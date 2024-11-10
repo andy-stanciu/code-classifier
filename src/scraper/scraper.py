@@ -27,6 +27,7 @@ def scrape_code(solution_id):
             if code_block.lower().startswith("java []"):
                 code_block = code_block.replace("\\n", "\n")  # fix newlines
                 code_block = code_block.replace("\\t", "\t")  # fix tabs
+                code_block = code_block.replace("\'", "'")  # fix apostrophes
                 code_block = re.sub(r'^.*\n', '', code_block, count=1)  # remove first line, which is always "java []"
                 code_block = re.sub(r'\s*import\s+[^;]*?;\s*(\r\n|\r|\n)?', '', code_block, flags=re.IGNORECASE)  # remove any import statements
                 solutions.append(code_block)
@@ -82,7 +83,7 @@ def scrape_solutions(question_name, count):
 
 def main():
     # scrape_solutions("two-sum", 1000)
-    scrape_solutions("add-two-numbers", 1000)
+    # scrape_solutions("add-two-numbers", 1000)
 
 if __name__ == "__main__":
     main()
