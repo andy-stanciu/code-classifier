@@ -2,6 +2,7 @@
 This is a UW CSE493g1 deep learning project by students Andy Stanciu & Rich Chen. The goal: given a Leetcode solution, identify the problem it is trying to solve. Exploring various neural network code classification architectures including (but not limited to) AST-based GNNs, CNNs, LSTMs, and potentially transformers.
 
 ## Contents
+- `docs/` - Background documentation and project report.
 - `src/scraper` - GraphQL based web scraper implemented in Python. Used to retrieve raw, unprocessed community solutions for various Leetcode solutions written in Java.
 - `src/parser` - Java parser used to optionally preprocess solution data prior to feeding it into our models. The parser currently has the following capabilities, all of which are optional:
   1. Redacting "sensitive identifiers" from the source code, i.e. if any permutation of the problem title appears within an identifier in the solution, it is replaced with a generic "method1" or "var1" identifier.
