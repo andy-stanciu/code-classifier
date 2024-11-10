@@ -82,8 +82,9 @@ def scrape_solutions(question_name, count):
     print(f'Finished scraping solutions (requested: {count}, actual: {i - 1}) to {solution_dir}')
 
 def main():
-    # scrape_solutions("two-sum", 1000)
-    # scrape_solutions("add-two-numbers", 1000)
+    scrape_solutions("two-sum", 100)
+    scrape_solutions("add-two-numbers", 100)
+    pass
 
 if __name__ == "__main__":
     main()

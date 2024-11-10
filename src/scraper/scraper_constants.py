@@ -4,7 +4,7 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0",
     "Origin": "https://leetcode.com"
 }
-SOLUTIONS_DIR = "../../solutions"
+SOLUTIONS_DIR = "../../solutions/raw"
 
 communitySolution_query = """
 query communitySolution($topicId: Int!) {
