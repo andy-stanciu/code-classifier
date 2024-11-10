@@ -1,6 +1,7 @@
 import os
 import re
 import requests
+import argparse
 
 from scraper_constants import *
 
@@ -82,9 +83,19 @@ def scrape_solutions(question_name, count):
     print(f'Finished scraping solutions (requested: {count}, actual: {i - 1}) to {solution_dir}')
 
 def main():
-    scrape_solutions("two-sum", 100)
-    scrape_solutions("add-two-numbers", 100)
-    pass
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--problem', '-p', action='append', required=True, help='Name of the problem')
+    parser.add_argument('--count', '-c', action='append', required=True, help='Number of solutions to scrape for the problem')
+
+    args = parser.parse_args()
+
+    if len(args.problem) != len(args.count):
+        parser.error('The number of --problem and --count arguments must be the same.')
+
+    problem_counts = list(zip(args.problem, args.count))
+    for problem, count in problem_counts:
+        scrape_solutions(problem, count)
 
 if __name__ == "__main__":
     main()

@@ -11,7 +11,7 @@ public class Main {
 
         var rawSolutionsDirectory = path.toFile();
         if (!rawSolutionsDirectory.exists() || !rawSolutionsDirectory.isDirectory()) {
-            System.out.printf("%s does not exist! Have you scraped any problems yet?", path);
+            System.out.printf("%s does not exist! Have you scraped any problems yet?%n", path);
             return;
         }
 
