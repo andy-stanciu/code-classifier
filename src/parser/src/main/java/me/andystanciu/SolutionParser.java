@@ -31,6 +31,7 @@ public final class SolutionParser {
     private String problemName;
     private int solutionNumber;
 
+    private Path sourcePath;
     private CompilationUnit compilationUnit;
 
     private SolutionParser() {
@@ -47,7 +48,7 @@ public final class SolutionParser {
         this.problemName = problemName;
         this.solutionNumber = solutionNumber;
 
-        var path = Path.of(String.format("%s/raw/%s/%s-%d.txt",
+        sourcePath = Path.of(String.format("%s/raw/%s/%s-%d.txt",
                 SOLUTIONS_DIR, problemName, problemName, solutionNumber));
 
         for (var keyword : problemName.split("-")) {
@@ -57,7 +58,7 @@ public final class SolutionParser {
         }
 
         try {
-            String sourceCode = Files.readString(path, StandardCharsets.UTF_8);
+            String sourceCode = Files.readString(sourcePath, StandardCharsets.UTF_8);
             var parser = new JavaParser();
             var parseResult = parser.parse(sourceCode);
             parseResult.ifSuccessful(compilationUnit -> {
@@ -72,8 +73,6 @@ public final class SolutionParser {
 
     public SolutionParser redactSensitiveIdentifiers() {
         if (compilationUnit == null) {
-            System.out.printf("Skipping further processing of %s-%s.txt, reason: failed to parse%n",
-                    problemName, solutionNumber);
             return this;
         }
 
@@ -89,8 +88,6 @@ public final class SolutionParser {
 
     public SolutionParser stripComments() {
         if (compilationUnit == null) {
-            System.out.printf("Skipping further processing of %s-%s.txt, reason: failed to parse%n",
-                    problemName, solutionNumber);
             return this;
         }
 
@@ -99,7 +96,36 @@ public final class SolutionParser {
         return this;
     }
 
-    public boolean complete() {
+    public SolutionParser purgeFailures() {
+        if (compilationUnit == null) {
+            try {
+                Files.deleteIfExists(sourcePath);
+                System.out.printf("Deleted non-compiling solutions %s%n", sourcePath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return this;
+    }
+
+    public SolutionParser remapSourceFile(int solutionNumber) {
+        if (solutionNumber == this.solutionNumber) {
+            return this;
+        }
+
+        var newPath = Path.of(String.format("%s/raw/%s/%s-%d.txt",
+                SOLUTIONS_DIR, problemName, problemName, solutionNumber));
+        sourcePath.toFile().renameTo(newPath.toFile());
+        System.out.printf("Remapped source file %s to %s%n", sourcePath, newPath);
+
+        this.sourcePath = newPath;
+        this.solutionNumber = solutionNumber;
+
+        return this;
+    }
+
+    public boolean isSuccessful() {
         return compilationUnit != null;
     }
 
