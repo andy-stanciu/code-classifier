@@ -1,0 +1,75 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    List<List<Integer>> List = new ArrayList<List<Integer>>();
+
+    List<Integer> l1 = new ArrayList<Integer>();
+
+    List<Integer> array1 = new ArrayList<Integer>();
+
+    List<Integer> array2 = new ArrayList<Integer>();
+
+    int count = 0;
+
+    int max_level = 0;
+
+    public void move(TreeNode root, int level) {
+        if (root == null) {
+            return;
+        }
+        array1.add(root.val);
+        array2.add(level);
+        count++;
+        if (max_level < level) {
+            max_level = level;
+        }
+        move(root.left, level + 1);
+        move(root.right, level + 1);
+    }
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        if (root == null) {
+            return List;
+        }
+        move(root, 0);
+        int fflag = 0;
+        for (int i = 0; i <= max_level; i++) {
+            if (fflag == 0) {
+                for (int j = 0; j < count; j++) {
+                    if (array2.get(j) == i) {
+                        l1.add(array1.get(j));
+                    }
+                }
+                fflag = 1;
+            } else {
+                List<Integer> stack = new ArrayList<Integer>();
+                for (int j = 0; j < count; j++) {
+                    if (array2.get(j) == i) {
+                        stack.add(array1.get(j));
+                    }
+                }
+                fflag = 0;
+                for (int z = stack.size() - 1; z >= 0; z = z - 1) {
+                    l1.add(stack.get(z));
+                }
+            }
+            List.add(l1);
+            l1 = new ArrayList<Integer>();
+        }
+        return List;
+    }
+}

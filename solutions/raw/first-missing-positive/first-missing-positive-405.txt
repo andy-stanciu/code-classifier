@@ -1,0 +1,39 @@
+class Solution {
+
+    public int firstMissingPositive(int[] nums) {
+        // Mark all negative, 0s and anything greater than n as 1.
+        // So that this will mark 0th element negative all the time.
+        // And we will specially check if 1 exists or not.
+        // My goal is to keep values from 1 to N. Mark all element from 0 to N-1 : negative.
+        int len = nums.length;
+        boolean oneExists = false;
+        for (int i = 0; i < len; i++) {
+            int curr = nums[i];
+            if (curr == 1) {
+                oneExists = true;
+            } else if (curr <= 0 || curr > len) {
+                // len is fine. I will use it as index len - 1.
+                nums[i] = 1;
+            }
+        }
+        if (!oneExists) {
+            // This gentleman is missing.
+            return 1;
+        }
+        for (int i = 0; i < len; i++) {
+            int curr = Math.abs(nums[i]);
+            if (nums[curr - 1] > 0) {
+                nums[curr - 1] = -nums[curr - 1];
+            }
+        }
+        for (int i = 0; i < len; i++) {
+            int curr = nums[i];
+            if (curr > 0) {
+                return i + 1;
+            }
+        }
+        // The array was perfect. It had value from [1, N].
+        // It means missing : N + 1
+        return len + 1;
+    }
+}

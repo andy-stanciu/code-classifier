@@ -1,0 +1,43 @@
+class Solution {
+
+    Set<List<Integer>> res = new HashSet<>();
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums);
+        kSum(nums, 4, 0, target, null);
+        return new ArrayList<>(res);
+    }
+
+    public void kSum(int[] nums, int k, int start, long target, List<Integer> curr) {
+        if (k > 2) {
+            for (int i = start; i < nums.length - k + 1; i++) {
+                if (i > start && nums[i] == nums[i - 1]) {
+                    continue;
+                }
+                if (curr == null)
+                    curr = new ArrayList<>();
+                curr.add(nums[i]);
+                kSum(nums, k - 1, i + 1, target - nums[i], curr);
+                curr.removeLast();
+            }
+            return;
+        }
+        int left = start;
+        int right = nums.length - 1;
+        while (left < right) {
+            if (nums[left] + nums[right] > target)
+                right--;
+            else if (nums[left] + nums[right] < target)
+                left++;
+            else {
+                curr.add(nums[left]);
+                curr.add(nums[right]);
+                left++;
+                right--;
+                res.add(new ArrayList<>(curr));
+                curr.removeLast();
+                curr.removeLast();
+            }
+        }
+    }
+}

@@ -1,0 +1,60 @@
+class Solution {
+
+    int liveNeighbourCount = 0;
+
+    int[][] directions = new int[][] { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 } };
+
+    public void method1(int[][] board) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                board[i][j] = method2(board, i, j);
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == 2) {
+                    board[i][j] = 0;
+                }
+                if (board[i][j] == 4) {
+                    board[i][j] = 1;
+                }
+            }
+        }
+    }
+
+    public boolean isValid(int i, int j, int[][] board) {
+        if (i < 0 || j < 0 || i >= board.length || j >= board[0].length) {
+            return false;
+        }
+        return true;
+    }
+
+    public int method2(int[][] board, int i, int j) {
+        liveNeighbourCount = 0;
+        for (int[] dir : directions) {
+            evaluateRuleToLiveOrDie(board, i + dir[0], j + dir[1]);
+        }
+        int currState = board[i][j];
+        if (currState == 1 || currState == 2) {
+            if (liveNeighbourCount >= 2 && liveNeighbourCount <= 3) {
+                return 1;
+            } else {
+                return 2;
+            }
+        } else {
+            if (liveNeighbourCount == 3) {
+                return 4;
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    public void evaluateRuleToLiveOrDie(int[][] board, int i, int j) {
+        if (isValid(i, j, board)) {
+            if (board[i][j] == 2 || board[i][j] == 1) {
+                liveNeighbourCount++;
+            }
+        }
+    }
+}

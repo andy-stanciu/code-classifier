@@ -1,0 +1,51 @@
+class Solution {
+
+    public List<List<Integer>> method1(TreeNode root) {
+        List<List<Integer>> ans = new ArrayList<>();
+        if (root == null) {
+            return ans;
+        }
+        List<Integer> v = new ArrayList<>();
+        boolean leftToRight = true;
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        q.add(null);
+        while (!q.isEmpty()) {
+            TreeNode temp = q.poll();
+            if (temp != null) {
+                v.add(temp.val);
+                if (temp.left != null) {
+                    q.add(temp.left);
+                }
+                if (temp.right != null) {
+                    q.add(temp.right);
+                }
+            } else {
+                if (leftToRight) {
+                    ans.add(new ArrayList<>(v));
+                } else {
+                    reverseList(v);
+                    ans.add(new ArrayList<>(v));
+                }
+                v.clear();
+                leftToRight = !leftToRight;
+                if (!q.isEmpty()) {
+                    q.add(null);
+                }
+            }
+        }
+        return ans;
+    }
+
+    private void reverseList(List<Integer> list) {
+        int left = 0;
+        int right = list.size() - 1;
+        while (left < right) {
+            int temp = list.get(left);
+            list.set(left, list.get(right));
+            list.set(right, temp);
+            left++;
+            right--;
+        }
+    }
+}

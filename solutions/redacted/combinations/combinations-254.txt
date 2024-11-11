@@ -1,0 +1,31 @@
+class Solution {
+
+    List<List<Integer>> res = new ArrayList<>();
+
+    List<Integer> path = new ArrayList<>();
+
+    public List<List<Integer>> combine(int n, int k) {
+        if (k > n)
+            return res;
+        backtrack(n, k, 1);
+        return res;
+    }
+
+    public void backtrack(int n, int k, int startIndex) {
+        if (path.size() == k) {
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        // i <= n - (k - path.size()) + 1 is to optimize the algo
+        // the number we can choose : n - i + 1
+        // the actual number we need k - path.size()
+        // n - i + 1 >= k - path.size()
+        // helps avoid unnecessary iterations
+        for (int i = startIndex; i <= n - (k - path.size()) + 1; i++) {
+            path.add(i);
+            //startIndex = i + 1; then will not repeat the former one
+            backtrack(n, k, i + 1);
+            path.remove(path.size() - 1);
+        }
+    }
+}

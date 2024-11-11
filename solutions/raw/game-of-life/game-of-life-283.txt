@@ -1,0 +1,70 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        int[][] copyOfBoard = new int[board.length][board[0].length];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                copyOfBoard[i][j] = board[i][j];
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                int currentVal = board[i][j];
+                int liveCells = getNeighbouringCells(copyOfBoard, i, j);
+                if (currentVal == 1) {
+                    if (liveCells < 2) {
+                        board[i][j] = 0;
+                    }
+                    if (liveCells > 3) {
+                        board[i][j] = 0;
+                    }
+                }
+                if (currentVal == 0 && liveCells == 3) {
+                    board[i][j] = 1;
+                }
+            }
+        }
+    }
+
+    private int getNeighbouringCells(int[][] board, int row, int col) {
+        int liveCells = 0;
+        // find vertical neighbours
+        int leftCol = col - 1;
+        int rightCol = col + 1;
+        int topRow = row - 1;
+        int bottomRow = row + 1;
+        //lef col
+        if (leftCol >= 0) {
+            liveCells += board[row][leftCol];
+        }
+        //right col
+        if (rightCol < board[0].length) {
+            liveCells += board[row][rightCol];
+        }
+        //top row
+        if (topRow >= 0) {
+            liveCells += board[topRow][col];
+        }
+        //bottom row
+        if (bottomRow < board.length) {
+            liveCells += board[bottomRow][col];
+        }
+        // top left
+        if (topRow >= 0 && leftCol >= 0) {
+            liveCells += (board[topRow][leftCol]);
+        }
+        //bottom left
+        if (bottomRow < board.length && leftCol >= 0) {
+            liveCells += (board[bottomRow][leftCol]);
+        }
+        //top right
+        if (rightCol < board[0].length && topRow >= 0) {
+            liveCells += (board[topRow][rightCol]);
+        }
+        // bottom right
+        if (rightCol < board[0].length && bottomRow < board.length) {
+            liveCells += (board[bottomRow][rightCol]);
+        }
+        return liveCells;
+    }
+}

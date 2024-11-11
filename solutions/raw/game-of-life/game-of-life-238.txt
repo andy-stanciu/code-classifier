@@ -1,0 +1,46 @@
+class Solution {
+
+    int[] rArr = { -1, -1, -1, 1, 1, 1, 0, 0 };
+
+    int[] cArr = { 0, -1, 1, 0, -1, 1, -1, 1 };
+
+    public void gameOfLife(int[][] board) {
+        int[][] temp = new int[board.length][board[0].length];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                temp[i][j] = board[i][j];
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (temp[i][j] == 0) {
+                    if (threeLivesExists(temp, i, j))
+                        board[i][j] = 1;
+                } else {
+                    if (!twoOrThreeLives(temp, i, j))
+                        board[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    boolean threeLivesExists(int[][] temp, int i, int j) {
+        return numberOfLives(temp, i, j) == 3;
+    }
+
+    boolean twoOrThreeLives(int[][] temp, int i, int j) {
+        int lives = numberOfLives(temp, i, j);
+        return lives == 2 || lives == 3;
+    }
+
+    int numberOfLives(int[][] temp, int i, int j) {
+        int lives = 0;
+        for (int k = 0; k < 8; k++) {
+            int x = i + rArr[k];
+            int y = j + cArr[k];
+            if (x < temp.length && x >= 0 && y < temp[0].length && y >= 0 && temp[x][y] == 1)
+                lives++;
+        }
+        return lives;
+    }
+}

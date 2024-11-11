@@ -1,0 +1,68 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        /*
+        To avoid updating the board immediately and potentially affecting the calculation of neighboring cells, an intermediate state is introduced. 
+		If a dead cell becomes alive, it is set to a value of 3, and if a live cell dies, it is set to a value of -3. 
+		These intermediate states allow the calculations to be performed correctly without interfering with neighboring cells\' state.
+        */
+        int m = board.length;
+        int n = board[0].length;
+        int[][] directions = { { -1, 0 }, { -1, -1 }, { 0, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 } };
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int var1 = calculateLiveNeighbours(i, j, board, directions);
+                //System.out.println("("+i+", "+j+") = "+ numberOfLivesNeighbours);
+                if (board[i][j] == 1 || board[i][j] == -3) {
+                    if (var1 < 2 || var1 > 3) {
+                        board[i][j] = -3;
+                    }
+                } else {
+                    // 0 or 3
+                    if (var1 == 3) {
+                        board[i][j] = 3;
+                    }
+                }
+            }
+        }
+        update(board);
+    }
+
+    private void update(int[][] board) {
+        /*
+		After iterating through all cells, the update function is called to convert the intermediate states back to the original values. 
+		Cells with a value of 3 are updated to 1 (alive), and cells with a value of -3 are updated to 0 (dead).
+		*/
+        int m = board.length;
+        int n = board[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 3) {
+                    board[i][j] = 1;
+                } else if (board[i][j] == -3) {
+                    board[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    private int calculateLiveNeighbours(int i, int j, int[][] board, int[][] directions) {
+        /*
+		The calculateLiveNeighbours function calculates the number of live neighbors for a given cell. 
+		It uses the provided directions array to determine the neighboring cell positions and checks if each neighbor is alive (1) or in the intermediate state (-3). 
+		The count of live neighbors is returned.
+		*/
+        int count = 0;
+        for (int k = 0; k < directions.length; k++) {
+            int newX = i + directions[k][0];
+            int newY = j + directions[k][1];
+            if (newX < 0 || newY < 0 || newX >= board.length || newY >= board[0].length) {
+                continue;
+            }
+            if (board[newX][newY] == 1 || board[newX][newY] == -3) {
+                count++;
+            }
+        }
+        return count;
+    }
+}

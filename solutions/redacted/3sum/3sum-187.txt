@@ -1,0 +1,50 @@
+class Solution {
+
+    int n;
+
+    Map<Integer, Set<Integer>> vis = new HashMap<>();
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        // check different i, transform to 2sum;
+        List<List<Integer>> results = new ArrayList<>();
+        int target = 0;
+        n = nums.length;
+        //sort for dedupe;
+        Arrays.sort(nums);
+        for (int i = 0; i < n; i++) {
+            // [-1, -1, 2] [-1, 0, 2];
+            // if (i > 0 && nums[i] == nums[i - 1]) continue;
+            target = 0 - nums[i];
+            List<List<Integer>> tmp = twoSum(i + 1, target, nums);
+            if (tmp.size() > 0) {
+                results.addAll(getResult(nums[i], tmp));
+            }
+        }
+        return results;
+    }
+
+    private List<List<Integer>> twoSum(int from, int target, int[] nums) {
+        List<List<Integer>> results = new ArrayList<>();
+        Set<Integer> set = new HashSet<>();
+        for (int k = from; k < n; k++) {
+            int remain = target - nums[k];
+            if (set.contains(remain)) {
+                results.add(Arrays.asList(nums[k], remain));
+            }
+            set.add(nums[k]);
+        }
+        return results;
+    }
+
+    private List<List<Integer>> getResult(int val, List<List<Integer>> tmp) {
+        List<List<Integer>> results = new ArrayList<>();
+        for (List<Integer> list : tmp) {
+            if (vis.containsKey(val) && vis.get(val).contains(list.get(0)))
+                continue;
+            results.add(Arrays.asList(val, list.get(0), list.get(1)));
+            vis.putIfAbsent(val, new HashSet<>());
+            vis.get(val).add(list.get(0));
+        }
+        return results;
+    }
+}

@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> method1(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        Deque<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        boolean reverse = false;
+        while (!queue.isEmpty()) {
+            int var1 = queue.size();
+            List<Integer> var2 = new ArrayList<>(var1);
+            for (int i = 0; i < var1; i++) {
+                if (!reverse) {
+                    //remove nodes one by one
+                    TreeNode currentnode = queue.pollFirst();
+                    //adding that current node value in the current level sublist of result list
+                    var2.add(currentnode.val);
+                    if (currentnode.left != null) {
+                        queue.addLast(currentnode.left);
+                    }
+                    if (currentnode.right != null) {
+                        queue.addLast(currentnode.right);
+                    }
+                } else {
+                    //remove nodes one by one
+                    TreeNode currentnode = queue.pollLast();
+                    var2.add(currentnode.val);
+                    //adding that current node value in the current level sublist of result list
+                    //adding right and then left will give 6,7 that is the needed order while we are adding in front of 2
+                    //if i had added left followed by right then it would have given 7,6 which would have been the wrong order
+                    if (currentnode.right != null) {
+                        queue.addFirst(currentnode.right);
+                    }
+                    if (currentnode.left != null) {
+                        queue.addFirst(currentnode.left);
+                    }
+                }
+            }
+            reverse = !reverse;
+            result.add(var2);
+        }
+        return result;
+    }
+}

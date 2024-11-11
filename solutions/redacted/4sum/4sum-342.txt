@@ -1,0 +1,55 @@
+class Solution {
+
+    private int[] arr;
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        this.arr = nums;
+        Arrays.sort(this.arr);
+        return kSum(target, 0, 4);
+    }
+
+    public List<List<Integer>> kSum(long target, int start, int k) {
+        List<List<Integer>> res = new LinkedList<>();
+        // If we have run out of numbers to add, return res.
+        if (start == this.arr.length) {
+            return res;
+        }
+        // There are k remaining values to add to the sum.
+        // The average of these values is at least target / k.
+        long average_value = target / k;
+        // We cannot obtain a sum of target if the smallest value
+        // in nums is greater than target / k or if the largest
+        // value in nums is smaller than target / k.
+        if (this.arr[start] > average_value || average_value > this.arr[this.arr.length - 1]) {
+            return res;
+        }
+        if (k == 2) {
+            return twoSum(target, start);
+        }
+        for (int i = start; i < this.arr.length; ++i) {
+            if (i == start || this.arr[i - 1] != this.arr[i]) {
+                for (List<Integer> subset : kSum(target - this.arr[i], i + 1, k - 1)) {
+                    res.add(new LinkedList<>(Arrays.asList(this.arr[i])));
+                    res.get(res.size() - 1).addAll(subset);
+                }
+            }
+        }
+        return res;
+    }
+
+    public List<List<Integer>> twoSum(long target, int start) {
+        List<List<Integer>> res = new LinkedList<>();
+        int lo = start, hi = this.arr.length - 1;
+        while (lo < hi) {
+            int currSum = this.arr[lo] + this.arr[hi];
+            if (currSum < target || (lo > start && this.arr[lo] == this.arr[lo - 1])) {
+                ++lo;
+            } else if (currSum > target || (hi < this.arr.length - 1 && this.arr[hi] == this.arr[hi + 1])) {
+                --hi;
+            } else {
+                res.add(Arrays.asList(this.arr[lo++], this.arr[hi--]));
+            }
+        }
+        return res;
+    }
+}

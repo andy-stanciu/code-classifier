@@ -1,0 +1,40 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums);
+        Set<List<Integer>> working = new HashSet<>();
+        for (int h = 0; h < nums.length - 3; ++h) {
+            if (h > 0 && nums[h] == nums[h - 1]) {
+                continue;
+            }
+            for (int i = h + 1; i < nums.length - 2; ++i) {
+                if (i > h + 1 && nums[i] == nums[i - 1]) {
+                    continue;
+                }
+                int left = i + 1;
+                int right = nums.length - 1;
+                long sumOfHandI = nums[h] + nums[i];
+                long smallerTarget = (long) target - sumOfHandI;
+                while (left < right) {
+                    long sum = (long) nums[left] + nums[right];
+                    if (sum == smallerTarget) {
+                        working.add(Arrays.asList(nums[h], nums[i], nums[left], nums[right]));
+                        while (left < right && nums[left] == nums[left + 1]) {
+                            ++left;
+                        }
+                        while (left < right && nums[right] == nums[right - 1]) {
+                            --right;
+                        }
+                        ++left;
+                        --right;
+                    } else if (sum < smallerTarget) {
+                        ++left;
+                    } else {
+                        --right;
+                    }
+                }
+            }
+        }
+        return new ArrayList<>(working);
+    }
+}

@@ -1,0 +1,42 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        helper(result, new ArrayList<Integer>(), 0, nums, 0, (long) target);
+        return result;
+    }
+
+    public void helper(List<List<Integer>> result, List<Integer> accumulation, int index, int[] nums, long sum, long target) {
+        if (accumulation.size() == 2) {
+            int left = index;
+            int right = nums.length - 1;
+            while (left < right) {
+                long partialsum = nums[left] + nums[right] + sum;
+                if (partialsum > target) {
+                    right = right - 1;
+                } else if (partialsum < target) {
+                    left = left + 1;
+                } else {
+                    List<Integer> newlist = new ArrayList<>(accumulation);
+                    newlist.add(nums[left]);
+                    newlist.add(nums[right]);
+                    result.add(newlist);
+                    left++;
+                    while (left < right && nums[left] == nums[left - 1]) {
+                        left++;
+                    }
+                }
+            }
+            return;
+        }
+        for (int i = index; i < nums.length - (4 - accumulation.size()) + 1; i++) {
+            if (i > index && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            accumulation.add(nums[i]);
+            helper(result, accumulation, i + 1, nums, (long) sum + nums[i], target);
+            accumulation.remove(accumulation.size() - 1);
+        }
+    }
+}

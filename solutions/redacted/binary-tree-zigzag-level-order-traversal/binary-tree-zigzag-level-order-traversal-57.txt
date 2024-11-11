@@ -1,0 +1,63 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> method1(TreeNode root) {
+        if (root == null) {
+            return new ArrayList<List<Integer>>();
+        }
+        int rtl = 1;
+        Stack<TreeNode> st = new Stack<>();
+        Stack<TreeNode> tempSt = new Stack<>();
+        ArrayList<List<Integer>> ans = new ArrayList<List<Integer>>();
+        ArrayList<Integer> smallAns = new ArrayList<>();
+        st.push(root);
+        while (!st.empty()) {
+            TreeNode node = st.pop();
+            smallAns.add(node.val);
+            if (rtl == 1) {
+                if (node.left != null) {
+                    tempSt.push(node.left);
+                }
+                if (node.right != null) {
+                    tempSt.push(node.right);
+                }
+            } else {
+                if (node.right != null) {
+                    tempSt.push(node.right);
+                }
+                if (node.left != null) {
+                    tempSt.push(node.left);
+                }
+            }
+            if (st.empty()) {
+                ans.add(smallAns);
+                if (tempSt.empty()) {
+                    break;
+                }
+                if (rtl == 1) {
+                    rtl = 0;
+                } else {
+                    rtl = 1;
+                }
+                smallAns = new ArrayList<Integer>();
+                st = tempSt;
+                tempSt = new Stack<>();
+            }
+        }
+        return ans;
+    }
+}

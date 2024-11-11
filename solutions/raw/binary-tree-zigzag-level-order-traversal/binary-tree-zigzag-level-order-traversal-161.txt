@@ -1,0 +1,57 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        // Declare result list to hold the final zigzag level order traversal
+        List<List<Integer>> result = new ArrayList<>();
+        // if root is null
+        if (root == null) {
+            return result;
+        }
+        // Declare Queue for performing bfs
+        Queue<TreeNode> q = new LinkedList<>();
+        // insert rootNode
+        q.add(root);
+        // leftToRight variable to toggle b/w the nodes
+        boolean leftToRight = true;
+        while (!q.isEmpty()) {
+            // No.of nodes in the current levelorder
+            int levelsize = q.size();
+            List<Integer> currLevel = new ArrayList<>();
+            for (int i = 0; i < levelsize; i++) {
+                TreeNode currN = q.poll();
+                if (// traverse from L -> R
+                leftToRight) {
+                    // add node.val in L -> R
+                    currLevel.add(currN.val);
+                } else // traverse from R -> L
+                {
+                    currLevel.add(0, currN.val);
+                }
+                // if left & right exists, insert them into queue
+                if (currN.left != null)
+                    q.add(currN.left);
+                if (currN.right != null)
+                    q.add(currN.right);
+            }
+            result.add(currLevel);
+            // toggle the direction for next level
+            leftToRight = !leftToRight;
+        }
+        return result;
+    }
+}

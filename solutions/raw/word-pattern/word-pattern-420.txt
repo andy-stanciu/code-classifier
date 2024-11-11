@@ -1,0 +1,23 @@
+class Solution {
+
+    public boolean wordPattern(String pattern, String s) {
+        String[] words = s.split(" ");
+        if (pattern.length() != words.length) {
+            return false;
+        }
+        int[] ascii = new int[128];
+        Map<String, Integer> intMapWord = new HashMap<>();
+        for (int i = 0; i < pattern.length(); i++) {
+            if (intMapWord.containsKey(words[i]) && ascii[pattern.charAt(i)] != 0) {
+                if (ascii[pattern.charAt(i)] != intMapWord.get(words[i])) {
+                    return false;
+                }
+            } else if (intMapWord.containsKey(words[i]) || ascii[pattern.charAt(i)] != 0) {
+                return false;
+            }
+            ascii[pattern.charAt(i)] = ((int) pattern.charAt(i)) + i + 1;
+            intMapWord.put(words[i], ascii[pattern.charAt(i)]);
+        }
+        return true;
+    }
+}

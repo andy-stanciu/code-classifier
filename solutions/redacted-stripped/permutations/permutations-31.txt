@@ -1,0 +1,29 @@
+class Solution {
+
+    List<List<Integer>> ans;
+
+    public List<List<Integer>> permute(int[] nums) {
+        ans = new ArrayList<>();
+        int fin = (int) Math.pow(2, nums.length) - 1;
+        int pos = 0;
+        fun(new ArrayList<>(), 0, nums, fin);
+        return ans;
+    }
+
+    public void fun(List<Integer> per, int pos, int[] nums, int fin) {
+        if (pos == fin) {
+            ans.add(new ArrayList<>(per));
+            return;
+        }
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            if (((1 << i) | pos) != pos) {
+                pos = pos ^ (1 << i);
+                per.add(nums[i]);
+                fun(per, pos, nums, fin);
+                pos = pos ^ (1 << i);
+                per.remove(per.size() - 1);
+            }
+        }
+    }
+}

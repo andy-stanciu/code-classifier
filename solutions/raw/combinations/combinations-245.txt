@@ -1,0 +1,34 @@
+class Solution {
+
+    List<List<Integer>> result = new ArrayList<>();
+
+    public List<List<Integer>> combine(int n, int k) {
+        List<Integer> l = new ArrayList<>();
+        combineRecursion(n, k, l);
+        return result;
+    }
+
+    // Here we create all possible patterns. but the optimaztion will be, to have
+    // only those with size 2.
+    public void combineRecursion(int n, int k, List<Integer> l) {
+        // when k = 0, that means we got a pattern of size k, then simply add in LL
+        if (k == 0) {
+            result.add(new ArrayList<>(l));
+            return;
+        }
+        if (n < 1) {
+            // when n reduces to 1, then return
+            return;
+        }
+        // Considering nth element, and going to next numbers -> n-1
+        l.add(n);
+        // Here, we decrease "n", along with "k".
+        combineRecursion(n - 1, k - 1, l);
+        // When "k" becomes 0, that means we got a pattern with size "k". add in LL, and
+        // simply return. The recursion call below, will again set k back to it\'s
+        // value, ex. k = 0 -> k = 2, and call again
+        // Not considering or removing the last element
+        l.remove(l.size() - 1);
+        combineRecursion(n - 1, k, l);
+    }
+}

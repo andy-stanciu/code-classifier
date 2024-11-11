@@ -1,0 +1,41 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        boolean[][] nextState = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                nextState[i][j] = nextStatus(board, i, j);
+            }
+        }
+        //update board
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (nextState[i][j]) {
+                    board[i][j] = 1;
+                } else {
+                    board[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    public boolean nextStatus(int[][] board, int i, int j) {
+        int liveNeighbors = 0;
+        for (int row = Math.max(0, i - 1); row <= Math.min(i + 1, board.length - 1); row++) {
+            for (int column = Math.max(0, j - 1); column <= Math.min(j + 1, board[row].length - 1); column++) {
+                if (board[row][column] == 1) {
+                    liveNeighbors++;
+                }
+            }
+        }
+        if (board[i][j] == 1) {
+            // board[i][j] count as live neighbor
+            liveNeighbors--;
+            return (!(liveNeighbors < 2 | liveNeighbors > 3));
+        } else {
+            return (liveNeighbors == 3);
+        }
+    }
+}

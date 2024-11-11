@@ -1,0 +1,58 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        List<List<Integer>> result = new ArrayList<>();
+        // If the root node is null return the empty result
+        if (root == null)
+            return result;
+        // Initialize a queue and offer the root node to it
+        queue.offer(root);
+        // Flag to determine the direction of traversal
+        boolean leftToRight = true;
+        // Iterate over queue until queue in not empty
+        while (!queue.isEmpty()) {
+            // Get the level number(which is equal to total number of nodes in current level)
+            int levelNum = queue.size();
+            // List to store nodes in current level
+            List<Integer> row = new ArrayList<>();
+            // Traverse for each node in the current level
+            for (int i = 0; i < levelNum; i++) {
+                // Get the front node from the queue
+                TreeNode currNode = queue.poll();
+                // Append the node\'s value to the row list (will reverse later if required)
+                row.add(currNode.val);
+                // Add the left node to the queue if it exists
+                if (currNode.left != null)
+                    queue.offer(currNode.left);
+                // Add the right node to the queue if its exists
+                if (currNode.right != null)
+                    queue.offer(currNode.right);
+            }
+            // If the traversal is right to left, reverse the row list
+            if (!leftToRight)
+                Collections.reverse(row);
+            // Switch the traversal direction fro the next level
+            leftToRight = !leftToRight;
+            // Add the current level row to result
+            result.add(row);
+        }
+        // Return the result
+        return result;
+    }
+}

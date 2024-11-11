@@ -1,0 +1,47 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        for (int r = 0; r < m; r++) {
+            for (int c = 0; c < n; c++) {
+                helper(board, m, n, r, c);
+            }
+        }
+        for (int r = 0; r < m; r++) {
+            for (int c = 0; c < n; c++) {
+                board[r][c] = board[r][c] % 2;
+            }
+        }
+    }
+
+    private static void helper(int[][] board, int m, int n, int r, int c) {
+        if (!inLimit(m, n, r, c))
+            return;
+        int live = 0;
+        int[] nxtR = new int[] { 1, 0, -1, 0, 1, 1, -1, -1 };
+        int[] nxtC = new int[] { 0, 1, 0, -1, 1, -1, 1, -1 };
+        for (int i = 0; i < 8; i++) {
+            int nR = r + nxtR[i];
+            int nC = c + nxtC[i];
+            if (inLimit(m, n, nR, nC) && (board[nR][nC] == 1 || board[nR][nC] == 2)) {
+                live++;
+            }
+        }
+        if (board[r][c] == 1) {
+            if (live < 2)
+                board[r][c] = 2;
+            else if (live > 3)
+                board[r][c] = 2;
+        } else {
+            if (live == 3)
+                board[r][c] = 3;
+        }
+    }
+
+    private static boolean inLimit(int m, int n, int r, int c) {
+        if (r >= m || r < 0 || c >= n || c < 0)
+            return false;
+        return true;
+    }
+}

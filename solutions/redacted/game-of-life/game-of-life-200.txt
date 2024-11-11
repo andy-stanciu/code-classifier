@@ -1,0 +1,47 @@
+class Solution {
+
+    private static int bitNext = 1 << 1;
+
+    private static int[][] idxMove = new int[][] { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 }, { 1, 1 }, { -1, -1 }, { 1, -1 }, { -1, 1 } };
+
+    public void method1(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                int numLive = 0;
+                boolean nextLive = false;
+                boolean currLive = live(board, i, j, m, n) > 0;
+                for (final var idx : idxMove) {
+                    numLive += live(board, i + idx[0], j + idx[1], m, n);
+                    if (numLive > 3) {
+                        nextLive = false;
+                        break;
+                    } else if (numLive < 2) {
+                        nextLive = false;
+                    } else if (numLive == 3) {
+                        nextLive = true;
+                    } else if (numLive == 2) {
+                        nextLive = currLive;
+                    }
+                }
+                if (nextLive) {
+                    board[i][j] |= bitNext;
+                }
+            }
+        }
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                // discard lowest bit that represents current state
+                board[i][j] >>= 1;
+            }
+        }
+    }
+
+    private int live(int[][] board, int i, int j, int m, int n) {
+        if (i >= 0 && i < m && j >= 0 && j < n) {
+            return (board[i][j] & 1) > 0 ? 1 : 0;
+        }
+        return 0;
+    }
+}

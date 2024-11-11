@@ -1,0 +1,110 @@
+class Solution {
+
+    private static final int LIVE_TO_DEATH = -1;
+
+    private static final int LIVE_TO_LIVE = 1;
+
+    private static final int DEATH_TO_LIVE = -2;
+
+    private static final int DEATH_TO_DEATH = 0;
+
+    public void method1(int[][] board) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                board[i][j] = nextState(board, i, j);
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (willLive(board[i][j])) {
+                    board[i][j] = 1;
+                } else {
+                    board[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    private int nextState(int[][] board, int row, int col) {
+        int lives = 0, deads = 0;
+        if (row > 0) {
+            if (isLive(board[row - 1][col])) {
+                lives++;
+            } else {
+                deads++;
+            }
+        }
+        if (col > 0) {
+            if (isLive(board[row][col - 1])) {
+                lives++;
+            } else {
+                deads++;
+            }
+        }
+        if (row < board.length - 1) {
+            if (isLive(board[row + 1][col])) {
+                lives++;
+            } else {
+                deads++;
+            }
+        }
+        if (col < board[0].length - 1) {
+            if (isLive(board[row][col + 1])) {
+                lives++;
+            } else {
+                deads++;
+            }
+        }
+        if (row > 0 && col > 0) {
+            if (isLive(board[row - 1][col - 1])) {
+                lives++;
+            } else {
+                deads++;
+            }
+        }
+        if (row < board.length - 1 && col < board[0].length - 1) {
+            if (isLive(board[row + 1][col + 1])) {
+                lives++;
+            } else {
+                deads++;
+            }
+        }
+        if (row > 0 && col < board[0].length - 1) {
+            if (isLive(board[row - 1][col + 1])) {
+                lives++;
+            } else {
+                deads++;
+            }
+        }
+        if (row < board.length - 1 && col > 0) {
+            if (isLive(board[row + 1][col - 1])) {
+                lives++;
+            } else {
+                deads++;
+            }
+        }
+        if (isLive(board[row][col])) {
+            if (lives > 3) {
+                return LIVE_TO_DEATH;
+            } else if (lives == 2 || lives == 3) {
+                return LIVE_TO_LIVE;
+            } else {
+                return LIVE_TO_DEATH;
+            }
+        } else {
+            if (lives == 3) {
+                return DEATH_TO_LIVE;
+            } else {
+                return DEATH_TO_DEATH;
+            }
+        }
+    }
+
+    private boolean willLive(int num) {
+        return num == DEATH_TO_LIVE || num == LIVE_TO_LIVE;
+    }
+
+    private boolean isLive(int num) {
+        return num == LIVE_TO_DEATH || num == LIVE_TO_LIVE;
+    }
+}

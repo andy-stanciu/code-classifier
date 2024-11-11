@@ -1,0 +1,52 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        int[][] copy = new int[board.length][board[0].length];
+        for (int i = 0; i < board.length; i++) {
+            copy[i] = board[i].clone();
+        }
+        for (int i = 0; i < copy.length; i++) {
+            for (int j = 0; j < copy[i].length; j++) {
+                int liveNeighbors = countLiveNeighbors(copy, i, j);
+                if (copy[i][j] == 1) {
+                    //1, under population less than 2
+                    if (liveNeighbors < 2) {
+                        board[i][j] = 0;
+                    }
+                    //2, perfect population 2 to 3
+                    if (liveNeighbors == 2 || liveNeighbors == 3) {
+                        board[i][j] = 1;
+                    }
+                    //3, over population more than 3
+                    if (liveNeighbors > 3) {
+                        board[i][j] = 0;
+                    }
+                } else {
+                    //4, reproduction exactly 3
+                    if (liveNeighbors == 3) {
+                        board[i][j] = 1;
+                    }
+                }
+            }
+        }
+    }
+
+    private int countLiveNeighbors(int[][] board, int r, int c) {
+        int sr = r == 0 ? 0 : r - 1;
+        int er = r == board.length - 1 ? board.length - 1 : r + 1;
+        int sc = c == 0 ? 0 : c - 1;
+        int ec = c == board[0].length - 1 ? board[0].length - 1 : c + 1;
+        int count = 0;
+        for (int i = sr; i <= er; i++) {
+            for (int j = sc; j <= ec; j++) {
+                if (i == r && j == c) {
+                    continue;
+                }
+                if (board[i][j] == 1) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+}

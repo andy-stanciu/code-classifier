@@ -1,0 +1,43 @@
+class Solution {
+
+    public List<List<Integer>> method1(TreeNode root) {
+        if (root == null) {
+            return new ArrayList<>();
+        }
+        boolean normal = true;
+        List<List<Integer>> res = new ArrayList<>();
+        Deque<TreeNode> deque = new ArrayDeque<>();
+        deque.offerLast(root);
+        while (!deque.isEmpty()) {
+            int i = deque.size();
+            List<Integer> inner = new ArrayList<>();
+            while (i > 0) {
+                if (normal) {
+                    TreeNode popped = deque.pollFirst();
+                    inner.add(popped.val);
+                    if (popped.left != null) {
+                        deque.offerLast(popped.left);
+                    }
+                    if (popped.right != null) {
+                        deque.offerLast(popped.right);
+                    }
+                } else {
+                    TreeNode popped = deque.pollLast();
+                    inner.add(popped.val);
+                    if (popped.right != null) {
+                        deque.offerFirst(popped.right);
+                    }
+                    if (popped.left != null) {
+                        deque.offerFirst(popped.left);
+                    }
+                }
+                i--;
+                if (i == 0) {
+                    res.add(inner);
+                }
+            }
+            normal = !normal;
+        }
+        return res;
+    }
+}

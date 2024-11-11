@@ -1,0 +1,52 @@
+class Solution {
+
+    public static void method1(int[][] board) {
+        var temp = cloneArray(board);
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                board[i][j] = getNewValue(temp, i, j);
+            }
+        }
+    }
+
+    public static int[][] cloneArray(int[][] src) {
+        int length = src.length;
+        int[][] target = new int[length][src[0].length];
+        for (int i = 0; i < length; i++) {
+            System.arraycopy(src[i], 0, target[i], 0, src[i].length);
+        }
+        return target;
+    }
+
+    private static int getNewValue(int[][] board, int i, int j) {
+        var amountAlive = getAliveNeighborsCount(board, i, j);
+        if (amountAlive < 2) {
+            return 0;
+        }
+        if (amountAlive == 3) {
+            return 1;
+        }
+        if (amountAlive == 2) {
+            return board[i][j];
+        }
+        if (amountAlive > 3) {
+            return 0;
+        }
+        return board[i][j];
+    }
+
+    private static int getAliveNeighborsCount(int[][] board, int i, int j) {
+        //right,left, top, bottom
+        var edgeSum = getCurrentValue(board, i, j + 1) + getCurrentValue(board, i, j - 1) + getCurrentValue(board, i - 1, j) + getCurrentValue(board, i + 1, j);
+        //rightTop, leftTop, rightBottom, leftBottom
+        var diagonalSum = getCurrentValue(board, i - 1, j + 1) + getCurrentValue(board, i - 1, j - 1) + getCurrentValue(board, i + 1, j + 1) + getCurrentValue(board, i + 1, j - 1);
+        return edgeSum + diagonalSum;
+    }
+
+    private static int getCurrentValue(int[][] board, int i, int j) {
+        if (i < 0 || i >= board.length || j < 0 || j >= board[i].length) {
+            return 0;
+        }
+        return board[i][j];
+    }
+}

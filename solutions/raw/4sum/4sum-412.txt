@@ -1,0 +1,47 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        Arrays.sort(nums);
+        List<Integer> quadruplet = new ArrayList<>();
+        nSum(ans, nums, (long) target, 0, 4, quadruplet);
+        return ans;
+    }
+
+    // start position in the nums array
+    // n means n-sum
+    // quadruplet keeps fixed all i-th position elements of a prefix quadruplet
+    private void nSum(List<List<Integer>> ans, int[] nums, long target, int start, int n, List<Integer> quadruplet) {
+        if (n == 2) {
+            for (int i = start, j = nums.length - 1; i < j; ) {
+                if ((long) nums[i] + nums[j] == target) {
+                    List<Integer> q = new ArrayList<>(quadruplet);
+                    q.add(nums[i]);
+                    q.add(nums[j]);
+                    ans.add(q);
+                    i++;
+                    // i++ may cause i is greater than j
+                    while (i < j && nums[i] == nums[i - 1]) i++;
+                    j--;
+                    while (i < j && nums[j] == nums[j + 1]) j--;
+                } else if ((long) nums[i] + nums[j] < target) {
+                    i++;
+                } else {
+                    j--;
+                }
+            }
+        } else {
+            // target > greatest num * n || target < least num * n, prune early
+            if (target > ((long) nums[nums.length - 1]) * n || target < ((long) nums[start]) * n) {
+                return;
+            }
+            for (int i = start; i <= nums.length - n; i++) {
+                if (i > start && nums[i] == nums[i - 1])
+                    continue;
+                quadruplet.add(nums[i]);
+                nSum(ans, nums, target - nums[i], i + 1, n - 1, quadruplet);
+                quadruplet.remove(quadruplet.size() - 1);
+            }
+        }
+    }
+}

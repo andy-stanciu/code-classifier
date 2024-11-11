@@ -1,0 +1,65 @@
+class Solution {
+
+    public static int[][] theta = new int[][] { new int[] { -1, 0 }, new int[] { 0, -1 }, new int[] { 1, 0 }, new int[] { 0, 1 } };
+
+    public static boolean validate(int digitX, int digitY, int rangeX, int rangeY) {
+        if (digitX >= rangeX) {
+            return false;
+        }
+        if (digitY >= rangeY) {
+            return false;
+        }
+        if (digitX < 0) {
+            return false;
+        }
+        if (digitY < 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public static void perform(int width, int height, int[][] source, int[][] clone) {
+        for (int dy = height - 1; dy >= 0; dy--) {
+            for (int dx = width - 1; dx >= 0; dx--) {
+                int digit = clone[dy][dx];
+                int delta = 0;
+                for (int fy = -1; fy <= 1; fy++) {
+                    for (int fx = -1; fx <= 1; fx++) {
+                        if (fx == 0 && fy == 0) {
+                            continue;
+                        }
+                        if (!validate(dx + fx, dy + fy, width, height)) {
+                            continue;
+                        }
+                        if (clone[dy + fy][dx + fx] == 1) {
+                            delta = delta + 1;
+                        }
+                    }
+                }
+                if (digit == 0) {
+                    if (delta == 3) {
+                        source[dy][dx] = 1;
+                    }
+                }
+                if (digit == 1) {
+                    if (delta < 2 || delta > 3) {
+                        source[dy][dx] = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    public void gameOfLife(int[][] board) {
+        int height = board.length;
+        int width = board[0].length;
+        int[][] clone = new int[height][width];
+        for (int dy = width - 1; dy >= 0; dy--) {
+            for (int dx = height - 1; dx >= 0; dx--) {
+                clone[dx][dy] = board[dx][dy];
+            }
+        }
+        perform(width, height, board, clone);
+        return;
+    }
+}

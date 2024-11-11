@@ -1,0 +1,51 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        int i = 0, j = 0, k = 0, l = 0;
+        int n = nums.length;
+        Arrays.sort(nums);
+        ab: for (i = 0; i < n - 3; i++) {
+            if (i > 0) {
+                while (nums[i] == nums[i - 1]) {
+                    continue ab;
+                }
+            }
+            cd: for (j = i + 1; j < n - 2; j++) {
+                if (j > i + 1) {
+                    while (nums[j] == nums[j - 1]) {
+                        continue cd;
+                    }
+                }
+                k = j + 1;
+                l = nums.length - 1;
+                // long wali cheez dhyan rakhna
+                long remSum = target - (long) nums[i] - (long) nums[j];
+                while (k < l) {
+                    long temp = nums[k] + nums[l];
+                    if (temp == remSum) {
+                        List<Integer> list = new ArrayList<>();
+                        list.add(nums[i]);
+                        list.add(nums[j]);
+                        list.add(nums[k]);
+                        list.add(nums[l]);
+                        ans.add(list);
+                        // if(true) // this helped me debug the TLE, MLE error, keep in mind
+                        // break;
+                        // yahan k++ karna extremely important or else TLE, analyze
+                        k++;
+                        // TC : [1,1,1,2,2,2,2,3,3,3,3,3,4,4,4]
+                        while (k < l && nums[k] == nums[k - 1]) {
+                            k++;
+                        }
+                    } else if (temp < remSum) {
+                        k++;
+                    } else {
+                        l--;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+}

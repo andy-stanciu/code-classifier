@@ -1,0 +1,52 @@
+class Solution {
+
+    int[] dirX = { 1, 0, -1, 0, 1, 1, -1, -1 };
+
+    int[] dirY = { 0, -1, 0, 1, 1, -1, -1, 1 };
+
+    public void gameOfLife(int[][] board) {
+        // 2: 0 to 1
+        // 3: 1 to 0
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                int n = this.findLiveNeighbors(i, j, board);
+                if (board[i][j] == 0) {
+                    if (n == 3) {
+                        board[i][j] = 2;
+                    }
+                } else {
+                    // 1
+                    if (n < 2) {
+                        board[i][j] = 3;
+                    } else if (n > 3) {
+                        board[i][j] = 3;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == 2) {
+                    board[i][j] = 1;
+                }
+                if (board[i][j] == 3) {
+                    board[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    public int findLiveNeighbors(int x, int y, int[][] board) {
+        int count = 0;
+        for (int i = 0; i < 8; i++) {
+            int newX = dirX[i] + x;
+            int newY = dirY[i] + y;
+            if (newX >= 0 && newX < board.length && newY >= 0 && newY < board[0].length) {
+                if (board[newX][newY] == 1 || board[newX][newY] == 3) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+}

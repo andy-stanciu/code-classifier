@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+// This is the Most optimized algo which take TC: O logN^2 , SC: O logN
+//Easy algo via Recurrsion which uses the property of complete BT,
+// from any node if their L and R are equal than we can directly calculate the nodes from curr to all the below nodes, the formula is 2^height-1 , see the dry run for formula its very easy peasy
+// if on any nodes the L and R are not equal then just take 1 for curr node and cal left and right via recc.
+//  (NOTE): for TC: O N, we can do it via any normal traversal for counting nodes.
+class Solution {
+
+    public int method1(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        // gives left height
+        int leftHeight = leftHeight(root);
+        // gives right height
+        int rightHeight = rightHeight(root);
+        if (leftHeight == rightHeight) {
+            // of boths size are equal that means from the curr node till L and R bottom the tree is Complete, so return the remaining node via the formula which will improve the TC
+            return (int) Math.pow(2, leftHeight) - 1;
+        } else {
+            // if not means from curr level its not a Complete BT to call left and right nodes with adding 1 for curr node.
+            return 1 + method1(root.left) + method1(root.right);
+        }
+    }
+
+    public int leftHeight(TreeNode root) {
+        if (root == null)
+            return 0;
+        int height = 1;
+        while (root.left != null) {
+            height++;
+            root = root.left;
+        }
+        return height;
+    }
+
+    public int rightHeight(TreeNode root) {
+        if (root == null)
+            return 0;
+        int height = 1;
+        while (root.right != null) {
+            height++;
+            root = root.right;
+        }
+        return height;
+    }
+}

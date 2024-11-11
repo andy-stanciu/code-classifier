@@ -1,0 +1,48 @@
+class Solution {
+
+    int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 } };
+
+    public void method1(int[][] board) {
+        method1(board, 0, 0, board.length, board[0].length);
+    }
+
+    private void method1(int[][] board, int i, int j, int n, int m) {
+        if (j == m) {
+            j = 0;
+            if (++i == n)
+                return;
+        }
+        int cell;
+        if (board[i][j] == 0) {
+            cell = getDeidCellValue(board, i, j, n, m);
+        } else {
+            cell = getLiveCellValue(board, i, j, n, m);
+        }
+        method1(board, i, j + 1, n, m);
+        board[i][j] = cell;
+    }
+
+    private int getLiveCellValue(int[][] board, int i, int j, int n, int m) {
+        int live = getLive(board, i, j, n, m);
+        if (live < 2)
+            return 0;
+        return live < 4 ? 1 : 0;
+    }
+
+    private int getDeidCellValue(int[][] board, int i, int j, int n, int m) {
+        int live = getLive(board, i, j, n, m);
+        return live == 3 ? 1 : 0;
+    }
+
+    private int getLive(int[][] board, int i, int j, int n, int m) {
+        int live = 0;
+        for (int[] direction : directions) {
+            int updateI = i + direction[0];
+            int updateJ = j + direction[1];
+            if (updateI >= 0 && updateI < n && updateJ >= 0 && updateJ < m && board[updateI][updateJ] == 1) {
+                live++;
+            }
+        }
+        return live;
+    }
+}

@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> method1(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null)
+            return result;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        //flaf to determine the order of traversal
+        boolean leftToright = true;
+        while (!queue.isEmpty()) {
+            int var1 = queue.size();
+            List<Integer> path = new ArrayList<>();
+            for (int i = 0; i < var1; i++) {
+                TreeNode curr = queue.poll();
+                // Left to right: add to the end
+                if (leftToright) {
+                    path.add(curr.val);
+                } else // Right to left: add to the front
+                {
+                    path.add(0, curr.val);
+                }
+                // Add the child nodes to the queue for the next level
+                if (curr.left != null) {
+                    queue.add(curr.left);
+                }
+                if (curr.right != null) {
+                    queue.add(curr.right);
+                }
+            }
+            // Add the current level to the result and flip the traversal order
+            result.add(path);
+            leftToright = !leftToright;
+        }
+        return result;
+    }
+}

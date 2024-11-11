@@ -1,0 +1,94 @@
+class Solution {
+
+    final int MOD = 1_000_000_007;
+
+    public List<List<Integer>> fourSum(int[] arr, int target) {
+        List<List<Integer>> list = new ArrayList<>();
+        if (arr == null || arr.length < 4) {
+            return list;
+        }
+        Arrays.sort(arr);
+        for (int i = 0; i < arr.length - 3; i++) {
+            if (i > 0 && arr[i] == arr[i - 1]) {
+                continue;
+            }
+            for (int j = i + 1; j < arr.length - 2; j++) {
+                if (j > i + 1 && arr[j] == arr[j - 1]) {
+                    continue;
+                }
+                int k = j + 1;
+                int l = arr.length - 1;
+                while (k < l) {
+                    long sum = (long) arr[i] + (long) arr[j] + (long) arr[k] + (long) arr[l];
+                    if (sum == target) {
+                        list.add(Arrays.asList(arr[i], arr[j], arr[k], arr[l]));
+                        while (k < l && arr[k] == arr[k + 1]) {
+                            k++;
+                        }
+                        while (k < l && arr[l] == arr[l - 1]) {
+                            l--;
+                        }
+                        k++;
+                        l--;
+                    } else if (sum < target) {
+                        k++;
+                    } else {
+                        l--;
+                    }
+                }
+            }
+        }
+        return list;
+    }
+}
+
+class olution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> result = new ArrayList();
+        if (nums == null) {
+            return result;
+        }
+        Arrays.sort(nums);
+        helper(result, nums, target, 4, 0, new ArrayList());
+        return result;
+    }
+
+    private void helper(List<List<Integer>> result, int[] nums, int target, int count, int idx, List<Integer> subR) {
+        if (count == 2) {
+            int k = idx;
+            int l = nums.length - 1;
+            while (k < l) {
+                int sum = nums[k] + nums[l];
+                if (sum == target) {
+                    subR.add(nums[k]);
+                    subR.add(nums[l]);
+                    result.add(new ArrayList(subR));
+                    subR.remove(subR.size() - 1);
+                    subR.remove(subR.size() - 1);
+                    k++;
+                    l--;
+                    while (k < l && nums[k] == nums[k - 1]) {
+                        k++;
+                    }
+                    while (k < l && nums[l] == nums[l + 1]) {
+                        l--;
+                    }
+                } else if (sum > target) {
+                    l--;
+                } else {
+                    k++;
+                }
+            }
+        } else {
+            for (int i = idx; i < nums.length; i++) {
+                if (i != idx && nums[i] == nums[i - 1]) {
+                    continue;
+                }
+                subR.add(nums[i]);
+                helper(result, nums, target - nums[i], count - 1, i + 1, subR);
+                subR.remove(subR.size() - 1);
+            }
+        }
+    }
+}

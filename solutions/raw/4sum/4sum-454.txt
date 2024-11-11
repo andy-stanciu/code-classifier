@@ -1,0 +1,38 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        //base case: if array is null or has less than 4, we cannot proceed
+        if (nums == null || nums.length < 4)
+            return new ArrayList<>();
+        //sort the elements
+        Arrays.sort(nums);
+        //initialize the set where we have to store the quad list
+        Set<List<Integer>> set = new HashSet<>();
+        //loop through first fixed element
+        for (int i = 0; i < nums.length - 3; i++) {
+            //loop through second fixed element
+            for (int j = i + 1; j < nums.length - 2; j++) {
+                //intiialize the two pointers
+                int left = j + 1;
+                int right = nums.length - 1;
+                while (left < right) {
+                    //checking for more quad lists
+                    //use long to avoid integer overflow
+                    long sum = (long) nums[i] + (long) nums[left] + (long) nums[j] + (long) nums[right];
+                    if (sum == target) {
+                        //add valid quad to the set
+                        set.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+                        //checking next elements, adjust pointers
+                        left++;
+                        right--;
+                    } else if (sum < target)
+                        left++;
+                    else
+                        right--;
+                }
+            }
+        }
+        //return result in a List
+        return new ArrayList<>(set);
+    }
+}

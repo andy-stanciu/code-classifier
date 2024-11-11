@@ -1,0 +1,65 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        // Get the number of rows and columns in the board
+        int rows = board.length;
+        int cols = board[0].length;
+        // Create a new 2D array to store the updated state of the board
+        int[][] updatedBoard = new int[rows][cols];
+        // Iterate through each cell in the board
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                // Count the number of live neighbors for the current cell
+                int liveNeighbors = countLiveNeighbors(board, i, j);
+                // Apply Game of Life rules to determine the state of the cell
+                if (board[i][j] == 1) {
+                    // Cell is alive
+                    if (liveNeighbors < 2 || liveNeighbors > 3) {
+                        // Cell dies due to underpopulation or overpopulation
+                        updatedBoard[i][j] = 0;
+                    } else {
+                        // Cell survives
+                        updatedBoard[i][j] = 1;
+                    }
+                } else {
+                    // Cell is dead
+                    if (liveNeighbors == 3) {
+                        // Cell becomes alive due to reproduction
+                        updatedBoard[i][j] = 1;
+                    } else {
+                        // Cell remains dead
+                        updatedBoard[i][j] = 0;
+                    }
+                }
+            }
+        }
+        // Copy the updated state back to the original board
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                board[i][j] = updatedBoard[i][j];
+            }
+        }
+    }
+
+    // Function to count the number of live neighbors for a given cell
+    private int countLiveNeighbors(int[][] board, int row, int col) {
+        int count = 0;
+        // Offsets for neighboring cells
+        int[] rows = { -1, -1, -1, 0, 0, 1, 1, 1 };
+        int[] cols = { -1, 0, 1, -1, 1, -1, 0, 1 };
+        // Iterate through each neighboring cell
+        for (int i = 0; i < 8; i++) {
+            int nCol = col + cols[i];
+            int nRow = row + rows[i];
+            // Check if the neighboring cell is within the bounds of the board
+            if (nCol >= 0 && nRow >= 0 && nCol < board[0].length && nRow < board.length) {
+                // Check if the neighboring cell is alive
+                if (board[nRow][nCol] == 1) {
+                    count++;
+                }
+            }
+        }
+        // Return the count of live neighbors
+        return count;
+    }
+}

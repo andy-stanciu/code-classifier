@@ -1,0 +1,49 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int m = board.length;
+        if (m == 0)
+            return;
+        int n = board[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int count = method2(i, j, board, m, n);
+                if (board[i][j] == 0) {
+                    if (count == 3) {
+                        board[i][j] = -1;
+                    }
+                } else {
+                    if (count < 2 || count > 3) {
+                        board[i][j] = 2;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == -1) {
+                    board[i][j] = 1;
+                } else if (board[i][j] == 2) {
+                    board[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    private int method2(int i, int j, int[][] board, int m, int n) {
+        int sum = 0;
+        for (int row = -1; row <= 1; row++) {
+            for (int col = -1; col <= 1; col++) {
+                if (row == 0 && col == 0)
+                    continue;
+                int newRow = i + row, newCol = j + col;
+                if (newRow >= 0 && newRow < m && newCol >= 0 && newCol < n) {
+                    if (board[newRow][newCol] == 1 || board[newRow][newCol] == 2) {
+                        sum++;
+                    }
+                }
+            }
+        }
+        return sum;
+    }
+}

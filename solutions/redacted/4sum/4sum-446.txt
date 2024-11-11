@@ -1,0 +1,47 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> output = new ArrayList<List<Integer>>();
+        if (nums == null || nums.length < 4)
+            return output;
+        Arrays.sort(nums);
+        // Nested outer loops
+        for (int i = 0; i < nums.length - 3; i++) {
+            // Skip duplicate elements
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+            // Loop from next element till end of array
+            for (int j = i + 1; j < nums.length - 2; j++) {
+                if (j > i + 1 && nums[j] == nums[j - 1])
+                    continue;
+                // Do a two-Sum but for required quadrapule target
+                searchPairs(nums, i, j, target, output);
+            }
+        }
+        return output;
+    }
+
+    // Two-pointer approach as the array is sorted
+    // Skipping duplicate elements
+    // Add quadrapule to result if sum == target
+    private void searchPairs(int[] nums, int i, int j, int target, List<List<Integer>> result) {
+        // Set our two pointers on opposite ends
+        int left = j + 1, right = nums.length - 1;
+        while (left < right) {
+            long sum = (long) nums[i] + nums[j] + nums[left] + nums[right];
+            if (sum == (long) target) {
+                result.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+                left++;
+                right--;
+                // Skip duplicates as nums[left] and nums[right] have been accounted for already
+                while (left < right && nums[left] == nums[left - 1]) left++;
+                while (left < right && nums[right] == nums[right + 1]) right--;
+            } else if (sum < target) {
+                // Move towards target
+                left++;
+            } else {
+                right--;
+            }
+        }
+    }
+}

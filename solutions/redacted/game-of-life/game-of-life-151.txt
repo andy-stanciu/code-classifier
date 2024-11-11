@@ -1,0 +1,51 @@
+class Solution {
+
+    // Function to check the validity of the neighbor
+    private boolean isValidNeighbor(int x, int y, int[][] board) {
+        // Check if the cell (x, y) is within the bounds of the board
+        return (x >= 0 && x < board.length && y >= 0 && y < board[0].length);
+    }
+
+    public void method1(int[][] board) {
+        // Arrays to help find the 8 possible neighbors of a cell
+        // x-direction adjustments
+        int[] dx = { 0, 0, 1, 1, 1, -1, -1, -1 };
+        // y-direction adjustments
+        int[] dy = { 1, -1, 1, -1, 0, 0, 1, -1 };
+        // Traverse each cell in the board
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[0].length; col++) {
+                // Initialize live neighbor count
+                int countLiveNeighbors = 0;
+                // Check all 8 possible neighbors
+                for (int i = 0; i < 8; i++) {
+                    int currX = row + dx[i], currY = col + dy[i];
+                    // If the neighbor is valid and is originally live
+                    if (isValidNeighbor(currX, currY, board) && Math.abs(board[currX][currY]) == 1)
+                        countLiveNeighbors++;
+                }
+                // Apply the rules of the game
+                // Rule 1 or Rule 3: Live cell with fewer than 2 or more than 3 live neighbors dies
+                if (board[row][col] == 1 && (countLiveNeighbors < 2 || countLiveNeighbors > 3))
+                    // Mark as dead but originally live
+                    board[row][col] = -1;
+                // Rule 4: Dead cell with exactly 3 live neighbors becomes a live cell
+                if (board[row][col] == 0 && countLiveNeighbors == 3)
+                    // Mark as live but originally dead
+                    board[row][col] = 2;
+            }
+        }
+        // Update the board to the next state
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[0].length; col++) {
+                // Convert cells to their final states
+                if (board[row][col] >= 1)
+                    // Live cell
+                    board[row][col] = 1;
+                else
+                    // Dead cell
+                    board[row][col] = 0;
+            }
+        }
+    }
+}

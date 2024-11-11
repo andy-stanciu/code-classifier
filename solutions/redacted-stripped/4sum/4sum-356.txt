@@ -1,0 +1,40 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] a, int target) {
+        boolean allPositive = Arrays.stream(a).allMatch(n -> n > 0);
+        if (allPositive && target < 0) {
+            return new ArrayList<>();
+        }
+        Arrays.sort(a);
+        Set<List<Integer>> lists = new HashSet<>();
+        List<Integer> integerList = new ArrayList<>();
+        int left = 0;
+        int rifght = a.length - 1;
+        for (int i = 0; i < a.length; i++) {
+            for (int j = i + 1; j < a.length; j++) {
+                left = j + 1;
+                rifght = a.length - 1;
+                while (left < rifght) {
+                    int sum = a[left] + a[rifght] + a[i] + a[j];
+                    if (sum == target) {
+                        integerList.add(a[left]);
+                        integerList.add(a[rifght]);
+                        integerList.add(a[i]);
+                        integerList.add(a[j]);
+                        Collections.sort(integerList);
+                        lists.add(integerList);
+                        integerList = new ArrayList<>();
+                        left = left + 1;
+                        rifght = rifght - 1;
+                    } else if (sum <= target) {
+                        left = left + 1;
+                    } else {
+                        rifght = rifght - 1;
+                    }
+                }
+            }
+        }
+        System.out.println(lists);
+        return lists.stream().collect(Collectors.toList());
+    }
+}

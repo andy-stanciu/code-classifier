@@ -1,0 +1,47 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums);
+        int ptrToRemainingArray = 0;
+        List<Integer> current = new ArrayList<>();
+        List<List<Integer>> result = new ArrayList<>();
+        findKSum(4, ptrToRemainingArray, nums, (long) target, current, result);
+        return result;
+    }
+
+    void findKSum(int k, int ptrToRemainingArray, int[] nums, long remainingTarget, List<Integer> current, List<List<Integer>> result) {
+        if (k == 2) {
+            find2Sum(ptrToRemainingArray, nums, remainingTarget, current, result);
+            return;
+        }
+        for (int i = ptrToRemainingArray; i <= nums.length - k; i++) {
+            if (i != ptrToRemainingArray && nums[i] == nums[i - 1])
+                continue;
+            current.add(nums[i]);
+            findKSum(k - 1, i + 1, nums, remainingTarget - (long) nums[i], current, result);
+            current.remove(current.size() - 1);
+        }
+    }
+
+    void find2Sum(int ptrToRemainingArray, int[] nums, long remainingTarget, List<Integer> current, List<List<Integer>> result) {
+        int l = ptrToRemainingArray, r = nums.length - 1;
+        while (l < r) {
+            if (l != ptrToRemainingArray && nums[l] == nums[l - 1]) {
+                l++;
+                continue;
+            }
+            int sum = nums[l] + nums[r];
+            if (sum < remainingTarget) {
+                l++;
+            } else if (sum == remainingTarget) {
+                List<Integer> sol = new ArrayList<>(current);
+                sol.add(nums[l]);
+                sol.add(nums[r]);
+                result.add(sol);
+                l++;
+            } else if (sum > remainingTarget) {
+                r--;
+            }
+        }
+    }
+}

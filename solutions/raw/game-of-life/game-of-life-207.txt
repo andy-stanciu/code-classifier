@@ -1,0 +1,48 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        List<Integer> set = new ArrayList<>();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                checkForNeighbour(board, i, j, set);
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                checkForLife(board, i, j, set.get((i * board[0].length) + j));
+            }
+        }
+    }
+
+    private void checkForLife(int[][] board, int i, int j, int neighCount) {
+        if (board[i][j] == 0 && neighCount == 3) {
+            board[i][j] = 1;
+        }
+        if (board[i][j] == 1) {
+            if (neighCount < 2 || neighCount > 3) {
+                board[i][j] = 0;
+            }
+        }
+    }
+
+    private void checkForNeighbour(int[][] board, int m, int n, List<Integer> set) {
+        int count = 0;
+        if (m != 0 && n != 0 && board[m - 1][n - 1] == 1)
+            count++;
+        if (m != 0 && board[m - 1][n] == 1)
+            count++;
+        if (m != 0 && n != board[0].length - 1 && board[m - 1][n + 1] == 1)
+            count++;
+        if (n != board[0].length - 1 && board[m][n + 1] == 1)
+            count++;
+        if (m != board.length - 1 && n != board[0].length - 1 && board[m + 1][n + 1] == 1)
+            count++;
+        if (m != board.length - 1 && board[m + 1][n] == 1)
+            count++;
+        if (m != board.length - 1 && n != 0 && board[m + 1][n - 1] == 1)
+            count++;
+        if (n != 0 && board[m][n - 1] == 1)
+            count++;
+        set.add(count);
+    }
+}

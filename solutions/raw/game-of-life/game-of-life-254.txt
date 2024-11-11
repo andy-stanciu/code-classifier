@@ -1,0 +1,43 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        int[][] ans = new int[board.length][board[0].length];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                ans = getvalue(board, ans, i, j);
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                board[i][j] = ans[i][j];
+            }
+        }
+    }
+
+    public int[][] getvalue(int[][] board, int[][] ans, int i, int j) {
+        int[] xn = { -1, -1, -1, 0, 0, 1, 1, 1 };
+        int[] yn = { -1, 0, 1, -1, 1, -1, 0, 1 };
+        int count = 0;
+        for (int a = 0; a < 8; a++) {
+            int xindex = i + xn[a];
+            int yindex = j + yn[a];
+            if ((xindex >= 0 && xindex < board.length) && (yindex >= 0 && yindex < board[0].length)) {
+                count = count + board[xindex][yindex];
+            }
+        }
+        if (board[i][j] == 1) {
+            if (count < 2 || count > 3) {
+                ans[i][j] = 0;
+            }
+            if (count == 2 || count == 3) {
+                ans[i][j] = board[i][j];
+            }
+        }
+        if (board[i][j] == 0) {
+            if (count == 3) {
+                ans[i][j] = 1;
+            }
+        }
+        return ans;
+    }
+}

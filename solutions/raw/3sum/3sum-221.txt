@@ -1,0 +1,48 @@
+class Solution {
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> ans = new ArrayList<>();
+        for (int i = 0; i < nums.length - 2; i++) {
+            //skipping triplet\'s first element\'s duplicate
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            //marking second triplet element
+            int next = i + 1;
+            //marking third triplet element
+            int nextest = nums.length - 1;
+            while (next < nextest) {
+                int sum = nums[i] + nums[next] + nums[nextest];
+                if (sum == 0) {
+                    ans.add(Arrays.asList(nums[i], nums[next], nums[nextest]));
+                    //add elements to answer and start managing duplicates
+                    while (next < nextest && nums[next] == nums[next + 1]) {
+                        //skipping duplicate of second element rightwards
+                        next++;
+                    }
+                    while (next < nextest && nums[nextest] == nums[nextest - 1]) {
+                        //skipping duplicate of third element leftwards
+                        nextest--;
+                    }
+                    //at this point next() and nextest{} are at the final duplicate value, so iterate once more to get the next
+                    //unique value
+                    //Eg: [...2,(2),4,4,4,4,{5},5,...]
+                    next++;
+                    nextest--;
+                }
+                if (sum < 0) {
+                    //to increase sum
+                    next++;
+                    //because array is sorted, 2nd element when iterated rightwards will increase sum
+                }
+                if (sum > 0) {
+                    //to decrease sum
+                    nextest--;
+                    //because array is sorted, 3rd element when iterated leftwards will decrease sum
+                }
+            }
+        }
+        return ans;
+    }
+}

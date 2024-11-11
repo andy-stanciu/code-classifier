@@ -1,0 +1,64 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int rows = board.length, cols = board[0].length;
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                board[row][col] += neighbors(board, row, col) * 10;
+            }
+        }
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                board[row][col] = calculateAliveOrDead(board[row][col]);
+            }
+        }
+    }
+
+    private int neighbors(int[][] board, int row, int col) {
+        int result = 0;
+        boolean top = row - 1 >= 0;
+        boolean bottom = row + 1 < board.length;
+        boolean left = col - 1 >= 0;
+        boolean right = col + 1 < board[0].length;
+        if (top) {
+            result += board[row - 1][col] % 10;
+            if (left) {
+                result += board[row - 1][col - 1] % 10;
+            }
+            if (right) {
+                result += board[row - 1][col + 1] % 10;
+            }
+        }
+        if (bottom) {
+            result += board[row + 1][col] % 10;
+            if (left) {
+                result += board[row + 1][col - 1] % 10;
+            }
+            if (right) {
+                result += board[row + 1][col + 1] % 10;
+            }
+        }
+        if (left) {
+            result += board[row][col - 1] % 10;
+        }
+        if (right) {
+            result += board[row][col + 1] % 10;
+        }
+        return result;
+    }
+
+    private int calculateAliveOrDead(int cell) {
+        int neighbors = cell / 10;
+        boolean alive = cell % 10 == 1;
+        if (alive) {
+            if (neighbors < 2 || neighbors > 3) {
+                return 0;
+            }
+            return 1;
+        }
+        if (neighbors == 3) {
+            return 1;
+        }
+        return 0;
+    }
+}

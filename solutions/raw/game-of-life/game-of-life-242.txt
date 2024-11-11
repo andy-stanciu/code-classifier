@@ -1,0 +1,53 @@
+class Solution {
+
+    boolean isValid(int i, int j, int n, int m) {
+        return i >= 0 && j >= 0 && i < n && j < m;
+    }
+
+    public void dfs(int i, int j, int n, int m, boolean[] vis, int[][] board) {
+        int pos = (i * m) + j;
+        if (!isValid(i, j, n, m) || vis[pos])
+            return;
+        vis[pos] = true;
+        int liveCells = 0, x, y;
+        int[][] dirs = new int[8][2];
+        dirs[0] = new int[] { 0, 1 };
+        dirs[1] = new int[] { 0, -1 };
+        dirs[2] = new int[] { 1, 1 };
+        dirs[3] = new int[] { -1, -1 };
+        dirs[4] = new int[] { 1, 0 };
+        dirs[5] = new int[] { -1, 0 };
+        dirs[6] = new int[] { -1, 1 };
+        dirs[7] = new int[] { 1, -1 };
+        liveCells = 0;
+        for (int[] dir : dirs) {
+            x = i + dir[0];
+            y = j + dir[1];
+            if (isValid(x, y, n, m) && board[x][y] == 1) {
+                liveCells += 1;
+            }
+        }
+        dfs(i, j + 1, n, m, vis, board);
+        dfs(i, j - 1, n, m, vis, board);
+        dfs(i + 1, j, n, m, vis, board);
+        dfs(i - 1, j, n, m, vis, board);
+        dfs(i + 1, j + 1, n, m, vis, board);
+        dfs(i - 1, j - 1, n, m, vis, board);
+        dfs(i + 1, j - 1, n, m, vis, board);
+        dfs(i - 1, j + 1, n, m, vis, board);
+        System.out.println(i + "  " + j + " " + liveCells);
+        if (board[i][j] == 1) {
+            board[i][j] = liveCells > 3 || liveCells < 2 ? 0 : 1;
+        } else {
+            board[i][j] = liveCells == 3 ? 1 : 0;
+        }
+    }
+
+    public void gameOfLife(int[][] board) {
+        int i, j, n, m;
+        n = board.length;
+        m = board[0].length;
+        boolean[] vis = new boolean[n * m];
+        dfs(0, 0, n, m, vis, board);
+    }
+}

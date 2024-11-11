@@ -1,0 +1,62 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> method1(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        Deque<TreeNode> deque = new LinkedList<>();
+        // left to right once done
+        deque.offerFirst(root);
+        boolean reverse = true;
+        while (!deque.isEmpty()) {
+            int var1 = deque.size();
+            List<Integer> var2 = new ArrayList<>(var1);
+            for (int i = 0; i < var1; i++) {
+                // TreeNode currentNode = queue.poll(); // keep it here in original BFS, as we
+                // have to extract the node each time
+                if (reverse) {
+                    TreeNode currentNode = deque.removeLast();
+                    var2.add(currentNode.val);
+                    if (currentNode.left != null) {
+                        deque.addFirst(currentNode.left);
+                    }
+                    if (currentNode.right != null) {
+                        deque.addFirst(currentNode.right);
+                    }
+                } else {
+                    TreeNode currentNode = deque.removeFirst();
+                    var2.add(currentNode.val);
+                    if (currentNode.right != null) {
+                        deque.addLast(currentNode.right);
+                    }
+                    if (currentNode.left != null) {
+                        deque.addLast(currentNode.left);
+                    }
+                }
+            }
+            result.add(var2);
+            if (reverse == true) {
+                reverse = false;
+            } else {
+                reverse = true;
+            }
+        }
+        return result;
+    }
+}

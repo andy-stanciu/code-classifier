@@ -1,0 +1,68 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    List<List<Integer>> li = new ArrayList<>();
+
+    int count = 1;
+
+    public List<Integer> method1(List<Integer> l) {
+        int temp = 0;
+        ArrayList<Integer> revArrayList = new ArrayList<Integer>();
+        for (int i = l.size() - 1; i >= 0; i--) {
+            // Append the elements in reverse order
+            revArrayList.add(l.get(i));
+        }
+        // Return the reversed arraylist
+        return revArrayList;
+    }
+
+    public List<List<Integer>> method2(TreeNode root, List<Integer> arr) {
+        if (root == null)
+            return li;
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        q.add(null);
+        while (!q.isEmpty()) {
+            TreeNode curr = q.remove();
+            if (curr == null) {
+                if (count % 2 != 0) {
+                    li.add(new ArrayList<>(arr));
+                } else {
+                    List<Integer> p = method1(arr);
+                    li.add(p);
+                }
+                arr.clear();
+                if (q.isEmpty())
+                    break;
+                else
+                    q.add(null);
+                count++;
+            } else {
+                arr.add(curr.val);
+                if (curr.left != null)
+                    q.add(curr.left);
+                if (curr.right != null)
+                    q.add(curr.right);
+            }
+        }
+        return li;
+    }
+
+    public List<List<Integer>> method3(TreeNode root) {
+        return method2(root, new ArrayList<>());
+    }
+}

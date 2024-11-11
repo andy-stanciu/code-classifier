@@ -1,0 +1,44 @@
+class Solution {
+
+    public List<List<Integer>> combine(int n, int k) {
+        // total amount of combinations
+        int size = (int) (factorial(n) / ((factorial(n - k) * factorial(k))));
+        ArrayList<List<Integer>> result = new ArrayList<>(size);
+        // create base combination
+        List<Integer> first = new ArrayList<>(k);
+        for (int i = 0; i < k; i++) {
+            first.add(i + 1);
+        }
+        result.add(first);
+        List<Integer> previous = first;
+        for (int i = 1; i < size; i++) {
+            // create next combination based on previous
+            List<Integer> current = new ArrayList<>(previous);
+            previous = current;
+            // try to increase numbers from last to first
+            for (int j = k - 1; j >= 0; j--) {
+                int val = previous.get(j) + 1;
+                // should increase no more than its position
+                // for arr with length 3 arr[2] max is n, arr[1] max is n - 1, etc
+                if (val <= n - (k - 1 - j)) {
+                    current.set(j, val);
+                    // if increased not last element, then change all elements on the right
+                    for (int l = j + 1; l < k; l++) {
+                        current.set(l, current.get(j) + (l - j));
+                    }
+                    break;
+                }
+            }
+            result.add(current);
+        }
+        return result;
+    }
+
+    private long factorial(int n) {
+        if (n <= 1)
+            return 1;
+        if (n == 2)
+            return 2;
+        return n * factorial(n - 1);
+    }
+}

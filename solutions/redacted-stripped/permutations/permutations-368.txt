@@ -1,0 +1,33 @@
+class Solution {
+
+    private List<List<Integer>> result;
+
+    private int finalMask;
+
+    public List<List<Integer>> permute(int[] nums) {
+        result = new ArrayList<>();
+        finalMask = (int) Math.pow(2, nums.length) - 1;
+        int[] positions = new int[nums.length];
+        backtrack(nums, positions, 0, 0);
+        return result;
+    }
+
+    private void backtrack(int[] nums, int[] positions, int mask, int index) {
+        if (mask == finalMask) {
+            addPermutation(nums, positions);
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if ((mask & 1 << i) != 0)
+                continue;
+            positions[index] = i;
+            backtrack(nums, positions, mask | 1 << i, index + 1);
+        }
+    }
+
+    private void addPermutation(int[] nums, int[] positions) {
+        List<Integer> tmp = new ArrayList<>();
+        for (int idx : positions) tmp.add(nums[idx]);
+        result.add(tmp);
+    }
+}

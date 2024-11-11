@@ -1,0 +1,28 @@
+class Solution {
+
+    public int liveNeighbors(int[][] board, int r, int c) {
+        int sum = 0;
+        for (int row = Math.max(0, r - 1); row <= Math.min(board.length - 1, r + 1); row++) {
+            for (int col = Math.max(0, c - 1); col <= Math.min(board[0].length - 1, c + 1); col++) {
+                sum += board[row][col];
+            }
+        }
+        return sum - board[r][c];
+    }
+
+    public void gameOfLife(int[][] board) {
+        int[] prior = null;
+        for (int r = 0; r < board.length; r++) {
+            int[] temp = new int[board[0].length];
+            for (int c = 0; c < board[0].length; c++) {
+                int sum = liveNeighbors(board, r, c);
+                temp[c] = (board[r][c] == 0 && sum == 3 || board[r][c] == 1 && (sum == 2 || sum == 3)) ? 1 : 0;
+            }
+            if (r > 0) {
+                board[r - 1] = prior;
+            }
+            prior = temp;
+        }
+        board[board.length - 1] = prior;
+    }
+}

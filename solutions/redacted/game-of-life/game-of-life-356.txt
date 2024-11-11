@@ -1,0 +1,56 @@
+class Solution {
+
+    int[][] board;
+
+    public void method1(int[][] br) {
+        board = br;
+        int rows = board.length;
+        int cols = board[0].length;
+        int[][] cords = new int[rows * cols][2];
+        int count = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                int alive = 0;
+                if (isAlive(i - 1, j - 1))
+                    alive++;
+                if (isAlive(i - 1, j))
+                    alive++;
+                if (isAlive(i - 1, j + 1))
+                    alive++;
+                if (isAlive(i, j - 1))
+                    alive++;
+                if (isAlive(i, j + 1))
+                    alive++;
+                if (isAlive(i + 1, j - 1))
+                    alive++;
+                if (isAlive(i + 1, j))
+                    alive++;
+                if (isAlive(i + 1, j + 1))
+                    alive++;
+                if (board[i][j] == 0) {
+                    if (alive == 3) {
+                        board[i][j] = 11;
+                        cords[count] = new int[] { i, j };
+                        count++;
+                    }
+                } else {
+                    if (alive < 2 || alive > 3) {
+                        board[i][j] = 10;
+                        cords[count] = new int[] { i, j };
+                        count++;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < count; i++) {
+            int[] cor = cords[i];
+            board[cor[0]][cor[1]] = board[cor[0]][cor[1]] % 10;
+        }
+    }
+
+    private boolean isAlive(int row, int col) {
+        if (row < 0 || col < 0 || row > board.length - 1 || col > board[0].length - 1)
+            return false;
+        return board[row][col] == 1 || board[row][col] == 10;
+    }
+}

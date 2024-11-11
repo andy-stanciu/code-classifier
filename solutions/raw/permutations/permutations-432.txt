@@ -1,0 +1,39 @@
+class Solution {
+
+    public List<List<Integer>> permute(int[] nums) {
+        // it is used to store our answer.
+        List<List<Integer>> permutations = new ArrayList<>();
+        // it is used to store temporary list of our answer.
+        List<Integer> temp = new ArrayList<>();
+        // it is used to track which is index elements is alredy add in our permutation.
+        boolean[] marked = new boolean[nums.length];
+        findAllPermutations(nums, marked, temp, permutations);
+        return permutations;
+    }
+
+    public void findAllPermutations(int[] nums, boolean[] marked, List<Integer> temp, List<List<Integer>> permutations) {
+        // it is a base case, whenever temp size is becomes equlas to nums size so simply add our temporary list in our main list and return from it.
+        if (temp.size() == nums.length) {
+            permutations.add(new ArrayList(temp));
+            return;
+        } else {
+            // otherwise try to explore all possiblity.
+            for (int i = 0; i < nums.length; i++) {
+                // first of all check if current index\'s element is already available in our
+                // permutation so we don\'t need to add current index\'s element twise.
+                if (!marked[i]) {
+                    // if current element is not in permutation so simply add it in our current permutation
+                    temp.add(nums[i]);
+                    // and marke the current index as a marked
+                    marked[i] = true;
+                    // then it is a recursion call and try to add more elements in our permutation
+                    findAllPermutations(nums, marked, temp, permutations);
+                    // then whenever recursion call is come back so we need to remove last added element from temporary permutation.
+                    temp.remove(temp.size() - 1);
+                    // and also make unmarked
+                    marked[i] = false;
+                }
+            }
+        }
+    }
+}

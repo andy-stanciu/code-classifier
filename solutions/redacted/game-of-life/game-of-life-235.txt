@@ -1,0 +1,57 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int n = board.length;
+        int m = board[0].length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                int nNumber = neighbourNumber(board, i, j);
+                int currValue = board[i][j];
+                if (nNumber == 3 && (currValue & 1) == 0 || nNumber >= 2 && nNumber <= 3 && (currValue & 1) == 1) {
+                    board[i][j] += 2;
+                }
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                // shift to the right. link with explanation below
+                board[i][j] >>= 1;
+            }
+        }
+    }
+
+    /**
+     * @param board the board of the game of life
+     * @param x the current cell\'s row
+     * @param y the current cell\'s column
+     * @return the number of alive neighbours at this stage of life
+     */
+    private int neighbourNumber(int[][] board, int x, int y) {
+        int sum = 0;
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i != 0 || j != 0) {
+                    // summing up the current state of the neighbours
+                    sum += value(board, x + i, y + j);
+                }
+            }
+        }
+        return sum;
+    }
+
+    /**
+     * @param board the board of the game of life
+     * @param i the neighbour cell\'s row
+     * @param j the neighbour cell\'s column
+     * @return the current state of life of the [i,j] cell.
+     *         Basically returning the last bit.
+     *         Or zero in case if [i,j] is out of bounds
+     */
+    private int value(int[][] board, int i, int j) {
+        if (i < 0 || j < 0 || i >= board.length || j >= board[0].length) {
+            return 0;
+        }
+        // see below links with explanations
+        return board[i][j] & 1;
+    }
+}

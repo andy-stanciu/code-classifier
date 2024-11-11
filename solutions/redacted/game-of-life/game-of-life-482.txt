@@ -1,0 +1,68 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        //0->1 changed is 3. So that for further calculation it an be known it was 0
+        //1->0 changed is 2/. Our further calculations should consider original board for its calculations.
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 0) {
+                    //consider 2 as also 1
+                    int onesAroundZero = 0;
+                    for (int k = -1; k <= 1; k++) {
+                        for (int l = -1; l <= 1; l++) {
+                            if (k == 0 && l == 0) {
+                                continue;
+                            }
+                            if (i + k < 0 || i + k > m - 1) {
+                                continue;
+                            }
+                            if (j + l < 0 || j + l > n - 1) {
+                                continue;
+                            }
+                            if (board[i + k][j + l] == 1 || board[i + k][j + l] == 2) {
+                                onesAroundZero++;
+                            }
+                        }
+                    }
+                    if (onesAroundZero == 3) {
+                        //0->1 changed is 3. So that for further calculation it an be known it was 0
+                        board[i][j] = 3;
+                    }
+                } else {
+                    int onesAroundOne = 0;
+                    for (int k = -1; k <= 1; k++) {
+                        for (int l = -1; l <= 1; l++) {
+                            if (k == 0 && l == 0) {
+                                continue;
+                            }
+                            if (i + k < 0 || i + k > m - 1) {
+                                continue;
+                            }
+                            if (j + l < 0 || j + l > n - 1) {
+                                continue;
+                            }
+                            if (board[i + k][j + l] == 1 || board[i + k][j + l] == 2) {
+                                onesAroundOne++;
+                            }
+                        }
+                    }
+                    if (onesAroundOne < 2 || onesAroundOne > 3) {
+                        board[i][j] = 2;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 2) {
+                    board[i][j] = 0;
+                }
+                if (board[i][j] == 3) {
+                    board[i][j] = 1;
+                }
+            }
+        }
+    }
+}

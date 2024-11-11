@@ -1,0 +1,49 @@
+class Solution {
+
+    int n = 0;
+
+    public int method1(TreeNode A) {
+        if (A == null)
+            return 0;
+        int height = heightCBT(A);
+        if (height == 0)
+            return 1;
+        return (1 << height) - 1 + method2(A, height);
+    }
+
+    private int heightCBT(TreeNode A) {
+        int height = -1;
+        while (A != null) {
+            height++;
+            A = A.left;
+        }
+        return height;
+    }
+
+    private int method2(TreeNode A, int height) {
+        int var1 = (1 << height);
+        int low = 0, high = var1 - 1;
+        int mid = 0;
+        while (low <= high) {
+            mid = (low + high) / 2;
+            if (isExists(A, height, mid))
+                low = mid + 1;
+            else
+                high = mid - 1;
+        }
+        return low;
+    }
+
+    private boolean isExists(TreeNode A, int height, int idx) {
+        int i = 1;
+        while (i <= height) {
+            if ((idx & (1 << (height - i))) == 0) {
+                A = A.left;
+            } else {
+                A = A.right;
+            }
+            i++;
+        }
+        return !(A == null);
+    }
+}

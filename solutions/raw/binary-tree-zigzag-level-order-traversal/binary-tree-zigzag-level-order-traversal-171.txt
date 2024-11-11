@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode node) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (node == null) {
+            return result;
+        }
+        Deque<TreeNode> deque = new LinkedList<TreeNode>();
+        deque.offer(node);
+        int zigZag = 0;
+        while (!deque.isEmpty()) {
+            int dequeueSize = deque.size();
+            List<Integer> list = new ArrayList<>();
+            for (int i = 1; i <= dequeueSize; i++) {
+                if (zigZag % 2 == 0) {
+                    TreeNode currentNode = deque.removeFirst();
+                    list.add(currentNode.val);
+                    if (currentNode.left != null) {
+                        deque.addLast(currentNode.left);
+                    }
+                    if (currentNode.right != null) {
+                        deque.addLast(currentNode.right);
+                    }
+                } else {
+                    TreeNode currentNode = deque.removeLast();
+                    list.add(currentNode.val);
+                    if (currentNode.right != null) {
+                        deque.addFirst(currentNode.right);
+                    }
+                    if (currentNode.left != null) {
+                        deque.addFirst(currentNode.left);
+                    }
+                }
+            }
+            zigZag += 1;
+            result.add(list);
+        }
+        return result;
+    }
+}

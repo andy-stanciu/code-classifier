@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        Map<Integer, List<Integer>> traversal = new HashMap<>();
+        if (root != null) {
+            Queue<NodePosition> BFS = new LinkedList<>();
+            BFS.add(new NodePosition(root, 0, true));
+            NodePosition currentNodePosition;
+            TreeNode currentNode;
+            int currentLevel;
+            boolean reverseOrder;
+            while (!BFS.isEmpty()) {
+                currentNodePosition = BFS.poll();
+                currentNode = currentNodePosition.node;
+                currentLevel = currentNodePosition.level;
+                reverseOrder = !currentNodePosition.reverseOrder;
+                if (!traversal.containsKey(currentLevel))
+                    traversal.put(currentLevel, new LinkedList<>());
+                if (reverseOrder)
+                    traversal.get(currentLevel).addFirst(currentNode.val);
+                else
+                    traversal.get(currentLevel).add(currentNode.val);
+                if (currentNode.left != null)
+                    BFS.add(new NodePosition(currentNode.left, currentLevel + 1, reverseOrder));
+                if (currentNode.right != null)
+                    BFS.add(new NodePosition(currentNode.right, currentLevel + 1, reverseOrder));
+            }
+        }
+        return new LinkedList<>(traversal.values());
+    }
+
+    private static class NodePosition {
+
+        private TreeNode node;
+
+        private int level;
+
+        private boolean reverseOrder;
+
+        public NodePosition(TreeNode node, int level, boolean reverseOrder) {
+            this.node = node;
+            this.level = level;
+            this.reverseOrder = reverseOrder;
+        }
+    }
+}

@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
+ * }
+ */
+class Solution {
+
+    public int countNodes(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.left == null) {
+            return 1;
+        }
+        int height = getHeight(root);
+        int[] result = { 0, -1 };
+        lastLeaveIndex(root, result, height - 1);
+        return (int) Math.pow(2, height + 1) - 2 * result[0] - result[1] - 1;
+    }
+
+    // this function runs less than O(n) time because it only checks right most node
+    // which have their leaf node so, average time taken is O(logN)
+    private void lastLeaveIndex(TreeNode node, int[] result, int lastLevel) {
+        if (lastLevel == 0) {
+            if (node.right != null) {
+                result[1] = 0;
+            } else if (node.left != null) {
+                result[1] = 1;
+            } else {
+                result[0]++;
+                result[1] = -1;
+            }
+            return;
+        }
+        lastLeaveIndex(node.right, result, lastLevel - 1);
+        if (result[1] != -1) {
+            return;
+        }
+        lastLeaveIndex(node.left, result, lastLevel - 1);
+    }
+
+    // this function runs in O(h) and height of the tree is O(logN)
+    private int getHeight(TreeNode root) {
+        int height = 0;
+        while (root != null && root.left != null) {
+            height++;
+            root = root.left;
+        }
+        return height;
+    }
+}

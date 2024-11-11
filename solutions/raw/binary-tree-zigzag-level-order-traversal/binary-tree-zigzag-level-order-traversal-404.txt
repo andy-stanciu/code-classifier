@@ -1,0 +1,52 @@
+class Solution {
+
+    public static int levels(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        return 1 + Math.max(levels(root.left), levels(root.right));
+    }
+
+    public static void Nthlevel(TreeNode root, int currLevel, int targetLevel, List<Integer> v) {
+        if (root == null) {
+            return;
+        }
+        if (currLevel == targetLevel) {
+            v.add(root.val);
+            return;
+        }
+        Nthlevel(root.right, currLevel + 1, targetLevel, v);
+        Nthlevel(root.left, currLevel + 1, targetLevel, v);
+    }
+
+    public static void revNthlevel(TreeNode root, int currLevel, int targetLevel, List<Integer> v) {
+        if (root == null) {
+            return;
+        }
+        if (currLevel == targetLevel) {
+            v.add(root.val);
+            return;
+        }
+        revNthlevel(root.left, currLevel + 1, targetLevel, v);
+        revNthlevel(root.right, currLevel + 1, targetLevel, v);
+    }
+
+    public static void lOrder(TreeNode root, List<List<Integer>> ans) {
+        int n = levels(root);
+        for (int i = 1; i <= n; i++) {
+            List<Integer> v = new ArrayList<>();
+            if (i % 2 == 0) {
+                Nthlevel(root, 1, i, v);
+            } else {
+                revNthlevel(root, 1, i, v);
+            }
+            ans.add(v);
+        }
+    }
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> ans = new ArrayList<>();
+        lOrder(root, ans);
+        return ans;
+    }
+}

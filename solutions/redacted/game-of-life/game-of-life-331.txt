@@ -1,0 +1,47 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        // 0 - > 0 is 0 , 0 - > 1  is 3
+        // 1 - > 1 is 1 , 1 - > 0  is 4
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                calculate(board, i, j);
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                board[i][j] %= 2;
+            }
+        }
+    }
+
+    private void calculate(int[][] board, int i, int j) {
+        int liveCount = 0;
+        for (int ii = -1; ii < 2; ii++) {
+            for (int jj = -1; jj < 2; jj++) {
+                if (ii == 0 && jj == 0) {
+                    continue;
+                }
+                liveCount += getIsLive(board, i + ii, j + jj);
+            }
+        }
+        if (board[i][j] == 0) {
+            // check live
+            if (liveCount == 3) {
+                board[i][j] = 3;
+            }
+        } else {
+            // check die
+            if (liveCount < 2 || liveCount > 3) {
+                board[i][j] = 4;
+            }
+        }
+    }
+
+    private int getIsLive(int[][] board, int i, int j) {
+        if (i >= 0 && i < board.length && j >= 0 && j < board[0].length) {
+            return board[i][j] % 3;
+        }
+        return 0;
+    }
+}

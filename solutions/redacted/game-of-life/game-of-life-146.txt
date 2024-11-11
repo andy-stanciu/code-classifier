@@ -1,0 +1,75 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        // decode
+        // by making 1 -> 10, any cell in a board will hold 2 values (1, 0) + we can add
+        // neighbours to it
+        // if greater than 10 then 1 else its a 0
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 1) {
+                    board[i][j] = 10;
+                }
+            }
+        }
+        // calculate neigbhours
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // upper neighbours
+                int neigbhours = 0;
+                int l = i - 1;
+                for (int k = j - 1; k <= j + 1; k++) {
+                    if (l != -1 && k != -1 && k != n) {
+                        if (board[l][k] >= 10) {
+                            neigbhours++;
+                        }
+                    }
+                }
+                // bottom neighbours
+                l = i + 1;
+                for (int k = j - 1; k <= j + 1; k++) {
+                    if (l != m && k != -1 && k != n) {
+                        if (board[l][k] >= 10) {
+                            neigbhours++;
+                        }
+                    }
+                }
+                // left
+                if (j - 1 != -1 && board[i][j - 1] >= 10)
+                    neigbhours++;
+                // right
+                if (j + 1 != n && board[i][j + 1] >= 10)
+                    neigbhours++;
+                board[i][j] += neigbhours;
+            }
+        }
+        // apply the rules of The Game of Life
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] < 10) {
+                    // its 0
+                    if (board[i][j] == 3) {
+                        // becomes alive
+                        board[i][j] = 1;
+                    } else {
+                        //else dead
+                        board[i][j] = 0;
+                    }
+                } else {
+                    // its 1
+                    // encoding
+                    int neighbours = board[i][j] - 10;
+                    if (neighbours < 2) {
+                        board[i][j] = 0;
+                    } else if (neighbours > 3) {
+                        board[i][j] = 0;
+                    } else {
+                        board[i][j] = 1;
+                    }
+                }
+            }
+        }
+    }
+}

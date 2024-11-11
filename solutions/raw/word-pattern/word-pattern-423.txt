@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean wordPattern(String pattern, String s) {
+        //Create a hashmap to store mapping of pattern and string elements
+        //Create a list by splitting based on space
+        HashMap<Character, String> map = new HashMap<>();
+        String[] str = s.split(" ");
+        if (pattern.length() != str.length) {
+            return false;
+        }
+        map.put(pattern.charAt(0), str[0]);
+        for (int i = 1; i < pattern.length(); i++) {
+            //Case1: same character has two different mappings
+            //a  b  b  a
+            //|  |  |  |
+            //dg       kh
+            //The pattern char is present in the map but pattern.charAt(i)!=str[i]
+            if (map.containsKey(pattern.charAt(i))) {
+                if (!map.get(pattern.charAt(i)).equals(str[i])) {
+                    return false;
+                }
+            } else //Case2: two different characters has same mapping
+            //a  b  b  a
+            //|  |  |  |
+            //dg dg
+            //The pattern character is not in the map but its corresponding value is already present in map
+            {
+                if (map.values().contains(str[i])) {
+                    return false;
+                }
+            }
+            map.put(pattern.charAt(i), str[i]);
+        }
+        return true;
+    }
+}

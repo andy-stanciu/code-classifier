@@ -1,0 +1,35 @@
+class Solution {
+
+    private void twoSum(int[] a, int fixA, int fixB, int l, int r, long sum, List<List<Integer>> ans) {
+        while (l < r) {
+            long now = (long) fixA + fixB + a[l] + a[r];
+            if (now == sum) {
+                ans.add(Arrays.asList(fixA, fixB, a[l], a[r]));
+                l++;
+                r--;
+                while (l < r && a[l] == a[l - 1]) l++;
+                while (l < r && a[r] == a[r + 1]) r--;
+            } else if (now < sum) {
+                l++;
+            } else {
+                r--;
+            }
+        }
+    }
+
+    public List<List<Integer>> fourSum(int[] a, int sum) {
+        List<List<Integer>> ans = new ArrayList<>();
+        int n = a.length;
+        Arrays.sort(a);
+        for (int i = 0; i < n; i++) {
+            if (i > 0 && a[i] == a[i - 1])
+                continue;
+            for (int j = i + 1; j < n; j++) {
+                if (j > i + 1 && a[j] == a[j - 1])
+                    continue;
+                twoSum(a, a[i], a[j], j + 1, n - 1, sum, ans);
+            }
+        }
+        return ans;
+    }
+}

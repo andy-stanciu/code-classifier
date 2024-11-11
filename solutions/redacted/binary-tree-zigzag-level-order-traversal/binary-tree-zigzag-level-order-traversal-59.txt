@@ -1,0 +1,64 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> method1(TreeNode root) {
+        // Create a queue to store the tree nodes
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        // Create an array list to store the final result
+        List<List<Integer>> wrapList = new ArrayList<>();
+        // If the root node is null, return an empty list
+        if (root == null) {
+            return wrapList;
+        }
+        // Add the root node to the queue
+        queue.add(root);
+        // Set the flag to true for left to right traversal
+        boolean flag = true;
+        // Traverse the tree level by level
+        while (!queue.isEmpty()) {
+            // Get the number of nodes at the current level
+            int size = queue.size();
+            // Create an array list to store the nodes\' values at the current level
+            List<Integer> subList = new ArrayList<>();
+            // Traverse the nodes at the current level
+            for (int i = 0; i < size; i++) {
+                // Check the left and right child of the current node and add them to the queue if they are not null
+                if (queue.peek().left != null) {
+                    queue.add(queue.peek().left);
+                }
+                if (queue.peek().right != null) {
+                    queue.add(queue.peek().right);
+                }
+                // For left to right traversal
+                if (flag == true) {
+                    // Add the node\'s value to the end of the subList
+                    subList.add(queue.poll().val);
+                } else // For right to left traversal
+                {
+                    // Add the node\'s value to the beginning of the subList
+                    subList.add(0, queue.poll().val);
+                }
+            }
+            // Toggle the flag to switch between left to right and right to left traversal
+            flag = !flag;
+            // Add the subList to the wrapList
+            wrapList.add(subList);
+        }
+        // Return the final result
+        return wrapList;
+    }
+}

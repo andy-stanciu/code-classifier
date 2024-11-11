@@ -1,0 +1,50 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        int numberOfElements = 4;
+        Set<List<Integer>> result = new HashSet<>();
+        if (nums.length < numberOfElements)
+            return new ArrayList<List<Integer>>(result);
+        Arrays.sort(nums);
+        nums = cleanUpNums(nums, numberOfElements);
+        boolean[] visited = new boolean[nums.length];
+        ArrayList<Integer> temp = new ArrayList<>();
+        Rec(numberOfElements, 0l, temp, visited, result, 0, nums, target);
+        return new ArrayList<List<Integer>>(result);
+    }
+
+    static void Rec(int N, long K, ArrayList<Integer> temp, boolean[] visited, Set<List<Integer>> result, int last, int[] alphabet, int target) {
+        if (N == 0 && K == target) {
+            result.add(new ArrayList<>(temp));
+            return;
+        }
+        if (N <= 0)
+            return;
+        for (int i = last; i < alphabet.length; i++) {
+            if (!visited[i]) {
+                visited[i] = true;
+                temp.add(alphabet[i]);
+                Rec(N - 1, K + alphabet[i], temp, visited, result, i + 1, alphabet, target);
+                temp.remove(temp.size() - 1);
+                visited[i] = false;
+            }
+        }
+    }
+
+    public int[] cleanUpNums(int[] nums, int numberOfElements) {
+        List<Integer> wrapper = new ArrayList<Integer>();
+        for (int i = 0; i < numberOfElements; i++) {
+            wrapper.add(nums[i]);
+        }
+        for (int i = numberOfElements; i < nums.length; i++) {
+            boolean same = true;
+            for (int j = 0; j < numberOfElements; j++) {
+                same = same && (wrapper.get(j) == nums[i]);
+            }
+            if (same) {
+            } else
+                wrapper.add(nums[i]);
+        }
+        return wrapper.stream().filter(x -> x instanceof Integer).mapToInt(i -> i).toArray();
+    }
+}

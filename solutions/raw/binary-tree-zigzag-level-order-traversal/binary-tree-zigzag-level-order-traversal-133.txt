@@ -1,0 +1,44 @@
+class Solution {
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> list = new ArrayList<>();
+        Queue<TreeNode> q = new LinkedList<>();
+        // Use primitive `boolean` and lowercase convention
+        boolean flag = true;
+        if (root == null) {
+            // If the root is null, return an empty list
+            return list;
+        }
+        // Start with the root in the queue
+        q.offer(root);
+        while (!q.isEmpty()) {
+            // Get the current level size
+            int qsize = q.size();
+            // List to hold the current level nodes
+            List<Integer> temp = new ArrayList<>();
+            for (int i = 0; i < qsize; i++) {
+                // Get and remove the node from the front of the queue
+                TreeNode currentNode = q.poll();
+                if (currentNode.left != null) {
+                    // Add left child if it exists
+                    q.offer(currentNode.left);
+                }
+                if (currentNode.right != null) {
+                    // Add right child if it exists
+                    q.offer(currentNode.right);
+                }
+                // Add the current node\'s value to the temp list
+                temp.add(currentNode.val);
+            }
+            // If the current level is in reverse order (zigzag), reverse the temp list
+            if (!flag) {
+                Collections.reverse(temp);
+            }
+            // Add the current level to the result
+            list.add(temp);
+            // Toggle the flag for the next level
+            flag = !flag;
+        }
+        return list;
+    }
+}

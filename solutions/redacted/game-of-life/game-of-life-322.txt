@@ -1,0 +1,57 @@
+class Solution {
+
+    int[][] dir = { // all 8 direction
+    // all 8 direction
+    // all 8 direction
+    { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 }, { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
+
+    public void method1(int[][] board) {
+        int n = board.length;
+        int m = board[0].length;
+        int[][] nextgen = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                int sum = 0;
+                for (int k = 0; k < dir.length; k++) {
+                    //count all live neighboiur
+                    int nr = i + dir[k][0];
+                    int nc = j + dir[k][1];
+                    if (nr >= 0 && nr < n && nc >= 0 && nc < m) {
+                        if (board[nr][nc] == 1)
+                            sum++;
+                    }
+                }
+                if (board[i][j] == 1) {
+                    //current cell is live
+                    if (sum < 2)
+                        nextgen[i][j] = 0;
+                    else if (sum > 3)
+                        nextgen[i][j] = 0;
+                    else
+                        nextgen[i][j] = board[i][j];
+                } else {
+                    //current cell is dead
+                    if (sum == 3)
+                        nextgen[i][j] = 1;
+                    else
+                        nextgen[i][j] = board[i][j];
+                }
+            }
+        }
+        //copy to original board
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                board[i][j] = nextgen[i][j];
+            }
+        }
+    }
+}
+/**
+ * if -> cell = \'1\'
+ *  if live neighbour < 2 than cell=0;
+ *  if live neighbour 2/3 than cell=1;
+ *  if live neighbour > 3 than cell=0;
+ *
+ * if -> cell = \'0\'
+ *  if live neighbour = 3 than cell=1;
+ */

@@ -1,0 +1,49 @@
+class Solution {
+
+    void increment(int[][] neighbors, int i, int j) {
+        if (i >= 0 && j >= 0 && i < neighbors.length && j < neighbors[0].length) {
+            neighbors[i][j]++;
+        }
+    }
+
+    int[][] getNeighborCount(int[][] board) {
+        int[][] neighbors = new int[board.length][board[0].length];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == 1) {
+                    increment(neighbors, i - 1, j - 1);
+                    increment(neighbors, i - 1, j);
+                    increment(neighbors, i - 1, j + 1);
+                    increment(neighbors, i, j - 1);
+                    increment(neighbors, i, j + 1);
+                    increment(neighbors, i + 1, j - 1);
+                    increment(neighbors, i + 1, j);
+                    increment(neighbors, i + 1, j + 1);
+                }
+            }
+        }
+        return neighbors;
+    }
+
+    public int getNextState(int currState, int neighborCount) {
+        if (neighborCount < 2 || neighborCount > 3) {
+            return 0;
+        }
+        if (neighborCount == 2) {
+            return currState;
+        }
+        if (neighborCount == 3) {
+            return 1;
+        }
+        return -1;
+    }
+
+    public void method1(int[][] board) {
+        int[][] neighbors = getNeighborCount(board);
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                board[i][j] = getNextState(board[i][j], neighbors[i][j]);
+            }
+        }
+    }
+}

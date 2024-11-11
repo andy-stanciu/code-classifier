@@ -1,0 +1,39 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        int[][] directions = { { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 }, { -1, -1 }, { 0, -1 }, { 1, -1 } };
+        List<int[]> toBeDead = new ArrayList<>();
+        List<int[]> toBeLive = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int liveNeighbours = 0;
+                for (int[] d : directions) {
+                    int row = i + d[0];
+                    int col = j + d[1];
+                    if (row < 0 || m <= row || col < 0 || n <= col) {
+                        continue;
+                    }
+                    if (board[row][col] == 1) {
+                        liveNeighbours++;
+                    }
+                }
+                if (board[i][j] == 0 && liveNeighbours == 3) {
+                    toBeLive.add(new int[] { i, j });
+                    continue;
+                }
+                if (liveNeighbours == 2 || liveNeighbours == 3) {
+                    continue;
+                }
+                toBeDead.add(new int[] { i, j });
+            }
+        }
+        for (int[] cell : toBeDead) {
+            board[cell[0]][cell[1]] = 0;
+        }
+        for (int[] cell : toBeLive) {
+            board[cell[0]][cell[1]] = 1;
+        }
+    }
+}

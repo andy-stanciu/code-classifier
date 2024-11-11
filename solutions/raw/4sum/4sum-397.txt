@@ -1,0 +1,53 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        // Initialize the result list to store the quadruplets
+        List<List<Integer>> result = new ArrayList<>();
+        // Sort the array to enable efficient search and to easily skip duplicates
+        Arrays.sort(nums);
+        // last variable for convenience, pointing to the last index of the array
+        int last = nums.length - 1;
+        // Iterate over the array to choose the first two numbers of the quadruplet
+        for (int i = 0; i < last - 2; i++) {
+            // Skip duplicates for the first number
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+            for (int j = i + 1; j < last - 1; j++) {
+                // Skip duplicates for the second number
+                if (j > i + 1 && nums[j] == nums[j - 1])
+                    continue;
+                // Calculate the remaining sum that the other two numbers must add up to
+                long rest = (long) target - (nums[i] + nums[j]);
+                // Set two pointers to find the remaining two numbers
+                int left = j + 1;
+                int right = last;
+                // While loop to move the two pointers towards each other
+                while (left < right) {
+                    // Use long for addition to prevent integer overflow
+                    long leftL = (long) nums[left];
+                    long rightL = (long) nums[right];
+                    // Check if current pair adds up to the remaining sum
+                    if ((long) nums[left] + nums[right] == rest) {
+                        // Add the valid quadruplet to the result list
+                        result.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+                        // Skip duplicates for the third number
+                        while (left < right && nums[left] == nums[left + 1]) left++;
+                        // Skip duplicates for the fourth number
+                        while (left < right && nums[right] == nums[right - 1]) right--;
+                        // Move pointers to look for new unique pairs
+                        left++;
+                        right--;
+                    } else if ((long) nums[left] + nums[right] < rest) {
+                        // If sum is less than needed, move the left pointer to increase the sum
+                        left++;
+                    } else {
+                        // If sum is more than needed, move the right pointer to decrease the sum
+                        right--;
+                    }
+                }
+            }
+        }
+        // Return the compiled list of quadruplets
+        return result;
+    }
+}

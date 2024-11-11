@@ -1,0 +1,44 @@
+enum CELL_STATE {
+
+    DEAD, LIVE, JUST_DEAD, RESURRECTED
+}
+
+class Solution {
+
+    private final List<Integer[]> directions = List.of(new Integer[] { -1, -1 }, new Integer[] { -1, 0 }, new Integer[] { -1, 1 }, new Integer[] { 0, -1 }, new Integer[] { 0, 1 }, new Integer[] { 1, -1 }, new Integer[] { 1, 0 }, new Integer[] { 1, 1 });
+
+    public void gameOfLife(int[][] board) {
+        int m = board.length, n = board[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int neighborsCount = countNeighbors(i, j, board, Set.of(CELL_STATE.LIVE.ordinal(), CELL_STATE.JUST_DEAD.ordinal()));
+                if (board[i][j] == CELL_STATE.LIVE.ordinal())
+                    board[i][j] = neighborsCount == 2 || neighborsCount == 3 ? CELL_STATE.LIVE.ordinal() : CELL_STATE.JUST_DEAD.ordinal();
+                else
+                    board[i][j] = neighborsCount == 3 ? CELL_STATE.RESURRECTED.ordinal() : CELL_STATE.DEAD.ordinal();
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == CELL_STATE.RESURRECTED.ordinal())
+                    board[i][j] = CELL_STATE.LIVE.ordinal();
+                if (board[i][j] == CELL_STATE.JUST_DEAD.ordinal())
+                    board[i][j] = CELL_STATE.DEAD.ordinal();
+            }
+        }
+    }
+
+    private int countNeighbors(int i, int j, int[][] board, Set<Integer> searchValues) {
+        int count = 0;
+        for (Integer[] direction : directions) {
+            int x = direction[0] + i, y = direction[1] + j;
+            if (isValid(x, y, board) && searchValues.contains(board[x][y]))
+                count++;
+        }
+        return count;
+    }
+
+    private boolean isValid(int i, int j, int[][] board) {
+        return i >= 0 && i < board.length && j >= 0 && j < board[0].length;
+    }
+}

@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public int countNodes(TreeNode root) {
+        return countHelper(root);
+    }
+
+    int countHelper(TreeNode root) {
+        if (root == null)
+            return 0;
+        int height = heightHelper(root, true);
+        //int heightR = heightHelper(root,false);
+        // if(height == heightR)
+        //    return (1<<height) -1;
+        // else {
+        int heightRight = heightHelper(root.right, true);
+        if (heightRight == height - 1) {
+            int countLeft = (1 << (height - 1)) - 1;
+            return 1 + countLeft + countHelper(root.right);
+        } else {
+            int countRight = (1 << (heightRight)) - 1;
+            return 1 + countRight + countHelper(root.left);
+        }
+        // }
+    }
+
+    int heightHelper(TreeNode root, boolean left) {
+        if (root == null)
+            return 0;
+        TreeNode current = root;
+        int height = 0;
+        while (current != null) {
+            height++;
+            if (left)
+                current = current.left;
+            else
+                current = current.right;
+        }
+        return height;
+    }
+}

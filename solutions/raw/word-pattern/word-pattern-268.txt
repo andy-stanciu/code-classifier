@@ -1,0 +1,34 @@
+class Solution {
+
+    public boolean wordPattern(String pattern, String s) {
+        String[] words = s.split(" ");
+        // Check if the lengths of pattern and words array are the same
+        if (pattern.length() != words.length) {
+            return false;
+        }
+        // Hash maps to store the mappings
+        HashMap<Character, String> charToWord = new HashMap<>();
+        HashMap<String, Character> wordToChar = new HashMap<>();
+        for (int i = 0; i < pattern.length(); i++) {
+            char c = pattern.charAt(i);
+            String word = words[i];
+            // Check if there is a mismatch in the mapping
+            if (charToWord.containsKey(c)) {
+                if (!charToWord.get(c).equals(word)) {
+                    return false;
+                }
+            } else {
+                if (wordToChar.containsKey(word)) {
+                    if (wordToChar.get(word) != c) {
+                        return false;
+                    }
+                } else {
+                    // Establish the bidirectional mapping
+                    charToWord.put(c, word);
+                    wordToChar.put(word, c);
+                }
+            }
+        }
+        return true;
+    }
+}

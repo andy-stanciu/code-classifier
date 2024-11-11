@@ -1,0 +1,30 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        int[][] copyboard = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                copyboard[i][j] = board[i][j];
+            }
+        }
+        int[] dx = { 1, 1, 0, -1, -1, -1, 0, 1 };
+        int[] dy = { 0, 1, 1, 1, 0, -1, -1, -1 };
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int livecount = 0;
+                for (int k = 0; k < dx.length; k++) if (issafe(i + dx[k], j + dy[k], m, n) && copyboard[i + dx[k]][j + dy[k]] == 1)
+                    livecount++;
+                if (copyboard[i][j] == 0 && livecount == 3)
+                    board[i][j] = 1;
+                if (board[i][j] == 1 && (livecount < 2 || livecount > 3))
+                    board[i][j] = 0;
+            }
+        }
+    }
+
+    private boolean issafe(int x, int y, int m, int n) {
+        return (x >= 0 && x < m && y >= 0 && y < n);
+    }
+}

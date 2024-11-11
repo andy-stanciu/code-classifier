@@ -1,0 +1,87 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        //maintain temp array to store result of row
+        //More to new row,
+        //calculate values of new row based on all values and store in the temp array
+        //Store temp values in row - 1
+        //Store new calculated values in temp values
+        //in end, store temp values in last row
+        //maintain live cells, dead cells neighbors
+        // Correct
+        // 0 0 0
+        // 1 0 1
+        // 0 1 1
+        // 0 1 0
+        // Input
+        // 0 1 0
+        // 0 0 1
+        // 1 1 1
+        // 0 0 0
+        int m = board.length, n = board[0].length;
+        int[] temp1 = new int[n];
+        int[] temp2 = new int[n];
+        int tempVal = 0, j = 0;
+        for (int r = 0; r < m; r++) {
+            j = 0;
+            for (int c = 0; c < n; c++) {
+                int dead = calculateLiveOrDeadCells(r, c, board, m, n, 0);
+                int live = calculateLiveOrDeadCells(r, c, board, m, n, 1);
+                int currentVal = board[r][c];
+                temp1[j] = calculateFinalVal(currentVal, dead, live);
+                j++;
+            }
+            if (r != 0) {
+                for (int i = 0; i < n; i++) {
+                    board[r - 1][i] = temp2[i];
+                }
+            }
+            for (int i = 0; i < n; i++) {
+                temp2[i] = temp1[i];
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            board[m - 1][i] = temp2[i];
+        }
+    }
+
+    public int calculateFinalVal(int currentVal, int dead, int live) {
+        int finalVal = 0;
+        if (currentVal == 1) {
+            if (live < 2) {
+                finalVal = 0;
+            }
+            if (live == 2 || live == 3) {
+                finalVal = 1;
+            }
+            if (live > 3) {
+                finalVal = 0;
+            }
+        } else {
+            if (live == 3) {
+                finalVal = 1;
+            }
+        }
+        return finalVal;
+    }
+
+    public int calculateLiveOrDeadCells(int r, int c, int[][] matrix, int m, int n, int val) {
+        int[] rows = new int[] { -1, 0, 1 };
+        int[] cols = new int[] { -1, 0, 1 };
+        int count = 0;
+        for (int row : rows) {
+            for (int col : cols) {
+                int newRow = r + row;
+                int newCol = c + col;
+                if (!(row == 0 && col == 0) && isValid(newRow, newCol, m, n) && matrix[newRow][newCol] == val) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public boolean isValid(int r, int c, int m, int n) {
+        return r >= 0 && c >= 0 && r < m && c < n;
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    public int neighbour(int[][] board, int i, int j) {
+        int n = board.length, m = board[0].length;
+        // west->northwest->north->northeast->east->southeast->south->southweast
+        int[] diri = { 0, -1, -1, -1, 0, 1, 1, 1 };
+        int[] dirj = { -1, -1, 0, 1, 1, 1, 0, -1 };
+        int count = 0;
+        for (int k = 0; k < 8; k++) {
+            int nexti = i + diri[k];
+            int nextj = j + dirj[k];
+            if (nexti >= 0 && nexti < n && nextj >= 0 && nextj < m && (board[nexti][nextj] == 1 || board[nexti][nextj] == -2))
+                count++;
+        }
+        return count;
+    }
+
+    public void gameOfLife(int[][] board) {
+        int n = board.length, m = board[0].length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (board[i][j] == 1) {
+                    int val = neighbour(board, i, j);
+                    if (val < 2 || val > 3) {
+                        board[i][j] = -2;
+                    }
+                } else {
+                    if (neighbour(board, i, j) == 3) {
+                        board[i][j] = 2;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (board[i][j] == -2)
+                    board[i][j] = 0;
+                else if (board[i][j] == 2)
+                    board[i][j] = 1;
+            }
+        }
+    }
+}

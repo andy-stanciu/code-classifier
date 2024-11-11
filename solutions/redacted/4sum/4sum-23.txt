@@ -1,0 +1,59 @@
+public class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        // Sort the input array in ascending order.
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        // Use long data type for target.
+        helper(nums, (long) target, 0, result, temp, 4);
+        // Return the result list containing unique quadruplets.
+        return result;
+    }
+
+    private void helper(int[] nums, long target, int start, List<List<Integer>> result, List<Integer> temp, int numNeed) {
+        if (numNeed != 2) {
+            for (int i = start; i < nums.length - numNeed + 1; i++) {
+                if (i > start && nums[i] == nums[i - 1]) {
+                    // Skip duplicates to avoid duplicate combinations.
+                    continue;
+                }
+                // Add the current number to the combination.
+                temp.add(nums[i]);
+                // Recursively find the next number(s).
+                helper(nums, target - nums[i], i + 1, result, temp, numNeed - 1);
+                // Remove the last number to backtrack.
+                temp.remove(temp.size() - 1);
+            }
+            return;
+        }
+        // If we need exactly 2 numbers, perform a two-pointer approach.
+        int l = start;
+        int r = nums.length - 1;
+        while (l < r) {
+            long total = (long) nums[l] + nums[r];
+            if (total < target) {
+                l++;
+            } else if (total > target) {
+                r--;
+            } else {
+                // Add the left number to the combination.
+                temp.add(nums[l]);
+                // Add the right number to the combination.
+                temp.add(nums[r]);
+                // Store the valid quadruplet in the result list.
+                result.add(new ArrayList<>(temp));
+                // Remove the right number to backtrack.
+                temp.remove(temp.size() - 1);
+                // Remove the left number to backtrack.
+                temp.remove(temp.size() - 1);
+                l++;
+                r--;
+                while (l < r && nums[l] == nums[l - 1]) {
+                    // Skip duplicates on the left.
+                    l++;
+                }
+            }
+        }
+    }
+}

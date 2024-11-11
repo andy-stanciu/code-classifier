@@ -1,0 +1,49 @@
+class Solution {
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> resultSet = new ArrayList<>();
+        Arrays.sort(nums);
+        int n = nums.length;
+        for (int i = 0; i < n - 2; i++) {
+            //You will not find any triplets whose sum is zero after you encounter a positive value
+            if (nums[i] > 0) {
+                break;
+            }
+            //I the current element is not the first element and if its equal to the previous element then we move right to avoid duplicate triplets
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            //Now the problem can be boiled down to two sum || Problem when the input array is sorted i.e use two pointer approach fo find the triplet
+            int start = i + 1;
+            int end = n - 1;
+            int tripletSum = 0;
+            while (start < end) {
+                tripletSum = nums[i] + nums[start] + nums[end];
+                //if sum is less than zero you move right so that the sum increases
+                if (tripletSum < 0) {
+                    start++;
+                } else //if sum is greater than zero you move left so that the sum decreases
+                if (tripletSum > 0) {
+                    end--;
+                } else //Yay ! You found a triplet
+                {
+                    List<Integer> triplet = Arrays.asList(nums[i], nums[start], nums[end]);
+                    resultSet.add(triplet);
+                    //increment the start pointer
+                    start++;
+                    //If there are elements with the same value then discard them
+                    while (start < end && nums[start] == nums[start - 1]) {
+                        start++;
+                    }
+                    // decrement the end pointer
+                    end--;
+                    //If there are elements with the same value then discard them
+                    while (start < end && nums[end] == nums[end + 1]) {
+                        end--;
+                    }
+                }
+            }
+        }
+        return resultSet;
+    }
+}

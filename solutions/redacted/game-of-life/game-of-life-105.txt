@@ -1,0 +1,58 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        /* We create a copy the array board, as we have to continuously update 
+        the values of board while working with the previous values */
+        int[][] b = new int[board.length][board[0].length];
+        for (int i = 0; i < b.length; i++) for (int j = 0; j < b[0].length; j++) b[i][j] = board[i][j];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                int n = neighbour(b, i, j);
+                //we check if the current cell is live or not
+                if (b[i][j] == 1) {
+                    //if there are 2 or 3 neighbours, the cell will continue to live
+                    if (n < 2)
+                        board[i][j] = 0;
+                    else if (n > 3)
+                        board[i][j] = 0;
+                } else {
+                    //if the dead cell does not have 3 neighbours, it will stay dead
+                    if (n == 3)
+                        board[i][j] = 1;
+                }
+            }
+        }
+    }
+
+    private int neighbour(int[][] b, int x, int y) {
+        int count = 0;
+        // we will count all the live neighbour cells
+        // first we will check if the neighbour exists, or we have hit the boundary
+        if (x > 0)
+            if (b[x - 1][y] == 1)
+                count++;
+        if (y > 0)
+            if (b[x][y - 1] == 1)
+                count++;
+        if (x < b.length - 1)
+            if (b[x + 1][y] == 1)
+                count++;
+        if (y < b[0].length - 1)
+            if (b[x][y + 1] == 1)
+                count++;
+        if (x > 0 && y > 0)
+            if (b[x - 1][y - 1] == 1)
+                count++;
+        if (x < b.length - 1 && y < b[0].length - 1)
+            if (b[x + 1][y + 1] == 1)
+                count++;
+        if (x < b.length - 1 && y > 0)
+            if (b[x + 1][y - 1] == 1)
+                count++;
+        if (x > 0 && y < b[0].length - 1)
+            if (b[x - 1][y + 1] == 1)
+                count++;
+        // we return the number of live neighbours of the current cell
+        return count;
+    }
+}

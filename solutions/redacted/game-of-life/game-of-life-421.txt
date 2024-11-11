@@ -1,0 +1,129 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int[][] cells = new int[board.length][board[0].length];
+        int rows = board.length;
+        int columns = board[0].length;
+        if (rows == 1 || columns == 1) {
+            for (int i = 0; i < cells.length; i++) {
+                for (int j = 0; j < cells[0].length; j++) {
+                    board[i][j] = cells[i][j];
+                }
+            }
+            return;
+        }
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (i == 0 && j == 0) {
+                    // top-left
+                    int parameters = 0;
+                    parameters += board[i + 1][j];
+                    parameters += board[i + 1][j + 1];
+                    parameters += board[i][j + 1];
+                    cells[i][j] = defineState(parameters, board[i][j]);
+                    continue;
+                }
+                if (i == 0 && j == columns - 1) {
+                    //top-right
+                    int parameters = 0;
+                    parameters += board[i][j - 1];
+                    parameters += board[i + 1][j - 1];
+                    parameters += board[i + 1][j];
+                    cells[i][j] = defineState(parameters, board[i][j]);
+                    continue;
+                }
+                if (i == rows - 1 && j == 0) {
+                    // bottom-left
+                    int parameters = 0;
+                    parameters += board[i - 1][j];
+                    parameters += board[i - 1][j + 1];
+                    parameters += board[i][j + 1];
+                    cells[i][j] = defineState(parameters, board[i][j]);
+                    continue;
+                }
+                if (i == rows - 1 && j == columns - 1) {
+                    // bottom-right
+                    int parameters = 0;
+                    parameters += board[i][j - 1];
+                    parameters += board[i - 1][j - 1];
+                    parameters += board[i - 1][j];
+                    cells[i][j] = defineState(parameters, board[i][j]);
+                    continue;
+                }
+                if (i == 0) {
+                    // top
+                    int parameters = 0;
+                    parameters += board[i][j - 1];
+                    parameters += board[i + 1][j - 1];
+                    parameters += board[i + 1][j];
+                    parameters += board[i + 1][j + 1];
+                    parameters += board[i][j + 1];
+                    cells[i][j] = defineState(parameters, board[i][j]);
+                    continue;
+                }
+                if (i == rows - 1) {
+                    // bottom
+                    int parameters = 0;
+                    parameters += board[i][j - 1];
+                    parameters += board[i - 1][j - 1];
+                    parameters += board[i - 1][j];
+                    parameters += board[i - 1][j + 1];
+                    parameters += board[i][j + 1];
+                    cells[i][j] = defineState(parameters, board[i][j]);
+                    continue;
+                }
+                if (j == 0) {
+                    // left
+                    int parameters = 0;
+                    parameters += board[i - 1][j];
+                    parameters += board[i - 1][j + 1];
+                    parameters += board[i][j + 1];
+                    parameters += board[i + 1][j + 1];
+                    parameters += board[i + 1][j];
+                    cells[i][j] = defineState(parameters, board[i][j]);
+                    continue;
+                }
+                if (j == columns - 1) {
+                    // right
+                    int parameters = 0;
+                    parameters += board[i - 1][j];
+                    parameters += board[i - 1][j - 1];
+                    parameters += board[i][j - 1];
+                    parameters += board[i + 1][j - 1];
+                    parameters += board[i + 1][j];
+                    cells[i][j] = defineState(parameters, board[i][j]);
+                    continue;
+                }
+                int parameters = 0;
+                parameters += board[i - 1][j];
+                parameters += board[i - 1][j - 1];
+                parameters += board[i][j - 1];
+                parameters += board[i + 1][j - 1];
+                parameters += board[i + 1][j];
+                parameters += board[i + 1][j + 1];
+                parameters += board[i][j + 1];
+                parameters += board[i - 1][j + 1];
+                cells[i][j] = defineState(parameters, board[i][j]);
+            }
+        }
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[0].length; j++) {
+                board[i][j] = cells[i][j];
+            }
+        }
+    }
+
+    private int defineState(int parameters, int state) {
+        if (state == 0) {
+            if (parameters == 3)
+                return 1;
+            else
+                return 0;
+        }
+        if (parameters == 2 || parameters == 3) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+}

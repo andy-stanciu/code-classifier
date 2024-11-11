@@ -1,0 +1,59 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> method1(TreeNode root) {
+        List<List<Integer>> resultList = new ArrayList<List<Integer>>();
+        if (root == null)
+            return resultList;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        boolean leftRight = true;
+        while (!queue.isEmpty()) {
+            Stack<Integer> stack = new Stack<>();
+            List<Integer> list = new ArrayList<>();
+            int count = queue.size();
+            while (count > 0) {
+                if (leftRight) {
+                    TreeNode curr = queue.peek();
+                    list.add(curr.val);
+                    queue.poll();
+                    if (curr.left != null)
+                        queue.add(curr.left);
+                    if (curr.right != null)
+                        queue.add(curr.right);
+                } else {
+                    TreeNode curr = queue.peek();
+                    queue.poll();
+                    stack.add(curr.val);
+                    if (curr.left != null)
+                        queue.add(curr.left);
+                    if (curr.right != null)
+                        queue.add(curr.right);
+                }
+                count--;
+            }
+            if (!leftRight) {
+                while (!stack.isEmpty()) {
+                    list.add(stack.pop());
+                }
+            }
+            resultList.add(new ArrayList<>(list));
+            leftRight = !leftRight;
+        }
+        return resultList;
+    }
+}

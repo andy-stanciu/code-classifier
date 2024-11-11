@@ -1,0 +1,65 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int x = board.length;
+        int y = board[0].length;
+        int[][] oneToZero = new int[x][y];
+        int[][] zeroToOne = new int[x][y];
+        // Construct oneToZero and zeroToOne board
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                oneToZero[i][j] = board[i][j];
+                zeroToOne[i][j] = board[i][j];
+            }
+        }
+        // Construct oneToZero board
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                // Change one to zero
+                if (board[i][j] == 1) {
+                    int ones1 = 0;
+                    for (int m = i - 1; m <= i + 1; m++) {
+                        for (int n = j - 1; n <= j + 1; n++) {
+                            if (m >= 0 && m < x && n >= 0 && n < y && (m != i || n != j) && board[m][n] == 1) {
+                                ones1++;
+                            }
+                        }
+                    }
+                    if (ones1 < 2 || ones1 > 3) {
+                        oneToZero[i][j] = 0;
+                    }
+                }
+            }
+        }
+        // Construct zeroToOne board
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                // Change zero to one
+                if (board[i][j] == 0) {
+                    int ones2 = 0;
+                    for (int m = i - 1; m <= i + 1; m++) {
+                        for (int n = j - 1; n <= j + 1; n++) {
+                            if (m >= 0 && m < x && n >= 0 && n < y && (m != i || n != j) && board[m][n] == 1) {
+                                ones2++;
+                            }
+                        }
+                    }
+                    if (ones2 == 3) {
+                        zeroToOne[i][j] = 1;
+                    }
+                }
+            }
+        }
+        // Add up values for each cell from all three boards. If 2 then 0; If 1 then 1;
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                int added = board[i][j] + oneToZero[i][j] + zeroToOne[i][j];
+                if (added == 2) {
+                    board[i][j] = 0;
+                } else if (added == 1) {
+                    board[i][j] = 1;
+                }
+            }
+        }
+    }
+}

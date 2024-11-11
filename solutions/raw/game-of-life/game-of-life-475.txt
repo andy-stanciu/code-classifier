@@ -1,0 +1,35 @@
+class Solution {
+
+    private int find(int i, int j, int key, int[][] board) {
+        if (i > board.length - 1 || i < 0 || j > board[0].length - 1 || j < 0 || board[i][j] % 2 != key)
+            return 0;
+        return 1;
+    }
+
+    public void gameOfLife(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int alive = find(i + 1, j, 1, board) + find(i - 1, j, 1, board) + find(i, j + 1, 1, board) + find(i, j - 1, 1, board) + find(i + 1, j + 1, 1, board) + find(i - 1, j - 1, 1, board) + find(i + 1, j - 1, 1, board) + find(i - 1, j + 1, 1, board);
+                if (board[i][j] % 2 == 1 && (alive < 2 || alive > 3)) {
+                    // changing the 1\'s which has to be changed to 0 as 3 (on % of 2 we will get back the original ele 1 )
+                    board[i][j] += 2;
+                }
+                if (board[i][j] % 2 == 0 && alive == 3) {
+                    // changing the 0\'s which has to be changed to 1 as 2 (on % of 2 we will get back the original ele 0 )
+                    board[i][j] += 2;
+                }
+            }
+        }
+        // atlast changing 3\'s to 0\'s & 2\'s to 1
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 3)
+                    board[i][j] = 0;
+                else if (board[i][j] == 2)
+                    board[i][j] = 1;
+            }
+        }
+    }
+}

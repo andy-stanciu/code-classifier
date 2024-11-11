@@ -1,0 +1,69 @@
+class Solution {
+
+    public static List<List<Integer>> twoSum(int[] nums, int l, int r, long target) {
+        List<List<Integer>> res = new ArrayList<>();
+        while (l < r) {
+            long sum = nums[l] + nums[r];
+            if (sum == target) {
+                ArrayList<Integer> temp = new ArrayList<>();
+                temp.add(nums[l]);
+                temp.add(nums[r]);
+                res.add(temp);
+                l++;
+                r--;
+                while (l < r && nums[l] == nums[l - 1]) {
+                    l++;
+                }
+                while (l < r && nums[r] == nums[r + 1]) {
+                    r--;
+                }
+            } else if (sum < target) {
+                l++;
+                while (l < r && nums[l] == nums[l - 1]) {
+                    l++;
+                }
+            } else {
+                r--;
+                while (l < r && nums[r] == nums[r + 1]) {
+                    r--;
+                }
+            }
+        }
+        return res;
+    }
+
+    public static List<List<Integer>> threeSum(int[] nums, int l, int r, long target) {
+        List<List<Integer>> res = new ArrayList<>();
+        for (int i = l; i < r; ++i) {
+            List<List<Integer>> lists = twoSum(nums, i + 1, r, target - nums[i]);
+            for (List<Integer> t : lists) {
+                ArrayList<Integer> tmp = new ArrayList<>();
+                tmp.add(nums[i]);
+                tmp.addAll(t);
+                res.add(tmp);
+            }
+            while (i < r - 1 && nums[i + 1] == nums[i]) {
+                i++;
+            }
+        }
+        return res;
+    }
+
+    public static List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new ArrayList<>();
+        for (int i = 0; i < nums.length; ++i) {
+            List<List<Integer>> lists = threeSum(nums, i + 1, nums.length - 1, target - nums[i]);
+            for (List<Integer> t : lists) {
+                ArrayList<Integer> tmp = new ArrayList<>();
+                tmp.add(nums[i]);
+                tmp.addAll(t);
+                res.add(tmp);
+            }
+            while (i < nums.length - 1 && nums[i + 1] == nums[i]) {
+                i++;
+            }
+        }
+        return res;
+    }
+}

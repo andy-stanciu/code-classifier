@@ -1,0 +1,60 @@
+class Solution {
+
+    int[] checks = { -1, 0, 1, 0, 0, -1, 0, 1, -1, -1, -1, 1, 1, -1, 1, 1 };
+
+    public int getOnes(int[][] board, int i, int j, int rows, int cols) {
+        int ones = 0;
+        for (int k = 0; k < checks.length; k += 2) {
+            int row = i + checks[k];
+            int col = j + checks[k + 1];
+            if (row >= 0 && row < rows && col >= 0 && col < cols) {
+                if (board[row][col] == 1 || board[row][col] == -2) {
+                    ones++;
+                }
+            }
+        }
+        return ones;
+    }
+
+    public void handlelife(int[][] board, int i, int j, int rows, int cols) {
+        int ones = getOnes(board, i, j, rows, cols);
+        // System.out.println(i+"-->"+j+"=="+ones);
+        if (ones < 2 || ones > 3) {
+            board[i][j] = -2;
+        }
+    }
+
+    public void handledeath(int[][] board, int i, int j, int rows, int cols) {
+        int ones = getOnes(board, i, j, rows, cols);
+        // System.out.println(i+"-->"+j+"=="+ones);
+        if (ones == 3) {
+            board[i][j] = -1;
+        }
+    }
+
+    public void cleandata(int[][] board, int rows, int cols) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (board[i][j] == -1)
+                    board[i][j] = 1;
+                if (board[i][j] == -2)
+                    board[i][j] = 0;
+            }
+        }
+    }
+
+    public void gameOfLife(int[][] board) {
+        int rows = board.length, cols = board[0].length;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (board[i][j] == 1) {
+                    handlelife(board, i, j, rows, cols);
+                } else {
+                    handledeath(board, i, j, rows, cols);
+                }
+            }
+        }
+        // System.out.println(Arrays.deepToString(board));
+        cleandata(board, rows, cols);
+    }
+}

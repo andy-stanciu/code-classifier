@@ -1,0 +1,40 @@
+class Solution {
+
+    private int countNeighbours(int[][] board, int x, int y, int rowLength, int columnLength) {
+        // defining borders for it\'s neighbours.
+        int topBorder = (x - 1 == -1) ? 0 : x - 1;
+        int leftBorder = (y - 1 == -1) ? 0 : y - 1;
+        int bottomBorder = (x + 1 == rowLength) ? x : x + 1;
+        int rightBorder = (y + 1 == columnLength) ? y : y + 1;
+        int liveCells = 0;
+        for (int i = topBorder; i <= bottomBorder; i++) {
+            for (int j = leftBorder; j <= rightBorder; j++) {
+                liveCells += board[i][j];
+            }
+        }
+        //excluding the cell itself.
+        return liveCells - board[x][y];
+    }
+
+    public void method1(int[][] board) {
+        int rowLength = board.length;
+        int columnLength = board[0].length;
+        int live = 1;
+        int[][] nextState = new int[rowLength][columnLength];
+        for (int i = 0; i < rowLength; i++) {
+            for (int j = 0; j < columnLength; j++) {
+                switch(countNeighbours(board, i, j, rowLength, columnLength)) {
+                    // retaining previous state of the cells.
+                    case 2 ->
+                        nextState[i][j] = board[i][j];
+                    case 3 ->
+                        nextState[i][j] = live;
+                }
+            }
+        }
+        for (int i = 0; i < rowLength; i++) {
+            // replacing the original grid.
+            board[i] = nextState[i];
+        }
+    }
+}

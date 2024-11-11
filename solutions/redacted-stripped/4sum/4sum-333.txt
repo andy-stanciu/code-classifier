@@ -1,0 +1,36 @@
+class Solution {
+
+    List<List<Integer>> ans = new ArrayList<>();
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        if (nums.length < 4)
+            return ans;
+        Arrays.sort(nums);
+        int i, j, n;
+        n = nums.length;
+        for (i = 0; i < n; i++) {
+            for (j = i + 1; j < n - 2; j++) {
+                searchForCD(nums, (long) ((long) target - (long) (nums[i] + nums[j])), i, j, j + 1, n - 1);
+            }
+        }
+        List<List<Integer>> uniqueAns = ans.stream().distinct().collect(Collectors.toList());
+        return uniqueAns;
+    }
+
+    private void searchForCD(int[] nums, long target, int i, int j, int start, int end) {
+        int c = start;
+        int d = end;
+        while (c < d) {
+            if ((long) (nums[c] + nums[d]) == target) {
+                List<Integer> quadruplet = new ArrayList<>(Arrays.asList(nums[i], nums[j], nums[c], nums[d]));
+                ans.add(quadruplet);
+                c++;
+                d--;
+            } else if (nums[c] + nums[d] > target) {
+                d--;
+            } else {
+                c++;
+            }
+        }
+    }
+}

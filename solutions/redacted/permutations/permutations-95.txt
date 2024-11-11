@@ -1,0 +1,33 @@
+class Solution {
+
+    public List<List<Integer>> permute(int[] nums) {
+        //pass the processed list and base array
+        return permuteHelp(new ArrayList<>(), nums);
+    }
+
+    static List<List<Integer>> permuteHelp(List<Integer> up, int[] base) {
+        //base case : length becomes 0 then add the list in the answer
+        if (base.length == 0) {
+            List<List<Integer>> subList = new ArrayList<>();
+            subList.add(up);
+            return subList;
+        }
+        // select first element
+        int firstMember = base[0];
+        List<List<Integer>> answer = new ArrayList<>();
+        for (int i = 0; i <= up.size(); i++) {
+            // iterating over processed list to place selected element
+            List<Integer> temp = new ArrayList<>();
+            //placing first sublist ---------(i)
+            temp.addAll(up.subList(0, i));
+            //placing selected number from base array
+            temp.add(firstMember);
+            //placing remaining sublist --------(ii)
+            temp.addAll(up.subList(i, up.size()));
+            //from (i) to (ii), it is a combination
+            // now for other combinations, make recursive call using temp
+            answer.addAll(permuteHelp(temp, Arrays.copyOfRange(base, 1, base.length)));
+        }
+        return answer;
+    }
+}

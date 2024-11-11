@@ -1,0 +1,49 @@
+class Solution {
+
+    public int getLivePeople(int[][] cell, int row, int col) {
+        int live = 0;
+        int[][] direction = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+        for (int[] dir : direction) {
+            int newRow = row + dir[0];
+            int newCol = col + dir[1];
+            if (isValid(cell, newRow, newCol) && cell[newRow][newCol] == 1) {
+                live++;
+            }
+        }
+        return live;
+    }
+
+    public boolean isValid(int[][] cell, int row, int col) {
+        if (row >= 0 && col >= 0 && row < cell.length && col < cell[0].length) {
+            return true;
+        }
+        return false;
+    }
+
+    public void method1(int[][] board) {
+        int row = board.length;
+        int col = board[0].length;
+        int[][] newState = new int[row][col];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                int livePeople = getLivePeople(board, i, j);
+                if (board[i][j] == 1) {
+                    if (livePeople < 2 || livePeople > 3) {
+                        newState[i][j] = 0;
+                    } else {
+                        newState[i][j] = 1;
+                    }
+                } else {
+                    if (livePeople == 3) {
+                        newState[i][j] = 1;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                board[i][j] = newState[i][j];
+            }
+        }
+    }
+}

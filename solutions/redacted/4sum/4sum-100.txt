@@ -1,0 +1,50 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        // to skip duplicates
+        Arrays.sort(nums);
+        Set<List<Integer>> working = new HashSet<>();
+        // we start with a 4sum
+        for (int h = 0; h < nums.length - 3; ++h) {
+            if (h > 0 && nums[h] == nums[h - 1]) {
+                // skip duplicates
+                continue;
+            }
+            // now it\'s a 3sum
+            for (int i = h + 1; i < nums.length - 2; ++i) {
+                if (i > h + 1 && nums[i] == nums[i - 1]) {
+                    // skip duplicates
+                    continue;
+                }
+                // now it\'s a 2sum
+                int left = i + 1;
+                int right = nums.length - 1;
+                // two small optimizations to avoid repeated calculations in innermost loop
+                long sumOfHandI = nums[h] + nums[i];
+                long smallerTarget = (long) target - sumOfHandI;
+                while (left < right) {
+                    // Use long to handle overflow
+                    long sum = (long) nums[left] + nums[right];
+                    if (sum == smallerTarget) {
+                        working.add(Arrays.asList(nums[h], nums[i], nums[left], nums[right]));
+                        while (left < right && nums[left] == nums[left + 1]) {
+                            ++left;
+                        }
+                        while (left < right && nums[right] == nums[right - 1]) {
+                            --right;
+                        }
+                        ++left;
+                        --right;
+                    } else if (sum < smallerTarget) {
+                        // adjust to a greater sum
+                        ++left;
+                    } else {
+                        // adjust to a smaller sum
+                        --right;
+                    }
+                }
+            }
+        }
+        return new ArrayList<>(working);
+    }
+}

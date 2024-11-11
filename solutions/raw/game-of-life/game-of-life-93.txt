@@ -1,0 +1,42 @@
+class Solution {
+
+    static final int live = 3;
+
+    static final int die = 2;
+
+    public void gameOfLife(int[][] board) {
+        int rowlen = board.length;
+        int collen = board[0].length;
+        for (int i = 0; i < rowlen; i++) {
+            for (int j = 0; j < collen; j++) {
+                int count = countOne(board, i, j, rowlen, collen);
+                if (count == 3 && board[i][j] == 0)
+                    board[i][j] = live;
+                else if ((count < 2 || count > 3) && board[i][j] == 1)
+                    board[i][j] = die;
+            }
+        }
+        for (int i = 0; i < rowlen; i++) {
+            for (int j = 0; j < collen; j++) {
+                if (board[i][j] == live)
+                    board[i][j] = 1;
+                else if (board[i][j] == die)
+                    board[i][j] = 0;
+            }
+        }
+    }
+
+    private int countOne(int[][] board, int i, int j, int rowlen, int collen) {
+        int[][] idx = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 1 }, { 1, 0 } };
+        int count = 0;
+        for (int[] id : idx) {
+            int x = i + id[0];
+            int y = j + id[1];
+            if (x < rowlen && y < collen && x >= 0 && y >= 0) {
+                if (board[x][y] == 1 || board[x][y] == die)
+                    count++;
+            }
+        }
+        return count;
+    }
+}

@@ -1,0 +1,63 @@
+//  dead -> live : 2
+//  dead -> dead : 3
+//  live -> dead : 4
+//  live -> live : 5
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                int dead = 0, live = 0;
+                int[][] directions = { { 0, 1 }, { 0, -1 }, { -1, 1 }, { 1, 1 }, { -1, 0 }, { 1, 0 }, { 1, -1 }, { -1, -1 } };
+                for (int[] dir : directions) {
+                    int nextI = i + dir[0];
+                    int nextJ = j + dir[1];
+                    if (isValid(nextI, nextJ, board)) {
+                        int currState = getCurrentState(board[nextI][nextJ]);
+                        if (currState == 0)
+                            dead++;
+                        else
+                            live++;
+                    }
+                }
+                if (getCurrentState(board[i][j]) == 1) {
+                    //currently live
+                    if (live < 2 || live > 3)
+                        board[i][j] = 4;
+                    else
+                        board[i][j] = 5;
+                } else {
+                    //currently Dead
+                    if (live == 3) {
+                        board[i][j] = 2;
+                    } else {
+                        board[i][j] = 3;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                board[i][j] = getFutureState(board[i][j]);
+            }
+        }
+    }
+
+    int getCurrentState(int val) {
+        if (val == 1 || val == 4 || val == 5)
+            return 1;
+        return 0;
+    }
+
+    int getFutureState(int val) {
+        if (val == 5 || val == 2)
+            return 1;
+        return 0;
+    }
+
+    boolean isValid(int i, int j, int[][] board) {
+        if (i < 0 || j < 0 || i >= board.length || j >= board[i].length)
+            return false;
+        return true;
+    }
+}

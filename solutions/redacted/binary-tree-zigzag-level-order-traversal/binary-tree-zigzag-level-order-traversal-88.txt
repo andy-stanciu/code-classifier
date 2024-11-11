@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    List<List<Integer>> resList;
+
+    /**
+     *    1.queue size will be the level size
+     *    2. first leftside traversal then addFirst at beginning of list
+     *    3. else add at last of list
+     */
+    public List<List<Integer>> method1(TreeNode root) {
+        resList = new ArrayList<>();
+        if (root == null) {
+            return resList;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        boolean isleftstart = false;
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            List<Integer> list = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.remove();
+                if (isleftstart) {
+                    list.addFirst(node.val);
+                } else {
+                    list.add(node.val);
+                }
+                if (node.left != null) {
+                    queue.add(node.left);
+                }
+                if (node.right != null) {
+                    queue.add(node.right);
+                }
+            }
+            resList.add(list);
+            isleftstart = !isleftstart;
+        }
+        return resList;
+    }
+}

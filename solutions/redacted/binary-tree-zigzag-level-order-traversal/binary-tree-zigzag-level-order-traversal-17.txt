@@ -1,0 +1,36 @@
+/**
+ * Definition for a binary tree node, came with the java template:
+ * public class TreeNode { int val; TreeNode left; TreeNode right; TreeNode() {}
+ *     TreeNode(int val) { this.val = val; } TreeNode(int val, TreeNode left, TreeNode right) { this.val = val; this.left = left; this.right = right; } }
+ */
+class Solution {
+
+    // 1. put every value in list-of-lists, distinct list for every depth level;
+    //          any tree traversal can do this
+    // 2. reverse the odd lines
+    // 3. that\'s it! :)
+    public List<List<Integer>> method1(TreeNode root) {
+        List<List<Integer>> res = new ArrayList();
+        method2(root, 0, res);
+        for (int i = 0; i < res.size(); ++i) {
+            if (i % 2 == 1) {
+                // for odd lines, go right to left
+                Collections.reverse(res.get(i));
+            }
+        }
+        return res;
+    }
+
+    void method2(TreeNode node, int depth, List<List<Integer>> res) {
+        if (node == null)
+            return;
+        if (res.size() <= depth) {
+            // first time on this level, make sure we have a list to put values into
+            res.add(new ArrayList());
+        }
+        List<Integer> var1 = res.get(depth);
+        var1.add(node.val);
+        method2(node.left, depth + 1, res);
+        method2(node.right, depth + 1, res);
+    }
+}

@@ -1,0 +1,39 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        // Edge case: if there are fewer than 4 numbers, return an empty list.
+        if (nums.length < 4) {
+            return new ArrayList<>();
+        }
+        // Sort the array to make it easier to avoid duplicates and use two-pointer technique.
+        Arrays.sort(nums);
+        Set<List<Integer>> ans = new HashSet<>();
+        // Outer loop for the first element
+        for (int i = 0; i < nums.length - 3; i++) {
+            // Second loop for the second element
+            for (int j = i + 1; j < nums.length - 2; j++) {
+                // Two pointers approach for the remaining two elements
+                int left = j + 1;
+                int right = nums.length - 1;
+                while (left < right) {
+                    long sum = (long) nums[i] + nums[j] + nums[left] + nums[right];
+                    if (sum == target) {
+                        // Add the quadruplet to the set to avoid duplicates
+                        ans.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+                        // Move both pointers inward to explore other potential pairs
+                        left++;
+                        right--;
+                    } else if (sum > target) {
+                        // If the sum is too large, move the right pointer to the left
+                        right--;
+                    } else {
+                        // If the sum is too small, move the left pointer to the right
+                        left++;
+                    }
+                }
+            }
+        }
+        // Convert the set to a list before returning
+        return new ArrayList<>(ans);
+    }
+}

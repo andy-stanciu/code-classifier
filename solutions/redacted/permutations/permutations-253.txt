@@ -1,0 +1,38 @@
+class Solution {
+
+    public List<List<Integer>> permute(int[] nums) {
+        // create a list of lists (permutations) and an array for the current permutation
+        List<List<Integer>> results = new ArrayList<>();
+        List<Integer> currPerm = new ArrayList<>();
+        // call recursive helper method to fill the list of perms
+        getPerms(nums, results, currPerm);
+        return results;
+    }
+
+    private static int[] splice(int[] nums, int remove) {
+        // This method just plices out an index from the array
+        int[] rest = new int[nums.length - 1];
+        for (int i = 0, j = 0; i < nums.length; i++) if (i != remove)
+            rest[j++] = nums[i];
+        return rest;
+    }
+
+    private static void getPerms(int[] nums, List<List<Integer>> results, List<Integer> currPerm) {
+        // Base case: only 1 value... add to current perm and then add to result
+        if (nums.length == 1) {
+            currPerm.add(nums[0]);
+            results.add(new ArrayList<>(currPerm));
+            // backtrack... remove the last entry in prep for next permutation
+            currPerm.removeLast();
+        } else {
+            // Recursive part -> loop over each value, add it, remove it from nums, and recurse
+            for (int i = 0; i < nums.length; i++) {
+                int[] theRest = splice(nums, i);
+                currPerm.add(nums[i]);
+                getPerms(theRest, results, currPerm);
+                // Don\'t forget to remove last value before moving onto next permutation
+                currPerm.removeLast();
+            }
+        }
+    }
+}

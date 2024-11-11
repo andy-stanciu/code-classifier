@@ -1,0 +1,29 @@
+class Solution {
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        if (nums.length < 3)
+            return new ArrayList<>();
+        //we use set to ensure there are no duplicates triplets
+        Set<List<Integer>> result = new HashSet<>();
+        Map<Integer, Integer> map = new HashMap<>();
+        //pre-process the input by storing the indices of all elements in a HashMap
+        for (int i = 0; i < nums.length; i++) {
+            map.put(nums[i], i);
+        }
+        //Now map contains
+        //{ -1: 4, 0: 1, 1: 2, 2: 3, -4: 5}
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                int desiredNum = -(nums[i] + nums[j]);
+                if (map.containsKey(desiredNum) && map.get(desiredNum) != i && map.get(desiredNum) != j) {
+                    //then we have a triplet and we need to store it in the result set
+                    List<Integer> triplet = new ArrayList<>(Arrays.asList(nums[i], nums[j], desiredNum));
+                    //sorting is done here to ensure there are no duplicates and the default hashcode used in the HashSet will take care of duplicate triplets
+                    Collections.sort(triplet);
+                    result.add(triplet);
+                }
+            }
+        }
+        return new ArrayList<>(result);
+    }
+}

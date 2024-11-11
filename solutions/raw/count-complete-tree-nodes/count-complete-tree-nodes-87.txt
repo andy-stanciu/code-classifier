@@ -1,0 +1,47 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+/*
+  * Idea: In complete binary tree, all elements are left placed, so at single node from evry level we checked if dept of left == depth of right, if yes, we can assume left tree is complete and number of nodes = 2^leftDepth
+  If No, then left tree is not complete and add nodes count of right = 2^rightDepth
+*/
+class Solution {
+
+    public int countNodes(TreeNode root) {
+        return cnt(root);
+    }
+
+    public int cnt(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int leftDept = getdpth(root.left);
+        int rightDept = getdpth(root.right);
+        if (leftDept == rightDept) {
+            return (1 << leftDept) + cnt(root.right);
+        } else {
+            return (1 << rightDept) + cnt(root.left);
+        }
+    }
+
+    int getdpth(TreeNode root) {
+        int depth = 0;
+        while (root != null) {
+            depth++;
+            root = root.left;
+        }
+        return depth;
+    }
+}

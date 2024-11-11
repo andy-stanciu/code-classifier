@@ -1,0 +1,77 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        int n = board.length;
+        int m = board[0].length;
+        //modifying board to change 1->2 and 0->1.
+        //so we can mark live board as negative numbers
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                board[i][j] += 1;
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (isAlive(board, i, j, n, m)) {
+                    // if board[i][j] is live, thn make then negative
+                    board[i][j] = -1 * board[i][j];
+                }
+            }
+        }
+        //revert back to original
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (board[i][j] < 0) {
+                    // mark all negative numbers as live
+                    board[i][j] = 1;
+                } else {
+                    board[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    private Boolean isAlive(int[][] board, int i, int j, int n, int m) {
+        //neighbour count
+        int count = 0;
+        // checking absolute value since we maked the previously calculated live
+        //members to negative
+        if (i - 1 >= 0 && j - 1 >= 0 && Math.abs(board[i - 1][j - 1]) == 2) {
+            count++;
+        }
+        if (i - 1 >= 0 && Math.abs(board[i - 1][j]) == 2) {
+            count++;
+        }
+        if (i - 1 >= 0 && j + 1 < m && Math.abs(board[i - 1][j + 1]) == 2) {
+            count++;
+        }
+        if (j - 1 >= 0 && Math.abs(board[i][j - 1]) == 2) {
+            count++;
+        }
+        if (j + 1 < m && Math.abs(board[i][j + 1]) == 2) {
+            count++;
+        }
+        if (i + 1 < n && j - 1 >= 0 && Math.abs(board[i + 1][j - 1]) == 2) {
+            count++;
+        }
+        if (i + 1 < n && Math.abs(board[i + 1][j]) == 2) {
+            count++;
+        }
+        if (i + 1 < n && j + 1 < m && Math.abs(board[i + 1][j + 1]) == 2) {
+            count++;
+        }
+        if (Math.abs(board[i][j]) == 1 && count == 3) {
+            return true;
+        }
+        if (Math.abs(board[i][j]) == 2 && count < 2) {
+            return false;
+        }
+        if (Math.abs(board[i][j]) == 2 && count > 3) {
+            return false;
+        }
+        if (Math.abs(board[i][j]) == 2 && (count == 2 || count == 3)) {
+            return true;
+        }
+        return false;
+    }
+}

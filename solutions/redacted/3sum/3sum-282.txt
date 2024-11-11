@@ -1,0 +1,85 @@
+class Solution {
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        // Sort the input array to handle duplicates and optimize the search
+        Arrays.sort(nums);
+        // Iterate through the array, fixing the first element of the triplet
+        for (int i = 0; i < nums.length; i++) {
+            // Skip duplicates from the second element to avoid duplicate triplets
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            int j = i + 1;
+            int k = nums.length - 1;
+            while (j < k) {
+                int sum = nums[i] + nums[j] + nums[k];
+                if (sum < 0) {
+                    // If sum is less than zero, we need a larger value, so increment j
+                    j++;
+                } else if (sum > 0) {
+                    // If sum is greater than zero, we need a smaller value, so decrement k
+                    k--;
+                } else {
+                    // We found a triplet that sums to zero
+                    List<Integer> ds = Arrays.asList(nums[i], nums[j], nums[k]);
+                    ans.add(ds);
+                    // Move both pointers
+                    j++;
+                    k--;
+                    // Skip duplicates for j
+                    while (j < k && nums[j] == nums[j - 1]) {
+                        j++;
+                    }
+                    // Skip duplicates for k
+                    while (j < k && nums[k] == nums[k + 1]) {
+                        k--;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+}
+// Better O(N^2)
+/*
+ * public List<List<Integer>> threeSum(int[] nums) {
+ * Set<List<Integer>> set = new HashSet<>();
+ * int n = nums.length;
+ * 
+ * for (int i = 0; i < n; i++) {
+ * Set<Integer> set2 = new HashSet<>();
+ * for (int j = i + 1; j < n; j++) {
+ * if (set2.contains(-(nums[i] + nums[j]))) {
+ * List<Integer> list = Arrays.asList(nums[i], nums[j], -(nums[i] + nums[j]));
+ * Collections.sort(list);
+ * set.add(list);
+ * } else {
+ * set2.add(nums[j]);
+ * }
+ * }
+ * }
+ * return new ArrayList<>(set);
+ * }
+ */
+// Brute force O(n^3)
+/*
+ * public List<List<Integer>> threeSum(int[] nums) {
+ * Set<List<Integer>> set = new HashSet<>();
+ * int n = nums.length;
+ * 
+ * for (int i = 0; i < n; i++) {
+ * for (int j = i + 1; j < n; j++) {
+ * for (int k = j + 1; k < n; k++) {
+ * if (nums[i] + nums[j] + nums[k] == 0) {
+ * List<Integer> list = Arrays.asList(nums[i], nums[j], nums[k]);
+ * Collections.sort(list);
+ * set.add(list);
+ * }
+ * }
+ * }
+ * }
+ * 
+ * return new ArrayList<>(set);
+ * }
+ */

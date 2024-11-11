@@ -1,0 +1,40 @@
+class Solution {
+
+    private int[][] directions = new int[][] { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, 1 }, { -1, -1 }, { 1, -1 }, { 1, 1 } };
+
+    public void method1(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        int[][] matrix = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix[i][j] = fill(board, i, j, m, n);
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                board[i][j] = matrix[i][j];
+            }
+        }
+    }
+
+    private int fill(int[][] board, int i, int j, int m, int n) {
+        int lives = 0;
+        for (int[] direction : directions) {
+            int x = i + direction[0];
+            int y = j + direction[1];
+            if (x >= 0 && x < m && y >= 0 && y < n) {
+                lives += board[x][y];
+            }
+        }
+        return compute(board[i][j], lives);
+    }
+
+    private int compute(int cell, int lives) {
+        int result = 0;
+        if ((cell == 1 && (lives == 2 || lives == 3)) || (cell == 0 && lives == 3)) {
+            result = 1;
+        }
+        return result;
+    }
+}

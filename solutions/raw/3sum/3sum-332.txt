@@ -1,0 +1,49 @@
+class Solution {
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (nums == null || nums.length == 0) {
+            return result;
+        }
+        //sort the numbers since it can duplicates too
+        Arrays.sort(nums);
+        int n = nums.length;
+        int j = 0, k = 0;
+        int target = 0;
+        for (int i = 0; i <= n - 3; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            target = -nums[i];
+            j = i + 1;
+            k = n - 1;
+            while (j < k) {
+                if ((nums[i] + nums[j] + nums[k]) == 0) {
+                    result.add(Arrays.asList(nums[i], nums[j], nums[k]));
+                    j++;
+                    k--;
+                    //can\'t do these jumps as first thing in loop without doing if((nums[i] + nums[j] + nums[k]) == 0)
+                    //because if j and k index have same value, we jump over and j>=k and we come out of loop
+                    //without considering that result triplet
+                    /*
+                        Also, don\'t compare nums[j] with nums[j+1] because j+1 might be same index as k
+                        So, j should compare towards left, k should compare towards right
+
+                        That\'s why, capture first positions into result and then make them jump
+                    */
+                    while (j < k && nums[j] == nums[j - 1]) {
+                        j++;
+                    }
+                    while (j < k && nums[k] == nums[k + 1]) {
+                        k--;
+                    }
+                } else if ((nums[i] + nums[j] + nums[k]) < 0) {
+                    j++;
+                } else {
+                    k--;
+                }
+            }
+        }
+        return result;
+    }
+}

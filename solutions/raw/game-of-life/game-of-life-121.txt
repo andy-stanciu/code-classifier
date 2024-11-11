@@ -1,0 +1,47 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        int[][] dummyBoard = new int[board.length][board[0].length];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (canLive(board, i, j)) {
+                    dummyBoard[i][j] = 1;
+                } else {
+                    dummyBoard[i][j] = 0;
+                }
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                board[i][j] = dummyBoard[i][j];
+            }
+        }
+    }
+
+    public boolean canLive(int[][] board, int i, int j) {
+        int[] X = { -1, 0, 1, 0, -1, 1, -1, 1 };
+        int[] Y = { 0, -1, 0, 1, -1, 1, 1, -1 };
+        int liveNeighbors = 0;
+        for (int k = 0; k < 8; k++) {
+            liveNeighbors += getLiveNeighbors(board, i + X[k], j + Y[k]);
+        }
+        if (board[i][j] == 1) {
+            if (liveNeighbors < 2 || liveNeighbors > 3) {
+                return false;
+            }
+            return true;
+        } else {
+            if (liveNeighbors == 3) {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public int getLiveNeighbors(int[][] board, int i, int j) {
+        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length || board[i][j] == 0) {
+            return 0;
+        }
+        return 1;
+    }
+}

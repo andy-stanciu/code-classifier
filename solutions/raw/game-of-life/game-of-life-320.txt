@@ -1,0 +1,52 @@
+class Solution {
+
+    static int[] xDim = { 0, 0, -1, 1, -1, 1, -1, 1 };
+
+    static int[] yDim = { 1, -1, 0, 0, 1, 1, -1, -1 };
+
+    private boolean withinBoundary(int x, int y, int n, int m) {
+        return (x < 0 || y < 0 || x >= n || y >= m) ? false : true;
+    }
+
+    private void helper(int[][] matrix, int n, int m) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                int liveNodes = 0;
+                for (int k = 0; k < xDim.length; k++) {
+                    int newX = i + xDim[k];
+                    int newY = j + yDim[k];
+                    if (withinBoundary(newX, newY, n, m)) {
+                        if (matrix[newX][newY] >= 1)
+                            liveNodes += 1;
+                    }
+                }
+                switch(matrix[i][j]) {
+                    case 0:
+                        if (liveNodes == 3)
+                            matrix[i][j] = -1;
+                        break;
+                    case 1:
+                        if (liveNodes > 3 || liveNodes < 2)
+                            matrix[i][j] = 2;
+                        break;
+                }
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (matrix[i][j] > 1)
+                    matrix[i][j] = 0;
+                if (matrix[i][j] < 0)
+                    matrix[i][j] = 1;
+            }
+        }
+        return;
+    }
+
+    public void gameOfLife(int[][] matrix) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        helper(matrix, n, m);
+        return;
+    }
+}

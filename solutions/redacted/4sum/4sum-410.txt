@@ -1,0 +1,42 @@
+/*
+1. we can\'t use the same element repeatly in the array
+2. we can sort the array to prune some unnecessary search
+
+for [1,0,-1,0,-2,2], target = 0, we got sorted array [-2, -1, 0, 0, 1, 2]
+we fix a, b using a 2-level loop, then use 2-sum for remaining. if current element > remaing target, we can prune remaining elements search.
+for example : when a = -2, b = -1, then [0, 0, 1, 2] for 2-sum. when a = 0, b = 0, [1, 2] for 2-sum, but 1 > 0 - (0 + 0), so break the loop.
+*/
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        int len = nums.length;
+        Arrays.sort(nums);
+        for (int i = 0; i < len - 3; i++) {
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+            for (int j = i + 1; j < len - 2; j++) {
+                if (j > i + 1 && nums[j] == nums[j - 1])
+                    continue;
+                int newTarget = target - nums[i] - nums[j];
+                if (newTarget < nums[j + 1]) {
+                    // we newTarget is negative, is it enough?
+                    break;
+                }
+                // fast search complementary num of current
+                Set<Integer> set = new HashSet<>();
+                // if the remaining is [1,1,3,3], we can skip by if nums[k] == nums[k-1] continue.
+                // if the remaining is [2,2,2,2], how to skip. the previous 2-sum approach is infeasible.
+                // how can I forget the double pointer for the sorted array?
+                for (int k = j + 1; k < len; k++) {
+                    if (k > j + 1 && k < len - 1 && nums[k] == nums[k - 1])
+                        if (set.contains(newTarget - nums[k])) {
+                            ans.add(Arrays.asList(nums[i], nums[j], newTarget - nums[k], nums[k]));
+                        }
+                    set.add(nums[k]);
+                }
+            }
+        }
+        return ans;
+    }
+}

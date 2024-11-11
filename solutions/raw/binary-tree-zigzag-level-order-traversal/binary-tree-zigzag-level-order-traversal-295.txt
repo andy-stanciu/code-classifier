@@ -1,0 +1,69 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
+ * }
+ */
+// class Solution {
+// public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+// List<List<Integer>> ans = new ArrayList<>();
+// zigzagLevelOrderHelper(root, 0, ans);
+// return ans;
+// }
+// private void zigzagLevelOrderHelper(TreeNode node, int level,
+// List<List<Integer>> ans) {
+// if (node == null)
+// return;
+// if (level == ans.size()) {
+// ans.add(new ArrayList<>());
+// }
+// if (level % 2 == 0) {
+// ans.get(level).add(node.val);
+// } else {
+// ans.get(level).add(0, node.val);
+// }
+// zigzagLevelOrderHelper(node.left, level + 1, ans);
+// zigzagLevelOrderHelper(node.right, level + 1, ans);
+// }
+// }
+class Solution {
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> ans = new ArrayList<>();
+        if (root == null)
+            return ans;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        int level = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            List<Integer> list = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                TreeNode temp = queue.remove();
+                if ((level) % 2 == 0) {
+                    list.add(temp.val);
+                } else {
+                    list.add(0, temp.val);
+                }
+                if (temp.left != null) {
+                    queue.add(temp.left);
+                }
+                if (temp.right != null) {
+                    queue.add(temp.right);
+                }
+            }
+            level++;
+            ans.add(list);
+        }
+        return ans;
+    }
+}

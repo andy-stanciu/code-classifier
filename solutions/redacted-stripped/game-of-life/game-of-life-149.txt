@@ -1,0 +1,43 @@
+class Solution {
+
+    public void method1(int[][] matrix) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        int[][] helper = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                int count = countLiveNeighbours(matrix, i, j, n, m);
+                if (matrix[i][j] == 1) {
+                    if (count < 2 || count > 3) {
+                        helper[i][j] = 0;
+                    } else {
+                        helper[i][j] = 1;
+                    }
+                } else {
+                    if (count == 3) {
+                        helper[i][j] = 1;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                matrix[i][j] = helper[i][j];
+            }
+        }
+    }
+
+    private int countLiveNeighbours(int[][] helper, int row, int col, int n, int m) {
+        int count1 = 0;
+        int[] dx = { -1, -1, -1, 0, 0, 1, 1, 1 };
+        int[] dy = { -1, 0, 1, -1, 1, -1, 0, 1 };
+        for (int k = 0; k < 8; k++) {
+            int x = row + dx[k];
+            int y = col + dy[k];
+            if (x < n && x >= 0 && y < m && y >= 0 && helper[x][y] == 1) {
+                count1++;
+            }
+        }
+        return count1;
+    }
+}

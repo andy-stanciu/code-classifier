@@ -1,0 +1,84 @@
+class Solution {
+
+    private int liveNeighborCount(int[][] board, int i, int j) {
+        int[] dir = { -1, 0, 1 };
+        int c = 0;
+        for (int rd : dir) {
+            for (int cd : dir) {
+                int x = i + rd;
+                int y = j + cd;
+                if (!(rd == 0 && cd == 0) && x >= 0 && y >= 0 && x < board.length && y < board[0].length) {
+                    if (board[x][y] > 0) {
+                        c++;
+                    }
+                }
+            }
+        }
+        return c;
+    }
+
+    public void gameOfLife(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int c = liveNeighborCount(board, i, j);
+                if (board[i][j] > 0) {
+                    //live cells set to count, but only if count > 0 ie >0 will show previously alive cells
+                    if (c > 0) {
+                        board[i][j] = c;
+                    }
+                } else {
+                    // set dead cells that should become alive to -1
+                    if (c == 3) {
+                        board[i][j] = -1;
+                    }
+                }
+            }
+        }
+        // // 1s or> 4s to 0, 2-3s to 1s, -1s to 1
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == -1 || (board[i][j] >= 2 && board[i][j] <= 3)) {
+                    board[i][j] = 1;
+                } else {
+                    board[i][j] = 0;
+                }
+            }
+        }
+        // printMatrix(board);
+        // // counts
+        // 0 1 0
+        // 0 0 3
+        // 1 3 2
+        // 0 0 0
+        // // 0 to 9
+        // 0 1 0
+        // -1 0 3
+        // 1 3 2
+        // 0 -1 0
+        // // 1s or> 4s to 0, 2-3s to 1s, -1s to 1
+        // 0 0 0
+        // 1 0 1
+        // 0 1 1
+        // 0 1 0
+        // 0 1 0
+        // 9 0 1
+        // 0 0 0
+        // 0 0 3
+        // 0 2 2
+        // 0 0 0
+    }
+
+    private void printMatrix(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                System.out.print(" " + matrix[i][j]);
+            }
+            System.out.println(" ");
+        }
+        System.out.println(" --- ");
+    }
+}

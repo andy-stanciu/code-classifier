@@ -1,0 +1,58 @@
+class Solution {
+
+    public void method1(int[][] grid) {
+        // Apply the given 4 conditions on all elements
+        int m = grid.length, n = grid[0].length;
+        int[][] res = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 0) {
+                    // dead cell
+                    int liveCnt = 0;
+                    for (int delRow = -1; delRow <= 1; delRow++) {
+                        for (int delCol = -1; delCol <= 1; delCol++) {
+                            int r = delRow + i, c = delCol + j;
+                            if (isValid(r, c, m, n)) {
+                                if (grid[r][c] == 1)
+                                    liveCnt++;
+                            }
+                        }
+                    }
+                    if (liveCnt == 3)
+                        res[i][j] = 1;
+                } else {
+                    // live cell
+                    int liveCnt = 0;
+                    for (int delRow = -1; delRow <= 1; delRow++) {
+                        for (int delCol = -1; delCol <= 1; delCol++) {
+                            if (delRow == 0 && delCol == 0)
+                                continue;
+                            int r = delRow + i, c = delCol + j;
+                            if (isValid(r, c, m, n)) {
+                                if (grid[r][c] == 1)
+                                    liveCnt++;
+                            }
+                        }
+                    }
+                    if (liveCnt < 2)
+                        res[i][j] = 0;
+                    else if (liveCnt == 2 || liveCnt == 3)
+                        res[i][j] = 1;
+                    else
+                        res[i][j] = 0;
+                }
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                grid[i][j] = res[i][j];
+            }
+        }
+    }
+
+    boolean isValid(int i, int j, int m, int n) {
+        if (i < 0 || i >= m || j < 0 || j >= n)
+            return false;
+        return true;
+    }
+}

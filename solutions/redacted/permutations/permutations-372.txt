@@ -1,0 +1,34 @@
+class Solution {
+
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        f(nums, 0, new ArrayList<>(), result);
+        return result;
+    }
+
+    private void f(int[] nums, int idx, List<Integer> buffer, List<List<Integer>> result) {
+        if (idx == nums.length) {
+            result.add(new ArrayList<>(buffer));
+            return;
+        }
+        //we can optimize by picking length as one smaller
+        int[] copy = new int[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            copy[i] = nums[i];
+        }
+        for (int i = 0; i < nums.length; i++) {
+            //pick next valid element
+            if (copy[i] >= -10 && copy[i] <= 10) {
+                //add each element one by one in buffer
+                buffer.add(copy[i]);
+                //mark current element as taken in the copy
+                int temp = copy[i];
+                //set it to invalid value
+                copy[i] = 11;
+                f(copy, idx + 1, buffer, result);
+                copy[i] = temp;
+                buffer.remove(buffer.size() - 1);
+            }
+        }
+    }
+}

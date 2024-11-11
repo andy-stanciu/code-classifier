@@ -1,0 +1,64 @@
+class Solution {
+
+    public static void zigzag(TreeNode root, List<List<Integer>> list, int level) {
+        // CREATING STACK FOR THOSE LEVEL WHICH NEEDED TO REVERSE
+        Stack<Integer> st = new Stack<>();
+        // EDGE CASE IF ROOOT == NULL
+        if (root == null) {
+            return;
+        }
+        // CREATING QUEUE FOR STORING EACH LEVEL ELEMENT
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        q.add(null);
+        while (!q.isEmpty()) {
+            TreeNode curr = q.remove();
+            if (curr == null) {
+                // HERE REVERSING ELEMENT
+                // NOTE : WE ASSUME HERE STARTING LEVEL WITH 0
+                if (level % 2 != 0) {
+                    while (!st.isEmpty()) {
+                        list.get(level).add(st.pop());
+                    }
+                }
+                level++;
+                // ADDING NEXT INDEX IN 2D LIST EX: { {} , {THIS} , {...}}
+                list.add(new ArrayList<>());
+                if (q.isEmpty()) {
+                    break;
+                } else {
+                    q.add(null);
+                }
+            } else {
+                // HERE SIMPLY ADDING ELEMENT WHICH NEED NOT TO REVERSE
+                if (level % 2 == 0) {
+                    list.get(level).add(curr.val);
+                } else {
+                    // HERE ADDING ELEMENT TO STACK WHICH NEEDED TO REVERSE
+                    st.add(curr.val);
+                }
+                // HERE ADDING ELEMENT TO QUEUE
+                if (curr.left != null) {
+                    q.add(curr.left);
+                }
+                if (curr.right != null) {
+                    q.add(curr.right);
+                }
+            }
+        }
+    }
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        // 2D LIST FOR STORING OUTPUT
+        List<List<Integer>> list = new ArrayList<>();
+        // OUR BINARY TREE LEVEL
+        int level = 0;
+        //FIIRST INDEX OF 2D LIST EX: { {THIS} , {} , {} }
+        list.add(new ArrayList<>());
+        // CALLING OUR FUNCTION
+        zigzag(root, list, level);
+        // REMOVING LAST INDEX OF 2D LIST AS IT WAS CREATED IN LAST AND IT WAS EMPTY
+        list.remove(list.size() - 1);
+        return list;
+    }
+}

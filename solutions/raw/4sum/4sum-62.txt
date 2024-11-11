@@ -1,0 +1,38 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> quads = new ArrayList();
+        if (nums.length < 4)
+            return quads;
+        // sort the array
+        Arrays.sort(nums);
+        int n = nums.length;
+        // time complexity : O(N^3)
+        for (int a = 0; a < n - 3; a++) {
+            for (int b = a + 1; b < n - 2; b++) {
+                long target_for_2sum = (long) target - (nums[a] + nums[b]);
+                int c = b + 1, d = n - 1;
+                // do two sum using 2 pointers
+                while (c < d) {
+                    long sum = (long) nums[c] + nums[d];
+                    if (sum < target_for_2sum)
+                        c++;
+                    else if (sum > target_for_2sum)
+                        d--;
+                    else {
+                        List<Integer> quad = new ArrayList(Arrays.asList(nums[a], nums[b], nums[c], nums[d]));
+                        quads.add(quad);
+                        //to avoid duplicates
+                        while (c < d && nums[c] == quad.get(2)) c++;
+                        while (d > c && nums[d] == quad.get(3)) d--;
+                    }
+                }
+                // to avoid duplicates
+                while (b < n - 2 && nums[b + 1] == nums[b]) b++;
+            }
+            // to avoid duplicates
+            while (a < n - 3 && nums[a + 1] == nums[a]) a++;
+        }
+        return quads;
+    }
+}

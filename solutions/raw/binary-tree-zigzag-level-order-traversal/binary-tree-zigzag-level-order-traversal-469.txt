@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        // Declare result list
+        List<List<Integer>> res = new ArrayList<>();
+        // Base case
+        if (root == null)
+            return res;
+        // Declare queue
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        // Direction of traversal across level
+        boolean lToR = true;
+        // Run loop till queue is empty, every iteration represents new tree level from root
+        while (!q.isEmpty()) {
+            // Store current size of queue
+            int size = q.size();
+            // Temporary list to be added to result list depending on insertion method
+            List<Integer> temp = new ArrayList<>();
+            // Add every element in queue to temp list and replace with children
+            for (int i = 0; i < size; i++) {
+                TreeNode curr = q.remove();
+                if (curr.left != null)
+                    q.add(curr.left);
+                if (curr.right != null)
+                    q.add(curr.right);
+                temp.add(curr.val);
+            }
+            // Right to left insertion (zig-zag)
+            if (!lToR)
+                Collections.reverse(temp);
+            // Add temp list to result list
+            res.add(temp);
+            // For new level, change order of insertion
+            lToR = !lToR;
+        }
+        // Return result
+        return res;
+    }
+}

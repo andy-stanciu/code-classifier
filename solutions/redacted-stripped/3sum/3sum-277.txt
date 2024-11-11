@@ -1,0 +1,59 @@
+class Solution {
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        return nSum(nums, 0, 3, 0);
+    }
+
+    List<List<Integer>> nSum(int[] arr, int idx, int n, int t) {
+        if (n == 2) {
+            return twoSum(arr, idx, t);
+        }
+        List<List<Integer>> ans = new ArrayList<>();
+        for (int i = idx; i < arr.length; i++) {
+            if (i > idx && arr[i] == arr[i - 1]) {
+                continue;
+            }
+            int nextT = t - arr[i];
+            List<List<Integer>> subAns = nSum(arr, i + 1, n - 1, nextT);
+            if (subAns.size() > 0) {
+                for (List<Integer> l : subAns) {
+                    l.add(arr[i]);
+                    ans.add(l);
+                }
+            }
+        }
+        return ans;
+    }
+
+    ArrayList<Integer> getArrayList(int... arr) {
+        ArrayList<Integer> l = new ArrayList<>();
+        for (int x : arr) {
+            l.add(x);
+        }
+        return l;
+    }
+
+    List<List<Integer>> twoSum(int[] arr, int idx, int t) {
+        List<List<Integer>> ans = new ArrayList<>();
+        int s = idx;
+        int e = arr.length - 1;
+        while (s < e) {
+            if (s > idx && arr[s] == arr[s - 1]) {
+                s++;
+                continue;
+            }
+            int sum = arr[s] + arr[e];
+            if (sum == t) {
+                ans.add(getArrayList(arr[s], arr[e]));
+                s++;
+                e--;
+            } else if (sum > t) {
+                e--;
+            } else {
+                s++;
+            }
+        }
+        return ans;
+    }
+}

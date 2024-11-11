@@ -1,0 +1,45 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                int live = countLive(board, i, j);
+                if (board[i][j] == 1) {
+                    if (!(live == 2 || live == 3)) {
+                        board[i][j] = -2;
+                    }
+                } else {
+                    if (live == 3) {
+                        board[i][j] = 2;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                int live = countLive(board, i, j);
+                if (board[i][j] == -2) {
+                    board[i][j] = 0;
+                } else if (board[i][j] == 2) {
+                    board[i][j] = 1;
+                }
+            }
+        }
+    }
+
+    private int countLive(int[][] board, int i, int j) {
+        int[] moveI = new int[] { 0, 0, 1, -1, 1, -1, 1, -1 };
+        int[] moveJ = new int[] { 1, -1, 0, 0, 1, -1, -1, 1 };
+        int live = 0;
+        for (int move = 0; move < moveI.length; move++) {
+            int nextI = i + moveI[move];
+            int nextJ = j + moveJ[move];
+            if (nextI >= 0 && nextI < board.length && nextJ >= 0 && nextJ < board[0].length) {
+                if (board[nextI][nextJ] == 1 || board[nextI][nextJ] == -2) {
+                    live++;
+                }
+            }
+        }
+        return live;
+    }
+}

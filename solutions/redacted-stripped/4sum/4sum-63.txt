@@ -1,0 +1,51 @@
+class Solution {
+
+    int[] nums;
+
+    int size;
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums);
+        this.nums = nums;
+        size = nums.length;
+        return kSumRecursion(0, 4, (long) target);
+    }
+
+    public List<List<Integer>> kSumRecursion(int index, int k, long target) {
+        List<List<Integer>> output = new ArrayList();
+        if (k == 2) {
+            output = twoSum(index, size - 1, target);
+        } else {
+            for (int i = index; i < size - k + 1; i++) {
+                List<List<Integer>> temp = kSumRecursion(i + 1, k - 1, target - nums[i]);
+                if (!temp.isEmpty()) {
+                    for (List<Integer> li : temp) {
+                        li.add(0, nums[i]);
+                        output.add(li);
+                    }
+                }
+                while (i < size - k + 1 && nums[i + 1] == nums[i]) i++;
+            }
+        }
+        return output;
+    }
+
+    public List<List<Integer>> twoSum(int i, int j, long target) {
+        List<List<Integer>> output = new ArrayList<>();
+        while (i < j) {
+            long sum = (long) nums[i] + nums[j];
+            if (sum > target)
+                j--;
+            else if (sum < target)
+                i++;
+            else {
+                List<Integer> pair = new ArrayList(Arrays.asList(nums[i], nums[j]));
+                output.add(pair);
+                int ti = nums[i], tj = nums[j];
+                while (i < j && nums[i] == ti) i++;
+                while (j > i && nums[j] == tj) j--;
+            }
+        }
+        return output;
+    }
+}

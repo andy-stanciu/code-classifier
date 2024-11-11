@@ -1,0 +1,59 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        Arrays.sort(nums);
+        if (nums.length < 4)
+            return result;
+        if (nums[0] == nums[nums.length - 1]) {
+            if (target < 0 && nums[0] > 0) {
+                return result;
+            }
+            if (target > 0 && nums[nums.length - 1] < 0) {
+                return result;
+            } else if ((4 * nums[0]) == target) {
+                int a = nums[0];
+                result.add(List.of(a, a, a, a));
+                return result;
+            } else
+                return result;
+        }
+        Map<Integer, List<List<Integer>>> temp = new HashMap<>();
+        Set<List<Integer>> tempset = new HashSet<>();
+        for (int i = 1; i < nums.length - 1; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                int currentsum = nums[i] + nums[j];
+                long temp1 = (long) target - (long) currentsum;
+                if (temp1 > 2000000000 || temp1 < -2000000000) {
+                    continue;
+                }
+                int requiredsum = target - currentsum;
+                if (temp.containsKey(requiredsum)) {
+                    List<List<Integer>> requiredpair = temp.get(requiredsum);
+                    for (List<Integer> pair : requiredpair) {
+                        List<Integer> p = new ArrayList<>();
+                        p.addAll(pair);
+                        p.add(nums[i]);
+                        p.add(nums[j]);
+                        tempset.add(p);
+                    }
+                }
+            }
+            for (int j = 0; j < i; j++) {
+                int sum = nums[j] + nums[i];
+                List<Integer> newpair = List.of(nums[j], nums[i]);
+                if (temp.containsKey(sum)) {
+                    List<List<Integer>> requiredpair = temp.get(sum);
+                    List<List<Integer>> temppair = new ArrayList<>();
+                    temppair.addAll(requiredpair);
+                    temppair.add(newpair);
+                    temp.replace(sum, temppair);
+                } else {
+                    temp.put(sum, List.of(newpair));
+                }
+            }
+        }
+        result.addAll(tempset);
+        return result;
+    }
+}

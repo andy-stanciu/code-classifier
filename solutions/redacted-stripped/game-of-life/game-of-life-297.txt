@@ -1,0 +1,49 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        boolean[][] dies = new boolean[m][n];
+        boolean[][] born = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int alive = getAliveNeighbors(board, i, j);
+                if (alive < 2 || alive > 3)
+                    dies[i][j] = true;
+                if (alive == 3)
+                    born[i][j] = true;
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (dies[i][j])
+                    board[i][j] = 0;
+                if (born[i][j])
+                    board[i][j] = 1;
+            }
+        }
+    }
+
+    public int getAliveNeighbors(int[][] board, int i, int j) {
+        int alive = 0;
+        int m = board.length;
+        int n = board[0].length;
+        if (i != 0)
+            alive += board[i - 1][j];
+        if (i != m - 1)
+            alive += board[i + 1][j];
+        if (j != 0)
+            alive += board[i][j - 1];
+        if (j != n - 1)
+            alive += board[i][j + 1];
+        if (i != 0 && j != 0)
+            alive += board[i - 1][j - 1];
+        if (i != 0 && j != n - 1)
+            alive += board[i - 1][j + 1];
+        if (i != m - 1 && j != 0)
+            alive += board[i + 1][j - 1];
+        if (i != m - 1 && j != n - 1)
+            alive += board[i + 1][j + 1];
+        return alive;
+    }
+}

@@ -1,0 +1,45 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> fourSumSolutions = new ArrayList<List<Integer>>();
+        Arrays.sort(nums);
+        for (int k = 0; k < nums.length - 3; k++) {
+            if (k != 0 && nums[k] == nums[k - 1]) {
+                continue;
+            }
+            long subTarget = target - (long) nums[k];
+            List<List<Integer>> threeSumSolutions = threeSum(nums, subTarget, k + 1);
+            for (List<Integer> list : threeSumSolutions) {
+                list.add(nums[k]);
+                fourSumSolutions.add(list);
+            }
+        }
+        return fourSumSolutions;
+    }
+
+    public List<List<Integer>> threeSum(int[] nums, long target, int startingIndex) {
+        List<List<Integer>> results = new ArrayList<List<Integer>>();
+        for (int i = startingIndex; i < nums.length - 2; i++) {
+            int iNum = nums[i];
+            int j = i + 1;
+            int k = nums.length - 1;
+            while (j < k) {
+                long sum = (long) iNum + (long) nums[j] + (long) nums[k];
+                if (sum == target) {
+                    List<Integer> solution = new ArrayList<>();
+                    solution.add(iNum);
+                    solution.add(nums[j++]);
+                    solution.add(nums[k--]);
+                    results.add(solution);
+                    while (j < nums.length && nums[j] == nums[j - 1]) j++;
+                } else if (sum < target) {
+                    j++;
+                } else {
+                    k--;
+                }
+            }
+            while (i < nums.length - 1 && nums[i + 1] == nums[i]) i++;
+        }
+        return results;
+    }
+}

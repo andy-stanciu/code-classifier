@@ -1,0 +1,59 @@
+class Solution {
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        // Initialize a result array to hold and return the solution
+        List<List<Integer>> res = new ArrayList<>();
+        // It\u2019s much easier to solve by first sorting the array
+        // in ascending order, this is really crucial to remember
+        // for the rest of the logic
+        Arrays.sort(nums);
+        // Fix the first value in the triple sum with an outer for loop
+        for (int i = 0; i < nums.length; i++) {
+            // One thing to remember is that since the array is ordered,
+            // if the value in nums at i is greater than 0,
+            // all the rest of the values will be greater than 0
+            // and therefore no other solution exists.
+            // In this case break out of the loop and return whatever results was solved
+            if (nums[i] > 0)
+                break;
+            // Another initial check is to see that we are at a value for the first time,
+            // to avoid repeat solutions, check if the current index
+            // is the same value as the previous index, if so then
+            // continue since you have already calculated the sum
+            // for that fixed start point
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+            // Now the approach is similar to Two Sum II,
+            // we need a left and right pointer for the rest of the
+            // array and while left < right we will calculate the sum at all 3 indexes
+            int left = i + 1;
+            int right = nums.length - 1;
+            while (left < right) {
+                int sum = nums[i] + nums[left] + nums[right];
+                if (sum > 0) {
+                    // The sum needs to be decreased so decrement the right pointer
+                    right--;
+                } else if (sum < 0) {
+                    // The sum needs to be increased so increment the left pointer
+                    left++;
+                } else {
+                    // We are at a solution but the search needs to continue
+                    // Save the 3 values that created the 0 sum to the result array
+                    res.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                    // To continue the search we have to find values that aren\u2019t repeats of what was just seen
+                    // Increment the left and decrement to right values to completely change them
+                    // since they are a pair value that leads to the answer and we cannot have repeats
+                    left++;
+                    right--;
+                    // Now while the left value is same as the left-1 value,
+                    // similar to the 2nd check in the outer for loop,
+                    // keep incrementing the left counter, again to avoid repeat solutions
+                    while (nums[left] == nums[left - 1] && left < right) {
+                        left++;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+}

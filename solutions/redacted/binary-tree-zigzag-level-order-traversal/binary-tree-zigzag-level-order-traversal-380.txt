@@ -1,0 +1,56 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    static int height(TreeNode root) {
+        if (root == null)
+            return 0;
+        else {
+            int lh = height(root.left);
+            int rh = height(root.right);
+            return Math.max(lh, rh) + 1;
+        }
+    }
+
+    static void printcurrentlist(TreeNode root, int param1, List<Integer> result) {
+        if (root == null)
+            return;
+        if (param1 == 1)
+            result.add(root.val);
+        else if (param1 > 1) {
+            printcurrentlist(root.left, param1 - 1, result);
+            printcurrentlist(root.right, param1 - 1, result);
+        }
+    }
+
+    public List<List<Integer>> method1(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null)
+            return res;
+        int h = height(root);
+        for (int i = 1; i <= h; i++) {
+            List<Integer> curr = new ArrayList<>();
+            if (i % 2 == 0) {
+                printcurrentlist(root, i, curr);
+                Collections.reverse(curr);
+            } else {
+                printcurrentlist(root, i, curr);
+            }
+            res.add(curr);
+        }
+        return res;
+    }
+}
