@@ -1,0 +1,35 @@
+class Solution {
+
+    int[] myPiles;
+
+    public int minEatingSpeed(int[] piles, int h) {
+        myPiles = piles;
+        Arrays.sort(piles);
+        int minK = 1;
+        int maxK = piles[piles.length - 1];
+        while (minK < maxK) {
+            int midK = (minK + maxK) / 2;
+            if (isPossible(midK, h)) {
+                maxK = midK;
+            } else {
+                minK = midK + 1;
+            }
+        }
+        return minK;
+    }
+
+    private boolean isPossible(int kSpeed, int h) {
+        int numDays = 0;
+        for (int i : myPiles) {
+            if (kSpeed >= i)
+                numDays++;
+            else {
+                if (i % kSpeed == 0)
+                    numDays += i / kSpeed;
+                else
+                    numDays += i / kSpeed + 1;
+            }
+        }
+        return numDays <= h;
+    }
+}

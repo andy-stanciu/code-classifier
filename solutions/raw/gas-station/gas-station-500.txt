@@ -1,0 +1,26 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int n = gas.length;
+        int total_gas = 0, total_cost = 0;
+        for (int i = 0; i < n; i++) {
+            total_gas += gas[i];
+            total_cost += cost[i];
+        }
+        if (total_cost > total_gas)
+            return -1;
+        int start = 0;
+        int remaining_gas = 0;
+        for (int i = 0; i < n; i++) {
+            remaining_gas += gas[i] - cost[i];
+            // if remaining_gas  or negative  at ith point becomes zero than update start by i+1
+            //this is because if  start to ith point all the positive contribution can\'t travel to further
+            // than any point between  start<=new_start<=n won\'t be able to travel further because their new contribution will be less than original contribution\'
+            if (remaining_gas < 0) {
+                start = i + 1;
+                remaining_gas = 0;
+            }
+        }
+        return start;
+    }
+}

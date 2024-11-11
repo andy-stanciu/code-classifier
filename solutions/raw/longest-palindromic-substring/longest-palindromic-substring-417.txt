@@ -1,0 +1,49 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        //S: x(i,j) whether it is a palindrome or not
+        //R: if x(i-1,j-1) and s[i] == s[j] then it means that x(i,j) is also a palindrome
+        //T: increasing i, increaisng j
+        //B: x(i,i+1) is palindrome
+        //O: x(0,n-1)
+        //T: O(n^2)
+        int len = s.length();
+        boolean[][] memo = new boolean[len][len];
+        //initialise to false first
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j < len; j++) {
+                if (i == j)
+                    memo[i][j] = true;
+                else if (j == i + 1 || i == j + 1) {
+                    if (s.charAt(i) == s.charAt(j)) {
+                        memo[i][j] = true;
+                    } else
+                        memo[i][j] = false;
+                } else
+                    memo[i][j] = false;
+            }
+        }
+        int longest = 0;
+        int START = 0;
+        int END = 0;
+        //topo order should be increasing length.
+        for (int j = 1; j < len; j++) {
+            for (int i = 0; i < len; i++) {
+                int end = i + j;
+                if (end < len) {
+                    if (memo[i + 1][end - 1] && s.charAt(i) == s.charAt(end)) {
+                        memo[i][end] = true;
+                    }
+                    if (memo[i][end]) {
+                        if (j > longest) {
+                            longest = j;
+                            START = i;
+                            END = end;
+                        }
+                    }
+                }
+            }
+        }
+        return s.substring(START, END + 1);
+    }
+}

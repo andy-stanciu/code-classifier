@@ -1,0 +1,45 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        HashMap<Character, ArrayList<Integer>> hm = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (!hm.containsKey(c)) {
+                hm.put(c, new ArrayList<>());
+            }
+            hm.get(c).add(i);
+        }
+        String ans = "";
+        for (ArrayList<Integer> al : hm.values()) {
+            if (al.size() > 1) {
+                for (int i = 0; i < al.size() - 1; i++) {
+                    for (int j = i + 1; j < al.size(); j++) {
+                        int start = al.get(i);
+                        int end = al.get(j);
+                        if (isPalindrome(s, start, end) && (ans.isEmpty() || end - start + 1 > ans.length())) {
+                            ans = s.substring(start, end + 1);
+                        }
+                    }
+                }
+            } else if (ans.isEmpty()) {
+                // Handle the case when s has only one character
+                ans = s.substring(al.get(0), al.get(0) + 1);
+            }
+        }
+        return ans;
+    }
+
+    public boolean isPalindrome(String str, int start, int end) {
+        while (start < end) {
+            if (str.charAt(start) != str.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+}

@@ -1,0 +1,66 @@
+class Solution {
+
+    public String intToRoman(int num) {
+        StringBuilder sb = new StringBuilder();
+        Integer[] allValues = // Convert int to Integer
+        Arrays.stream(Roman.getAllIntValues()).boxed().toArray(Integer[]::new);
+        Arrays.sort(allValues, Collections.reverseOrder());
+        for (int k = 0; k < allValues.length; k++) {
+            int it = allValues[k];
+            int total = num / it;
+            int rest = num % it;
+            if (total > 0) {
+                for (int i = 0; i < total; i++) {
+                    sb.append(Roman.fromInt(it));
+                }
+                if (rest > 0) {
+                    sb.append(intToRoman(rest));
+                    break;
+                }
+                if (rest == 0)
+                    break;
+            }
+        }
+        return sb.toString();
+    }
+
+    public enum Roman {
+
+        I(1),
+        V(5),
+        X(10),
+        L(50),
+        C(100),
+        D(500),
+        M(1000),
+        IV(4),
+        IX(9),
+        XL(40),
+        XC(90),
+        CD(400),
+        CM(900);
+
+        private final int intValue;
+
+        Roman(int intValue) {
+            this.intValue = intValue;
+        }
+
+        public static int[] getAllIntValues() {
+            return Arrays.stream(Roman.values()).mapToInt(Roman::getIntValue).toArray();
+        }
+
+        public static Roman fromInt(int num) {
+            for (Roman roman : Roman.values()) {
+                if (roman.intValue == num) {
+                    return roman;
+                }
+            }
+            throw new IllegalArgumentException("Invalid integer value: " + num);
+        }
+
+        public int getIntValue() {
+            return intValue;
+        }
+    }
+}

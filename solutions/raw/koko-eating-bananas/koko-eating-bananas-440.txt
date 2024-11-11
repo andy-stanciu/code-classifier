@@ -1,0 +1,43 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        // you might be able to get away with eating one banana an hour
+        int minK = 1;
+        // you eat the biggest pile in 1 hour
+        int maxK = Arrays.stream(piles).max().getAsInt();
+        while (minK <= maxK) {
+            int guess = (minK + maxK) >>> 1;
+            if (isPossible(piles, h, guess)) {
+                // try to find an even smaller k
+                maxK = guess - 1;
+            } else {
+                minK = guess + 1;
+            }
+        }
+        // Note: maxK will end being equal to minK - 1
+        return minK;
+    }
+
+    private boolean isPossible(int[] piles, int h, int k) {
+        int hoursRequired = 0;
+        int doubleHoursRequired = 0;
+        for (int i = 0; i < piles.length; i++) {
+            // Note this casts the result of the addition
+            // to int
+            // See https://stackoverflow.com/questions/8710619/why-dont-javas-compound-assignment-operators-require-casting-lo
+            // i.e. hoursRequired += Math.ceil((double) piles[i] / k);
+            // is the same as hoursRequired = (int) (hoursRequired + Math.ceil((double) piles[i] / k));
+            // This does not work btw:
+            // int hoursForPile = (int) Math.ceil((double) piles[i] / k);
+            // hoursRequired += Math.ceil((double) piles[i] / k);
+            // Details: https://stackoverflow.com/questions/10444350/c-sharp-loss-of-precision-when-dividing-doubles
+            // Should do: https://stackoverflow.com/questions/7139382/java-rounding-up-to-an-int-using-math-ceil
+            int hoursForPile = (int) Math.ceil((double) piles[i] / k);
+            double hrsForPile = Math.ceil((double) piles[i] / k);
+            // Note: hoursRequired does not work while doubleHoursRequired does
+            hoursRequired += hoursForPile;
+            doubleHoursRequired += hrsForPile;
+        }
+        return doubleHoursRequired <= h;
+    }
+}

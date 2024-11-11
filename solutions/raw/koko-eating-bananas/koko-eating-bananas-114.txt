@@ -1,0 +1,30 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        int n = piles.length;
+        long total = 0;
+        for (int p : piles) {
+            total += p;
+        }
+        //minimum number of bananas she eats per hour.
+        int left = (int) ((total - 1) / h) + 1;
+        //assuming she eats all the bananas from the biggest pile in 1 hour and then waits takes her time with the rest.
+        int right = (int) ((total - n) / (h - n + 1)) + 1;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            int time = 0;
+            for (int p : piles) {
+                //calculating the total time it takes to eat the rest of the bananas at the current rate without using pointers.
+                time += (p - 1) / mid + 1;
+            }
+            if (time > h) {
+                //if the time currently is greater than h we should increase the min time.
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        //since we need the minimum integer where she can eat all the bananas within the time.
+        return left;
+    }
+}

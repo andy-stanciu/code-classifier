@@ -1,0 +1,36 @@
+class Solution {
+
+    public int method1(int[] piles, int h) {
+        int minK = 1;
+        int maxK = getMaxK(piles);
+        int left = minK;
+        int right = maxK;
+        int result = maxK;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (method2(piles, h, mid)) {
+                result = Math.min(result, mid);
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return result;
+    }
+
+    int getMaxK(int[] piles) {
+        int maxK = Integer.MIN_VALUE;
+        for (int i = 0; i < piles.length; i++) {
+            maxK = Math.max(maxK, piles[i]);
+        }
+        return maxK;
+    }
+
+    boolean method2(int[] piles, int h, int k) {
+        int totalHrs = 0;
+        for (int i = 0; i < piles.length; i++) {
+            totalHrs += Math.ceil((double) piles[i] / k);
+        }
+        return totalHrs <= h;
+    }
+}

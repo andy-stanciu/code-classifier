@@ -1,0 +1,79 @@
+class Solution {
+
+    public String method1(int num) {
+        if (num < 1 || num > 3999) {
+            System.out.println("Only Enter Positive Integers between 1 & 3999.");
+            System.exit(0);
+        }
+        LinkedHashMap<Integer, String> method1 = new LinkedHashMap<>() {
+
+            {
+                put(1, "I");
+                put(5, "V");
+                put(10, "X");
+                put(50, "L");
+                put(100, "C");
+                put(500, "D");
+                put(1000, "M");
+            }
+        };
+        ArrayList<Integer> tPos = tenthPosArray(num);
+        StringBuilder strBld = new StringBuilder();
+        for (int i = 0; i <= tPos.size() - 1; i++) {
+            int each = tPos.get(i);
+            String eachPos = String.valueOf(each);
+            int min = findMinOrMaxChar(method1, tPos.get(i), false);
+            int max = findMinOrMaxChar(method1, tPos.get(i), true);
+            if (eachPos.startsWith("4") || eachPos.startsWith("9")) {
+                strBld.append(method1.get(max - each));
+                strBld.append(method1.get(max));
+            } else {
+                if (each % min == 0) {
+                    strBld.append(method1.get(min).repeat(each / min));
+                } else {
+                    int minMin = findMinOrMaxChar(method1, each - min, false);
+                    strBld.append(method1.get(min));
+                    strBld.append(method1.get(minMin).repeat((each - min) / minMin));
+                }
+            }
+        }
+        return String.valueOf(strBld);
+    }
+
+    public int findMinOrMaxChar(LinkedHashMap<Integer, String> hashMap, int val, boolean flag) {
+        int minVal = 1;
+        int maxVal = 1000;
+        int minOrMax = 1;
+        //boolean flag=false --> To find the closest small Roman Numeral Value.
+        //boolean flag=true --> To find the closest big Roman Numeral Value.
+        if (!flag) {
+            for (Map.Entry<Integer, String> entry : hashMap.entrySet()) {
+                if (entry.getKey() >= minVal && entry.getKey() <= val) {
+                    minOrMax = entry.getKey();
+                }
+            }
+        } else {
+            for (Map.Entry<Integer, String> entry : hashMap.entrySet()) {
+                if (entry.getKey() <= maxVal && entry.getKey() >= val) {
+                    maxVal = entry.getKey();
+                }
+            }
+            if (val > maxVal) {
+                maxVal = val;
+            }
+            minOrMax = maxVal;
+        }
+        return minOrMax;
+    }
+
+    public ArrayList<Integer> tenthPosArray(int a) {
+        ArrayList<Integer> tenthPos = new ArrayList<>();
+        String stringInt = String.valueOf(a);
+        int l = stringInt.length();
+        for (int i = 0; i <= l - 1; i++) {
+            int element = Character.getNumericValue(stringInt.charAt(i));
+            tenthPos.add(element * (int) Math.pow(10, l - i - 1));
+        }
+        return tenthPos;
+    }
+}

@@ -1,0 +1,36 @@
+class Solution {
+
+    private void add(String s, int[] skips, int offset, StringBuilder result) {
+        int i = offset;
+        int n = s.length();
+        int whichSkip = 0;
+        while (i < n) {
+            result.append(s.charAt(i));
+            i += skips[whichSkip];
+            if (skips.length > 1) {
+                whichSkip = (whichSkip + 1) % skips.length;
+            }
+        }
+    }
+
+    public String convert(String s, int numRows) {
+        StringBuilder result = new StringBuilder();
+        int n = s.length();
+        int skip = Math.max(1, (numRows + numRows - 2));
+        int skip1 = skip - 2;
+        int skip2 = 2;
+        int row = 0;
+        add(s, new int[] { skip }, 0, result);
+        row++;
+        while (row < numRows - 1) {
+            add(s, new int[] { skip1, skip2 }, row, result);
+            skip1 -= 2;
+            skip2 += 2;
+            row++;
+        }
+        if (result.length() < n) {
+            add(s, new int[] { skip }, row, result);
+        }
+        return result.toString();
+    }
+}

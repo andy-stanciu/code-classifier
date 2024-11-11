@@ -1,0 +1,40 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        int n = piles.length;
+        long sum = 0;
+        int max = 0;
+        for (int pile : piles) {
+            sum += pile;
+            max = Math.max(max, pile);
+        }
+        int rem = ((max % (h / n)) > 0) ? 1 : 0;
+        int high = (max / (h / n)) + rem;
+        long lowlong = (sum / h);
+        int low = (int) lowlong;
+        int mid;
+        boolean validMid;
+        while (low < high) {
+            mid = low + (high - low) / 2;
+            validMid = validK(piles, h, mid);
+            if (validMid)
+                high = mid;
+            if (!validMid)
+                low = mid + 1;
+        }
+        return low;
+    }
+
+    public boolean validK(int[] piles, int h, int k) {
+        if (k == 0)
+            return false;
+        int requiredH = 0;
+        for (int pile : piles) {
+            int rem = (pile % k > 0) ? 1 : 0;
+            requiredH += pile / k + rem;
+        }
+        if (requiredH <= h)
+            return true;
+        return false;
+    }
+}

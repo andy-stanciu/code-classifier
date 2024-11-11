@@ -1,0 +1,43 @@
+public class Solution {
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int totalCost = 0;
+        for (int i = 0; i < gas.length; i++) {
+            totalCost += (gas[i] - cost[i]);
+        }
+        if (totalCost < 0)
+            return -1;
+        // At any point, if gain is negative, we\'re
+        // replacing it with next point.
+        //
+        // So there is no point in the current run until \'i\' that
+        // depletes gas so much that without visiting that station we would be in a
+        // better position when we reach \'i\'.
+        //
+        // See below example, here even if it reduced to 2 and then to 1, it is still our
+        // best option because we\'ve accumulated > 0 gas until any point and that\'s net positive.
+        // If we start after the point it collapses to 2 or 1, we\'ll lose the accumulated gas too so its not
+        // a better solution than having the accumulated gas.
+        // The only time it gets better is when accumulated gas becomes negative,so then restart from next
+        // gas station.
+        // Like this, we go till the end. If we\'ve ruled out all the other starting points, then the last point has to
+        // be the starting point since we verify above that the solution exists (and question says its unique).
+        //
+        // 3  _________
+        // 2         _______
+        // 1
+        // 0                 _______
+        // -1                          _____
+        //
+        int curr = 0;
+        int start = 0;
+        for (int i = 0; i < gas.length; i++) {
+            curr += (gas[i] - cost[i]);
+            if (curr < 0) {
+                curr = 0;
+                start = i + 1;
+            }
+        }
+        return start;
+    }
+}

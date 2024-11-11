@@ -1,0 +1,42 @@
+class Solution {
+
+    public String convert(String str, int numRows) {
+        StringBuilder strResult = new StringBuilder();
+        int zigzagLength = numRows - 2;
+        int symbolsRead = 0;
+        int stringLength = str.length();
+        int charPointer = 0;
+        int lengthToNextChar = 0;
+        int rowNumber = 1;
+        boolean isCurrentlyZigZagElement = false;
+        while (symbolsRead < stringLength) {
+            if (charPointer + lengthToNextChar >= stringLength) {
+                rowNumber++;
+                charPointer = rowNumber - 1;
+                isCurrentlyZigZagElement = false;
+            } else {
+                charPointer += lengthToNextChar;
+            }
+            char readChar = str.charAt(charPointer);
+            strResult.append(readChar);
+            if (isCurrentlyZigZagElement) {
+                int lengthToFinishZigZag = rowNumber - 1;
+                int lengthToGoDown = rowNumber - 1;
+                lengthToNextChar = lengthToFinishZigZag + lengthToGoDown;
+            } else {
+                int numberOfCellsToGoDown = numRows - rowNumber;
+                int lengthOfZigZagToSkip;
+                if (rowNumber == 1)
+                    lengthOfZigZagToSkip = zigzagLength + 1;
+                else if (rowNumber == numRows)
+                    lengthOfZigZagToSkip = zigzagLength + 1 + numRows - 1;
+                else
+                    lengthOfZigZagToSkip = zigzagLength + 1 - rowNumber;
+                lengthToNextChar = Math.max(numberOfCellsToGoDown + lengthOfZigZagToSkip, 1);
+            }
+            symbolsRead++;
+            isCurrentlyZigZagElement = (rowNumber == 1 || rowNumber == numRows) ? false : !isCurrentlyZigZagElement;
+        }
+        return strResult.toString();
+    }
+}

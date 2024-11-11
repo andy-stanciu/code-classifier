@@ -1,0 +1,31 @@
+class Solution {
+
+    private int[] piles;
+
+    private int h;
+
+    public int method1(int[] piles, int h) {
+        this.piles = piles;
+        this.h = h;
+        return binarySearch(1, Arrays.stream(piles).max().getAsInt());
+        //return binarySearch(Math.max(Arrays.stream(piles).sum()/h, 1), Arrays.stream(piles).max().getAsInt());
+    }
+
+    private int binarySearch(int left, int right) {
+        while (left < right) {
+            int mid = (left + right) >>> 1;
+            if (check(mid))
+                right = mid;
+            else
+                left = mid + 1;
+        }
+        return right;
+    }
+
+    private boolean check(int k) {
+        int hours = 0;
+        for (int pile : piles) hours += pile / k + (pile % k != 0 ? 1 : 0);
+        //System.out.println(" for k = " + k + " hours = " + hours);
+        return hours <= h;
+    }
+}

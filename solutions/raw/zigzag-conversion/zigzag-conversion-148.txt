@@ -1,0 +1,57 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        StringBuilder strBld = new StringBuilder();
+        ArrayList<ArrayList<String>> zigZagArr = new ArrayList<>();
+        for (int i = 0; i < numRows; i++) {
+            zigZagArr.add(new ArrayList<>());
+            while (zigZagArr.get(i).size() <= s.length()) {
+                zigZagArr.get(i).add(null);
+            }
+        }
+        int i = 0, j = 0;
+        int j1 = j;
+        for (String ch : s.split("")) {
+            if (numRows >= 2) {
+                if (i >= 0 && i < numRows) {
+                    if (i == 0 && j == 0) {
+                        zigZagArr.get(i).set(j, ch);
+                        i++;
+                    } else if (j == 0) {
+                        zigZagArr.get(i).set(j, ch);
+                        i++;
+                    } else if (i == 0) {
+                        j1 = j;
+                        i++;
+                        zigZagArr.get(i).set(j, ch);
+                        i++;
+                    } else if (j - j1 == 0) {
+                        zigZagArr.get(i).set(j, ch);
+                        i++;
+                    } else {
+                        i--;
+                        j1 = j++;
+                        zigZagArr.get(i).set(j, ch);
+                    }
+                } else {
+                    --i;
+                    i -= 1;
+                    j1 = j++;
+                    zigZagArr.get(i).set(j, ch);
+                }
+            } else if (numRows == 1) {
+                zigZagArr.get(0).add(ch);
+            } else {
+                System.out.println("Only Enter Rows greater than or equal to 1.");
+                System.exit(0);
+            }
+        }
+        for (ArrayList<String> aX : zigZagArr) {
+            aX.removeIf(Objects::isNull);
+            for (String ele : aX) {
+                strBld.append(ele);
+            }
+        }
+        return strBld.toString();
+    }
+}

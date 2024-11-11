@@ -1,0 +1,43 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        // binary search from average bananas that need to be eat per hr to max in piles
+        if (piles == null || h < piles.length) {
+            return -1;
+        }
+        long total = 0;
+        int min = Integer.MAX_VALUE, r = 0;
+        for (int n : piles) {
+            total += n;
+            min = Math.min(min, n);
+            r = Math.max(r, n);
+        }
+        int l = Math.min(min, (int) total / h);
+        l = l == 0 ? 1 : l;
+        while (l < r) {
+            int m = l + (r - l) / 2;
+            if (canEat(m, h, piles)) {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+        return r;
+    }
+
+    boolean canEat(int min, int hrs, int[] piles) {
+        int requiredHrs = 0;
+        for (int n : piles) {
+            if (n <= min) {
+                requiredHrs++;
+            } else {
+                requiredHrs += n / min;
+                requiredHrs += (n % min) == 0 ? 0 : 1;
+            }
+            if (requiredHrs > hrs) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        // Edge cases
+        if (numRows == 1 || numRows == s.length()) {
+            return s;
+        }
+        // The length of any substring that begins and ends on the first row
+        int zigLength = (2 * numRows) - 2;
+        // In case the string ends on a partial zig, this is the theoretical
+        // index of the end of the final zig
+        int nearestZig = ((int) Math.ceil(((double) s.length()) / ((double) zigLength))) * zigLength;
+        // Use StringBuilder to avoid array recreation & shifting with regular string
+        StringBuilder sb = new StringBuilder();
+        // Handle first row
+        for (int j = 0; j < s.length(); j += zigLength) {
+            sb.append(s.charAt(j));
+        }
+        // Loop over the inner rows
+        for (int i = 1; i < numRows - 1; i++) {
+            // For each row, loop over the string using zigLength
+            for (int j = 0; j <= nearestZig; j += zigLength) {
+                int behind = j - i, ahead = j + i;
+                // If the current row\'s character to the left of the zig peak exists
+                if (behind > 0 && behind < s.length()) {
+                    sb.append(s.charAt(behind));
+                }
+                // If the current row\'s character to the right of the zig peak exists
+                if (ahead < s.length()) {
+                    sb.append(s.charAt(ahead));
+                }
+            }
+        }
+        // Handle last row
+        for (int j = numRows - 1; j < s.length(); j += zigLength) {
+            sb.append(s.charAt(j));
+        }
+        return sb.toString();
+    }
+}

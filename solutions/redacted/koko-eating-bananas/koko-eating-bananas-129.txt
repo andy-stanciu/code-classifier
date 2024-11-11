@@ -1,0 +1,35 @@
+class Solution {
+
+    public int method1(int[] piles, int h) {
+        // minimum eating speed
+        int left = 1;
+        // maximum eating speed
+        int right = 0;
+        // Find the maximum value in piles to set the upper bound for binary search
+        for (int pile : piles) {
+            right = Math.max(right, pile);
+        }
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (canEatAll(piles, mid, h)) {
+                // try for a smaller eating speed
+                right = mid;
+            } else {
+                // increase eating speed
+                left = mid + 1;
+            }
+        }
+        // the minimum speed that works
+        return left;
+    }
+
+    private boolean canEatAll(int[] piles, int speed, int h) {
+        int hours = 0;
+        for (int pile : piles) {
+            // ceiling division
+            hours += (pile + speed - 1) / speed;
+        }
+        // check if the current speed can eat all piles in h hours
+        return hours <= h;
+    }
+}

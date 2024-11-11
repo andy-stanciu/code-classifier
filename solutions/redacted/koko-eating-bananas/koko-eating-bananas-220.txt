@@ -1,0 +1,44 @@
+class Solution {
+
+    public int method1(int[] piles, int h) {
+        int l = piles.length;
+        if (l == 0) {
+            return 0;
+        }
+        int startSpeed = 1;
+        int maxPile = Integer.MIN_VALUE;
+        for (int pile : piles) {
+            maxPile = Math.max(maxPile, pile);
+        }
+        int minSpeed = maxPile;
+        //piles=[5]-h=2
+        int endSpeed = maxPile;
+        while (startSpeed <= endSpeed) {
+            int midSpeed = startSpeed + (endSpeed - startSpeed) / 2;
+            long hoursReq = calcHoursReq(piles, midSpeed);
+            if (hoursReq <= (long) h) {
+                //can be ans, try reducing speed if it works
+                minSpeed = Math.min(minSpeed, midSpeed);
+                endSpeed = midSpeed - 1;
+            } else {
+                //if hoursReq are more inc speed
+                startSpeed = midSpeed + 1;
+            }
+        }
+        return minSpeed;
+    }
+
+    public long calcHoursReq(int[] piles, int speed) {
+        //5 ban, speed 2
+        long res = 0;
+        for (int pile : piles) {
+            long hourPerPile = pile / speed;
+            int rem = pile % speed;
+            if (rem > 0) {
+                hourPerPile++;
+            }
+            res += hourPerPile;
+        }
+        return res;
+    }
+}

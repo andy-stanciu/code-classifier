@@ -1,0 +1,40 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        //Given the piles, we want to find the \'k\' that Koko can use to eat all bananas.
+        //k is going to be in range [1 , max(piles)] . We can do a binary search in this range and check if we can use that K to eat all bananas.
+        int max = 0;
+        for (int pile : piles) {
+            max = Math.max(max, pile);
+        }
+        //Koko can choose the max value to eat all bananas in h hours.
+        if (piles.length == h)
+            return max;
+        int left = 1;
+        int right = 1000000000;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            // check if koko can eat \'mid\' bananas per hour in less then or equals to \'h\' hours
+            if (canEatInTime(piles, mid, h))
+                right = mid - 1;
+            else
+                left = mid + 1;
+        }
+        return left;
+    }
+
+    boolean canEatInTime(int[] piles, int k, int h) {
+        int hours = 0;
+        for (int pile : piles) {
+            int div = pile / k;
+            hours += div;
+            if (hours > h)
+                return false;
+            // we need 1 extra hour to finish
+            if (pile % k != 0)
+                hours++;
+        }
+        //valid ans should make it possible to eat all bananas within H hours
+        return hours <= h;
+    }
+}

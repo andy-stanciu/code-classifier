@@ -1,0 +1,52 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] param1, int[] cost) {
+        int n = param1.length;
+        List<Node> myStack = new LinkedList<>();
+        int[] var1 = new int[n];
+        for (int i = n - 1; i != -1; i--) var1[i] = param1[i] - cost[i];
+        myStack.addLast(new Node(var1[0], 0));
+        for (int i = 1; i != n; i++) {
+            Node last = myStack.removeLast();
+            if (last.val >= 0) {
+                last.val += var1[i];
+                if (last.val < 0 && myStack.size() != 0) {
+                    Node secondLast = myStack.removeLast();
+                    secondLast.val += last.val;
+                    myStack.addLast(secondLast);
+                } else {
+                    myStack.addLast(last);
+                }
+            } else {
+                if (var1[i] < 0) {
+                    last.val += var1[i];
+                    myStack.addLast(last);
+                } else {
+                    myStack.addLast(last);
+                    myStack.addLast(new Node(var1[i], i));
+                }
+            }
+        }
+        Node last = myStack.removeLast();
+        if (last.val < 0)
+            return -1;
+        else if (myStack.size() == 0)
+            return last.pos;
+        else if (myStack.size() == 1 && myStack.removeLast().val + last.val >= 0)
+            return last.pos;
+        else
+            return -1;
+    }
+}
+
+public class Node {
+
+    public int val;
+
+    public int pos;
+
+    public Node(int val, int pos) {
+        this.val = val;
+        this.pos = pos;
+    }
+}

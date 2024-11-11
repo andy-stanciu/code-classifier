@@ -1,0 +1,35 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        int maxSkipValue = numRows + (numRows - 2);
+        StringBuilder strb = new StringBuilder();
+        if (s.length() == 1 || numRows == 1 || numRows == 0 || s.length() < numRows) {
+            return s;
+        }
+        int i = 0;
+        while (i < numRows) {
+            Integer skipDifference = maxSkipValue - i * 2;
+            int[] skipCounters = null;
+            if (skipDifference.equals(0) || i == 0) {
+                skipCounters = new int[] { maxSkipValue, maxSkipValue };
+            } else {
+                skipCounters = new int[] { skipDifference, maxSkipValue - skipDifference };
+            }
+            strb.append(s.charAt(i));
+            int j = i + skipCounters[0];
+            boolean counterNumber = true;
+            while (j < s.length()) {
+                strb.append(s.charAt(j));
+                if (counterNumber) {
+                    j = j + skipCounters[1];
+                    counterNumber = false;
+                } else {
+                    j = j + skipCounters[0];
+                    counterNumber = true;
+                }
+            }
+            i++;
+        }
+        return strb.toString();
+    }
+}

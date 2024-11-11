@@ -1,0 +1,47 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] param1, int[] cost) {
+        // initialise pointers, assume path starting from 0
+        // for summing purpose
+        int i = 0;
+        // starting point
+        int j = param1.length;
+        int difference = j - i;
+        int sum = param1[i] - cost[i];
+        int totalSum = 0;
+        // calculate total sum to see whether it can complete a circuit
+        for (int k = 0; k < param1.length; k++) {
+            totalSum += param1[k] - cost[k];
+        }
+        if (totalSum < 0) {
+            return -1;
+        } else {
+            // for each specific type of path
+            while (difference != 1) {
+                if (sum < 0) {
+                    // current path not feasible
+                    // set starting point j = one index before 0
+                    // which is at the back
+                    j--;
+                    // recalculate the total gas available if starting from j and drive until i
+                    sum += param1[j] - cost[j];
+                } else if (sum >= 0) {
+                    // current path seems to be feasible
+                    // move i to the next position
+                    i++;
+                    // recalculate the total gas available if starting from j and drive until the new i
+                    sum += param1[i] - cost[i];
+                }
+                // update difference
+                difference = j - i;
+                // loop ends when the two pointers converge
+            }
+            if (j == param1.length) {
+                // means j never moved, meaning the path starting from 0 is always feasible, so 0 should be the starting point
+                return 0;
+            } else {
+                return j;
+            }
+        }
+    }
+}

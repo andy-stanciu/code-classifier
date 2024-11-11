@@ -1,0 +1,78 @@
+class Solution {
+
+    public String method1(int num) {
+        assert num < 4000;
+        String result = "";
+        for (int i = RomanNum.values().length - 1; i >= 0 || num > 0; --i) {
+            Tuple2<String, Integer> convertedPart = method2(num, i);
+            result += convertedPart._1();
+            num = convertedPart._2();
+        }
+        return result.replace("DCD", "CM").replace("LXL", "XC").replace("VIV", "IX");
+    }
+
+    private Tuple2<String, Integer> method2(int num, int i) {
+        RomanNum rn = RomanNum.values()[i];
+        String part = "";
+        while (num - rn.get() >= 0) {
+            part += rn.name();
+            num -= rn.get();
+        }
+        if (part.length() == 4)
+            part = rn.name() + RomanNum.values()[i + 1].name();
+        return new Tuple2<String, Integer>(part, num);
+    }
+
+    private enum RomanNum {
+
+        I(1),
+        V(5),
+        X(10),
+        L(50),
+        C(100),
+        D(500),
+        M(1000);
+
+        private int value;
+
+        private RomanNum(int value) {
+            this.value = value;
+        }
+
+        public int get() {
+            return value;
+        }
+
+        public static RomanNum valueOf(char c) {
+            return valueOf((c + "").toUpperCase());
+        }
+    }
+
+    public class Tuple2<U extends Object, V extends Object> {
+
+        private U _1;
+
+        private V _2;
+
+        public Tuple2(U _1, V _2) {
+            this._1 = _1;
+            this._2 = _2;
+        }
+
+        public U _1() {
+            return _1;
+        }
+
+        public V _2() {
+            return _2;
+        }
+
+        public U first() {
+            return _1();
+        }
+
+        public V second() {
+            return _2();
+        }
+    }
+}

@@ -1,0 +1,34 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        int n = piles.length - 1;
+        if (n > h)
+            return -1;
+        int low = 1, high = Integer.MIN_VALUE;
+        for (int i : piles) {
+            high = Math.max(high, i);
+        }
+        while (low < high) {
+            int m = low + (high - low) / 2;
+            if (blackbox(m, piles, h)) {
+                high = m;
+            } else {
+                low = m + 1;
+            }
+        }
+        return low;
+    }
+
+    public boolean blackbox(int m, int[] piles, int h) {
+        int hours = 0;
+        for (int i : piles) {
+            int t = i / m;
+            hours += t;
+            if (i % m != 0)
+                hours++;
+        }
+        if (hours <= h)
+            return true;
+        return false;
+    }
+}

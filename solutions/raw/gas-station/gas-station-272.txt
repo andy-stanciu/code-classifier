@@ -1,0 +1,40 @@
+class Solution {
+
+    /**
+     *       2 things to check
+     *        1. if total gas is not sufficient, that is sum of total gas - sum of total cost is < 0,
+     *           we cant cover all the stations.
+     *        2. we can consider first station as start station and at each station, we check
+     *            if we can reach from prev station to next station. if we can, we are good.
+     *            if we cant, update next station as start station and update current gas as 0 again.
+     */
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int totalGas = 0;
+        int totalCost = 0;
+        for (int i = 0; i < gas.length; i++) {
+            totalGas += gas[i];
+            totalCost += cost[i];
+        }
+        if (totalGas < totalCost)
+            return -1;
+        int currentGas = 0;
+        int startStation = 0;
+        int curStation = 0;
+        while (curStation < gas.length) {
+            currentGas += gas[curStation] - cost[curStation];
+            if (currentGas < 0) {
+                // update startStation as next station of current station
+                startStation = curStation + 1;
+                curStation = startStation;
+                currentGas = 0;
+            } else {
+                // move to next station
+                curStation = curStation + 1;
+            }
+        }
+        return startStation;
+    }
+}
+/*
+4 - 1 + 5 - 2 + 1 - 3 + 2 - 4 + 3 - 5
+*/

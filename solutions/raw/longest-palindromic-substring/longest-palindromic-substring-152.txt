@@ -1,0 +1,41 @@
+class Solution {
+
+    int resultStartIndex;
+
+    int resultLength;
+
+    public String longestPalindrome(String s) {
+        int len = s.length();
+        if (len < 2)
+            return s;
+        for (int start = 0; start < len; start++) {
+            // searching for palindrome with even length
+            expandSearch(s, start, start);
+            // searching for palindrome with odd length
+            expandSearch(s, start, start + 1);
+        }
+        return s.substring(resultStartIndex, resultStartIndex + resultLength);
+    }
+
+    public void expandSearch(String s, int left, int right) {
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            // as we are starting from middle, we are moving
+            // the pointers to the left and right accordingly
+            left--;
+            right++;
+        }
+        if (right - left - 1 > resultLength) {
+            // we are doing left+1, as in the above loop,
+            // we keep on moving left, and at some point
+            // the value of left might become -1 or might go
+            // outside the horizon, that\'s why, we are adding 1
+            //  to the resultStartIndex
+            resultStartIndex = left + 1;
+            // we are doing right+1, as in the above loop,
+            // we keep on moving right, and at some point
+            // the value of right might become n or might go
+            // outside the horizon, that\'s why,
+            resultLength = (right - 1) - (left + 1) + 1;
+        }
+    }
+}

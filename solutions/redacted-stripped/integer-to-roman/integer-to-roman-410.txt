@@ -1,0 +1,57 @@
+class Solution {
+
+    public String method1(int num) {
+        int division = (int) (Math.log10(num) + 1);
+        StringBuilder res = new StringBuilder();
+        int processedNumber = 0;
+        while (division > 0) {
+            int currentRemainder = (int) ((num - processedNumber) / Math.pow(10, division - 1));
+            if (currentRemainder == 0) {
+                division--;
+                continue;
+            }
+            if (currentRemainder == 9) {
+                res.append(method2(division).repeat(10 - currentRemainder));
+                res.append(method2(division + 1));
+            } else if (currentRemainder > 5) {
+                res.append(method3(division));
+                res.append(method2(division).repeat(currentRemainder - 5));
+            } else if (currentRemainder == 5) {
+                res.append(method3(division));
+            } else if (currentRemainder == 4) {
+                res.append(method2(division));
+                res.append(method3(division));
+            } else {
+                res.append(method2(division).repeat(currentRemainder));
+            }
+            division--;
+            processedNumber += currentRemainder * Math.pow(10, division);
+        }
+        return res.toString();
+    }
+
+    private static String method2(int division) {
+        if (division == 1) {
+            return "I";
+        } else if (division == 2) {
+            return "X";
+        } else if (division == 3) {
+            return "C";
+        } else if (division == 4) {
+            return "M";
+        }
+        throw new IllegalArgumentException("Wrong division:" + division);
+    }
+
+    private static String method3(int division) {
+        if (division == 1) {
+            return "V";
+        } else if (division == 2) {
+            return "L";
+        }
+        if (division == 3) {
+            return "D";
+        }
+        throw new IllegalArgumentException("Wrong division:" + division);
+    }
+}

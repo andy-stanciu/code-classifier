@@ -1,0 +1,54 @@
+public class Solution {
+
+    public int strStr(String haystack, String needle) {
+        int m = needle.length();
+        int n = haystack.length();
+        if (m > n)
+            return -1;
+        // Prime number for modulo operation
+        int prime = 101;
+        // Number of characters in the input alphabet
+        int base = 256;
+        long needleHash = 0;
+        long haystackHash = 0;
+        // The value of base^(m-1)
+        long power = 1;
+        // Precompute power = base^(m-1) % prime
+        for (int i = 0; i < m - 1; i++) {
+            power = (power * base) % prime;
+        }
+        // Compute the hash value of the needle and the first window of the haystack
+        for (int i = 0; i < m; i++) {
+            needleHash = (needleHash * base + needle.charAt(i)) % prime;
+            haystackHash = (haystackHash * base + haystack.charAt(i)) % prime;
+        }
+        // Slide the pattern over the haystack string
+        for (int i = 0; i <= n - m; i++) {
+            // If the hash values match, check the strings character by character
+            if (needleHash == haystackHash) {
+                // Check character by character to confirm the match
+                int j;
+                for (j = 0; j < m; j++) {
+                    if (haystack.charAt(i + j) != needle.charAt(j)) {
+                        break;
+                    }
+                }
+                if (j == m) {
+                    // Match found at index i
+                    return i;
+                }
+            }
+            // Calculate the hash value for the next window of the haystack
+            if (i < n - m) {
+                haystackHash = (haystackHash - haystack.charAt(i) * power) % prime;
+                haystackHash = (haystackHash * base + haystack.charAt(i + m)) % prime;
+                // We might get negative hash value, converting it to positive
+                if (haystackHash < 0) {
+                    haystackHash = (haystackHash + prime);
+                }
+            }
+        }
+        // No match found
+        return -1;
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        //  Special cases
+        if (s.length() == 1 || numRows == 1 || numRows > s.length())
+            return s;
+        //  Temp for various purposes
+        int temp;
+        StringBuilder zigzag = new StringBuilder();
+        //  Row one formula: 2m(n-1)+1
+        int m = 0;
+        while ((temp = 2 * m * (numRows - 1) + 1) <= s.length()) {
+            zigzag.append(s.charAt(temp - 1));
+            m++;
+        }
+        //  Middle row formulas: 2m(n-1)+2-i and 2m(n-1)+i
+        for (int i = 2; i < numRows; i++) {
+            //  Iterations start at 1 as the second rule is invalid at m = 0
+            m = 1;
+            //  First rule at m = 0
+            zigzag.append(s.charAt(i - 1));
+            //  Until the end of the string is reached, keep incrementing m and implementing both rules
+            while ((temp = 2 * m * (numRows - 1) + i - 1) < s.length()) {
+                zigzag.append(s.charAt(2 * m * (numRows - 1) + 2 - i - 1));
+                zigzag.append(s.charAt(temp));
+                m++;
+            }
+            //  Check if the second rule applies for one last m
+            if ((temp = 2 * m * (numRows - 1) + 2 - i - 1) < s.length())
+                zigzag.append(s.charAt(temp));
+        }
+        //  Last row formula: 2m(n-1)+n
+        m = 0;
+        while ((temp = 2 * m * (numRows - 1) + numRows - 1) < s.length()) {
+            zigzag.append(s.charAt(temp));
+            m++;
+        }
+        return zigzag.toString();
+    }
+}

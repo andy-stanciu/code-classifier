@@ -1,0 +1,54 @@
+/**
+ * 134. Gas Station
+ * There are n gas stations along a circular route, where the amount of gas at the ith station is gas[i].
+ *
+ * You have a car with an unlimited gas tank and it costs cost[i] of gas to travel from the ith
+ * station to its next (i + 1)th station. You begin the journey with an empty tank at one of the gas
+ * stations.
+ *
+ * Given two integer arrays gas and cost, return the starting gas station\'s index if you can travel
+ * around the circuit once in the clockwise direction, otherwise return -1. If there exists a
+ * solution, it is guaranteed to be unique.
+ *
+ * Constraints:
+ * n == gas.length == cost.length
+ * 1 <= n <= 10^5
+ * 0 <= gas[i], cost[i] <= 10^4
+ */
+class Solution {
+
+    // A verbose solution (1 ms)
+    public int canCompleteCircuit(int[] param1, int[] cost) {
+        // A round trip requires traveling all the roads. There needs to be enough gas to cover the costs.
+        int totalNet = 0;
+        for (int i = 0; i < param1.length; i++) {
+            totalNet += param1[i] - cost[i];
+        }
+        // a round trip isn\'t possible
+        if (totalNet < 0)
+            return -1;
+        // Got here cause a round trip is possible. So, find the starting station,
+        // which is guaranteed to exist and is unique.
+        // Start at station 0 with an empty tank.
+        int var1 = 0;
+        // with an empty tank
+        int tank = 0;
+        for (int i = 0; i < param1.length; i++) {
+            // fill up the tank
+            tank += param1[i];
+            // drive to the next station
+            tank -= cost[i];
+            // Checks if there\'s was enough gas to get there
+            if (tank < 0) {
+                // There was not enough gas to get there. Therefore, that wasn\'t
+                // the starting station. (And every station we encountered along the
+                // way can\'t be the starting station either.)
+                // Start at the next gas station
+                var1 = i + 1;
+                // with an empty gas tank
+                tank = 0;
+            }
+        }
+        return var1;
+    }
+}

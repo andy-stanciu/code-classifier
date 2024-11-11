@@ -1,0 +1,42 @@
+class Solution {
+
+    private void findlps(int[] lps, String s) {
+        int pre = 0;
+        int suff = 1;
+        lps[0] = 0;
+        while (suff < s.length()) {
+            if (s.charAt(pre) == s.charAt(suff)) {
+                lps[suff] = pre + 1;
+                pre++;
+                suff++;
+            } else {
+                if (pre == 0) {
+                    lps[suff] = 0;
+                    suff++;
+                } else {
+                    pre = lps[pre - 1];
+                }
+            }
+        }
+    }
+
+    public int strStr(String s1, String s) {
+        int[] lps = new int[s.length()];
+        findlps(lps, s);
+        int i = 0, j = 0;
+        while (i < s1.length() && j < s.length()) {
+            if (s1.charAt(i) == s.charAt(j)) {
+                i++;
+                j++;
+            } else {
+                if (j == 0) {
+                    i++;
+                } else
+                    j = lps[j - 1];
+            }
+        }
+        if (j == s.length())
+            return i - j;
+        return -1;
+    }
+}

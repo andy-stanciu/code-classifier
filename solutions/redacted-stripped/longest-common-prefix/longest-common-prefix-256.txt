@@ -1,0 +1,50 @@
+class Solution {
+
+    public String method1(String[] strs) {
+        if (strs.length == 1) {
+            return strs[0];
+        }
+        HashSet<String> uniqueArraySub = new HashSet<>();
+        for (String a : strs) {
+            List<String> subStringOfstring = getSubStringOfstring(a);
+            for (String s : subStringOfstring) {
+                uniqueArraySub.add(s);
+            }
+        }
+        HashMap<String, Integer> storeMap = new HashMap<>();
+        for (String s : uniqueArraySub) {
+            boolean exist = false;
+            for (String a : strs) {
+                List<String> subStringOfstring = getSubStringOfstring(a);
+                if (subStringOfstring.contains(s)) {
+                    exist = true;
+                } else {
+                    exist = false;
+                    break;
+                }
+            }
+            if (exist) {
+                storeMap.put(s, s.length());
+            }
+        }
+        OptionalInt max = storeMap.entrySet().stream().map(e -> e.getValue()).mapToInt(e -> e).max();
+        List<String> collect = storeMap.entrySet().stream().filter(e -> e.getValue() == max.getAsInt()).map(e -> e.getKey()).collect(Collectors.toList());
+        String returnString = "";
+        if (collect.size() > 0) {
+            returnString = collect.get(0).toString();
+        }
+        return returnString;
+    }
+
+    public static List<String> getSubStringOfstring(String s) {
+        ArrayList<String> allSubString = new ArrayList<>();
+        allSubString.add(s);
+        for (int i = 0; i < 1; i++) {
+            for (int j = i + 1; j < s.length(); j++) {
+                String substring = s.substring(i, j);
+                allSubString.add(substring);
+            }
+        }
+        return allSubString;
+    }
+}

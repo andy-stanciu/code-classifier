@@ -1,0 +1,37 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        // search space
+        // minimum: 1 banana in 1 hour, this will become minimum
+        int left = 1;
+        // maximum: any complete pile, find the the pile with max size: if eating speed is max then for sure koko can eat all banana in piles.length hours which is nothing but minimum number of hours possible [check the constraints]
+        int right = 0;
+        // finding the max pile size
+        for (int x : piles) right = Math.max(right, x);
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (condition(piles, mid, h)) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+
+    public boolean condition(int[] piles, int mid, int h) {
+        // to track the hours spent
+        int count = 0;
+        for (int x : piles) {
+            if (x % mid == 0)
+                count += x / mid;
+            else {
+                // +1 is there if there are less banana remaining in the pile than the per hour eating speed, since koko will not eat any extra banana if the pile is having refer this statement from problem [If the pile has less than k bananas, she eats all of them instead and will not eat any more bananas during this hour.]
+                count += x / mid + 1;
+            }
+            if (count > h)
+                return false;
+        }
+        return true;
+    }
+}

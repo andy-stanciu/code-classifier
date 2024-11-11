@@ -1,0 +1,44 @@
+class Solution {
+
+    /*
+	 * T = O(n) + O(log(max) * n)
+	 */
+    public int minEatingSpeed(int[] piles, int h) {
+        // Possible values of k = 1, 2, 3, .... , max(piles)
+        int n = piles.length;
+        //int max = Collections.max(Arrays.stream(piles).boxed().collect(Collectors.toList()));
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i <= n - 1; i++) {
+            // T = O(n)
+            if (piles[i] > max) {
+                max = piles[i];
+            }
+        }
+        int minResult = max;
+        int left = 1;
+        int right = max;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            int totalHrs = hoursRequiredToEatBananas(piles, mid);
+            if (totalHrs <= h) {
+                right = mid - 1;
+                if (minResult > mid) {
+                    minResult = mid;
+                }
+            } else if (totalHrs > h) {
+                left = mid + 1;
+            }
+        }
+        return minResult;
+    }
+
+    public int hoursRequiredToEatBananas(int[] piles, int k) {
+        int n = piles.length;
+        double sum = 0;
+        //find total hours:
+        for (int i = 0; i < n; i++) {
+            sum = sum + Math.ceil((double) (piles[i]) / (double) (k));
+        }
+        return (int) sum;
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    public int strStr(String haystack, String needle) {
+        if (needle.length() > haystack.length()) {
+            return -1;
+        }
+        int haylen = haystack.length();
+        int nelen = needle.length();
+        int[] next = getNextArr(needle);
+        int j = 0;
+        for (int i = 0; i < haylen; i++) {
+            while (j > 0 && haystack.charAt(i) != needle.charAt(j)) {
+                j = next[j - 1] + 1;
+            }
+            if (haystack.charAt(i) == needle.charAt(j)) {
+                j++;
+            }
+            if (j >= nelen) {
+                return i - nelen + 1;
+            }
+        }
+        return -1;
+    }
+
+    public int[] getNextArr(String needle) {
+        int nelen = needle.length();
+        int[] next = new int[nelen];
+        int j = -1;
+        next[0] = -1;
+        for (int i = 1; i < nelen; i++) {
+            while (j >= 0 && needle.charAt(i) != needle.charAt(j + 1)) {
+                j = next[j];
+            }
+            if (needle.charAt(i) == needle.charAt(j + 1)) {
+                j++;
+            }
+            next[i] = j;
+        }
+        return next;
+    }
+}

@@ -1,0 +1,34 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        int min = 1;
+        int max = 0;
+        // Find the maximum number of bananas in a pile
+        for (int pile : piles) {
+            if (pile > max) {
+                max = pile;
+            }
+        }
+        // Perform binary search
+        while (min < max) {
+            int mid = min + (max - min) / 2;
+            if (canEatAllBananas(piles, h, mid)) {
+                // Try to find a slower speed
+                max = mid;
+            } else {
+                // Need a faster speed
+                min = mid + 1;
+            }
+        }
+        return min;
+    }
+
+    private boolean canEatAllBananas(int[] piles, int h, int k) {
+        int hoursNeeded = 0;
+        for (int pile : piles) {
+            // Same as Math.ceil((double)pile / k)
+            hoursNeeded += (pile + k - 1) / k;
+        }
+        return hoursNeeded <= h;
+    }
+}

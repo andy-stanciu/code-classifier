@@ -1,0 +1,37 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        int low = 1;
+        int high = getmax(piles);
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (caneat(piles, h, mid)) {
+                //now going to get more smaller value
+                high = mid;
+            } else
+                //going to upper limit as in this range answer is not present
+                low = mid + 1;
+        }
+        return low;
+    }
+
+    public boolean caneat(int[] piles, int h, int k) {
+        //finding how much hours required if speed is k
+        int hours = 0;
+        for (int i = 0; i < piles.length; i++) {
+            //similar as ceil(piles[i]/k)
+            hours += (piles[i] + k - 1) / k;
+        }
+        return hours <= h;
+    }
+
+    //finds the max element of piles
+    public int getmax(int[] piles) {
+        int m = Integer.MIN_VALUE;
+        for (int i = 0; i < piles.length; i++) {
+            if (m < piles[i])
+                m = piles[i];
+        }
+        return m;
+    }
+}

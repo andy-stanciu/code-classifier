@@ -1,0 +1,80 @@
+class Solution {
+
+    public Map<Integer, String> method1() {
+        Map<Integer, String> map = new LinkedHashMap<Integer, String>();
+        map.put(1, "I");
+        map.put(5, "V");
+        map.put(10, "X");
+        map.put(50, "L");
+        map.put(100, "C");
+        map.put(500, "D");
+        map.put(1000, "M");
+        return map;
+    }
+
+    public Map<Integer, String> method2() {
+        Map<Integer, String> map = new LinkedHashMap<Integer, String>();
+        map.put(4, "IV");
+        map.put(9, "IX");
+        map.put(40, "XL");
+        map.put(90, "XC");
+        map.put(400, "CD");
+        map.put(900, "CM");
+        return map;
+    }
+
+    public Integer findMaxValueBeforeNum(int num, Map<Integer, String> map) {
+        int max = 0;
+        for (Map.Entry<Integer, String> entry : map.entrySet()) {
+            if (num > entry.getKey()) {
+                max = entry.getKey();
+            } else {
+                break;
+            }
+        }
+        return max;
+    }
+
+    public String method3(int num) {
+        StringBuilder builder = new StringBuilder();
+        Solution solution = new Solution();
+        Map<Integer, String> map = solution.method1();
+        Map<Integer, String> mapContaning4Or9 = solution.method2();
+        String var1 = String.valueOf(num);
+        String c = null;
+        Map<Integer, String> currentMap = null;
+        if (var1.startsWith("9") || var1.startsWith("4")) {
+            c = mapContaning4Or9.get(num);
+            currentMap = mapContaning4Or9;
+        } else {
+            c = map.get(num);
+            currentMap = map;
+        }
+        if (c != null)
+            return builder.append(c).toString();
+        else {
+            Integer currentVal = solution.findMaxValueBeforeNum(num, currentMap);
+            builder.append(currentMap.get(currentVal));
+            Integer tmp = num - currentVal;
+            String var2 = String.valueOf(tmp);
+            if (var2.startsWith("9") || var2.startsWith("4")) {
+                currentMap = mapContaning4Or9;
+            } else {
+                currentMap = map;
+            }
+            while (tmp > 0 && currentMap.get(tmp) == null) {
+                currentVal = solution.findMaxValueBeforeNum(tmp, currentMap);
+                tmp = tmp - currentVal;
+                builder.append(currentMap.get(currentVal));
+                var2 = String.valueOf(tmp);
+                if (var2.startsWith("9") || var2.startsWith("4")) {
+                    currentMap = mapContaning4Or9;
+                } else {
+                    currentMap = map;
+                }
+            }
+            builder.append(currentMap.get(tmp));
+        }
+        return builder.toString();
+    }
+}

@@ -1,0 +1,30 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int n = gas.length;
+        int total_surplus = 0;
+        int surplus = 0;
+        int start = 0;
+        for (int i = 0; i < n; i++) {
+            // total_surplus ensures we can complete the circuit if we start at some index that\'s unknown
+            total_surplus = total_surplus + (gas[i] - cost[i]);
+            // surplus is needed to determine the start index
+            surplus = surplus + (gas[i] - cost[i]);
+            // surplus is total diff from that start_index
+            if (surplus < 0) {
+                // if surplus is less than 0 then we cant reach the next index/gas station to fillup
+                surplus = 0;
+                // we move start to next index because previous index is not feasible
+                start = i + 1;
+            }
+        }
+        if (total_surplus < 0) {
+            // if total diff between gas and cost is <0 then we can never complete the circuit no matter where we started
+            return -1;
+        } else {
+            // if circuit completion is possible then we return the start_index
+            return start;
+            // in this example, [1,2,3,4,5] if we start from index 3, surplus is all positive until we end the array, still we are not checking the full circuit one more time because we know total_surplus is > 0
+        }
+    }
+}

@@ -1,0 +1,45 @@
+class Solution {
+
+    public String method1(String s) {
+        int len = s.length();
+        int[][] dp = new int[len][len];
+        for (int i = 0; i < len; i++) dp[i][i] = 1;
+        //System.out.println(dp[2][2]);
+        int max = -1, fi = 0, fj = 0;
+        for (int i = 1; i < len; i++) {
+            for (int j = 0; j + i < len; j++) {
+                int lp = j, rp = j + i;
+                if (s.charAt(lp) != s.charAt(rp)) {
+                    dp[lp][rp] = 0;
+                    continue;
+                }
+                if (lp + 1 >= rp - 1) {
+                    dp[lp][rp] = 1;
+                    if (rp - lp + 1 > max) {
+                        max = rp - lp + 1;
+                        fj = rp;
+                        fi = lp;
+                    }
+                    continue;
+                }
+                if (dp[lp + 1][rp - 1] == 1) {
+                    dp[lp][rp] = 1;
+                    if (rp - lp + 1 > max) {
+                        max = rp - lp + 1;
+                        fj = rp;
+                        fi = lp;
+                    }
+                    continue;
+                } else {
+                    dp[lp][rp] = 0;
+                }
+            }
+        }
+        return s.substring(fi, fj + 1);
+    }
+}
+/*
+s(i,j) is palindrome if s[i]=s[j] and s[i-1,j-1] is palindrome
+
+s(i,i) is palindrome with length 1
+*/

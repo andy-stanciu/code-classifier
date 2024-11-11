@@ -1,0 +1,41 @@
+class Solution {
+
+    public static String convert(String s, int numRows) {
+        int theLength = s.length();
+        if (theLength <= numRows || numRows == 1) {
+            return s;
+        }
+        StringBuilder converted = new StringBuilder();
+        HashMap<Integer, Integer> onRow = new HashMap();
+        boolean adding = false;
+        int temp = 0;
+        for (int j = 0; j < theLength; j++) {
+            if (j < numRows - 1) {
+                onRow.put(j, 1);
+            } else if (adding) {
+                temp = temp + 1;
+                onRow.merge(j % ((numRows * 2) - 2), 1, Integer::sum);
+                adding = (temp != numRows && numRows != 2);
+            } else {
+                temp = 0;
+                onRow.merge(numRows - (j % (numRows - 1)) - 1, 1, Integer::sum);
+                adding = numRows - (j % (numRows - 1)) - 1 == 1;
+            }
+        }
+        for (int i = 0; i < numRows; i++) {
+            for (double j = 0; j < onRow.get(i); j++) {
+                double currentIndex = 0;
+                if (j == 0) {
+                    currentIndex = i;
+                } else if (i == 0 || i == numRows - 1) {
+                    currentIndex = j * ((numRows * 2) - 2) + i;
+                } else {
+                    currentIndex = j % 2 == 1 ? ((Math.ceil(j / 2)) * ((numRows * 2) - 2)) - i : (Math.ceil(j / 2)) * ((numRows * 2) - 2) + i;
+                }
+                int currentInd = ((int) currentIndex);
+                converted.append(currentIndex != (theLength - 1) ? s.substring(currentInd, (currentInd) + 1) : s.substring(currentInd));
+            }
+        }
+        return converted.toString();
+    }
+}

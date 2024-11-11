@@ -1,0 +1,38 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        int n = gas.length;
+        for (int i = 0; i < n; i++) {
+            if (gas[i] - cost[i] >= 0) {
+                stack.push(i);
+            }
+        }
+        // Now checking for all points
+        while (stack.size() > 0) {
+            int index = stack.pop();
+            if (check(gas, cost, index, n)) {
+                return index;
+            }
+        }
+        return -1;
+    }
+
+    public boolean check(int[] gas, int[] cost, int index, int n) {
+        boolean flag = true;
+        int size = 0;
+        int ptr = index;
+        int sum = 0;
+        while (size < n) {
+            sum += gas[ptr % n] - cost[ptr % n];
+            if (sum < 0) {
+                return false;
+            }
+            ptr++;
+            size++;
+        }
+        if (size == n && sum >= 0)
+            return true;
+        return false;
+    }
+}

@@ -1,0 +1,33 @@
+class Solution {
+
+    public String method1(String s) {
+        String[][] memo = new String[s.length()][s.length()];
+        for (int i = 0; i < s.length(); i++) Arrays.fill(memo[i], "@");
+        return helper(0, s.length() - 1, s, memo);
+    }
+
+    public String helper(int start, int end, String s, String[][] memo) {
+        if (!memo[start][end].equals("@"))
+            return memo[start][end];
+        if (start > end)
+            return "";
+        if (end == start)
+            return "" + s.charAt(start);
+        String ans1 = "";
+        if (s.charAt(start) == s.charAt(end)) {
+            ans1 = helper(start + 1, end - 1, s, memo);
+            if (end - start - 1 == ans1.length()) {
+                ans1 = s.charAt(start) + ans1 + s.charAt(end);
+            } else {
+                ans1 = "";
+            }
+        }
+        String ans2 = helper(start, end - 1, s, memo);
+        String ans3 = helper(start + 1, end, s, memo);
+        if (ans1.length() >= ans2.length() && ans1.length() >= ans3.length())
+            return memo[start][end] = ans1;
+        if (ans2.length() >= ans3.length() && ans2.length() >= ans1.length())
+            return memo[start][end] = ans2;
+        return memo[start][end] = ans3;
+    }
+}

@@ -1,0 +1,33 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        //range is from 1~max value from piles
+        //basically solve for total hours with mid value
+        //if hours<h then valid and try to find a smaller pile by moving the right pointer
+        //if hours>h then not valid and try to find a bigger piles by moving the left pointer
+        int max = piles[0];
+        for (int i = 0; i < piles.length; i++) {
+            if (piles[i] > max) {
+                max = piles[i];
+            }
+        }
+        int lo = 1;
+        int hi = max;
+        int res = hi;
+        while (lo <= hi) {
+            int k = lo + (hi - lo) / 2;
+            int totalHr = 0;
+            for (int i = 0; i < piles.length; i++) {
+                double pileVal = piles[i];
+                totalHr += Math.ceil(pileVal / k);
+            }
+            if (totalHr <= h) {
+                res = Math.min(res, k);
+                hi = k - 1;
+            } else {
+                lo = k + 1;
+            }
+        }
+        return res;
+    }
+}

@@ -1,0 +1,42 @@
+class Solution {
+
+    // finding maximum range of hours which is nothing but the maximum value in the array(simple find max in the array)
+    public int maximumElementInPiles(int[] piles) {
+        int maximumElementValue = Integer.MAX_VALUE;
+        for (int i = 0; i < piles.length; i++) {
+            maximumElementValue = Math.max(piles[i], maximumElementValue);
+        }
+        return maximumElementValue;
+    }
+
+    // finding total time taken by middle time interval value, ceil as 7  bananas per 3 hour must give us 3 hours not 2.something...
+    public int timeTakenByMid(int[] piles, int middleValue) {
+        int timeTakenByMiddleValue = 0;
+        for (int i = 0; i < piles.length; i++) {
+            timeTakenByMiddleValue += Math.ceil((double) piles[i] / middleValue);
+        }
+        return timeTakenByMiddleValue;
+    }
+
+    public int minEatingSpeed(int[] piles, int h) {
+        int low = 0;
+        // to find the initial maximum limit of number of bananas to eat in an hour
+        int high = maximumElementInPiles(piles);
+        int minimumTimeTaken = -1;
+        // iterate between 1 to high using Binary search
+        while (low <= high) {
+            int mid = (high + low) / 2;
+            // find time taken using middle value between low and high
+            int timeTakenWithMiddleValue = timeTakenByMid(piles, mid);
+            //if we find a value matching this constraint, we found a minimum and hope there is another minimum and shift our high to the left side of the array
+            if (timeTakenWithMiddleValue <= h) {
+                minimumTimeTaken = mid;
+                high = mid - 1;
+            } else // if now found change low to shift focus on right side of the array
+            {
+                low = mid + 1;
+            }
+        }
+        return minimumTimeTaken;
+    }
+}

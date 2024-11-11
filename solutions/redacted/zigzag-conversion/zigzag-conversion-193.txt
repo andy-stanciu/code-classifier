@@ -1,0 +1,45 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        if (numRows == 1)
+            return s;
+        int n = s.length();
+        StringBuilder res = new StringBuilder(s);
+        int inPos = 0;
+        int outPos = 0;
+        int jump = 2 * numRows - 2;
+        // pass for the first row
+        while (inPos < n) {
+            res.setCharAt(outPos, s.charAt(inPos));
+            inPos += jump;
+            outPos++;
+        }
+        // pass for the 2nd ... n-1 rows
+        int outPos2 = outPos + 1;
+        for (int i = 1; i < numRows - 1; i++) {
+            inPos = i;
+            int inPos2 = jump - i;
+            outPos = Math.min(outPos, outPos2);
+            outPos2 = outPos + 1;
+            while (inPos < n) {
+                res.setCharAt(outPos, s.charAt(inPos));
+                inPos += jump;
+                outPos += 2;
+            }
+            while (inPos2 < n) {
+                res.setCharAt(outPos2, s.charAt(inPos2));
+                inPos2 += jump;
+                outPos2 += 2;
+            }
+        }
+        // pass for the last row
+        outPos = Math.min(outPos, outPos2);
+        inPos = numRows - 1;
+        while (inPos < n) {
+            res.setCharAt(outPos, s.charAt(inPos));
+            inPos += jump;
+            outPos++;
+        }
+        return res.toString();
+    }
+}

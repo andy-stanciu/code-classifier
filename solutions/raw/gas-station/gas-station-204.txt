@@ -1,0 +1,47 @@
+class Solution {
+
+    public boolean canCar(int[] gas, int[] cost, int index, int startIndex, int gasRemaining, int n) {
+        // System.out.println("gasremaining "+gasRemaining+" cost[index]="+cost[index]+" index="+index);
+        if (gasRemaining - cost[index] < 0) {
+            return false;
+        }
+        gasRemaining -= cost[index];
+        index = (index + 1) % n;
+        gasRemaining += gas[index];
+        if (index == startIndex) {
+            return true;
+        }
+        boolean ans = canCar(gas, cost, index, startIndex, gasRemaining, n);
+        return ans;
+    }
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int sumCost = 0;
+        for (int c : cost) {
+            sumCost += c;
+        }
+        int sumGas = 0;
+        for (int g : gas) {
+            sumGas += g;
+        }
+        // Check if it is possible to complete the journey
+        if (sumCost > sumGas) {
+            return -1;
+        }
+        int i = 0;
+        int n = gas.length;
+        boolean ans = false;
+        for (i = 0; i < n; i++) {
+            if (gas[i] == 0) {
+                continue;
+            }
+            if (gas[i] >= cost[i]) {
+                ans = canCar(gas, cost, i, i, gas[i], n);
+                if (ans) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+}

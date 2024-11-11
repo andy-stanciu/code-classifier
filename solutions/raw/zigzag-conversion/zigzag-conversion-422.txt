@@ -1,0 +1,45 @@
+class Solution {
+
+    public String convert(String s, int N) {
+        int l = s.length();
+        // handle base cases
+        if (l <= N || N == 1) {
+            return s;
+        }
+        // As per above picture, now create list of chars
+        List<List<Character>> ans = new ArrayList<>();
+        for (int i = 0; i < N; i++) {
+            List<Character> ls = new ArrayList<>();
+            ls.add(s.charAt(i));
+            ans.add(ls);
+        }
+        // order of insertion reverses in every column of list, so use below bool variable
+        boolean shouldEndAt0 = true;
+        int row = N - 2;
+        for (int i = N; i < l; i++) {
+            char ch = s.charAt(i);
+            ans.get(row).add(ch);
+            if (shouldEndAt0) {
+                row--;
+                if (row == -1) {
+                    row = 1;
+                    shouldEndAt0 = false;
+                }
+            } else {
+                row++;
+                if (row == N) {
+                    row = N - 2;
+                    shouldEndAt0 = true;
+                }
+            }
+        }
+        // Now just iterate list and keep adding chars to final result
+        StringBuilder sb = new StringBuilder();
+        for (List<Character> ls : ans) {
+            for (Character ch : ls) {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
+    }
+}

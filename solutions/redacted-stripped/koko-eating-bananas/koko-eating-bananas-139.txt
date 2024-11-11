@@ -1,0 +1,34 @@
+class Solution {
+
+    private boolean canEatInTime(int[] piles, int param1, int hoursLeftToEat) {
+        for (int pile : piles) {
+            hoursLeftToEat -= Math.ceil((double) pile / (double) param1);
+            if (hoursLeftToEat < 0)
+                return true;
+        }
+        return false;
+    }
+
+    private int method1(int[] piles, int minSpeed, int maxSpeed, int hoursToEat) {
+        if (minSpeed >= maxSpeed)
+            return minSpeed;
+        int middleSpeed = minSpeed + (maxSpeed - minSpeed) / 2;
+        boolean var1 = canEatInTime(piles, middleSpeed, hoursToEat);
+        if (var1) {
+            return method1(piles, middleSpeed + 1, maxSpeed, hoursToEat);
+        }
+        return method1(piles, minSpeed, middleSpeed, hoursToEat);
+    }
+
+    private int getMaxValue(int[] arr) {
+        int maxValue = 1;
+        for (int value : arr) {
+            maxValue = Math.max(maxValue, value);
+        }
+        return maxValue;
+    }
+
+    public int method2(int[] piles, int h) {
+        return method1(piles, 1, getMaxValue(piles), h);
+    }
+}

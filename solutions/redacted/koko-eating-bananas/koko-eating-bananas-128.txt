@@ -1,0 +1,53 @@
+class Solution {
+
+    int ans = Integer.MAX_VALUE;
+
+    public int method1(int[] piles, int h) {
+        // Find the maximum number of bananas in a pile
+        int max = Arrays.stream(piles).max().getAsInt();
+        // Initialize ans with the maximum for initial search
+        this.ans = max;
+        // Perform binary search to find the minimum eating speed
+        this.binaryFind(piles, max, h);
+        return this.ans;
+    }
+
+    public void binaryFind(int[] piles, int val, int h) {
+        int left = 0;
+        // Right boundary starts at the maximum number of bananas
+        int right = val;
+        int mid = (left + right) / 2;
+        int temp = h;
+        while (true) {
+            // Keeps track of remaining hours
+            temp = h;
+            // Calculate hours needed for Koko to eat all piles at the current speed (val)
+            for (int pile : piles) {
+                temp -= pile % mid > 0 ? ((pile / mid) + 1) : pile / mid;
+                // Explanation:
+                // - pile / mid: This is the number of hours it takes to eat the whole pile if it\'s divisible by val.
+                // - pile % mid > 0: This checks if there are any leftover bananas after eating whole portions (pile / val).
+                // - ((pile / mid) + 1): If there\'s a leftover, we need one additional hour to finish the pile.
+                if (// If temp becomes negative, Koko can\'t finish within h hours at this speed
+                temp < 0)
+                    break;
+            }
+            // Update search based on the calculated hours
+            if (temp >= 0) {
+                // If Koko can finish within h hours at this speed
+                // Update minimum speed if necessary
+                this.ans = Math.min(this.ans, mid);
+                // Move the right boundary to the current speed (potential minimum)
+                right = mid;
+            } else
+                // Move the left boundary to the current speed (not a minimum)
+                left = mid;
+            // Update the middle for the next iteration
+            mid = (left + right) / 2;
+            // Break if the search space becomes too narrow (left and right are close)
+            if (mid == left || mid == right) {
+                break;
+            }
+        }
+    }
+}

@@ -1,0 +1,36 @@
+public class Solution {
+
+    public int expand(String s, int left, int right) {
+        // Expand while the characters on both sides match
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
+        }
+        // Return the length of the palindrome
+        // Length = right - left - 1 because left and right go out of bounds
+        return right - left - 1;
+    }
+
+    public String method1(String s) {
+        if (s == null || s.length() < 1) {
+            return "";
+        }
+        int start = 0, end = 0;
+        for (int i = 0; i < s.length(); i++) {
+            // Try both odd-length and even-length palindromes
+            // Odd-length palindrome (single center)
+            int len1 = expand(s, i, i);
+            // Even-length palindrome (two centers)
+            int len2 = expand(s, i, i + 1);
+            // Get the maximum length
+            int len = Math.max(len1, len2);
+            // Update the start and end indices of the longest palindrome found
+            if (len > end - start) {
+                start = i - (len - 1) / 2;
+                end = i + len / 2;
+            }
+        }
+        // Return the longest palindrome
+        return s.substring(start, end + 1);
+    }
+}

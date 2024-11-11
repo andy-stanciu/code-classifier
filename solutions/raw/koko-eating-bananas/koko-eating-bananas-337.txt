@@ -1,0 +1,34 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        var low = 1;
+        var high = 0;
+        for (var max : piles) {
+            if (max > high)
+                high = max;
+        }
+        while (low <= high) {
+            var mid = low + (high - low) / 2;
+            if (canEatBananas(piles, mid, h)) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return low;
+    }
+
+    private boolean canEatBananas(int[] piles, int k, int maxHours) {
+        if (piles.length > maxHours)
+            return false;
+        long hours = 0;
+        for (var value : piles) {
+            hours = hours + (value / k);
+            if (value % k > 0)
+                hours++;
+        }
+        if (hours <= maxHours)
+            return true;
+        return false;
+    }
+}

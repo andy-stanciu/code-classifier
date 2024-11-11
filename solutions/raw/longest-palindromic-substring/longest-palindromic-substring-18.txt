@@ -1,0 +1,39 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        int n = s.length();
+        int[][] dp = new int[n][n];
+        int maxLen = 0;
+        int start = 0;
+        // Initialize dp array for single characters and two-character substrings
+        for (int i = 0; i < n; i++) {
+            // Single character substrings are palindromes
+            dp[i][i] = 1;
+        }
+        for (int i = 0; i < n - 1; i++) {
+            if (s.charAt(i) == s.charAt(i + 1)) {
+                // Two-character substrings are palindromes if both characters are the same
+                dp[i][i + 1] = 1;
+            }
+        }
+        // Fill dp table for substrings longer than 2 characters
+        for (int length = 3; length <= n; length++) {
+            for (int i = 0; i <= n - length; i++) {
+                int j = i + length - 1;
+                if (s.charAt(i) == s.charAt(j) && dp[i + 1][j - 1] == 1) {
+                    dp[i][j] = 1;
+                }
+            }
+        }
+        // Find the longest palindromic substring
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                if (dp[i][j] == 1 && j - i + 1 > maxLen) {
+                    maxLen = j - i + 1;
+                    start = i;
+                }
+            }
+        }
+        return s.substring(start, start + maxLen);
+    }
+}

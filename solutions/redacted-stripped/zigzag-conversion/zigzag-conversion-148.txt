@@ -1,0 +1,57 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        StringBuilder strBld = new StringBuilder();
+        ArrayList<ArrayList<String>> var1 = new ArrayList<>();
+        for (int i = 0; i < numRows; i++) {
+            var1.add(new ArrayList<>());
+            while (var1.get(i).size() <= s.length()) {
+                var1.get(i).add(null);
+            }
+        }
+        int i = 0, j = 0;
+        int j1 = j;
+        for (String ch : s.split("")) {
+            if (numRows >= 2) {
+                if (i >= 0 && i < numRows) {
+                    if (i == 0 && j == 0) {
+                        var1.get(i).set(j, ch);
+                        i++;
+                    } else if (j == 0) {
+                        var1.get(i).set(j, ch);
+                        i++;
+                    } else if (i == 0) {
+                        j1 = j;
+                        i++;
+                        var1.get(i).set(j, ch);
+                        i++;
+                    } else if (j - j1 == 0) {
+                        var1.get(i).set(j, ch);
+                        i++;
+                    } else {
+                        i--;
+                        j1 = j++;
+                        var1.get(i).set(j, ch);
+                    }
+                } else {
+                    --i;
+                    i -= 1;
+                    j1 = j++;
+                    var1.get(i).set(j, ch);
+                }
+            } else if (numRows == 1) {
+                var1.get(0).add(ch);
+            } else {
+                System.out.println("Only Enter Rows greater than or equal to 1.");
+                System.exit(0);
+            }
+        }
+        for (ArrayList<String> aX : var1) {
+            aX.removeIf(Objects::isNull);
+            for (String ele : aX) {
+                strBld.append(ele);
+            }
+        }
+        return strBld.toString();
+    }
+}

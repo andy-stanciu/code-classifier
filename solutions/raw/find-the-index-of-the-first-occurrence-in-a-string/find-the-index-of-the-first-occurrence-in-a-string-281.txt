@@ -1,0 +1,88 @@
+class Solution {
+
+    /* Method to build the LPS (Longest Prefix Suffix) array for the pattern (needle) */
+    public int[] buildLPS(String needle) {
+        /* Handle edge case where needle is null or empty */
+        if (needle == null || needle.length() == 0) {
+            return new int[0];
+        }
+        int m = needle.length();
+        int[] lps = new int[m];
+        /* The first value of LPS is always 0 */
+        lps[0] = 0;
+        int i = 1;
+        /* Pointer to traverse the needle */
+        int len = 0;
+        /* Length of the previous longest prefix suffix */
+        /* Calculate LPS values for the pattern */
+        while (i < m) {
+            /* If characters match, increment len and assign it to lps[i] */
+            if (needle.charAt(len) == needle.charAt(i)) {
+                len++;
+                lps[i] = len;
+                i++;
+            } else {
+                /* If characters do not match */
+                if (len != 0) {
+                    /* Update len to the previous LPS value */
+                    len = lps[len - 1];
+                } else {
+                    /* If len is 0, assign lps[i] to 0 and move to the next character */
+                    lps[i] = 0;
+                    i++;
+                }
+            }
+        }
+        return lps;
+    }
+
+    /* Method to perform KMP pattern matching to find the first occurrence of needle in haystack */
+    public int KMPpatternMatching(String haystack, String needle) {
+        /* Handle edge case where needle is null or empty
+            Return 0 as per standard behavior for empty needle */
+        if (needle == null || needle.length() == 0) {
+            return 0;
+        }
+        int n = haystack.length();
+        int m = needle.length();
+        /* If the pattern is longer than the text, it cannot be found */
+        if (m > n) {
+            return -1;
+        }
+        /* Preprocess the pattern to build the LPS array */
+        int[] lps = buildLPS(needle);
+        int i = 0;
+        /* Pointer for haystack */
+        int j = 0;
+        /* Pointer for needle */
+        /* Traverse through the haystack */
+        while (i < n) {
+            /* If characters match, increment both pointers */
+            if (needle.charAt(j) == haystack.charAt(i)) {
+                i++;
+                j++;
+            }
+            /* If we have found the entire pattern in the text */
+            if (j == m) {
+                return (i - j);
+                /* Return the starting index of the match */
+            } else /* If there is a mismatch after some matches */
+            if (i < n && needle.charAt(j) != haystack.charAt(i)) {
+                if (j != 0) {
+                    /* Update j to the previous LPS value to skip unnecessary comparisons */
+                    j = lps[j - 1];
+                } else {
+                    /* If j is 0, move to the next character in the haystack */
+                    i++;
+                }
+            }
+        }
+        /* If no match is found in the entire haystack */
+        return -1;
+    }
+
+    /* Wrapper method that calls the KMP pattern matching method */
+    public int strStr(String haystack, String needle) {
+        return KMPpatternMatching(haystack, needle);
+    }
+}

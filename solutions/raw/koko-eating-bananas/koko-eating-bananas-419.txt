@@ -1,0 +1,33 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        int low = 1;
+        int high = getMaxPiles(piles);
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (canEatInTime(mid, piles, h)) {
+                high = mid;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return low;
+    }
+
+    private int getMaxPiles(int[] piles) {
+        int maxPiles = 0;
+        for (int pile : piles) {
+            maxPiles = Math.max(maxPiles, pile);
+        }
+        return maxPiles;
+    }
+
+    private boolean canEatInTime(int speed, int[] piles, int h) {
+        int hours = 0;
+        for (int pile : piles) {
+            // Using ceiling division
+            hours += (pile + speed - 1) / speed;
+        }
+        return hours <= h;
+    }
+}

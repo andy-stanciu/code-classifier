@@ -1,0 +1,39 @@
+class Solution {
+
+    int optimal = Integer.MAX_VALUE;
+
+    public int method1(int[] piles, int h) {
+        int max = Arrays.stream(piles).max().orElse(0);
+        if (piles.length == h) {
+            return max;
+        }
+        optimal = max;
+        return getOptimalSpeed(piles, 0, max, h);
+    }
+
+    private int getOptimalSpeed(int[] piles, int low, int high, int h) {
+        if (low + 1 == high) {
+            return optimal;
+        }
+        int mid = (low + high) / 2;
+        long timeTaken = getTimeTaken(piles, mid);
+        if (timeTaken <= h) {
+            optimal = Math.min(mid, optimal);
+            return getOptimalSpeed(piles, low, mid, h);
+        } else {
+            return getOptimalSpeed(piles, mid, high, h);
+        }
+    }
+
+    private long getTimeTaken(int[] piles, int speed) {
+        long timeTaken = 0;
+        for (int i : piles) {
+            if (i % speed == 0) {
+                timeTaken += i / speed;
+            } else {
+                timeTaken += i / speed + 1;
+            }
+        }
+        return timeTaken;
+    }
+}

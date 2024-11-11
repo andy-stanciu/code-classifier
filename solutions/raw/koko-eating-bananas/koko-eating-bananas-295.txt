@@ -1,0 +1,42 @@
+class Solution {
+
+    /*
+    We need a utility that checks if x is eating speed, whether koko can eat all the piles in h hours
+    We need to do a binary search on this x that ranges from 1 to maximum size of pile in piles array.
+    */
+    public int minEatingSpeed(int[] piles, int h) {
+        // least speed at which koko can eat is 1 banana per hour
+        int low = 1;
+        // most speed at which koko can eat is max pile in piles
+        int high = 1;
+        for (int pile : piles) high = Math.max(high, pile);
+        int mid;
+        int ans = 1;
+        while (low <= high) {
+            mid = low + (high - low) / 2;
+            // mid here would be the eating speed
+            // if koko can eat in mid bananas per hours, this is a potential answer
+            // we need to check if she can do better by eating at slower rate as question asks
+            // minimum integer k such that she can eat all the bananas within h hours.
+            if (canEatAllPiles(piles, mid, h)) {
+                ans = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return ans;
+    }
+
+    // checks if given speed as eatingSpeed, can koko finish eating all piles at this speed
+    // within h hours
+    private boolean canEatAllPiles(int[] piles, int eatingSpeed, int hours) {
+        int ans = 0;
+        for (int pile : piles) {
+            ans += (int) Math.ceil((double) pile / (double) eatingSpeed);
+            if (ans > hours)
+                return false;
+        }
+        return ans <= hours;
+    }
+}

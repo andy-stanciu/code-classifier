@@ -1,0 +1,52 @@
+class Solution {
+
+    String word;
+
+    String[] zigzag;
+
+    int numRows;
+
+    public String convert(String s, int numRows) {
+        this.word = s;
+        this.numRows = numRows;
+        zigzag = new String[numRows];
+        Arrays.fill(zigzag, "");
+        return getZigzag();
+    }
+
+    private String getZigzag() {
+        if (word.length() <= numRows || numRows < 2)
+            return word;
+        int[] mids = getMids();
+        int ln = word.length(), j = 0, ch = 0;
+        while (ch < ln) {
+            if (j == numRows) {
+                for (Integer m : mids) {
+                    setZigzag(m, ch);
+                    ch++;
+                }
+                j = 0;
+            }
+            setZigzag(j, ch);
+            j++;
+            ch++;
+        }
+        return String.join("", zigzag);
+    }
+
+    private void setZigzag(int j, int i) {
+        if (Objects.isNull(zigzag[j]))
+            zigzag[j] = "";
+        if (i > word.length() - 1)
+            return;
+        zigzag[j] += word.charAt(i);
+    }
+
+    private int[] getMids() {
+        int[] m = new int[numRows - 2];
+        for (int i = 0; i < numRows - 2; i++) {
+            m[i] = (numRows - 2) - i;
+        }
+        return m;
+    }
+}

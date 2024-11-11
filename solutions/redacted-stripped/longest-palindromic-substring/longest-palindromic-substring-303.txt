@@ -1,0 +1,34 @@
+class Solution {
+
+    public String method1(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        String s1 = revStr(s);
+        int m = s.length();
+        int n = s1.length();
+        int[][] dp = new int[m + 1][n + 1];
+        int maxLength = 0;
+        int end = 0;
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (s.charAt(i - 1) == s1.charAt(j - 1)) {
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                    int beforeRevIndex = m - j;
+                    if (dp[i][j] > maxLength && beforeRevIndex + dp[i][j] - 1 == i - 1) {
+                        maxLength = dp[i][j];
+                        end = i - 1;
+                    }
+                } else {
+                    dp[i][j] = 0;
+                }
+            }
+        }
+        return s.substring(end - maxLength + 1, end + 1);
+    }
+
+    private static String revStr(String s) {
+        StringBuilder s1 = new StringBuilder(s);
+        return s1.reverse().toString();
+    }
+}

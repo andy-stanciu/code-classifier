@@ -1,0 +1,72 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        /*
+        
+        Row i, column j has form:
+        if(j%2 == 0){
+            j*n-i;
+        }
+        else{
+            (j-1)*n+i;
+        }
+        */
+        char[] original = s.toCharArray();
+        char[] res = new char[original.length];
+        int n = numRows - 1;
+        int i = 0, j = 0, k = 0;
+        //deal with edge cases
+        if (numRows >= original.length || numRows == 1)
+            return s;
+        if (numRows == 2) {
+            for (i = 0; i < original.length; i += 2) {
+                res[k] = original[i];
+                ++k;
+            }
+            for (i = 1; i < original.length; i += 2) {
+                res[k] = original[i];
+                ++k;
+            }
+            return new String(res);
+        }
+        //fill out row 0:
+        while (j < original.length) {
+            res[k] = original[j];
+            ++k;
+            j += 2 * n;
+        }
+        //fill out rows 1-(n-1)
+        for (i = 1; i < n; ++i) {
+            //go through each row
+            for (j = 0; true; ++j) {
+                boolean lastChanged = false;
+                //we need this because sometimes even operations will be more than odd and vice versa
+                if (j % 2 == 0) {
+                    //even
+                    if (j * n + i < original.length) {
+                        res[k] = original[j * n + i];
+                        ++k;
+                        lastChanged = true;
+                    } else //finished with even
+                    if (!lastChanged)
+                        break;
+                } else {
+                    //odd
+                    if ((j + 1) * n < original.length + i) {
+                        res[k] = original[(j + 1) * n - i];
+                        ++k;
+                        lastChanged = true;
+                    } else //finished with odd
+                    if (!lastChanged)
+                        break;
+                }
+            }
+        }
+        //final row
+        for (i = 0; k < original.length; i += 2) {
+            res[k] = original[(i + 1) * n];
+            ++k;
+        }
+        return new String(res);
+    }
+}

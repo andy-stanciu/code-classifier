@@ -1,0 +1,37 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] param1, int[] cost) {
+        // Start with a minimum of 0 - if it stays 0, then our initial guess is right.
+        int minCumulative = 0;
+        // We will add 1 to the minimum balance index, so start at -1.
+        // If 0 is in fact the minimum, when we add one, we get index 0 as desired.
+        int minCumulativeIndex = -1;
+        // Start with a balance of 0 and for each i (from 0) we\'ll update
+        // this to the cumulative balance (gas - cost) at that index.
+        // starting balance of 0
+        int currentCumulative = 0;
+        // Define a variable for computing the next balance for use in the loop.
+        int nextCumulative;
+        for (int i = 0; i < param1.length; i++) {
+            // Compute the balance when arriving at the next station:
+            nextCumulative = currentCumulative + param1[i] - cost[i];
+            // Is this the minimum balance?  If so update it and track the index.
+            if (nextCumulative < minCumulative) {
+                minCumulative = nextCumulative;
+                minCumulativeIndex = i;
+            }
+            // Update the current balance for the next station.
+            currentCumulative = nextCumulative;
+        }
+        // The cycle is complete.  Is our net balance negative?
+        // If it is, there is no solution, so return -1.
+        if (currentCumulative < 0) {
+            return -1;
+        }
+        // The cycle can be completed without running out of gas!
+        // There is an answer - to find it, add one to our minimum index.
+        // Then, take the remainder modulo gas.length (the number of
+        // stations) in case the last station had the minimum balance.
+        return ((minCumulativeIndex + 1) % param1.length);
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    public String longestPalindrome(String str) {
+        if (str.length() == 0 || str.length() == 1) {
+            return str;
+        }
+        HashMap<Character, ArrayList<Integer>> list = new HashMap<>();
+        String ans = "";
+        for (int i = 0; i < str.length(); i++) {
+            char val = str.charAt(i);
+            if (list.containsKey(val)) {
+                for (int j : list.get(val)) {
+                    int s = j;
+                    int e = i;
+                    boolean bol = true;
+                    while (s < e) {
+                        if (str.charAt(s) != str.charAt(e)) {
+                            bol = false;
+                            break;
+                        } else {
+                            s++;
+                            e--;
+                        }
+                    }
+                    if (bol && ans.length() < (i - j + 1)) {
+                        ans = str.substring(j, i + 1);
+                    }
+                }
+                list.get(val).add(i);
+            } else {
+                list.put(val, new ArrayList<>());
+                list.get(val).add(i);
+            }
+        }
+        if (ans.length() == 0) {
+            ans = str.charAt(0) + "";
+        }
+        return ans;
+    }
+}

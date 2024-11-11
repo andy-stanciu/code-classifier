@@ -1,0 +1,41 @@
+class Solution {
+
+    public int method1(int[] piles, int h) {
+        int i;
+        int n = piles.length;
+        int minSpeed, maxSpeed = piles[0];
+        for (i = 0; i < n; i++) {
+            maxSpeed = Math.max(maxSpeed, piles[i]);
+        }
+        minSpeed = 1;
+        while (minSpeed < maxSpeed) {
+            int speed = minSpeed + (maxSpeed - minSpeed) / 2;
+            int time = 0;
+            for (i = 0; i < n; i++) {
+                time += Math.ceil((double) piles[i] / speed);
+                if (time > h) {
+                    break;
+                }
+            }
+            if (time <= h) {
+                // We shift to left side by including the middle value
+                // because of the fact that if for \'k\' time <= h then,
+                // there \'may be\' a value smaller than \'k\' for which
+                // time <= h. Since its not guaranteed (because \'k\' itself)
+                // could be the answer, so we do maxSpeed = speed because
+                // we don\'t want to lose the value of \'speed\' i.e. \'k\' if
+                // it was the minimum value that satisfies the condition.
+                // Basically this is a condition where, if \'k\' satisfies then
+                // \'k+1\' will definitely satisfy
+                maxSpeed = speed;
+            } else {
+                // We shift to right side because \'k\' cannot satisfy the condition,
+                // so we know for sure that \'k-1\' and below values will
+                // definitely not satisfy the condition.
+                minSpeed = speed + 1;
+            }
+        }
+        // Since minSpeed = maxSpeed, you can return any value
+        return minSpeed;
+    }
+}

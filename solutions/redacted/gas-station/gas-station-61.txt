@@ -1,0 +1,36 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] param1, int[] cost) {
+        // Initialize st to -1, which represents that the starting gas station has not been found yet.
+        // Initialize sum to 0, which will keep track of the total remaining gas after visiting all stations.
+        // Initialize asum to 0, which will keep track of the total remaining gas after visiting each station.
+        int st = -1;
+        int sum = 0;
+        int asum = 0;
+        // Iterate through each gas station.
+        for (int i = 0; i < param1.length; i++) {
+            // Calculate the remaining gas at the current station after traveling to the next station.
+            param1[i] -= cost[i];
+            // Add the remaining gas to the total sum.
+            sum += param1[i];
+            // Add the remaining gas to the running sum for the current station.
+            asum += param1[i];
+            // If the running sum is negative, it means that the circuit cannot be completed from the current starting gas station.
+            // Reset the running sum to 0 and update the starting gas station to the next station.
+            if (asum < 0) {
+                asum = 0;
+                st = i + 1;
+            } else // If the starting gas station is still unassigned, assign it to the current station.
+            if (st == -1) {
+                st = i;
+            }
+        }
+        // If the total sum is negative, it means that it is not possible to complete a circuit without running out of gas.
+        // Return -1 in this case.
+        if (sum < 0) {
+            return -1;
+        }
+        // Otherwise, return the starting gas station index.
+        return st;
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    private boolean canFinish(int[] piles, int k, int h) {
+        //time required to eat bananas in all piles at the rate/speed of midVal bph
+        int totalTime = 0;
+        for (int pile : piles) {
+            //time required to eat that pile
+            int currPileTime = (pile + k - 1) / k;
+            totalTime = totalTime + currPileTime;
+        }
+        if (totalTime <= h)
+            return true;
+        else
+            return false;
+    }
+
+    public int method1(int[] piles, int h) {
+        //maximum no of bananas koko can eat in an hr for a single pile
+        int maxRate = 0;
+        for (int pile : piles) {
+            //find the maximum value in the piles array
+            maxRate = Math.max(maxRate, pile);
+        }
+        //koko eats k bananas per hr i.e. k bph
+        //using binary search to find the suitable k in the rates array
+        int left = 1;
+        int right = maxRate;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (//if this is true it means total time is less than or equal to h which max time limit
+            canFinish(piles, mid, h))
+                //we can perform binary search again to find a more lesser rate/speed at which koko can eat all bananas
+                right = mid;
+            else
+                //this means the time required was too long than the max limit h, so increase the rate/speed
+                //so we check for a greater rate/speed in new subarray
+                left = mid + 1;
+        }
+        return left;
+    }
+}

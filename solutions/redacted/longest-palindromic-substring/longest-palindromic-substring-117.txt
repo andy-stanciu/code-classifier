@@ -1,0 +1,46 @@
+class Solution {
+
+    public String method1(String s) {
+        if (s.length() < 2)
+            return s;
+        String var1 = "";
+        Map<String, String> dp = new HashMap();
+        // delete char from beginging
+        for (int i = 0; i < s.length() - 1; i++) {
+            String reqString = s.substring(i, s.length());
+            String current = method1(reqString, dp);
+            if (current.length() > var1.length())
+                var1 = current;
+        }
+        return var1;
+    }
+
+    // check all combinations by deleting chars from end
+    public String method1(String s, Map<String, String> m) {
+        String var1 = "";
+        if (s.length() < 2)
+            return s;
+        if (m.containsKey(s))
+            return m.get(s);
+        if (isPalindrome(s) && s.length() > var1.length()) {
+            var1 = s;
+        }
+        if (var1.length() >= s.length() - 1) {
+            m.put(s, var1);
+            return var1;
+        }
+        String current = method1(s.substring(0, s.length() - 1), m);
+        if (current.length() > var1.length())
+            var1 = current;
+        m.put(s, var1);
+        return var1;
+    }
+
+    boolean isPalindrome(String s) {
+        for (int i = 0; i < s.length() / 2; i++) {
+            if (s.charAt(i) != s.charAt(s.length() - 1 - i))
+                return false;
+        }
+        return true;
+    }
+}

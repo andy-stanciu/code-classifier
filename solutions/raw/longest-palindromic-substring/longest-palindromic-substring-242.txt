@@ -1,0 +1,27 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        int resL = 0, resR = 0;
+        for (int i = 0; i < s.length(); i++) {
+            int[] oddPal = expandAroundCenter(s, i, i);
+            int[] evenPal = expandAroundCenter(s, i, i + 1);
+            if ((oddPal[1] - oddPal[0] + 1) > (resR - resL + 1)) {
+                resL = oddPal[0];
+                resR = oddPal[1];
+            }
+            if ((evenPal[1] - evenPal[0] + 1) > (resR - resL + 1)) {
+                resL = evenPal[0];
+                resR = evenPal[1];
+            }
+        }
+        return s.substring(resL, resR + 1);
+    }
+
+    private int[] expandAroundCenter(String s, int l, int r) {
+        while (l >= 0 && r < s.length() && s.charAt(l) == s.charAt(r)) {
+            l--;
+            r++;
+        }
+        return new int[] { l + 1, r - 1 };
+    }
+}

@@ -1,0 +1,49 @@
+class Solution {
+
+    // Dynanmic programming solution
+    // Time complexity O(n^2) denotes 2 the nested for loops, rest of the operations inside the forloop is just O(1)
+    // Space complexity is O(n^2) for the table initialization
+    //
+    public String longestPalindrome(String s) {
+        // base case
+        if (s.length() == 0) {
+            return s;
+        }
+        // intialize a 2d table, which stores if substring of ij is a palindrome
+        int n = s.length();
+        boolean[][] table = new boolean[n][n];
+        // All substrings of length 1 is palindromes
+        int maxLength = 1;
+        for (int i = 0; i < n; ++i) {
+            table[i][i] = true;
+        }
+        // check for substrings of length 2, duplicates in this case;
+        int start = 0;
+        for (int i = 0; i < n - 1; i++) {
+            if (s.charAt(i) == s.charAt(i + 1)) {
+                table[i][i + 1] = true;
+                // the start index of the longest palidrome, because there might be mutiple solution, we just keep the start index of the last longest palidrome
+                start = i;
+                maxLength = 2;
+            }
+        }
+        // check for substrings greater than 2;
+        for (int length = 3; length <= n; length++) {
+            // aaaaa and we are looking for substring length 3, then the max possible index is 2, as we refer index 2 3 4;
+            for (int i = 0; i < n - length + 1; i++) {
+                // get the end index of the substring
+                int j = i + length - 1;
+                // since the table is populated for index 3 we first check if the substring(i+1, j-1) is a palindome and then if character i == chracter j;
+                if (table[i + 1][j - 1] == true && s.charAt(i) == s.charAt(j)) {
+                    table[i][j] = true;
+                    // we want to update maxlength to k because k is the longest palidrome
+                    if (length > maxLength) {
+                        maxLength = length;
+                        start = i;
+                    }
+                }
+            }
+        }
+        return s.substring(start, start + maxLength);
+    }
+}

@@ -1,0 +1,82 @@
+class Solution {
+
+    String max = "";
+
+    String original = "";
+
+    Map<Character, List<Integer>> map = new HashMap<>();
+
+    public String method1(String s) {
+        if (s.length() == 1) {
+            return s;
+        }
+        this.original = s;
+        this.max = s.substring(0, 1);
+        char[] cArray = s.toCharArray();
+        for (int i = 0; i < cArray.length; ++i) {
+            char c = cArray[i];
+            if (!map.containsKey(c)) {
+                map.put(c, new ArrayList<>());
+            }
+            map.get(c).add(i);
+        }
+        for (int i = 0; i < cArray.length; ++i) {
+            if (map.size() == 0) {
+                break;
+            }
+            if (!greaterThanMax(i, cArray.length - 1)) {
+                break;
+            }
+            findPalindrome(cArray, i);
+        }
+        return max;
+    }
+
+    void findPalindrome(char[] cArray, int left) {
+        char c = cArray[left];
+        List<Integer> list = map.get(c);
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+        if (list.size() == 1) {
+            map.remove(c);
+            return;
+        } else {
+            list.remove(0);
+            for (int i = list.size() - 1; i >= 0; --i) {
+                int right = list.get(i);
+                if (!greaterThanMax(left, right)) {
+                    return;
+                }
+                if (isPalindrome(cArray, left, right)) {
+                    setMax(left, right);
+                }
+            }
+        }
+    }
+
+    boolean isPalindrome(char[] cArray, int left, int right) {
+        if (left == right) {
+            return true;
+        }
+        for (; left < right; ++left, --right) {
+            if (cArray[left] == cArray[right]) {
+                continue;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    boolean greaterThanMax(int left, int right) {
+        int n = right + 1 - left;
+        return (n > max.length());
+    }
+
+    void setMax(int left, int right) {
+        if (greaterThanMax(left, right)) {
+            max = this.original.substring(left, right + 1);
+        }
+    }
+}

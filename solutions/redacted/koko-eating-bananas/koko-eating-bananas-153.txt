@@ -1,0 +1,38 @@
+class Solution {
+
+    public int method1(int[] piles, int h) {
+        long sum = 0;
+        int max = 0;
+        for (int pile : piles) {
+            sum += pile;
+            max = Math.max(pile, max);
+        }
+        int minK = getUpperLimitDivision(sum, h);
+        return bst(minK, max, piles, h);
+    }
+
+    private int bst(int start, int end, int[] piles, int h) {
+        if (start > end)
+            return start;
+        int mid = (start + end) / 2;
+        boolean result = isValid(piles, mid, h);
+        if (result) {
+            return bst(start, mid - 1, piles, h);
+        } else {
+            return bst(mid + 1, end, piles, h);
+        }
+    }
+
+    boolean isValid(int[] piles, int k, int h) {
+        for (int pile : piles) {
+            h -= getUpperLimitDivision(pile, k);
+            if (h < 0)
+                return false;
+        }
+        return h >= 0;
+    }
+
+    private int getUpperLimitDivision(long a, int b) {
+        return (int) Math.ceil((double) a / b);
+    }
+}

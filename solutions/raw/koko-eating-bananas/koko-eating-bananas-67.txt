@@ -1,0 +1,31 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        //calculate the search space
+        int low = 1, high = Integer.MIN_VALUE;
+        for (int i = 0; i < piles.length; i++) high = Math.max(piles[i], high);
+        //perform binary search
+        int ans = 0;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            System.out.println(low + " " + high + " " + mid);
+            if (possibleToEat(mid, piles, h)) {
+                //if possible,lower the search space to find better answer
+                ans = mid;
+                high = mid - 1;
+            } else
+                low = mid + 1;
+        }
+        return ans;
+    }
+
+    //if its possible to eat with a eatingRate k
+    private boolean possibleToEat(int k, int[] piles, int h) {
+        int requiredHours = 0;
+        for (int i = 0; i < piles.length; i++) {
+            double d = (piles[i] * 1.0) / k;
+            requiredHours += Math.ceil(d);
+        }
+        return requiredHours <= h;
+    }
+}

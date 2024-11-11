@@ -1,0 +1,29 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        if (s.length() == 1) {
+            return s;
+        }
+        int[][] dp = new int[s.length()][s.length()];
+        for (int index = 0; index < s.length(); ++index) {
+            dp[index][index] = 1;
+        }
+        int currentMaxLength = Integer.MIN_VALUE;
+        int startPalindrome = 0;
+        for (int diff = 1; diff < s.length(); ++diff) {
+            for (int row = 0; row < s.length() - diff; ++row) {
+                int col = row + diff;
+                if (s.charAt(row) == s.charAt(col) && dp[row + 1][col - 1] == (diff - 1)) {
+                    dp[row][col] = 2 + dp[row + 1][col - 1];
+                } else {
+                    dp[row][col] = Math.max(dp[row + 1][col], dp[row][col - 1]);
+                }
+                if (currentMaxLength < dp[row][col]) {
+                    currentMaxLength = dp[row][col];
+                    startPalindrome = row;
+                }
+            }
+        }
+        return s.substring(startPalindrome, startPalindrome + dp[0][s.length() - 1]);
+    }
+}

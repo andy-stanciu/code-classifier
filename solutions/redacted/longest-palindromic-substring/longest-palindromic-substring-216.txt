@@ -1,0 +1,44 @@
+class Solution {
+
+    public String method1(String s) {
+        //convert from string to characters
+        char[] c = s.toCharArray();
+        //initialize all our counters
+        int maxLeft = 0, maxRange = 1, tempLeft = 0, tempRight = 0, tempRange = 1;
+        for (int i = 0; i < c.length - (maxRange / 2); ++i) {
+            //our one pass for loop
+            tempLeft = tempRight = i;
+            while (tempLeft != 0 && tempRight != c.length - 1 && c[tempLeft - 1] == c[tempRight + 1]) {
+                --tempLeft;
+                ++tempRight;
+            }
+            //finds the longest palindrome around c[i]
+            //calculate the correct range
+            tempRange = 2 * (i - tempLeft) + 1;
+            if (tempRange > maxRange) {
+                maxRange = tempRange;
+                maxLeft = tempLeft;
+            }
+            //update our left and our range if necessary
+            if (i + 1 < c.length && c[i] == c[i + 1]) {
+                //if we have two-in-a-row
+                tempLeft = i;
+                tempRight = i + 1;
+                while (tempLeft != 0 && tempRight != c.length - 1 && c[tempLeft - 1] == c[tempRight + 1]) {
+                    --tempLeft;
+                    ++tempRight;
+                }
+                //compute the largest palindrome around the two
+                //calculate our range
+                tempRange = 2 * (i - tempLeft + 1);
+                if (tempRange > maxRange) {
+                    //update if we have a maximum
+                    maxRange = tempRange;
+                    maxLeft = tempLeft;
+                }
+            }
+        }
+        //return maximum
+        return s.substring(maxLeft, maxLeft + maxRange);
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        if (numRows == 1) {
+            return s;
+        }
+        StringBuilder output = new StringBuilder("");
+        // Calculate zig-zag rows
+        int zig_zag_rows = numRows - 2;
+        // Calculate First-Row
+        int first_index_incr = numRows + zig_zag_rows;
+        for (int i = 0; i < s.length(); i += first_index_incr) {
+            output.append(s.charAt(i));
+        }
+        // Calculate mid/zig-zag-rows
+        int j = 1;
+        int last_zig_zag_value = first_index_incr - 1;
+        int t = 1;
+        while (j <= zig_zag_rows) {
+            int i = j;
+            int incr = last_zig_zag_value - i;
+            while (i < s.length()) {
+                output.append(s.charAt(i));
+                i += incr;
+                if (i < s.length())
+                    output.append(s.charAt(i));
+                //Because we have pattern 2, 4 and 4, 2
+                i += 2 * t;
+            }
+            last_zig_zag_value -= 1;
+            j++;
+            t++;
+        }
+        //Calculate last row
+        for (int i = numRows - 1; i < s.length(); i += first_index_incr) {
+            output.append(s.charAt(i));
+        }
+        return output.toString();
+    }
+}

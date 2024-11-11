@@ -1,0 +1,46 @@
+class Solution {
+
+    public String method1(String str) {
+        int n = str.length();
+        int[][] dp = new int[n][n];
+        for (int[] d : dp) {
+            Arrays.fill(d, -1);
+        }
+        method2(str, 0, n - 1, dp);
+        return str.substring(stIdx, stIdx + max);
+    }
+
+    private int max = 0;
+
+    private int stIdx = 0;
+
+    public int method2(String s, int i, int j, int[][] dp) {
+        if (i >= j) {
+            dp[i][j] = i == j ? 1 : 0;
+            if (dp[i][j] > max) {
+                max = dp[i][j];
+                stIdx = i;
+            }
+            return dp[i][j];
+        }
+        if (dp[i][j] != -1)
+            return dp[i][j];
+        int a = method2(s, i + 1, j - 1, dp);
+        int b = method2(s, i + 1, j, dp);
+        int c = method2(s, i, j - 1, dp);
+        if (s.charAt(i) == s.charAt(j)) {
+            if (i + 1 == j) {
+                dp[i][j] = 2;
+            } else {
+                dp[i][j] = a > 0 ? a + 2 : 0;
+            }
+            if (dp[i][j] > max) {
+                max = dp[i][j];
+                stIdx = i;
+            }
+            return dp[i][j];
+        } else {
+            return dp[i][j] = 0;
+        }
+    }
+}

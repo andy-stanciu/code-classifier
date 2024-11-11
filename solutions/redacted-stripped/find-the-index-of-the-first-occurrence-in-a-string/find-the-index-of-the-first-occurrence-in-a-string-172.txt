@@ -1,0 +1,43 @@
+class Solution {
+
+    public int strStr(String haystack, String needle) {
+        final int prime = 9999991;
+        final int base = 10;
+        if (needle.length() == 0)
+            return 0;
+        if (haystack.length() < needle.length())
+            return -1;
+        int maxBase = 1;
+        for (int i = 1; i < needle.length(); i++) {
+            maxBase = (maxBase * base) % prime;
+        }
+        int needlehash = hash(needle, needle.length(), base, prime);
+        int haystackhash = hash(haystack, needle.length(), base, prime);
+        if (needlehash == haystackhash)
+            return 0;
+        for (int i = needle.length(); i < haystack.length(); i++) {
+            haystackhash = (haystackhash + prime - (maxBase * haystack.charAt(i - needle.length()) % prime)) % prime;
+            haystackhash = (haystackhash * base + haystack.charAt(i)) % prime;
+            if (needlehash == haystackhash && checkSolution(haystack, needle, i - needle.length() + 1))
+                return i - needle.length() + 1;
+        }
+        return -1;
+    }
+
+    private int hash(String chars, int count, int base, int prime) {
+        int hash = 0;
+        for (int i = 0; i < count; i++) {
+            char c = chars.charAt(i);
+            hash = (hash * base + c) % prime;
+        }
+        return hash;
+    }
+
+    private boolean checkSolution(String haystack, String needle, int i) {
+        for (int j = 0; j < needle.length(); j++) {
+            if (haystack.charAt(j + i) != needle.charAt(j))
+                return false;
+        }
+        return true;
+    }
+}

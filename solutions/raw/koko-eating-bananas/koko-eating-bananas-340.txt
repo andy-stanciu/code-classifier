@@ -1,0 +1,46 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        // k can be from 1 to max element in the piles
+        // minimum k
+        // given a value k can she eat all in h
+        int max = 0;
+        for (int pile : piles) {
+            max = Math.max(pile, max);
+        }
+        return minK(piles, h, 1, max);
+    }
+
+    // binary search
+    private int minK(int[] piles, int h, int low, int high) {
+        int ans = high;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            // see if we can eat in mid
+            boolean eat = canEat(piles, h, mid);
+            if (eat) {
+                ans = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return ans;
+    }
+
+    private boolean canEat(int[] piles, int h, int k) {
+        int total = 0;
+        // check hour needed
+        for (int i = 0; i < piles.length; i++) {
+            if (piles[i] % k == 0) {
+                total = total + piles[i] / k;
+            } else {
+                total = total + piles[i] / k + 1;
+            }
+            if (total > h) {
+                return false;
+            }
+        }
+        return total <= h;
+    }
+}

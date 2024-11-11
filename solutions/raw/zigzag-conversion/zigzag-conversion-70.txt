@@ -1,0 +1,42 @@
+class Solution {
+
+    //formula proceeds in following way
+    //suppose numRows = 4;
+    //row == 1, gap1 = 2*1-2 = 0, gap2 = 2*4-2 = 6;
+    //row == 2, gap1 = 2*2-2 = 2, gap2 = 2*3-2 = 4;
+    //row == 3, gap1 = 2*3-2 = 4, gap2 = 2*2-2 = 2;
+    //row == 4, gap2 = 2*4-2 = 6, gap2 = 2*1-2 = 0;
+    //means we have to switch between gap1 and gap2 for a particular row;
+    public String convert(String s, int numRows) {
+        int n = numRows;
+        int i = 0;
+        StringBuilder sb = new StringBuilder();
+        if (n == 1)
+            return s;
+        while (i < numRows) {
+            int gap1 = 2 * n - 2;
+            int gap2 = 2 * i;
+            int index = i;
+            boolean flag = true;
+            while (index < s.length()) {
+                sb.append(s.charAt(index) + "");
+                //for i == 0 && i == numRows-1, we have only 1 gap, other gap is 0;
+                if (i == 0 || i == numRows - 1) {
+                    index += 2 * numRows - 2;
+                    continue;
+                }
+                //here we alternate the gap
+                if (flag) {
+                    index += gap1;
+                    flag = false;
+                } else {
+                    index += gap2;
+                    flag = true;
+                }
+            }
+            n--;
+            i++;
+        }
+        return sb.toString();
+    }
+}

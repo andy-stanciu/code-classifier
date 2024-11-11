@@ -1,0 +1,46 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        if (numRows == 1)
+            return s;
+        Map<Integer, String> map = new HashMap<>();
+        StringBuilder sbRes = new StringBuilder();
+        int n = 1;
+        boolean isReached = false;
+        for (int i = 0; i < s.length(); i++) {
+            char currentChar = s.charAt(i);
+            if (!map.containsKey(n) && n <= numRows) {
+                map.put(n, Character.toString(currentChar));
+                n++;
+                if (n <= numRows) {
+                    isReached = false;
+                } else {
+                    isReached = true;
+                    n--;
+                }
+            } else {
+                if (!isReached) {
+                    map.put(n, map.get(n) + currentChar);
+                    n++;
+                    if (n == (numRows + 1)) {
+                        isReached = true;
+                        n--;
+                    }
+                } else {
+                    if (n > 1) {
+                        n--;
+                    }
+                    map.put(n, map.get(n) + currentChar);
+                    if (n == 1) {
+                        isReached = false;
+                        n++;
+                    }
+                }
+            }
+        }
+        for (String str : map.values()) {
+            sbRes.append(str);
+        }
+        return sbRes.toString().replaceAll("null", "");
+    }
+}

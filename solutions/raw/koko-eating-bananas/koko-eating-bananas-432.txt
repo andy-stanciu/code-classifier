@@ -1,0 +1,42 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        for (int i = 0; i < piles.length; i++) {
+            if (piles[i] > max) {
+                max = piles[i];
+            }
+        }
+        int low = 1, high = max, ans = 0;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int time = findTime(mid, piles);
+            if (time <= h) {
+                ans = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return ans;
+        // for(int i=1;i<=max;i++){
+        //     int time=findTime(i,piles);
+        //     if(time<=h){
+        //         return i;
+        //     }
+        // }
+        // return -1;
+    }
+
+    public int findTime(int k, int[] piles) {
+        int t = 0;
+        for (int i = 0; i < piles.length; i++) {
+            if (piles[i] % k == 0) {
+                t += ((double) piles[i] / (double) k);
+            } else {
+                t += (((double) piles[i] / (double) k) + 1);
+            }
+        }
+        return t;
+    }
+}

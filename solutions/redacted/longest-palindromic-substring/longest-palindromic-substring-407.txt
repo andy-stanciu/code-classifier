@@ -1,0 +1,34 @@
+class Solution {
+
+    public String method1(String s) {
+        int offset = 0;
+        int index = 0;
+        boolean isEven = false;
+        var array = s.toCharArray();
+        for (int i = 0; i < s.length(); i++) {
+            int newOffset = checkSize(i, array, 1, false);
+            if (newOffset > offset) {
+                index = i;
+                offset = newOffset;
+                isEven = false;
+            }
+            if (i + 1 < s.length() && array[i] == array[i + 1]) {
+                newOffset = checkSize(i, array, 1, true);
+                if (newOffset >= offset) {
+                    index = i;
+                    offset = newOffset;
+                    isEven = true;
+                }
+            }
+        }
+        return s.substring(index - offset, index + offset + (isEven ? 2 : 1));
+    }
+
+    static int checkSize(int index, char[] array, int offset, boolean isEven) {
+        if (index - offset < 0 || index + offset + (isEven ? 1 : 0) >= array.length || array[index - offset] != array[index + offset + (isEven ? 1 : 0)]) {
+            return offset - 1;
+        } else {
+            return checkSize(index, array, offset + 1, isEven);
+        }
+    }
+}

@@ -1,0 +1,59 @@
+class Solution {
+
+    /*
+        Given: n gas station along a circular rourte, where the amount of gas at the i station i is gas[i]
+
+        unlimited gas tank and it costs cost[i] of gas to travel from i station to its next i + 1 station
+
+        starts with empty tank at one of the gas station 
+
+        Given: two integer arrays gas and costs 
+        return the starting gas station index
+
+        1. select one gas station i, sum 
+        2. start with i station gas: gas[i], sum = gas[i]
+        3. take out cost[i] from sum 
+        4. plus i + 1 station gas, sum += gas[i + 1]
+        return which gas station can make circular route 
+
+
+    */
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int ans = -1, result = -1;
+        Deque<Integer> q = new ArrayDeque<>();
+        if (gas.length == 1 && gas[0] == cost[0])
+            return 0;
+        for (int i = 0; i < gas.length; i++) {
+            // if (cost[i] == 0) continue;
+            if (gas[i] - cost[i] > 0)
+                q.addLast(i);
+        }
+        // if (q.isEmpty()) q.addLast(0);
+        // System.out.println(q);
+        while (q.isEmpty() == false) {
+            int start = q.removeFirst();
+            ans = gas[start];
+            for (int i = start; i < gas.length; i++) {
+                ans -= cost[i];
+                if (ans < 0)
+                    break;
+                if (i + 1 < gas.length)
+                    ans += gas[i + 1];
+                else
+                    ans += gas[0];
+            }
+            if (ans > 0) {
+                for (int i = 0; i < start; i++) {
+                    ans -= cost[i];
+                    if (ans < 0)
+                        break;
+                    if (i + 1 != start)
+                        ans += gas[i + 1];
+                }
+            }
+            if (ans >= 0)
+                result = start;
+        }
+        return result;
+    }
+}

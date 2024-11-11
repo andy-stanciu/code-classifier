@@ -1,0 +1,44 @@
+class Solution {
+
+    public String longestCommonPrefix(String[] strs) {
+        if (strs == null || strs.length == 0) {
+            return "";
+        }
+        Map<Character, Map> trie = new HashMap<>();
+        add(trie, strs[0]);
+        for (int i = 1; i < strs.length; i++) {
+            find(trie, strs[i]);
+        }
+        String res = "";
+        while (trie.size() > 0) {
+            for (char c : trie.keySet()) {
+                res = res + c;
+                trie = trie.get(c);
+                break;
+            }
+        }
+        return res;
+    }
+
+    void find(Map<Character, Map> trie, String s) {
+        Map<Character, Map> last = trie;
+        for (char c : s.toCharArray()) {
+            if (!trie.containsKey(c)) {
+                last.clear();
+                return;
+            }
+            trie = trie.get(c);
+            last = trie;
+        }
+        last.clear();
+    }
+
+    void add(Map<Character, Map> trie, String s) {
+        for (char c : s.toCharArray()) {
+            if (!trie.containsKey(c)) {
+                trie.put(c, new HashMap<>());
+            }
+            trie = trie.get(c);
+        }
+    }
+}

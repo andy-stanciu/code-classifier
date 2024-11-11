@@ -1,0 +1,37 @@
+class Solution {
+
+    public int method1(int[] piles, int h) {
+        int minSpeed = 1, maxSpeed = maxSpeed(piles);
+        while (minSpeed < maxSpeed) {
+            int avgSpeed = minSpeed + (maxSpeed - minSpeed) / 2;
+            // if koko can eat at this speed, there might be a
+            // smaller speed, so to find that, move maxSpeed to avgSpeed
+            // And search towards the left side of the array
+            // (considering pile   size as speed)
+            if (canEatOrNot(piles, avgSpeed, h)) {
+                maxSpeed = avgSpeed;
+            } else {
+                minSpeed = avgSpeed + 1;
+            }
+        }
+        return maxSpeed;
+    }
+
+    // if koko can finish all the piles with the given avgSpeed or not?
+    private boolean canEatOrNot(int[] piles, int speed, int hoursAllowed) {
+        int currentHoursNeeded = 0;
+        for (int pile : piles) {
+            currentHoursNeeded += (pile + speed - 1) / speed;
+        }
+        return currentHoursNeeded <= hoursAllowed;
+    }
+
+    // find the max speed rnge or max number of bananas koko is allowed to eat, depending on the max bananas prsent in the pile.
+    private int maxSpeed(int[] piles) {
+        int max = Integer.MIN_VALUE;
+        for (int pile : piles) {
+            max = Math.max(pile, max);
+        }
+        return max;
+    }
+}

@@ -1,0 +1,39 @@
+class Solution {
+
+    public String updateString(String s) {
+        StringBuilder temp = new StringBuilder("#");
+        for (int i = 0; i < s.length(); i++) {
+            temp.append(s.charAt(i)).append("#");
+        }
+        return temp.toString();
+    }
+
+    public String longestPalindrome(String s) {
+        s = updateString(s);
+        int n = s.length();
+        int center = 0;
+        int right = 0;
+        int[] lps = new int[n];
+        int longest = 0;
+        int t_center = 0;
+        for (int i = 0; i < n; i++) {
+            if (i < right) {
+                int i_mir = 2 * center - i;
+                lps[i] = Math.min(lps[i_mir], right - i);
+            }
+            while ((i + 1 + lps[i] < n) && (i - 1 - lps[i] >= 0) && (s.charAt(i + 1 + lps[i]) == s.charAt(i - 1 - lps[i]))) {
+                lps[i]++;
+            }
+            if (i + lps[i] > right) {
+                center = i;
+                right = lps[i] + i;
+            }
+            if (lps[i] > longest) {
+                longest = lps[i];
+                t_center = center;
+            }
+        }
+        String res = s.substring(t_center - longest, t_center + longest + 1);
+        return res.replace("#", "");
+    }
+}

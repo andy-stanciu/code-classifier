@@ -1,0 +1,55 @@
+class Solution {
+
+    int[][] dp;
+
+    String res;
+
+    public String method1(String s) {
+        //Have a Dp and intitalise it to -1
+        dp = new int[s.length()][s.length()];
+        for (int i = 0; i < dp.length; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        //have the result set to initial character
+        res = s.substring(0, 1);
+        //Start from 0 and iterate till end
+        //on the second loop have j=i+res.length so that we will only check for substrings greater than curr palindrome string
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = i + res.length(); j < s.length(); j++) {
+                isPalindrome(i, j, s);
+            }
+        }
+        return res;
+    }
+
+    public boolean isPalindrome(int strt, int end, String s) {
+        if (strt >= end) {
+            return true;
+        }
+        //Check dp and return solution if the sub problem is already solved
+        if (dp[strt][end] != -1) {
+            if (dp[strt][end] == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        //Recursion call if strt and end character are equal
+        boolean flag = false;
+        if (s.charAt(strt) == s.charAt(end)) {
+            flag = isPalindrome(strt + 1, end - 1, s);
+            if (flag) {
+                if (res.length() < end - strt + 1) {
+                    res = s.substring(strt, end + 1);
+                }
+            }
+        }
+        //Update Dp and return result
+        if (flag) {
+            dp[strt][end] = 1;
+        } else {
+            dp[strt][end] = 0;
+        }
+        return flag;
+    }
+}

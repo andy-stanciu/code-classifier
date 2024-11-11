@@ -1,0 +1,45 @@
+class Solution {
+
+    public String intToRoman(int roman) {
+        NavigableMap<Integer, String> map = new TreeMap<Integer, String>();
+        map.put(1, "I");
+        map.put(5, "V");
+        map.put(10, "X");
+        map.put(50, "L");
+        map.put(100, "C");
+        map.put(500, "D");
+        map.put(1000, "M");
+        String finalStr = "";
+        boolean isDone = false;
+        while (!isDone) {
+            if (roman == 0) {
+                isDone = true;
+            } else {
+                String romanStr = "" + roman;
+                if (romanStr.charAt(0) != "4".charAt(0) && romanStr.charAt(0) != "9".charAt(0)) {
+                    int relativelyLowestCloseNum = map.floorKey(roman);
+                    roman = roman - relativelyLowestCloseNum;
+                    finalStr = finalStr + map.get(relativelyLowestCloseNum);
+                } else if (romanStr.charAt(0) == "4".charAt(0)) {
+                    int upperCloseNum = map.ceilingKey(roman);
+                    int lowerCloseNum = map.floorKey(roman);
+                    while (roman >= lowerCloseNum) {
+                        roman -= lowerCloseNum;
+                    }
+                    finalStr = finalStr + map.get(lowerCloseNum);
+                    finalStr = finalStr + map.get(upperCloseNum);
+                } else if (romanStr.charAt(0) == "9".charAt(0)) {
+                    int upperCloseNum = map.ceilingKey(roman);
+                    int lowerCloseNum = map.floorKey(roman);
+                    lowerCloseNum = map.floorKey(lowerCloseNum - 1);
+                    while (roman >= lowerCloseNum) {
+                        roman -= lowerCloseNum;
+                    }
+                    finalStr = finalStr + map.get(lowerCloseNum);
+                    finalStr = finalStr + map.get(upperCloseNum);
+                }
+            }
+        }
+        return finalStr;
+    }
+}

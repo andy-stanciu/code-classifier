@@ -1,0 +1,24 @@
+class Solution {
+
+    public int method1(int[] piles, int h) {
+        int low = 1;
+        int high = Arrays.stream(piles).max().orElse(0);
+        int optimalSpeed = high;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            long numberOfHoursAtMidSpeed = 0;
+            for (int pile : piles) {
+                //To round up the result of integer division, add (divisor - 1) to the dividend before performing the division
+                numberOfHoursAtMidSpeed += (pile + mid - 1) / mid;
+            }
+            if (numberOfHoursAtMidSpeed <= h) {
+                // we found a K, can we optimize ?
+                optimalSpeed = Math.min(mid, optimalSpeed);
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return optimalSpeed;
+    }
+}
