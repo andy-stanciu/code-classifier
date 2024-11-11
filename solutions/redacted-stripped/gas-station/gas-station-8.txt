@@ -1,0 +1,48 @@
+class Solution {
+
+    boolean canSolve(int i, int[] param1, int[] cost) {
+        int maxStart = i;
+        int fuel = 0;
+        int n = cost.length;
+        do {
+            fuel += param1[i % (n)];
+            if (fuel < cost[i % n]) {
+                return false;
+            }
+            fuel -= cost[i % n];
+            i = (i + 1) % n;
+        } while (i != maxStart);
+        return true;
+    }
+
+    public int canCompleteCircuit(int[] param1, int[] cost) {
+        int var1 = 0;
+        int totalCost = 0;
+        for (int i = 0; i < param1.length; i++) {
+            var1 += param1[i];
+            totalCost += cost[i];
+        }
+        if (var1 < totalCost) {
+            return -1;
+        }
+        int[][] arr = new int[param1.length][3];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i][0] = param1[i];
+            arr[i][1] = cost[i];
+            arr[i][2] = i;
+        }
+        Arrays.sort(arr, (a, b) -> {
+            if (a[0] - a[1] == b[0] - b[1]) {
+                return a[1] - b[1];
+            } else {
+                return (b[0] - b[1]) - (a[0] - a[1]);
+            }
+        });
+        for (int[] row : arr) {
+            if (canSolve(row[2], param1, cost) == true) {
+                return row[2];
+            }
+        }
+        return -1;
+    }
+}

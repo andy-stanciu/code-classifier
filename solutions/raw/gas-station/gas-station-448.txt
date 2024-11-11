@@ -1,0 +1,42 @@
+class Solution {
+
+    // Brute Force --->
+    // public int canCompleteCircuit2(int[] gas, int[] cost) {
+    //     int n = gas.length;
+    //     int curr = 0;
+    //     ArrayDeque<Integer> dq = new ArrayDeque<>();
+    //     // traverse 2 times since we gotta check for circular array
+    //     // maintain curr petrol petrol while traversing through array
+    //     // If curr petrol is +ve or 0 then just push it from end
+    //     // If curr petrol is -ve, remove it from start and update curr petrol by removing removed el petrol value. Do this until curr becomes +ve again or deque is empty
+    //     // maintain index deque not value, since we need that at end
+    //     // if size == n and curr > 0 (since we gotta move from last to first el too) that means we gottem. peek from start is starting index of this array
+    //     for(int i=0; i<2*n; i++){
+    //         while(!dq.isEmpty() && curr<0){
+    //             int k = dq.pollFirst();
+    //             curr -= gas[k]-cost[k];
+    //         }
+    //         dq.offerLast(i%n);
+    //         curr += gas[i%n]-cost[i%n];
+    //         if(dq.size() == n && curr>=0) return dq.peekFirst();
+    //     }
+    //     return -1;
+    // }
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        // Observation --> if for an element curr petrol is -ve then there will be no value previously which will complete full circle. So, if there is a starting point then it will after this point only.
+        // also if we encounter a -ve curr petrol value then we have to maintain a prevSum value which contain sum of petrol of prev el\'s.
+        // prevSum will be used since we gotta complete whole circle so we\'ll need total sum of prev and next el\'s at starting point, only if total>0 then result is true
+        int res = 0;
+        int n = gas.length;
+        int curr = 0, prev = 0;
+        for (int i = 0; i < n; i++) {
+            curr += gas[i] - cost[i];
+            if (curr < 0) {
+                res = i + 1;
+                prev += curr;
+                curr = 0;
+            }
+        }
+        return (curr + prev >= 0) ? res : -1;
+    }
+}

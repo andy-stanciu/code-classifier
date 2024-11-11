@@ -1,0 +1,42 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        // finding index skipping values for 1st and last row
+        int maxSkipValue = numRows + (numRows - 2);
+        // variable which will hold and return our generated string
+        StringBuilder strb = new StringBuilder();
+        // edge cases where input string can be returned as is
+        if (s.length() == 1 || numRows == 1 || numRows == 0 || s.length() < numRows) {
+            return s;
+        }
+        int i = 0;
+        //looping over every row
+        while (i < numRows) {
+            // intermittent index skipping logic starts here
+            Integer skipDifference = maxSkipValue - i * 2;
+            int[] skipCounters = null;
+            if (skipDifference.equals(0) || i == 0) {
+                skipCounters = new int[] { maxSkipValue, maxSkipValue };
+            } else {
+                skipCounters = new int[] { skipDifference, maxSkipValue - skipDifference };
+            }
+            // intermittent index skipping logic ends here
+            // appending characters in string builder
+            strb.append(s.charAt(i));
+            int j = i + skipCounters[0];
+            boolean counterNumber = true;
+            while (j < s.length()) {
+                strb.append(s.charAt(j));
+                if (counterNumber) {
+                    j = j + skipCounters[1];
+                    counterNumber = false;
+                } else {
+                    j = j + skipCounters[0];
+                    counterNumber = true;
+                }
+            }
+            i++;
+        }
+        return strb.toString();
+    }
+}

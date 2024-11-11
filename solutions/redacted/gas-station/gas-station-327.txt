@@ -1,0 +1,47 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] param1, int[] cost) {
+        if (param1.length == 1 && cost.length == 1) {
+            if (param1[0] >= cost[0])
+                return 0;
+            else
+                return -1;
+        }
+        int in = -1;
+        int n = param1.length;
+        ArrayList<Integer> arr = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (param1[i] > cost[i]) {
+                in = i;
+                arr.add(in);
+            }
+        }
+        if (in == -1 || arr.size() == 0)
+            return -1;
+        else {
+            for (int j = 0; j < arr.size(); j++) {
+                int a = get(arr.get(j), param1, cost, n);
+                if (a > -1)
+                    return a;
+            }
+        }
+        return -1;
+    }
+
+    public int get(int in, int[] param1, int[] cost, int n) {
+        int g = param1[in];
+        int c = 0;
+        for (int i = in; i % n < n && c < n; i++) {
+            c++;
+            if (i >= n)
+                i = i % n;
+            if (g < cost[i])
+                return -1;
+            else if (i != n - 1)
+                g = g + param1[i + 1] - cost[i];
+            else if (i == n - 1)
+                g = g + param1[0] - cost[i];
+        }
+        return in;
+    }
+}

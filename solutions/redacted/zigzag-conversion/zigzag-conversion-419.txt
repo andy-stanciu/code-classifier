@@ -1,0 +1,43 @@
+class Solution {
+
+    public String convert(String str, int numRows) {
+        if (str.length() < numRows || numRows == 1)
+            return str;
+        StringBuilder sb = new StringBuilder();
+        int current = numRows * 2 - 2;
+        int tempCurrent = numRows * 2 - 2;
+        int prev = 0;
+        int tempPrev = 0;
+        int count = 1;
+        for (int index = 0; index < numRows; index++) {
+            sb.append(str.charAt(index));
+            for (int subindex = index + 1; subindex < str.length(); subindex++) {
+                if (count == current) {
+                    sb.append(str.charAt(subindex));
+                    if (current != (numRows * 2 - 2)) {
+                        int temp = prev;
+                        prev = current;
+                        current = temp;
+                    }
+                    count = 0;
+                }
+                count++;
+            }
+            //reset prev
+            prev = tempPrev;
+            //reset current
+            current = tempCurrent;
+            prev = prev + 2;
+            current = (numRows * 2) - (prev + 2);
+            if (current == 0)
+                current = prev;
+            //save the changes
+            tempPrev = prev;
+            //save the changes
+            tempCurrent = current;
+            //reset count
+            count = 1;
+        }
+        return sb.toString();
+    }
+}

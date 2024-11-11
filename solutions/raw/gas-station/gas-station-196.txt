@@ -1,0 +1,32 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int lowestIdx = 0;
+        int lowestTankValue = 0;
+        int tank = 0;
+        for (int i = 0; i < gas.length; i++) {
+            if (lowestTankValue > tank) {
+                lowestTankValue = tank;
+                lowestIdx = i;
+            }
+            tank += gas[i];
+            tank -= cost[i];
+        }
+        tank = gas[lowestIdx];
+        for (int i = lowestIdx; i < gas.length; i++) {
+            tank -= cost[i];
+            if (tank < 0) {
+                return -1;
+            }
+            tank += gas[i == gas.length - 1 ? 0 : i + 1];
+        }
+        for (int i = 0; i < lowestIdx; i++) {
+            tank -= cost[i];
+            if (tank < 0) {
+                return -1;
+            }
+            tank += gas[i == gas.length - 1 ? 0 : i + 1];
+        }
+        return lowestIdx;
+    }
+}

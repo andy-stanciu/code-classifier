@@ -1,0 +1,33 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] param1, int[] cost) {
+        int var1 = 0;
+        int totalCost = 0;
+        int len = param1.length;
+        for (int i = 0; i < len; i++) {
+            var1 += param1[i];
+            totalCost += cost[i];
+        }
+        // No way we can have circular as cost > gas.
+        if (totalCost > var1) {
+            return -1;
+        }
+        // I am certain: there is circle from somewhere.
+        // Lets find where?
+        // Assume circle starts from 0.
+        int circleStarts = 0;
+        int var2 = 0;
+        for (int i = 0; i < len; i++) {
+            int var3 = param1[i];
+            int currCost = cost[i];
+            var2 += var3 - currCost;
+            if (var2 < 0) {
+                // Oh No! We cant start cycle here.
+                // But may be from the next station.
+                circleStarts = i + 1;
+                var2 = 0;
+            }
+        }
+        return circleStarts;
+    }
+}

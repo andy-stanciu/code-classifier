@@ -1,0 +1,113 @@
+class Solution {
+
+    public static int canCompleteCircuit(int[] param1, int[] cost) {
+        if (Arrays.stream(param1).sum() - Arrays.stream(cost).sum() < 0) {
+            return -1;
+        }
+        var route = new Route(param1, cost);
+        var car = new Car(route);
+        var startPosition = car.findStartPosition(0);
+        if (startPosition == -1) {
+            return -1;
+        }
+        while (startPosition <= route.getMaxPosition()) {
+            car.setCurrentPosition(startPosition);
+            car.emptyTank();
+            while (true) {
+                car.replenishTank();
+                if (!car.canTravel()) {
+                    startPosition = car.getNextPosition();
+                    break;
+                }
+                car.travel();
+                if (startPosition == car.getCurrentPosition()) {
+                    return startPosition;
+                }
+            }
+            ;
+        }
+        return -1;
+    }
+}
+
+class Route {
+
+    private final List<Integer> param1;
+
+    private final List<Integer> cost;
+
+    public Route(int[] param1, int[] cost) {
+        this.param1 = Arrays.stream(param1).boxed().toList();
+        this.cost = Arrays.stream(cost).boxed().toList();
+    }
+
+    public int method1(int position) {
+        return param1.get(position);
+    }
+
+    public int getCost(int position) {
+        return cost.get(position);
+    }
+
+    public int getMaxPosition() {
+        return param1.size() - 1;
+    }
+}
+
+class Car {
+
+    private int tank = 0;
+
+    private int currentPosition = 0;
+
+    private final Route route;
+
+    public Car(Route route) {
+        this.route = route;
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public boolean canTravel() {
+        var newTank = tank - route.getCost(currentPosition);
+        return (newTank >= 0);
+    }
+
+    public int getNextPosition() {
+        var nextPosition = currentPosition + 1;
+        if (nextPosition > route.getMaxPosition()) {
+            nextPosition = 0;
+        }
+        return nextPosition;
+    }
+
+    public void travel() {
+        tank -= route.getCost(currentPosition);
+        currentPosition = getNextPosition();
+    }
+
+    public void replenishTank() {
+        tank += route.method1(currentPosition);
+    }
+
+    public int findStartPosition(int from) {
+        var result = -1;
+        for (int i = from; i <= route.getMaxPosition(); i++) {
+            if (route.method1(i) >= route.getCost(i)) {
+                result = i;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public void setCurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
+    }
+
+    public void emptyTank() {
+        this.tank = 0;
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        if (numRows == 1)
+            return s;
+        var buf = new StringBuilder();
+        var map = new HashMap<Integer, List<Character>>();
+        // build row per row representation
+        boolean goingDown = true;
+        for (int i = 0, j = 0; i < s.length(); ) {
+            var row = map.getOrDefault(j, new ArrayList<>());
+            row.add(s.charAt(i));
+            map.put(j, row);
+            i++;
+            if (goingDown) {
+                if (j == numRows - 1) {
+                    goingDown = false;
+                }
+            } else {
+                if (j == 0) {
+                    goingDown = true;
+                }
+            }
+            if (goingDown)
+                j++;
+            else
+                j--;
+        }
+        // convert to str
+        for (int i = 0; i < numRows; i++) {
+            var row = map.get(i);
+            if (row == null)
+                continue;
+            for (var c : row) {
+                buf.append(c);
+            }
+        }
+        return buf.toString();
+    }
+}

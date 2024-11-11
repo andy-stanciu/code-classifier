@@ -1,0 +1,46 @@
+class Solution {
+
+    int sum = 0;
+
+    int remain = 0;
+
+    int check(int index, int[] param1, int[] cost) {
+        int temp = 0;
+        int i = index;
+        for (; i < param1.length; i++) {
+            temp += param1[i];
+            temp -= cost[i];
+            if (temp < 0) {
+                int j = index;
+                while (j <= i) {
+                    sum += param1[j];
+                    remain += cost[j];
+                    j++;
+                }
+                return j;
+            }
+        }
+        if ((temp + sum) - remain < 0) {
+            int j = index;
+            while (j <= i && j < param1.length) {
+                sum += param1[j];
+                remain += cost[j];
+                j++;
+            }
+            return j;
+        }
+        return -1;
+    }
+
+    public int canCompleteCircuit(int[] param1, int[] cost) {
+        for (int i = 0; i < param1.length; ) {
+            int j = check(i, param1, cost);
+            if (j != -1) {
+                i = j;
+            } else {
+                return i;
+            }
+        }
+        return -1;
+    }
+}

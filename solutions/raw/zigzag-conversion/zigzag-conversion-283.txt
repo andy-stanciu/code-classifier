@@ -1,0 +1,39 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        if (numRows == 1)
+            return s;
+        StringBuilder ss = new StringBuilder("");
+        //Magic number is total number of jumps to cover the row for one zig zag
+        int magicNum = (numRows - 1) * 2;
+        //Track jump1 and jump2 size, should add up to the magic number
+        //Jump1 decreases by two each loop starting as magic number
+        //Jump2 increases by two each loop starting as 0
+        int jump1 = magicNum;
+        int jump2 = 0;
+        for (int i = 1; i <= numRows; i++) {
+            int j = i - 1;
+            //Flag to determine if need to do jump 1 or 2
+            boolean j1 = true;
+            //Important that if a jump is 0, don\'t print an extra character when no movement
+            while (j < s.length()) {
+                if (j1) {
+                    if (jump1 != 0) {
+                        ss.append(s.charAt(j));
+                    }
+                    j = j + jump1;
+                    j1 = false;
+                } else {
+                    if (jump2 != 0) {
+                        ss.append(s.charAt(j));
+                    }
+                    j = j + jump2;
+                    j1 = true;
+                }
+            }
+            jump1 -= 2;
+            jump2 += 2;
+        }
+        return ss.toString();
+    }
+}

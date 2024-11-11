@@ -1,0 +1,65 @@
+class Solution {
+
+    public String intToRoman(int num) {
+        StringBuilder resultBuilder = new StringBuilder();
+        String[] romanSymbol = { "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
+        if (num >= 1000) {
+            for (int i = 0; i < ((num - (num % 1000)) / 1000); i++) {
+                resultBuilder.append("M");
+            }
+            num = num % 1000;
+        }
+        if (num >= 100) {
+            resultBuilder.append(getRoman(num, romanSymbol, 100));
+            num = num % 100;
+        }
+        if (num >= 10) {
+            resultBuilder.append(getRoman(num, romanSymbol, 10));
+            num = num % 10;
+        }
+        if (num >= 1) {
+            resultBuilder.append(getRoman(num, romanSymbol, 1));
+        }
+        return resultBuilder.toString();
+    }
+
+    private String getRoman(int num, String[] romanSymbol, int k) {
+        int index = 0;
+        if (k == 10) {
+            index = 4;
+        }
+        if (k == 1) {
+            index = 8;
+        }
+        int tempVar;
+        StringBuilder tempBuilder = new StringBuilder();
+        if (num >= 9 * k) {
+            return romanSymbol[0 + index];
+        }
+        if (num >= 5 * k) {
+            tempBuilder.append(romanSymbol[1 + index]);
+            /*   if (k == 100 || k == 10) {
+                num = num - num % (5 * k);
+            }*/
+            tempVar = (num - 5 * k) / k;
+            for (int i = 0; i < tempVar; i++) {
+                tempBuilder.append(romanSymbol[3 + index]);
+            }
+            return tempBuilder.toString();
+        }
+        if (num >= 4 * k) {
+            return romanSymbol[2 + index];
+        }
+        if (num >= 1 * k) {
+            tempBuilder.append(romanSymbol[3 + index]);
+            if (k == 100 || k == 10) {
+                num = num - num % (1 * k);
+            }
+            tempVar = (num - 1 * k) / k;
+            for (int i = 0; i < tempVar; i++) {
+                tempBuilder.append(romanSymbol[3 + index]);
+            }
+        }
+        return tempBuilder.toString();
+    }
+}

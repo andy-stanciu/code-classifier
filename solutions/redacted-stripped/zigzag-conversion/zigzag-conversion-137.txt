@@ -1,0 +1,43 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        StringBuilder str = new StringBuilder(s.length());
+        if (numRows == 1) {
+            return s;
+        }
+        int m = numRows + (numRows - 3);
+        int n = 1;
+        for (int i = 0; i < numRows && i < s.length(); i++) {
+            str.append(s.charAt(i));
+            if (i == 0 || (i == numRows / 2 && numRows % 2 != 0)) {
+                method1(s, m, m, i + m, str);
+            } else if (i == numRows - 1) {
+                method1(s, n, n, i + n, str);
+            } else {
+                method1(s, m, n, i + m, str);
+            }
+            n = i > 0 ? n + 2 : n;
+            m = m > 1 ? m - 2 : m + 2;
+        }
+        return str.toString();
+    }
+
+    public void method1(String s, int m, int n, int pos, StringBuilder sb) {
+        int count = 0;
+        if (m == n) {
+            while (pos + 1 < s.length()) {
+                sb.append(s.charAt(pos + 1));
+                pos = pos + m + 1;
+            }
+        } else {
+            while (pos + 1 < s.length()) {
+                sb.append(s.charAt(pos + 1));
+                if (count++ % 2 != 0) {
+                    pos = pos + m + 1;
+                } else {
+                    pos = pos + n + 1;
+                }
+            }
+        }
+    }
+}

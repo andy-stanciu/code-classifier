@@ -1,0 +1,36 @@
+class Solution {
+
+    public int strStr(String haystack, String needle) {
+        int n = haystack.length();
+        int m = needle.length();
+        if (m > n) {
+            return -1;
+        }
+        int base = 1000;
+        int prime = 31;
+        int pow = 1;
+        for (int i = 0; i < m; i++) {
+            pow = (pow * prime) % base;
+        }
+        int nCode = 0;
+        for (int i = 0; i < m; i++) {
+            nCode = (nCode * prime + needle.charAt(i)) % base;
+        }
+        int hCode = 0;
+        for (int i = 0; i < n; i++) {
+            hCode = (hCode * prime + haystack.charAt(i)) % base;
+            if (i < m - 1) {
+                continue;
+            }
+            if (i >= m) {
+                hCode = (hCode - haystack.charAt(i - m) * pow) % base;
+                if (hCode < 0)
+                    hCode += base;
+            }
+            if (hCode == nCode && haystack.substring(i - m + 1, i + 1).equals(needle)) {
+                return i - m + 1;
+            }
+        }
+        return -1;
+    }
+}

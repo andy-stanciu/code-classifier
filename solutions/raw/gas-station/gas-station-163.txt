@@ -1,0 +1,35 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int n = gas.length;
+        int totalCost = 0;
+        int totalGas = 0;
+        int tank = 0;
+        int start = 0;
+        for (int i = 0; i < n; i++) {
+            totalCost += cost[i];
+            totalGas += gas[i];
+            /**
+             * Add current gas[i] & reduce the cost[i] to move to the next station
+             */
+            tank += (gas[i] - cost[i]);
+            /**
+             * If tank < 0, We can\'t move to the next station, hence set start as i+1
+             *            & tank =0
+             */
+            if (tank < 0) {
+                start = i + 1;
+                tank = 0;
+            }
+        }
+        /**
+         * Circular trip not possible if totalGas < totalCost
+         */
+        if (totalGas < totalCost)
+            return -1;
+        /**
+         * Return the start index, If circular route is possible
+         */
+        return start;
+    }
+}

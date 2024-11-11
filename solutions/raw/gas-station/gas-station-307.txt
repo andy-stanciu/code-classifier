@@ -1,0 +1,36 @@
+// TC: O(n)
+//SC: O(1)
+class Solution {
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int gasSum = 0;
+        int costSum = 0;
+        // Calculate the total gas and cost sums
+        for (int i = 0; i < gas.length; i++) {
+            gasSum += gas[i];
+            costSum += cost[i];
+        }
+        // If total gas is less than total cost, it\'s impossible to complete the circuit
+        if (gasSum < costSum) {
+            return -1;
+        }
+        // Stores the starting gas station\'s index
+        int res = 0;
+        // Running total of gas - cost as we simulate the journey
+        int totalSum = 0;
+        for (int i = 0; i < gas.length; i++) {
+            // Update totalSum with net gas after reaching this station
+            totalSum += (gas[i] - cost[i]);
+            // If at any point totalSum is negative, the current starting point is not viable
+            if (totalSum < 0) {
+                // Reset totalSum for the new starting point
+                totalSum = 0;
+                // Update res to the next station as the new start point
+                res = i + 1;
+            }
+        }
+        // Return the starting station index. If the loop completes without finding a start point,
+        // the first station is assumed to be the start point.
+        return res;
+    }
+}

@@ -1,0 +1,55 @@
+class Solution {
+
+    public String intToRoman(int num) {
+        // Create a HashMap to store the mappings of integers to Roman numerals
+        HashMap<Integer, String> romanMap = new HashMap<>();
+        romanMap.put(1, "I");
+        romanMap.put(4, "IV");
+        romanMap.put(5, "V");
+        romanMap.put(9, "IX");
+        romanMap.put(10, "X");
+        romanMap.put(40, "XL");
+        romanMap.put(50, "L");
+        romanMap.put(90, "XC");
+        romanMap.put(100, "C");
+        romanMap.put(400, "CD");
+        romanMap.put(500, "D");
+        romanMap.put(900, "CM");
+        romanMap.put(1000, "M");
+        // StringBuilder to store the Roman numeral representation
+        StringBuilder sb = new StringBuilder();
+        int pow = 1;
+        // Iterate over each digit of the number from right to left
+        while (num > 0) {
+            // Get the current digit
+            int r = num % 10;
+            // Check if the current digit multiplied by the current power of 10 is a key in the HashMap
+            if (romanMap.containsKey(r * pow)) {
+                // Append the corresponding Roman numeral to the StringBuilder
+                sb.insert(0, romanMap.get(r * pow));
+            } else if (r * pow > 5 * pow) {
+                // If the current digit multiplied by the current power of 10 is greater than 5 times the power,
+                // handle it separately by appending the Roman numeral for 5 times the power and then the remaining ones
+                int count = r - 5;
+                String ch = romanMap.get(1 * pow);
+                for (int i = 0; i < count; i++) {
+                    sb.insert(0, ch);
+                }
+                sb.insert(0, romanMap.get(5 * pow));
+            } else {
+                // If the current digit multiplied by the current power of 10 is less than 5 times the power,
+                // simply append the corresponding Roman numeral for each occurrence of the digit
+                String ch = romanMap.get(1 * pow);
+                for (int i = 0; i < r; i++) {
+                    sb.insert(0, ch);
+                }
+            }
+            // Update the power of 10
+            pow *= 10;
+            // Remove the last digit from the number
+            num /= 10;
+        }
+        // Convert the StringBuilder to a String and return
+        return sb.toString();
+    }
+}

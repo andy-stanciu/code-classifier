@@ -1,0 +1,46 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] param1, int[] cost) {
+        int var1 = 0;
+        int costs = 0;
+        for (int i = 0; i < param1.length; i++) {
+            var1 += param1[i];
+            costs += cost[i];
+        }
+        if (costs - var1 > 0)
+            return -1;
+        if (cost.length == 1 && param1.length == 1) {
+            return cost[0] - param1[0] <= 0 ? 0 : -1;
+        }
+        for (int i = 0; i < param1.length; i++) {
+            if (isFeasible(param1[i], cost[i])) {
+                if (can(i, param1, cost)) {
+                    return i;
+                } else {
+                    continue;
+                }
+            } else {
+                continue;
+            }
+        }
+        return -1;
+    }
+
+    private boolean can(int j, int[] param1, int[] cost) {
+        int curr = param1[j];
+        int res = j;
+        for (int i = 0; i < param1.length; i++) {
+            if (cost[j] - curr > 0)
+                return false;
+            curr = curr + param1[(j + 1) % param1.length] - cost[j];
+            j = (j + 1) % param1.length;
+            if (curr < 0)
+                return false;
+        }
+        return true;
+    }
+
+    private boolean isFeasible(int param1, int cost) {
+        return cost - param1 < 0;
+    }
+}

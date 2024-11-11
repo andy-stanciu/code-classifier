@@ -1,0 +1,39 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int totalGas = 0;
+        int totalCost = 0;
+        for (int i = 0; i < gas.length; i++) {
+            totalGas += gas[i];
+            totalCost += cost[i];
+        }
+        if (totalCost > totalGas) {
+            // Not enough total gas to complete the total cycle by incurring the cost,
+            // so no solution , return -1;
+            return -1;
+        }
+        // Once we reached here , that means we have a solution
+        // As the condition in the question mentioned
+        //  If there exists a solution, it is "guaranteed" to be "unique"
+        // Label: 1 == So as we reached here,  we have a solution and that ONLY ONE solution.
+        int resultStartIndex = 0;
+        int totalDiff = 0;
+        for (int i = 0; i < gas.length; i++) {
+            totalDiff += gas[i] - cost[i];
+            if (totalDiff < 0) {
+                // Not enough gas from the resultStartIndex , try from next index
+                resultStartIndex = i + 1;
+                totalDiff = 0;
+            }
+        }
+        // Once we reched end of the array , we don\'t need to move to 0, not needed
+        // Why ?
+        // from the "Label: 1 " section we know we have ONLY ONE solution
+        // In the above for loop we are trying from begining of the array
+        // so there is no solution in the left of resultStartIndex
+        // As we reached the end, we know we have ONLY ONE solution and we reached the end.
+        // The resultStartIndex can\'t be on the left, also we HAVE a solution ,
+        // and  we reached the end . So we got the index;
+        return resultStartIndex;
+    }
+}

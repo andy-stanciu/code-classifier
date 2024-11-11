@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] method1(int[] nums) {
+        /*
+        Approach: I am trying to build the prefixProduct and the suffixProduct with that just considering the product before that element and fater that element will give us the product of numbers except that number
+        */
+        // Step 0: Initailize the required varaiables I am considering the arrays as a data structure as I want the product at that index
+        int len = nums.length;
+        int[] result = new int[len];
+        int[] var1 = new int[len];
+        int[] var2 = new int[len];
+        var1[0] = nums[0];
+        // Step 1: Building the Prefix product the logic will be similar to the prefixSum
+        // at index 0 = nums[0] at index 1 prefixSum[0]*nums[1]
+        var1[0] = nums[0];
+        for (int i = 1; i < len; i++) {
+            var1[i] = var1[i - 1] * nums[i];
+            // 1, 2, 6, 24
+        }
+        // Step 3: Building the Suffix product the logic will be similar to the SuffixSum
+        // We will come from the back
+        var2[len - 1] = nums[len - 1];
+        for (int i = len - 2; i >= 0; i--) {
+            var2[i] = var2[i + 1] * nums[i];
+            //  1, 24, 12, 4
+        }
+        // Step 4: Building the result here the resultant product will be the product of the prefixProduct[i -1] and the suffixProduct[i+1]
+        for (int i = 0; i < len; i++) {
+            // 1, 2, 6, 24
+            // 1, 24, 12, 4
+            // 24,12,8,6
+            if (i == 0)
+                result[i] = var2[i + 1];
+            else if (i == len - 1)
+                result[i] = var1[i - 1];
+            else
+                result[i] = var2[i + 1] * var1[i - 1];
+        }
+        return result;
+    }
+}
+// Time Complexity: As we iterate three times on the nums it will be o(3n) = o(n)
+// Space Complexity: o(n) as I used extra arrays to create the resulting array
+// Next Optimzation: This 3 pass and reducing it to two pass is next optimzation and not using any extra space will be final optimzation

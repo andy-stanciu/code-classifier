@@ -1,0 +1,41 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        if (// if numrows == length of the String then return the string.
+        numRows == s.length())
+            return s;
+        int left = 0;
+        int len = s.length();
+        int rowNum = 0;
+        // Groups the Strings by row number.
+        HashMap<Integer, List<String>> rowCharMap = new HashMap<>();
+        for (int i = 0; i < numRows; i++) {
+            // ideally you will have one row list of strings per numRow.
+            rowCharMap.put(i, new ArrayList<String>());
+        }
+        while (left < len) {
+            // Add one char per rowNum.
+            rowCharMap.get(rowNum).add(s.substring(left, left + 1));
+            if (rowNum == numRows - 1) {
+                // Diagonal usecase starts when rowNum == lastRow
+                // Always diagonal char num will start from numRows - 2 .
+                int temp = numRows - 2;
+                while (temp > 0 && left < len - 1) {
+                    ++left;
+                    rowCharMap.get(temp).add(s.substring(left, left + 1));
+                    temp--;
+                }
+            }
+            left++;
+            rowNum++;
+            // reset to 0 and start reading from next char.
+            rowNum %= numRows;
+        }
+        rowNum = 0;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < numRows; i++) {
+            sb.append(String.join("", rowCharMap.get(i)));
+        }
+        return sb.toString();
+    }
+}

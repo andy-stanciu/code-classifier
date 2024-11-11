@@ -1,0 +1,34 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int tank = gas[0];
+        // track tank\'s value
+        int[] first = new int[gas.length];
+        int[] second = new int[gas.length];
+        for (int i = 1; i < gas.length; i++) {
+            tank -= cost[i - 1];
+            first[i] = tank;
+            tank += gas[i];
+        }
+        for (int i = 0; i < gas.length; i++) {
+            if (i == 0) {
+                tank -= cost[cost.length - 1];
+            } else
+                tank -= cost[i - 1];
+            second[i] = tank;
+            tank += gas[i];
+        }
+        int last = 0;
+        for (int i = 0; i < first.length; i++) {
+            if (first[i] < first[last]) {
+                last = i;
+            }
+        }
+        for (int i = 0; i < second.length; i++) {
+            if (second[i] < first[last]) {
+                return -1;
+            }
+        }
+        return last;
+    }
+}

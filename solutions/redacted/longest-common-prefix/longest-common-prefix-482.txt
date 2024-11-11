@@ -1,0 +1,37 @@
+class Solution {
+
+    public String method1(String[] strs) {
+        if (strs.length == 0) {
+            return "";
+        }
+        // Since the longest common prefix cannot be longer than the shortest string in the array.
+        int minLength = Integer.MAX_VALUE;
+        for (String str : strs) {
+            minLength = Math.min(str.length(), minLength);
+        }
+        int low = 0;
+        int high = minLength;
+        int mid = 0;
+        //We are binary searching for the shortest length, in first iteration takes minLength/2.
+        while (low <= high) {
+            mid = (low + high) / 2;
+            if (method2(strs, mid)) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return strs[0].substring(0, high);
+    }
+
+    // Helper function to check if all strings share the same prefix of given length
+    private boolean method2(String[] strs, int length) {
+        String curr = strs[0].substring(0, length);
+        for (int i = 0; i < strs.length; i++) {
+            if (!strs[i].startsWith(curr)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

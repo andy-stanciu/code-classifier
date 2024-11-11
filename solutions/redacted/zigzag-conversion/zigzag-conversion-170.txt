@@ -1,0 +1,34 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        int n = s.length();
+        if (numRows == 1 || numRows > n) {
+            return s;
+        }
+        // the entire sequence, including: up to down and then down to side-up (let\'s call it a batch)
+        // this batch is repeated
+        // \'-2\' because down to side-up skips the top and bottom elements of the column
+        int batchSize = (2 * numRows) - 2;
+        StringBuilder var1 = new StringBuilder();
+        // let\'s iterate for each row
+        // and append every element of up-to-down and down-to-side-up columns
+        for (int rowIdx = 0; rowIdx < numRows; rowIdx++) {
+            int chIdx = rowIdx;
+            while (chIdx < n) {
+                // in a batch the up to down column (let\'s call it head)
+                var1.append(s.charAt(chIdx));
+                // System.out.print("row " + rowIdx + " : chIdx " + chIdx + " : \'" + s.charAt(chIdx) + "\' : ");
+                // formula to get the small columns that go down to up (let\'s call it tail)
+                int tail = chIdx + batchSize - (2 * rowIdx);
+                // tail is optional (based on extended remainder)
+                if (rowIdx > 0 && rowIdx < numRows - 1 && tail < n) {
+                    // System.out.print("tail :" + tail);
+                    var1.append(s.charAt(tail));
+                }
+                // System.out.println();
+                chIdx += batchSize;
+            }
+        }
+        return var1.toString();
+    }
+}

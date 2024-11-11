@@ -1,0 +1,54 @@
+class Solution {
+
+    public int strStr(String haystack, String needle) {
+        if (needle.length() > haystack.length()) {
+            return -1;
+        }
+        int haylen = haystack.length();
+        int nelen = needle.length();
+        int[] next = getNextArr(needle);
+        // for(int i : next){
+        //     System.out.print(i+" ");
+        // }
+        int j = 0;
+        for (int i = 0; i < haylen; i++) {
+            // Start matching from the first char
+            while (j > 0 && haystack.charAt(i) != needle.charAt(j)) {
+                // At the specific j, unmatched, then go to the next character of the longest proper prefix which is
+                // also a suffix in the string of needle[0,...j - 1]
+                j = next[j - 1] + 1;
+            }
+            if (haystack.charAt(i) == needle.charAt(j)) {
+                j++;
+            }
+            if (j >= nelen) {
+                //All the characters matched
+                return i - nelen + 1;
+            }
+        }
+        return -1;
+    }
+
+    public int[] getNextArr(String needle) {
+        int nelen = needle.length();
+        // next array stores at each character\'s position, the index of the last character of longest proper prefix which is also a suffix.
+        int[] next = new int[nelen];
+        //Initialization
+        // j indicates the index of the last character of the previous longest prefix-suffix.
+        int j = -1;
+        // A string of length 1 does not have any proper prefix and proper suffix.
+        next[0] = -1;
+        for (int i = 1; i < nelen; i++) {
+            //unmatch
+            while (j >= 0 && needle.charAt(i) != needle.charAt(j + 1)) {
+                j = next[j];
+            }
+            //Matched
+            if (needle.charAt(i) == needle.charAt(j + 1)) {
+                j++;
+            }
+            next[i] = j;
+        }
+        return next;
+    }
+}

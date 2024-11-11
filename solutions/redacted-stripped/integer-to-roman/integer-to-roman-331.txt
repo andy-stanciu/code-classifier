@@ -1,0 +1,45 @@
+class Solution {
+
+    public String method1(int param1) {
+        NavigableMap<Integer, String> map = new TreeMap<Integer, String>();
+        map.put(1, "I");
+        map.put(5, "V");
+        map.put(10, "X");
+        map.put(50, "L");
+        map.put(100, "C");
+        map.put(500, "D");
+        map.put(1000, "M");
+        String finalStr = "";
+        boolean isDone = false;
+        while (!isDone) {
+            if (param1 == 0) {
+                isDone = true;
+            } else {
+                String var1 = "" + param1;
+                if (var1.charAt(0) != "4".charAt(0) && var1.charAt(0) != "9".charAt(0)) {
+                    int relativelyLowestCloseNum = map.floorKey(param1);
+                    param1 = param1 - relativelyLowestCloseNum;
+                    finalStr = finalStr + map.get(relativelyLowestCloseNum);
+                } else if (var1.charAt(0) == "4".charAt(0)) {
+                    int upperCloseNum = map.ceilingKey(param1);
+                    int lowerCloseNum = map.floorKey(param1);
+                    while (param1 >= lowerCloseNum) {
+                        param1 -= lowerCloseNum;
+                    }
+                    finalStr = finalStr + map.get(lowerCloseNum);
+                    finalStr = finalStr + map.get(upperCloseNum);
+                } else if (var1.charAt(0) == "9".charAt(0)) {
+                    int upperCloseNum = map.ceilingKey(param1);
+                    int lowerCloseNum = map.floorKey(param1);
+                    lowerCloseNum = map.floorKey(lowerCloseNum - 1);
+                    while (param1 >= lowerCloseNum) {
+                        param1 -= lowerCloseNum;
+                    }
+                    finalStr = finalStr + map.get(lowerCloseNum);
+                    finalStr = finalStr + map.get(upperCloseNum);
+                }
+            }
+        }
+        return finalStr;
+    }
+}

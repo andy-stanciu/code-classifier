@@ -1,0 +1,42 @@
+public class Solution {
+
+    public int strStr(String haystack, String needle) {
+        int m = needle.length();
+        int n = haystack.length();
+        if (m > n)
+            return -1;
+        int prime = 101;
+        int base = 256;
+        long needleHash = 0;
+        long haystackHash = 0;
+        long power = 1;
+        for (int i = 0; i < m - 1; i++) {
+            power = (power * base) % prime;
+        }
+        for (int i = 0; i < m; i++) {
+            needleHash = (needleHash * base + needle.charAt(i)) % prime;
+            haystackHash = (haystackHash * base + haystack.charAt(i)) % prime;
+        }
+        for (int i = 0; i <= n - m; i++) {
+            if (needleHash == haystackHash) {
+                int j;
+                for (j = 0; j < m; j++) {
+                    if (haystack.charAt(i + j) != needle.charAt(j)) {
+                        break;
+                    }
+                }
+                if (j == m) {
+                    return i;
+                }
+            }
+            if (i < n - m) {
+                haystackHash = (haystackHash - haystack.charAt(i) * power) % prime;
+                haystackHash = (haystackHash * base + haystack.charAt(i + m)) % prime;
+                if (haystackHash < 0) {
+                    haystackHash = (haystackHash + prime);
+                }
+            }
+        }
+        return -1;
+    }
+}

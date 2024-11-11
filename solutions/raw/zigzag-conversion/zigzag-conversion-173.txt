@@ -1,0 +1,47 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        int idx = 0;
+        StringBuilder sb = new StringBuilder();
+        TreeMap<Integer, List<Character>> tmap = new TreeMap<>();
+        while (idx < s.length()) {
+            int tempRow = numRows;
+            for (int i = 0; i < tempRow; i++) {
+                if (idx < s.length()) {
+                    char ch = s.charAt(idx);
+                    List<Character> list;
+                    if (!tmap.containsKey(i)) {
+                        list = new ArrayList<>();
+                        list.add(ch);
+                        tmap.put(i, list);
+                    } else {
+                        list = tmap.get(i);
+                        list.add(ch);
+                        tmap.put(i, list);
+                    }
+                    idx++;
+                }
+            }
+            // we are doing -1 because we want to start from a row less than the last row and keep reducing that until it reaches 1 at which point, the curRow will reach 0 row.
+            int curRow = numRows - 1;
+            while (curRow > 1 && idx < s.length()) {
+                curRow--;
+                char ch = s.charAt(idx);
+                idx++;
+                List<Character> l = tmap.get(curRow);
+                l.add(ch);
+                tmap.put(curRow, l);
+            }
+        }
+        Iterator iter = tmap.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry pair = (Map.Entry) iter.next();
+            List<Character> l = (List<Character>) pair.getValue();
+            for (char ch : l) {
+                sb.append(ch);
+            }
+        }
+        System.out.println(tmap);
+        return sb.toString();
+    }
+}

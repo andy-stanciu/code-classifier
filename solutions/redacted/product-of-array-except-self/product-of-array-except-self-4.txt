@@ -1,0 +1,47 @@
+class Solution {
+
+    //To calculate the product except self, we can multiply the
+    //the array together and divide out the current element being
+    //processed.
+    //Case 1: There are no zeros.
+    //In this case, division is safe (no dividing by zero problems) and
+    //the algorithm works as expected.
+    // Case 2: There exists exactly one zero
+    //In this case, multiplying by zero will cause the product to always be
+    //zero, except in the case where we don\'t include the zero entry
+    //Case 3: There exists more than 1 zero
+    //In this case, the product will always be zero. Even if we exclude
+    //a zero entry because there will always be  zero present to bring the
+    //product back
+    public int[] method1(int[] nums) {
+        //Only makes sense to track non-zero product.
+        //Multiplying by zero is an informatin loss event.
+        int var1 = 1;
+        int zeros = 0;
+        //Do a first scan to count the zero and to detect the product of the array.
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0) {
+                zeros++;
+            } else {
+                var1 *= nums[i];
+            }
+        }
+        //Two or more zeros means that the product is always going to be zero.
+        int[] var2 = new int[nums.length];
+        if (zeros >= 2) {
+            return var2;
+        }
+        //1 zero means everything is zero except potentially the zero element entry
+        for (int i = 0; i < nums.length; i++) {
+            //Don\'t divide by zero.
+            int divisor = nums[i] != 0 ? nums[i] : 1;
+            if (zeros == 1) {
+                var2[i] = nums[i] == 0 ? var1 : 0;
+            } else {
+                //no zeros means normal division method works
+                var2[i] = nums[i] = var1 / divisor;
+            }
+        }
+        return var2;
+    }
+}

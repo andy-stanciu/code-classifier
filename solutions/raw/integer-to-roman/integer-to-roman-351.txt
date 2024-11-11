@@ -1,0 +1,75 @@
+class Solution {
+
+    class RomanNumber {
+
+        private int arabic;
+
+        private StringBuffer roman;
+
+        public RomanNumber(int arabic) {
+            this.arabic = arabic;
+            this.roman = new StringBuffer();
+        }
+
+        public int getArabic() {
+            return this.arabic;
+        }
+
+        public void setArabic(int value) {
+            this.arabic = value;
+        }
+
+        public StringBuffer getRoman() {
+            return this.roman;
+        }
+
+        public void setRoman(String value) {
+            this.roman.append(value);
+        }
+    }
+
+    public String intToRoman(int num) {
+        RomanNumber output = new RomanNumber(num);
+        output = parseLevel(output, 1000, "M", 100, "C");
+        output = parseLevel(output, 500, "D", 100, "C");
+        output = parseLevel(output, 100, "C", 10, "X");
+        output = parseLevel(output, 50, "L", 10, "X");
+        output = parseLevel(output, 10, "X", 1, "I");
+        output = parseLevel(output, 5, "V", 1, "I");
+        output = parseLevel(output, 1, "I", 0, "");
+        return output.getRoman().toString();
+    }
+
+    private RomanNumber parseLevel(RomanNumber input, int level, String numeral, int reductive, String reductiveNumeral) {
+        if (input.getArabic() >= level) {
+            while (input.getArabic() >= level) {
+                input.setArabic(input.getArabic() - level);
+                input.setRoman(numeral);
+            }
+        }
+        if (input.getArabic() >= level - reductive) {
+            input.setArabic(input.getArabic() - (level - reductive));
+            switch(level) {
+                case 1000:
+                    input.setRoman("CM");
+                    break;
+                case 500:
+                    input.setRoman("CD");
+                    break;
+                case 100:
+                    input.setRoman("XC");
+                    break;
+                case 50:
+                    input.setRoman("XL");
+                    break;
+                case 10:
+                    input.setRoman("IX");
+                    break;
+                case 5:
+                    input.setRoman("IV");
+                    break;
+            }
+        }
+        return input;
+    }
+}

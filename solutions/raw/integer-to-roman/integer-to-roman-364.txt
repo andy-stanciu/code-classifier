@@ -1,0 +1,66 @@
+class Solution {
+
+    public String intToRoman(int num) {
+        String result = null;
+        int number = 0;
+        int reminder = 0;
+        StringBuffer sb = new StringBuffer();
+        int originalNum = num;
+        LinkedHashMap<Integer, String> hm = new LinkedHashMap<Integer, String>();
+        hm.put(1, "I");
+        hm.put(4, "IV");
+        hm.put(5, "V");
+        hm.put(9, "IX");
+        hm.put(10, "X");
+        hm.put(40, "XL");
+        hm.put(50, "L");
+        hm.put(90, "XC");
+        hm.put(100, "C");
+        hm.put(400, "CD");
+        hm.put(500, "D");
+        hm.put(900, "CM");
+        hm.put(1000, "M");
+        while (num > 1000) {
+            sb.append(hm.get(1000));
+            num = num - 1000;
+        }
+        if (num == 0) {
+            reminder = originalNum - 1000;
+            while (reminder != 0) {
+                reminder = reminder - 1000;
+                sb.append(hm.get(1000));
+            }
+            result = sb.toString();
+        } else {
+            number = extractRoman(num, hm);
+            sb.append(hm.get(number));
+            reminder = num - number;
+            while (reminder > 0) {
+                number = extractRoman(reminder, hm);
+                sb.append(hm.get(number));
+                reminder = reminder - number;
+            }
+            result = sb.toString();
+        }
+        return result;
+    }
+
+    public int extractRoman(int num, LinkedHashMap<Integer, String> hm) {
+        int result = 0;
+        int current = 0;
+        int previous = 0;
+        if (hm.containsKey(num)) {
+            result = num;
+        } else {
+            for (int a : hm.keySet()) {
+                current = a;
+                if (a > num) {
+                    result = previous;
+                    break;
+                }
+                previous = current;
+            }
+        }
+        return result;
+    }
+}

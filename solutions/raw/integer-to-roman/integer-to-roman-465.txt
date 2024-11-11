@@ -1,0 +1,44 @@
+class Solution {
+
+    public String intToRoman(int num) {
+        String[] hashmap = new String[] { "", "I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M" };
+        int[] values = new int[] { 0, 1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000 };
+        String ans = "";
+        String strint = Integer.toString(num);
+        int remaining = num;
+        while (remaining != 0) {
+            //place value * face value of the index
+            int power = (int) Math.pow(10, strint.length() - 1);
+            int current = power * Integer.parseInt(strint.substring(0, 1));
+            //for another iteration
+            remaining -= current;
+            //for another iteration
+            strint = Integer.toString(remaining);
+            int tempnumber = current;
+            while (tempnumber != 0) {
+                /*for current place value* face value
+            extract the floor value in the array and corresponding roman*/
+                int ll = 0;
+                int ul = values.length - 1;
+                int number = 0;
+                String character = " ";
+                while (ll <= ul) {
+                    //binary search for floor value
+                    int mid = ll + (ul - ll) / 2;
+                    if (values[mid] <= tempnumber) {
+                        number = values[mid];
+                        character = hashmap[mid];
+                        ll = mid + 1;
+                    } else
+                        ul = mid - 1;
+                }
+                /*we get the roman but there may still be balance left as 
+                we searched for floor value like for 8 we have only V*/
+                tempnumber -= number;
+                ans += character;
+                //once the current index place value*face value is done we move to other;
+            }
+        }
+        return ans;
+    }
+}

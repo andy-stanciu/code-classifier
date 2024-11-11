@@ -1,0 +1,39 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        if (gas.length == 1 && gas[0] < cost[0]) {
+            return -1;
+        }
+        if (gas.length == 1 && gas[0] >= cost[0]) {
+            return 0;
+        }
+        for (int i = 0; i < gas.length; i++) {
+            if (gas[i] > cost[i]) {
+                if (checkIfAllPlacesCovered(cost, gas, i)) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    private static boolean checkIfAllPlacesCovered(int[] cost, int[] gas, int i) {
+        int totalFuel = 0;
+        int remainingFuel = 0;
+        for (int j = i; j < cost.length; j++) {
+            totalFuel = gas[j];
+            remainingFuel = remainingFuel + totalFuel - cost[j];
+            if (remainingFuel < 0) {
+                return false;
+            }
+        }
+        for (int j = 0; j < i; j++) {
+            totalFuel = gas[j];
+            remainingFuel = remainingFuel + totalFuel - cost[j];
+            if (remainingFuel < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

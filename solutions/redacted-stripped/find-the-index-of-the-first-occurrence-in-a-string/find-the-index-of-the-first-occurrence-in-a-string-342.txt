@@ -1,0 +1,49 @@
+public class Solution {
+
+    public int[] computeLSPArray(String pattern) {
+        int n = pattern.length();
+        int[] lsp = new int[n];
+        int length = 0;
+        int i = 1;
+        lsp[0] = 0;
+        while (i < n) {
+            if (pattern.charAt(i) == pattern.charAt(length)) {
+                length++;
+                lsp[i] = length;
+                i++;
+            } else {
+                if (length != 0) {
+                    length = lsp[length - 1];
+                } else {
+                    lsp[i] = 0;
+                    i++;
+                }
+            }
+        }
+        return lsp;
+    }
+
+    public int strStr(String text, String pattern) {
+        if (pattern.isEmpty())
+            return 0;
+        int[] lps = computeLSPArray(pattern);
+        int i = 0;
+        int j = 0;
+        while (i < text.length()) {
+            if (pattern.charAt(j) == text.charAt(i)) {
+                j++;
+                i++;
+            }
+            if (j == pattern.length()) {
+                return i - j;
+            } else if (i < text.length() && pattern.charAt(j) != text.charAt(i)) {
+                if (j != 0) {
+                    j = lps[j - 1];
+                } else {
+                    i++;
+                }
+            }
+        }
+        return -1;
+    }
+}

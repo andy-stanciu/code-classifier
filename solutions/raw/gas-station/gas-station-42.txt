@@ -1,0 +1,34 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int n = gas.length;
+        if (n == 1 && gas[0] >= cost[0])
+            return 0;
+        int max = 0;
+        int startindex = -1;
+        for (int i = 0; i < gas.length; i++) {
+            int flag = 0;
+            if (gas[i] - cost[i] > 0) {
+                startindex = i;
+                int initialGas = gas[startindex];
+                int sindex = startindex;
+                int k = 0;
+                while (k < n) {
+                    int nextStation = (sindex + 1) % n;
+                    if (initialGas >= cost[sindex % n])
+                        initialGas -= cost[sindex % n];
+                    else {
+                        flag = 1;
+                        break;
+                    }
+                    initialGas += gas[(sindex + 1) % n];
+                    sindex++;
+                    k++;
+                }
+                if (initialGas >= 0 && flag == 0)
+                    return startindex;
+            }
+        }
+        return -1;
+    }
+}

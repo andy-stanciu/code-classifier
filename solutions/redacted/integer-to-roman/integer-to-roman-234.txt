@@ -1,0 +1,63 @@
+class Solution {
+
+    public String method1(int size, int currDigit) {
+        //what to concatenate with the roman string
+        String add = "";
+        //they all have this pattern -> unit, mid, end letter
+        String unitLetter, midLetter, endLetter;
+        if (size == 1) {
+            //for ones (1 digit number --> 1-9)
+            unitLetter = "I";
+            midLetter = "V";
+            endLetter = "X";
+        } else if (size == 2) {
+            //for tens (2 digits number --> 10-99)
+            unitLetter = "X";
+            midLetter = "L";
+            endLetter = "C";
+        } else if (size == 3) {
+            //for hundreds (3 digits number --> 100-999)
+            unitLetter = "C";
+            midLetter = "D";
+            endLetter = "M";
+        } else {
+            //for thousands (4 digits number --> 1000-9999)
+            unitLetter = "M";
+            midLetter = "";
+            endLetter = "";
+        }
+        //particular pattern --> Previous digits of 4 (1-3), then for 4, then for previous digits of 9 (5-8), then for 9
+        if (currDigit < 4) {
+            for (int i = 0; i < currDigit; i++) {
+                add = add + unitLetter;
+            }
+        } else if (currDigit == 4) {
+            add = unitLetter + midLetter;
+        } else if (currDigit < 9) {
+            add = midLetter;
+            for (int i = 0; i < currDigit - 5; i++) {
+                add = add + unitLetter;
+            }
+        } else {
+            add = unitLetter + endLetter;
+        }
+        return add;
+    }
+
+    public String method2(int num) {
+        //from 1 to 9 --> unit = I, mid = V, end = X;; 10 to 99 --> unit = X, mid = L, end = C so on
+        String var1 = "";
+        //ones - 1 digit, tens - 2 digits, hundreds - 3 digits, thousands - 4 digits
+        int size = 1;
+        while (num > 0) {
+            //until extracting all the digits
+            //extracting the last digit
+            int currDigit = num % 10;
+            //adding the roman string in front
+            var1 = method1(size++, currDigit) + var1;
+            //cut the last digit
+            num = num / 10;
+        }
+        return var1;
+    }
+}

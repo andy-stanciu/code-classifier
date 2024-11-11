@@ -1,0 +1,43 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int length = gas.length;
+        int start = 0;
+        if (length == 1) {
+            if (gas[0] >= cost[0]) {
+                return 0;
+            }
+            return -1;
+        }
+        //first, we need to choose the starting index before testing it
+        for (int i = 0; i < length; i++) {
+            if (gas[i] > cost[i]) {
+                start = i;
+                int stopCount = 0;
+                //gas tank at the starting index
+                int gasSum = 0;
+                int j = i;
+                while (stopCount < length) {
+                    //start at a station
+                    gasSum += gas[j];
+                    if (gasSum < cost[j]) {
+                        break;
+                    }
+                    stopCount++;
+                    //move to next station
+                    gasSum -= cost[j];
+                    //turn around
+                    if (j == length - 1) {
+                        j = 0;
+                    } else {
+                        j++;
+                    }
+                }
+                if (stopCount == length) {
+                    return start;
+                }
+            }
+        }
+        return -1;
+    }
+}

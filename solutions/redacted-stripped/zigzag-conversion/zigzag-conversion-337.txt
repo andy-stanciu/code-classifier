@@ -1,0 +1,41 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        if (numRows == 1) {
+            return s;
+        }
+        Map<Integer, List<Character>> graph = new HashMap();
+        for (int i = 0; i < numRows; i++) {
+            graph.put(i, new ArrayList());
+        }
+        int index = 0;
+        boolean outBound = true;
+        for (char c : s.toCharArray()) {
+            if (outBound && index < numRows) {
+                List<Character> curr = graph.get(index);
+                curr.add(c);
+                index++;
+                if (index >= numRows) {
+                    outBound = false;
+                    index--;
+                }
+            } else {
+                index--;
+                List<Character> curr = graph.get(index);
+                curr.add(c);
+                if (index == 0) {
+                    outBound = true;
+                    index++;
+                }
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < numRows; i++) {
+            List<Character> chars = graph.get(i);
+            for (char c : chars) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+}

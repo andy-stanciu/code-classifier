@@ -1,0 +1,30 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        if (s.length() == 1)
+            return s;
+        if (numRows == 1)
+            return s;
+        int base = numRows * 2 - 2;
+        List<StringBuilder> builders = new ArrayList<>();
+        for (int i = 0; i < numRows; i++) {
+            builders.add(new StringBuilder());
+        }
+        for (int i = 0; i < s.length(); i += base) {
+            for (int j = 0; j < numRows; j++) {
+                final StringBuilder stringBuilder = builders.get(j);
+                if (j == numRows - 1 && j + i < s.length()) {
+                    stringBuilder.append(s.charAt(j + i));
+                    break;
+                }
+                if (i + j < s.length())
+                    stringBuilder.append(s.charAt(j + i));
+                if (j != 0) {
+                    if (i + base - j < s.length())
+                        stringBuilder.append(s.charAt(i + base - j));
+                }
+            }
+        }
+        return builders.stream().map(StringBuilder::toString).collect(Collectors.joining());
+    }
+}

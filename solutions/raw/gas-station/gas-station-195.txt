@@ -1,0 +1,29 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int excess = 0;
+        int need = 0;
+        int n = gas.length;
+        int lastPos = -1;
+        for (int i = 0; i < n; i++) {
+            int diff = gas[i] - cost[i];
+            if (diff >= 0) {
+                if (lastPos == -1)
+                    lastPos = i;
+                excess += diff;
+            } else {
+                int rem = excess + diff;
+                if (rem < 0) {
+                    lastPos = -1;
+                    need += rem;
+                    excess = 0;
+                } else {
+                    excess = excess + diff;
+                }
+            }
+        }
+        if (lastPos != -1 && (excess + need >= 0))
+            return lastPos;
+        return -1;
+    }
+}

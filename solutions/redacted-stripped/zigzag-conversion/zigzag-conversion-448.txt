@@ -1,0 +1,44 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        if (s == null || s.length() < 1 || numRows < 2) {
+            return s;
+        }
+        final List<List<Character>> charMatrix = buildMatrixFromString(s, numRows);
+        return createStringFromMatrix(charMatrix);
+    }
+
+    private String createStringFromMatrix(final List<List<Character>> matrix) {
+        final StringBuilder sb = new StringBuilder();
+        for (List<Character> list : matrix) {
+            for (Character c : list) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    private List<List<Character>> buildMatrixFromString(String s, int numRows) {
+        List<List<Character>> result = new ArrayList<>();
+        int sIndex = 0;
+        int currentRow = 0;
+        while (sIndex < s.length()) {
+            while (currentRow < numRows && sIndex < s.length()) {
+                if (result.size() < currentRow + 1) {
+                    result.add(new ArrayList<Character>());
+                }
+                List<Character> list = result.get(currentRow);
+                list.add(s.charAt(sIndex++));
+                currentRow++;
+            }
+            currentRow = currentRow - 2;
+            while (currentRow >= 0 && sIndex < s.length()) {
+                List<Character> list = result.get(currentRow);
+                list.add(s.charAt(sIndex++));
+                currentRow--;
+            }
+            currentRow = currentRow + 2;
+        }
+        return result;
+    }
+}

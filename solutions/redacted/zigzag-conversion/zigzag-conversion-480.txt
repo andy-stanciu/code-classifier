@@ -1,0 +1,31 @@
+class Solution {
+
+    public String convert(String s, int numRows) {
+        if (numRows <= 0)
+            return null;
+        if (s == null || s.length() <= 1 || numRows == 1)
+            return s;
+        StringBuffer sb = new StringBuffer();
+        int n = s.length();
+        for (int row = 0; row < numRows; row++) {
+            // First index of the row is the rowth char at the s.
+            // First iteration is finding the second char of the row, searching to bottom and bouce up, applies to all odd iterations. Second iteration is finding the third char of the row, searching to the top and bounce down, applies to all even iterations.
+            int curIndex = row, iteration = 1;
+            while (curIndex < n) {
+                sb.append(s.charAt(curIndex));
+                curIndex += getNextDistance(row, numRows, iteration);
+                iteration++;
+            }
+        }
+        return sb.toString();
+    }
+
+    private int getNextDistance(int row, int totalRows, int iteration) {
+        // Is first or last row, distance is 2(totalRows-1).
+        if (row == 0 || row == totalRows - 1) {
+            return 2 * (totalRows - 1);
+        }
+        // Middle rows. distance is dependent on row is even or odd.
+        return iteration % 2 == 1 ? 2 * (totalRows - 1 - row) : 2 * row;
+    }
+}

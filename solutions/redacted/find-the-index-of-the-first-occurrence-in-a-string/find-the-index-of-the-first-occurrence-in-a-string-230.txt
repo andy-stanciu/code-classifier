@@ -1,0 +1,46 @@
+class Solution {
+
+    public int strStr(String haystack, String needle) {
+        char[] text = haystack.toCharArray();
+        char[] pattern = needle.toCharArray();
+        int n = text.length;
+        int pLength = pattern.length;
+        if (pLength == 0)
+            return 0;
+        int[] fail = computeFailKMP(pattern);
+        int runner = 0;
+        int var1 = 0;
+        while (runner < n) {
+            if (text[runner] == pattern[var1]) {
+                if (var1 == pLength - 1)
+                    return runner - var1;
+                runner++;
+                var1++;
+            } else if (var1 > 0) {
+                var1 = fail[var1 - 1];
+            } else {
+                runner++;
+            }
+        }
+        return -1;
+    }
+
+    //  a b a a b a b a
+    //  0 0 1 1 2 3 2 3
+    private int[] computeFailKMP(char[] pattern) {
+        int length = pattern.length;
+        int[] fail = new int[length];
+        int runner = 1;
+        int match = 0;
+        while (runner < length) {
+            if (pattern[runner] == pattern[match]) {
+                fail[runner++] = ++match;
+            } else if (match > 0) {
+                match = fail[match - 1];
+            } else {
+                runner++;
+            }
+        }
+        return fail;
+    }
+}

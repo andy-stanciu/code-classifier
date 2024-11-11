@@ -1,0 +1,67 @@
+class Solution {
+
+    public int canCompleteCircuit(int[] param1, int[] cost) {
+        if (param1.length != cost.length) {
+            throw new IllegalArgumentException("gas, cost arrays do not match");
+        }
+        int aggregateCost = IntStream.of(cost).sum();
+        int var1 = IntStream.of(param1).sum();
+        if (aggregateCost > var1) {
+            // will never have successful option
+            return -1;
+        }
+        // know there is a solution, just need the starting index
+        // if the "tank" ever gets empty, move index to next index (AFTER empty index)
+        int tank = 0;
+        int start = 0;
+        for (int index = 0; index < param1.length; index++) {
+            tank += (param1[index] - cost[index]);
+            if (tank < 0) {
+                start = index + 1;
+                tank = 0;
+            }
+        }
+        return start;
+    }
+
+    private static void print(String s) {
+        System.out.println(s);
+    }
+
+    private static final int[] TEST_ONES = { 1, 1, 1 };
+
+    private static final int[] TEST_THREES = { 3, 3, 3 };
+
+    private static final int[] TEST_UP = { 1, 2, 3 };
+
+    private static final int[] TEST_DOWN = { 3, 2, 1 };
+
+    private static final int[] var2 = { 1, 2, 3, 4, 5 };
+
+    private static final int[] EX1_COST = { 3, 4, 5, 1, 2 };
+
+    private static final int[] var3 = { 2, 3, 4 };
+
+    private static final int[] EX2_COST = { 3, 4, 3 };
+
+    void runTest(int[] param1, int[] cost, final int expected, String testMessage) {
+        int result = canCompleteCircuit(param1, cost);
+        if (result == expected) {
+            print("pass: " + testMessage);
+        } else {
+            print(String.format("FAIL: %s result %d != expected %d", testMessage, result, expected));
+        }
+    }
+
+    public static void main(String[] args) {
+        Solution var4 = new Solution();
+        // simpler tests
+        var4.runTest(TEST_ONES, TEST_THREES, -1, "cost > gas");
+        var4.runTest(TEST_THREES, TEST_ONES, 0, "gas > cost");
+        var4.runTest(TEST_DOWN, TEST_UP, 0, "(down, up)");
+        var4.runTest(TEST_UP, TEST_DOWN, 1, "(up, down)");
+        // provided examples
+        var4.runTest(var2, EX1_COST, 3, "example 1");
+        var4.runTest(var3, EX2_COST, -1, "example 2");
+    }
+}

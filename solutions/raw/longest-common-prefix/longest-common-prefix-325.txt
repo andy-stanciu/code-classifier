@@ -1,0 +1,45 @@
+class Solution {
+
+    class Node {
+
+        HashMap<Character, Node> child = new HashMap<>();
+
+        boolean isEnd = false;
+    }
+
+    public Node insert(String[] str) {
+        Node root = new Node();
+        for (String h : str) {
+            Node temp = root;
+            for (char r : h.toCharArray()) {
+                temp = temp.child.computeIfAbsent(r, k -> new Node());
+            }
+            temp.isEnd = true;
+        }
+        return root;
+    }
+
+    public String count(Node root, String s) {
+        String ans = "";
+        Node temp = root;
+        for (char t : s.toCharArray()) {
+            if (temp.isEnd) {
+                return ans;
+            }
+            if (temp.child.size() > 1) {
+                return ans;
+            }
+            temp = temp.child.get(t);
+            ans += String.valueOf(t);
+        }
+        return ans;
+    }
+
+    public String longestCommonPrefix(String[] strs) {
+        Node root = insert(strs);
+        if (strs.length == 0) {
+            return "";
+        }
+        return count(root, strs[0]);
+    }
+}
