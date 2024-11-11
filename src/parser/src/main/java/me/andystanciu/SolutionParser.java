@@ -149,7 +149,7 @@ public final class SolutionParser {
             throw new RuntimeException(e);
         }
 
-        System.out.printf("Saved solution: %s%n", filePath);
+        // System.out.printf("Saved solution: %s%n", filePath);
     }
 
     private final class ObfuscateDeclarationVisitor extends ModifierVisitor<Void> {
