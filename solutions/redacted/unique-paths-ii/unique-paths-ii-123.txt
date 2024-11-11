@@ -1,0 +1,39 @@
+class Solution {
+
+    public int method1(int[][] obstacleGrid, int gox, int goy, int[][] memo) {
+        if (memo[gox][goy] != -1)
+            return memo[gox][goy];
+        if (gox == 0 || goy == 0) {
+            boolean passable = true;
+            if (gox == 0)
+                for (int i = 0; i <= goy; i++) if (obstacleGrid[gox][i] == 1)
+                    passable = false;
+            if (goy == 0)
+                for (int i = 0; i <= gox; i++) if (obstacleGrid[i][goy] == 1)
+                    passable = false;
+            if (passable) {
+                memo[gox][goy] = 1;
+                return 1;
+            } else {
+                memo[gox][goy] = 0;
+                return 0;
+            }
+        }
+        var ans = method1(obstacleGrid, gox - 1, goy, memo) + method1(obstacleGrid, gox, goy - 1, memo);
+        memo[gox][goy] = ans;
+        return ans;
+    }
+
+    public int method1(int[][] obstacleGrid) {
+        var memo = new int[obstacleGrid.length][obstacleGrid[0].length];
+        for (int i = 0; i < obstacleGrid.length; i++) for (int j = 0; j < obstacleGrid[0].length; j++) if (obstacleGrid[i][j] == 1)
+            memo[i][j] = 0;
+        else
+            memo[i][j] = -1;
+        if (obstacleGrid[0][0] == 1)
+            memo[0][0] = 0;
+        else
+            memo[0][0] = 1;
+        return method1(obstacleGrid, obstacleGrid.length - 1, obstacleGrid[0].length - 1, memo);
+    }
+}

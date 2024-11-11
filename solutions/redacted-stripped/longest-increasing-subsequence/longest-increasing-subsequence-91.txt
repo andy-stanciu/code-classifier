@@ -1,0 +1,21 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        Integer[][] dp = new Integer[n][n + 1];
+        return solve(0, -1, nums, dp);
+    }
+
+    private int solve(int ind, int prev, int[] nums, Integer[][] dp) {
+        if (ind == nums.length)
+            return 0;
+        if (dp[ind][prev + 1] != null)
+            return dp[ind][prev + 1];
+        int notpick = solve(ind + 1, prev, nums, dp);
+        int pick = 0;
+        if (prev == -1 || nums[ind] > nums[prev])
+            pick = 1 + solve(ind + 1, ind, nums, dp);
+        int len = Math.max(pick, notpick);
+        return dp[ind][prev + 1] = len;
+    }
+}

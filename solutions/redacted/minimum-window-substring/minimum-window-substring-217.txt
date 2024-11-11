@@ -1,0 +1,42 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s == null || t == null || s.length() == 0 || t.length() == 0 || s.length() < t.length()) {
+            return new String();
+        }
+        List<Integer> ans = new ArrayList();
+        int minlen = s.length() + 1;
+        int k = t.length();
+        int condition = 0;
+        int bestleft = -1;
+        int left = 0;
+        Map<Character, Integer> original = new HashMap();
+        Map<Character, Integer> m = new HashMap();
+        for (char c : t.toCharArray()) {
+            original.put(c, original.getOrDefault(c, 0) + 1);
+        }
+        for (int right = 0; right < s.length(); right++) {
+            char val = s.charAt(right);
+            if (original.containsKey(val)) {
+                m.put(val, m.getOrDefault(val, 0) + 1);
+                if (original.get(val).equals(m.get(val)))
+                    condition++;
+            }
+            // use while because imagine there is a serie of characters thats are not
+            // included so u skip them
+            while (condition == original.size()) {
+                if (right - left + 1 <= minlen) {
+                    minlen = right - left + 1;
+                    bestleft = left;
+                }
+                if (original.containsKey(s.charAt(left))) {
+                    m.put(s.charAt(left), m.get(s.charAt(left)) - 1);
+                    if (m.get(s.charAt(left)) < original.get(s.charAt(left)))
+                        condition--;
+                }
+                left++;
+            }
+        }
+        return bestleft == -1 ? "" : s.substring(bestleft, bestleft + minlen);
+    }
+}

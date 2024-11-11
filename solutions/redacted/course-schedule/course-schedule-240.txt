@@ -1,0 +1,41 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Hashtable<Integer, ArrayList<Integer>> graph = new Hashtable<Integer, ArrayList<Integer>>();
+        int[] parentsArray = new int[param1];
+        boolean[] nodeIsDependent = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            graph.put(i, new ArrayList<Integer>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int firstConnect = prerequisites[i][0];
+            int secondConnect = prerequisites[i][1];
+            ArrayList<Integer> temp = graph.get(firstConnect);
+            temp.add(secondConnect);
+            graph.put(firstConnect, temp);
+            parentsArray[secondConnect]++;
+            nodeIsDependent[secondConnect] = true;
+        }
+        Queue<Integer> currentNodes = new LinkedList<Integer>();
+        for (int i = 0; i < param1; i++) {
+            if (nodeIsDependent[i] == false) {
+                currentNodes.add(i);
+            }
+        }
+        while (currentNodes.isEmpty() == false) {
+            int currentNode = currentNodes.poll();
+            ArrayList<Integer> neighbors = graph.get(currentNode);
+            graph.remove(currentNode);
+            for (int j = 0; j < neighbors.size(); j++) {
+                parentsArray[neighbors.get(j)]--;
+                if (parentsArray[neighbors.get(j)] == 0) {
+                    currentNodes.add(neighbors.get(j));
+                }
+            }
+        }
+        if (graph.size() >= 1) {
+            return (false);
+        }
+        return (true);
+    }
+}

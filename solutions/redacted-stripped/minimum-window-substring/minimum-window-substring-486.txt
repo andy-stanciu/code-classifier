@@ -1,0 +1,22 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < t.length(); ++i) map.merge(t.charAt(i), 1, Integer::sum);
+        boolean hasmatched = false;
+        int besti = 0, bestj = s.length() - 1;
+        for (int i = 0, j = 0; j < s.length(); ++j) {
+            map.computeIfPresent(s.charAt(j), (k, v) -> v - 1);
+            while (!map.values().stream().anyMatch(k -> k > 0)) {
+                hasmatched = true;
+                if (j - i < bestj - besti) {
+                    besti = i;
+                    bestj = j;
+                }
+                map.computeIfPresent(s.charAt(i), (k, v) -> v + 1);
+                i++;
+            }
+        }
+        return hasmatched ? s.substring(besti, bestj + 1) : "";
+    }
+}

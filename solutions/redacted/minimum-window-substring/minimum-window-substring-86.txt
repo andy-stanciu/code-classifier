@@ -1,0 +1,53 @@
+/* Take frequency of each char present in t and make a map2<chara in t, its count>.  DesiredCount = t.length
+Traverse s, keeping i and j, staring at 0. Expand/acquire until count==desiredCount, but increase count only if this was a meaningful acquisition. A meaningful aquistion is- count of char in map1 after aquiring is <= count of same char in map2.
+
+Once count==desiredCount, you start to shring, discard one on j and check new substring(starting at j, going upto i+1). Is this new substring valid? If yes, update the ans. Is substring valid?-> after you discarded, if the count of char in map1 goes down compared to map2, reduce count.
+
+ */
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> map1 = new HashMap<>();
+        HashMap<Character, Integer> map2 = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            map2.put(c, map2.getOrDefault(c, 0) + 1);
+        }
+        int desiredCount = t.length();
+        int i = 0;
+        int j = 0;
+        int count = 0;
+        String ans = "";
+        char ch;
+        while (i < s.length()) {
+            //start aquiring
+            ch = s.charAt(i);
+            //you aquired
+            map1.put(ch, map1.getOrDefault(ch, 0) + 1);
+            if (map1.get(ch) <= map2.getOrDefault(ch, 0)) {
+                //decision to increase count or not.
+                count += 1;
+            }
+            //shrink and collect answer only if count==desiredCount
+            if (count == desiredCount) {
+                //now start shrinking j upto i and take ans only of the post shring substring is still valid
+                while (j <= i && count == desiredCount) {
+                    //Collect answer
+                    String possibleAns = s.substring(j, i + 1);
+                    if (ans.length() == 0 || possibleAns.length() < ans.length()) {
+                        ans = possibleAns;
+                    }
+                    char ch2 = s.charAt(j);
+                    ////released now.
+                    map1.put(ch2, map1.get(ch2) - 1);
+                    if (//do we decrement the desiredCount?, only if you lost a kaam ka bandha
+                    map1.getOrDefault(ch2, 0) < map2.getOrDefault(ch2, 0)) {
+                        count--;
+                    }
+                    j++;
+                }
+            }
+            i++;
+        }
+        return ans;
+    }
+}

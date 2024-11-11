@@ -1,0 +1,51 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        int m = s.length();
+        int n = t.length();
+        Map<Character, Integer> tFreqMap = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            tFreqMap.put(t.charAt(i), tFreqMap.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        int leftPointer = 0;
+        int minLength = Integer.MAX_VALUE;
+        String var1 = "";
+        Map<Character, Integer> sFreqMap = new HashMap<>();
+        for (int i = 0; i < m; i++) {
+            char c = s.charAt(i);
+            if (tFreqMap.containsKey(c)) {
+                sFreqMap.put(c, sFreqMap.getOrDefault(c, 0) + 1);
+                while (sFreqMap.size() == tFreqMap.size() && compareMaps(sFreqMap, tFreqMap)) {
+                    int currentLength = i - leftPointer + 1;
+                    if (currentLength < minLength) {
+                        var1 = s.substring(leftPointer, i + 1);
+                        minLength = currentLength;
+                    }
+                    char leftChar = s.charAt(leftPointer);
+                    sFreqMap.put(leftChar, sFreqMap.get(leftChar) - 1);
+                    if (sFreqMap.get(leftChar) == 0) {
+                        sFreqMap.remove(leftChar);
+                    }
+                    leftPointer++;
+                    while (leftPointer < i && !sFreqMap.containsKey(s.charAt(leftPointer))) leftPointer++;
+                }
+            } else {
+                if (sFreqMap.size() == 0)
+                    leftPointer++;
+            }
+        }
+        return var1;
+    }
+
+    public boolean compareMaps(Map<Character, Integer> sMap, Map<Character, Integer> tMap) {
+        for (char c : tMap.keySet()) {
+            int tFreq = tMap.get(c);
+            int sFreq = sMap.getOrDefault(c, 0);
+            if (sFreq < tFreq)
+                return false;
+        }
+        return true;
+    }
+}

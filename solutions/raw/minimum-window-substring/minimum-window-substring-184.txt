@@ -1,0 +1,41 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (t.length() > s.length()) {
+            return "";
+        }
+        var map = new HashMap<Character, Integer>();
+        for (char c : t.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        var minmap = new HashMap<Character, Integer>();
+        int l = 0;
+        int have = 0;
+        //tmap size
+        int need = map.size();
+        int minlength = Integer.MAX_VALUE;
+        int newstart = 0;
+        char[] arr = s.toCharArray();
+        for (int r = 0; r < arr.length; r++) {
+            char c = arr[r];
+            minmap.put(c, minmap.getOrDefault(c, 0) + 1);
+            if (map.containsKey(c) && minmap.get(c).intValue() == map.get(c).intValue()) {
+                have++;
+            }
+            while (have == need) {
+                c = arr[l];
+                if (r - l + 1 < minlength) {
+                    minlength = r - l + 1;
+                    newstart = l;
+                }
+                //pop from left
+                minmap.put(c, minmap.get(c) - 1);
+                if (map.containsKey(c) && minmap.get(c) < map.get(c)) {
+                    have--;
+                }
+                l++;
+            }
+        }
+        return minlength == Integer.MAX_VALUE ? "" : s.substring(newstart, newstart + minlength);
+    }
+}

@@ -1,0 +1,48 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // using some outside varibale is not thread safe
+    // private int pathSum;
+    /**
+     *    1. the path can be a straight top to down Or it can be bent at a node spanning across
+     *    both childrens
+     *    2. minimum one node needed in a path
+     *
+     *    for each node, we will find the left max connected path and right max connected path
+     *
+     *    then we will add that to the current node and updated max path sum val.
+     *
+     *    the method will return the max stratight path by adding current node
+     *    with max of left and right
+     */
+    public int method1(TreeNode root) {
+        // pathSum = root.val;
+        // thread safe
+        TreeNode resultNode = new TreeNode(root.val);
+        method2(root, resultNode);
+        return resultNode.val;
+    }
+
+    private int method2(TreeNode node, TreeNode resultNode) {
+        if (node == null)
+            return 0;
+        int var1 = method2(node.left, resultNode);
+        int var2 = method2(node.right, resultNode);
+        resultNode.val = Collections.max(Arrays.asList(resultNode.val, node.val, node.val + var1, node.val + var2, node.val + var1 + var2));
+        return Collections.max(Arrays.asList(node.val, node.val + var1, node.val + var2));
+    }
+}

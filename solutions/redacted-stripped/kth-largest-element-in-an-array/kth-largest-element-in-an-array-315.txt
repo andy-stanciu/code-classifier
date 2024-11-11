@@ -1,0 +1,50 @@
+class Solution {
+
+    Random var1 = new Random();
+
+    public int method1(int[] nums, int k) {
+        if (nums == null || nums.length == 0)
+            return Integer.MIN_VALUE;
+        int n = nums.length;
+        int low = 0;
+        int high = n - 1;
+        while (low < high) {
+            int[] partition = _3WayPartition(nums, low, high);
+            if (partition[0] > n - k) {
+                high = partition[0] - 1;
+            } else if (partition[1] < n - k)
+                low = partition[1] + 1;
+            else if (partition[0] <= n - k && partition[1] >= n - k)
+                break;
+        }
+        return nums[n - k];
+    }
+
+    private int[] _3WayPartition(int[] nums, int low, int high) {
+        int var2 = low + var1.nextInt(high - low + 1);
+        swap(nums, var2, low);
+        int leftBoundary = low;
+        int rightBoundary = high;
+        int var3 = nums[leftBoundary];
+        int l = low + 1;
+        while (l <= rightBoundary) {
+            if (nums[l] < var3) {
+                swap(nums, l, leftBoundary);
+                l++;
+                leftBoundary++;
+            } else if (nums[l] > var3) {
+                swap(nums, l, rightBoundary);
+                rightBoundary--;
+            } else if (nums[l] == var3) {
+                l++;
+            }
+        }
+        return new int[] { leftBoundary, rightBoundary };
+    }
+
+    private void swap(int[] nums, int l, int r) {
+        int temp = nums[l];
+        nums[l] = nums[r];
+        nums[r] = temp;
+    }
+}

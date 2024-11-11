@@ -1,0 +1,41 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int sLen = s.length();
+        int tLen = t.length();
+        // minus 65
+        int[] tFreqs = new int[58];
+        for (int i = 0; i < tLen; i++) {
+            //tracking t\'s values
+            tFreqs[t.charAt(i) - 65]++;
+        }
+        //curr start of window
+        int start = 0;
+        //curr end of window
+        int end = 0;
+        //smallest working window
+        int minWindow = sLen + 1;
+        //start of the smallest working window
+        int minStart = -1;
+        int count = 0;
+        while (end < sLen) {
+            if (tFreqs[s.charAt(end++) - 65]-- > 0) {
+                //if adding the rightmost val in s is helpful...
+                count++;
+            }
+            while (count == tLen) {
+                //while all vals in t are in window...
+                if (end - start < minWindow) {
+                    // if current working window is smaller than minWindow...
+                    minWindow = end - start;
+                    minStart = start;
+                }
+                if (++tFreqs[s.charAt(start++) - 65] > 0) {
+                    //if taking away leftmost val in s is fine..
+                    count--;
+                }
+            }
+        }
+        return minStart == -1 ? "" : s.substring(minStart, minStart + minWindow);
+    }
+}

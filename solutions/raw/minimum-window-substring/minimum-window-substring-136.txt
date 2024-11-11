@@ -1,0 +1,52 @@
+public class Solution {
+
+    public String minWindow(String s, String t) {
+        if (s == null || t == null || s.length() == 0 || t.length() == 0 || s.length() < t.length()) {
+            return "";
+        }
+        // For storing character counts (ASCII characters)
+        int[] map = new int[128];
+        // Number of characters we need to match in s
+        int required = t.length();
+        // Left and right pointers for the sliding window
+        int left = 0, right = 0;
+        // Track the minimum window length
+        int minLen = Integer.MAX_VALUE;
+        // Track the start of the minimum window
+        int startIndex = 0;
+        // Pre-populate the map with characters in t
+        for (char c : t.toCharArray()) {
+            // Count occurrences of each character in t
+            map[c]++;
+        }
+        // Move the right pointer to expand the window
+        while (right < s.length()) {
+            if (map[s.charAt(right)] > 0) {
+                // Decrease requirement for a valid window
+                required--;
+            }
+            // Decrease character count in the map
+            map[s.charAt(right)]--;
+            // Expand window
+            right++;
+            // When the window contains all characters from t
+            while (required == 0) {
+                // Update the minimum window if it\'s smaller than previous
+                if (right - left < minLen) {
+                    minLen = right - left;
+                    startIndex = left;
+                }
+                // Remove the leftmost character from the window
+                map[s.charAt(left)]++;
+                if (map[s.charAt(left)] > 0) {
+                    // If we lose a needed character, increase required count
+                    required++;
+                }
+                // Shrink window from the left
+                left++;
+            }
+        }
+        // If no valid window is found, return an empty string
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(startIndex, startIndex + minLen);
+    }
+}

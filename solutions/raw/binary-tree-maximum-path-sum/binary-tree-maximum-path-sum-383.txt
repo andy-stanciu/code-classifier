@@ -1,0 +1,57 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    int maxPathSum = Integer.MIN_VALUE;
+
+    public int maxPathSum(TreeNode root) {
+        if (root == null)
+            return 0;
+        if (root.left == null && root.right == null)
+            return root.val;
+        maxPathSumUtil(root);
+        return Math.max(maxPathSum, maxPathSumUtil(root));
+    }
+
+    public int maxPathSumUtil(TreeNode root) {
+        // Base case
+        if (root == null)
+            return 0;
+        if (root.left == null && root.right == null)
+            return root.val;
+        // Recursion and processing
+        int rightLegMaxSum = maxPathSumUtil(root.right);
+        int leftLegMaxSum = maxPathSumUtil(root.left);
+        int arcMaxSum = rightLegMaxSum + leftLegMaxSum + root.val;
+        // Handle for negative value cases
+        if (root.right == null) {
+            maxPathSum = Math.max(leftLegMaxSum, Math.max(arcMaxSum, maxPathSum));
+        } else if (root.left == null) {
+            maxPathSum = Math.max(rightLegMaxSum, Math.max(arcMaxSum, maxPathSum));
+        } else if (root.right != null && root.left != null) {
+            maxPathSum = Math.max(Math.max(rightLegMaxSum, leftLegMaxSum), Math.max(arcMaxSum, maxPathSum));
+        }
+        maxPathSum = Math.max(maxPathSum, root.val);
+        // Similar way,handle for returned value
+        if (root.right == null) {
+            return Math.max((leftLegMaxSum + root.val), root.val);
+        }
+        if (root.left == null) {
+            return Math.max((rightLegMaxSum + root.val), root.val);
+        }
+        return Math.max(Math.max(rightLegMaxSum + root.val, leftLegMaxSum + root.val), root.val);
+    }
+}

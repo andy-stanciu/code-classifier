@@ -1,0 +1,55 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        HashMap<Character, Integer> freq = new HashMap<>();
+        HashMap<Character, Integer> window = new HashMap<>();
+        int need = t.length();
+        for (int i = 0; i < t.length(); i++) {
+            char letter = t.charAt(i);
+            freq.put(letter, freq.getOrDefault(letter, 0) + 1);
+            window.put(letter, 0);
+        }
+        int windowStart = 0;
+        int minimumLength = s.length();
+        // The start and the end index of the result
+        int[] minimumSubstringIndices = new int[2];
+        int have = 0;
+        for (int windowEnd = 0; windowEnd < s.length(); windowEnd++) {
+            if (need != have) {
+                char letter = s.charAt(windowEnd);
+                if (window.containsKey(letter)) {
+                    // Update the key value
+                    window.put(letter, window.get(letter) + 1);
+                    // Compare the key\'s value in the window and freq map
+                    // If the value is greater than required we need not update "have"
+                    if (window.get(letter) <= freq.get(letter)) {
+                        have++;
+                    }
+                }
+            }
+            while (need == have && windowStart <= windowEnd) {
+                // Found a potential answer
+                // Check if potential answer is better than earlier obtained potential answer
+                if ((windowEnd - windowStart + 1) <= minimumLength) {
+                    minimumLength = windowEnd - windowStart + 1;
+                    minimumSubstringIndices[0] = windowStart;
+                    // Updating windowEnd by 1 because while slicing the endIndex is not inclusive
+                    minimumSubstringIndices[1] = windowEnd + 1;
+                }
+                char ch = s.charAt(windowStart);
+                if (window.containsKey(ch)) {
+                    window.put(ch, window.get(ch) - 1);
+                    // Check whether the key\'s value in the window and freq are equal
+                    // Once the window\'s value reduces we need to reduce the "have"
+                    if (window.get(ch) < freq.get(ch)) {
+                        have--;
+                    }
+                }
+                windowStart++;
+            }
+        }
+        return s.substring(minimumSubstringIndices[0], minimumSubstringIndices[1]);
+    }
+}

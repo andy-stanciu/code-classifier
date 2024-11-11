@@ -1,0 +1,51 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] matchCounters = new int[128];
+        int totalMatchCounters = 0;
+        boolean[] charToMatch = new boolean[128];
+        for (char c : t.toCharArray()) {
+            matchCounters[c]++;
+            totalMatchCounters++;
+            charToMatch[c] = true;
+        }
+        int m = s.length();
+        int left = 0;
+        int right = 0;
+        int minLeft = 0;
+        int minRight = 0;
+        int method1 = m + 1;
+        while (true) {
+            if (totalMatchCounters > 0) {
+                if (right == m) {
+                    break;
+                }
+                char rightChar = s.charAt(right);
+                if (charToMatch[rightChar]) {
+                    if (--matchCounters[rightChar] >= 0) {
+                        totalMatchCounters--;
+                    }
+                }
+                right++;
+            } else {
+                if (left == m) {
+                    break;
+                }
+                char leftChar = s.charAt(left);
+                if (charToMatch[leftChar]) {
+                    if (++matchCounters[leftChar] > 0) {
+                        totalMatchCounters++;
+                        int var1 = right - left;
+                        if (var1 < method1) {
+                            method1 = var1;
+                            minLeft = left;
+                            minRight = right;
+                        }
+                    }
+                }
+                left++;
+            }
+        }
+        return s.substring(minLeft, minRight);
+    }
+}

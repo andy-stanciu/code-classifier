@@ -1,0 +1,47 @@
+class Solution {
+
+    boolean[] path;
+
+    boolean[] visited;
+
+    boolean hasCycle = false;
+
+    Map<Integer, List<Integer>> mp;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int n = param1;
+        path = new boolean[n + 1];
+        visited = new boolean[n + 1];
+        mp = new HashMap<>();
+        buildGraph(prerequisites);
+        for (int i = 0; i < param1; i++) {
+            traverse(mp, i);
+        }
+        return !hasCycle;
+    }
+
+    public void traverse(Map<Integer, List<Integer>> mp, int idx) {
+        if (path[idx]) {
+            hasCycle = true;
+        }
+        if (hasCycle || visited[idx])
+            return;
+        visited[idx] = true;
+        path[idx] = true;
+        if (mp.get(idx) != null) {
+            for (int i : mp.get(idx)) {
+                traverse(mp, i);
+            }
+        }
+        path[idx] = false;
+    }
+
+    public void buildGraph(int[][] prerequisites) {
+        for (int[] i : prerequisites) {
+            if (!mp.containsKey(i[1])) {
+                mp.put(i[1], new ArrayList<>());
+            }
+            mp.get(i[1]).add(i[0]);
+        }
+    }
+}

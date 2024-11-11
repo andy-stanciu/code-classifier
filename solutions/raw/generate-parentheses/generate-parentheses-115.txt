@@ -1,0 +1,21 @@
+class Solution {
+
+    List<String> forPrefix(int openLeft, int closeLeft, String prefix) {
+        final List<String> forOpen;
+        if (openLeft != 0) {
+            forOpen = forPrefix(openLeft - 1, closeLeft, prefix + "(");
+        } else {
+            final var closedPrefix = closeLeft > 0 ? prefix + ")".repeat(closeLeft) : prefix;
+            return List.of(closedPrefix);
+        }
+        final var result = new ArrayList<String>(forOpen);
+        if (closeLeft > openLeft) {
+            result.addAll(forPrefix(openLeft, closeLeft - 1, prefix + ")"));
+        }
+        return result;
+    }
+
+    public List<String> generateParenthesis(int n) {
+        return forPrefix(n, n, "");
+    }
+}

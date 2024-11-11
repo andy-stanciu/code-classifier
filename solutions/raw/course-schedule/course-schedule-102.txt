@@ -1,0 +1,39 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        //topological sorting using dfs
+        List<Integer>[] graph = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] pre : prerequisites) {
+            graph[pre[1]].add(pre[0]);
+        }
+        boolean[] completed = new boolean[numCourses];
+        boolean[] visited = new boolean[numCourses];
+        for (int course = 0; course < numCourses; course++) {
+            if (!dfs(course, completed, graph, visited)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean dfs(int course, boolean[] completed, List<Integer>[] graph, boolean[] visited) {
+        if (visited[course]) {
+            return false;
+        }
+        if (completed[course]) {
+            return true;
+        }
+        visited[course] = true;
+        for (int neighbor : graph[course]) {
+            if (!dfs(neighbor, completed, graph, visited)) {
+                return false;
+            }
+        }
+        completed[course] = true;
+        visited[course] = false;
+        return true;
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    List<Integer> l = new ArrayList<>();
+
+    int bfs(List<List<Integer>> e, int v) {
+        int[] indeg = new int[v];
+        for (int i = 0; i < v; i++) {
+            for (int node : e.get(i)) {
+                indeg[node]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < v; i++) {
+            if (indeg[i] == 0)
+                q.add(i);
+        }
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            l.add(node);
+            for (int j : e.get(node)) {
+                indeg[j]--;
+                if (indeg[j] == 0)
+                    q.add(j);
+            }
+        }
+        return l.size();
+    }
+
+    public boolean canFinish(int v, int[][] g) {
+        List<List<Integer>> e = new ArrayList<>();
+        for (int i = 0; i < v; i++) {
+            e.add(new ArrayList<>());
+        }
+        for (int i = 0; i < g.length; i++) {
+            e.get(g[i][1]).add(g[i][0]);
+        }
+        if (bfs(e, v) == v)
+            return true;
+        return false;
+    }
+}

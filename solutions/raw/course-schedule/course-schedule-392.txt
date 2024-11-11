@@ -1,0 +1,37 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        ArrayList<Integer>[] arr = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            arr[i] = new ArrayList<Integer>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            arr[prerequisites[i][0]].add(prerequisites[i][1]);
+        }
+        boolean[] visited = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (visited[i] == false) {
+                if (hasLoop(arr, i, visited, new boolean[numCourses]) == true) {
+                    return (false);
+                }
+            }
+        }
+        return (true);
+    }
+
+    public boolean hasLoop(ArrayList[] arr, int n, boolean[] visited, boolean[] prev) {
+        visited[n] = true;
+        prev[n] = true;
+        for (int i = 0; i < arr[n].size(); i++) {
+            if (prev[(int) arr[n].get(i)] == true) {
+                return (true);
+            } else {
+                if (visited[(int) arr[n].get(i)] == false && hasLoop(arr, (int) arr[n].get(i), visited, prev.clone()) == true) {
+                    return (true);
+                }
+            }
+        }
+        return (false);
+    }
+}
+// dfs loop finding approch

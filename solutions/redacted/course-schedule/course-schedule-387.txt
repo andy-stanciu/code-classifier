@@ -1,0 +1,72 @@
+class Solution {
+
+    public void createGraph(int[][] prerequisites, ArrayList<Integer>[] graph, int[] indegree) {
+        for (int[] array : prerequisites) {
+            int src = array[1];
+            int dest = array[0];
+            graph[src].add(dest);
+            indegree[dest]++;
+        }
+    }
+
+    public boolean solveUsingBfs(ArrayList<Integer>[] graph, int param1, int[] indegree) {
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        int count = 0;
+        while (!q.isEmpty()) {
+            int curr = q.poll();
+            count++;
+            for (int dest : graph[curr]) {
+                indegree[dest]--;
+                if (indegree[dest] == 0) {
+                    q.add(dest);
+                }
+            }
+        }
+        return count == param1;
+    }
+
+    public boolean solveUsingDfs(ArrayList<Integer>[] graph, boolean[] stack, boolean[] visited, int src) {
+        visited[src] = true;
+        stack[src] = true;
+        for (int dest : graph[src]) {
+            if (!visited[dest]) {
+                boolean nextAnswer = solveUsingDfs(graph, stack, visited, dest);
+                if (nextAnswer) {
+                    return true;
+                }
+            } else {
+                if (stack[dest]) {
+                    return true;
+                }
+            }
+        }
+        stack[src] = false;
+        return false;
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<Integer>[] graph = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        boolean[] visited = new boolean[param1];
+        boolean[] stack = new boolean[param1];
+        int[] indegree = new int[param1];
+        createGraph(prerequisites, graph, indegree);
+        // return solveUsingBfs(graph,numCourses,indegree);
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                boolean checked = solveUsingDfs(graph, stack, visited, i);
+                if (checked) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}

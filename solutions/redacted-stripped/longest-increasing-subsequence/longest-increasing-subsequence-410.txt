@@ -1,0 +1,65 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        return usingMonotonicStack(nums);
+    }
+
+    public int usingMonotonicStack(int[] nums) {
+        int n = nums.length;
+        int[] stack = new int[n];
+        int maxLIS = 1;
+        int topIdx = -1;
+        for (int i = 0; i < n; i++) {
+            int num = nums[i];
+            int LISEndingAtCurr = 1;
+            if (topIdx == -1 || stack[topIdx] < num) {
+                topIdx++;
+                stack[topIdx] = num;
+                LISEndingAtCurr = topIdx + 1;
+            } else {
+                int idx = findStackPos(stack, topIdx, num);
+                stack[idx] = num;
+                LISEndingAtCurr = idx + 1;
+            }
+            maxLIS = Math.max(maxLIS, LISEndingAtCurr);
+        }
+        return maxLIS;
+    }
+
+    private int findStackPos(int[] stack, int topIdx, int num) {
+        if (stack[topIdx] == num) {
+            return topIdx;
+        }
+        int st = 0;
+        int en = topIdx;
+        int ans = topIdx;
+        while (st <= en) {
+            int mid = st + (en - st) / 2;
+            if (stack[mid] >= num) {
+                ans = mid;
+                en = mid - 1;
+            } else {
+                st = mid + 1;
+            }
+        }
+        return ans;
+    }
+
+    public int usingDP(int[] nums) {
+        int n = nums.length;
+        int[] LIS = new int[n];
+        Arrays.fill(LIS, 1);
+        int overAllMaxLIS = 1;
+        for (int i = 0; i < n; i++) {
+            int maxLIS = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (nums[i] > nums[j]) {
+                    maxLIS = Math.max(maxLIS, LIS[j] + 1);
+                }
+            }
+            LIS[i] = maxLIS;
+            overAllMaxLIS = Math.max(overAllMaxLIS, maxLIS);
+        }
+        return overAllMaxLIS;
+    }
+}

@@ -1,0 +1,42 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>(param1);
+        List<Integer> indegree = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+            // Adding an empty inner list for each course
+            indegree.add(0);
+        }
+        for (int[] arr : prerequisites) {
+            // Fixing list of lists add syntax
+            adjList.get(arr[1]).add(arr[0]);
+            // Fixing indegree update
+            indegree.set(arr[0], indegree.get(arr[0]) + 1);
+        }
+        // Correct instantiation of the Queue
+        Queue<Integer> q = new LinkedList<>();
+        int i = 0;
+        for (int indegre : indegree) {
+            if (indegre == 0) {
+                q.add(i);
+            }
+            i++;
+        }
+        int visited = 0;
+        while (!q.isEmpty()) {
+            // Fix the while condition
+            // Fix pop method to poll
+            int node = q.poll();
+            visited++;
+            for (int neighbour : adjList.get(node)) {
+                // Fix indegree update
+                indegree.set(neighbour, indegree.get(neighbour) - 1);
+                if (indegree.get(neighbour) == 0) {
+                    q.add(neighbour);
+                }
+            }
+        }
+        return visited == param1;
+    }
+}

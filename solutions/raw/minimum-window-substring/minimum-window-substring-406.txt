@@ -1,0 +1,53 @@
+class Solution {
+
+    public boolean if_Contains(Map<Character, Integer> ds_s, Map<Character, Integer> ds_t) {
+        //Here we check, if s string contains all the characters of t string in equal or greater number count using hashmaps data
+        //if we get the above condition correct, we return true else false
+        if (ds_s.size() < ds_t.size())
+            return false;
+        else {
+            for (Map.Entry<Character, Integer> en : ds_t.entrySet()) {
+                if (!ds_s.containsKey(en.getKey()))
+                    return false;
+                else if (ds_s.get(en.getKey()) < en.getValue())
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public String minWindow(String s, String t) {
+        int n = s.length();
+        //To track of s string characters and its count
+        Map<Character, Integer> ds_s = new HashMap<>();
+        //To track of s string characters and its count
+        Map<Character, Integer> ds_t = new HashMap<>();
+        //Storing the character and count of t string
+        for (int i = 0; i < t.length(); i++) ds_t.put(t.charAt(i), ds_t.getOrDefault(t.charAt(i), 0) + 1);
+        int r, l = 0, min_len = Integer.MAX_VALUE;
+        String ans = "";
+        //Iterating through the whole s string character wise from left to right
+        for (r = 0; r < n; r++) {
+            //We add new character from s string to map on every iteration
+            ds_s.put(s.charAt(r), ds_s.getOrDefault(s.charAt(r), 0) + 1);
+            //We check if the current substring of s under our ptr range contains all the characters of t string
+            //If true we get inside while
+            while (if_Contains(ds_s, ds_t)) {
+                //If the current substring under ptr range has a minimum length than the previous minimum length
+                //We update the previous minimum length and also update the ans string which stores the minimum length string
+                if (r - l + 1 <= min_len) {
+                    min_len = r - l + 1;
+                    ans = s.substring(l, r + 1);
+                }
+                //Now we remove the character from start at left pointer index to keep minimizing the substring range
+                //So the we can get a valid minimum length substring in future
+                int temp = ds_s.get(s.charAt(l)) - 1;
+                ds_s.put(s.charAt(l), temp);
+                if (ds_s.get(s.charAt(l)) == 0)
+                    ds_s.remove(s.charAt(l));
+                l++;
+            }
+        }
+        return ans;
+    }
+}

@@ -1,0 +1,47 @@
+class Solution {
+
+    private boolean dfsCheck(int node, ArrayList<ArrayList<Integer>> adj, int[] vis, int[] pathVis) {
+        vis[node] = 1;
+        pathVis[node] = 1;
+        // Traverse the adjacent nodes
+        for (int neighbor : adj.get(node)) {
+            // If the neighbor has not been visited
+            if (vis[neighbor] == 0) {
+                if (dfsCheck(neighbor, adj, vis, pathVis)) {
+                    return true;
+                }
+            } else // If the neighbor is visited and is on the current path
+            if (pathVis[neighbor] == 1) {
+                return true;
+            }
+        }
+        pathVis[node] = 0;
+        return false;
+    }
+
+    // Method to check if all courses can be finished
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        // Initialize adjacency list
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<>());
+        }
+        // Fill the adjacency list with prerequisites
+        for (int[] prerequisite : prerequisites) {
+            adj.get(prerequisite[1]).add(prerequisite[0]);
+        }
+        int[] vis = new int[param1];
+        int[] pathVis = new int[param1];
+        // Check for cycles in each course
+        for (int i = 0; i < param1; i++) {
+            if (vis[i] == 0) {
+                if (dfsCheck(i, adj, vis, pathVis)) {
+                    // A cycle is detected, so it\'s not possible to finish all courses
+                    return false;
+                }
+            }
+        }
+        // No cycle detected, so it\'s possible to finish all courses
+        return true;
+    }
+}

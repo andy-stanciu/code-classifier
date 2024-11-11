@@ -1,0 +1,43 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s.equals(t)) {
+            return t;
+        }
+        StringBuilder sb = new StringBuilder();
+        HashMap<Character, Integer> hm = new HashMap<>();
+        int i = 0;
+        int j = 0;
+        int count = 0;
+        char[] crr = s.toCharArray();
+        for (char c : t.toCharArray()) {
+            hm.put(c, hm.getOrDefault(c, 0) + 1);
+            if (hm.get(c) > 0) {
+                count++;
+            }
+        }
+        while (j < s.length()) {
+            if (hm.containsKey(crr[j])) {
+                hm.put(crr[j], hm.get(crr[j]) - 1);
+                if (hm.get(crr[j]) >= 0) {
+                    count--;
+                }
+            }
+            while (count == 0) {
+                if (sb.length() == 0 || j - i + 1 < sb.length()) {
+                    sb.setLength(0);
+                    sb.append(s.substring(i, j + 1));
+                }
+                if (hm.containsKey(crr[i])) {
+                    hm.put(crr[i], hm.get(crr[i]) + 1);
+                    if (hm.get(crr[i]) > 0) {
+                        count++;
+                    }
+                }
+                i++;
+            }
+            j++;
+        }
+        return sb.toString();
+    }
+}

@@ -1,0 +1,51 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        //Using BFS
+        List<List<Integer>> adjList = new ArrayList<>();
+        //I will first create Adjacency List to fetch neighbours or required courses
+        //numCourses in for loop because those many nodes are present
+        for (int i = 0; i < numCourses; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        int m = prerequisites.length;
+        for (int i = 0; i < m; i++) {
+            adjList.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        //to complete task 1 ,
+        //i need to complete task 0.which means we have topo sort kinda dependency
+        //So lets use toposort ,I will prefer BFS for it
+        int[] indegree = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            for (int node : adjList.get(i)) {
+                indegree[node]++;
+            }
+        }
+        //I will all vertices with indegree 0 in queue
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        //now actually perform bfs(toposort way)
+        int cnt = 0;
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            cnt++;
+            for (int i : adjList.get(node)) {
+                indegree[i]--;
+                if (indegree[i] == 0) {
+                    q.add(i);
+                }
+            }
+        }
+        //it is valid if there is no cycle.
+        //How to determine that:put cnt for no of nodes in topo sort.
+        //If it is equal to numCOurses .Its valid else not valid
+        if (cnt == numCourses) {
+            return true;
+        }
+        return false;
+    }
+}

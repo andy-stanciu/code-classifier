@@ -1,0 +1,70 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        int pivot = method2(nums, 0, nums.length - 1);
+        if (target >= nums[pivot] && target <= nums[nums.length - 1]) {
+            return method2(nums, pivot, nums.length - 1, target);
+        } else {
+            return method2(nums, 0, pivot, target);
+        }
+    }
+
+    public int method2(int[] nums, int i, int j, int target) {
+        if (i < 0 || j < 0 || i >= nums.length || j >= nums.length) {
+            return -1;
+        }
+        if (i == j) {
+            if (nums[i] == target) {
+                return i;
+            } else {
+                return -1;
+            }
+        }
+        if (i + 1 == j) {
+            if (nums[i] == target) {
+                return i;
+            } else if (nums[j] == target) {
+                return j;
+            }
+            return -1;
+        }
+        int mid = (i + j) / 2;
+        if (nums[mid] == target) {
+            return mid;
+        }
+        if (nums[mid] > nums[mid - 1]) {
+            if (target < nums[mid]) {
+                return method2(nums, i, mid - 1, target);
+            } else {
+                return method2(nums, mid + 1, j, target);
+            }
+        } else {
+            if (target < nums[mid]) {
+                return method2(nums, mid + 1, j, target);
+            } else {
+                return method2(nums, i, mid - 1, target);
+            }
+        }
+    }
+
+    public int method2(int[] nums, int i, int j) {
+        if (i < 0 || j < 0 || i >= nums.length || j >= nums.length) {
+            return -1;
+        }
+        if (i + 1 == j) {
+            return nums[i] < nums[j] ? i : j;
+        }
+        if (i == j) {
+            return i;
+        }
+        int mid = (i + j) / 2;
+        if (nums[mid] < nums[mid - 1] && nums[mid] < nums[mid + 1]) {
+            return mid;
+        }
+        if (nums[mid] > nums[j]) {
+            return method2(nums, mid, j);
+        } else {
+            return method2(nums, i, mid);
+        }
+    }
+}

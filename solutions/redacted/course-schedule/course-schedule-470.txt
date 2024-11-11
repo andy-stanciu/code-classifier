@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int n = prerequisites.length;
+        // Building InDegree and Adjacency List
+        List<List<Integer>> adjList = new ArrayList<>();
+        int[] inDegree = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int i = 0; i < n; i++) {
+            int var1 = prerequisites[i][0];
+            int prerequisite = prerequisites[i][1];
+            inDegree[var1]++;
+            adjList.get(prerequisite).add(var1);
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (inDegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        int count = 0;
+        while (!q.isEmpty()) {
+            int var1 = q.poll();
+            count++;
+            for (int neighbor : adjList.get(var1)) {
+                inDegree[neighbor]--;
+                if (inDegree[neighbor] == 0) {
+                    q.add(neighbor);
+                }
+            }
+        }
+        return count == param1;
+    }
+}

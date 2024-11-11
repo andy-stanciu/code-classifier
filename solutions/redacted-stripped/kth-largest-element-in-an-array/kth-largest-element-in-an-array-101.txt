@@ -1,0 +1,71 @@
+class Solution {
+
+    int[] heap;
+
+    int enter = 1;
+
+    public int method1(int[] nums, int k) {
+        heap = new int[k + 1];
+        for (int i = 0; i < nums.length; i++) {
+            if (i < k || nums[i] > heap[1]) {
+                if (enter <= k) {
+                    heap[enter] = nums[i];
+                    upheap(heap, enter);
+                    enter++;
+                } else {
+                    heap[1] = nums[i];
+                    downheap(heap, 1, k);
+                }
+            }
+        }
+        return heap[1];
+    }
+
+    public void upheap(int[] heap, int param1) {
+        if (param1 <= 1) {
+            return;
+        }
+        int parent = heap[param1 / 2];
+        if (parent > heap[param1]) {
+            swap(heap, param1, param1 / 2);
+            upheap(heap, param1 / 2);
+        }
+    }
+
+    public void downheap(int[] heap, int j, int k) {
+        if (j > k || j > enter) {
+            return;
+        }
+        int left = getVal(heap, 2 * j, k);
+        int right = getVal(heap, 2 * j + 1, k);
+        if (left == right) {
+            if (left == Integer.MAX_VALUE)
+                return;
+            if (heap[j] > left) {
+                swap(heap, j, 2 * j);
+                downheap(heap, 2 * j, k);
+            }
+        }
+        if (left < right && heap[j] > left) {
+            swap(heap, 2 * j, j);
+            downheap(heap, 2 * j, k);
+        }
+        if (right < left && heap[j] > right) {
+            swap(heap, 2 * j + 1, j);
+            downheap(heap, 2 * j + 1, k);
+        }
+    }
+
+    public int getVal(int[] arr, int m, int k) {
+        if (m > k || m > enter) {
+            return Integer.MAX_VALUE;
+        }
+        return arr[m];
+    }
+
+    public void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}

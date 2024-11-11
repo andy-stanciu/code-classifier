@@ -1,0 +1,53 @@
+class Solution {
+
+    public int method1(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        Map<Integer, Integer> lowToHigh = new HashMap<>();
+        Map<Integer, Integer> highToLow = new HashMap<>();
+        Set<Integer> visited = new HashSet<>();
+        int var1 = 1;
+        for (int n : nums) {
+            boolean merged = false;
+            if (lowToHigh.containsKey(n + 1)) {
+                int high = lowToHigh.get(n + 1);
+                lowToHigh.remove(n + 1);
+                if (highToLow.containsKey(n - 1)) {
+                    int low = highToLow.get(n - 1);
+                    highToLow.remove(n - 1);
+                    highToLow.put(high, low);
+                    lowToHigh.put(low, high);
+                    var1 = Math.max(var1, high - low + 1);
+                } else {
+                    highToLow.put(high, n);
+                    lowToHigh.put(n, high);
+                    var1 = Math.max(var1, high - n + 1);
+                }
+                merged = true;
+            }
+            if (highToLow.containsKey(n - 1)) {
+                int low = highToLow.get(n - 1);
+                highToLow.remove(n - 1);
+                if (lowToHigh.containsKey(n + 1)) {
+                    int high = lowToHigh.get(n + 1);
+                    lowToHigh.remove(n + 1);
+                    lowToHigh.put(low, high);
+                    highToLow.put(high, low);
+                    var1 = Math.max(var1, high - low + 1);
+                } else {
+                    lowToHigh.put(low, n);
+                    highToLow.put(n, low);
+                    var1 = Math.max(var1, n - low + 1);
+                }
+                merged = true;
+            }
+            if ((!merged) && (!visited.contains(n))) {
+                lowToHigh.put(n, n);
+                highToLow.put(n, n);
+            }
+            visited.add(n);
+        }
+        return var1;
+    }
+}

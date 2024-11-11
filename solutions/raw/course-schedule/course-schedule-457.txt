@@ -1,0 +1,49 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> map = mapCoursesToDependencies(prerequisites);
+        boolean[] vis = new boolean[numCourses];
+        for (int course = 0; course < numCourses; course++) {
+            if (!dfs(course, map, vis))
+                return false;
+        }
+        return true;
+    }
+
+    private static boolean dfs(int course, Map<Integer, List<Integer>> map, boolean[] vis) {
+        List<Integer> dependencies = map.getOrDefault(course, Collections.emptyList());
+        // halting point
+        if (dependencies.isEmpty())
+            return vis[course] = true;
+        // we found a cycle
+        if (vis[course])
+            return false;
+        // so that the next call who\'s having the same course path, if having this same course, it\'s cyclic
+        vis[course] = true;
+        boolean res = true;
+        for (var dependency : dependencies) {
+            if (!dfs(dependency, map, vis)) {
+                // if any result in false, break, because we found a cycle
+                res = false;
+                break;
+            }
+        }
+        // because it\'ll be used for different course paths
+        vis[course] = false;
+        // it\'s known by now the result of this course, no need to revisit its dependencies again
+        map.put(course, Collections.emptyList());
+        return res;
+    }
+
+    private static Map<Integer, List<Integer>> mapCoursesToDependencies(int[][] prerequisites) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int i = 0; i < prerequisites.length; i++) {
+            var course = prerequisites[i][0];
+            var dependency = prerequisites[i][1];
+            var dependencies = map.getOrDefault(course, new ArrayList<>());
+            dependencies.add(dependency);
+            map.put(course, dependencies);
+        }
+        return map;
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    HashMap<Character, Integer> map_s = new HashMap<>();
+
+    HashMap<Character, Integer> map_t = new HashMap<>();
+
+    public String method1(String s, String t) {
+        int left = 0, right = 0;
+        String substr = new String();
+        String result = new String();
+        int result_len = Integer.MAX_VALUE;
+        for (char c : t.toCharArray()) {
+            map_t.put(c, map_t.getOrDefault(c, 0) + 1);
+        }
+        for (; right < s.length(); right++) {
+            map_s.put(s.charAt(right), map_s.getOrDefault(s.charAt(right), 0) + 1);
+            // substr = s.substring(left, right);
+            while (ContainsAllChar() && left <= right) {
+                substr = s.substring(left, right + 1);
+                if (result_len > (right + 1 - left)) {
+                    result = substr;
+                    result_len = right + 1 - left;
+                }
+                map_s.put(s.charAt(left), map_s.get(s.charAt(left)) - 1);
+                left++;
+            }
+        }
+        return result;
+    }
+
+    private Boolean ContainsAllChar() {
+        for (Map.Entry<Character, Integer> entry : map_t.entrySet()) {
+            Character c = entry.getKey();
+            Integer num = entry.getValue();
+            if (!map_s.containsKey(c)) {
+                return false;
+            } else if (map_s.get(c) < num) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

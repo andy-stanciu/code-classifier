@@ -1,0 +1,29 @@
+class Solution {
+
+    // Binary search, O(nlogn)
+    public int lengthOfLIS(int[] nums) {
+        // Initialize a list to store the longest increasing subsequence
+        List<Integer> lis = new ArrayList<>(nums.length);
+        for (int n : nums) {
+            // Use binary search to find the index where the current element should be inserted or found in the list
+            int i = Collections.binarySearch(lis, n);
+            // If the element is not found, Collections.binarySearch returns a negative value.
+            // We need to convert it to the index where the element should be inserted using -i - 1.
+            // -i-1 is the convention set for binarySearch to cover the edge case of returning index 0.
+            // If the proper index to place the element is at 3 to maintain sortedness of list, it would return -4.
+            if (i < 0) {
+                i = -i - 1;
+            }
+            // If the index is equal to the current size of the list, it means the element is greater than all elements in the list.
+            // In this case, we add the element to the end of the list.
+            if (i == lis.size()) {
+                lis.add(n);
+            } else {
+                // If the index is not equal to the size, it means the element can replace an existing element at that index
+                // since we are looking for a strictly increasing subsequence.
+                lis.set(i, n);
+            }
+        }
+        return lis.size();
+    }
+}

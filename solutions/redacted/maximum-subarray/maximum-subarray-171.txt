@@ -1,0 +1,33 @@
+class Solution {
+
+    public int method1(int[] nums) {
+        return DFS(nums, 0, nums.length - 1);
+    }
+
+    public int DFS(int[] nums, int left, int right) {
+        //step 1
+        if (left == right) {
+            return nums[left];
+        }
+        //step 2
+        int mid = (left + right) / 2;
+        int sum = 0, leftMaxSum = Integer.MIN_VALUE;
+        for (int k = mid; k >= left; k--) {
+            sum += nums[k];
+            if (sum > leftMaxSum) {
+                leftMaxSum = sum;
+            }
+        }
+        int rightMaxSum = Integer.MIN_VALUE;
+        sum = 0;
+        for (int k = mid + 1; k <= right; k++) {
+            sum += nums[k];
+            if (sum > rightMaxSum) {
+                rightMaxSum = sum;
+            }
+        }
+        //step 3
+        int maxLeftRight = Math.max(DFS(nums, left, mid), DFS(nums, mid + 1, right));
+        return Math.max(maxLeftRight, leftMaxSum + rightMaxSum);
+    }
+}

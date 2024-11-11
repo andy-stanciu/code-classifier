@@ -1,0 +1,36 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        return helper(s, t);
+    }
+
+    public String helper(String s, String p) {
+        HashMap<Character, Integer> map1 = new HashMap<>();
+        for (int i = 0; i < p.length(); i++) map1.put(p.charAt(i), map1.getOrDefault(p.charAt(i), 0) + 1);
+        HashMap<Character, Integer> map2 = new HashMap<>();
+        int tail = 0, head = 0, min = Integer.MAX_VALUE;
+        String ans = "";
+        for (; head < s.length(); head++) {
+            map2.put(s.charAt(head), map2.getOrDefault(s.charAt(head), 0) + 1);
+            while (isEqual(map2, map1)) {
+                if ((head - tail + 1) < min) {
+                    min = (head - tail + 1);
+                    ans = s.substring(tail, head + 1);
+                }
+                map2.put(s.charAt(tail), map2.get(s.charAt(tail)) - 1);
+                if (map2.get(s.charAt(tail)) == 0)
+                    map2.remove(s.charAt(tail));
+                tail++;
+            }
+        }
+        return ans;
+    }
+
+    public boolean isEqual(HashMap<Character, Integer> m1, HashMap<Character, Integer> m2) {
+        for (Map.Entry<Character, Integer> i : m2.entrySet()) {
+            if (i.getValue() > m1.getOrDefault(i.getKey(), 0))
+                return false;
+        }
+        return true;
+    }
+}

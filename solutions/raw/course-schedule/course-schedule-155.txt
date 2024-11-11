@@ -1,0 +1,45 @@
+class Solution {
+
+    private enum Status {
+
+        UNREAD, READING, READ
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // construct the adj list for directed graph
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] pre : prerequisites) {
+            adjList.get(pre[0]).add(pre[1]);
+        }
+        // perform dfs on each course and detect a cycle.
+        // a cycle is when during a dfs we get a course which is already in reading status
+        Status[] courseStats = new Status[numCourses];
+        Arrays.fill(courseStats, Status.UNREAD);
+        for (int course = 0; course < numCourses; course++) {
+            if (courseStats[course] == Status.UNREAD) {
+                if (complete(course, courseStats, adjList) == false) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean complete(int course, Status[] courseStats, List<List<Integer>> adjList) {
+        courseStats[course] = Status.READING;
+        for (Integer preCourse : adjList.get(course)) {
+            if (courseStats[preCourse] == Status.UNREAD) {
+                if (complete(preCourse, courseStats, adjList) == false) {
+                    return false;
+                }
+            } else if (courseStats[preCourse] == Status.READING) {
+                return false;
+            }
+        }
+        courseStats[course] = Status.READ;
+        return true;
+    }
+}

@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            graph.get(prerequisite[1]).add(prerequisite[0]);
+        }
+        boolean[] visited = new boolean[param1];
+        boolean[] inStack = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i] && hasCycle(graph, i, visited, inStack)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean hasCycle(List<List<Integer>> graph, int node, boolean[] visited, boolean[] inStack) {
+        visited[node] = true;
+        inStack[node] = true;
+        for (int neighbor : graph.get(node)) {
+            if (!visited[neighbor]) {
+                if (hasCycle(graph, neighbor, visited, inStack)) {
+                    return true;
+                }
+            } else if (inStack[neighbor]) {
+                return true;
+            }
+        }
+        inStack[node] = false;
+        return false;
+    }
+}

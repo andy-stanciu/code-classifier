@@ -1,0 +1,43 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> g = makeGraph(numCourses, prerequisites);
+        boolean[] visited = new boolean[numCourses];
+        boolean[] inPath = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (hasCycle(g, i, visited, inPath)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    Map<Integer, List<Integer>> makeGraph(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> m = new HashMap<>();
+        for (int i = 0; i < numCourses; i++) {
+            m.put(i, new ArrayList<>());
+        }
+        for (int[] p : prerequisites) {
+            m.get(p[0]).add(p[1]);
+        }
+        return m;
+    }
+
+    boolean hasCycle(Map<Integer, List<Integer>> g, int node, boolean[] visited, boolean[] inPath) {
+        if (inPath[node]) {
+            return true;
+        }
+        if (visited[node]) {
+            return false;
+        }
+        inPath[node] = true;
+        visited[node] = true;
+        for (Integer n : g.get(node)) {
+            if (hasCycle(g, n, visited, inPath)) {
+                return true;
+            }
+        }
+        inPath[node] = false;
+        return false;
+    }
+}

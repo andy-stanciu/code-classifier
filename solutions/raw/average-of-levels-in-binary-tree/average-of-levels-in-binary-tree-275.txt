@@ -1,0 +1,35 @@
+class Solution {
+
+    public List<Double> averageOfLevels(TreeNode root) {
+        List<Double> result = new ArrayList<>();
+        List<Integer> count = new ArrayList<>();
+        //gather the data
+        helper(root, result, count, 0);
+        int j = 0;
+        for (Double i : result) {
+            result.set(j, i / count.get(j));
+            j++;
+        }
+        count = null;
+        return result;
+    }
+
+    public void helper(TreeNode root, List<Double> result, List<Integer> count, int level) {
+        if (root == null)
+            return;
+        //add the values to calculate the sum on each level
+        if (result.size() <= level) {
+            result.add(level, new Double(root.val));
+        } else {
+            result.set(level, root.val + result.get(level));
+        }
+        //count the total of nodes on each level
+        if (count.size() <= level) {
+            count.add(level, 1);
+        } else {
+            count.set(level, count.get(level) + 1);
+        }
+        helper(root.left, result, count, level + 1);
+        helper(root.right, result, count, level + 1);
+    }
+}

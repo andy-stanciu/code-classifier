@@ -1,0 +1,39 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Map<Integer, Set<Integer>> map = new HashMap<>();
+        Map<Integer, Integer> indegree = new HashMap<>();
+        for (int[] prerequisite : prerequisites) {
+            int src = prerequisite[1];
+            int dest = prerequisite[0];
+            if (!map.containsKey(src))
+                map.put(src, new HashSet<>());
+            //adding a directed edge from source to destination
+            map.get(src).add(dest);
+            // increasing the indegree of destination and setting
+            // indegree of source to 0 if it is not present.
+            indegree.put(dest, indegree.getOrDefault(dest, 0) + 1);
+            indegree.put(src, indegree.getOrDefault(src, 0));
+        }
+        LinkedList<Integer> queue = new LinkedList<>();
+        // starting with all edges with indegree of 0.
+        for (int key : indegree.keySet()) if (indegree.get(key) == 0)
+            queue.addLast(key);
+        int count = 0;
+        while (queue.size() != 0) {
+            int temp = queue.poll();
+            count++;
+            if (map.containsKey(temp)) {
+                for (int nei : map.get(temp)) {
+                    // decreasing the indegree of neighbors and if it becomes 0, then include it
+                    indegree.put(nei, indegree.get(nei) - 1);
+                    if (indegree.get(nei) == 0)
+                        queue.addLast(nei);
+                }
+            }
+        }
+        // if the graph was not a directed acyclic graph then
+        // this condition will never become true
+        return count == indegree.size();
+    }
+}

@@ -1,0 +1,50 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            map.put(t.charAt(i), map.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        int i = 0;
+        int j = 0;
+        int count = map.size();
+        int var1 = 0;
+        int var2 = 0;
+        int var3 = Integer.MAX_VALUE;
+        while (j < s.length()) {
+            //            Calculations for j
+            if (map.containsKey(s.charAt(j))) {
+                map.put(s.charAt(j), map.get(s.charAt(j)) - 1);
+                if (map.get(s.charAt(j)) == 0) {
+                    count--;
+                }
+            }
+            //            Check if count is greater than 0. Count will never be less than 0
+            if (count > 0) {
+                j++;
+            } else //            Check if condition meets k
+            {
+                while (count == 0) {
+                    if (var3 > j - i + 1) {
+                        var3 = j - i + 1;
+                        var1 = i;
+                        // As endIndex of substring is exclusive and if we do +1 in return
+                        // So, if empty return is to be returned then too it will return 1st character of the string.
+                        // So if we find the answer then only we will mark it as j+1.
+                        // If answer is not found by our calculations, then as minimumI and minimumJ are zero only, so it will return empty substring.
+                        var2 = j + 1;
+                    }
+                    if (map.containsKey(s.charAt(i))) {
+                        map.put(s.charAt(i), map.get(s.charAt(i)) + 1);
+                        if (map.get(s.charAt(i)) == 1) {
+                            count++;
+                        }
+                    }
+                    i++;
+                }
+                j++;
+            }
+        }
+        return s.substring(var1, var2);
+    }
+}

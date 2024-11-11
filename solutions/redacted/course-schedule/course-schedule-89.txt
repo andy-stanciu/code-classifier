@@ -1,0 +1,53 @@
+class Solution {
+
+    private static final int WHITE = 0;
+
+    private static final int GRAY = 1;
+
+    private static final int BLACK = 2;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int n = param1;
+        // build adjacency matrix
+        int[][] adjMatrix = new int[param1][param1];
+        for (int[] edge : prerequisites) {
+            adjMatrix[edge[1]][edge[0]] = 1;
+        }
+        int[] isVisited = new int[n];
+        for (int i = 0; i < n; i++) {
+            isVisited[i] = WHITE;
+        }
+        boolean isCyclic = false;
+        for (int i = 0; i < n && !isCyclic; ++i) {
+            if (isCyclic(n, i, isVisited, adjMatrix)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isCyclic(int n, int node, int[] isVisited, int[][] adjMatrix) {
+        // reaching a node that is still in processing
+        // there is a cycle
+        if (isVisited[node] == GRAY) {
+            return true;
+        }
+        // reaching a node that is already visited
+        // not required to visit again and no cycle
+        if (isVisited[node] == BLACK) {
+            return false;
+        }
+        isVisited[node] = GRAY;
+        for (int i = 0; i < n; ++i) {
+            // if there is an edge with i then visit the node
+            if (adjMatrix[node][i] == 1) {
+                // if the traversal leads to cycle then stop further processing and return
+                if (isCyclic(n, i, isVisited, adjMatrix)) {
+                    return true;
+                }
+            }
+        }
+        isVisited[node] = BLACK;
+        return false;
+    }
+}

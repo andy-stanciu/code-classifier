@@ -1,0 +1,41 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int m = s.length();
+        int n = t.length();
+        if (m == 0 || n == 0 || m < n)
+            return "";
+        Map<Character, Integer> charFrequencyMap = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            charFrequencyMap.put(c, charFrequencyMap.getOrDefault(c, 0) + 1);
+        }
+        int minLength = Integer.MAX_VALUE;
+        int start = 0;
+        int count = 0;
+        int minLeft = -1;
+        for (int i = 0; i < m; i++) {
+            char currentChar = s.charAt(i);
+            if (charFrequencyMap.containsKey(currentChar)) {
+                charFrequencyMap.put(currentChar, charFrequencyMap.get(currentChar) - 1);
+                if (charFrequencyMap.get(currentChar) >= 0) {
+                    count++;
+                }
+            }
+            while (count == n) {
+                if (minLength > i - start + 1) {
+                    minLength = i - start + 1;
+                    minLeft = start;
+                }
+                char leftChar = s.charAt(start);
+                if (charFrequencyMap.containsKey(leftChar)) {
+                    charFrequencyMap.put(leftChar, charFrequencyMap.get(leftChar) + 1);
+                    if (charFrequencyMap.get(leftChar) > 0) {
+                        count--;
+                    }
+                }
+                start++;
+            }
+        }
+        return minLeft == -1 ? "" : s.substring(minLeft, minLeft + minLength);
+    }
+}

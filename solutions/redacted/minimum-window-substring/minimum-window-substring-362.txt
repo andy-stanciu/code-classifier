@@ -1,0 +1,51 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        //edge cases
+        if (s.length() < t.length() || s.length() == 0 || t.length() == 0)
+            return "";
+        if (s.equals(t))
+            return s;
+        String result = "";
+        HashMap<Character, Integer> pattern = new HashMap<>();
+        HashMap<Character, Integer> var1 = new HashMap<>();
+        for (char c : t.toCharArray()) pattern.put(c, pattern.getOrDefault(c, 0) + 1);
+        //matching characters count
+        int have = 0;
+        //need character count
+        int need = t.length();
+        //left pointer
+        int l = 0;
+        int minLength = s.length();
+        for (int r = 0; r < s.length(); r++) {
+            //right pointer
+            char curChar = s.charAt(r);
+            //insert current character into window
+            var1.put(curChar, var1.getOrDefault(curChar, 0) + 1);
+            if (pattern.containsKey(curChar) && var1.get(curChar) <= pattern.get(curChar)) {
+                // if current character matches in pattern and its freq is less than freq in window,
+                // increment my have count
+                have++;
+            }
+            while (have == need) {
+                //if i have achieved my window
+                //update window size an save substring
+                if (r - l + 1 <= minLength) {
+                    minLength = r - l + 1;
+                    result = s.substring(l, r + 1);
+                }
+                //remove left char from window
+                char leftChar = s.charAt(l);
+                var1.put(leftChar, var1.get(leftChar) - 1);
+                if (pattern.containsKey(leftChar) && var1.get(leftChar) < pattern.get(leftChar)) {
+                    // if we removed a potential char from pattern which resulted in freq< freq from pattern
+                    // decrease have count
+                    have--;
+                }
+                // shrink from left
+                l++;
+            }
+        }
+        return result;
+    }
+}

@@ -1,0 +1,81 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] targetFreq = new int[128];
+        int[] var1 = new int[128];
+        for (char c : t.toCharArray()) {
+            targetFreq[c]++;
+        }
+        int left = 0;
+        int right = -1;
+        int minLength = Integer.MAX_VALUE;
+        int minLeft = -1;
+        while (right < s.length()) {
+            if (contains(var1, targetFreq)) {
+                if (right - left + 1 < minLength) {
+                    minLength = right - left + 1;
+                    minLeft = left;
+                }
+                var1[s.charAt(left)]--;
+                left++;
+            } else {
+                right++;
+                if (right < s.length()) {
+                    var1[s.charAt(right)]++;
+                }
+            }
+        }
+        return minLength == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + minLength);
+    }
+
+    private boolean contains(int[] freq1, int[] freq2) {
+        for (int i = 0; i < 128; i++) {
+            if (freq2[i] > freq1[i])
+                return false;
+        }
+        return true;
+    }
+
+    // brute force solution
+    // passes 240/267 but  TLE for larger test case
+    public String method2(String s, String t) {
+        int n = t.length();
+        String result = null;
+        for (int i = 0; i < s.length(); i++) {
+            // O(N^2)
+            for (int j = 0; j < s.length(); j++) {
+                if (j - i + 1 >= n) {
+                    String str = s.substring(i, j + 1);
+                    if (contains(str, t)) {
+                        if (result == null) {
+                            result = str;
+                        } else {
+                            if (str.length() < result.length()) {
+                                result = str;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return result == null ? "" : result;
+    }
+
+    // O(n + m)
+    private boolean contains(String first, String second) {
+        int[] freq1 = new int[128];
+        int[] freq2 = new int[128];
+        for (char c : first.toCharArray()) {
+            freq1[c]++;
+        }
+        for (char c : second.toCharArray()) {
+            freq2[c]++;
+        }
+        for (int i = 0; i < 128; i++) {
+            if (freq2[i] > freq1[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    public boolean dfs(ArrayList<ArrayList<Integer>> graph, int curr, boolean[] vis, boolean[] rec) {
+        vis[curr] = true;
+        rec[curr] = true;
+        // go for neighbours
+        for (int i = 0; i < graph.get(curr).size(); i++) {
+            int next = graph.get(curr).get(i);
+            if (rec[next]) {
+                return true;
+            }
+            if (!vis[next]) {
+                if (dfs(graph, next, vis, rec))
+                    return true;
+            }
+        }
+        rec[curr] = false;
+        return false;
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList());
+        }
+        // add elements into arraylist
+        for (int[] preq : prerequisites) {
+            graph.get(preq[0]).add(preq[1]);
+        }
+        boolean[] vis = new boolean[numCourses];
+        boolean[] rec = new boolean[numCourses];
+        for (int i = 0; i < prerequisites.length; i++) {
+            int startCourse = prerequisites[i][0];
+            if (!vis[startCourse] && dfs(graph, startCourse, vis, rec)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

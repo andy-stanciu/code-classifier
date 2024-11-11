@@ -1,0 +1,38 @@
+class Solution {
+
+    int[] visited;
+
+    Map<Integer, List<Integer>> map;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        map = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            map.put(i, new ArrayList<>());
+        }
+        for (int[] prere : prerequisites) {
+            map.get(prere[0]).add(prere[1]);
+        }
+        visited = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (visited[i] == 0) {
+                if (isCyclic(i))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isCyclic(int index) {
+        if (visited[index] == 2)
+            return true;
+        visited[index] = 2;
+        for (int i = 0; i < map.get(index).size(); i++) {
+            if (visited[map.get(index).get(i)] != 1) {
+                if (isCyclic(map.get(index).get(i)))
+                    return true;
+            }
+        }
+        visited[index] = 1;
+        return false;
+    }
+}

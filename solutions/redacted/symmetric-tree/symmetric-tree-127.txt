@@ -1,0 +1,97 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+/*Space comp:- O(W) ; W= max width of level
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        
+            if(root==null)return true;
+            Queue<TreeNode> queue = new LinkedList<>();
+            queue.offer(root);
+
+            while(!queue.isEmpty()){
+                List<Integer> currentLevelValues = new ArrayList<>();
+                int levelNodes = queue.size();
+                for(int i=0;i<levelNodes;i++){
+                    TreeNode currentNode = queue.poll();
+                    if(currentNode == null){
+                       
+                        currentLevelValues.add(null);
+                    }
+                    else{
+                         currentLevelValues.add(currentNode.val);
+                          //add left right childs even if they are null
+                        queue.offer(currentNode.left);
+                        queue.offer(currentNode.right);
+                    }
+                    
+                   
+                }
+                
+                 if(!checkPalindrome(currentLevelValues))return false;
+            }
+
+            return true;
+
+    }
+
+    private static boolean checkPalindrome(List<Integer> a){
+        int i=0;
+        int j=a.size()-1;
+
+        while(i<j){
+            if(a.get(i)!=a.get(j))return false;
+            i++;
+            j--;
+        }
+        return true;
+    }
+}
+//approach is to add all the values at currentLevel in a list along with the null values, and then check if that list is paindrome.
+
+*/
+//The below approach is without using the extra space for list to store all the nodes in current Level.
+class Solution {
+
+    public boolean method1(TreeNode root) {
+        if (root == null)
+            return true;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root.left);
+        queue.offer(root.right);
+        while (!queue.isEmpty()) {
+            TreeNode leftNode = queue.poll();
+            TreeNode rightNode = queue.poll();
+            //both are null, then no problem
+            if (leftNode == null && rightNode == null)
+                continue;
+            //only one value is null
+            if (leftNode == null || rightNode == null)
+                return false;
+            //values not same
+            if (leftNode.val != rightNode.val)
+                return false;
+            //adding children nodes such that equal nodes are offered simulataneously left to right
+            //3
+            queue.offer(leftNode.left);
+            //also 3
+            queue.offer(rightNode.right);
+            queue.offer(leftNode.right);
+            queue.offer(rightNode.left);
+        }
+        return true;
+    }
+}
+//in this both the approach give same time complexity.First one is also fine as the space complexity is not much and thinking the first solution using palindrome is more intutive.

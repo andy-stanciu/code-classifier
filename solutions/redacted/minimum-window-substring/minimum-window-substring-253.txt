@@ -1,0 +1,30 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] dic = new int[128];
+        int count = 0;
+        for (char c : t.toCharArray()) {
+            dic[c]++;
+            count++;
+        }
+        int l = 0, r = 0, d = Integer.MAX_VALUE, head = 0;
+        while (r < s.length()) {
+            char right = s.charAt(r);
+            if (dic[right] > 0)
+                count--;
+            dic[right]--;
+            r++;
+            while (count == 0) {
+                char left = s.charAt(l);
+                if (r - l < d) {
+                    d = r - l;
+                    head = l;
+                }
+                if (dic[left]++ == 0)
+                    count++;
+                l++;
+            }
+        }
+        return d == Integer.MAX_VALUE ? "" : s.substring(head, head + d);
+    }
+}

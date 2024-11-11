@@ -1,0 +1,47 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        // Create a hashmap to store the frequency of each character in t
+        HashMap<Character, Integer> map = new HashMap<>();
+        // Initialize variables
+        // Start index of the minimum window
+        int r = 0;
+        // Length of the target string t
+        int size = t.length();
+        // Minimum length of the window found
+        int min = Integer.MAX_VALUE;
+        // Counter to track how many characters of t are found in the current window
+        int counter = 0;
+        // Start index of the current window
+        int x = 0;
+        // Populate the hashmap with the frequency of characters in t
+        for (char c : t.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        // Traverse the string s to find the minimum window
+        for (int i = 0; i < s.length(); i++) {
+            // Decrease the count of the current character in the hashmap
+            map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0) - 1);
+            // If the current character is in t, increase the counter
+            counter += map.get(s.charAt(i)) >= 0 ? 1 : 0;
+            // When a valid window is found (contains all characters of t)
+            while (counter == size && x <= i) {
+                // Try to minimize the window size by moving the start index
+                map.put(s.charAt(x), map.get(s.charAt(x)) + 1);
+                counter -= map.get(s.charAt(x)) > 0 ? 1 : 0;
+                // Update the minimum window size and start index
+                if (min > i - x + 1) {
+                    min = i - x + 1;
+                    r = x;
+                }
+                x++;
+            }
+        }
+        // If no valid window is found, return an empty string
+        if (min == Integer.MAX_VALUE) {
+            min = 0;
+        }
+        // Return the minimum window substring
+        return s.substring(r, r + min);
+    }
+}

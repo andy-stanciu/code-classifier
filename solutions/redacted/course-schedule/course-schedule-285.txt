@@ -1,0 +1,42 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        // 1. Fill adjancency map
+        Map<Integer, Set<Integer>> prereqMap = new HashMap<>();
+        for (int[] prereq : prerequisites) {
+            prereqMap.computeIfAbsent(prereq[0], k -> new HashSet<>()).add(prereq[1]);
+        }
+        // 2. Go through it in DFS fashion, keeping track of visited nodes
+        Set<Integer> visited = new HashSet<>();
+        for (int i = 0; i < param1; i++) {
+            if (!canFinish(i, prereqMap, visited)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    static boolean canFinish(int param2, Map<Integer, Set<Integer>> prereqMap, Set<Integer> visited) {
+        if (visited.contains(param2)) {
+            // found a cycle
+            return false;
+        }
+        Set<Integer> prereqs = prereqMap.get(param2);
+        if (prereqs == null) {
+            // no more pre requisites to search
+            return true;
+        }
+        visited.add(param2);
+        // make sure all pre requisites are good.
+        for (int p : prereqs) {
+            if (!canFinish(p, prereqMap, visited)) {
+                return false;
+            }
+        }
+        // no longer visiting this course
+        visited.remove(param2);
+        // went through all pre requisites for this course - no need to go through them again
+        prereqs.clear();
+        return true;
+    }
+}

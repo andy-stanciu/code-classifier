@@ -1,0 +1,45 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        Map<Character, Integer> map = new HashMap<>();
+        // build frequency map
+        for (int i = 0; i < t.length(); ++i) {
+            char c = t.charAt(i);
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        int left = 0;
+        int right = 0;
+        // indicates how many char in t is matched in the sliding window
+        int matched = 0;
+        // found, left, right
+        int[] res = { -1, 0, 0 };
+        while (right < s.length()) {
+            char rightChar = s.charAt(right);
+            if (map.containsKey(rightChar)) {
+                int rCount = map.getOrDefault(rightChar, 0) - 1;
+                map.put(rightChar, rCount);
+                if (rCount == 0) {
+                    matched++;
+                }
+            }
+            while (matched == map.size()) {
+                if (res[0] == -1 || (res[2] - res[1]) > (right - left)) {
+                    res[0] = 1;
+                    res[1] = left;
+                    res[2] = right;
+                }
+                char leftChar = s.charAt(left);
+                if (map.containsKey(leftChar)) {
+                    int lCount = map.get(leftChar) + 1;
+                    map.put(leftChar, lCount);
+                    if (lCount == 1) {
+                        matched--;
+                    }
+                }
+                left++;
+            }
+            right++;
+        }
+        return res[0] == -1 ? "" : s.substring(res[1], res[2] + 1);
+    }
+}

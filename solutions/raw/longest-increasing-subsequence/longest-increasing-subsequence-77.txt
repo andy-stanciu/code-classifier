@@ -1,0 +1,25 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        // dp[i] represents the length of the longest increasing subsequence that ends with the i th element.
+        int[] dp = new int[nums.length];
+        // base case, min 1, the element itself
+        Arrays.fill(dp, 1);
+        for (int i = 1; i < nums.length; i++) {
+            for (int j = 0; j < i; j++) {
+                // we look backwards and see if current num[i] is greater all nums from j -> i-1. This is represented by comparing num[i] and num[j] plus the dp[j] state
+                if (nums[i] > nums[j]) {
+                    // dp[j] + 1 means prev longest subsequence + curr num (which is +1)
+                    // dp[i] gets computed multiple times as we iterate j
+                    // we take max in case one of the subarrays has a subsequence that is shorter
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+        }
+        int longest = 0;
+        for (int num : dp) {
+            longest = Math.max(longest, num);
+        }
+        return longest;
+    }
+}

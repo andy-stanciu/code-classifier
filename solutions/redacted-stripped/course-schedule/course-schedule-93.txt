@@ -1,0 +1,42 @@
+class Solution {
+
+    HashMap<Integer, List<Integer>> adjList;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int[][] var1 = prerequisites;
+        adjList = new HashMap<>();
+        for (int[] var2 : var1) {
+            int a = var2[0];
+            int b = var2[1];
+            if (!adjList.containsKey(a)) {
+                adjList.put(a, new ArrayList<Integer>());
+            }
+            adjList.get(a).add(b);
+            System.out.println(adjList.size());
+        }
+        int[] states = new int[param1];
+        for (int var2 = 0; var2 < param1; var2++) {
+            if (!dfs(var2, states)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(int var2, int[] states) {
+        if (states[var2] == 2)
+            return true;
+        if (states[var2] == 1)
+            return false;
+        states[var2] = 1;
+        if (adjList.containsKey(var2)) {
+            for (int neighbor : adjList.get(var2)) {
+                if (!this.dfs(neighbor, states)) {
+                    return false;
+                }
+            }
+        }
+        states[var2] = 2;
+        return true;
+    }
+}

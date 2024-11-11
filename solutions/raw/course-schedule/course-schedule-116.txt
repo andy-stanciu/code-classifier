@@ -1,0 +1,75 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        HashMap<Integer, Course> map = new HashMap<Integer, Course>();
+        HashMap<Integer, List<Integer>> prerekList = new HashMap<Integer, List<Integer>>();
+        for (int i = 0; i < numCourses; i++) {
+            Course c = new Course(i);
+            map.put(i, c);
+        }
+        for (int[] p : prerequisites) {
+            Course c = map.get(p[0]);
+            c.addPrerex();
+            if (prerekList.containsKey(p[1])) {
+                (prerekList.get(p[1])).add(p[0]);
+            } else {
+                List<Integer> d = new ArrayList<Integer>();
+                d.add(p[0]);
+                prerekList.put(p[1], d);
+            }
+        }
+        // load minheap
+        PriorityQueue<Course> minHeap = new PriorityQueue<Course>(new CourseComparator());
+        for (int i = 0; i < numCourses; i++) {
+            minHeap.offer(map.get(i));
+        }
+        while (!minHeap.isEmpty()) {
+            Course currentCourse = minHeap.poll();
+            if (currentCourse.prerex != 0) {
+                return false;
+            }
+            // get all courses that depend on currentCourse
+            if (prerekList.containsKey(currentCourse.courseNumber)) {
+                List<Integer> children = prerekList.get(currentCourse.courseNumber);
+                // for each child in children, reduce prereq count since currentCourse can be taken
+                for (Integer c : children) {
+                    (map.get(c)).removePrerex();
+                    minHeap.remove(map.get(c));
+                    minHeap.offer(map.get(c));
+                }
+            }
+        }
+        return minHeap.isEmpty();
+    }
+
+    public class Course {
+
+        int courseNumber;
+
+        int prerex;
+
+        Course(int cn) {
+            courseNumber = cn;
+            prerex = 0;
+        }
+
+        public void addPrerex() {
+            prerex++;
+        }
+
+        public void removePrerex() {
+            prerex--;
+        }
+    }
+
+    public class CourseComparator implements Comparator<Course> {
+
+        @Override
+        public int compare(Course a, Course b) {
+            if (a.prerex < b.prerex) {
+                return -1;
+            }
+            return 1;
+        }
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] count = new int[128];
+        // Count the characters in t
+        for (char ch : t.toCharArray()) count[ch]++;
+        char[] sourceStr = s.toCharArray();
+        String var1 = "";
+        int var2 = 0, var3 = 0, var4 = 0, totalCharsToFind = t.length(), var5 = Integer.MAX_VALUE;
+        while (var3 < sourceStr.length) {
+            int currentChar = sourceStr[var3];
+            // Reduce the count of current character
+            count[currentChar]--;
+            // If current character\'s count is greater than or equal to 0 if it was also present in target string t
+            // and we can say that we have found that character in current window so we increment charsFoundInWindow
+            if (count[currentChar] >= 0) {
+                var4++;
+            }
+            // If we found a window containing all characters of t, find if it\'s smaller than the smallest window
+            // If yes, store the window in windowString to return finally.
+            while (var4 == totalCharsToFind) {
+                int var6 = var3 - var2 + 1;
+                if (var5 > var6) {
+                    var5 = var6;
+                    var1 = s.substring(var2, var3 + 1);
+                }
+                // Now we need to reduce the window size from left to further look for smaller windows.
+                // The current leftmost character was already visited by right pointer windowRight earlier
+                // and we had reduced its count in count[]. So now we increment it because
+                // we need the count of that character in the remaining window.
+                count[sourceStr[var2]]++;
+                // Now if the last character is greater than 0, it means that character was present in t but
+                // is not present in current window so we have to decrement charsFoundInWindow
+                if (count[sourceStr[var2]] > 0) {
+                    var4--;
+                }
+                var2++;
+            }
+            var3++;
+        }
+        return var1;
+    }
+}

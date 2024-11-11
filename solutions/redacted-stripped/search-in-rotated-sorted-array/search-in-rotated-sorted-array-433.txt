@@ -1,0 +1,71 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+        if (nums.length == 1) {
+            if (nums[0] == target) {
+                return 0;
+            }
+            return -1;
+        }
+        return this.method2(nums, 0, nums.length - 1, target);
+    }
+
+    public int method2(int[] nums, int start, int end, int target) {
+        if (start < 0 || end >= nums.length) {
+            return -1;
+        }
+        if (end - start <= 1) {
+            if (nums[start] == target) {
+                return start;
+            }
+            if (nums[end] == target) {
+                return end;
+            }
+            return -1;
+        }
+        int length = (end - start);
+        int mid = start + length / 2;
+        if (nums[mid] == target) {
+            return mid;
+        }
+        if (nums[mid - 1] < nums[mid] && nums[mid + 1] > nums[mid]) {
+            if (nums[mid] > nums[start] && nums[mid] > nums[end]) {
+                if (nums[start] > nums[end]) {
+                    if (nums[start] <= target && target < nums[mid]) {
+                        return method2(nums, start, mid - 1, target);
+                    }
+                    return method2(nums, mid + 1, end, target);
+                } else {
+                    if (nums[mid] < target && target <= nums[end]) {
+                        return method2(nums, mid + 1, end, target);
+                    }
+                    return method2(nums, start, mid - 1, target);
+                }
+            } else if (nums[mid] < nums[start] && nums[mid] < nums[end]) {
+                if (nums[start] < nums[end]) {
+                    if (nums[start] <= target && target < nums[mid]) {
+                        return method2(nums, start, mid - 1, target);
+                    }
+                    return method2(nums, mid + 1, end, target);
+                } else {
+                    if (nums[mid] < target && target <= nums[end]) {
+                        return method2(nums, mid + 1, end, target);
+                    }
+                    return method2(nums, start, mid - 1, target);
+                }
+            }
+            if (nums[start] <= target && target < nums[mid]) {
+                return method2(nums, start, mid - 1, target);
+            }
+            return method2(nums, mid + 1, end, target);
+        } else {
+            if (nums[start] <= target && target <= nums[mid - 1]) {
+                return method2(nums, start, mid - 1, target);
+            }
+            return method2(nums, mid + 1, end, target);
+        }
+    }
+}

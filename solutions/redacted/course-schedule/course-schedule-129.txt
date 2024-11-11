@@ -1,0 +1,47 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        // Create a graph represented by an adjacency list where each course points to its prerequisites
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        // Create an array to store the in-degree (number of prerequisites) for each course
+        int[] inDegrees = new int[param1];
+        // Populate the graph and update the in-degrees based on the prerequisites
+        for (int[] prerequisite : prerequisites) {
+            int var1 = prerequisite[0];
+            int var2 = prerequisite[1];
+            graph.get(var2).add(var1);
+            // Increment the in-degree of the course
+            inDegrees[var1]++;
+        }
+        // Queue to hold courses with in-degree of 0 (no prerequisites)
+        Deque<Integer> queue = new ArrayDeque<>();
+        // Enqueue all courses which have no prerequisites
+        for (int i = 0; i < param1; i++) {
+            if (inDegrees[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        // Counter for number of courses that have been processed
+        int var3 = 0;
+        // Process the courses in the queue
+        while (!queue.isEmpty()) {
+            int var1 = queue.poll();
+            // Increment count of processed courses
+            var3++;
+            // Iterate over the neighbors of the current course
+            for (int neighbor : graph.get(var1)) {
+                // Decrement the in-degree of each neighbor, since we have processed one of their prerequisites
+                inDegrees[neighbor]--;
+                if (inDegrees[neighbor] == 0) {
+                    // If in-degree becomes 0, it means all prerequisites are met, so enqueue the course
+                    queue.offer(neighbor);
+                }
+            }
+        }
+        // If the number of processed courses equals the total number of courses, all can be finished
+        return var3 == param1;
+    }
+}

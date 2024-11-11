@@ -1,0 +1,50 @@
+class Solution {
+
+    boolean checkit(HashMap<Character, Integer> letter1, HashMap<Character, Integer> ltr) {
+        for (Map.Entry<Character, Integer> mapElement : letter1.entrySet()) {
+            char key = mapElement.getKey();
+            ;
+            if (!ltr.containsKey(key) || letter1.get(key) > ltr.get(key))
+                return false;
+        }
+        return true;
+    }
+
+    public String method1(String s, String t) {
+        int n1 = t.length();
+        int n2 = s.length();
+        if (n1 > n2)
+            return "";
+        int counter = 0;
+        HashMap<Character, Integer> letter1 = new HashMap<>();
+        HashMap<Character, Integer> ltr = new HashMap<>();
+        int d;
+        for (d = 0; d < n1; d++) letter1.put(t.charAt(d), letter1.getOrDefault(t.charAt(d), 0) + 1);
+        String answer = "";
+        int len = Integer.MAX_VALUE;
+        int start = 0;
+        for (d = 0; d < n2; d++) {
+            char chr = s.charAt(d);
+            ltr.put(chr, ltr.getOrDefault(chr, 0) + 1);
+            if (d - start + 1 >= n1 && checkit(letter1, ltr)) {
+                if (d - start + 1 < len) {
+                    answer = s.substring(start, d + 1);
+                    len = d - start + 1;
+                }
+                int lent = d - start + 1;
+                while (checkit(letter1, ltr)) {
+                    char ch = s.charAt(start);
+                    ltr.put(ch, ltr.get(ch) - 1);
+                    start++;
+                    if (checkit(letter1, ltr))
+                        lent--;
+                }
+                if (lent < len) {
+                    answer = s.substring(start - 1, d + 1);
+                    len = lent;
+                }
+            }
+        }
+        return answer;
+    }
+}

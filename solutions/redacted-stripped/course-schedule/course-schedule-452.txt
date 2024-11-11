@@ -1,0 +1,43 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<Integer>[] adj = new ArrayList[param1];
+        boolean[] visited = new boolean[param1];
+        for (int i = 0; i < adj.length; i++) {
+            adj[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            adj[prerequisites[i][0]].add(prerequisites[i][1]);
+        }
+        boolean[] good = new boolean[param1];
+        for (int var1 = 0; var1 < param1; var1++) {
+            boolean temp = true;
+            if (!good[var1] && adj[var1].size() > 0) {
+                for (int c : adj[var1]) {
+                    visited = new boolean[param1];
+                    visited[var1] = true;
+                    temp = good[c] || run(visited, c, adj, good);
+                    if (!temp)
+                        return false;
+                }
+            }
+            good[var1] = true;
+        }
+        return true;
+    }
+
+    public boolean run(boolean[] visited, int var1, List<Integer>[] adj, boolean[] good) {
+        if (visited[var1])
+            return false;
+        else
+            visited[var1] = true;
+        for (Integer c : adj[var1]) {
+            boolean r = good[c] || run(visited, c, adj, good);
+            if (!r) {
+                return false;
+            }
+        }
+        good[var1] = true;
+        return true;
+    }
+}

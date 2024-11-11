@@ -1,0 +1,44 @@
+class Solution {
+
+    public int search(int[] nums, int target) {
+        // Leftmost index of the search range
+        int left = 0;
+        // Rightmost index of the search range
+        int right = nums.length - 1;
+        // Middle index of the search range
+        int mid = (left + right) / 2;
+        // Base case: Handle small arrays efficiently
+        if (nums.length <= 3) {
+            for (int i = 0; i < nums.length; i++) {
+                if (nums[i] == target) {
+                    // Target found at index i
+                    return i;
+                }
+            }
+            // Target not found
+            return -1;
+        }
+        // Binary search loop
+        while (mid != left && mid != right) {
+            // Check if target is at the current left, mid, or right index
+            if (nums[left] == target)
+                return left;
+            if (nums[mid] == target)
+                return mid;
+            if (nums[right] == target)
+                return right;
+            // Determine the direction to continue the search based on the relative positions
+            // of the target, left, and mid values
+            if ((nums[left] < nums[mid] && target < nums[left] && target < nums[mid]) || (nums[left] > nums[mid] && target < nums[left] && target > nums[mid]) || (nums[left] < nums[mid] && target > nums[mid]))
+                // Target lies in the right half of the subarray
+                left = mid;
+            else
+                // Target lies in the left half of the subarray
+                right = mid;
+            // Recalculate the middle index
+            mid = (left + right) / 2;
+        }
+        // Target not found
+        return -1;
+    }
+}

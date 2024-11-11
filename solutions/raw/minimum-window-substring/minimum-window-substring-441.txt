@@ -1,0 +1,49 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        // Create an array to store character frequencies for characters in string t
+        int[] charFrequency = new int[128];
+        // Initialize the character frequencies for string t
+        for (char c : t.toCharArray()) {
+            charFrequency[c]++;
+        }
+        // Initialize pointers and variables to keep track of the minimum window
+        // Left pointer of the sliding window
+        int leftPointer = 0;
+        // Right pointer of the sliding window
+        int rightPointer = 0;
+        // Left index of the minimum window
+        int minLeft = 0;
+        // Minimum window length
+        int minLen = Integer.MAX_VALUE;
+        // Counter to track characters remaining to match
+        int counter = t.length();
+        // Iterate through the string s using the sliding window approach
+        while (rightPointer < s.length()) {
+            char currentChar = s.charAt(rightPointer);
+            // Update the character frequency and the counter
+            if (charFrequency[currentChar] > 0) {
+                counter--;
+            }
+            charFrequency[currentChar]--;
+            rightPointer++;
+            // Check if all characters from string t are found in the current window
+            while (counter == 0) {
+                // Update the minimum window information if a smaller window is found
+                if (minLen > rightPointer - leftPointer) {
+                    minLen = rightPointer - leftPointer;
+                    minLeft = leftPointer;
+                }
+                char leftChar = s.charAt(leftPointer);
+                // Restore the character frequency and counter
+                charFrequency[leftChar]++;
+                if (charFrequency[leftChar] > 0)
+                    counter++;
+                // Move the left pointer to shrink the window
+                leftPointer++;
+            }
+        }
+        // Check if a valid minimum window was found, and return it
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + minLen);
+    }
+}

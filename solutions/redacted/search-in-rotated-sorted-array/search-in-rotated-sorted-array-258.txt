@@ -1,0 +1,50 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        int n = nums.length;
+        int partition = method3(nums);
+        // no rotation, direct binary search
+        if (partition == -1)
+            return method2(nums, 0, n - 1, target);
+        else // target is in second half
+        if (nums[0] > target)
+            return method2(nums, partition + 1, n - 1, target);
+        else
+            return method2(nums, 0, partition, target);
+    }
+
+    int method2(int[] nums, int leftPos, int rightPos, int target) {
+        int result = -1;
+        while (leftPos <= rightPos) {
+            int mid = (leftPos + rightPos) / 2;
+            if (nums[mid] == target) {
+                result = mid;
+                break;
+            } else if (nums[mid] > target) {
+                rightPos = mid - 1;
+            } else {
+                leftPos = mid + 1;
+            }
+        }
+        return result;
+    }
+
+    int method3(int[] nums) {
+        int result = -1;
+        int n = nums.length;
+        int leftPos = 0;
+        int rightPos = n - 1;
+        while (leftPos <= rightPos) {
+            int mid = (leftPos + rightPos) / 2;
+            if (mid + 1 < n && nums[mid] > nums[mid + 1]) {
+                result = mid;
+                break;
+            } else if (nums[mid] >= nums[0]) {
+                leftPos = mid + 1;
+            } else {
+                rightPos = mid - 1;
+            }
+        }
+        return result;
+    }
+}

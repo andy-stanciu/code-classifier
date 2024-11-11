@@ -1,0 +1,43 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int[] text = new int[256];
+        int[] pattern = new int[256];
+        for (int i = 0; i < t.length(); i++) {
+            pattern[t.charAt(i)]++;
+        }
+        int start = 0;
+        int end = 0;
+        int minLen = s.length() + 1;
+        int minStart = 0;
+        int minEnd = 0;
+        int count = t.length();
+        while (true) {
+            if (end < s.length()) {
+                char cur = s.charAt(end);
+                text[cur]++;
+                if (pattern[cur] >= text[cur]) {
+                    count--;
+                }
+            } else {
+                break;
+            }
+            if (count == 0) {
+                while (text[s.charAt(start)] > pattern[s.charAt(start)]) {
+                    text[s.charAt(start)]--;
+                    start++;
+                }
+                if (end - start + 1 < minLen) {
+                    minLen = end - start + 1;
+                    minStart = start;
+                    minEnd = end;
+                }
+            }
+            end++;
+        }
+        if (minLen < s.length() + 1) {
+            return s.substring(minStart, minEnd + 1);
+        }
+        return "";
+    }
+}

@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    int max = Integer.MIN_VALUE;
+
+    public int maxPathSum(TreeNode root) {
+        solve(root);
+        return max;
+    }
+
+    public int solve(TreeNode root) {
+        if (root == null)
+            return 0;
+        //path sum for single node in path
+        max = Math.max(max, root.val);
+        int leftMax = solve(root.left);
+        int rightMax = solve(root.right);
+        /*
+        max path sum for this subtree will be
+        maxPath in left subtree(leftMax) + node.val or
+        maxPath in right subtree(rightMax) + node.val or
+        path going from left subtree to right subtree through
+        current root node which is (leftMax+rightMax+node.val)
+        */
+        int maxValue = Math.max(Math.max(leftMax + root.val, rightMax + root.val), leftMax + rightMax + root.val);
+        //update the max path achieved so far
+        max = Math.max(max, maxValue);
+        // System.out.println(leftMax+" : "+rightMax+" : "+max);
+        /*
+            as path can either lead to left subtree or right subtree
+            including root node which is 
+                max of (leftMax,rightMax)  + root.val
+            also there can be a path of only one node root in case
+            if root.val > max(leftMax+rightMax)+root.val
+        */
+        return Math.max(Math.max(leftMax, rightMax) + root.val, root.val);
+    }
+}

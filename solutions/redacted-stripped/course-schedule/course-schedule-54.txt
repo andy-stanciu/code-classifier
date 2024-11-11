@@ -1,0 +1,37 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<Integer>[] var1 = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            var1[i] = new ArrayList();
+        }
+        for (int[] p : prerequisites) {
+            var1[p[0]].add(p[1]);
+        }
+        boolean[] processing = new boolean[param1];
+        boolean[] checkedNoCycle = new boolean[param1];
+        for (int var2 = 0; var2 < param1; var2++) {
+            if (isCycle(var2, var1, processing, checkedNoCycle))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean isCycle(int var2, ArrayList<Integer>[] var1, boolean[] processing, boolean[] checkedNoCycle) {
+        if (checkedNoCycle[var2])
+            return false;
+        if (processing[var2])
+            return true;
+        if (var1[var2].size() == 0)
+            return false;
+        processing[var2] = true;
+        for (int neighbor : var1[var2]) {
+            if (isCycle(neighbor, var1, processing, checkedNoCycle)) {
+                return true;
+            }
+        }
+        processing[var2] = false;
+        checkedNoCycle[var2] = true;
+        return false;
+    }
+}

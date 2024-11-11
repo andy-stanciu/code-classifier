@@ -1,0 +1,53 @@
+class Solution {
+
+    class Parentheses {
+
+        public String str;
+
+        public int opening;
+
+        public int closing;
+
+        public Parentheses(String str) {
+            this.str = str;
+            if (str.equals("(")) {
+                this.opening = 1;
+            }
+            if (str.equals(")")) {
+                this.closing = 1;
+            }
+        }
+
+        public Parentheses(String str, int opening, int closing) {
+            this.str = str;
+            this.opening = opening;
+            this.closing = closing;
+        }
+    }
+
+    public List<String> generateParenthesis(int n) {
+        Queue<Parentheses> reserved = new LinkedList<>();
+        Parentheses parentheses = new Parentheses("(");
+        List<String> result = new ArrayList<>();
+        reserved.add(parentheses);
+        while (!reserved.isEmpty()) {
+            Parentheses pollParentheses = reserved.poll();
+            String currentStr = pollParentheses.str;
+            if (pollParentheses.opening == n && pollParentheses.closing == n) {
+                result.add(currentStr);
+            } else {
+                if (pollParentheses.opening < n) {
+                    Parentheses nextOpeningParentheses = new Parentheses(currentStr + "(", pollParentheses.opening + 1, pollParentheses.closing);
+                    reserved.add(nextOpeningParentheses);
+                }
+                if (pollParentheses.closing < n) {
+                    if (pollParentheses.opening > pollParentheses.closing) {
+                        Parentheses nextClosinggParentheses = new Parentheses(currentStr + ")", pollParentheses.opening, pollParentheses.closing + 1);
+                        reserved.add(nextClosinggParentheses);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}

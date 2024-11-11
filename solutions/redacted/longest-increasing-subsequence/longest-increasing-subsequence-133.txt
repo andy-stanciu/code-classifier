@@ -1,0 +1,24 @@
+class Solution {
+
+    public int lengthOfLIS(int[] arr) {
+        int max = Integer.MIN_VALUE;
+        int[][] dp = new int[arr.length][arr.length + 1];
+        for (int[] row : dp) Arrays.fill(row, -1);
+        return subseq(0, -1, arr, dp);
+    }
+
+    public int subseq(int ind, int prev_ind, int[] arr, int[][] dp) {
+        // base-case
+        if (ind == arr.length)
+            return 0;
+        if (dp[ind][prev_ind + 1] != -1)
+            return dp[ind][prev_ind + 1];
+        // take
+        int take = 0;
+        if (prev_ind == -1 || arr[ind] > arr[prev_ind])
+            take = 1 + subseq(ind + 1, ind, arr, dp);
+        // not-take
+        int notTake = subseq(ind + 1, prev_ind, arr, dp);
+        return dp[ind][prev_ind + 1] = Math.max(take, notTake);
+    }
+}

@@ -1,0 +1,59 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (s.length() < t.length()) {
+            return "";
+        }
+        char[] sarray = s.toCharArray();
+        char[] tarray = t.toCharArray();
+        Map<Character, Integer> map = new HashMap<>();
+        helper(tarray, map);
+        int slow = 0;
+        int fast = 0;
+        int start = 0;
+        int length = Integer.MAX_VALUE;
+        Integer count = 0;
+        int match = map.size();
+        while (fast < sarray.length) {
+            count = map.get(sarray[fast]);
+            if (count == null) {
+                fast++;
+                continue;
+            }
+            count--;
+            map.put(sarray[fast], count);
+            if (count == 0) {
+                match--;
+            }
+            count = map.get(sarray[slow]);
+            while (count == null || count < 0) {
+                if (count != null && count < 0) {
+                    count++;
+                    map.put(sarray[slow], count);
+                }
+                slow++;
+                count = map.get(sarray[slow]);
+            }
+            if (match == 0 && fast - slow + 1 < length) {
+                start = slow;
+                length = fast - slow + 1;
+            }
+            fast++;
+        }
+        if (length == Integer.MAX_VALUE) {
+            return "";
+        }
+        return s.substring(start, start + length);
+    }
+
+    private void helper(char[] array, Map<Character, Integer> map) {
+        for (char ch : array) {
+            if (map.containsKey(ch)) {
+                int freq = map.get(ch);
+                map.put(ch, freq + 1);
+            } else {
+                map.put(ch, 1);
+            }
+        }
+    }
+}

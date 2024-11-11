@@ -1,0 +1,39 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s.length() < t.length()) {
+            return "";
+        }
+        int[] freq = new int[256];
+        for (int i = 0; i < t.length(); i++) {
+            freq[t.charAt(i)]++;
+        }
+        int minLen = Integer.MAX_VALUE;
+        int start = 0;
+        int left = 0, right = 0;
+        int count = 0;
+        while (right < s.length()) {
+            // Include character at `right` into the window
+            if (freq[s.charAt(right)] > 0) {
+                count++;
+            }
+            freq[s.charAt(right)]--;
+            // Check if we have a valid window
+            while (count == t.length()) {
+                // Update minimum length and start position
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    start = left;
+                }
+                // Exclude character at `left` from the window
+                freq[s.charAt(left)]++;
+                if (freq[s.charAt(left)] > 0) {
+                    count--;
+                }
+                left++;
+            }
+            right++;
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(start, start + minLen);
+    }
+}

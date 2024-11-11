@@ -1,0 +1,28 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        int count = 1;
+        int[] d = new int[nums.length];
+        d[0] = nums[0];
+        for (int i = 1; i < nums.length; ++i) {
+            if (nums[i] > d[count - 1]) {
+                d[count] = nums[i];
+                ++count;
+            } else {
+                int left = 0, right = count, mid = 0;
+                while (left <= right) {
+                    mid = (left + right) / 2;
+                    if ((mid == 0 && nums[i] < d[mid]) || (mid < count && nums[i] < d[mid] && nums[i] > d[mid - 1])) {
+                        d[mid] = nums[i];
+                        break;
+                    }
+                    if (d[mid] < nums[i])
+                        left = mid + 1;
+                    else
+                        right = mid - 1;
+                }
+            }
+        }
+        return count;
+    }
+}

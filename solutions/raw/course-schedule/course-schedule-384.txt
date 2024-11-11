@@ -1,0 +1,49 @@
+class Solution {
+
+    //Element 1, identify pre-req, identify pre-reqs for pre-req, keep going until satisfied
+    //If we identify a cyclic dependency, aka we come back to an element whose pre-reqs we\'re identifying while looking for the pre-req to a pre-req, we return false;
+    /*
+    -Start at first element
+    -Look for pre-req in other first elements, if it\'s there -> continue cycle with its pre-req
+        -Keep track of current classes in a set
+    -If at any point we identify a pre-req whose pre-req is at a higher level (class present in set), return false
+    -If a pre-req is not present as another class, we\'re good
+    -return true at end
+
+    Ex: [[0,1,2], [1, 3], [2, 4]]
+        [[1,0],[0,1]]
+    */
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Set<Integer> courses = new HashSet<>();
+        Set<Integer> validatedCourses = new HashSet<>();
+        for (int i = 0; i < prerequisites.length; i++) {
+            courses = new HashSet<>();
+            //look for this course\'s pre-reqs
+            courses.add(prerequisites[i][0]);
+            if (!recurse(prerequisites, courses, prerequisites[i][1], validatedCourses)) {
+                //identify pre-req pre-reqs
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean recurse(int[][] preReqs, Set courses, int course, Set validatedCourses) {
+        //check if course has pre-reqs
+        if (courses.contains(course)) {
+            return false;
+        }
+        if (validatedCourses.contains(course)) {
+            return true;
+        }
+        for (int i = 0; i < preReqs.length; i++) {
+            if (course == preReqs[i][0]) {
+                courses.add(course);
+                course = preReqs[i][1];
+                return recurse(preReqs, courses, course, validatedCourses);
+            }
+        }
+        validatedCourses.add(course);
+        return true;
+    }
+}

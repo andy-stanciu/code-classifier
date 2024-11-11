@@ -1,0 +1,42 @@
+class Solution {
+
+    private enum Status {
+
+        UNREAD, READING, READ
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] pre : prerequisites) {
+            adjList.get(pre[0]).add(pre[1]);
+        }
+        Status[] var1 = new Status[param1];
+        Arrays.fill(var1, Status.UNREAD);
+        for (int var2 = 0; var2 < param1; var2++) {
+            if (var1[var2] == Status.UNREAD) {
+                if (complete(var2, var1, adjList) == false) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean complete(int var2, Status[] var1, List<List<Integer>> adjList) {
+        var1[var2] = Status.READING;
+        for (Integer var3 : adjList.get(var2)) {
+            if (var1[var3] == Status.UNREAD) {
+                if (complete(var3, var1, adjList) == false) {
+                    return false;
+                }
+            } else if (var1[var3] == Status.READING) {
+                return false;
+            }
+        }
+        var1[var2] = Status.READ;
+        return true;
+    }
+}

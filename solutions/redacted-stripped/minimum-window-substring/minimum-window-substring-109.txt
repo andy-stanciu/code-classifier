@@ -1,0 +1,45 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s.isEmpty() || t.isEmpty())
+            return "";
+        char[] sChars = s.toCharArray();
+        char[] tChars = t.toCharArray();
+        int m = s.length();
+        int n = t.length();
+        final int[] shouldFind = new int[256];
+        final int[] hasFind = new int[256];
+        for (char c : tChars) {
+            shouldFind[c]++;
+        }
+        int left = 0, right = 0;
+        int counts = 0;
+        int minLength = m + 1;
+        int start = -1, end = -1;
+        while (right < m) {
+            char ch = sChars[right];
+            if (shouldFind[ch] > 0) {
+                hasFind[ch]++;
+                if (hasFind[ch] <= shouldFind[ch]) {
+                    counts++;
+                }
+                if (counts == n) {
+                    while (shouldFind[sChars[left]] == 0 || hasFind[sChars[left]] > shouldFind[sChars[left]]) {
+                        hasFind[sChars[left]]--;
+                        left++;
+                    }
+                    int len = right - left + 1;
+                    if (len < minLength) {
+                        minLength = len;
+                        start = left;
+                        end = right;
+                    }
+                }
+            }
+            right++;
+        }
+        if (minLength > m)
+            return "";
+        return s.substring(start, end + 1);
+    }
+}

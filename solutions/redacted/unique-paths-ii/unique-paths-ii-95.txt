@@ -1,0 +1,63 @@
+class Solution {
+
+    public int method1(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        if (obstacleGrid[m - 1][n - 1] == 1)
+            return 0;
+        // This is our tabulation matrix.
+        // Each cell in this matrix will contain a value
+        // representing the number of possible paths to finish
+        // if that cell was the start point.
+        int[][] tab = new int[m][n];
+        // We can set the finish set to 1, since there is only
+        // one path possible to reach finish from there
+        tab[m - 1][n - 1] = 1;
+        // Since we can only move to right or down,
+        // we know that any cell on the last column could have only one
+        // path to the end, so maybe we could set them to 1.
+        // However, there could be obstacles in that column as well.
+        // With that in mind, we can conclude that all those cells would
+        // have a value of either 1 or 0. Any cell that is not an obstacle
+        // and has no obstacle on its way to the finish cell should be set to 1.
+        // All cells that are an obstacle or that are behind a cell set to 0
+        // (obstructed at some point) should also be 0.
+        for (int i = m - 2; i >= 0; i--) {
+            if (obstacleGrid[i][n - 1] == 1) {
+                tab[i][n - 1] = 0;
+            } else {
+                tab[i][n - 1] = tab[i + 1][n - 1];
+            }
+        }
+        // The same logic can be applied here for the last row
+        for (int j = n - 2; j >= 0; j--) {
+            if (obstacleGrid[m - 1][j] == 1) {
+                tab[m - 1][j] = 0;
+            } else {
+                tab[m - 1][j] = tab[m - 1][j + 1];
+            }
+        }
+        // Now we will set every other cell starting from the one
+        // on the second to the last row and second to the last column.
+        // If the cell is an obstacle, then we can easily set it to 0,
+        // as there is no path from it to the finish.
+        // Now, if that is not the case, then we know that from there
+        // there are only two options, go right, or go down.
+        // Because of that, the total number of paths
+        // from there is the sum of the values of its right and down
+        // neighbors. If we follow this process, we will be able to fill
+        // every cell.
+        for (int i = m - 2; i >= 0; i--) {
+            for (int j = n - 2; j >= 0; j--) {
+                if (obstacleGrid[i][j] == 1) {
+                    tab[i][j] = 0;
+                } else {
+                    tab[i][j] = tab[i + 1][j] + tab[i][j + 1];
+                }
+            }
+        }
+        // After the process is complete, we simply return the value
+        // at cell (0, 0)
+        return tab[0][0];
+    }
+}

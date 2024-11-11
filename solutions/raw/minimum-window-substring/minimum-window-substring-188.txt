@@ -1,0 +1,50 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        // Base case scenario : If there is no such substring, return the empty string "".
+        if (s == null || t == null || s.length() < t.length()) {
+            return "";
+        }
+        Map<Character, Integer> tMap = new HashMap<>();
+        Map<Character, Integer> sMap = new HashMap<>();
+        // Frequnecy data that will help us to indentify to move right or left
+        // In Sliding Window
+        for (int i = 0; i < t.length(); i++) {
+            char tele = t.charAt(i);
+            tMap.put(tele, tMap.getOrDefault(tele, 0) + 1);
+        }
+        int windowStart = 0;
+        int minLength = Integer.MAX_VALUE;
+        int startIndex = 0;
+        int windowFrequencyCount = 0;
+        int tMapSize = tMap.size();
+        for (int windowEnd = 0; windowEnd < s.length(); windowEnd++) {
+            char sele = s.charAt(windowEnd);
+            sMap.put(sele, sMap.getOrDefault(sele, 0) + 1);
+            // We care about characters present in t string , And we are matching
+            // frequnecy of all element
+            if (tMap.containsKey(sele) && sMap.get(sele).equals(tMap.get(sele))) {
+                windowFrequencyCount++;
+            }
+            // Once we Found that all element frequency is matched then we will
+            // look by narrowing space that is size can be done smaller
+            while (windowFrequencyCount == tMapSize) {
+                char seleAtLeft = s.charAt(windowStart);
+                int windowSize = windowEnd - windowStart + 1;
+                if (windowSize < minLength) {
+                    minLength = windowSize;
+                    startIndex = windowStart;
+                }
+                // We will keep updating frequnecy as if any charcater doesn\'t matches
+                // We have to move in right direction
+                sMap.put(seleAtLeft, sMap.get(seleAtLeft) - 1);
+                if (tMap.containsKey(seleAtLeft) && sMap.get(seleAtLeft) < tMap.get(seleAtLeft)) {
+                    windowFrequencyCount--;
+                }
+                windowStart++;
+            }
+        }
+        // Substring is really helpful as last test case of Long String was not matching
+        return (minLength == Integer.MAX_VALUE) ? "" : s.substring(startIndex, startIndex + minLength);
+    }
+}

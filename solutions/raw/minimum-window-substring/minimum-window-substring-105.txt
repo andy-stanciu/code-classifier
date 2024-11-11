@@ -1,0 +1,41 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (s == null || t == null || s.length() == 0 || t.length() == 0 || s.length() < t.length()) {
+            return "";
+        }
+        Map<Character, Integer> m = new HashMap<Character, Integer>();
+        for (char ch : t.toCharArray()) m.put(ch, m.getOrDefault(ch, 0) + 1);
+        int left = 0;
+        int count = t.length();
+        int minWindowLength = s.length() + 1;
+        int begin = 0;
+        for (int right = 0; right < s.length(); right++) {
+            char ch = s.charAt(right);
+            if (m.containsKey(ch)) {
+                int frequency = m.get(ch);
+                if (frequency > 0)
+                    count--;
+                m.put(ch, frequency - 1);
+            } else
+                m.put(ch, -1);
+            while (count == 0) {
+                int windowLength = right - left;
+                char c = s.charAt(left);
+                if (windowLength < minWindowLength) {
+                    begin = left;
+                    minWindowLength = windowLength;
+                }
+                if (m.containsKey(c)) {
+                    int frequency = m.get(c);
+                    if (frequency == 0)
+                        count++;
+                    m.put(c, frequency + 1);
+                } else
+                    m.put(c, 1);
+                left++;
+            }
+        }
+        return minWindowLength == s.length() + 1 ? "" : s.substring(begin, begin + minWindowLength + 1);
+    }
+}

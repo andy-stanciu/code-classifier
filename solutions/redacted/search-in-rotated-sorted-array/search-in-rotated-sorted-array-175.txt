@@ -1,0 +1,51 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        // var initialize
+        int low = 0;
+        int high = nums.length - 1;
+        // We will follow the same as Simple Binary Search
+        while (low <= high) {
+            // calculating mid
+            int mid = low + (high - low) / 2;
+            // Checking, Does mid value is the target element ?
+            if (nums[mid] == target) {
+                return mid;
+            }
+            // As Its rotated sorted array
+            // So here I\'m asking my self like,
+            // Does this array sorted from low to mid or mid to high.
+            // Beacuse I know one of the array will be
+            // sorted after we get mid point, Either low to mid or Mid to high.
+            // To understand this, lets take an example. Arr = [4,5,6,7,0,1,2]
+            // Here our mid will be 7 (element) index = 3
+            // then our left and right will be look like this
+            // Left ->   {4, 5, 6, 7};
+            // Right -> {7, 0, 1, 2}
+            // Here you can see that the left array is sorted but not right
+            // But there is guarantee one of the array will be sorted
+            // Checking left array is sorted or not
+            if (nums[low] <= nums[mid]) {
+                //Now Here we can easily check
+                // our taget is lies in this range or not
+                if (nums[low] <= target && target < nums[mid]) {
+                    // If its lies in this range
+                    high = mid - 1;
+                } else {
+                    // As the array was sorted here so,
+                    low = mid + 1;
+                }
+            } else {
+                // Here it may right will be sorted.
+                if (nums[mid] < target && target <= nums[high]) {
+                    // If its lies in this range
+                    low = mid + 1;
+                } else {
+                    // As the array was sorted here so,
+                    high = mid - 1;
+                }
+            }
+        }
+        return -1;
+    }
+}

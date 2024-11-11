@@ -1,0 +1,36 @@
+class Solution {
+
+    static int get_lower_bound(ArrayList temp, int target) {
+        int left = 0, right = temp.size();
+        int middle;
+        while (left < right) {
+            middle = left + (right - left) / 2;
+            if (target <= (int) temp.get(middle)) {
+                right = middle;
+            } else {
+                left = middle + 1;
+            }
+        }
+        if (left < temp.size() && (int) temp.get(left) < target) {
+            left++;
+        }
+        return left;
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        ArrayList temp = new ArrayList();
+        temp.add(nums[0]);
+        int len = 1;
+        for (int i = 1; i < n; i++) {
+            if (nums[i] > (int) temp.get(temp.size() - 1)) {
+                temp.add(nums[i]);
+                len++;
+            } else {
+                int ind = get_lower_bound(temp, nums[i]);
+                temp.set(ind, nums[i]);
+            }
+        }
+        return len;
+    }
+}

@@ -1,0 +1,45 @@
+class Solution {
+
+    public int method1(int[] a, int v, int s, int e) {
+        while (s <= e && s >= 0 && e < a.length) {
+            int mid = (s + e) / 2;
+            if (a[mid] == v)
+                return mid;
+            else if (a[mid] > v) {
+                e = mid - 1;
+            } else
+                s = mid + 1;
+        }
+        return -1;
+    }
+
+    public int method2(int[] a, int v, int s, int e) {
+        if (s > e)
+            return -1;
+        int var1;
+        int mid = (s + e) / 2;
+        if (a[mid] == v) {
+            var1 = mid;
+            return mid;
+        }
+        if (a[e] > a[mid] && v > a[mid] && v <= a[e])
+            return method1(a, v, mid + 1, e);
+        if (a[e] > a[mid] && v > a[e])
+            return method2(a, v, s, mid - 1);
+        if (a[s] < a[mid] && v >= a[s] && v < a[mid])
+            return method1(a, v, s, mid - 1);
+        if (a[s] < a[mid] && v < a[s])
+            return method2(a, v, mid + 1, e);
+        int a1 = method2(a, v, s, mid - 1);
+        if (a1 != -1)
+            return a1;
+        int a2 = method2(a, v, mid + 1, e);
+        if (a2 != -1)
+            return a2;
+        return -1;
+    }
+
+    public int method3(int[] nums, int target) {
+        return method2(nums, target, 0, nums.length - 1);
+    }
+}

@@ -1,0 +1,47 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        Map<Character, Integer> tCount = new HashMap<>();
+        Map<Character, Integer> sCount = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            tCount.put(ch, tCount.getOrDefault(ch, 0) + 1);
+        }
+        int mcount = 0;
+        int dcount = t.length();
+        int i = -1, j = -1;
+        String ans = "";
+        while (true) {
+            boolean f1 = false, f2 = false;
+            while (i < s.length() - 1 && mcount < dcount) {
+                i++;
+                char ch = s.charAt(i);
+                sCount.put(ch, sCount.getOrDefault(ch, 0) + 1);
+                if (sCount.getOrDefault(ch, 0) <= tCount.getOrDefault(ch, 0)) {
+                    mcount++;
+                }
+                f1 = true;
+            }
+            while (j < i && mcount == dcount) {
+                String pans = s.substring(j + 1, i + 1);
+                if (ans.length() == 0 || ans.length() > pans.length()) {
+                    ans = pans;
+                }
+                j++;
+                char ch = s.charAt(j);
+                if (sCount.get(ch) == 1) {
+                    sCount.remove(ch);
+                } else {
+                    sCount.put(ch, sCount.get(ch) - 1);
+                }
+                if (sCount.getOrDefault(ch, 0) < tCount.getOrDefault(ch, 0)) {
+                    mcount--;
+                }
+                f2 = true;
+            }
+            if (!f1 && !f2) {
+                break;
+            }
+        }
+        return ans;
+    }
+}

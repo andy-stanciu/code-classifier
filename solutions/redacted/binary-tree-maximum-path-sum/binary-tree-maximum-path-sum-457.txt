@@ -1,0 +1,49 @@
+class Solution {
+
+    /**
+     *        Intuition: Try to solve this similar to longest path
+     *                    Intead of length of path calculate weight (sum) of the path
+     *
+     *        A global variable for final result
+     *        Using post-order DFS,
+     *        At each node:
+     *            - Get left and right pathSum
+     *            - Update the value of global result variable with max of a path passing thru current node. Max path passing thru current node could be:
+     *                - just the current node
+     *                - current node + leftSum + rightSum
+     *                - current node + leftSum
+     *                - current node + rightSum
+     *            - return the max path optionally of either of the children (use similar case like above, but can\'t conside both children at the same time)
+     */
+    int var1 = Integer.MIN_VALUE;
+
+    public int method1(TreeNode root) {
+        method2(root);
+        return var1;
+    }
+
+    private int method2(TreeNode current) {
+        if (current == null)
+            return 0;
+        int var2 = method2(current.left);
+        int var3 = method2(current.right);
+        // A path that passes thru current node could be max. And the nodes contributing to it maybe:
+        //      - current.val + leftSum + rightPathSum
+        //      - only current.val
+        //      - current + either childSum
+        int currentMax = (var2 + var3 + current.val);
+        currentMax = Math.max(current.val, currentMax);
+        currentMax = Math.max(currentMax, current.val + var2);
+        currentMax = Math.max(currentMax, current.val + var3);
+        // Update such a path if found as max
+        var1 = Math.max(var1, currentMax);
+        // We need to return UP the max (sub) path found till now
+        //  Similar to above case, it could be only the current node (OR) it could be either children with current
+        //  NOTE: It cannot be both children, then it\'s NO LONGER A PATH but a branch
+        int var4 = current.val;
+        var4 = Math.max(var4, current.val + var3);
+        var4 = Math.max(var4, current.val + var2);
+        // This returned (sub) path will be used in upper node path sum calculation
+        return var4;
+    }
+}

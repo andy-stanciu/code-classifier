@@ -1,0 +1,42 @@
+class Solution {
+
+    public static boolean canFinish(int param1, int[][] prerequisites) {
+        Map<Integer, Set<Integer>> var1 = new HashMap<Integer, Set<Integer>>();
+        Map<Integer, Set<Integer>> prereqMap = new HashMap<Integer, Set<Integer>>();
+        Queue<Integer> backlog = new LinkedList<Integer>();
+        for (int i = 0; i < prerequisites.length; i++) {
+            if (var1.containsKey(prerequisites[i][0])) {
+                var1.get(prerequisites[i][0]).add(prerequisites[i][1]);
+            } else {
+                var1.put(prerequisites[i][0], new HashSet<Integer>());
+                var1.get(prerequisites[i][0]).add(prerequisites[i][1]);
+            }
+            if (prereqMap.containsKey(prerequisites[i][1])) {
+                prereqMap.get(prerequisites[i][1]).add(prerequisites[i][0]);
+            } else {
+                prereqMap.put(prerequisites[i][1], new HashSet<Integer>());
+                prereqMap.get(prerequisites[i][1]).add(prerequisites[i][0]);
+            }
+        }
+        for (int i = 0; i < param1; i++) {
+            if (!var1.containsKey(i)) {
+                backlog.add(i);
+            }
+        }
+        while (!backlog.isEmpty()) {
+            int curr = backlog.poll();
+            Set<Integer> temp = prereqMap.get(curr);
+            if (temp == null)
+                continue;
+            for (int var3 : temp) {
+                Set<Integer> var2 = var1.get(var3);
+                var2.remove(curr);
+                if (var2.size() == 0) {
+                    backlog.add(var3);
+                    var1.remove(var3);
+                }
+            }
+        }
+        return var1.size() == 0;
+    }
+}

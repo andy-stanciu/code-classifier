@@ -1,0 +1,55 @@
+class Solution {
+
+    public int search(int[] nums, int target) {
+        if (// Array isn\'t rotated apply BS on full array
+        nums[0] <= nums[nums.length - 1])
+            return BS(nums, 0, nums.length - 1, target);
+        else {
+            // Index of minimum element
+            int index = findIndexMin(nums);
+            int res1 = BS(nums, 0, index - 1, target);
+            if (res1 != -1)
+                return res1;
+            int res2 = BS(nums, index, nums.length - 1, target);
+            if (res2 != -1)
+                return res2;
+        }
+        return -1;
+    }
+
+    // Method to find index of minimum element
+    public int findIndexMin(int[] nums) {
+        int start = 0;
+        int end = nums.length - 1;
+        while (start <= end) {
+            int mid = start + ((end - start) / 2);
+            int next = (mid + 1) % nums.length;
+            int prev = (mid + nums.length - 1) % nums.length;
+            if (nums[mid] < nums[prev])
+                return mid;
+            else if (nums[mid] > nums[next])
+                return next;
+            else if (// Right part is sorted
+            nums[mid] <= nums[end])
+                end = mid - 1;
+            else if (// Left part is sorted
+            nums[mid] >= nums[start])
+                start = mid + 1;
+        }
+        return 0;
+    }
+
+    // Binary Search Method
+    public int BS(int[] nums, int start, int end, int target) {
+        while (start <= end) {
+            int mid = start + ((end - start) / 2);
+            if (nums[mid] == target)
+                return mid;
+            else if (nums[mid] > target)
+                end = mid - 1;
+            else if (nums[mid] < target)
+                start = mid + 1;
+        }
+        return -1;
+    }
+}

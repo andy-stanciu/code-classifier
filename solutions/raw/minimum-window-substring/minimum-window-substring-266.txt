@@ -1,0 +1,58 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        // hashmap
+        HashMap<Character, Integer> hm = new HashMap<>();
+        int i = 0, j = 0, n = s.length(), m = t.length();
+        int st = 0, end = 0, max = Integer.MAX_VALUE;
+        // indicates can we make required substring
+        int flag = 0;
+        // inserting all characters of string t in hashmap along with their frequency
+        for (int x = 0; x < m; x++) {
+            hm.put(t.charAt(x), hm.getOrDefault(t.charAt(x), 0) + 1);
+        }
+        int cnt = hm.size();
+        // Sliding Window-:
+        while (j < n) {
+            // if string s contains character of string t
+            if (hm.containsKey(s.charAt(j))) {
+                // decrease its ferquency
+                hm.put(s.charAt(j), hm.get(s.charAt(j)) - 1);
+                // if frequency becomes 0 decrease count
+                if (hm.get(s.charAt(j)) == 0)
+                    cnt--;
+            }
+            // if cnt becomes zero it means all characters of string t has been included in current substring
+            if (cnt == 0) {
+                while (// traverse until we get incomplete substring
+                cnt == 0) {
+                    flag = 1;
+                    if (hm.containsKey(s.charAt(i))) {
+                        if (max > j - i + 1) {
+                            // get minimum substring
+                            max = j - i + 1;
+                            // store starting index in st
+                            st = i;
+                            // store end index in end
+                            end = j;
+                        }
+                        // increase frequency of char
+                        hm.put(s.charAt(i), hm.get(s.charAt(i)) + 1);
+                        if (hm.get(s.charAt(i)) > 0) {
+                            // if frequency becomes greater than to 0
+                            cnt++;
+                        }
+                    }
+                    // slide i
+                    i++;
+                }
+            }
+            // in each iteration slide j
+            j++;
+        }
+        // if we don\'t get answer
+        if (flag == 0)
+            return "";
+        return s.substring(st, end + 1);
+    }
+}

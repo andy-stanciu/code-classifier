@@ -1,0 +1,45 @@
+/*
+Now we have the possibilty for the space optimization.
+
+We can do space optimization generally when we are using the previous values or previous previous values for the computation of the current value. No other past values.
+Here we are just using the previous row value and the previous column value The previous column value can be easily obtained by taking current[j - 1]
+But to get the previous row value, we need to maintain a dp array which only holds the immediate previous row, not any row before that. Just the previous row and this will reduce the space complexity to O(N) where N = col
+
+TC : O(M * N)
+SC : O(N)
+
+
+*/
+class Solution {
+
+    public int uniquePathsWithObstacles(int[][] grid) {
+        int row = grid.length;
+        int col = grid[0].length;
+        if (grid[0][0] == 1) {
+            return 0;
+        }
+        if (grid[row - 1][col - 1] == 1) {
+            return 0;
+        }
+        int[] previousRow = new int[col];
+        for (int i = 0; i < row; i++) {
+            int[] currentRow = new int[col];
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] == 1) {
+                    currentRow[j] = 0;
+                } else if (i == 0 && j == 0) {
+                    currentRow[j] = 1;
+                } else {
+                    int up = previousRow[j];
+                    int left = 0;
+                    if (j > 0) {
+                        left = currentRow[j - 1];
+                    }
+                    currentRow[j] = left + up;
+                }
+            }
+            previousRow = currentRow;
+        }
+        return previousRow[col - 1];
+    }
+}

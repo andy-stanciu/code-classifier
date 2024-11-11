@@ -1,0 +1,32 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        String ans = "";
+        if (s.length() < t.length())
+            return ans;
+        HashMap<Character, Integer> mapt = new HashMap<>();
+        HashMap<Character, List<Integer>> maps = new HashMap<>();
+        for (char c : t.toCharArray()) mapt.put(c, mapt.getOrDefault(c, 0) + 1);
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (mapt.containsKey(c)) {
+                if (!maps.containsKey(c))
+                    maps.put(c, new LinkedList<>());
+                if (maps.get(c).size() == mapt.get(c)) {
+                    maps.get(c).removeFirst();
+                }
+                maps.get(c).add(i);
+                int len = 0, b = s.length(), e = 0;
+                for (List<Integer> l : maps.values()) {
+                    len += l.size();
+                    b = Math.min(l.getFirst(), b);
+                    e = Math.max(l.getLast(), e);
+                }
+                if (len == t.length() && (e - b + 1 < ans.length() || ans.length() == 0)) {
+                    ans = s.substring(b, e + 1);
+                }
+            }
+        }
+        return ans;
+    }
+}

@@ -1,0 +1,26 @@
+class Solution {
+
+    int lower_bound(List<Integer> array, int low, int high, int key) {
+        if (low > high)
+            return low;
+        int mid = low + (high - low) / 2;
+        if (key <= array.get(mid))
+            return lower_bound(array, low, mid - 1, key);
+        return lower_bound(array, mid + 1, high, key);
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        List<Integer> ans = new ArrayList();
+        int n = nums.length;
+        ans.add(nums[0]);
+        for (int i = 1; i < n; i++) {
+            if (nums[i] > ans.get(ans.size() - 1))
+                ans.add(nums[i]);
+            else {
+                int k = lower_bound(ans, 0, ans.size(), nums[i]);
+                ans.set(k, nums[i]);
+            }
+        }
+        return ans.size();
+    }
+}

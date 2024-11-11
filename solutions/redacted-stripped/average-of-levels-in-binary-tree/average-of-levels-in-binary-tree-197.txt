@@ -1,0 +1,37 @@
+class Solution {
+
+    class Node {
+
+        double total;
+
+        int count;
+
+        Node(double total, int count) {
+            this.total = total;
+            this.count = count;
+        }
+    }
+
+    public List<Double> method1(TreeNode root) {
+        List<Double> answer = new ArrayList<>();
+        Map<Integer, Node> map = new HashMap<>();
+        method2(root, 0, map);
+        for (int i = 0; i < map.size(); i++) {
+            Node node = map.get(i);
+            Double result = node.total / node.count;
+            answer.add(result);
+        }
+        return answer;
+    }
+
+    public void method2(TreeNode root, int level, Map<Integer, Node> map) {
+        if (root == null)
+            return;
+        Node node = map.getOrDefault(level, new Node(0.0, 0));
+        node.total = node.total + root.val;
+        node.count = node.count + 1;
+        map.put(level, node);
+        method2(root.left, level + 1, map);
+        method2(root.right, level + 1, map);
+    }
+}

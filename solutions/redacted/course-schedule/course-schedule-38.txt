@@ -1,0 +1,39 @@
+class Solution {
+
+    public boolean isCyclic(List<List<Integer>> prerequsite, int curr, int[] visited) {
+        // We\'re Returing true as a Cycle is Found.
+        // Like,While processing a node, You have found which is also in its processing in its way.
+        if (visited[curr] == 1)
+            return true;
+        // If No We have made that node as visited
+        visited[curr] = 1;
+        //Iterating over its adjacent nodes that we stored.
+        for (int i : prerequsite.get(curr)) {
+            //If a Node is not processed That is, If it haven\'t completed its process, we\'re calling the function again in a if condition by checking whether it forms a cycle or not.
+            if (visited[i] != 2)
+                if (isCyclic(prerequsite, i, visited))
+                    return true;
+        }
+        //If No Cycle then the node is totally proccessed and we changed the visited state as 2.
+        visited[curr] = 2;
+        //As No Cycle Detected We return false.
+        return false;
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int plen = prerequisites.length;
+        List<List<Integer>> prerequsite = new ArrayList<>();
+        for (int i = 0; i < param1; i++) prerequsite.add(new ArrayList<>());
+        //Here, we have created a List of List which contains the edge matrix. Like we have the edges hose are connected with the node as a Array.
+        for (int i = 0; i < plen; i++) prerequsite.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        //Creating a visited array for the state of visit. Initially all are 0.
+        int[] visited = new int[param1];
+        //Iterating over all nodes, and finding whether the current node forms a cycle ot not.
+        for (int i = 0; i < param1; i++) {
+            //If it is we return false, that is the course can\'t be completed, else True (i.e) Course Cane be Done!
+            if (isCyclic(prerequsite, i, visited))
+                return false;
+        }
+        return true;
+    }
+}

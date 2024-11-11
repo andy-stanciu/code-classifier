@@ -1,0 +1,41 @@
+class Solution {
+
+    public int longestConsecutive(int[] nums) {
+        Arrays.sort(nums);
+        System.out.println(Arrays.toString(nums));
+        int maxLen = 0;
+        Map<Integer, Integer> ranges = new HashMap<>();
+        for (int num : nums) {
+            int len = 1;
+            Integer self = ranges.get(num);
+            Integer left = ranges.get(num - 1);
+            Integer right = ranges.get(num + 1);
+            if (self == null) {
+                ranges.put(num, num);
+                self = num;
+                len = 1;
+            }
+            if (left == null && right == null) {
+            } else {
+                System.out.println("for num:" + num + ",left:" + left + ",right:" + right);
+                if (left != null && right == null) {
+                    ranges.put(self, left);
+                    ranges.put(left, self);
+                    len = Math.abs(self - left) + 1;
+                } else if (left == null && right != null) {
+                    ranges.put(self, right);
+                    ranges.put(right, self);
+                    len = Math.abs(right - self) + 1;
+                } else {
+                    ranges.put(left, right);
+                    ranges.put(right, left);
+                    len = Math.abs(right - left) + 1;
+                }
+            }
+            if (maxLen <= len) {
+                maxLen = len;
+            }
+        }
+        return maxLen;
+    }
+}

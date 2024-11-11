@@ -1,0 +1,52 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Step 1: Create a graph representation
+        ArrayList<Integer>[] graph = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        // Add edges based on prerequisites
+        for (int[] prerequisite : prerequisites) {
+            int course = prerequisite[0];
+            int prerequisiteCourse = prerequisite[1];
+            graph[prerequisiteCourse].add(course);
+        }
+        // Step 2: Check for cycle using topological sorting
+        return !hasCycle(graph);
+    }
+
+    // Step 2 (cont.): Function to perform topological sorting and check for cycle
+    private boolean hasCycle(ArrayList<Integer>[] graph) {
+        boolean[] visited = new boolean[graph.length];
+        boolean[] stack = new boolean[graph.length];
+        for (int i = 0; i < graph.length; i++) {
+            if (!visited[i] && dfs(graph, i, visited, stack)) {
+                // Cycle detected
+                return true;
+            }
+        }
+        // No cycle found
+        return false;
+    }
+
+    // Step 2 (cont.): DFS traversal to detect cycle
+    private boolean dfs(ArrayList<Integer>[] graph, int vertex, boolean[] visited, boolean[] stack) {
+        visited[vertex] = true;
+        stack[vertex] = true;
+        for (int neighbor : graph[vertex]) {
+            if (!visited[neighbor]) {
+                if (dfs(graph, neighbor, visited, stack)) {
+                    // Cycle detected
+                    return true;
+                }
+            } else if (stack[neighbor]) {
+                // Cycle detected
+                return true;
+            }
+        }
+        stack[vertex] = false;
+        // No cycle found
+        return false;
+    }
+}

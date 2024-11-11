@@ -1,0 +1,59 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<Double> method1(TreeNode root) {
+        List<List<TreeNode>> var1 = new ArrayList<>();
+        List<Double> result = new ArrayList<>();
+        getBreadthElements(root, var1, 0, result);
+        return result;
+    }
+
+    private void getBreadthElements(TreeNode node, List<List<TreeNode>> var1, int i, List<Double> result) {
+        ArrayList<TreeNode> values = new ArrayList();
+        if (i == 0) {
+            values.add(node);
+            i++;
+            var1.add(values);
+            result.add(node.val + 0.0);
+            getBreadthElements(node, var1, i, result);
+        } else {
+            List<TreeNode> previous = var1.get(i - 1);
+            if (previous.size() == 0) {
+                var1.remove(i - 1);
+                result.remove(i - 1);
+                return;
+            }
+            Double d = 0.0;
+            for (int j = 0; j < previous.size(); j++) {
+                TreeNode n = previous.get(j);
+                if (n.right != null) {
+                    values.add(n.right);
+                    d += n.right.val + 0.0;
+                }
+                if (n.left != null) {
+                    values.add(n.left);
+                    d += n.left.val + 0.0;
+                }
+            }
+            var1.add(values);
+            d = d / values.size();
+            result.add(d);
+            i++;
+            getBreadthElements(null, var1, i, result);
+        }
+    }
+}

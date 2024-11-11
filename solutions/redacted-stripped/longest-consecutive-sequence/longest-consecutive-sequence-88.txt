@@ -1,0 +1,81 @@
+class Class1 {
+
+    int currLength;
+
+    int head;
+
+    int tail;
+
+    public Class1(int num) {
+        this.currLength = 1;
+        this.head = num;
+        this.tail = num;
+    }
+
+    public void newHead(int num) {
+        this.head = num;
+        this.currLength++;
+    }
+
+    public void newTail(int num) {
+        this.tail = num;
+        this.currLength++;
+    }
+
+    public void merge(Class1 param1) {
+        int tail = param1.tail;
+        int currentLength = this.currLength;
+        this.currLength = currentLength + param1.currLength + 1;
+        this.tail = tail;
+    }
+}
+
+class Solution {
+
+    public int method1(int[] nums) {
+        if (nums.length == 0)
+            return 0;
+        int var1 = 1;
+        Map<Integer, Class1> headMap = new HashMap<>();
+        Map<Integer, Class1> tailMap = new HashMap<>();
+        Set<Integer> viewedNums = new HashSet<>();
+        for (int num : nums) {
+            if (viewedNums.contains(num)) {
+                continue;
+            }
+            Class1 currCounterInstance;
+            Class1 validHeadCounter = headMap.get(num - 1);
+            Class1 validTailCounter = tailMap.get(num + 1);
+            if (validHeadCounter != null && validTailCounter != null) {
+                validTailCounter.merge(validHeadCounter);
+                headMap.remove(num - 1);
+                tailMap.remove(num + 1);
+                headMap.put(validTailCounter.head, validTailCounter);
+                tailMap.put(validTailCounter.tail, validTailCounter);
+                currCounterInstance = validTailCounter;
+            } else if (validHeadCounter != null) {
+                validHeadCounter.newHead(num);
+                headMap.remove(num - 1);
+                headMap.put(validHeadCounter.head, validHeadCounter);
+                currCounterInstance = validHeadCounter;
+            } else if (validTailCounter != null) {
+                validTailCounter.newTail(num);
+                tailMap.remove(num - 1);
+                tailMap.put(validTailCounter.tail, validTailCounter);
+                currCounterInstance = validTailCounter;
+            } else {
+                Class1 param1 = new Class1(num);
+                int head = param1.head;
+                int tail = param1.tail;
+                headMap.put(head, param1);
+                tailMap.put(tail, param1);
+                currCounterInstance = param1;
+            }
+            if (currCounterInstance.currLength > var1) {
+                var1 = currCounterInstance.currLength;
+            }
+            viewedNums.add(num);
+        }
+        return var1;
+    }
+}

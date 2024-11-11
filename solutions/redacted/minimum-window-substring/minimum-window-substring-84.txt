@@ -1,0 +1,42 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int m = t.length();
+        int n = s.length();
+        int flen = Integer.MAX_VALUE;
+        HashMap<Character, Integer> hm1 = new HashMap<>();
+        for (int i = 0; i < m; i++) {
+            char ch = t.charAt(i);
+            hm1.put(ch, hm1.getOrDefault(ch, 0) + 1);
+        }
+        int p1 = 0;
+        int p2 = 0;
+        int match = 0;
+        int len = -1;
+        int st = -1;
+        int flag = 0;
+        HashMap<Character, Integer> hm2 = new HashMap<>();
+        while (p2 < n) {
+            char ch = s.charAt(p2);
+            hm2.put(ch, hm2.getOrDefault(ch, 0) + 1);
+            if (hm1.containsKey(ch) && hm2.get(ch) <= hm1.get(ch))
+                match++;
+            while (match == m) {
+                flag = 1;
+                len = p2 - p1 + 1;
+                if (len < flen) {
+                    flen = len;
+                    st = p1;
+                }
+                char removeChar = s.charAt(p1);
+                hm2.put(removeChar, hm2.getOrDefault(removeChar, 0) - 1);
+                if (hm1.containsKey(removeChar) && hm2.get(removeChar) < hm1.get(removeChar))
+                    match--;
+                p1++;
+            }
+            p2++;
+        }
+        int end = st + flen - 1;
+        return flag == 1 ? s.substring(st, end + 1) : "";
+    }
+}

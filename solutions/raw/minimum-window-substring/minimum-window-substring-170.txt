@@ -1,0 +1,31 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int m = s.length();
+        int n = t.length();
+        if (m < n)
+            return "";
+        int inc = 0;
+        int[] tc = new int[128];
+        for (int i = 0; i < n; ++i) tc[t.charAt(i)]++;
+        int[] sc = new int[128];
+        int[] range = new int[] { -1, -1, Integer.MAX_VALUE };
+        for (int r = 0, l = 0; r < m; ++r) {
+            char chr = s.charAt(r);
+            if (sc[chr] < tc[chr])
+                inc++;
+            sc[chr]++;
+            while (inc == n) {
+                if (r - l + 1 < range[2]) {
+                    range[0] = l;
+                    range[1] = r;
+                    range[2] = r - l + 1;
+                }
+                char chl = s.charAt(l++);
+                if (--sc[chl] < tc[chl])
+                    inc--;
+            }
+        }
+        return range[2] == Integer.MAX_VALUE ? "" : s.substring(range[0], range[1] + 1);
+    }
+}

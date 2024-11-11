@@ -1,0 +1,39 @@
+class Solution {
+
+    public boolean dfs(ArrayList<Integer>[] arr, int[] iv, int s) {
+        iv[s] = 1;
+        for (int i = 0; i < arr[s].size(); i++) {
+            int m = arr[s].get(i);
+            if (iv[m] == 0) {
+                if (dfs(arr, iv, m)) {
+                    return true;
+                }
+            } else if (iv[m] != 0 && iv[m] != 2) {
+                return true;
+            }
+        }
+        iv[s] = 2;
+        return false;
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        int v = numCourses;
+        int n = prerequisites.length;
+        ArrayList<Integer>[] arr = new ArrayList[v];
+        for (int i = 0; i < v; i++) {
+            arr[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < n; i++) {
+            arr[prerequisites[i][1]].add(prerequisites[i][0]);
+        }
+        int[] iv = new int[v];
+        for (int i = 0; i < v; i++) {
+            if (iv[i] == 0) {
+                if (dfs(arr, iv, i)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}

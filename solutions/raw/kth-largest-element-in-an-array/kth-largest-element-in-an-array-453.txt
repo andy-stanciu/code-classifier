@@ -1,0 +1,33 @@
+class Solution {
+
+    public int findKthLargest(int[] nums, int k) {
+        TreeMap<Integer, Integer> sortedMap = new TreeMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (sortedMap.containsKey(nums[i])) {
+                int count = sortedMap.get(nums[i]);
+                sortedMap.replace(nums[i], ++count);
+            } else {
+                sortedMap.put(nums[i], 1);
+            }
+        }
+        Set<Integer> keySet = sortedMap.descendingKeySet();
+        Iterator<Integer> it = keySet.iterator();
+        while (it.hasNext()) {
+            int key = it.next();
+            System.out.println(key + " " + sortedMap.get(key));
+        }
+        it = keySet.iterator();
+        int result = 0;
+        while (it.hasNext()) {
+            int key = it.next();
+            int val = sortedMap.get(key);
+            if (k <= val) {
+                result = key;
+                break;
+            } else {
+                k = k - val;
+            }
+        }
+        return result;
+    }
+}

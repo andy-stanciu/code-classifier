@@ -1,0 +1,67 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        // int [][] dp = new int[nums.length][nums.length+1];
+        // for(int i=0; i<nums.length; i++)
+        // Arrays.fill(dp[i],-1);
+        // return findMax(nums, 0, -1, dp);
+        //return findTab(nums);
+        return findBin(nums);
+    }
+
+    public int findBin(int[] nums) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            int index = binSearch(list, nums[i]);
+            if (index >= list.size())
+                list.add(nums[i]);
+            else
+                list.set(index, nums[i]);
+        }
+        return list.size();
+    }
+
+    public int binSearch(List<Integer> list, int target) {
+        int start = 0;
+        int end = list.size() - 1;
+        int ans = list.size();
+        while (start <= end) {
+            int mid = end - (end - start) / 2;
+            if (list.get(mid) >= target) {
+                ans = mid;
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return ans;
+    }
+
+    public int findTab(int[] nums) {
+        int[][] dp = new int[nums.length + 1][nums.length + 1];
+        for (int index = nums.length - 1; index >= 0; index--) {
+            for (int prev = index - 1; prev >= -1; prev--) {
+                int inc = 0;
+                int exc = 0;
+                exc = dp[index + 1][prev + 1];
+                if (prev == -1 || nums[prev] < nums[index])
+                    inc = dp[index + 1][index + 1] + 1;
+                dp[index][prev + 1] = Math.max(inc, exc);
+            }
+        }
+        return dp[0][0];
+    }
+
+    public int findMax(int[] nums, int index, int prev, int[][] dp) {
+        if (index >= nums.length)
+            return 0;
+        if (dp[index][prev + 1] != -1)
+            return dp[index][prev + 1];
+        int inc = 0;
+        int exc = 0;
+        exc = findMax(nums, index + 1, prev, dp);
+        if (prev == -1 || nums[prev] < nums[index])
+            inc = findMax(nums, index + 1, index, dp) + 1;
+        return dp[index][prev + 1] = Math.max(inc, exc);
+    }
+}

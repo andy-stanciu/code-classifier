@@ -1,0 +1,64 @@
+class Solution {
+
+    Map<Character, Integer> hmt = new HashMap<>();
+
+    public boolean check(Map<Character, Integer> hms) {
+        for (Map.Entry<Character, Integer> entry : hmt.entrySet()) {
+            char ch = entry.getKey();
+            int val = entry.getValue();
+            //System.out.println(ch + " " + val);
+            if (hms.getOrDefault(ch, 0) < val)
+                return false;
+        }
+        return true;
+    }
+
+    public String binarySearch(int l, String s) {
+        if (l == 0)
+            return "";
+        int m = s.length();
+        Map<Character, Integer> hms = new HashMap<>();
+        for (int i = 0; i < l; i++) {
+            char ch = s.charAt(i);
+            hms.put(ch, hms.getOrDefault(ch, 0) + 1);
+        }
+        if (check(hms))
+            return s.substring(0, l);
+        for (int i = l; i < m; i++) {
+            char remove = s.charAt(i - l);
+            hms.put(remove, hms.get(remove) - 1);
+            char put = s.charAt(i);
+            hms.put(put, hms.getOrDefault(put, 0) + 1);
+            if (check(hms)) {
+                System.out.println(i);
+                return s.substring(i - l + 1, i + 1);
+            }
+        }
+        return "";
+    }
+
+    public String method1(String s, String t) {
+        int m = s.length();
+        int n = t.length();
+        if (m < n)
+            return "";
+        for (int i = 0; i < n; i++) {
+            char ch = t.charAt(i);
+            hmt.put(ch, hmt.getOrDefault(ch, 0) + 1);
+        }
+        int low = 1;
+        int high = m;
+        String ans = "";
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            String res = binarySearch(mid, s);
+            if (res == "") {
+                low = mid + 1;
+            } else {
+                ans = res;
+                high = mid - 1;
+            }
+        }
+        return ans;
+    }
+}

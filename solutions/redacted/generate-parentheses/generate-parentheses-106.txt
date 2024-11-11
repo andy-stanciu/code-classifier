@@ -1,0 +1,67 @@
+class Solution {
+
+    //----------------------------------------------
+    // solution 1
+    //----------------------------------------------
+    public List<String> method1(int n) {
+        List<String> list = new ArrayList();
+        backTracking(list, new StringBuilder(), 0, 0, n);
+        return list;
+    }
+
+    public void backTracking(List<String> list, StringBuilder str, int open, int close, int max) {
+        //adding to list when reaching max length
+        if (str.length() == max * 2) {
+            list.add(str.toString());
+            return;
+        }
+        //keep open brackets until max
+        if (open < max) {
+            backTracking(list, str.append("("), open + 1, close, max);
+            str.deleteCharAt(str.length() - 1);
+        }
+        //keep close until less then open. as we focux on valid parenthesis.
+        if (close < open) {
+            backTracking(list, str.append(")"), open, close + 1, max);
+            str.deleteCharAt(str.length() - 1);
+        }
+    }
+
+    //----------------------------------------------
+    // solution 2
+    //----------------------------------------------
+    List<String> method1(int n) {
+        List<String> list = new ArrayList();
+        //using deque, to have stack and queue at same time. however we will use DFS algo based on stack
+        Deque<ParenthesisString> deque = new LinkedList();
+        deque.push(new ParenthesisString("", 0, 0));
+        while (!deque.isEmpty()) {
+            ParenthesisString object = deque.poll();
+            if (object.str.length() == n * 2) {
+                list.add(object.str);
+            }
+            if (object.open < n) {
+                deque.push(new ParenthesisString(object.str + "(", object.open + 1, object.close));
+            }
+            if (object.close < object.open) {
+                deque.push(new ParenthesisString(object.str + ")", object.open, object.close + 1));
+            }
+        }
+        return list;
+    }
+
+    class ParenthesisString {
+
+        String str;
+
+        int open;
+
+        int close;
+
+        ParenthesisString(String str, int open, int close) {
+            this.str = str;
+            this.open = open;
+            this.close = close;
+        }
+    }
+}

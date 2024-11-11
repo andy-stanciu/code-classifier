@@ -1,0 +1,54 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (s.length() < t.length())
+            return "";
+        HashMap<Character, Integer> mapS = new HashMap<>();
+        HashMap<Character, Integer> mapT = new HashMap<>();
+        int minLen = Integer.MAX_VALUE;
+        int low = 0, high = 0;
+        int weHave = 0, weNeed = t.length();
+        int ansLeft = 0, ansRight = 0;
+        // 1) Mapping the character of t in mapT
+        for (int i = 0; i < t.length(); i++) {
+            char ch = t.charAt(i);
+            mapT.put(ch, mapT.getOrDefault(ch, 0) + 1);
+        }
+        // 2) Finding the actual string which contains t string character
+        while (high < s.length()) {
+            char ch = s.charAt(high);
+            if (mapT.containsKey(ch)) {
+                if (mapS.getOrDefault(ch, 0) < mapT.get(ch)) {
+                    mapS.put(ch, mapS.getOrDefault(ch, 0) + 1);
+                    weHave++;
+                } else {
+                    mapS.put(ch, mapS.getOrDefault(ch, 0) + 1);
+                }
+            }
+            // Most important condition
+            while (weHave == weNeed) {
+                // Comparing the previous length of string to current length
+                if (high - low + 1 < minLen) {
+                    minLen = high - low + 1;
+                    ansLeft = low;
+                    ansRight = high;
+                }
+                char ch2 = s.charAt(low);
+                if (mapS.containsKey(ch2)) {
+                    if (mapS.get(ch2) >= mapT.get(ch2)) {
+                        mapS.put(ch2, mapS.getOrDefault(ch2, 0) - 1);
+                        if (mapS.get(ch2) < mapT.get(ch2)) {
+                            weHave--;
+                        }
+                    }
+                }
+                low++;
+            }
+            high++;
+        }
+        // Edge case
+        if (minLen == Integer.MAX_VALUE)
+            return "";
+        return s.substring(ansLeft, ansRight + 1);
+    }
+}

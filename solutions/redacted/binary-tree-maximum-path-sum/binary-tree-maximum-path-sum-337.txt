@@ -1,0 +1,62 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Class1 {
+
+    public int maxLeaf;
+
+    public int maxLocal;
+
+    public Class1(int maxLeaf, int maxLocal) {
+        this.maxLeaf = maxLeaf;
+        this.maxLocal = maxLocal;
+    }
+}
+
+class Solution {
+
+    private Class1 method1(TreeNode root) {
+        if (root.left == null && root.right == null) {
+            Class1 ans = new Class1(root.val, root.val);
+            return ans;
+        }
+        Class1 ans1 = null;
+        Class1 ans2 = null;
+        if (root.left != null) {
+            ans1 = method1(root.left);
+        }
+        if (root.right != null) {
+            ans2 = method1(root.right);
+        }
+        if (ans1 != null && ans2 != null) {
+            int maxLocal = Math.max(ans1.maxLeaf, Math.max(ans2.maxLeaf, Math.max(ans1.maxLocal, Math.max(ans2.maxLocal, root.val + ans1.maxLeaf + ans2.maxLeaf))));
+            int maxLeaf = Math.max(root.val, Math.max(root.val + ans1.maxLeaf, root.val + ans2.maxLeaf));
+            return new Class1(maxLeaf, maxLocal);
+        } else if (ans1 == null) {
+            int maxLocal = Math.max(ans2.maxLocal, Math.max(ans2.maxLeaf, root.val + ans2.maxLeaf));
+            int maxLeaf = Math.max(root.val, root.val + ans2.maxLeaf);
+            return new Class1(maxLeaf, maxLocal);
+        } else {
+            int maxLocal = Math.max(ans1.maxLocal, Math.max(ans1.maxLeaf, root.val + ans1.maxLeaf));
+            int maxLeaf = Math.max(root.val, root.val + ans1.maxLeaf);
+            return new Class1(maxLeaf, maxLocal);
+        }
+    }
+
+    public int method2(TreeNode root) {
+        Class1 ans = method1(root);
+        return Math.max(ans.maxLeaf, ans.maxLocal);
+    }
+}

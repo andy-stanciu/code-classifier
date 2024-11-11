@@ -1,0 +1,32 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>(param1);
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        int[] inDegree = new int[param1];
+        for (int[] a : prerequisites) {
+            int var1 = a[0];
+            int var2 = a[1];
+            graph.get(var2).add(var1);
+            inDegree[var1]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        int count = 0;
+        for (int i = 0; i < param1; i++) {
+            if (inDegree[i] == 0)
+                queue.offer(i);
+        }
+        while (queue.size() > 0) {
+            int curr = queue.poll();
+            count++;
+            for (int item : graph.get(curr)) {
+                inDegree[item]--;
+                if (inDegree[item] == 0)
+                    queue.offer(item);
+            }
+        }
+        return count == param1;
+    }
+}

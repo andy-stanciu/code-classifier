@@ -1,0 +1,38 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (t.equals("")) {
+            return "";
+        }
+        Map<Character, Integer> countT = new HashMap<>();
+        Map<Character, Integer> var1 = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            countT.put(c, 1 + countT.getOrDefault(c, 0));
+        }
+        int have = 0, need = countT.size();
+        int[] res = { -1, -1 };
+        int resLen = Integer.MAX_VALUE;
+        int l = 0;
+        for (int r = 0; r < s.length(); r++) {
+            char c = s.charAt(r);
+            var1.put(c, 1 + var1.getOrDefault(c, 0));
+            if (countT.containsKey(c) && var1.get(c).equals(countT.get(c))) {
+                have++;
+            }
+            while (have == need) {
+                if ((r - l + 1) < resLen) {
+                    res[0] = l;
+                    res[1] = r;
+                    resLen = r - l + 1;
+                }
+                var1.put(s.charAt(l), var1.get(s.charAt(l)) - 1);
+                if (countT.containsKey(s.charAt(l)) && var1.get(s.charAt(l)) < countT.get(s.charAt(l))) {
+                    have--;
+                }
+                l++;
+            }
+        }
+        int left = res[0], right = res[1];
+        return (resLen != Integer.MAX_VALUE) ? s.substring(left, right + 1) : "";
+    }
+}

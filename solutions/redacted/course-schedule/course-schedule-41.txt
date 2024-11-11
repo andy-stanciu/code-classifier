@@ -1,0 +1,35 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        int[] indegree = new int[param1];
+        // Construct the adjacency list and calculate indegrees
+        for (int[] prerequisite : prerequisites) {
+            int var1 = prerequisite[0];
+            int var2 = prerequisite[1];
+            adjList.get(var2).add(var1);
+            indegree[var1]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        Set<Integer> visited = new HashSet<>();
+        while (!queue.isEmpty()) {
+            int var1 = queue.poll();
+            visited.add(var1);
+            for (int neighbor : adjList.get(var1)) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0) {
+                    queue.offer(neighbor);
+                }
+            }
+        }
+        return visited.size() == param1;
+    }
+}

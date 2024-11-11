@@ -1,0 +1,32 @@
+class Solution {
+
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int[][] ansArray = new int[obstacleGrid.length][obstacleGrid[0].length];
+        if (obstacleGrid[0][0] == 1)
+            ansArray[0][0] = 0;
+        else
+            ansArray[0][0] = 1;
+        searchPaths(obstacleGrid, ansArray);
+        return ansArray[obstacleGrid.length - 1][obstacleGrid[0].length - 1];
+    }
+
+    public void searchPaths(int[][] obstacleGrid, int[][] ansArray) {
+        // memoization
+        for (int row = 0; row < ansArray.length; row++) {
+            for (int col = 0; col < ansArray[0].length; col++) {
+                if (row == 0 && col == 0)
+                    continue;
+                int back = 0, top = 0;
+                if (obstacleGrid[row][col] == 1) {
+                    ansArray[row][col] = 0;
+                    continue;
+                }
+                if (col - 1 >= 0)
+                    back = ansArray[row][col - 1];
+                if (row - 1 >= 0)
+                    top = ansArray[row - 1][col];
+                ansArray[row][col] = back + top;
+            }
+        }
+    }
+}

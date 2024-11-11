@@ -1,0 +1,39 @@
+class Solution {
+
+    public int method1(int[][] grid) {
+        int r = grid.length;
+        int c = grid[0].length;
+        //If the bottom-right corner is having blockage then there is no way to reach the destination.
+        if (grid[r - 1][c - 1] == 1)
+            return 0;
+        //Now assign a value 1 to the bottom-right cell to indicate there is one way to reach it.
+        grid[r - 1][c - 1] = 1;
+        //Now pre-calculate the last row
+        for (int i = c - 2; i >= 0; i--) {
+            if (grid[r - 1][i] == 1)
+                grid[r - 1][i] = 0;
+            else if (grid[r - 1][i + 1] == 1)
+                grid[r - 1][i] = 1;
+        }
+        //pre-calculate the last column
+        for (int i = r - 2; i >= 0; i--) {
+            if (grid[i][c - 1] == 1)
+                grid[i][c - 1] = 0;
+            else if (grid[i + 1][c - 1] == 1)
+                grid[i][c - 1] = 1;
+        }
+        //Now based on the cell value process each of the remaining cells
+        //1. if the cell is having blockade then assign a value 0 to indicate there is no way to reach the destination
+        //2. Otherwise sum up the possible ways from right cell or the cell below.
+        for (int i = r - 2; i >= 0; i--) {
+            for (int j = c - 2; j >= 0; j--) {
+                if (grid[i][j] == 1) {
+                    grid[i][j] = 0;
+                } else {
+                    grid[i][j] = grid[i + 1][j] + grid[i][j + 1];
+                }
+            }
+        }
+        return grid[0][0];
+    }
+}

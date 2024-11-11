@@ -1,0 +1,71 @@
+class Solution {
+
+    public int method1(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        if (m == 0 || n == 0) {
+            return 0;
+        }
+        if (m == 1 && n == 1) {
+            if (obstacleGrid[0][0] == 1) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+        int[][] dp = new int[m][n];
+        dp[0][0] = 0;
+        int Hflag = 0;
+        for (int i = 1; i < m; i++) {
+            if (obstacleGrid[i - 1][0] == 1 || obstacleGrid[i][0] == 1) {
+                Hflag = 1;
+            }
+            if (Hflag == 0) {
+                dp[i][0] = 1;
+            } else {
+                dp[i][0] = 0;
+            }
+        }
+        int Vflag = 0;
+        for (int i = 1; i < n; i++) {
+            if (obstacleGrid[0][i - 1] == 1 || obstacleGrid[0][i] == 1) {
+                Vflag = 1;
+            }
+            if (Vflag == 0) {
+                dp[0][i] = 1;
+            } else {
+                dp[0][i] = 0;
+            }
+        }
+        if (m == 1) {
+            return dp[0][n - 1];
+        }
+        if (n == 1) {
+            return dp[m - 1][0];
+        }
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = obstacleGrid[i][j] == 1 ? 0 : ((obstacleGrid[i][j - 1] != 1 ? dp[i][j - 1] : 0) + (obstacleGrid[i - 1][j] != 1 ? dp[i - 1][j] : 0));
+                System.out.print(dp[i][j] + " ");
+            }
+            System.out.println();
+        }
+        return dp[m - 1][n - 1];
+    }
+}
+/*
+1\uFF1A\u786E\u5B9Adp\u6570\u7EC4\u7684\u542B\u4E49\u4EE5\u53CAdp\u6570\u7EC4\u4E0B\u6807\u7684\u542B\u4E49
+    dp[i][j]  [i][j]\u4F4D\u7F6E\u7684\u4E0D\u5305\u542B\u969C\u788D\u7269\u7684\u603B\u8DEF\u5F84\u6570\u662Fdp[i][j]
+2\uFF1A\u786E\u5B9A\u9012\u63A8\u516C\u5F0F
+    dp[i][j] = obstacleGrid[i][j] == 1 ? 0 : ((obstacleGrid[i][j - 1] != 1 ? dp[i][j - 1] : 0) + (obstacleGrid[i - 1][j] != 1 ? dp[i - 1][j] : 0));
+3\uFF1Adp\u6570\u7EC4\u5982\u4F55\u521D\u59CB\u5316
+    dp[0][0] = 0
+    dp[i][0] :  obstacleGrid[i-1][0] == 1 ||  obstacleGrid[i][0] == 1? \u540E\u9762\u7684\u90FD\u662F0
+    dp[0][i] :  obstacleGrid[0][i-1] == 1 ||  obstacleGrid[0][i] == 1? \u540E\u9762\u7684\u90FD\u662F0
+4\uFF1A\u786E\u5B9A\u904D\u5386\u987A\u5E8F
+    \u4ECE\u5DE6\u5F80\u53F3\u904D\u5386
+    \u4ECE\u4E0A\u5F80\u4E0B\u904D\u5386
+5\uFF1A\u4E3E\u4F8B\u63A8\u5BFCdp\u6570\u7EC4
+    dp[3][1] = dp[2][1] + dp[3][0]
+    dp[2][1] = dp[1][0] + dp[0][1]
+*/

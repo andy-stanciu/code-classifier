@@ -1,0 +1,39 @@
+class Solution {
+
+    public boolean canFinish(int n, int[][] pre) {
+        // Creating the Adjacency List
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<Integer>());
+        }
+        int m = pre.length;
+        for (int i = 0; i < m; i++) {
+            adj.get(pre[i][0]).add(pre[i][1]);
+        }
+        // Indegree
+        int[] deg = new int[n];
+        for (int i = 0; i < n; i++) {
+            for (int node : adj.get(i)) {
+                deg[node]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (deg[i] == 0)
+                q.add(i);
+        }
+        List<Integer> top = new ArrayList<>();
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            top.add(node);
+            for (int it : adj.get(node)) {
+                deg[it]--;
+                if (deg[it] == 0)
+                    q.add(it);
+            }
+        }
+        if (top.size() == n)
+            return true;
+        return false;
+    }
+}

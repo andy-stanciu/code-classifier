@@ -1,0 +1,29 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (t.length() > s.length() || s.isEmpty() || t.isEmpty())
+            return "";
+        int[] reqCharCount = new int[128];
+        for (char c : t.toCharArray()) {
+            reqCharCount[c]++;
+        }
+        int left = 0, method1 = Integer.MAX_VALUE, requiredChars = t.length();
+        String result = "";
+        for (int right = 0; right < s.length(); right++) {
+            reqCharCount[s.charAt(right)]--;
+            if (reqCharCount[s.charAt(right)] >= 0)
+                requiredChars--;
+            while (requiredChars == 0) {
+                if (right - left + 1 < method1) {
+                    method1 = right - left + 1;
+                    result = s.substring(left, right + 1);
+                }
+                reqCharCount[s.charAt(left)]++;
+                if (reqCharCount[s.charAt(left)] > 0)
+                    requiredChars++;
+                left++;
+            }
+        }
+        return result;
+    }
+}

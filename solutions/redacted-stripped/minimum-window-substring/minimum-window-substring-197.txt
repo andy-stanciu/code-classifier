@@ -1,0 +1,56 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (t.length() > s.length()) {
+            return "";
+        }
+        if (s.length() == 1 && t.length() == 1) {
+            return s.charAt(0) == t.charAt(0) ? s : "";
+        }
+        Map<Character, Integer> var1 = new HashMap<>();
+        Map<Character, Integer> tFrequency = new HashMap<>();
+        for (int i = 0; i < t.length(); ++i) {
+            char c = t.charAt(i);
+            tFrequency.put(c, tFrequency.getOrDefault(c, 0) + 1);
+        }
+        int i = 0;
+        int j = 0;
+        int n = s.length();
+        int result = Integer.MAX_VALUE;
+        int[] indx = new int[2];
+        while (j < n) {
+            char c = s.charAt(j);
+            var1.put(c, var1.getOrDefault(c, 0) + 1);
+            while (contains(var1, tFrequency)) {
+                char q = s.charAt(i);
+                var1.put(q, var1.get(q) - 1);
+                if (j - i + 1 < result) {
+                    result = j - i + 1;
+                    indx[0] = i;
+                    indx[1] = j;
+                }
+                ++i;
+            }
+            ++j;
+        }
+        return s.substring(indx[0], result == Integer.MAX_VALUE ? indx[0] : indx[0] + result);
+    }
+
+    public void print(Map<Character, Integer> map) {
+        for (char c : map.keySet()) {
+            System.out.print(c + " : " + map.get(c) + " | ");
+        }
+        System.out.println();
+    }
+
+    public boolean contains(Map<Character, Integer> map1, Map<Character, Integer> map2) {
+        for (char c : map2.keySet()) {
+            if (!map1.containsKey(c))
+                return false;
+            if (map1.get(c) < map2.get(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

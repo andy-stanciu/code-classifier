@@ -1,0 +1,34 @@
+class Solution {
+
+    private static final HashSet<Integer> EMPTY = new HashSet<Integer>();
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        HashMap<Integer, HashSet<Integer>> adj = new HashMap<>();
+        int[] indegrees = new int[numCourses];
+        for (int[] prerequisitePair : prerequisites) {
+            int course = prerequisitePair[0];
+            int prerequisite = prerequisitePair[1];
+            adj.putIfAbsent(course, new HashSet<Integer>());
+            adj.get(course).add(prerequisite);
+            indegrees[prerequisite]++;
+        }
+        int visited = 0;
+        ArrayDeque<Integer> q = new ArrayDeque<>();
+        for (int course = 0; course < indegrees.length; course++) {
+            if (indegrees[course] == 0) {
+                q.offer(course);
+            }
+        }
+        while (!q.isEmpty()) {
+            int course = q.poll();
+            visited++;
+            for (int nei : adj.getOrDefault(course, EMPTY)) {
+                indegrees[nei]--;
+                if (indegrees[nei] == 0) {
+                    q.offer(nei);
+                }
+            }
+        }
+        return visited == numCourses;
+    }
+}

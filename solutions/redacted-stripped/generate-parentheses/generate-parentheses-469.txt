@@ -1,0 +1,45 @@
+class Solution {
+
+    class Pos {
+
+        int open;
+
+        int close;
+
+        String bracket;
+
+        Pos(int open, int close, String bracket) {
+            this.open = open;
+            this.close = close;
+            this.bracket = bracket;
+        }
+    }
+
+    public List<String> method1(int n) {
+        Stack<Pos> stack = new Stack<>();
+        List<String> res = new ArrayList();
+        stack.push(new Pos(1, 0, "("));
+        while (!stack.isEmpty()) {
+            Pos pos = stack.pop();
+            int close = pos.close;
+            int open = pos.open;
+            String bracket = pos.bracket;
+            if (close == n && open == n) {
+                res.add(pos.bracket);
+            }
+            if (open < n) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(bracket);
+                sb.append("(");
+                stack.push(new Pos(open + 1, close, sb.toString()));
+            }
+            if (close < open) {
+                StringBuilder sb1 = new StringBuilder();
+                sb1.append(bracket);
+                sb1.append(")");
+                stack.push(new Pos(open, close + 1, sb1.toString()));
+            }
+        }
+        return res;
+    }
+}

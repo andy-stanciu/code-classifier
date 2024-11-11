@@ -1,0 +1,41 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> hm = new HashMap<>();
+        int i = 0, j = 0, n = s.length(), m = t.length();
+        int st = 0, end = 0, max = Integer.MAX_VALUE;
+        int flag = 0;
+        for (int x = 0; x < m; x++) {
+            hm.put(t.charAt(x), hm.getOrDefault(t.charAt(x), 0) + 1);
+        }
+        int cnt = hm.size();
+        while (j < n) {
+            if (hm.containsKey(s.charAt(j))) {
+                hm.put(s.charAt(j), hm.get(s.charAt(j)) - 1);
+                if (hm.get(s.charAt(j)) == 0)
+                    cnt--;
+            }
+            if (cnt == 0) {
+                while (cnt == 0) {
+                    flag = 1;
+                    if (hm.containsKey(s.charAt(i))) {
+                        if (max > j - i + 1) {
+                            max = j - i + 1;
+                            st = i;
+                            end = j;
+                        }
+                        hm.put(s.charAt(i), hm.get(s.charAt(i)) + 1);
+                        if (hm.get(s.charAt(i)) > 0) {
+                            cnt++;
+                        }
+                    }
+                    i++;
+                }
+            }
+            j++;
+        }
+        if (flag == 0)
+            return "";
+        return s.substring(st, end + 1);
+    }
+}

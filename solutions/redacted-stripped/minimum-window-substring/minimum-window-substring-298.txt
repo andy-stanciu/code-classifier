@@ -1,0 +1,40 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s.length() == 0 || t.length() == 0 || s.length() < t.length()) {
+            return "";
+        }
+        Map<Character, Integer> targetFreq = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            targetFreq.put(c, targetFreq.getOrDefault(c, 0) + 1);
+        }
+        int required = targetFreq.size();
+        int formed = 0;
+        int left = 0;
+        int right = 0;
+        int minLen = Integer.MAX_VALUE;
+        int minStart = 0;
+        Map<Character, Integer> var1 = new HashMap<>();
+        while (right < s.length()) {
+            char currentChar = s.charAt(right);
+            var1.put(currentChar, var1.getOrDefault(currentChar, 0) + 1);
+            if (targetFreq.containsKey(currentChar) && var1.get(currentChar).intValue() == targetFreq.get(currentChar).intValue()) {
+                formed++;
+            }
+            while (left <= right && formed == required) {
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    minStart = left;
+                }
+                char leftChar = s.charAt(left);
+                var1.put(leftChar, var1.get(leftChar) - 1);
+                if (targetFreq.containsKey(leftChar) && var1.get(leftChar).intValue() < targetFreq.get(leftChar).intValue()) {
+                    formed--;
+                }
+                left++;
+            }
+            right++;
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart + minLen);
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    Set<Integer> set = new HashSet();
+
+    public boolean canFinish(int n, int[][] prearr) {
+        int[] count = new int[n];
+        ArrayList<Integer>[] pre = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            pre[i] = new ArrayList();
+        }
+        for (int[] vis : prearr) {
+            int parent = vis[0];
+            int child = vis[1];
+            count[parent]++;
+            pre[child].add(parent);
+        }
+        for (int i = 0; i < count.length; i++) {
+            if (!set.contains(i)) {
+                if (count[i] == 0) {
+                    n = DFS(count, pre, i, n);
+                }
+            }
+        }
+        return n == 0 ? true : false;
+    }
+
+    public int DFS(int[] count, ArrayList<Integer>[] pre, int param1, int n) {
+        set.add(param1);
+        n--;
+        if (pre[param1].size() == 0) {
+            return n;
+        }
+        for (int neig : pre[param1]) {
+            count[neig]--;
+            if (count[neig] == 0) {
+                if (!set.contains(neig)) {
+                    n = DFS(count, pre, neig, n);
+                }
+            }
+        }
+        return n;
+    }
+}

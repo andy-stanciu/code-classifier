@@ -1,0 +1,35 @@
+class Solution {
+
+    public List<Double> method1(TreeNode root) {
+        List<Double> var1 = new ArrayList<>();
+        if (root == null)
+            return var1;
+        Queue<TreeNode> q = new LinkedList<>();
+        q.offer(root);
+        // add null since root has a level too (first level)
+        q.offer(null);
+        //number of nodes
+        int n = 0;
+        double sum = 0;
+        while (!q.isEmpty()) {
+            TreeNode current = q.poll();
+            if (current == null) {
+                //are we at the end of a level?
+                var1.add(sum / n);
+                sum = n = 0;
+                if (//If there is more items in queue that means we have more levels, so add null after them to know the ending
+                !q.isEmpty())
+                    q.offer(null);
+            } else {
+                //we are still in a level, add childs, increment node counts and sum
+                sum += current.val;
+                n++;
+                if (current.left != null)
+                    q.offer(current.left);
+                if (current.right != null)
+                    q.offer(current.right);
+            }
+        }
+        return var1;
+    }
+}

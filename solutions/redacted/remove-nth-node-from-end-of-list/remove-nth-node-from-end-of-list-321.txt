@@ -1,0 +1,39 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int n) {
+        // Initialize dummy ListNode and idx for size
+        ListNode dummy = head;
+        int idx = 0;
+        while (dummy != null) {
+            dummy = dummy.next;
+            idx++;
+        }
+        // List has one element so return null
+        if (idx == 1)
+            return null;
+        dummy = head;
+        ListNode swap = null;
+        boolean swapComplete = false;
+        for (int i = 1; i <= idx; i++) {
+            // we are at the n-1 node from the end of the list
+            if (i == idx - n) {
+                swap = dummy;
+            } else // we are at the n+1 node from the end of the list
+            if (i == idx - n + 2 && swap != null) {
+                swap.next = dummy;
+                swapComplete = true;
+                break;
+            }
+            dummy = dummy.next;
+        }
+        // we found node to modify in swap, but never completed swap,
+        // so node marked for removal is at the end of list
+        if (!swapComplete && swap != null)
+            swap.next = null;
+        else // we never found node to modify, so target is head
+        if (swap == null) {
+            head = head.next;
+        }
+        return head;
+    }
+}

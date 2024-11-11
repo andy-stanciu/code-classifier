@@ -1,0 +1,45 @@
+class Solution {
+
+    public boolean check(Map<Character, Integer> sm, Map<Character, Integer> tm) {
+        for (Map.Entry<Character, Integer> entry : tm.entrySet()) {
+            char key = entry.getKey();
+            int value = entry.getValue();
+            if (sm.getOrDefault(key, 0) < value) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public String method1(String s, String t) {
+        if (s.length() < t.length()) {
+            return "";
+        }
+        int r = 0;
+        int l = 0;
+        String ans = "";
+        boolean contains = false;
+        LinkedHashMap<Character, Integer> tm = new LinkedHashMap<>();
+        for (char c : t.toCharArray()) {
+            tm.put(c, tm.getOrDefault(c, 0) + 1);
+        }
+        LinkedHashMap<Character, Integer> sm = new LinkedHashMap<>();
+        while (r < s.length()) {
+            sm.put(s.charAt(r), sm.getOrDefault(s.charAt(r), 0) + 1);
+            r++;
+            contains = check(sm, tm);
+            while (contains) {
+                if (ans.isEmpty() || (r - l < ans.length())) {
+                    ans = s.substring(l, r);
+                }
+                sm.put(s.charAt(l), sm.get(s.charAt(l)) - 1);
+                if (sm.get(s.charAt(l)) == 0) {
+                    sm.remove(s.charAt(l));
+                }
+                l++;
+                contains = check(sm, tm);
+            }
+        }
+        return ans;
+    }
+}

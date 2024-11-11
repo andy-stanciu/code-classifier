@@ -1,0 +1,40 @@
+class Solution {
+
+    public boolean if_Contains(Map<Character, Integer> ds_s, Map<Character, Integer> ds_t) {
+        if (ds_s.size() < ds_t.size())
+            return false;
+        else {
+            for (Map.Entry<Character, Integer> en : ds_t.entrySet()) {
+                if (!ds_s.containsKey(en.getKey()))
+                    return false;
+                else if (ds_s.get(en.getKey()) < en.getValue())
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public String method1(String s, String t) {
+        int n = s.length();
+        Map<Character, Integer> ds_s = new HashMap<>();
+        Map<Character, Integer> ds_t = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) ds_t.put(t.charAt(i), ds_t.getOrDefault(t.charAt(i), 0) + 1);
+        int r, l = 0, min_len = Integer.MAX_VALUE;
+        String ans = "";
+        for (r = 0; r < n; r++) {
+            ds_s.put(s.charAt(r), ds_s.getOrDefault(s.charAt(r), 0) + 1);
+            while (if_Contains(ds_s, ds_t)) {
+                if (r - l + 1 <= min_len) {
+                    min_len = r - l + 1;
+                    ans = s.substring(l, r + 1);
+                }
+                int temp = ds_s.get(s.charAt(l)) - 1;
+                ds_s.put(s.charAt(l), temp);
+                if (ds_s.get(s.charAt(l)) == 0)
+                    ds_s.remove(s.charAt(l));
+                l++;
+            }
+        }
+        return ans;
+    }
+}

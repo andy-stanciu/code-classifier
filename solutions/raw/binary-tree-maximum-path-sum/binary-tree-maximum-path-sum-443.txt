@@ -1,0 +1,47 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    static class Pair {
+
+        int rootToNodeMaxSum;
+
+        int nodeToNodeMaxSum;
+
+        public Pair(int nodeToNodeMaxSum, int rootToNodeMaxSum) {
+            this.nodeToNodeMaxSum = nodeToNodeMaxSum;
+            this.rootToNodeMaxSum = rootToNodeMaxSum;
+        }
+    }
+
+    public int maxPathSum(TreeNode root) {
+        if (root == null)
+            return 0;
+        return helper(root).nodeToNodeMaxSum;
+    }
+
+    public Pair helper(TreeNode root) {
+        if (root == null)
+            return new Pair(Integer.MIN_VALUE, Integer.MIN_VALUE);
+        Pair left = helper(root.left);
+        Pair right = helper(root.right);
+        int rootToNodeMaxSum = Math.max(Math.max(left.rootToNodeMaxSum, right.rootToNodeMaxSum), 0) + root.val;
+        int maxSumInLeftOrRightSubtree = Math.max(left.nodeToNodeMaxSum, right.nodeToNodeMaxSum);
+        int maxSumWithLeftSubtreeRootAndRightSubtree = Math.max(0, left.rootToNodeMaxSum) + root.val + Math.max(0, right.rootToNodeMaxSum);
+        int nodeToNodeMaxSum = Math.max(maxSumWithLeftSubtreeRootAndRightSubtree, Math.max(rootToNodeMaxSum, maxSumInLeftOrRightSubtree));
+        return new Pair(nodeToNodeMaxSum, rootToNodeMaxSum);
+    }
+}

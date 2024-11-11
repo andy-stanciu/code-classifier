@@ -1,0 +1,41 @@
+class Solution {
+
+    //this is the list the contains all the generated parenthese
+    List<String> result = new LinkedList<String>();
+
+    public List<String> generateParenthesis(int n) {
+        //construct the parenthese combinations
+        combination(n, new StringBuilder(), 0);
+        return result;
+    }
+
+    void combination(int index, StringBuilder sb, int stack) {
+        if (index == 0 && stack == 0) {
+            result.add(sb.toString());
+            return;
+        }
+        int len = sb.length();
+        if (index > 0) {
+            //if there are still room for opening one more parenthese
+            //now that we are opening a new parenthese, then one more parenthese is now available for closing
+            stack++;
+            //open the parenthese, reduce the available number of parenthese by 1
+            combination(index - 1, sb.append("("), stack);
+            //restore state to before opening the parenthese, remove the recently open parenthese
+            sb.setLength(len);
+            //remove the number of available closing parenthese
+            stack--;
+        }
+        if (stack > 0) {
+            //there is still room for closing one parenthese
+            //we are closing a parenthese, then reduce the number of availble parenthese for closing
+            stack--;
+            //cloe the parenthese. the number of available open parenthese is still the same
+            combination(index, sb.append(")"), stack);
+            //restore the state to the state before closing the parenthese
+            sb.setLength(len);
+            //restore the number of available closing parenthese
+            stack++;
+        }
+    }
+}

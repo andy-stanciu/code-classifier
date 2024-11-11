@@ -1,0 +1,27 @@
+class Solution {
+
+    private HashMap<TreeNode, Integer> map;
+
+    public int method1(TreeNode root) {
+        map = new HashMap<>();
+        int[] res = new int[1];
+        res[0] = Integer.MIN_VALUE;
+        solve(root, res);
+        return res[0];
+    }
+
+    private int solve(TreeNode root, int[] res) {
+        if (root == null) {
+            return 0;
+        }
+        if (map.containsKey(root)) {
+            return map.get(root);
+        }
+        int l = Math.max(0, solve(root.left, res));
+        int r = Math.max(0, solve(root.right, res));
+        res[0] = Math.max(res[0], root.val + l + r);
+        int temp = root.val + Math.max(l, r);
+        map.put(root, temp);
+        return temp;
+    }
+}

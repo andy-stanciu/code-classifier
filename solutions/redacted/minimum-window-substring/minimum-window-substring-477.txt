@@ -1,0 +1,49 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        //couneter for character that we need to cover string t
+        Map<Character, Integer> need = new HashMap<>();
+        //read through t and fill in counter
+        for (char c : t.toCharArray()) {
+            need.put(c, need.getOrDefault(c, 0) + 1);
+        }
+        //initialize window
+        Map<Character, Integer> var1 = new HashMap<>();
+        int left = 0, right = 0;
+        //valid - to count how many characters in t are in the current window
+        int valid = 0;
+        //keep track of starting index of the current minimum substring and len
+        int start = 0, len = Integer.MAX_VALUE;
+        //slide window to look for the minimum substring
+        while (right < s.length()) {
+            //expend window on the right
+            char c = s.charAt(right);
+            right++;
+            //windonw only keeps track of characters that are also in t
+            if (need.containsKey(c)) {
+                var1.put(c, var1.getOrDefault(c, 0) + 1);
+                if (var1.get(c).equals(need.get(c))) {
+                    valid++;
+                }
+            }
+            //only start shrinking the window when the window has all the characters in t
+            while (valid == need.size()) {
+                //update the substring info
+                if (right - left < len) {
+                    start = left;
+                    len = right - left;
+                }
+                //shirnk window from the left
+                char d = s.charAt(left);
+                left++;
+                if (need.containsKey(d)) {
+                    if (var1.get(d).equals(need.get(d))) {
+                        valid--;
+                    }
+                    var1.put(d, var1.getOrDefault(d, 0) - 1);
+                }
+            }
+        }
+        return len < Integer.MAX_VALUE ? s.substring(start, start + len) : "";
+    }
+}

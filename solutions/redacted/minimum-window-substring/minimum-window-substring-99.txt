@@ -1,0 +1,63 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int left = 0;
+        int right = 0;
+        TreeMap<Character, Integer> mp1 = new TreeMap<>();
+        // sliding window technique
+        // here the characters present in the string t would start with positive values
+        // in the map
+        // else the remaining would start with the negative values in the map
+        for (int k = 0; k < t.length(); k++) {
+            if (!mp1.containsKey(t.charAt(k))) {
+                mp1.put(t.charAt(k), 1);
+            } else {
+                mp1.put(t.charAt(k), mp1.get(t.charAt(k)) + 1);
+            }
+        }
+        // initial map populated
+        int cnt = 0;
+        // when the value of cnt == t.length() it implies all the characters are present
+        // in the given substring of s
+        int min_len = Integer.MAX_VALUE;
+        int st_ind = -1;
+        int end_ind = -1;
+        while (right <= s.length() - 1) {
+            if (mp1.containsKey(s.charAt(right))) {
+                int val = mp1.get(s.charAt(right));
+                if (val > 0) {
+                    cnt++;
+                }
+                mp1.put(s.charAt(right), val - 1);
+            } else {
+                mp1.put(s.charAt(right), -1);
+            }
+            int ind = 0;
+            if (cnt == t.length()) {
+                ind = 1;
+                while (cnt == t.length()) {
+                    int v1 = mp1.get(s.charAt(left));
+                    if (v1 + 1 <= 0) {
+                        mp1.put(s.charAt(left), v1 + 1);
+                        left++;
+                    } else {
+                        break;
+                    }
+                }
+                if (ind == 1) {
+                    if (right - left + 1 < min_len) {
+                        st_ind = left;
+                        end_ind = right;
+                        min_len = right - left + 1;
+                    }
+                }
+            }
+            right++;
+        }
+        if (st_ind == -1 || end_ind == -1) {
+            return "";
+        } else {
+            return s.substring(st_ind, end_ind + 1);
+        }
+    }
+}

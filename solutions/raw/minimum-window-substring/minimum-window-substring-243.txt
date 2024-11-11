@@ -1,0 +1,58 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int[] matchCounters = new int[128];
+        int totalMatchCounters = 0;
+        boolean[] charToMatch = new boolean[128];
+        for (char c : t.toCharArray()) {
+            matchCounters[c]++;
+            totalMatchCounters++;
+            charToMatch[c] = true;
+        }
+        int m = s.length();
+        int left = 0;
+        int right = 0;
+        int minLeft = 0;
+        int minRight = 0;
+        int minWindow = m + 1;
+        while (true) {
+            if (totalMatchCounters > 0) {
+                if (right == m) {
+                    break;
+                }
+                // if our window is in-complete on characters, move right
+                char rightChar = s.charAt(right);
+                if (charToMatch[rightChar]) {
+                    if (--matchCounters[rightChar] >= 0) {
+                        // don\'t count surpluses by only decrementing the total
+                        // when the corresponding counter isn\'t negative
+                        totalMatchCounters--;
+                    }
+                }
+                right++;
+            } else {
+                if (left == m) {
+                    break;
+                }
+                // the window is complete so, move left until a minimum-sized
+                // window is found (when the window goes to incomplete)
+                char leftChar = s.charAt(left);
+                if (charToMatch[leftChar]) {
+                    if (++matchCounters[leftChar] > 0) {
+                        totalMatchCounters++;
+                        // the window just went incomplete. remember the
+                        // window if it was the minimum.
+                        int window = right - left;
+                        if (window < minWindow) {
+                            minWindow = window;
+                            minLeft = left;
+                            minRight = right;
+                        }
+                    }
+                }
+                left++;
+            }
+        }
+        return s.substring(minLeft, minRight);
+    }
+}

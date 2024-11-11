@@ -1,0 +1,25 @@
+class Solution {
+
+    public List<Double> averageOfLevels(TreeNode root) {
+        List<Double> result = new ArrayList<>();
+        Map<Integer, List<Integer>> levelMap = new HashMap<>();
+        dfs(root, 0, levelMap);
+        int level = 0;
+        while (levelMap.containsKey(level)) {
+            List<Integer> levelValues = levelMap.get(level);
+            double average = levelValues.stream().mapToDouble(Integer::doubleValue).average().orElse(0.0);
+            result.add(average);
+            level++;
+        }
+        return result;
+    }
+
+    private void dfs(TreeNode root, int height, Map<Integer, List<Integer>> levelMap) {
+        if (root == null)
+            return;
+        levelMap.putIfAbsent(height, new ArrayList<>());
+        levelMap.get(height).add(root.val);
+        dfs(root.left, height + 1, levelMap);
+        dfs(root.right, height + 1, levelMap);
+    }
+}

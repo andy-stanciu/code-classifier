@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>(param1);
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            int var1 = prerequisite[0];
+            int var2 = prerequisite[1];
+            adjList.get(var1).add(var2);
+        }
+        int[] visited = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (hasCycle(i, adjList, visited)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean hasCycle(int var1, List<List<Integer>> adjList, int[] visited) {
+        if (visited[var1] == 1) {
+            return true;
+        }
+        if (visited[var1] == 2) {
+            return false;
+        }
+        visited[var1] = 1;
+        for (int var2 : adjList.get(var1)) {
+            if (hasCycle(var2, adjList, visited)) {
+                return true;
+            }
+        }
+        visited[var1] = 2;
+        return false;
+    }
+}

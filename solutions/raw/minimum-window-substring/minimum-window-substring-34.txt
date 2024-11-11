@@ -1,0 +1,46 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (t.length() > s.length()) {
+            return "";
+        }
+        int map[] = new int[128], len = t.length();
+        for (int i = 0; i < len; i++) {
+            map[t.charAt(i)]++;
+        }
+        StringBuilder sb = new StringBuilder();
+        String min = null;
+        int[] currMap = new int[128];
+        for (int i = 0; i < len; i++) {
+            sb.append(s.charAt(i));
+            currMap[s.charAt(i)]++;
+        }
+        if (Arrays.equals(currMap, map)) {
+            return sb.toString();
+        }
+        int left = 0, right = len;
+        while (right < s.length()) {
+            sb.append(s.charAt(right));
+            currMap[s.charAt(right)]++;
+            while (checkMap(currMap, map)) {
+                if (min == null || sb.length() < min.length()) {
+                    min = sb.toString();
+                }
+                currMap[s.charAt(left)]--;
+                sb.deleteCharAt(0);
+                left++;
+            }
+            right++;
+        }
+        return min == null ? "" : min;
+    }
+
+    public boolean checkMap(int[] currMap, int[] map) {
+        for (int i = 0; i < currMap.length; i++) {
+            if (currMap[i] < map[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

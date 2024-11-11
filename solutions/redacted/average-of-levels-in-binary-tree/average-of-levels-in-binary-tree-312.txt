@@ -1,0 +1,49 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public int getHeight(TreeNode root) {
+        if (root == null)
+            return 0;
+        return 1 + Math.max(getHeight(root.left), getHeight(root.right));
+        // logN time
+    }
+
+    public void helper(TreeNode root, int level, double[] sum, double[] cnt, double[] avg) {
+        if (root == null)
+            return;
+        helper(root.left, level - 1, sum, cnt, avg);
+        if (level == 1) {
+            cnt[0]++;
+            sum[0] += root.val;
+            avg[0] = sum[0] / cnt[0];
+        }
+        helper(root.right, level - 1, sum, cnt, avg);
+    }
+
+    public List<Double> method1(TreeNode root) {
+        List<Double> ans = new ArrayList<>();
+        int height = getHeight(root);
+        for (int i = 1; i <= height; i++) {
+            double[] sum = { 0 };
+            double[] cnt = { 0 };
+            double[] avg = { 0 };
+            helper(root, i, sum, cnt, avg);
+            ans.add(avg[0]);
+        }
+        return ans;
+    }
+}

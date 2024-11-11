@@ -1,0 +1,53 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        // Create a map to store course dependencies
+        Map<Integer, List<Integer>> depMap = new HashMap<>();
+        // Initialize the map with empty lists for each course
+        for (int i = 0; i < param1; i++) {
+            depMap.put(i, new ArrayList<>());
+        }
+        // Populate the map with the given prerequisites
+        for (int[] edge : prerequisites) {
+            // Note the reversal of edge[0] and edge[1]
+            depMap.get(edge[1]).add(edge[0]);
+        }
+        // Track the visit status of each node:
+        // 0 - unvisited, 1 - visiting (in the current DFS path), 2 - visited (processed)
+        int[] visitStatus = new int[param1];
+        // Check all courses to ensure no cycle exists
+        for (int i = 0; i < param1; i++) {
+            if (visitStatus[i] == 0) {
+                // If the node is unvisited
+                if (!checkDFS(depMap, visitStatus, i)) {
+                    // If a cycle is detected
+                    return false;
+                }
+            }
+        }
+        // No cycles detected
+        return true;
+    }
+
+    private boolean checkDFS(Map<Integer, List<Integer>> depMap, int[] visitStatus, int param2) {
+        // If the course is in the visiting state, we have found a cycle
+        if (visitStatus[param2] == 1) {
+            return false;
+        }
+        // If the course is in the visited state, no need to check again
+        if (visitStatus[param2] == 2) {
+            return true;
+        }
+        // Mark the course as visiting
+        visitStatus[param2] = 1;
+        // Recursively check all prerequisites
+        for (int prereq : depMap.get(param2)) {
+            if (!checkDFS(depMap, visitStatus, prereq)) {
+                return false;
+            }
+        }
+        // Mark the course as visited
+        visitStatus[param2] = 2;
+        return true;
+    }
+}

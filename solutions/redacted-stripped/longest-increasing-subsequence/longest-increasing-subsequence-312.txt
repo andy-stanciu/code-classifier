@@ -1,0 +1,26 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        int[][] dp = new int[nums.length][nums.length + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        return solve(nums, dp, 0, -1);
+    }
+
+    public int solve(int[] nums, int[][] dp, int curr, int prev) {
+        if (curr == nums.length) {
+            return 0;
+        }
+        if (dp[curr][prev + 1] != -1) {
+            return dp[curr][prev + 1];
+        }
+        int include = 0;
+        if (prev == -1 || nums[curr] > nums[prev]) {
+            include = 1 + solve(nums, dp, curr + 1, curr);
+        }
+        int exclude = solve(nums, dp, curr + 1, prev);
+        dp[curr][prev + 1] = Math.max(include, exclude);
+        return dp[curr][prev + 1];
+    }
+}

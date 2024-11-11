@@ -1,0 +1,44 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int low = 0;
+        int high = 0;
+        Map<Character, Integer> targetCharsCount = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            targetCharsCount.put(ch, targetCharsCount.getOrDefault(ch, 0) + 1);
+        }
+        int unMatchedKeys = targetCharsCount.size();
+        String result = "";
+        int minLen = Integer.MAX_VALUE;
+        while (high < s.length()) {
+            char highChar = s.charAt(high);
+            high++;
+            if (targetCharsCount.containsKey(highChar)) {
+                targetCharsCount.put(highChar, targetCharsCount.get(highChar) - 1);
+                if (targetCharsCount.get(highChar) == 0) {
+                    // foud one match
+                    unMatchedKeys--;
+                }
+            }
+            // chech if we should move low pointer
+            while (unMatchedKeys == 0) {
+                // update result first
+                if (high - low < minLen) {
+                    minLen = high - low;
+                    result = s.substring(low, high);
+                }
+                // add char back to targetCharsCount only if it is related
+                char lowChar = s.charAt(low);
+                low++;
+                if (targetCharsCount.containsKey(lowChar)) {
+                    targetCharsCount.put(lowChar, targetCharsCount.get(lowChar) + 1);
+                    // update unMatched
+                    if (targetCharsCount.get(lowChar) > 0) {
+                        unMatchedKeys++;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}

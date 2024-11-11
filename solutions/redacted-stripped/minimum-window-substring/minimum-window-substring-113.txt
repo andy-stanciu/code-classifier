@@ -1,0 +1,40 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s == null || t == null || s.length() < t.length()) {
+            return "";
+        }
+        Map<Character, Integer> countMap = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            countMap.put(ch, countMap.getOrDefault(ch, 0) + 1);
+        }
+        int left = 0;
+        int right = 0;
+        int formed = 0;
+        int start = 0;
+        int required = countMap.size();
+        int minLen = Integer.MAX_VALUE;
+        Map<Character, Integer> var1 = new HashMap<>();
+        while (right < s.length()) {
+            char c = s.charAt(right);
+            var1.put(c, var1.getOrDefault(c, 0) + 1);
+            if (countMap.containsKey(c) && var1.get(c).intValue() == countMap.get(c).intValue()) {
+                formed++;
+            }
+            while (left <= right && formed == required) {
+                c = s.charAt(left);
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    start = left;
+                }
+                var1.put(c, var1.get(c) - 1);
+                if (countMap.containsKey(c) && var1.get(c).intValue() < countMap.get(c).intValue()) {
+                    formed--;
+                }
+                left++;
+            }
+            right++;
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(start, start + minLen);
+    }
+}

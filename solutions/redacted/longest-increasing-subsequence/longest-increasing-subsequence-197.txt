@@ -1,0 +1,85 @@
+/*Recursion ->TLE
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        int n=nums.length;
+        return fun(0,-1,nums,n);//i,p_i
+    }
+    public int fun(int i,int p_i,int[] nums,int n){
+        if(i>=n){
+            return 0; 
+        }
+        int len=0+fun(i+1,p_i,nums,n);
+        if(p_i==-1 || nums[i]>nums[p_i]){
+            len=Math.max(len,1+fun(i+1,i,nums,n));
+        }
+        return len;
+    }
+}*/
+/*Tabulation
+class Solution{
+    public int lengthOfLIS(int[] nums) {
+        int n=nums.length;
+        int[][] dp=new int[n+1][n+1];
+        for(int i=n-1;i>=0;i--){
+            for(int p_i=i-1;p_i>=-1;p_i--){
+                int len=0+dp[i+1][p_i+1];
+                if(p_i==-1 || nums[i]>nums[p_i]){
+                    len=Math.max(len,1+dp[i+1][i+1]);
+                }
+                dp[i][p_i+1]=len;
+            }
+        }
+        return dp[0][-1+1];
+    }
+}*/
+/*General
+class Solution{
+    public int lengthOfLIS(int[] nums) {
+        int n=nums.length;
+        int[] dp=new int[n];
+        Arrays.fill(dp,1);
+        int maxi=1;
+        for(int i=0;i<n;i++){
+            for(int p=0;p<i;p++){
+                if(nums[p]<nums[i]){
+                    dp[i]=Math.max(dp[p]+1,dp[i]);
+                }
+            }
+            maxi=Math.max(maxi,dp[i]);
+        }
+        return maxi;
+    }
+}*/
+//Binary search -> MOST OPTIMAL
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        List<Integer> l = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (l.isEmpty() || l.get(l.size() - 1) < nums[i]) {
+                l.add(nums[i]);
+            } else {
+                int ind = lb(l, nums[i]);
+                l.set(ind, nums[i]);
+            }
+        }
+        return l.size();
+    }
+
+    public int lb(List<Integer> al, int k) {
+        //LOWER BOND
+        int l = 0;
+        int h = al.size() - 1;
+        while (l <= h) {
+            int m = (l + h) / 2;
+            if (al.get(m) >= k) {
+                h = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+        return l;
+    }
+}

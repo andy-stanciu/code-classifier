@@ -1,0 +1,34 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s == null || t == null || s.length() < t.length()) {
+            return "";
+        }
+        // Frequency maps
+        // ASCII charset
+        int[] tFreq = new int[256];
+        for (char c : t.toCharArray()) {
+            tFreq[c]++;
+        }
+        int start = 0, minStart = 0, minLen = Integer.MAX_VALUE, count = 0;
+        for (int end = 0; end < s.length(); end++) {
+            if (--tFreq[s.charAt(end)] >= 0) {
+                // Found a character in t
+                count++;
+            }
+            // When all characters are found, try to shrink the window
+            while (count == t.length()) {
+                if (end - start + 1 < minLen) {
+                    minLen = end - start + 1;
+                    minStart = start;
+                }
+                // Exclude the start character and move start
+                if (++tFreq[s.charAt(start)] > 0) {
+                    count--;
+                }
+                start++;
+            }
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart + minLen);
+    }
+}

@@ -1,0 +1,30 @@
+class Solution {
+
+    public int method1(TreeNode root) {
+        if (root == null)
+            return 0;
+        int var1 = root.val;
+        Stack<TreeNode> nodes = new Stack<>();
+        Map<TreeNode, Integer> var2 = new HashMap<>();
+        nodes.push(root);
+        while (!nodes.isEmpty()) {
+            TreeNode node = nodes.pop();
+            if (var2.containsKey(node)) {
+                int left = Math.max(0, var2.getOrDefault(node.left, 0));
+                int right = Math.max(0, var2.getOrDefault(node.right, 0));
+                var2.put(node, node.val + Math.max(left, right));
+                int var3 = node.val + left + right;
+                if (var3 > var1)
+                    var1 = var3;
+            } else {
+                var2.put(node, 0);
+                nodes.push(node);
+                if (node.left != null)
+                    nodes.push(node.left);
+                if (node.right != null)
+                    nodes.push(node.right);
+            }
+        }
+        return var1;
+    }
+}

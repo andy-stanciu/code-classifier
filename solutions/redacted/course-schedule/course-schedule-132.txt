@@ -1,0 +1,39 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            adj.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        boolean[] pathVisited = new boolean[param1];
+        boolean[] visited = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (dfs(i, adj, pathVisited, visited)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(int idx, List<List<Integer>> adj, boolean[] pathVisited, boolean[] visited) {
+        if (pathVisited[idx])
+            return true;
+        if (visited[idx])
+            return false;
+        pathVisited[idx] = true;
+        visited[idx] = true;
+        for (int n : adj.get(idx)) {
+            if (pathVisited[n])
+                return true;
+            if (visited[n] == false) {
+                if (dfs(n, adj, pathVisited, visited))
+                    return true;
+            }
+        }
+        pathVisited[idx] = false;
+        return false;
+    }
+}

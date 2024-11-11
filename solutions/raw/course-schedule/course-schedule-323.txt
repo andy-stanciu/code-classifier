@@ -1,0 +1,47 @@
+class Solution {
+
+    private List<Integer>[] adj;
+
+    private boolean[] visited;
+
+    private boolean[] pathVisited;
+
+    private boolean hasCycle = false;
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        adj = new ArrayList[numCourses];
+        for (int idx = 0; idx < numCourses; idx++) {
+            adj[idx] = new ArrayList<Integer>();
+        }
+        for (int[] pair : prerequisites) {
+            int fromV = pair[0];
+            int toV = pair[1];
+            adj[fromV].add(toV);
+        }
+        visited = new boolean[numCourses];
+        pathVisited = new boolean[numCourses];
+        for (int v = 0; v < numCourses; v++) {
+            if (!visited[v])
+                dfs(v);
+        }
+        return !hasCycle;
+    }
+
+    private void dfs(int v) {
+        if (visited[v] || hasCycle) {
+            return;
+        }
+        visited[v] = true;
+        pathVisited[v] = true;
+        List<Integer> adjList = adj[v];
+        for (int adjV : adjList) {
+            if (!visited[adjV]) {
+                dfs(adjV);
+            } else if (pathVisited[adjV]) {
+                hasCycle = true;
+                return;
+            }
+        }
+        pathVisited[v] = false;
+    }
+}

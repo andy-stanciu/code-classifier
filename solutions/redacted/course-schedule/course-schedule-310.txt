@@ -1,0 +1,87 @@
+class Solution {
+
+    private boolean[] visited;
+
+    private boolean[] onStack;
+
+    private Map<Integer, Set<Integer>> graph;
+
+    private int[] inDegree;
+
+    private int n;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        visited = new boolean[param1];
+        onStack = new boolean[param1];
+        inDegree = new int[param1];
+        graph = new HashMap<Integer, Set<Integer>>();
+        n = param1;
+        for (int i = 0; i < param1; i++) {
+            graph.put(i, new HashSet<Integer>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            graph.get(prerequisite[0]).add(prerequisite[1]);
+            inDegree[prerequisite[1]]++;
+        }
+        return solve(2);
+    }
+
+    private boolean solve(int method) {
+        boolean can = true;
+        switch(method) {
+            case 1:
+                can = _1_canFinish();
+                break;
+            case 2:
+                can = _2_canFinish();
+                break;
+        }
+        return can;
+    }
+
+    private boolean _1_canFinish() {
+        for (int i = 0; i < n; i++) {
+            if (hasCycle(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean _2_canFinish() {
+        Queue<Integer> canComplete = new ArrayDeque<Integer>();
+        int completedCount = 0;
+        for (int i = 0; i < n; i++) {
+            if (inDegree[i] == 0) {
+                canComplete.add(i);
+            }
+        }
+        while (!canComplete.isEmpty()) {
+            int completed = canComplete.remove();
+            completedCount++;
+            for (int dependent : graph.get(completed)) {
+                inDegree[dependent]--;
+                if (inDegree[dependent] == 0) {
+                    canComplete.add(dependent);
+                }
+            }
+        }
+        return completedCount == n;
+    }
+
+    private boolean hasCycle(int v) {
+        if (onStack[v])
+            return true;
+        if (visited[v])
+            return false;
+        visited[v] = true;
+        onStack[v] = true;
+        for (int w : graph.get(v)) {
+            if (hasCycle(w)) {
+                return true;
+            }
+        }
+        onStack[v] = false;
+        return false;
+    }
+}

@@ -1,0 +1,34 @@
+class Solution {
+
+    public int uniquePathsWithObstacles(int[][] grid) {
+        int r = grid.length;
+        int c = grid[0].length;
+        int[][] dp = new int[r][c];
+        for (int[] rows : dp) {
+            Arrays.fill(rows, -1);
+        }
+        return dfs(r, c, 0, 0, grid, dp);
+    }
+
+    public int dfs(int r, int c, int i, int j, int[][] grid, int[][] dp) {
+        if (i == r - 1 && j == c - 1) {
+            if (grid[i][j] == 0) {
+                return 1;
+            }
+            return 0;
+        }
+        if (i == r || j == c) {
+            return 0;
+        }
+        if (dp[i][j] != -1) {
+            return dp[i][j];
+        }
+        if (grid[i][j] == 1) {
+            dp[i][j] = 0;
+            return 0;
+        }
+        int res = dfs(r, c, i + 1, j, grid, dp) + dfs(r, c, i, j + 1, grid, dp);
+        dp[i][j] = res;
+        return dp[i][j];
+    }
+}

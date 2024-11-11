@@ -1,0 +1,33 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        Map<Character, Integer> all = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            all.put(t.charAt(i), all.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        int left = 0;
+        int right = 0;
+        String ans = "";
+        while (left < s.length()) {
+            Map<Character, Integer> map = new HashMap<>(all);
+            right = left;
+            while (right < s.length()) {
+                char ch = s.charAt(right);
+                if (map.containsKey(ch)) {
+                    if (map.get(ch) == 1)
+                        map.remove(ch);
+                    else
+                        map.put(ch, map.get(ch) - 1);
+                }
+                if (map.isEmpty()) {
+                    if (ans.length() == 0 || ans.length() > (right - left))
+                        ans = s.substring(left, right + 1);
+                    break;
+                }
+                right++;
+            }
+            left++;
+        }
+        return ans;
+    }
+}

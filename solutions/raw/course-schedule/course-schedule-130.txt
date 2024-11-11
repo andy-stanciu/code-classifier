@@ -1,0 +1,61 @@
+class Solution {
+
+    // Define constants for course status
+    private static final List<Integer> EMPTY_LIST = Collections.emptyList();
+
+    // Course has not been visited yet
+    private static final int UNVISITED = 0;
+
+    // Course is currently being visited in DFS
+    private static final int VISITING = 1;
+
+    // Course has been fully visited, no cycles found
+    private static final int CHECKED = 2;
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Map to store the prerequisite list for each course
+        Map<Integer, List<Integer>> prerequisiteCoursesRecords = new HashMap<>();
+        // Status array to track the visit state of each course
+        int[] status = new int[numCourses];
+        // Build the prerequisite map from the input array
+        for (int[] pair : prerequisites) {
+            // Add the prerequisite course (pair[1]) to the course (pair[0])
+            prerequisiteCoursesRecords.computeIfAbsent(pair[0], k -> new ArrayList<>()).add(pair[1]);
+        }
+        // Perform DFS for each course to check for dependency cycles
+        for (int i = 0; i < numCourses; i++) {
+            // If a cycle is detected in any course, return false
+            if (!dfs(i, prerequisiteCoursesRecords, status)) {
+                return false;
+            }
+        }
+        // If no cycle is detected, return true
+        return true;
+    }
+
+    // Helper function to perform DFS and detect cycles
+    private boolean dfs(int course, Map<Integer, List<Integer>> prerequisiteCoursesRecords, int[] status) {
+        // If the course has already been checked, no need to visit it again
+        if (status[course] == CHECKED) {
+            return true;
+        } else // If the course is being visited, it means we found a cycle
+        if (status[course] == VISITING) {
+            return false;
+        }
+        // Mark the course as being visited
+        status[course] = VISITING;
+        // Get the list of prerequisite courses for the current course
+        List<Integer> prerequisiteCourses = prerequisiteCoursesRecords.getOrDefault(course, EMPTY_LIST);
+        // Recursively perform DFS on each prerequisite course
+        for (int pre : prerequisiteCourses) {
+            // If a cycle is detected in any prerequisite, return false
+            if (!dfs(pre, prerequisiteCoursesRecords, status)) {
+                return false;
+            }
+        }
+        // Mark the course as fully checked (no cycles found in its prerequisites)
+        status[course] = CHECKED;
+        // Return true since no cycle was detected
+        return true;
+    }
+}

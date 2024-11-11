@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> preReq = new HashMap<>();
+        for (int i = 0; i < numCourses; i++) {
+            preReq.put(i, new ArrayList<>());
+        }
+        boolean[] visited = new boolean[numCourses];
+        Set<Integer> passableCourses = new HashSet<>();
+        for (int i = 0; i < prerequisites.length; i++) {
+            preReq.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        for (Integer course : preReq.keySet()) {
+            visited = new boolean[numCourses];
+            if (cannotPass(course, preReq, visited, passableCourses))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean cannotPass(Integer course, Map<Integer, List<Integer>> preReq, boolean[] visited, Set<Integer> passableCourses) {
+        if (visited[course]) {
+            return true;
+        }
+        visited[course] = true;
+        for (Integer n : preReq.get(course)) {
+            if (!passableCourses.contains(n)) {
+                if (cannotPass(n, preReq, visited, passableCourses)) {
+                    return true;
+                }
+            }
+        }
+        passableCourses.add(course);
+        return false;
+    }
+}

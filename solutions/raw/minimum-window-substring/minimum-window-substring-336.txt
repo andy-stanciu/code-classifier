@@ -1,0 +1,60 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int n = s.length();
+        int m = t.length();
+        if (n < m) {
+            return "";
+        }
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < m; i++) {
+            map.put(t.charAt(i), map.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        System.out.println(map);
+        int i = 0;
+        int j = 0;
+        int reqcount = m;
+        int minwindow = Integer.MAX_VALUE;
+        int index = 0;
+        System.out.println(reqcount);
+        while (j < n) {
+            char ch = s.charAt(j);
+            if (map.get(ch) == null) {
+                // we dont need this character
+                map.put(ch, 0);
+                int a = map.get(ch);
+                map.put(ch, a - 1);
+            } else //present in map and frequency greater than zero
+            // we are taking that character in my window.
+            if (map.get(ch) <= 0) {
+                int a = map.get(ch);
+                map.put(ch, a - 1);
+            } else if (map.get(ch) > 0) {
+                reqcount--;
+                int a = map.get(ch);
+                map.put(ch, a - 1);
+            }
+            // now we are shrinking the window size cause we have all character prestn
+            while (reqcount == 0) {
+                System.out.println("hiii");
+                if (minwindow > j - i + 1) {
+                    minwindow = j - i + 1;
+                    index = i;
+                    // System.out.println(s.substring(index,minwindow-1));
+                }
+                char ch1 = s.charAt(i);
+                int a = map.get(ch1);
+                map.put(ch1, a + 1);
+                if (map.get(ch1) > 0) {
+                    reqcount++;
+                }
+                i++;
+            }
+            j++;
+        }
+        if (minwindow == Integer.MAX_VALUE) {
+            return "";
+        }
+        return s.substring(index, index + minwindow);
+    }
+}

@@ -1,0 +1,39 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        // Initialize a map to store character frequencies of string t
+        Map<Character, Integer> mp = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            mp.put(ch, mp.getOrDefault(ch, 0) + 1);
+        }
+        int left = 0, right = 0;
+        int minLen = Integer.MAX_VALUE;
+        int minStart = 0;
+        int counter = mp.size();
+        while (right < s.length()) {
+            char rightChar = s.charAt(right);
+            if (mp.containsKey(rightChar)) {
+                mp.put(rightChar, mp.get(rightChar) - 1);
+                if (mp.get(rightChar) == 0) {
+                    counter--;
+                }
+            }
+            right++;
+            while (counter == 0) {
+                if (right - left < minLen) {
+                    minLen = right - left;
+                    minStart = left;
+                }
+                char leftChar = s.charAt(left);
+                if (mp.containsKey(leftChar)) {
+                    mp.put(leftChar, mp.get(leftChar) + 1);
+                    if (mp.get(leftChar) > 0) {
+                        counter++;
+                    }
+                }
+                left++;
+            }
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart + minLen);
+    }
+}

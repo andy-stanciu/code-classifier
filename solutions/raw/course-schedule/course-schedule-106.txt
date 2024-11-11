@@ -1,0 +1,42 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<List<Integer>>();
+        int rlen = prerequisites.length;
+        if (numCourses == 1 || rlen == 0)
+            return true;
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<Integer>());
+        }
+        for (int i = 0; i < rlen; i++) {
+            graph.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        HashSet<Integer> visited = new HashSet<Integer>();
+        HashSet<Integer> rec = new HashSet<Integer>();
+        boolean ans = true;
+        for (int i = 0; i < rlen; i++) {
+            ans = ans & !check(graph, visited, rec, prerequisites[i][0]);
+        }
+        return ans;
+    }
+
+    public boolean check(List<List<Integer>> graph, HashSet<Integer> visited, HashSet<Integer> rec, int course) {
+        if (!visited.contains(course)) {
+            visited.add(course);
+            rec.add(course);
+            System.out.println(" course " + course);
+            for (int adj : graph.get(course)) {
+                if (!visited.contains(adj) && check(graph, visited, rec, adj)) {
+                    System.out.println(" adj " + adj);
+                    return true;
+                } else if (rec.contains(adj)) {
+                    System.out.println(" adj2 " + adj);
+                    return true;
+                }
+            }
+            rec.remove(course);
+        }
+        System.out.println(" course2 " + course);
+        return false;
+    }
+}

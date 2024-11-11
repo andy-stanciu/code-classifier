@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Make the graph
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        // unknow = 0, visiting = -1, visited = 1
+        Map<Integer, Integer> visit = new HashMap<>();
+        for (int i = 0; i < numCourses; i++) {
+            visit.put(i, 0);
+            graph.put(i, new ArrayList<>());
+        }
+        for (int[] preq : prerequisites) {
+            List<Integer> list = graph.get(preq[0]);
+            list.add(preq[1]);
+            graph.put(preq[0], list);
+        }
+        // DFS
+        boolean result = true;
+        for (Integer key : graph.keySet()) {
+            result = result && dfs(key, graph, visit);
+        }
+        return result;
+    }
+
+    private boolean dfs(Integer course, Map<Integer, List<Integer>> graph, Map<Integer, Integer> visit) {
+        if (visit.get(course) == -1)
+            return false;
+        if (visit.get(course) == 1)
+            return true;
+        visit.put(course, -1);
+        boolean result = true;
+        for (Integer dep : graph.get(course)) {
+            result = result && dfs(dep, graph, visit);
+        }
+        visit.put(course, 1);
+        return result;
+    }
+}

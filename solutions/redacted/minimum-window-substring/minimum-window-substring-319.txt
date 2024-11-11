@@ -1,0 +1,23 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] map = new int[128];
+        // create freq map
+        for (char c : t.toCharArray()) map[c]++;
+        int left = t.length(), begin = 0, end = 0, d = Integer.MAX_VALUE, head = 0;
+        // sliding window
+        while (end < s.length()) {
+            // expand window
+            if (map[s.charAt(end++)]-- > 0)
+                left--;
+            // shrink window
+            while (left == 0) {
+                if (end - begin < d)
+                    d = end - (head = begin);
+                if (map[s.charAt(begin++)]++ == 0)
+                    left++;
+            }
+        }
+        return d == Integer.MAX_VALUE ? "" : s.substring(head, head + d);
+    }
+}

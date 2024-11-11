@@ -1,0 +1,36 @@
+class Solution {
+
+    public int height(TreeNode root) {
+        if (root == null)
+            return 0;
+        return Math.max(height(root.left), height(root.right)) + 1;
+    }
+
+    public void getAvg(TreeNode root, List<Double> ans, int k, List<Integer> counter) {
+        if (root == null)
+            return;
+        if (k == 0) {
+            ans.set(0, ans.get(0) + root.val);
+            counter.set(0, counter.get(0) + 1);
+        } else {
+            getAvg(root.left, ans, k - 1, counter);
+            getAvg(root.right, ans, k - 1, counter);
+        }
+    }
+
+    public List<Double> method1(TreeNode root) {
+        int h = height(root);
+        int k = 0;
+        List<Double> res = new ArrayList<>();
+        while (k < h) {
+            List<Double> ans = new ArrayList<>(1);
+            ans.add(0.0);
+            List<Integer> counter = new ArrayList<>(1);
+            counter.add(0);
+            getAvg(root, ans, k, counter);
+            res.add(ans.get(0) / counter.get(0));
+            k++;
+        }
+        return res;
+    }
+}

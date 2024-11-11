@@ -1,0 +1,57 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<Double> averageOfLevels(TreeNode root) {
+        List<Double> result = new ArrayList<>();
+        List<TreeNode> levelTemp = new ArrayList<>();
+        result.add((double) root.val);
+        if (root.left != null) {
+            levelTemp.add(root.left);
+        }
+        if (root.right != null) {
+            levelTemp.add(root.right);
+        }
+        if (!levelTemp.isEmpty()) {
+            calculateAvrForLevel(levelTemp, result);
+        }
+        return result;
+    }
+
+    public void calculateAvrForLevel(List<TreeNode> currentLevelTemp, List<Double> result) {
+        double currentLevelAvr = 0;
+        int divider = 0;
+        List<TreeNode> nextLevelTemp = new ArrayList<>();
+        for (TreeNode currentTreeNode : currentLevelTemp) {
+            currentLevelAvr = Double.sum(currentLevelAvr, currentTreeNode.val);
+            divider++;
+            if (currentTreeNode.left != null) {
+                nextLevelTemp.add(currentTreeNode.left);
+            }
+            if (currentTreeNode.right != null) {
+                nextLevelTemp.add(currentTreeNode.right);
+            }
+        }
+        if (divider != 0) {
+            result.add(currentLevelAvr / divider);
+        } else {
+            result.add(currentLevelAvr);
+        }
+        if (!nextLevelTemp.isEmpty()) {
+            calculateAvrForLevel(nextLevelTemp, result);
+        }
+    }
+}

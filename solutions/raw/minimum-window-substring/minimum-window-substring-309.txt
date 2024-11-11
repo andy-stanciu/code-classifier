@@ -1,0 +1,47 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        //  Using sliding window and two pointers we can solve the following
+        if (s.length() == 0 || t.length() == 0)
+            return "";
+        HashMap<Character, Integer> map = new HashMap<>();
+        //  Place in the hashmap
+        for (char ch : t.toCharArray()) {
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        int count = map.size();
+        int minWindow = Integer.MAX_VALUE;
+        int n = s.length();
+        int start = 0;
+        int end = 0;
+        String substring = "";
+        while (end < n) {
+            char ch = s.charAt(end);
+            if (map.containsKey(ch)) {
+                map.put(ch, map.get(ch) - 1);
+                if (map.get(ch) == 0) {
+                    count--;
+                }
+            }
+            if (count > 0) {
+                end++;
+            } else if (count == 0) {
+                while (count == 0) {
+                    if (end - start + 1 < minWindow) {
+                        minWindow = end - start + 1;
+                        substring = s.substring(start, end + 1);
+                    }
+                    char chr = s.charAt(start);
+                    if (map.containsKey(chr)) {
+                        map.put(chr, map.get(chr) + 1);
+                        if (map.get(chr) == 1)
+                            count++;
+                    }
+                    start++;
+                }
+                end++;
+            }
+        }
+        return substring;
+    }
+}

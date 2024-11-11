@@ -1,0 +1,58 @@
+class Solution {
+
+    private char[] needle;
+
+    private int[] letterCounter(final String str, final int limit) {
+        var letters = new int[124];
+        var iterations = 0;
+        for (var letter : str.toCharArray()) {
+            if (iterations == limit)
+                break;
+            letters[letter]++;
+            iterations++;
+        }
+        return letters;
+    }
+
+    private boolean doesContainCharacters(final int[] haystackCounter, final int[] needleCounter) {
+        for (var needleLetter : needle) {
+            if (haystackCounter[needleLetter] < needleCounter[needleLetter])
+                return false;
+        }
+        return true;
+    }
+
+    public String method1(String s, String t) {
+        if (s.length() < t.length()) {
+            return "";
+        }
+        this.needle = t.toCharArray();
+        var var1 = t.length();
+        var var2 = 0;
+        int[] needleCounter = letterCounter(t, t.length());
+        int[] haystackCounter;
+        char letterToBeDecreased;
+        char letterToBeIncreased;
+        int letterToBeDecreasedCount;
+        while (var1 <= s.length()) {
+            haystackCounter = letterCounter(s, var1);
+            if (doesContainCharacters(haystackCounter, needleCounter)) {
+                return s.substring(0, var1);
+            }
+            var2 = 1;
+            while ((var2 + var1) <= s.length()) {
+                letterToBeDecreased = s.charAt(var2 - 1);
+                letterToBeIncreased = s.charAt(var2 + var1 - 1);
+                letterToBeDecreasedCount = haystackCounter[letterToBeDecreased] - 1;
+                haystackCounter[letterToBeDecreased] = letterToBeDecreasedCount;
+                haystackCounter[letterToBeIncreased]++;
+                if (doesContainCharacters(haystackCounter, needleCounter)) {
+                    return s.substring(var2, var2 + var1);
+                }
+                var2++;
+            }
+            var1++;
+        }
+        return "";
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> mapT = new HashMap<>();
+        int left = 0, right = 0, count = 0, startIdx = -1;
+        String st = "";
+        int minLen = Integer.MAX_VALUE;
+        //put all the characters in string t with their frequencies
+        for (int i = 0; i < t.length(); i++) {
+            int cnt = mapT.getOrDefault(t.charAt(i), 0);
+            mapT.put(t.charAt(i), cnt + 1);
+        }
+        while (right < s.length()) {
+            char c = s.charAt(right);
+            //when encounter character that is in map for T and also its frequency is > 0
+            if (mapT.containsKey(c) && mapT.get(c) > 0) {
+                count++;
+            }
+            //decrease the freq
+            mapT.put(c, mapT.getOrDefault(c, 0) - 1);
+            while (count == t.length()) {
+                //when all char acquired
+                if (right - left + 1 < minLen) {
+                    //update mininimum length
+                    minLen = right - left + 1;
+                    //store current min length subarray starting index
+                    startIdx = left;
+                }
+                //decrease the window from left
+                char leftCh = s.charAt(left);
+                mapT.put(leftCh, mapT.get(leftCh) + 1);
+                if (mapT.get(leftCh) > 0) {
+                    count--;
+                }
+                left++;
+            }
+            right++;
+        }
+        if (startIdx == -1) {
+            return st;
+        }
+        return s.substring(startIdx, startIdx + minLen);
+    }
+}

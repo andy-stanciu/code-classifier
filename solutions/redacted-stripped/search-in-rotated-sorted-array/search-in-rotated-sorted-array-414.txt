@@ -1,0 +1,46 @@
+class Solution {
+
+    public int method1(int[] nums, int start, int end) {
+        if (nums[start] <= nums[end]) {
+            return 0;
+        }
+        int var1 = 0;
+        int size = nums.length;
+        while (start <= end) {
+            int mid = (start + end) / 2;
+            if (nums[mid] > nums[(mid + 1) % size]) {
+                return mid + 1;
+            }
+            if (nums[mid] < nums[(mid - 1 + size) % size]) {
+                return mid;
+            }
+            if (nums[mid] < nums[end]) {
+                end = mid;
+            } else {
+                var1 += (mid - start);
+                start = mid;
+            }
+        }
+        return var1;
+    }
+
+    public int method2(int[] nums, int target, int start, int end) {
+        int size = nums.length;
+        while (start <= end) {
+            int mid = (start + end) / 2;
+            if (nums[mid % size] == target) {
+                return mid % size;
+            } else if (target < nums[mid % size]) {
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return -1;
+    }
+
+    public int method3(int[] nums, int target) {
+        int var1 = method1(nums, 0, nums.length - 1);
+        return method2(nums, target, var1, (nums.length - 1 + var1));
+    }
+}

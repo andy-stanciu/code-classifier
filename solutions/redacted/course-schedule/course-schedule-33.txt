@@ -1,0 +1,39 @@
+class Solution {
+
+    public boolean canFinish(int V, int[][] prerequisites) {
+        Map<Integer, ArrayList<Integer>> adj = new HashMap<>();
+        Queue<Integer> queue = new LinkedList<>();
+        int[] indegree = new int[V];
+        // Graph creation
+        for (int[] pair : prerequisites) {
+            int a = pair[0];
+            int b = pair[1];
+            // b -> a , first b then a
+            adj.putIfAbsent(b, new ArrayList<>());
+            adj.get(b).add(a);
+            // increment indegree
+            indegree[a]++;
+        }
+        //  if indegree == 0, add to queue
+        for (int i = 0; i < V; i++) {
+            if (indegree[i] == 0)
+                queue.offer(i);
+        }
+        //Simple BFS
+        int count = 0;
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            count++;
+            for (int v : adj.getOrDefault(current, new ArrayList<>())) {
+                // if elements in current exists, well and good. If not, it will return an empty list
+                indegree[v]--;
+                if (indegree[v] == 0) {
+                    queue.offer(v);
+                }
+            }
+        }
+        if (count != V)
+            return false;
+        return true;
+    }
+}

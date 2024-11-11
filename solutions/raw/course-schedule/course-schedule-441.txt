@@ -1,0 +1,43 @@
+class Solution {
+
+    List<Integer>[] adj;
+
+    boolean[] visited;
+
+    boolean[] explore;
+
+    public boolean canFinish(int nums, int[][] pre) {
+        adj = new ArrayList[nums];
+        for (int i = 0; i < nums; i++) {
+            adj[i] = new ArrayList<>();
+        }
+        visited = new boolean[nums];
+        explore = new boolean[nums];
+        for (int i = 0; i < pre.length; i++) {
+            adj[pre[i][0]].add(pre[i][1]);
+        }
+        for (int i = 0; i < nums; i++) {
+            if (!visited[i]) {
+                if (isCyclic(i)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    boolean isCyclic(int i) {
+        visited[i] = true;
+        for (Integer j : adj[i]) {
+            if (!visited[j]) {
+                if (isCyclic(j)) {
+                    return true;
+                }
+            } else if (!explore[j]) {
+                return true;
+            }
+        }
+        explore[i] = true;
+        return false;
+    }
+}

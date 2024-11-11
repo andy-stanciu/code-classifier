@@ -1,0 +1,47 @@
+// TC: O(N + P), where  N is the number of courses, P is the number of prerequisites
+// SC: O(N + P), as it needs to store the indegree information for each course and the adjacency list representing all prerequisite relationships.
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Array to keep track of indegrees of all courses
+        int[] indegree = new int[numCourses];
+        // Initialize adjacency list to keep track of which courses depend on a given course
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] preReq : prerequisites) {
+            adj.get(preReq[1]).add(preReq[0]);
+            indegree[preReq[0]]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        List<Integer> ans = new ArrayList<>();
+        boolean answer = bfs(numCourses, adj, ans, queue, indegree);
+        return answer;
+    }
+
+    private boolean bfs(int numCourses, List<List<Integer>> adj, List<Integer> ans, Queue<Integer> queue, int[] indegree) {
+        // Enqueue courses with no prerequisites
+        int i = 0;
+        for (int val : indegree) {
+            if (val == 0) {
+                queue.add(i);
+            }
+            i++;
+        }
+        while (!queue.isEmpty()) {
+            int currCourse = queue.poll();
+            ans.add(currCourse);
+            // For each course dependent on the current course
+            for (int course : adj.get(currCourse)) {
+                // Remove the prerequisite
+                indegree[course]--;
+                if (indegree[course] == 0) {
+                    // If no more prerequisites, add to queue
+                    queue.add(course);
+                }
+            }
+        }
+        return ans.size() == numCourses;
+    }
+}

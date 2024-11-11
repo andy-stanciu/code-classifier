@@ -1,0 +1,50 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        int pivot = method3(nums);
+        if (pivot == -1) {
+            // means our array is not rotated but sorted so we do normal bs
+            return method2(nums, target, 0, nums.length - 1);
+        } else {
+            // our array is rotated we have 2 asc sorted arrays
+            if (nums[pivot] == target)
+                return pivot;
+            else // search in first half of array
+            if (nums[0] <= target)
+                return method2(nums, target, 0, pivot - 1);
+            else
+                return method2(nums, target, pivot + 1, nums.length - 1);
+        }
+    }
+
+    public static int method2(int[] arr, int target, int start, int end) {
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (arr[mid] == target)
+                return mid;
+            if (arr[mid] < target)
+                start = mid + 1;
+            else if (arr[mid] > target)
+                end = mid - 1;
+        }
+        return -1;
+    }
+
+    public static int method3(int[] arr) {
+        // find peak element in O(log n)
+        int start = 0;
+        int end = arr.length - 1;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (end > mid && arr[mid] > arr[mid + 1])
+                return mid;
+            else if (start < mid && arr[mid] < arr[mid - 1])
+                return mid - 1;
+            else if (arr[mid] <= arr[start])
+                end = mid - 1;
+            else
+                start = mid + 1;
+        }
+        return -1;
+    }
+}

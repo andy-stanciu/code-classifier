@@ -1,0 +1,41 @@
+class Solution {
+
+    int[] visited;
+
+    Map<Integer, List<Integer>> map;
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        //record all courses\' prerequisites
+        map = new HashMap<>();
+        for (int i = 0; i < numCourses; i++) {
+            map.put(i, new ArrayList<>());
+        }
+        for (int[] prere : prerequisites) {
+            map.get(prere[0]).add(prere[1]);
+        }
+        visited = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (visited[i] == 0) {
+                if (isCyclic(i))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isCyclic(int index) {
+        if (visited[index] == 2)
+            return true;
+        //update current node\'s state
+        visited[index] = 2;
+        for (int i = 0; i < map.get(index).size(); i++) {
+            if (visited[map.get(index).get(i)] != 1) {
+                if (isCyclic(map.get(index).get(i)))
+                    return true;
+            }
+        }
+        //if there exist no cycle connected to the current node then update the state of this current as 1
+        visited[index] = 1;
+        return false;
+    }
+}

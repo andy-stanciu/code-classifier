@@ -1,0 +1,27 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] count = new int[128];
+        for (char ch : t.toCharArray()) count[ch]++;
+        int left = 0, right = 0, counter = t.length(), minLength = Integer.MAX_VALUE, minLeft = 0;
+        while (right < s.length()) {
+            char rightCH = s.charAt(right);
+            if (count[rightCH] > 0)
+                counter--;
+            count[rightCH]--;
+            right++;
+            while (counter == 0) {
+                if (right - left < minLength) {
+                    minLength = right - left;
+                    minLeft = left;
+                }
+                char leftCH = s.charAt(left);
+                count[leftCH]++;
+                if (count[leftCH] > 0)
+                    counter++;
+                left++;
+            }
+        }
+        return minLength == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + minLength);
+    }
+}

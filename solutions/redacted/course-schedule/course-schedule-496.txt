@@ -1,0 +1,59 @@
+class Solution {
+
+    static class Edge {
+
+        int src, des;
+
+        public Edge(int src, int des) {
+            this.src = src;
+            this.des = des;
+        }
+    }
+
+    public static void create(ArrayList<Edge>[] graph, int[][] prerequisites) {
+        for (int i = 0; i < graph.length; i++) {
+            graph[i] = new ArrayList<Edge>();
+        }
+        for (int[] prereq : prerequisites) {
+            int from = prereq[1];
+            int to = prereq[0];
+            graph[from].add(new Edge(from, to));
+        }
+    }
+
+    public static boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<Edge>[] graph = new ArrayList[param1];
+        create(graph, prerequisites);
+        boolean[] visited = new boolean[param1];
+        boolean[] recursionStack = new boolean[param1];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                if (isCyclic(i, graph, visited, recursionStack, stack)) {
+                    // Cycle detected, cannot finish all courses
+                    return false;
+                }
+            }
+        }
+        // No cycle detected, can finish all courses
+        return true;
+    }
+
+    public static boolean isCyclic(int node, ArrayList<Edge>[] graph, boolean[] visited, boolean[] recursionStack, Stack<Integer> stack) {
+        visited[node] = true;
+        recursionStack[node] = true;
+        for (Edge edge : graph[node]) {
+            int neighbor = edge.des;
+            if (!visited[neighbor]) {
+                if (isCyclic(neighbor, graph, visited, recursionStack, stack)) {
+                    return true;
+                }
+            } else if (recursionStack[neighbor]) {
+                return true;
+            }
+        }
+        recursionStack[node] = false;
+        stack.push(node);
+        return false;
+    }
+}

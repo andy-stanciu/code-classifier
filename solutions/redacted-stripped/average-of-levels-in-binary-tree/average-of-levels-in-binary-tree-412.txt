@@ -1,0 +1,42 @@
+class Solution {
+
+    public List<Double> method1(TreeNode root) {
+        List<Double> res = new ArrayList<>();
+        Queue<NodeLevel> q = new ArrayDeque<>();
+        q.add(new NodeLevel(root, 0));
+        int count = 0;
+        double total = 0;
+        int curr_level = 0;
+        while (q.size() > 0) {
+            NodeLevel curr = q.poll();
+            if (curr.level != curr_level) {
+                res.add(total / count);
+                count = 0;
+                total = 0;
+                curr_level = curr.level;
+            }
+            total += curr.node.val;
+            count += 1;
+            if (curr.node.left != null) {
+                q.add(new NodeLevel(curr.node.left, curr.level + 1));
+            }
+            if (curr.node.right != null) {
+                q.add(new NodeLevel(curr.node.right, curr.level + 1));
+            }
+        }
+        res.add(total / count);
+        return res;
+    }
+}
+
+public class NodeLevel {
+
+    TreeNode node;
+
+    int level;
+
+    NodeLevel(TreeNode node, int level) {
+        this.node = node;
+        this.level = level;
+    }
+}

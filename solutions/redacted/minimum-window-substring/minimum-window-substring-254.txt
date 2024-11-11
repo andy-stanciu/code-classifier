@@ -1,0 +1,36 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s.length() < t.length())
+            return "";
+        HashMap<Character, Integer> freq = new HashMap<>();
+        for (char ch : t.toCharArray()) freq.put(ch, freq.getOrDefault(ch, 0) + 1);
+        int i = 0, j = 0, misMatches = freq.size();
+        int min = (int) 1e9, st = -1, ed = -1;
+        while (j < s.length()) {
+            char ch = s.charAt(j);
+            if (freq.containsKey(ch)) {
+                freq.put(ch, freq.get(ch) - 1);
+                if (freq.get(ch) == 0) {
+                    misMatches--;
+                }
+            }
+            while (misMatches == 0) {
+                if (j - i + 1 < min) {
+                    min = j - i + 1;
+                    st = i;
+                    ed = j;
+                }
+                char left = s.charAt(i++);
+                if (freq.containsKey(left)) {
+                    freq.put(left, freq.get(left) + 1);
+                    if (freq.get(left) > 0) {
+                        misMatches++;
+                    }
+                }
+            }
+            j++;
+        }
+        return st == -1 ? "" : s.substring(st, ed + 1);
+    }
+}

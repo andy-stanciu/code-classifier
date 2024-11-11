@@ -1,0 +1,32 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s.length() == 0 || t.length() == 0 || s.length() < t.length()) {
+            return new String();
+        }
+        int[] map = new int[128];
+        for (char c : t.toCharArray()) {
+            map[(int) c]++;
+        }
+        char[] c = s.toCharArray();
+        int minLength = Integer.MAX_VALUE, count = t.length(), left = 0, right = 0, startIndex = 0;
+        while (right < c.length) {
+            if (map[c[right]] > 0)
+                count--;
+            map[c[right]]--;
+            right++;
+            while (count == 0) {
+                if (right - left < minLength) {
+                    startIndex = left;
+                    minLength = right - left;
+                }
+                if (map[c[left]] == 0) {
+                    count++;
+                }
+                map[c[left]]++;
+                left++;
+            }
+        }
+        return minLength == Integer.MAX_VALUE ? new String() : new String(c, startIndex, minLength);
+    }
+}

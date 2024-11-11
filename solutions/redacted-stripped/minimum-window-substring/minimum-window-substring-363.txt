@@ -1,0 +1,44 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int i = 0, j = 0;
+        int end = s.length();
+        if (s == null || t == null || s.length() == 0 || t.length() == 0 | s.length() < t.length()) {
+            return new String();
+        }
+        if (t.equals(s))
+            return s;
+        Map<Character, Integer> map = new HashMap<>();
+        for (Character ch : t.toCharArray()) {
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        String ans = s;
+        int startIndex = 0;
+        int res = Integer.MAX_VALUE;
+        int count = map.size();
+        char[] chS = s.toCharArray();
+        while (j < end) {
+            if (map.containsKey(s.charAt(j))) {
+                map.put(s.charAt(j), map.get(s.charAt(j)) - 1);
+                if (map.get(s.charAt(j)) == 0) {
+                    count--;
+                }
+            }
+            j++;
+            while (count == 0) {
+                if (j - i < res) {
+                    startIndex = i;
+                    res = j - i;
+                }
+                if (map.containsKey(s.charAt(i))) {
+                    map.put(s.charAt(i), map.get(s.charAt(i)) + 1);
+                    if (map.get(s.charAt(i)) > 0) {
+                        count++;
+                    }
+                }
+                i++;
+            }
+        }
+        return res == Integer.MAX_VALUE ? new String() : new String(chS, startIndex, res);
+    }
+}

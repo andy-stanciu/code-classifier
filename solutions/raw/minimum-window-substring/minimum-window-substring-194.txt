@@ -1,0 +1,30 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int[] freq = new int[256];
+        for (int i = 0; i < t.length(); i++) {
+            freq[t.charAt(i)]++;
+        }
+        int i = 0, j = 0, count = 0, minLen = Integer.MAX_VALUE, startIdx = -1;
+        while (j < s.length()) {
+            char ch = s.charAt(j);
+            // if the current character is present in t, then increament value of count
+            if (freq[ch] > 0)
+                count++;
+            freq[ch]--;
+            while (count == t.length()) {
+                char chr = s.charAt(i);
+                if ((j - i + 1) < minLen) {
+                    minLen = (j - i + 1);
+                    startIdx = i;
+                }
+                freq[chr]++;
+                if (freq[chr] > 0)
+                    count--;
+                i++;
+            }
+            j++;
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(startIdx, startIdx + minLen);
+    }
+}

@@ -1,0 +1,23 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        return lisAtI(nums, nums.length - 1, -1, new HashMap<>());
+    }
+
+    private int lisAtI(int[] nums, int idx, int last, Map<String, Integer> memo) {
+        if (idx == -1)
+            return 0;
+        String key = new StringBuilder().append("Q").append(idx).append("W").append(last).toString();
+        Integer res = memo.get(key);
+        if (res != null)
+            return res;
+        int incl, excl;
+        incl = excl = 0;
+        if (last == -1 || (last != -1 && nums[idx] < nums[last]))
+            incl = 1 + lisAtI(nums, idx - 1, idx, memo);
+        excl = lisAtI(nums, idx - 1, last, memo);
+        res = Math.max(incl, excl);
+        memo.put(key, res);
+        return res;
+    }
+}

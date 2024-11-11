@@ -1,0 +1,31 @@
+class Solution {
+
+    public List<Double> method1(TreeNode root) {
+        var levelToNodes = new TreeMap<Integer, List<TreeNode>>();
+        method2(root, levelToNodes, 1);
+        var method1 = new LinkedList<Double>();
+        for (int resultIdx = 1; resultIdx <= levelToNodes.size(); resultIdx++) {
+            var nodes = levelToNodes.get(resultIdx);
+            var sum = nodes.stream().mapToDouble(node -> node.val).sum();
+            method1.add(sum / nodes.size());
+        }
+        return method1;
+    }
+
+    private static void method2(TreeNode node, Map<Integer, List<TreeNode>> levelToNodes, Integer level) {
+        if (node == null) {
+            return;
+        }
+        levelToNodes.computeIfPresent(level, (keyLevel, nodes) -> {
+            nodes.add(node);
+            return nodes;
+        });
+        levelToNodes.computeIfAbsent(level, levelKey -> {
+            var nodes = new ArrayList<TreeNode>();
+            nodes.add(node);
+            return nodes;
+        });
+        method2(node.left, levelToNodes, level + 1);
+        method2(node.right, levelToNodes, level + 1);
+    }
+}

@@ -1,0 +1,53 @@
+class Solution {
+
+    private List<Integer>[] buildGraph(int numCourses, int[][] prerequisites) {
+        //graph have "numCourses" nodes
+        List<Integer>[] graph = new LinkedList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new LinkedList<>();
+        }
+        for (int[] edge : prerequisites) {
+            //complete the course "start" to take "end"
+            int start = edge[1];
+            int end = edge[0];
+            graph[start].add(end);
+        }
+        return graph;
+    }
+
+    boolean[] onPath;
+
+    //preventing repeated traversal of the same node
+    boolean[] visited;
+
+    boolean hasCycle = false;
+
+    //DFS trasversal from node "s"
+    private void traverse(List<Integer>[] graph, int s) {
+        //found a cycle
+        if (onPath[s])
+            hasCycle = true;
+        //founded a cycle already -> return
+        if (visited[s] || hasCycle)
+            return;
+        visited[s] = true;
+        //start traversing the node "s"
+        onPath[s] = true;
+        for (int t : graph[s]) {
+            traverse(graph, t);
+        }
+        //completed trasversal
+        onPath[s] = false;
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<Integer>[] graph = buildGraph(numCourses, prerequisites);
+        onPath = new boolean[numCourses];
+        visited = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            //traverse all vertexes
+            traverse(graph, i);
+        }
+        return !hasCycle;
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        // Top-left cell is an obstacle
+        if (obstacleGrid[0][0] == 1)
+            return 0;
+        // Number of rows
+        int m = obstacleGrid.length;
+        // Number of columns
+        int n = obstacleGrid[0].length;
+        // Initialize a 2D array for dynamic programming
+        int[][] dp = new int[m][n];
+        // Initialize the top-left cell
+        dp[0][0] = 1;
+        // Initialize unique paths for the first column
+        for (int i = 0; i < m; i++) {
+            if (obstacleGrid[i][0] != 1) {
+                dp[i][0] = 1;
+            } else {
+                // No paths beyond an obstacle
+                break;
+            }
+        }
+        // Initialize unique paths for the first row
+        for (int j = 0; j < n; j++) {
+            if (obstacleGrid[0][j] != 1) {
+                dp[0][j] = 1;
+            } else {
+                // No paths beyond an obstacle
+                break;
+            }
+        }
+        // Calculate unique paths for remaining cells
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (obstacleGrid[i][j] != 1) {
+                    dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+                }
+            }
+        }
+        // Return the number of unique paths
+        return dp[m - 1][n - 1];
+    }
+}

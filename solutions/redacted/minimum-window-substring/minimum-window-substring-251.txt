@@ -1,0 +1,33 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int n = s.length();
+        if (t.length() > n)
+            return "";
+        Integer[] arr = new Integer[128];
+        int diffCount = 0;
+        for (char c : t.toCharArray()) {
+            if (arr[c] == null) {
+                arr[c] = 1;
+                diffCount++;
+            } else
+                arr[c]++;
+        }
+        int i = 0, j = 0, l = 0, r = 0, count = diffCount;
+        while (r < n) {
+            char c = s.charAt(r++);
+            if (arr[c] != null && --arr[c] == 0)
+                count--;
+            while (count <= 0) {
+                if (i == j || (r - l) < (j - i)) {
+                    i = l;
+                    j = r;
+                }
+                char lc = s.charAt(l++);
+                if (arr[lc] != null && ++arr[lc] == 1)
+                    count++;
+            }
+        }
+        return s.substring(i, j);
+    }
+}

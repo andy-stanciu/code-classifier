@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        // Make the graph
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        // unknow = 0, visiting = -1, visited = 1
+        Map<Integer, Integer> visit = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            visit.put(i, 0);
+            graph.put(i, new ArrayList<>());
+        }
+        for (int[] preq : prerequisites) {
+            List<Integer> list = graph.get(preq[0]);
+            list.add(preq[1]);
+            graph.put(preq[0], list);
+        }
+        // DFS
+        boolean result = true;
+        for (Integer key : graph.keySet()) {
+            result = result && dfs(key, graph, visit);
+        }
+        return result;
+    }
+
+    private boolean dfs(Integer param2, Map<Integer, List<Integer>> graph, Map<Integer, Integer> visit) {
+        if (visit.get(param2) == -1)
+            return false;
+        if (visit.get(param2) == 1)
+            return true;
+        visit.put(param2, -1);
+        boolean result = true;
+        for (Integer dep : graph.get(param2)) {
+            result = result && dfs(dep, graph, visit);
+        }
+        visit.put(param2, 1);
+        return result;
+    }
+}

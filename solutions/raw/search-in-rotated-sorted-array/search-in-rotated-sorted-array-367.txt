@@ -1,0 +1,41 @@
+class Solution {
+
+    public int search(int[] nums, int target) {
+        int peak = findPeak(nums, 0, nums.length - 1);
+        if (nums[peak] == target) {
+            return peak;
+        }
+        if (nums[peak] >= target && nums[0] <= target) {
+            return binarySearch(nums, 0, peak - 1, target);
+        }
+        return binarySearch(nums, peak + 1, nums.length - 1, target);
+    }
+
+    private int findPeak(int[] nums, int left, int right) {
+        while (left < right) {
+            int mid = (left + right) / 2;
+            if (nums[mid] > nums[mid + 1]) {
+                return mid;
+            } else if (nums[mid] > nums[right]) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return left;
+    }
+
+    private int binarySearch(int[] nums, int left, int right, int target) {
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return -1;
+    }
+}

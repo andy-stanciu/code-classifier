@@ -1,0 +1,21 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        // DP: T:O(N*logN) S:O(N) track the smallest last subseq at each size
+        TreeMap<Integer, Integer> tmap = new TreeMap<>();
+        // make sure it stays above 0
+        tmap.put(Integer.MIN_VALUE, 0);
+        for (int val : nums) {
+            //System.out.println(val+tmap);
+            Integer prev = tmap.lowerKey(val);
+            Integer next = tmap.ceilingKey(val);
+            if (next == null)
+                // it is the highest, add to lower size + 1
+                tmap.put(val, tmap.get(prev) + 1);
+            else
+                // update next highest to be this one
+                tmap.put(val, tmap.remove(next));
+        }
+        return tmap.lastEntry().getValue();
+    }
+}

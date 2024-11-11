@@ -1,0 +1,51 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int n = s.length();
+        HashMap<Character, Integer> smap = new HashMap<>();
+        HashMap<Character, Integer> tmap = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            tmap.put(ch, tmap.getOrDefault(ch, 0) + 1);
+        }
+        int matchcnt = 0;
+        String ans = "";
+        int minlen = Integer.MAX_VALUE;
+        int inc = -1, exc = -1;
+        while (true) {
+            boolean include = false, exclude = false;
+            while (inc + 1 < n) {
+                include = true;
+                inc++;
+                char ch = s.charAt(inc);
+                if (t.contains(ch + "")) {
+                    smap.put(ch, smap.getOrDefault(ch, 0) + 1);
+                    if (smap.get(ch) <= tmap.get(ch)) {
+                        matchcnt++;
+                    }
+                }
+                if (matchcnt == t.length())
+                    break;
+            }
+            while (exc < inc && matchcnt == t.length()) {
+                exclude = true;
+                if (inc - exc < minlen) {
+                    minlen = inc - exc;
+                    ans = s.substring(exc + 1, inc + 1);
+                }
+                exc++;
+                char ch = s.charAt(exc);
+                if (smap.containsKey(ch)) {
+                    smap.put(ch, smap.get(ch) - 1);
+                    if (smap.get(ch) < tmap.get(ch)) {
+                        matchcnt--;
+                    }
+                    if (smap.get(ch) == 0)
+                        smap.remove(ch);
+                }
+            }
+            if (exclude == false && include == false)
+                break;
+        }
+        return ans;
+    }
+}

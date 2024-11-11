@@ -1,0 +1,27 @@
+class Solution {
+
+    public int uniquePathsWithObstacles(int[][] grid) {
+        int n = grid.length;
+        int m = grid[0].length;
+        if (n == 1 && m == 1 && grid[0][0] == 0)
+            return 1;
+        if (grid[n - 1][m - 1] != 0 || grid[0][0] == 1)
+            return 0;
+        return uniquePath(grid, 0, 1, n - 1, m - 1) + uniquePath(grid, 1, 0, n - 1, m - 1);
+    }
+
+    private int uniquePath(int[][] grid, int i, int j, int n, int m) {
+        // first check if the position is valid or not and it is not a blocker
+        if (!isValid(i, j, n, m) || grid[i][j] == 1)
+            return 0;
+        // if the robot is able to reach the dest means it will be considered a valid move
+        if (i == n && j == m)
+            return 1;
+        // every time there will be two choices move in right direction i.e col + 1 or move downwards means row  + 1
+        return uniquePath(grid, i + 1, j, n, m) + uniquePath(grid, i, j + 1, n, m);
+    }
+
+    private boolean isValid(int i, int j, int n, int m) {
+        return i >= 0 && j >= 0 && i <= n && j <= m;
+    }
+}

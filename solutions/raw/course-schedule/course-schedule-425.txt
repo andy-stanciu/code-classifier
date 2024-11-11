@@ -1,0 +1,42 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // solve using topological sort
+        int n = prerequisites.length;
+        // create graph
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < n; i++) {
+            adj.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        // setting indegree
+        int[] indegree = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            for (int j : adj.get(i)) {
+                indegree[j]++;
+            }
+        }
+        // add 0 indegree in q
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0)
+                q.add(i);
+        }
+        // doing bfs and add visited in top
+        List<Integer> top = new ArrayList<>();
+        while (!q.isEmpty()) {
+            int curr = q.remove();
+            top.add(curr);
+            for (int i : adj.get(curr)) {
+                indegree[i]--;
+                if (indegree[i] == 0)
+                    q.add(i);
+            }
+        }
+        if (top.size() == numCourses)
+            return true;
+        return false;
+    }
+}

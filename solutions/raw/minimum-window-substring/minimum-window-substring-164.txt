@@ -1,0 +1,44 @@
+class Solution {
+
+    private boolean isValidSubstring(HashMap<Character, Integer> candidateHashMap, HashMap<Character, Integer> containsHashMap) {
+        return containsHashMap.entrySet().stream().allMatch((entry) -> {
+            return candidateHashMap.containsKey(entry.getKey()) && candidateHashMap.get(entry.getKey()) >= entry.getValue();
+        });
+    }
+
+    public String minWindow(String candidateString, String containsString) {
+        /**
+         *            variable sliding window
+         *
+         *            time complexity: O(n + m) -> O(n + m)
+         *            space complexity: O(26) -> O(1)
+         */
+        HashMap<Character, Integer> candidateFreqMap = new HashMap();
+        HashMap<Character, Integer> containsFreqMap = new HashMap();
+        for (int i = 0; i < containsString.length(); i++) {
+            containsFreqMap.put(containsString.charAt(i), containsFreqMap.getOrDefault(containsString.charAt(i), 0) + 1);
+        }
+        int windowStartPointer = 0;
+        int windowEndPointer = 0;
+        int minWindowStartPointer = -1;
+        int minWindowEndPointer = -1;
+        Integer minWindowLength = Integer.MAX_VALUE;
+        while (windowEndPointer < candidateString.length()) {
+            candidateFreqMap.put(candidateString.charAt(windowEndPointer), candidateFreqMap.getOrDefault(candidateString.charAt(windowEndPointer), 0) + 1);
+            while (windowStartPointer <= windowEndPointer && isValidSubstring(candidateFreqMap, containsFreqMap)) {
+                int currentWindowLength = windowEndPointer - windowStartPointer + 1;
+                if (minWindowLength > currentWindowLength) {
+                    minWindowLength = currentWindowLength;
+                    minWindowStartPointer = windowStartPointer;
+                    minWindowEndPointer = windowEndPointer;
+                }
+                candidateFreqMap.put(candidateString.charAt(windowStartPointer), candidateFreqMap.getOrDefault(candidateString.charAt(windowStartPointer), 0) - 1);
+                windowStartPointer++;
+            }
+            windowEndPointer++;
+        }
+        if (minWindowStartPointer == -1)
+            return "";
+        return candidateString.substring(minWindowStartPointer, minWindowEndPointer + 1);
+    }
+}

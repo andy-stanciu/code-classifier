@@ -1,0 +1,68 @@
+class Solution {
+
+    int[] sFreq = new int[256];
+
+    char[] tFreq = new char[256];
+
+    int distance;
+
+    int minWindow;
+
+    public String minWindow(String s, String t) {
+        distance = t.length();
+        if (distance == 0)
+            return "";
+        if (s.equals(t))
+            return s;
+        minWindow = Integer.MAX_VALUE;
+        int startMinWindowIndex = -1;
+        for (char ch : t.toCharArray()) tFreq[ch]++;
+        char[] str = s.toCharArray();
+        int initialWinLen = 0;
+        int sLen = s.length();
+        int indexEnd = sLen - t.length();
+        for (int startIndex = 0; startIndex <= indexEnd; startIndex++) {
+            boolean found = false;
+            if (distance != 0) {
+                int windowEnd = sLen - startIndex;
+                for (int winLen = initialWinLen; winLen < windowEnd; winLen++) {
+                    //add new char at the end of the sliding window
+                    char sChar = str[startIndex + winLen];
+                    if (//the new character makes closer to get to the target
+                    sFreq[sChar] < tFreq[sChar])
+                        distance--;
+                    //increment the frequency of the source character
+                    sFreq[sChar]++;
+                    if (distance == 0) {
+                        //found a match of the target
+                        found = true;
+                        initialWinLen = winLen + 1;
+                        break;
+                    }
+                }
+            } else
+                found = true;
+            if (found) {
+                //a match to the target was found
+                if (initialWinLen < minWindow) {
+                    //the new window is smaller than the min window
+                    minWindow = initialWinLen;
+                    startMinWindowIndex = startIndex;
+                }
+                if (//it can\'t get shorter than this
+                minWindow == distance - 1)
+                    break;
+                //remove char of start char of sliding window
+                initialWinLen--;
+                char ch = str[startIndex];
+                if (//the removed character was part of the target, now it is further away from the target
+                sFreq[ch] <= tFreq[ch])
+                    distance++;
+                sFreq[ch]--;
+            } else
+                //if there was no match, then no shorter window can match
+                break;
+        }
+        return (startMinWindowIndex >= 0) ? s.substring(startMinWindowIndex, startMinWindowIndex + minWindow) : "";
+    }
+}

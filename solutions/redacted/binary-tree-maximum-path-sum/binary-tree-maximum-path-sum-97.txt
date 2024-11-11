@@ -1,0 +1,20 @@
+class Solution {
+
+    private int[] postOrderTraversal(TreeNode root) {
+        // return {Max sum from the subtree (more nodes can be attached to the path), Max result}
+        if (root == null)
+            return new int[] { -100000, -100000 };
+        int[] left = postOrderTraversal(root.left);
+        int[] right = postOrderTraversal(root.right);
+        int currVal = root.val;
+        // As more nodes can be attached to the sum so, current node must be included.
+        int var1 = Math.max(Math.max(left[0], right[0]), 0) + currVal;
+        // This is max result till now. But more nodes can\'t be attached to it as current node may not be included or current node already formed a path along with both the left & right subtree of it.
+        int maxRes = Math.max(Math.max(left[1], right[1]), Math.max(var1, left[0] + right[0] + currVal));
+        return new int[] { var1, maxRes };
+    }
+
+    public int method1(TreeNode root) {
+        return postOrderTraversal(root)[1];
+    }
+}

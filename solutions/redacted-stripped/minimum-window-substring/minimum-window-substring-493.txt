@@ -1,0 +1,30 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        Map<Character, Integer> mapS = new HashMap<>();
+        Map<Character, Integer> mapT = new HashMap<>();
+        for (char c : t.toCharArray()) mapT.put(c, mapT.getOrDefault(c, 0) + 1);
+        int i = 0, j = 0, count = 0, minLength = Integer.MAX_VALUE, left = 0, right = 0;
+        while (j < s.length()) {
+            char c = s.charAt(j);
+            mapS.put(c, mapS.getOrDefault(c, 0) + 1);
+            if (mapS.get(c) <= mapT.getOrDefault(c, 0)) {
+                count++;
+            }
+            while (i <= j && count == t.length()) {
+                if (j - i + 1 < minLength) {
+                    minLength = j - i + 1;
+                    left = i;
+                    right = j;
+                }
+                mapS.put(s.charAt(i), mapS.getOrDefault(s.charAt(i), 0) - 1);
+                if (mapS.get(s.charAt(i)) < mapT.getOrDefault(s.charAt(i), 0)) {
+                    count--;
+                }
+                i++;
+            }
+            j++;
+        }
+        return minLength == Integer.MAX_VALUE ? "" : s.substring(left, right + 1);
+    }
+}

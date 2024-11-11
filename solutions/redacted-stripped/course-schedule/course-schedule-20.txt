@@ -1,0 +1,37 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> adjList = new HashMap<>();
+        for (int[] prerequisite : prerequisites) {
+            int var1 = prerequisite[0];
+            int var2 = prerequisite[1];
+            adjList.computeIfAbsent(var1, key -> new ArrayList<>()).add(var2);
+        }
+        boolean[] visited = new boolean[param1];
+        boolean[] visiting = new boolean[param1];
+        for (int var1 = 0; var1 < param1; var1++) {
+            if (!visited[var1] && hasCycle(adjList, var1, visited, visiting)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean hasCycle(Map<Integer, List<Integer>> adjList, int var1, boolean[] visited, boolean[] visiting) {
+        if (visiting[var1]) {
+            return true;
+        }
+        visiting[var1] = true;
+        List<Integer> prerequisites = adjList.get(var1);
+        if (prerequisites != null) {
+            for (int prerequisite : prerequisites) {
+                if (!visited[prerequisite] && hasCycle(adjList, prerequisite, visited, visiting)) {
+                    return true;
+                }
+            }
+        }
+        visiting[var1] = false;
+        visited[var1] = true;
+        return false;
+    }
+}

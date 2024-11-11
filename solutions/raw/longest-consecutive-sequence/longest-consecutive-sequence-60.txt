@@ -1,0 +1,35 @@
+class Solution {
+
+    public int longestConsecutive(int[] nums) {
+        //To handle emty nums array
+        if (nums.length == 0)
+            return 0;
+        HashMap<Integer, Boolean> map = new HashMap<>();
+        /* 
+        sval = starting value for the longest consecutive subsequence
+        maxLength = max length of consecutive subsequence
+        tempLength = temperory length of consecutive subsequence
+        */
+        int sval = nums[0], maxLength = 1, tempLength = 1;
+        // This for loop will put a true for each element in the hashmap
+        for (Integer val : nums) map.put(val, true);
+        // This for loop will check if each element can be a potential starting point
+        for (Integer val : nums) {
+            if (map.containsKey(val - 1))
+                map.put(val, false);
+        }
+        // This for loop calculates the longest consecutive subsequence
+        for (Integer val : nums) {
+            if (map.get(val)) {
+                int temp = val;
+                while (map.containsKey(++temp)) tempLength++;
+                if (tempLength > maxLength) {
+                    sval = val;
+                    maxLength = tempLength;
+                }
+                tempLength = 1;
+            }
+        }
+        return maxLength;
+    }
+}

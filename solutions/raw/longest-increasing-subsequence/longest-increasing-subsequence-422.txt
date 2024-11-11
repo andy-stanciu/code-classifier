@@ -1,0 +1,41 @@
+class Solution {
+
+    // O(N^2) - DP
+    //    public int lengthOfLIS(int[] nums) {
+    //        int n = nums.length;
+    //        int[] dp = new int[n]; // seq end id to len
+    //        int best = 0;
+    //
+    //        for (int i = 0; i < n; i++) {
+    //            dp[i] = 1;
+    //
+    //            // extend the longest seq ending with smaller num
+    //            int longestSeqEndingJ = -1;
+    //            int lenToAdd = 0;
+    //            for (int j = 0; j < i; j++) {
+    //                if (nums[j] >= nums[i]) continue;
+    //                lenToAdd = Math.max(lenToAdd, dp[j]);
+    //            }
+    //            dp[i] += lenToAdd;
+    //
+    //            best = Math.max(best, dp[i]);
+    //        }
+    //        return best;
+    //    }
+    // O(NLogN) - optimal
+    public int lengthOfLIS(int[] nums) {
+        ArrayList<Integer> seqLenToLargest = new ArrayList<>();
+        for (int n : nums) {
+            if (seqLenToLargest.size() == 0 || n > seqLenToLargest.get(seqLenToLargest.size() - 1)) {
+                // extend longest seq
+                seqLenToLargest.add(n);
+                continue;
+            }
+            int insertId = Collections.binarySearch(seqLenToLargest, n);
+            if (insertId < 0)
+                insertId = ~insertId;
+            seqLenToLargest.set(insertId, n);
+        }
+        return seqLenToLargest.size();
+    }
+}

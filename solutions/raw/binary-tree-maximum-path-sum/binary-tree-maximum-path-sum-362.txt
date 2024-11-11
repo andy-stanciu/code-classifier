@@ -1,0 +1,58 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public int maxPathSum(TreeNode root) {
+        return bestAnswer(root)[0];
+    }
+
+    public int[] bestAnswer(TreeNode root) {
+        // it could be answered as
+        // 0, bestAnswer: max(left + root + right, left + root, right + root);
+        // 1, bestPath: max(left + root, right + root);
+        if (root == null) {
+            return null;
+        }
+        int leftBest;
+        int rightBest;
+        int leftPath;
+        int rightPath;
+        int bestAnswer = root.val;
+        int bestPath = root.val;
+        int[] leftAnswer = bestAnswer(root.left);
+        if (leftAnswer != null) {
+            leftBest = leftAnswer[0];
+            leftPath = leftAnswer[1];
+            bestPath = Math.max(bestPath, root.val + leftPath);
+            bestAnswer = Math.max(leftBest, bestAnswer);
+            bestAnswer = Math.max(bestAnswer, root.val + leftPath);
+        }
+        int[] rightAnswer = bestAnswer(root.right);
+        if (rightAnswer != null) {
+            rightBest = rightAnswer[0];
+            rightPath = rightAnswer[1];
+            bestPath = Math.max(bestPath, root.val + rightPath);
+            bestAnswer = Math.max(rightBest, bestAnswer);
+            bestAnswer = Math.max(bestAnswer, root.val + rightPath);
+        }
+        if (leftAnswer != null && rightAnswer != null) {
+            leftPath = leftAnswer[1];
+            rightPath = rightAnswer[1];
+            bestAnswer = Math.max(bestAnswer, leftPath + root.val + rightPath);
+        }
+        return new int[] { bestAnswer, bestPath };
+    }
+}

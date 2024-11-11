@@ -1,0 +1,30 @@
+class Solution {
+
+    public int maxSubArray(int[] nums) {
+        return divide(nums, 0, nums.length - 1);
+    }
+
+    public int divide(int[] arr, int left, int right) {
+        if (left == right)
+            return arr[left];
+        int mid = left + (right - left) / 2;
+        int left_sum = divide(arr, left, mid);
+        int right_sum = divide(arr, mid + 1, right);
+        int cross_sum = maxCrossingSum(arr, left, mid, right);
+        return Math.max(Math.max(left_sum, right_sum), cross_sum);
+    }
+
+    public int maxCrossingSum(int[] arr, int left, int mid, int right) {
+        int lmax = Integer.MIN_VALUE, left_sum = 0;
+        int rmax = Integer.MIN_VALUE, right_sum = 0;
+        for (int i = mid; i >= left; i--) {
+            left_sum += arr[i];
+            lmax = Math.max(lmax, left_sum);
+        }
+        for (int i = mid + 1; i <= right; i++) {
+            right_sum += arr[i];
+            rmax = Math.max(rmax, right_sum);
+        }
+        return rmax + lmax;
+    }
+}

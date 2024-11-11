@@ -1,0 +1,46 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        Map<Character, Integer> tMap = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            int count = tMap.getOrDefault(c, 0);
+            tMap.put(c, count + 1);
+        }
+        Map<Character, Integer> sMap = new HashMap<>();
+        int n = s.length();
+        int L, R;
+        L = R = 0;
+        int[] index = new int[] { -1, n };
+        while (R <= n) {
+            if (R - L >= t.length() && isValidWindow(tMap, sMap)) {
+                if ((R - L) < (index[1] - index[0])) {
+                    index = new int[] { L, R };
+                }
+                char left = s.charAt(L);
+                sMap.put(left, sMap.get(left) - 1);
+                L++;
+            } else {
+                if (R < n) {
+                    char curr = s.charAt(R);
+                    sMap.put(curr, sMap.getOrDefault(curr, 0) + 1);
+                }
+                R++;
+            }
+        }
+        if (index[0] == -1) {
+            return "";
+        }
+        return s.substring(index[0], index[1]);
+    }
+
+    boolean isValidWindow(Map<Character, Integer> tMap, Map<Character, Integer> sMap) {
+        for (Map.Entry<Character, Integer> e : tMap.entrySet()) {
+            int tCount = e.getValue();
+            int sCount = sMap.getOrDefault(e.getKey(), 0);
+            if (sCount < tCount) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

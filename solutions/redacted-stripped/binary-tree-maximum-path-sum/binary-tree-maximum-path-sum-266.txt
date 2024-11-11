@@ -1,0 +1,30 @@
+class Solution {
+
+    private int max = Integer.MIN_VALUE;
+
+    public int method1(TreeNode root) {
+        if (root == null)
+            return 0;
+        int n = traverse(root, null);
+        return Math.max(max, n);
+    }
+
+    private int traverse(TreeNode root, TreeNode parent) {
+        if (root == null) {
+            return (parent.val >= 0) ? 0 : -1001;
+        }
+        int left = traverse(root.left, root);
+        int right = traverse(root.right, root);
+        max = Math.max(max, root.val);
+        max = Math.max(max, Math.max(left, right) + root.val);
+        max = Math.max(max, left + root.val + right);
+        if (root.left != null && root.right != null) {
+            return Math.max(root.val, Math.max(left, right) + root.val);
+        } else if (root.left != null) {
+            return Math.max(root.val, left + root.val);
+        } else if (root.right != null) {
+            return Math.max(root.val, right + root.val);
+        }
+        return root.val;
+    }
+}

@@ -1,0 +1,51 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        // Initialize two pointers and a character frequency map for string t
+        int left = 0, right = 0;
+        Map<Character, Integer> tFreqMap = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            tFreqMap.put(c, tFreqMap.getOrDefault(c, 0) + 1);
+        }
+        // Initialize variables to keep track of the minimum window
+        int minLen = Integer.MAX_VALUE;
+        int minLeft = 0;
+        int requiredChars = tFreqMap.size();
+        int formedChars = 0;
+        // Initialize a character frequency map for the current window
+        Map<Character, Integer> var1 = new HashMap<>();
+        // Initialize variables to keep track of the current window
+        int curLen = 0;
+        while (right < s.length()) {
+            char curChar = s.charAt(right);
+            // Update the frequency of the current character in the window map
+            var1.put(curChar, var1.getOrDefault(curChar, 0) + 1);
+            // Check if the current character is part of string t and has been fully formed in the window
+            if (tFreqMap.containsKey(curChar) && var1.get(curChar).equals(tFreqMap.get(curChar))) {
+                formedChars++;
+            }
+            // Try to minimize the window size by moving the left pointer
+            while (left <= right && formedChars == requiredChars) {
+                curLen = right - left + 1;
+                // Update the minimum window if a smaller window is found
+                if (curLen < minLen) {
+                    minLen = curLen;
+                    minLeft = left;
+                }
+                char leftChar = s.charAt(left);
+                // Update the frequency of the left character in the window map
+                var1.put(leftChar, var1.get(leftChar) - 1);
+                // Check if the removal of the left character breaks the condition for string t
+                if (tFreqMap.containsKey(leftChar) && var1.get(leftChar) < tFreqMap.get(leftChar)) {
+                    formedChars--;
+                }
+                // Move the left pointer to shrink the window
+                left++;
+            }
+            // Move the right pointer to expand the window
+            right++;
+        }
+        // Return the minimum window substring or an empty string if no valid substring is found
+        return (minLen == Integer.MAX_VALUE) ? "" : s.substring(minLeft, minLeft + minLen);
+    }
+}

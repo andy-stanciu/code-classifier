@@ -1,0 +1,41 @@
+class Solution {
+
+    boolean cycle = false;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<Integer>[] graph = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph[prerequisites[i][0]].add(prerequisites[i][1]);
+        }
+        int[] visited = new int[param1];
+        int[] recStack = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (visited[i] == 0) {
+                detectCycle(graph, visited, recStack, i);
+            }
+            if (cycle)
+                return false;
+        }
+        return true;
+    }
+
+    private void detectCycle(ArrayList<Integer>[] graph, int[] visited, int[] recStack, int v) {
+        if (cycle)
+            return;
+        visited[v] = 1;
+        recStack[v] = 1;
+        for (int i = 0; i < graph[v].size(); i++) {
+            if (recStack[graph[v].get(i)] == 1) {
+                cycle = true;
+                return;
+            }
+            if (visited[graph[v].get(i)] == 0) {
+                detectCycle(graph, visited, recStack, graph[v].get(i));
+            }
+        }
+        recStack[v] = 0;
+    }
+}

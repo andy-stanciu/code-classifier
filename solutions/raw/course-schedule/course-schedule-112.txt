@@ -1,0 +1,32 @@
+class Solution {
+
+    public boolean dfsIsCyclic(Map<Integer, ArrayList<Integer>> adj, int u, boolean[] visited, boolean[] inrecursion) {
+        visited[u] = true;
+        inrecursion[u] = true;
+        for (int v : adj.getOrDefault(u, new ArrayList<>())) {
+            if (!visited[v] && dfsIsCyclic(adj, v, visited, inrecursion))
+                return true;
+            else if (inrecursion[v])
+                return true;
+        }
+        inrecursion[u] = false;
+        return false;
+    }
+
+    public boolean canFinish(int V, int[][] prerequisites) {
+        boolean[] inrecursion = new boolean[V];
+        Map<Integer, ArrayList<Integer>> adj = new HashMap<>();
+        boolean[] visited = new boolean[V];
+        for (int[] pair : prerequisites) {
+            int a = pair[0];
+            int b = pair[1];
+            adj.putIfAbsent(b, new ArrayList<>());
+            adj.get(b).add(a);
+        }
+        for (int i = 0; i < V; i++) {
+            if (!visited[i] && dfsIsCyclic(adj, i, visited, inrecursion))
+                return false;
+        }
+        return true;
+    }
+}

@@ -1,0 +1,46 @@
+class Solution {
+
+    public Map<Character, Integer> sMap, tMap;
+
+    public String minWindow(String s, String t) {
+        String minString = new String("--" + s);
+        sMap = new HashMap<>();
+        tMap = new HashMap<>();
+        for (char ch : t.toCharArray()) tMap.put(ch, tMap.getOrDefault(ch, 0) + 1);
+        int left = 0;
+        for (int right = 0; right < s.length(); right++) {
+            char ch = s.charAt(right);
+            sMap.put(ch, sMap.getOrDefault(ch, 0) + 1);
+            if (sMap.size() >= tMap.size()) {
+                if (isSame()) {
+                    while (left <= right && isSame()) {
+                        int len = right - left + 1;
+                        if (len < minString.length()) {
+                            String newString = s.substring(left, right + 1);
+                            minString = new String(newString);
+                        }
+                        char leftChar = s.charAt(left);
+                        int freq = sMap.get(leftChar);
+                        if (freq == 1)
+                            sMap.remove(leftChar);
+                        else
+                            sMap.put(leftChar, freq - 1);
+                        left++;
+                    }
+                }
+            }
+        }
+        return minString.length() > s.length() ? "" : minString;
+    }
+
+    public boolean isSame() {
+        for (char ch : tMap.keySet()) {
+            int freq = tMap.get(ch);
+            if (sMap.containsKey(ch) == false)
+                return false;
+            if (sMap.get(ch) < freq)
+                return false;
+        }
+        return true;
+    }
+}

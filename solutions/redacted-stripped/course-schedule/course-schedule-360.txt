@@ -1,0 +1,49 @@
+class Solution {
+
+    class Edge {
+
+        int src, des;
+
+        public Edge(int s, int d) {
+            this.src = s;
+            this.des = d;
+        }
+    }
+
+    public boolean isCycle(ArrayList<Edge>[] graph, boolean[] vis, boolean[] stack, int cur) {
+        vis[cur] = true;
+        stack[cur] = true;
+        for (int i = 0; i < graph[cur].size(); i++) {
+            Edge e = graph[cur].get(i);
+            if (stack[e.des]) {
+                return true;
+            }
+            if (!vis[e.des] && isCycle(graph, vis, stack, e.des)) {
+                return true;
+            }
+        }
+        stack[cur] = false;
+        return false;
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<Edge>[] graph = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int src = prerequisites[i][0];
+            graph[src].add(new Edge(src, prerequisites[i][1]));
+        }
+        boolean[] vis = new boolean[param1];
+        boolean[] stack = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!vis[i]) {
+                if (isCycle(graph, vis, stack, i)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}

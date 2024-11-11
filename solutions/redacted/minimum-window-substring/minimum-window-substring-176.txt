@@ -1,0 +1,45 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s.length() < t.length()) {
+            return "";
+        }
+        // Create a frequency map for the characters in t
+        Map<Character, Integer> targetFreq = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            targetFreq.put(ch, targetFreq.getOrDefault(ch, 0) + 1);
+        }
+        // Initialize variables
+        Map<Character, Integer> var1 = new HashMap<>();
+        int start = 0, end = 0, minStart = 0, minLen = Integer.MAX_VALUE, matches = 0;
+        // Expand the window by moving the end pointer
+        while (end < s.length()) {
+            char endChar = s.charAt(end);
+            var1.put(endChar, var1.getOrDefault(endChar, 0) + 1);
+            if (targetFreq.containsKey(endChar) && var1.get(endChar).intValue() == targetFreq.get(endChar).intValue()) {
+                matches++;
+            }
+            // Contract the window by moving the start pointer
+            while (matches == targetFreq.size()) {
+                if (end - start + 1 < minLen) {
+                    minStart = start;
+                    minLen = end - start + 1;
+                }
+                char startChar = s.charAt(start);
+                var1.put(startChar, var1.get(startChar) - 1);
+                if (targetFreq.containsKey(startChar) && var1.get(startChar).intValue() < targetFreq.get(startChar).intValue()) {
+                    matches--;
+                }
+                start++;
+            }
+            end++;
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart + minLen);
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        // Expected output: "baa"
+        System.out.println(solution.method1("bbaa", "aba"));
+    }
+}

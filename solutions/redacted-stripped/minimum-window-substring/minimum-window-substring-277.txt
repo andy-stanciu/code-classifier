@@ -1,0 +1,62 @@
+class Solution {
+
+    private static final int LARGE_NUMBER = MAX_VALUE / 2;
+
+    public String method1(String s, String t) {
+        Counter tCnt = new Counter(t), contained = new Counter();
+        Queue<Integer> q = new LinkedList<>();
+        int wStart = 0, wEnd = LARGE_NUMBER;
+        char c, v;
+        for (int i = 0; i < s.length(); i++) if (tCnt.contains(c = s.charAt(i))) {
+            contained.increment(c);
+            q.add(i);
+            while (tCnt.count(v = s.charAt(q.peek())) < contained.count(v)) {
+                contained.decrement(v);
+                q.poll();
+            }
+            if (wEnd - wStart + 1 > i - q.peek() + 1 && contained.containsAll(tCnt)) {
+                wStart = q.peek();
+                wEnd = i;
+            }
+        }
+        return wEnd != LARGE_NUMBER ? s.substring(wStart, wEnd + 1) : "";
+    }
+
+    private static class Counter {
+
+        final Map<Character, Integer> freq = new HashMap<>();
+
+        Counter(String s) {
+            for (int i = 0; i < s.length(); i++) freq.merge(s.charAt(i), 1, Integer::sum);
+        }
+
+        Counter() {
+        }
+
+        void increment(char c) {
+            update(c, 1);
+        }
+
+        void decrement(char c) {
+            update(c, -1);
+        }
+
+        void update(char c, int change) {
+            int count = freq.merge(c, change, Integer::sum);
+            if (count == 0)
+                freq.remove(c);
+        }
+
+        int count(char c) {
+            return freq.getOrDefault(c, 0);
+        }
+
+        boolean contains(char c) {
+            return count(c) != 0;
+        }
+
+        boolean containsAll(Counter other) {
+            return other.freq.entrySet().stream().allMatch(e -> e.getValue() <= count(e.getKey()));
+        }
+    }
+}

@@ -1,0 +1,39 @@
+class Solution {
+
+    public LinkedList<Integer>[] adj;
+
+    public boolean[] visited;
+
+    public boolean[] onstack;
+
+    public boolean hasCycle;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        // Use DFS for cycle detection
+        adj = new LinkedList[param1];
+        for (int i = 0; i < param1; i++) adj[i] = new LinkedList<>();
+        for (int[] p : prerequisites) adj[p[1]].add(p[0]);
+        visited = new boolean[param1];
+        onstack = new boolean[param1];
+        hasCycle = false;
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i])
+                dfs(i);
+        }
+        return !hasCycle;
+    }
+
+    private void dfs(int v) {
+        visited[v] = true;
+        onstack[v] = true;
+        for (int w : adj[v]) {
+            if (!visited[w])
+                dfs(w);
+            else if (onstack[w]) {
+                hasCycle = true;
+                return;
+            }
+        }
+        onstack[v] = false;
+    }
+}

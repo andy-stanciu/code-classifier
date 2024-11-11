@@ -1,0 +1,36 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        Map<Character, Integer> strCount = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            strCount.put(t.charAt(i), strCount.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        Map<Character, Integer> winCount = new HashMap<>();
+        int left = 0, right = 0;
+        int uniqueCount = strCount.keySet().size();
+        int winCt = 0;
+        String minString = "";
+        while (right < s.length()) {
+            char c = s.charAt(right);
+            winCount.put(c, winCount.getOrDefault(c, 0) + 1);
+            if (strCount.containsKey(c) && winCount.get(c).equals(strCount.get(c))) {
+                winCt++;
+            }
+            while (left <= right && winCt == uniqueCount) {
+                if (minString.isEmpty() || (right - left + 1) < minString.length()) {
+                    minString = s.substring(left, right + 1);
+                }
+                char leftC = s.charAt(left);
+                winCount.put(leftC, winCount.get(leftC) - 1);
+                if (strCount.containsKey(leftC) && winCount.get(leftC) < strCount.get(leftC)) {
+                    winCt--;
+                }
+                left++;
+            }
+            right++;
+        }
+        return minString;
+    }
+}

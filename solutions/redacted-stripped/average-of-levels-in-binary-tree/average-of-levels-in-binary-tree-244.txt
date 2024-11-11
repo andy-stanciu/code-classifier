@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<Double> method1(TreeNode root) {
+        List<Double> list = new ArrayList<Double>();
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        levelHelper(root, list, 0, map);
+        return list;
+    }
+
+    public void levelHelper(TreeNode root, List<Double> list, int level, Map<Integer, Integer> map) {
+        if (root == null) {
+            return;
+        }
+        Double currsum = null;
+        if (list.size() <= level) {
+            currsum = 0.0;
+        } else {
+            currsum = (list.get(level) * (map.get(level) != null ? map.get(level) : 0));
+        }
+        map.put(level, map.getOrDefault(level, 0) + 1);
+        double newsum = (currsum + root.val) / map.get(level);
+        if (list.size() <= level) {
+            list.add(newsum);
+        } else {
+            list.set(level, newsum);
+        }
+        levelHelper(root.left, list, level + 1, map);
+        levelHelper(root.right, list, level + 1, map);
+    }
+}

@@ -1,0 +1,133 @@
+class Solution {
+
+    private Map<Integer, Node> graph;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        this.graph = new HashMap<>();
+        boolean result = false;
+        int classReq;
+        int nextClass;
+        Node currentClass;
+        if (prerequisites.length == 0) {
+            return true;
+        }
+        for (int[] relation : prerequisites) {
+            nextClass = relation[0];
+            classReq = relation[1];
+            if (nextClass == classReq) {
+                return false;
+            }
+            if (graph.containsKey(classReq)) {
+                currentClass = graph.get(classReq);
+                currentClass.addNextNode(nextClass);
+            } else {
+                graph.put(classReq, new Node(classReq, ClassState.WHITE));
+                graph.get(classReq).addNextNode(nextClass);
+            }
+            if (!graph.containsKey(nextClass)) {
+                graph.put(nextClass, new Node(nextClass, ClassState.WHITE));
+                graph.get(nextClass).addDegree();
+            } else {
+                graph.get(nextClass).addDegree();
+            }
+        }
+        for (Integer sourceNode : getSources()) {
+            if (graph.get(sourceNode).getColor() == ClassState.WHITE) {
+                if (!dfs(sourceNode)) {
+                    return false;
+                }
+            }
+        }
+        //check for disjoint graphs and if there is, that means it didn\'t have a source
+        //which means that there is a cycle somewhere
+        for (Map.Entry<Integer, Node> node : graph.entrySet()) {
+            if (node.getValue().getColor() == ClassState.WHITE) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private enum ClassState {
+
+        WHITE, GRAY, BLACK
+    }
+
+    private ArrayList<Integer> getSources() {
+        ArrayList<Integer> sources = new ArrayList<>();
+        for (Map.Entry<Integer, Node> node : graph.entrySet()) {
+            if (node.getValue().getDegree() == 0) {
+                sources.add(node.getKey());
+            }
+        }
+        return sources;
+    }
+
+    private boolean dfs(Integer currentClass) {
+        Node currentNode = graph.get(currentClass);
+        ArrayList<Integer> nextClasses = currentNode.getNextNodes();
+        currentNode.setColor(ClassState.GRAY);
+        System.out.println("Current class: " + currentClass);
+        for (Integer nextClass : nextClasses) {
+            System.out.println(nextClass);
+            if (graph.get(nextClass).getColor() == ClassState.WHITE) {
+                if (!dfs(nextClass)) {
+                    return false;
+                }
+            } else if (graph.get(nextClass).getColor() == ClassState.GRAY) {
+                return false;
+            }
+        }
+        currentNode.setColor(ClassState.BLACK);
+        return true;
+    }
+
+    private class Node {
+
+        private Integer key;
+
+        private ClassState color;
+
+        private Integer degree = 0;
+
+        private ArrayList<Integer> adjList;
+
+        private Node(Integer key, ClassState color) {
+            this.key = key;
+            this.color = color;
+            adjList = new ArrayList<>();
+        }
+
+        public Integer getKey() {
+            return this.key;
+        }
+
+        public Integer getDegree() {
+            return this.degree;
+        }
+
+        public ClassState getColor() {
+            return this.color;
+        }
+
+        public ArrayList<Integer> getNextNodes() {
+            return this.adjList;
+        }
+
+        public void addDegree() {
+            degree++;
+        }
+
+        public void setColor(ClassState color) {
+            this.color = color;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public void addNextNode(Integer key) {
+            adjList.add(key);
+        }
+    }
+}

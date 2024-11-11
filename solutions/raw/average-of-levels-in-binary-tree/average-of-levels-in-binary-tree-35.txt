@@ -1,0 +1,63 @@
+/*
+ (BFS) Level Order Traversal
+ TC - O(total no. of nodes in input tree)
+ SC - O(max no. of nodes at any level) + O(total no. of levels)
+*/
+class Solution {
+
+    public List<Double> averageOfLevels(TreeNode root) {
+        List<Double> res = new ArrayList<>();
+        // to store all nodes at curlevel
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        while (!q.isEmpty()) {
+            int size = q.size();
+            // sum and no. of nodes at cur level
+            double sum = 0, count = size;
+            while (size-- > 0) {
+                TreeNode cur = q.remove();
+                sum += cur.val;
+                if (cur.left != null)
+                    q.add(cur.left);
+                if (cur.right != null)
+                    q.add(cur.right);
+            }
+            // avg of cur level
+            double avg = sum / count;
+            res.add(avg);
+        }
+        return res;
+    }
+}
+
+/*
+ DFS Approach
+ TC - O(total no. of nodes in input tree) + O(total no. of levels)
+ SC - O(2*total no. of levels) + auxiliary space
+*/
+class Solution {
+
+    // it will store sum, no. of nodes at each level
+    List<double[]> store = new ArrayList<>();
+
+    public List<Double> averageOfLevels(TreeNode root) {
+        List<Double> res = new ArrayList<>();
+        traverse(root, 0);
+        for (double[] cur : store) {
+            res.add(cur[0] / cur[1]);
+        }
+        return res;
+    }
+
+    private void traverse(TreeNode node, int level) {
+        if (node == null)
+            return;
+        if (store.size() <= level)
+            store.add(new double[2]);
+        // update sum and no. of nodes at curlevel
+        store.get(level)[0] += node.val;
+        store.get(level)[1]++;
+        traverse(node.left, level + 1);
+        traverse(node.right, level + 1);
+    }
+}

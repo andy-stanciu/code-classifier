@@ -1,0 +1,36 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (t.isEmpty())
+            return "";
+        HashMap<Character, Integer> target = new HashMap<>();
+        HashMap<Character, Integer> source = new HashMap<>();
+        for (char c : t.toCharArray()) target.put(c, target.getOrDefault(c, 0) + 1);
+        int need = target.size();
+        int have = 0;
+        int resultLength = Integer.MAX_VALUE;
+        String result = "";
+        int start = 0;
+        int end = 0;
+        int N = s.length();
+        while (end < N) {
+            char curr = s.charAt(end);
+            source.put(curr, source.getOrDefault(curr, 0) + 1);
+            if (target.get(curr) != null && Objects.equals(target.get(curr), source.get(curr)))
+                have++;
+            while (have == need && start <= end) {
+                if ((end - start + 1) < resultLength) {
+                    result = s.substring(start, end + 1);
+                    resultLength = (end - start + 1);
+                }
+                char tmp = s.charAt(start);
+                source.put(tmp, source.get(tmp) - 1);
+                if (target.get(tmp) != null && target.get(tmp) > source.get(tmp))
+                    have--;
+                start++;
+            }
+            end++;
+        }
+        return result;
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    public boolean dfs(ArrayList<Integer>[] graph, int curr, boolean[] vis, boolean[] recStack) {
+        vis[curr] = true;
+        if (graph[curr] == null) {
+            return false;
+        }
+        recStack[curr] = true;
+        for (int i = 0; i < graph[curr].size(); i++) {
+            int x = graph[curr].get(i);
+            if (recStack[x]) {
+                return true;
+            }
+            if (!vis[x]) {
+                if (dfs(graph, x, vis, recStack)) {
+                    return true;
+                }
+            }
+        }
+        recStack[curr] = false;
+        return false;
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<Integer>[] graph = new ArrayList[param1];
+        boolean[] vis = new boolean[param1];
+        boolean[] recStack = new boolean[param1];
+        for (int i = 0; i < prerequisites.length; i++) {
+            if (graph[prerequisites[i][1]] == null) {
+                graph[prerequisites[i][1]] = new ArrayList<>();
+            }
+            graph[prerequisites[i][1]].add(prerequisites[i][0]);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (!vis[i] && dfs(graph, i, vis, recStack)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    enum Status {
+
+        NOT_VISITED, VISITED, VISITING
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        if (prerequisites == null || prerequisites.length == 0 || prerequisites[0].length == 0)
+            return true;
+        List<List<Integer>> list = new ArrayList<>(param1);
+        for (int i = 0; i < param1; i++) {
+            list.add(new ArrayList<Integer>());
+        }
+        for (int[] p : prerequisites) {
+            int prerequisite = p[1];
+            int var1 = p[0];
+            list.get(var1).add(prerequisite);
+        }
+        Status[] visited = new Status[param1];
+        for (int i = 0; i < param1; i++) {
+            if (dfs(list, visited, i))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean dfs(List<List<Integer>> list, Status[] visited, int cur) {
+        if (visited[cur] == Status.VISITING)
+            return true;
+        if (visited[cur] == Status.VISITED)
+            return false;
+        visited[cur] = Status.VISITING;
+        for (int next : list.get(cur)) {
+            if (dfs(list, visited, next))
+                return true;
+        }
+        visited[cur] = Status.VISITED;
+        return false;
+    }
+}

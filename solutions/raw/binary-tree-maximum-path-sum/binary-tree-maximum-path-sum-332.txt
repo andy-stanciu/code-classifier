@@ -1,0 +1,36 @@
+class Solution {
+
+    int maxSum = -2147483648;
+
+    public int maxPathSum(TreeNode root) {
+        compute(root);
+        return this.maxSum;
+    }
+
+    public int compute(TreeNode root) {
+        if (this.maxSum < root.val) {
+            this.maxSum = root.val;
+        }
+        if (null == root.left && null == root.right) {
+            return root.val;
+        }
+        int leftSum = 0;
+        if (null != root.left) {
+            leftSum = compute(root.left);
+        }
+        int rightSum = 0;
+        if (null != root.right) {
+            rightSum = compute(root.right);
+        }
+        int leftRightRootSum = root.val + leftSum + rightSum;
+        int leftRootSum = root.val + leftSum;
+        int rightRootSum = root.val + rightSum;
+        int maxLeftRight = Integer.max(leftRootSum, rightRootSum);
+        int maxRootLeftRight = Integer.max(maxLeftRight, root.val);
+        int finalLeftRightRootSum = Integer.max(maxRootLeftRight, leftRightRootSum);
+        if (finalLeftRightRootSum > this.maxSum) {
+            this.maxSum = finalLeftRightRootSum;
+        }
+        return Integer.max(Integer.max(leftRootSum, rightRootSum), root.val);
+    }
+}

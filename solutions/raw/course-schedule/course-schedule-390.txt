@@ -1,0 +1,41 @@
+class Solution {
+
+    int timestamp = 0;
+
+    private boolean dfs(int course, Map<Integer, List<Integer>> graph, int[] arrival, int[] departure) {
+        arrival[course] = ++timestamp;
+        if (graph.get(course) != null)
+            for (int coursePrereqs : graph.get(course)) {
+                if (arrival[coursePrereqs] == 0) {
+                    boolean hasCycle = dfs(coursePrereqs, graph, arrival, departure);
+                    if (hasCycle)
+                        return true;
+                } else if (departure[coursePrereqs] == 0)
+                    return true;
+            }
+        departure[course] = ++timestamp;
+        return false;
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        /**
+         *            Topological sort, cannot have cycle.
+         */
+        if (prerequisites.length == 0)
+            // no cycle could be formed in empty graph.
+            return true;
+        // 1. build the graph
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int[] p : prerequisites) graph.computeIfAbsent(p[0], k -> new ArrayList<>()).add(p[1]);
+        // 2. dfs
+        // 3. outer loop
+        int[] arrival = new int[numCourses];
+        int[] departure = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            boolean hasCycle = dfs(i, graph, arrival, departure);
+            if (hasCycle)
+                return false;
+        }
+        return true;
+    }
+}

@@ -1,0 +1,28 @@
+class Solution {
+
+    List<List<Integer>> adj = new ArrayList<>();
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        for (int i = 0; i < param1; i++) adj.add(new LinkedList<>());
+        for (int i = 0; i < prerequisites.length; i++) adj.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        boolean[] visited = new boolean[param1];
+        boolean[] recStack = new boolean[param1];
+        for (int i = 0; i < param1; i++) if (isCyclic(i, visited, recStack))
+            return false;
+        return true;
+    }
+
+    boolean isCyclic(int i, boolean[] visited, boolean[] recStack) {
+        if (recStack[i])
+            return true;
+        if (visited[i])
+            return false;
+        visited[i] = true;
+        recStack[i] = true;
+        List<Integer> children = adj.get(i);
+        for (Integer c : children) if (isCyclic(c, visited, recStack))
+            return true;
+        recStack[i] = false;
+        return false;
+    }
+}

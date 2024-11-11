@@ -1,0 +1,27 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        HashMap<Integer, ArrayList<Integer>> adjList = new HashMap<Integer, ArrayList<Integer>>();
+        int[] inDegree = new int[param1];
+        for (int i = 0; i < param1; i++) adjList.put(i, new ArrayList<Integer>());
+        for (int[] prereq : prerequisites) {
+            adjList.get(prereq[0]).add(prereq[1]);
+            adjList.put(prereq[0], adjList.get(prereq[0]));
+            inDegree[prereq[1]]++;
+        }
+        Queue<Integer> q = new LinkedList<Integer>();
+        for (int i = 0; i < param1; i++) if (inDegree[i] == 0)
+            q.add(i);
+        int visitedCount = 0;
+        while (!q.isEmpty()) {
+            int node = q.remove();
+            visitedCount++;
+            adjList.get(node).forEach((nei) -> {
+                inDegree[nei]--;
+                if (inDegree[nei] == 0)
+                    q.add(nei);
+            });
+        }
+        return visitedCount == param1;
+    }
+}

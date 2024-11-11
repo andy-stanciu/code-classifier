@@ -1,0 +1,49 @@
+public class Solution {
+
+    public String method1(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        // Create a hashmap to save the frequency of each character in the target substring t
+        Map<Character, Integer> charCountMap = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            charCountMap.put(c, charCountMap.getOrDefault(c, 0) + 1);
+        }
+        // Maintain a counter to check how many characters match the target string
+        int matchCounter = charCountMap.size();
+        // Two pointers for the sliding window
+        int left = 0, right = 0;
+        // Variables to keep track of the minimum window
+        int minLen = Integer.MAX_VALUE;
+        int minStart = 0;
+        // Loop over the string s with the right pointer
+        while (right < s.length()) {
+            char rightChar = s.charAt(right);
+            // Decrease the frequency of the right character in the map
+            if (charCountMap.containsKey(rightChar)) {
+                charCountMap.put(rightChar, charCountMap.get(rightChar) - 1);
+                if (charCountMap.get(rightChar) == 0) {
+                    matchCounter--;
+                }
+            }
+            right++;
+            // Increase the left pointer to maintain the window\'s validity
+            while (matchCounter == 0) {
+                // Update the minimum window if the current window is smaller
+                if (right - left < minLen) {
+                    minLen = right - left;
+                    minStart = left;
+                }
+                char leftChar = s.charAt(left);
+                // Move the left pointer to the right and adjust the map and counter
+                if (charCountMap.containsKey(leftChar)) {
+                    charCountMap.put(leftChar, charCountMap.get(leftChar) + 1);
+                    if (charCountMap.get(leftChar) > 0) {
+                        matchCounter++;
+                    }
+                }
+                left++;
+            }
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart + minLen);
+    }
+}

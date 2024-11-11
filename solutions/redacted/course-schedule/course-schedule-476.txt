@@ -1,0 +1,49 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        //create an adjacency list to represent the graph
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        //build the graph from prerequisites
+        //prerequisites[i] = [a, b], So we add \'a\' to the list of prerequisites for course \'b\' in the adjacency list
+        for (int[] p : prerequisites) {
+            int var1 = p[0];
+            int var2 = p[1];
+            //we get the prerequisite course from the graph and add their equivalent course to it
+            graph.get(var2).add(var1);
+        }
+        //perform topological sort
+        Stack<Integer> st = new Stack<>();
+        boolean[] visited = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                if (!topo(i, graph, visited, st)) {
+                    //cycle exists
+                    return false;
+                }
+            }
+        }
+        // no cycle
+        return true;
+    }
+
+    public static boolean topo(int var1, List<List<Integer>> graph, boolean[] visited, Stack<Integer> st) {
+        visited[var1] = true;
+        for (int neighbor : graph.get(var1)) {
+            if (visited[neighbor] && !st.contains(neighbor)) {
+                // cycle detected
+                return false;
+            }
+            if (!visited[neighbor]) {
+                if (!topo(neighbor, graph, visited, st)) {
+                    return false;
+                }
+            }
+        }
+        //since no cycle is detected and this course can be scheduled
+        st.push(var1);
+        return true;
+    }
+}

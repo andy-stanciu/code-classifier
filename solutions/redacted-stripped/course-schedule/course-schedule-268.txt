@@ -1,0 +1,37 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            graph.get(prerequisite[1]).add(prerequisite[0]);
+        }
+        boolean[] vis = new boolean[param1];
+        boolean[] path = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!vis[i]) {
+                if (dfs(graph, i, vis, path))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean dfs(List<List<Integer>> graph, int i, boolean[] vis, boolean[] path) {
+        vis[i] = true;
+        path[i] = true;
+        for (int x : graph.get(i)) {
+            if (!vis[x]) {
+                if (dfs(graph, x, vis, path)) {
+                    return true;
+                }
+            } else if (path[x]) {
+                return true;
+            }
+        }
+        path[i] = false;
+        return false;
+    }
+}

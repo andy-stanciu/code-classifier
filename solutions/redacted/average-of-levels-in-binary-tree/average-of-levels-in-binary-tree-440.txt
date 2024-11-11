@@ -1,0 +1,53 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<Double> method1(TreeNode root) {
+        //run bfs.
+        return method2(root);
+    }
+
+    //BFS algorithm to solve the problem.
+    private List<Double> method2(TreeNode root) {
+        if (root == null)
+            return Collections.singletonList(0d);
+        List<Double> ans = new ArrayList<>();
+        //Initialize queue for bfs.
+        Deque<TreeNode> queue = new ArrayDeque<>();
+        queue.addLast(root);
+        while (!queue.isEmpty()) {
+            //nodes at curr level will be size of queue.
+            int nodeAtCurrLevel = queue.size();
+            //to keep track of pending nodes to be processed at curr level.
+            int nodesToProcessAtCurrLevel = queue.size();
+            //summ of all nodes at curr level.
+            double var1 = 0d;
+            //find sum of all nodes at curr level.
+            while (nodesToProcessAtCurrLevel > 0) {
+                TreeNode currNode = queue.removeFirst();
+                var1 += (currNode.val);
+                if (currNode.left != null)
+                    queue.addLast(currNode.left);
+                if (currNode.right != null)
+                    queue.addLast(currNode.right);
+                nodesToProcessAtCurrLevel -= 1;
+            }
+            //push average of curr level to list.
+            ans.add(var1 / nodeAtCurrLevel);
+        }
+        return ans;
+    }
+}

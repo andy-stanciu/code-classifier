@@ -1,0 +1,26 @@
+class Solution {
+
+    public int method1(int[] nums) {
+        Integer[] integerArray = Arrays.stream(nums).boxed().toArray(Integer[]::new);
+        TreeSet<Integer> set = new TreeSet<>(Arrays.asList(integerArray));
+        PriorityQueue<Integer> maxheap = new PriorityQueue<>();
+        int index = 1;
+        int answer = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (Integer n : set) {
+            if (maxheap.size() == 0) {
+                maxheap.add(n);
+                map.put(index, map.getOrDefault(index, 0) + 1);
+            } else {
+                if (maxheap.peek() + 1 != n) {
+                    index++;
+                }
+                maxheap.poll();
+                maxheap.add(n);
+                map.put(index, map.getOrDefault(index, 0) + 1);
+            }
+            answer = Math.max(answer, map.getOrDefault(index, 0));
+        }
+        return answer;
+    }
+}

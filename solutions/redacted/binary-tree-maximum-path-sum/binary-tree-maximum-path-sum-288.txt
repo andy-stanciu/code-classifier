@@ -1,0 +1,46 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // This already given function returns the maximum path sum for the entire binary tree
+    public int method1(TreeNode root) {
+        // Initialize maxi to the minimum possible integer value
+        int[] maxi = { Integer.MIN_VALUE };
+        //Call the function to calculate the overall sum inclusing the turning point node
+        method2(root, maxi);
+        //return the max path sum
+        return maxi[0];
+    }
+
+    // Recursive function to find the maxi path sum for a subtree at \'root\'
+    // The variable \'maxi\' is a reference parameter to store the maximum path sum encountered
+    int method2(TreeNode root, int[] maxi) {
+        //Establishing the base condition first
+        if (root == null) {
+            return 0;
+        }
+        //Max sum of the left subtree
+        int var1 = Math.max(0, method2(root.left, maxi));
+        //Max sum of the right subtree
+        int var2 = Math.max(0, method2(root.right, maxi));
+        //Overall max path sum at the turning point node
+        maxi[0] = Math.max(maxi[0], var1 + var2 + root.val);
+        // Returns the maximum sum considering
+        // only one branch (either left or right)
+        // along with the current node
+        return Math.max(var1, var2) + root.val;
+    }
+}

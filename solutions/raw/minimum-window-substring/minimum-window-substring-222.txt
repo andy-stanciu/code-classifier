@@ -1,0 +1,57 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        // Initialize pointers, map, and variables
+        // Left pointer
+        int left = 0;
+        // Right pointer
+        int right = 0;
+        // Map to store characters from string t
+        HashMap<Character, Integer> map = new HashMap<Character, Integer>();
+        // Minimum window length
+        int min = Integer.MAX_VALUE;
+        // Starting index of the minimum window
+        int startIndex = 0;
+        // Counter for matching characters
+        int count = 0;
+        // Populate the map with character counts from string t
+        for (char c : t.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        // Expand and shrink the window
+        while (right < s.length()) {
+            // Expand the window until it covers all characters in t
+            if (map.containsKey(s.charAt(right))) {
+                if (map.get(s.charAt(right)) > 0) {
+                    // Increment count if character at right pointer matches
+                    count++;
+                }
+                // Decrease character count
+                map.put(s.charAt(right), map.get(s.charAt(right)) - 1);
+            }
+            // Shrink the window until it no longer covers all characters in t
+            while (count == t.length()) {
+                // Update min window length and starting index
+                if (right - left + 1 < min) {
+                    min = right - left + 1;
+                    startIndex = left;
+                }
+                // Move left pointer and update count
+                if (map.containsKey(s.charAt(left))) {
+                    // Restore character count
+                    map.put(s.charAt(left), map.get(s.charAt(left)) + 1);
+                    if (map.get(s.charAt(left)) > 0) {
+                        // Decrement count if character at left pointer no longer matches
+                        count--;
+                    }
+                }
+                // Move left pointer to shrink the window
+                left++;
+            }
+            // Move right pointer to expand the window
+            right++;
+        }
+        // Return the minimum window substring
+        return min == Integer.MAX_VALUE ? "" : s.substring(startIndex, startIndex + min);
+    }
+}

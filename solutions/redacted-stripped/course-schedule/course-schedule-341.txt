@@ -1,0 +1,43 @@
+class Solution {
+
+    boolean[] visited, marked;
+
+    ArrayList<ArrayList<Integer>> graph;
+
+    boolean cycle;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        cycle = false;
+        graph = new ArrayList<ArrayList<Integer>>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<Integer>());
+        }
+        for (int[] c : prerequisites) {
+            int goal = c[0];
+            int prerequisite = c[1];
+            graph.get(prerequisite).add(goal);
+        }
+        visited = new boolean[param1];
+        marked = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                visit(i);
+            }
+        }
+        return !cycle;
+    }
+
+    private void visit(int i) {
+        visited[i] = true;
+        marked[i] = true;
+        ArrayList<Integer> neighbors = graph.get(i);
+        for (int neighbor : neighbors) {
+            if (!visited[neighbor]) {
+                visit(neighbor);
+            } else if (marked[neighbor]) {
+                cycle = true;
+            }
+        }
+        marked[i] = false;
+    }
+}

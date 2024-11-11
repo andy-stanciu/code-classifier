@@ -1,0 +1,33 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        HashMap<Integer, List<Integer>> graph = new HashMap<>();
+        HashSet<Integer> visited = new HashSet<>();
+        for (int i = 0; i < param1; i++) {
+            graph.putIfAbsent(i, new LinkedList<Integer>());
+        }
+        for (int[] pre : prerequisites) {
+            graph.get(pre[1]).add(pre[0]);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (graph.get(i).size() != 0) {
+                if (!DFS(graph, visited, i))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean DFS(HashMap<Integer, List<Integer>> graph, HashSet<Integer> visited, int param2) {
+        if (visited.contains(param2))
+            return false;
+        else
+            visited.add(param2);
+        for (int req : graph.get(param2)) {
+            if (!DFS(graph, visited, req))
+                return false;
+        }
+        visited.remove(param2);
+        return true;
+    }
+}

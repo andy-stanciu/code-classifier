@@ -1,0 +1,34 @@
+class Solution {
+
+    int smallestNumLargerThanN(List<Integer> list, int N) {
+        int low = 0, high = list.size() - 1;
+        int ans = 0;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int ele = list.get(mid);
+            if (N == ele)
+                return mid;
+            else if (N > ele)
+                low = mid + 1;
+            else {
+                ans = mid;
+                high = mid - 1;
+            }
+        }
+        return ans;
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        ArrayList<Integer> subSeq = new ArrayList<>();
+        subSeq.add(nums[0]);
+        int i = 1;
+        for (int n : nums) {
+            if (subSeq.get(i - 1) < n)
+                subSeq.add(i++, n);
+            else {
+                subSeq.set(smallestNumLargerThanN(subSeq, n), n);
+            }
+        }
+        return i;
+    }
+}

@@ -1,0 +1,82 @@
+public class Solution {
+
+    // Returns the index of the parent for a given node position
+    private int parent(int pos) {
+        return pos > 1 ? pos / 2 : -1;
+    }
+
+    // Checks if a node at a given position is a leaf node
+    private boolean isLeaf(int[] heap, int pos) {
+        return pos > heap.length / 2 && pos <= heap.length;
+    }
+
+    // Returns the index of the left child for a given node position
+    private int leftChild(int pos) {
+        return (2 * pos);
+    }
+
+    // Returns the index of the right child for a given node position
+    private int rightChild(int pos) {
+        return (2 * pos) + 1;
+    }
+
+    // Maintains the Min Heap property by moving an element down the heap
+    private void method1(int[] heap, int pos, int heapSize) {
+        if (!isLeaf(heap, pos) && pos <= heapSize / 2) {
+            // Only non-leaf nodes need heapification
+            int left = leftChild(pos);
+            int right = rightChild(pos);
+            int smallest = pos;
+            // Find the smallest element among the current node and its children
+            if (left <= heapSize && heap[left] < heap[smallest])
+                smallest = left;
+            if (right <= heapSize && heap[right] < heap[smallest])
+                smallest = right;
+            // Swap and continue heapifying if the current node is not the smallest
+            if (smallest != pos) {
+                swap(heap, pos, smallest);
+                method1(heap, smallest, heapSize);
+            }
+        }
+    }
+
+    // Swaps two elements in the heap array
+    private void swap(int[] heap, int fpos, int spos) {
+        int tmp = heap[fpos];
+        heap[fpos] = heap[spos];
+        heap[spos] = tmp;
+    }
+
+    // Inserts an element into the heap and maintains the Min Heap property
+    private void method2(int[] heap, int param1, int pos, int k) {
+        if (pos > k) {
+            // Once the heap reaches size k, only replace the root if the new element is larger
+            if (param1 > heap[1]) {
+                heap[1] = param1;
+                // Restore the Min Heap property after replacing the root
+                method1(heap, 1, k);
+            }
+        } else {
+            // Insert element at the current position if heap size is less than k
+            heap[pos] = param1;
+            int current = pos;
+            // Bubble up to maintain Min Heap property
+            while (parent(current) > 0 && heap[current] < heap[parent(current)]) {
+                swap(heap, current, parent(current));
+                current = parent(current);
+            }
+        }
+    }
+
+    public int method3(int[] nums, int k) {
+        // Create a heap array with a capacity of k
+        int[] heap = new int[k + 1];
+        // Sentinel value to simplify parent checks
+        heap[0] = Integer.MIN_VALUE;
+        for (int i = 0; i < nums.length; i++) {
+            method2(heap, nums[i], i + 1, k);
+        }
+        // The root of the Min Heap now contains the k-th largest element
+        return heap[1];
+    }
+}

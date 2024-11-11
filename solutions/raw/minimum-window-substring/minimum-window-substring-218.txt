@@ -1,0 +1,47 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (s == null || t == null || s.length() < t.length()) {
+            return "";
+        }
+        // Character count arrays for t and for the current window in s
+        int[] tCount = new int[128];
+        int[] windowCount = new int[128];
+        // Populate the tCount array with the frequencies of characters in t
+        for (char c : t.toCharArray()) {
+            tCount[c]++;
+        }
+        // Number of characters required from t
+        int required = t.length();
+        // Sliding window pointers
+        int left = 0, right = 0;
+        // Length of the minimum window
+        int minLength = Integer.MAX_VALUE;
+        // Starting index of the minimum window
+        int minLeft = 0;
+        // Number of characters that match t in the current window
+        int formed = 0;
+        while (right < s.length()) {
+            char rightChar = s.charAt(right);
+            windowCount[rightChar]++;
+            if (tCount[rightChar] > 0 && windowCount[rightChar] <= tCount[rightChar]) {
+                formed++;
+            }
+            while (formed == required) {
+                // Update the minimum window
+                if (right - left + 1 < minLength) {
+                    minLength = right - left + 1;
+                    minLeft = left;
+                }
+                char leftChar = s.charAt(left);
+                windowCount[leftChar]--;
+                if (tCount[leftChar] > 0 && windowCount[leftChar] < tCount[leftChar]) {
+                    formed--;
+                }
+                left++;
+            }
+            right++;
+        }
+        return minLength == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + minLength);
+    }
+}

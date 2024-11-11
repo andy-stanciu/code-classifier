@@ -1,0 +1,39 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        String result = "";
+        if (s.length() < t.length()) {
+            return result;
+        }
+        int[] tcount = new int[128];
+        for (char ch : t.toCharArray()) {
+            tcount[ch]++;
+        }
+        int found = 0;
+        int tofind = t.length();
+        int minwindow = Integer.MAX_VALUE;
+        char[] schars = s.toCharArray();
+        int left = 0;
+        int right = 0;
+        while (right < s.length()) {
+            char ch = schars[right];
+            tcount[ch]--;
+            if (tcount[ch] >= 0) {
+                found++;
+            }
+            while (found == tofind) {
+                if (minwindow > (right - left + 1)) {
+                    minwindow = right - left + 1;
+                    result = s.substring(left, right + 1);
+                }
+                tcount[schars[left]]++;
+                if (tcount[schars[left]] > 0) {
+                    found--;
+                }
+                left++;
+            }
+            right++;
+        }
+        return result;
+    }
+}

@@ -1,0 +1,37 @@
+class Solution {
+
+    int[][] pre;
+
+    int[] read;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        read = new int[param1];
+        pre = new int[param1][param1];
+        for (int i = 0; i < prerequisites.length; i++) {
+            pre[prerequisites[i][0]][0] = pre[prerequisites[i][0]][0] + 1;
+            int curCount = pre[prerequisites[i][0]][0];
+            pre[prerequisites[i][0]][curCount] = prerequisites[i][1];
+        }
+        for (int i = 0; i < param1; i++) {
+            if (!findDependency(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean findDependency(int param2) {
+        if (read[param2] == 2)
+            return true;
+        if (read[param2] == 1)
+            return false;
+        int[] dependents = pre[param2];
+        read[param2] = 1;
+        for (int i = 1; i <= dependents[0]; i++) {
+            if (!findDependency(dependents[i]))
+                return false;
+        }
+        read[param2] = 2;
+        return true;
+    }
+}

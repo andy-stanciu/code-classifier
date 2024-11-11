@@ -1,0 +1,43 @@
+class Solution {
+
+    String method1(String s, String t) {
+        if (s.length() < t.length()) {
+            return "";
+        }
+        HashMap<Character, Integer> tMap = new HashMap<>();
+        HashMap<Character, Integer> var1 = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            tMap.putIfAbsent(t.charAt(i), 0);
+            tMap.put(t.charAt(i), tMap.get(t.charAt(i)) + 1);
+            var1.putIfAbsent(t.charAt(i), 0);
+        }
+        int matches = 0;
+        int l = 0;
+        int minW = Integer.MAX_VALUE;
+        int[] minIndex = new int[2];
+        for (int r = 0; r < s.length(); r++) {
+            if (var1.containsKey(s.charAt(r))) {
+                var1.put(s.charAt(r), var1.get(s.charAt(r)) + 1);
+                if (var1.get(s.charAt(r)).equals(tMap.get(s.charAt(r)))) {
+                    matches++;
+                }
+            }
+            while (matches == tMap.size()) {
+                int currLength = r - l + 1;
+                if (minW > currLength) {
+                    minW = currLength;
+                    minIndex[0] = l;
+                    minIndex[1] = r;
+                }
+                if (var1.containsKey(s.charAt(l))) {
+                    var1.put(s.charAt(l), var1.get(s.charAt(l)) - 1);
+                    if (var1.get(s.charAt(l)) < tMap.get(s.charAt(l))) {
+                        matches--;
+                    }
+                }
+                l++;
+            }
+        }
+        return (minW != Integer.MAX_VALUE) ? s.substring(minIndex[0], minIndex[1] + 1) : "";
+    }
+}

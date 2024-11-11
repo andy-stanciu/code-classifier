@@ -1,0 +1,27 @@
+class Solution {
+
+    public int uniquePathsWithObstacles(int[][] ogrid) {
+        int rows = ogrid.length;
+        int cols = ogrid[0].length;
+        int[][] dp = new int[rows + 1][cols + 1];
+        for (int i = 0; i < rows + 1; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        return helper(ogrid, 0, 0, rows, cols, dp);
+    }
+
+    public int helper(int[][] grid, int r, int c, int rows, int cols, int[][] dp) {
+        if (r == rows || c == cols) {
+            return dp[r][c] = 0;
+        }
+        if (grid[r][c] == 1) {
+            return dp[r][c] = 0;
+        }
+        if (r == rows - 1 && c == cols - 1) {
+            return dp[r][c] = 1;
+        }
+        int a = dp[r + 1][c] == -1 ? helper(grid, r + 1, c, rows, cols, dp) : dp[r + 1][c];
+        int b = dp[r][c + 1] == -1 ? helper(grid, r, c + 1, rows, cols, dp) : dp[r][c + 1];
+        return dp[r][c] = a + b;
+    }
+}

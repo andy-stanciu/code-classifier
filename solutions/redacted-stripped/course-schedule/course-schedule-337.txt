@@ -1,0 +1,65 @@
+class Node {
+
+    int val;
+
+    List<Node> list;
+
+    boolean decide;
+
+    public Node(int val) {
+        this.val = val;
+        list = new ArrayList<>();
+    }
+
+    public Node(int val, List<Node> list) {
+        this.val = val;
+        this.list = list;
+    }
+}
+
+class Solution {
+
+    public static boolean dfs(boolean[] visited, boolean[] tf, Node node) {
+        visited[node.val] = true;
+        List<Node> list = node.list;
+        boolean ans = true;
+        for (int i = 0; i < list.size(); i++) {
+            Node curr = list.get(i);
+            if (visited[curr.val] && tf[curr.val] == false) {
+                curr.decide = false;
+                return false;
+            }
+            if (visited[curr.val] && tf[curr.val]) {
+                ans = ans && curr.decide;
+            } else {
+                ans = ans && dfs(visited, tf, curr);
+            }
+        }
+        tf[node.val] = true;
+        node.decide = ans;
+        return ans;
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Node[] gph = new Node[param1];
+        for (int i = 0; i < gph.length; i++) {
+            gph[i] = new Node(i);
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int a = prerequisites[i][0];
+            int b = prerequisites[i][1];
+            gph[a].list.add(gph[b]);
+        }
+        boolean[] visited = new boolean[param1];
+        boolean[] tf = new boolean[param1];
+        boolean ans = true;
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                ans = ans && dfs(visited, tf, gph[i]);
+            }
+            if (ans == false)
+                return ans;
+        }
+        return ans;
+    }
+}

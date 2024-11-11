@@ -1,0 +1,33 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] ans = new int[128];
+        for (char c : t.toCharArray()) {
+            ans[c]++;
+        }
+        int count = 0;
+        int left = 0;
+        int minlen = Integer.MAX_VALUE;
+        int right = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            ans[c]--;
+            if (ans[c] >= 0) {
+                count++;
+            }
+            while (count == t.length()) {
+                if (minlen > i - left + 1) {
+                    minlen = i - left + 1;
+                    right = left;
+                }
+                char ch = s.charAt(left);
+                ans[ch]++;
+                if (ans[ch] > 0) {
+                    count--;
+                }
+                left++;
+            }
+        }
+        return minlen == Integer.MAX_VALUE ? "" : s.substring(right, right + minlen);
+    }
+}

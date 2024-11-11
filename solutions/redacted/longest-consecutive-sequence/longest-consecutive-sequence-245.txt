@@ -1,0 +1,81 @@
+class DisjointSet {
+
+    int[] parent;
+
+    int[] size;
+
+    int maxCount;
+
+    DisjointSet(int n) {
+        this.parent = new int[n];
+        this.size = new int[n];
+        this.maxCount = 1;
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+    }
+
+    public int find(int a) {
+        if (parent[a] == a) {
+            return a;
+        }
+        return parent[a] = find(parent[a]);
+    }
+
+    public boolean merge(int a, int b) {
+        int parentA = find(a);
+        int parentB = find(b);
+        if (parentA == parentB) {
+            return false;
+        }
+        if (size[parentA] > size[parentB]) {
+            parent[parentB] = parentA;
+        } else if (size[parentA] > size[parentB]) {
+            parent[parentA] = parentB;
+        } else {
+            parent[parentA] = parentB;
+            size[parentA]++;
+        }
+        return true;
+    }
+
+    public int getMaxCount() {
+        HashMap<Integer, Integer> frequency = new HashMap();
+        int maxCount = 0;
+        for (int i = 0; i < parent.length; i++) {
+            int parent = find(i);
+            int frequencyValue = frequency.getOrDefault(parent, 0) + 1;
+            frequency.put(parent, frequencyValue);
+            maxCount = Math.max(frequencyValue, maxCount);
+        }
+        return maxCount;
+    }
+}
+
+class Solution {
+
+    public int method1(int[] numsGiven) {
+        HashSet<Integer> unique = new HashSet();
+        HashMap<Integer, Integer> exists = new HashMap();
+        for (int i = 0; i < numsGiven.length; i++) {
+            unique.add(numsGiven[i]);
+        }
+        int[] nums = new int[unique.size()];
+        int j = 0;
+        for (Integer val : unique) {
+            nums[j++] = val;
+        }
+        DisjointSet ds = new DisjointSet(nums.length);
+        for (int i = 0; i < nums.length; i++) {
+            exists.put(nums[i], i);
+        }
+        for (int i = 0; i < nums.length; i++) {
+            int previousValue = nums[i] - 1;
+            if (exists.containsKey(previousValue)) {
+                ds.merge(i, exists.get(previousValue));
+            }
+        }
+        return ds.getMaxCount();
+    }
+}

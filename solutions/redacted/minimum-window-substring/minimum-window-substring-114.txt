@@ -1,0 +1,38 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int l = 0;
+        int r = 0;
+        int minStart = l;
+        int[] sChar = new int[128];
+        int[] tChar = new int[128];
+        char c;
+        int minWin = Integer.MAX_VALUE;
+        int formed = 0;
+        for (int i = 0; i < t.length(); i++) {
+            c = t.charAt(i);
+            tChar[c]++;
+        }
+        while (r < s.length()) {
+            c = s.charAt(r);
+            sChar[c]++;
+            if (tChar[c] > 0 && sChar[c] <= tChar[c]) {
+                formed++;
+            }
+            while (formed == t.length()) {
+                if (r - l + 1 < minWin) {
+                    minWin = r - l + 1;
+                    minStart = l;
+                }
+                char leftChar = s.charAt(l);
+                sChar[leftChar]--;
+                if (tChar[leftChar] > 0 && sChar[leftChar] < tChar[leftChar]) {
+                    formed--;
+                }
+                l++;
+            }
+            r++;
+        }
+        return minWin == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart + minWin);
+    }
+}

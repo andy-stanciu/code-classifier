@@ -1,0 +1,28 @@
+class Solution {
+
+    int[][] dp;
+
+    public int helper(int index, int[] nums, int prev) {
+        if (index >= nums.length) {
+            return 0;
+        }
+        if (prev != -1 && dp[index][prev] != -1)
+            return dp[index][prev];
+        if (prev == -1 || nums[index] > nums[prev]) {
+            int res = Math.max(1 + helper(index + 1, nums, index), helper(index + 1, nums, prev));
+            if (prev != -1)
+                return dp[index][prev] = res;
+            return res;
+        } else {
+            return dp[index][prev] = helper(index + 1, nums, prev);
+        }
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        dp = new int[nums.length][nums.length];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        return helper(0, nums, -1);
+    }
+}

@@ -1,0 +1,45 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        HashMap<Character, Integer> freqmap = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            char ch = t.charAt(i);
+            freqmap.put(ch, freqmap.getOrDefault(ch, 0) + 1);
+        }
+        int uniquecount = freqmap.size();
+        int startindex = -1;
+        int ws = 0;
+        int WE = 0;
+        int minlen = Integer.MAX_VALUE;
+        int n = s.length();
+        while (WE < n) {
+            char ch = s.charAt(WE);
+            if (freqmap.containsKey(ch)) {
+                freqmap.put(ch, freqmap.get(ch) - 1);
+                if (freqmap.get(ch) == 0) {
+                    uniquecount--;
+                }
+            }
+            while (uniquecount == 0) {
+                int len = WE - ws + 1;
+                if (len < minlen) {
+                    minlen = len;
+                    startindex = ws;
+                }
+                ch = s.charAt(ws);
+                if (freqmap.containsKey(ch)) {
+                    freqmap.put(ch, freqmap.get(ch) + 1);
+                    if (freqmap.get(ch) > 0) {
+                        uniquecount++;
+                    }
+                }
+                ws++;
+            }
+            WE++;
+        }
+        if (startindex == -1) {
+            return "";
+        }
+        return s.substring(startindex, startindex + minlen);
+    }
+}

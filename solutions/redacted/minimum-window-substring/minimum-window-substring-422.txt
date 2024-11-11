@@ -1,0 +1,39 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> need = new HashMap<>();
+        int left = 0, matches = 0;
+        int minLength = Integer.MAX_VALUE, start = 0;
+        for (int i = 0; i < t.length(); i++) {
+            need.put(t.charAt(i), need.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        for (int right = 0; right < s.length(); right++) {
+            if (need.containsKey(s.charAt(right))) {
+                if (need.get(s.charAt(right)) > 0)
+                    matches++;
+                need.put(s.charAt(right), need.get(s.charAt(right)) - 1);
+            }
+            //the number of matches is equal to the number of chars present in t
+            if (matches == t.length()) {
+                //when we get equal number of mathches we update the left index to omit unwanted leftmost chars
+                while (left < right && (!need.containsKey(s.charAt(left)) || need.get(s.charAt(left)) < 0)) {
+                    if (need.containsKey(s.charAt(left))) {
+                        need.put(s.charAt(left), need.get(s.charAt(left)) + 1);
+                    }
+                    left++;
+                }
+                //to check the minimum length
+                if (minLength > right - left + 1) {
+                    start = left;
+                    minLength = right - left + 1;
+                }
+                if (need.containsKey(s.charAt(left))) {
+                    need.put(s.charAt(left), need.get(s.charAt(left)) + 1);
+                }
+                matches--;
+                left++;
+            }
+        }
+        return minLength == Integer.MAX_VALUE ? "" : s.substring(start, start + minLength);
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    private enum CourseStatus {
+
+        TAKEN, TAKING, NOT_TAKEN
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<Integer>[] var1 = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            var1[i] = new ArrayList<Integer>();
+        }
+        for (int[] prerequisite : prerequisites) {
+            int var2 = prerequisite[1];
+            int var3 = prerequisite[0];
+            var1[var2].add(var3);
+        }
+        CourseStatus[] var4 = new CourseStatus[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!canFinish(var1, i, var4)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean canFinish(ArrayList<Integer>[] var1, int param2, CourseStatus[] var4) {
+        if (var4[param2] == CourseStatus.TAKING) {
+            return false;
+        } else if (var4[param2] == CourseStatus.TAKEN) {
+            return true;
+        } else {
+            var4[param2] = CourseStatus.TAKING;
+            for (int var3 : var1[param2]) {
+                if (!canFinish(var1, var3, var4)) {
+                    return false;
+                }
+            }
+            var4[param2] = CourseStatus.TAKEN;
+            return true;
+        }
+    }
+}

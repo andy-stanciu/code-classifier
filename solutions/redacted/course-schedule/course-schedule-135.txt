@@ -1,0 +1,55 @@
+class Solution {
+
+    HashSet<Integer> seen;
+
+    HashMap<Integer, List<Integer>> map;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        seen = new HashSet<>();
+        map = new HashMap<>();
+        for (int[] array : prerequisites) {
+            if (!map.containsKey(array[0])) {
+                map.put(array[0], new ArrayList<>());
+            }
+            map.get(array[0]).add(array[1]);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (!seen.contains(i)) {
+                if (dfs(i, new HashSet<>())) {
+                    seen.add(i);
+                }
+            }
+        }
+        for (Map.Entry<Integer, List<Integer>> entry : map.entrySet()) {
+            if (!seen.contains(entry.getKey())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(int param2, HashSet<Integer> set) {
+        if (set.contains(param2)) {
+            return false;
+        }
+        set.add(param2);
+        List<Integer> prerequisites = map.getOrDefault(param2, new ArrayList<>());
+        if (prerequisites.isEmpty()) {
+            seen.add(param2);
+            return true;
+        }
+        for (int n : prerequisites) {
+            if (!seen.contains(n)) {
+                if (dfs(n, set)) {
+                    seen.add(n);
+                }
+            }
+        }
+        for (int x : prerequisites) {
+            if (!seen.contains(x)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

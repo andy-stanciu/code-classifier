@@ -1,0 +1,42 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<Integer>[] graph = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] prerequisite : prerequisites) {
+            int var1 = prerequisite[0];
+            int var2 = prerequisite[1];
+            graph[var2].add(var1);
+        }
+        return !hasCycle(graph);
+    }
+
+    private boolean hasCycle(ArrayList<Integer>[] graph) {
+        boolean[] visited = new boolean[graph.length];
+        boolean[] stack = new boolean[graph.length];
+        for (int i = 0; i < graph.length; i++) {
+            if (!visited[i] && dfs(graph, i, visited, stack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean dfs(ArrayList<Integer>[] graph, int vertex, boolean[] visited, boolean[] stack) {
+        visited[vertex] = true;
+        stack[vertex] = true;
+        for (int neighbor : graph[vertex]) {
+            if (!visited[neighbor]) {
+                if (dfs(graph, neighbor, visited, stack)) {
+                    return true;
+                }
+            } else if (stack[neighbor]) {
+                return true;
+            }
+        }
+        stack[vertex] = false;
+        return false;
+    }
+}

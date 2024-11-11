@@ -1,0 +1,42 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s == null || t == null || s.length() < t.length()) {
+            return "";
+        }
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        int left = 0;
+        int right = 0;
+        int minLen = Integer.MAX_VALUE;
+        int count = 0;
+        String result = "";
+        while (right < s.length()) {
+            char rChar = s.charAt(right);
+            if (map.containsKey(rChar)) {
+                map.put(rChar, map.get(rChar) - 1);
+                if (map.get(rChar) >= 0) {
+                    count++;
+                }
+            }
+            while (count == t.length()) {
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    result = s.substring(left, right + 1);
+                }
+                char lChar = s.charAt(left);
+                if (map.containsKey(lChar)) {
+                    map.put(lChar, map.get(lChar) + 1);
+                    if (map.get(lChar) > 0) {
+                        count--;
+                    }
+                }
+                left++;
+            }
+            right++;
+        }
+        return result;
+    }
+}

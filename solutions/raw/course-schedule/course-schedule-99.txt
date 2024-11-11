@@ -1,0 +1,37 @@
+class Solution {
+
+    int count = 0;
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // creation of graph (prereq course -> course)
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) graph.add(new ArrayList<>());
+        int[] indegree = new int[numCourses];
+        // calculate and store indegree of all the nodes
+        for (int[] edge : prerequisites) {
+            graph.get(edge[1]).add(edge[0]);
+            indegree[edge[0]]++;
+        }
+        // create a queue and add all the nodes with indegree 0
+        LinkedList<Integer> q = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0)
+                q.offer(i);
+        }
+        // remove from queue and add to the res
+        int res = 0;
+        while (!q.isEmpty()) {
+            int temp = q.poll();
+            res++;
+            // decrease the indegree of neighbors
+            // means decreasing prereqs to finish that course
+            // when prereqs are 0 we can do the course ie. just offer to queue
+            for (int neighbor : graph.get(temp)) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0)
+                    q.offer(neighbor);
+            }
+        }
+        return res == numCourses;
+    }
+}

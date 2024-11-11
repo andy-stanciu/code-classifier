@@ -1,0 +1,42 @@
+class Solution {
+
+    final String LEFT = "(";
+
+    final String RIGHT = ")";
+
+    public List<String> generateParenthesis(int n) {
+        ArrayList<String> returnList = new ArrayList<>();
+        generateParenthesisHelper(2 * n, 0, 0, new String[16], 0, returnList);
+        return returnList;
+    }
+
+    void generateParenthesisHelper(int n, int left, int right, String[] last, int lastSize, ArrayList<String> returnList) {
+        if (n == 0) {
+            // leaf
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < lastSize; i++) {
+                sb.append(last[i]);
+            }
+            returnList.add(sb.toString());
+            return;
+        }
+        if (n == 1) {
+            // leaf, needs closing parens
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < lastSize; i++) {
+                sb.append(last[i]);
+            }
+            sb.append(RIGHT);
+            returnList.add(sb.toString());
+            return;
+        }
+        if (left > right) {
+            last[lastSize] = RIGHT;
+            generateParenthesisHelper(n - 1, left, right + 1, last, lastSize + 1, returnList);
+        }
+        if (left - right < n) {
+            last[lastSize] = LEFT;
+            generateParenthesisHelper(n - 1, left + 1, right, last, lastSize + 1, returnList);
+        }
+    }
+}

@@ -1,0 +1,49 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Form Graph using an adjacency list
+        ArrayList<ArrayList<Integer>> adjacencyList = new ArrayList<>();
+        // Initialize adjacency list with empty lists for each course/node
+        for (int i = 0; i < numCourses; i++) {
+            adjacencyList.add(new ArrayList<>());
+        }
+        // Add prerequisites to the adjacency list
+        int numOfPrerequisites = prerequisites.length;
+        for (int i = 0; i < numOfPrerequisites; i++) {
+            adjacencyList.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        // Now, perform Topological Sort using BFS
+        // Array to store the indegree (number of incoming edges) for each course/node
+        int[] indegree = new int[numCourses];
+        // Calculate indegree for each node
+        for (int i = 0; i < numCourses; i++) {
+            for (int neighbor : adjacencyList.get(i)) {
+                indegree[neighbor]++;
+            }
+        }
+        // Use a queue to perform BFS for Topological Sort
+        Queue<Integer> queue = new LinkedList<>();
+        // Initialize the queue with nodes having indegree 0 (no prerequisites)
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        // List to store the topological order
+        List<Integer> topologicalOrder = new ArrayList<>();
+        // Start BFS traversal
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            topologicalOrder.add(node);
+            // Reduce the indegree of neighbors and add them to the queue if their indegree becomes 0
+            for (int neighbor : adjacencyList.get(node)) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0) {
+                    queue.add(neighbor);
+                }
+            }
+        }
+        // If the topological order has all nodes, return true, else return false
+        return topologicalOrder.size() == numCourses;
+    }
+}

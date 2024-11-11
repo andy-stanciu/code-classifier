@@ -1,0 +1,32 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        int[] courses = new int[numCourses];
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        Queue<Integer> q = new LinkedList<>();
+        int result = 0;
+        for (int[] prereq : prerequisites) {
+            map.computeIfAbsent(prereq[1], val -> new LinkedList<>()).add(prereq[0]);
+            courses[prereq[0]]++;
+        }
+        for (int i = 0; i < numCourses; i++) {
+            if (courses[i] == 0) {
+                q.offer(i);
+                result++;
+            }
+        }
+        while (!q.isEmpty()) {
+            int course = q.poll();
+            if (map.containsKey(course)) {
+                for (int i : map.get(course)) {
+                    courses[i]--;
+                    if (courses[i] == 0) {
+                        q.offer(i);
+                        result++;
+                    }
+                }
+            }
+        }
+        return result == numCourses;
+    }
+}

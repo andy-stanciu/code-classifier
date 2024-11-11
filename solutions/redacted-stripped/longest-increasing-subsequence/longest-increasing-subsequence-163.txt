@@ -1,0 +1,20 @@
+class Solution {
+
+    private int lis(int[] nums, int index, int prevElementIndex, HashMap<Integer, Integer> memo) {
+        if (index >= nums.length)
+            return 0;
+        var key = prevElementIndex;
+        if (memo.containsKey(key))
+            return memo.get(key);
+        int lisLength = lis(nums, index + 1, prevElementIndex, memo);
+        if (prevElementIndex == -1 || nums[prevElementIndex] < nums[index])
+            lisLength = Math.max(lisLength, 1 + lis(nums, index + 1, index, memo));
+        memo.put(key, lisLength);
+        return lisLength;
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        HashMap<Integer, Integer> memo = new HashMap();
+        return lis(nums, 0, -1, memo);
+    }
+}

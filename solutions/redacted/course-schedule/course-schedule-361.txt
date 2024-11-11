@@ -1,0 +1,39 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] preRequisites) {
+        List<Integer>[] graph = new List[param1];
+        Queue<Integer> var1 = new LinkedList<>();
+        HashSet<Integer> taken = new HashSet<>();
+        boolean[] preRequisiteRoot = new boolean[param1];
+        int[] var2 = new int[param1];
+        for (int i = 0; i < param1; ++i) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] edge : preRequisites) {
+            graph[edge[0]].add(edge[1]);
+            var2[edge[1]]++;
+            if (edge[0] == edge[1]) {
+                return false;
+            }
+        }
+        for (int i = 0; i < param1; ++i) {
+            if (var2[i] == 0) {
+                var1.add(i);
+            }
+        }
+        while (!var1.isEmpty()) {
+            int var3 = var1.poll();
+            taken.add(var3);
+            for (int child : graph[var3]) {
+                if (taken.contains(child)) {
+                    return false;
+                }
+                var2[child]--;
+                if (var2[child] == 0) {
+                    var1.add(child);
+                }
+            }
+        }
+        return taken.size() == param1;
+    }
+}

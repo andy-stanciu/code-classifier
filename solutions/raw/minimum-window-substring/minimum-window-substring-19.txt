@@ -1,0 +1,51 @@
+public class Solution {
+
+    public List<Integer> findSubstring(String s, String[] words) {
+        List<Integer> result = new LinkedList<>();
+        if (words.length == 0 || s.length() < words.length * words[0].length())
+            return result;
+        int wordLength = words[0].length();
+        int wordsCount = words.length;
+        int windowLength = wordLength * wordsCount;
+        int sLength = s.length();
+        // Create a hashmap to save the frequency of each word in words
+        Map<String, Integer> wordMap = new HashMap<>();
+        for (String word : words) {
+            wordMap.put(word, wordMap.getOrDefault(word, 0) + 1);
+        }
+        // Sliding window over each possible starting point within the word length
+        for (int i = 0; i < wordLength; i++) {
+            Map<String, Integer> currentMap = new HashMap<>();
+            int left = i, count = 0;
+            for (int right = i; right + wordLength <= sLength; right += wordLength) {
+                String word = s.substring(right, right + wordLength);
+                if (wordMap.containsKey(word)) {
+                    currentMap.put(word, currentMap.getOrDefault(word, 0) + 1);
+                    count++;
+                    // If there are more words than needed, move the left pointer to balance
+                    while (currentMap.get(word) > wordMap.get(word)) {
+                        String leftWord = s.substring(left, left + wordLength);
+                        currentMap.put(leftWord, currentMap.get(leftWord) - 1);
+                        count--;
+                        left += wordLength;
+                    }
+                    // When we find a valid window, add the start index to the result
+                    if (count == wordsCount) {
+                        result.add(left);
+                        // Move left to find new valid windows
+                        String leftWord = s.substring(left, left + wordLength);
+                        currentMap.put(leftWord, currentMap.get(leftWord) - 1);
+                        count--;
+                        left += wordLength;
+                    }
+                } else {
+                    // Reset if the word is not in wordMap
+                    currentMap.clear();
+                    count = 0;
+                    left = right + wordLength;
+                }
+            }
+        }
+        return result;
+    }
+}

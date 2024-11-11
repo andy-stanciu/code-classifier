@@ -1,0 +1,52 @@
+class Solution {
+
+    Map<Character, Integer> hmt = new HashMap<>();
+
+    public String minWindow(String s, String t) {
+        int m = s.length();
+        int n = t.length();
+        if (m < n)
+            return "";
+        for (int i = 0; i < n; i++) {
+            char ch = t.charAt(i);
+            hmt.put(ch, hmt.getOrDefault(ch, 0) + 1);
+        }
+        int k = hmt.size();
+        Map<Character, Integer> hms = new HashMap<>();
+        int found = 0;
+        int j = 0;
+        int first = -1;
+        int last = -1;
+        for (int i = 0; i < m; i++) {
+            char ch = s.charAt(i);
+            hms.put(ch, hms.getOrDefault(ch, 0) + 1);
+            if (hmt.containsKey(ch)) {
+                int val1 = hms.get(ch);
+                int val2 = hmt.get(ch);
+                if (val1 == val2)
+                    found += 1;
+            }
+            while (found == k) {
+                if (first == -1 && last == -1) {
+                    first = j;
+                    last = i;
+                } else {
+                    if ((last - first) > (i - j)) {
+                        last = i;
+                        first = j;
+                    }
+                }
+                char remove = s.charAt(j);
+                hms.put(remove, hms.get(remove) - 1);
+                if (hmt.containsKey(remove)) {
+                    if (hms.get(remove) < hmt.get(remove))
+                        found -= 1;
+                }
+                j += 1;
+            }
+        }
+        if (first == -1 && last == -1)
+            return "";
+        return s.substring(first, last + 1);
+    }
+}

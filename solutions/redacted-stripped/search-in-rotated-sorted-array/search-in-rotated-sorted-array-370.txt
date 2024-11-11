@@ -1,0 +1,47 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+        Stack<Integer> stack = new Stack<>();
+        stack.push(0);
+        stack.push(nums.length - 1);
+        while (!stack.isEmpty()) {
+            int right = stack.pop();
+            int left = stack.pop();
+            if (left > right) {
+                continue;
+            }
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            }
+            if (nums[left] <= nums[mid]) {
+                if (nums[left] <= target && target < nums[mid]) {
+                    stack.push(left);
+                    stack.push(mid - 1);
+                } else {
+                    stack.push(mid + 1);
+                    stack.push(right);
+                }
+            } else {
+                if (nums[mid] < target && target <= nums[right]) {
+                    stack.push(mid + 1);
+                    stack.push(right);
+                } else {
+                    stack.push(left);
+                    stack.push(mid - 1);
+                }
+            }
+        }
+        return -1;
+    }
+
+    public static void method2(String[] args) {
+        Solution solution = new Solution();
+        System.out.println(solution.method1(new int[] { 4, 5, 6, 7, 0, 1, 2 }, 0));
+        System.out.println(solution.method1(new int[] { 4, 5, 6, 7, 0, 1, 2 }, 3));
+        System.out.println(solution.method1(new int[] { 1 }, 0));
+    }
+}

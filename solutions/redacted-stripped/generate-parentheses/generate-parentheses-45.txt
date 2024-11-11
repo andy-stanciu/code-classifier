@@ -1,0 +1,43 @@
+class Solution {
+
+    public List<String> method1(int n) {
+        List<String> lst = getPermutations("", n * 2);
+        List<String> ans = new ArrayList<>();
+        for (String permutation : lst) {
+            if (isValidPermutation(permutation)) {
+                ans.add(permutation);
+            }
+        }
+        return ans;
+    }
+
+    public List<String> getPermutations(String permutation, int maxLength) {
+        List<String> lst = new ArrayList<>();
+        if (permutation.length() == maxLength) {
+            lst.add(permutation);
+            return lst;
+        }
+        lst.addAll(getPermutations(permutation + "(", maxLength));
+        lst.addAll(getPermutations(permutation + ")", maxLength));
+        return lst;
+    }
+
+    private boolean isValidPermutation(String permutation) {
+        Stack<String> stack = new Stack<>();
+        for (int i = 0; i < permutation.length(); i++) {
+            String s = permutation.substring(i, i + 1);
+            if (s.equals("(")) {
+                stack.push(s);
+            } else {
+                if (stack.size() == 0) {
+                    return false;
+                }
+                stack.pop();
+            }
+        }
+        if (stack.size() != 0) {
+            return false;
+        }
+        return true;
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    public boolean method1(TreeNode root) {
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        while (!q.isEmpty()) {
+            List<TreeNode> temp = new ArrayList<>(q);
+            q.clear();
+            List<Integer> tempVals = new ArrayList<>();
+            temp.forEach(node -> {
+                int left = Solution.toInt(node.left);
+                int right = Solution.toInt(node.right);
+                tempVals.add(left);
+                tempVals.add(right);
+            });
+            if (!method1(tempVals))
+                return false;
+            temp.forEach(node -> {
+                if (node.left != null)
+                    q.add(node.left);
+                if (node.right != null)
+                    q.add(node.right);
+            });
+        }
+        return true;
+    }
+
+    public static Integer toInt(TreeNode n) {
+        if (n == null)
+            return -101;
+        else
+            return n.val;
+    }
+
+    public static boolean method1(List<Integer> list) {
+        int n = list.size();
+        if (n % 2 != 0)
+            return false;
+        List<Integer> leftSideList = list.subList(0, n / 2);
+        List<Integer> rightSideList = list.subList(n / 2, n);
+        Collections.reverse(rightSideList);
+        return leftSideList.equals(rightSideList);
+    }
+}

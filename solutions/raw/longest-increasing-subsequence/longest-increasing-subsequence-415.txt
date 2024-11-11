@@ -1,0 +1,45 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        if (nums == null || nums.length == 0)
+            return 0;
+        int len = nums.length, i = 0, size = 0;
+        int[] tails = new int[len];
+        // tails stores the minimal last number of
+        // the longest strictly increasing subsequence
+        // e.g. [0,1,0,3,2,3], at last
+        // tails[0] is 0
+        // tails[1] is 1
+        // tails[2] is 2
+        // tails[3] is 3
+        // and the answer is 3+1 = 4
+        while (i < len) {
+            int n = nums[i];
+            if (size == 0)
+                tails[size++] = n;
+            else {
+                int left = 0, right = size - 1;
+                while (left <= right) {
+                    int mid = (left + right) / 2;
+                    // do nothing
+                    if (tails[mid] == n) {
+                        left = mid;
+                        break;
+                    }
+                    if (tails[mid] < n)
+                        left = mid + 1;
+                    else
+                        right = mid - 1;
+                }
+                // n is larger than eles in tails, add it
+                if (left == size)
+                    tails[size++] = n;
+                else
+                    // update the ele with smaller tail
+                    tails[left] = n;
+            }
+            i++;
+        }
+        return size;
+    }
+}

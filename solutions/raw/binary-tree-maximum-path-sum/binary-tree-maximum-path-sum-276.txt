@@ -1,0 +1,48 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public static int recursion(TreeNode root, int[] arr) {
+        /*Every recursive call returns the max path calculated from below recursive call
+       it will always be positive and if its negattive the below returns 0
+       */
+        if (root == null)
+            return 0;
+        else {
+            int sumleft = root.val + recursion(root.left, arr);
+            int sumright = root.val + recursion(root.right, arr);
+            /* now we have many choices 
+            first is to send which ever is greater 
+            if both are negative then send 0 because having nothing is better
+            than having something negative(it implies discontinuity from what is below
+            (below path not included)*/
+            if (arr[0] < (sumleft + sumright - root.val))
+                arr[0] = sumleft + sumright - root.val;
+            /*this stored data just like kadane algo stored the maxsum(leetcode max subarray 
+            sum question) did ie
+            we want to find the path including this current node
+            */
+            return Math.max(sumleft, Math.max(sumright, 0));
+        }
+    }
+
+    public int maxPathSum(TreeNode root) {
+        int[] arr = new int[1];
+        arr[0] = Integer.MIN_VALUE;
+        recursion(root, arr);
+        return arr[0];
+    }
+}

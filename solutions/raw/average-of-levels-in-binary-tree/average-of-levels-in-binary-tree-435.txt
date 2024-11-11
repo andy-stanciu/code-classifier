@@ -1,0 +1,46 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<Double> averageOfLevels(TreeNode root) {
+        var levelToNodes = new TreeMap<Integer, List<TreeNode>>();
+        averageOfLevelsInternal(root, levelToNodes, 1);
+        var averageOfLevels = new LinkedList<Double>();
+        for (int resultIdx = 1; resultIdx <= levelToNodes.size(); resultIdx++) {
+            var nodes = levelToNodes.get(resultIdx);
+            var sum = nodes.stream().mapToDouble(node -> node.val).sum();
+            averageOfLevels.add(sum / nodes.size());
+        }
+        return averageOfLevels;
+    }
+
+    private static void averageOfLevelsInternal(TreeNode node, Map<Integer, List<TreeNode>> levelToNodes, Integer level) {
+        if (node == null) {
+            return;
+        }
+        levelToNodes.computeIfPresent(level, (keyLevel, nodes) -> {
+            nodes.add(node);
+            return nodes;
+        });
+        levelToNodes.computeIfAbsent(level, levelKey -> {
+            var nodes = new ArrayList<TreeNode>();
+            nodes.add(node);
+            return nodes;
+        });
+        averageOfLevelsInternal(node.left, levelToNodes, level + 1);
+        averageOfLevelsInternal(node.right, levelToNodes, level + 1);
+    }
+}

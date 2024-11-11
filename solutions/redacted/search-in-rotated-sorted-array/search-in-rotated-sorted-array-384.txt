@@ -1,0 +1,35 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        if (nums.length == 1) {
+            return nums[0] == target ? 0 : -1;
+        }
+        if (nums[0] < nums[nums.length - 1]) {
+            var res = Arrays.binarySearch(nums, target);
+            return res < 0 ? -1 : res;
+        }
+        // search middle
+        var middleIdx = nums.length / 2;
+        if (nums[0] < nums[middleIdx]) {
+            // go right
+            while (nums[middleIdx] < nums[middleIdx + 1]) {
+                middleIdx++;
+            }
+            middleIdx++;
+        } else {
+            // go left
+            while (middleIdx > 1 && nums[middleIdx - 1] < nums[middleIdx]) {
+                middleIdx--;
+            }
+        }
+        var delta = nums.length % 2 == 0 ? 0 : 1;
+        var res = Arrays.binarySearch(nums, 0, middleIdx, target);
+        //System.out.println("Res1: " + res);
+        if (res < 0) {
+            res = Arrays.binarySearch(nums, middleIdx, nums.length, target);
+            //System.out.println("Res2: " + res);
+            return res < 0 ? -1 : res;
+        }
+        return res;
+    }
+}

@@ -1,0 +1,39 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<Double> averageOfLevels(TreeNode root) {
+        int[] nodeCountAtLevels = new int[10000];
+        long[] sumAtSameLevel = new long[10000];
+        inOrderTraversalWithLevelTracking(root, 0, nodeCountAtLevels, sumAtSameLevel);
+        int idx = 0;
+        ArrayList<Double> averageSumAtLevels = new ArrayList<>();
+        while (nodeCountAtLevels[idx] != 0) {
+            averageSumAtLevels.add((double) sumAtSameLevel[idx] / nodeCountAtLevels[idx]);
+            idx++;
+        }
+        return averageSumAtLevels;
+    }
+
+    public void inOrderTraversalWithLevelTracking(TreeNode root, int level, int[] nodeCountAtLevels, long[] sumAtSameLevel) {
+        if (root == null)
+            return;
+        inOrderTraversalWithLevelTracking(root.left, level + 1, nodeCountAtLevels, sumAtSameLevel);
+        nodeCountAtLevels[level] = nodeCountAtLevels[level] + 1;
+        sumAtSameLevel[level] = sumAtSameLevel[level] + root.val;
+        inOrderTraversalWithLevelTracking(root.right, level + 1, nodeCountAtLevels, sumAtSameLevel);
+    }
+}

@@ -1,0 +1,30 @@
+class Solution {
+
+    public int method1(int[] nums) {
+        HashMap<Integer, Integer> hm = new HashMap<>();
+        int var1 = 0;
+        for (int n : nums) {
+            if (hm.containsKey(n))
+                continue;
+            boolean hasLeft = hm.containsKey(n - 1);
+            boolean hasRight = hm.containsKey(n + 1);
+            Integer leftDist = hm.get(n - 1);
+            Integer rightDist = hm.get(n + 1);
+            int newDist = 1;
+            if (hasRight && hasLeft) {
+                newDist = 1 + leftDist + rightDist;
+                hm.put(n - leftDist, newDist);
+                hm.put(n + rightDist, newDist);
+            } else if (hasRight) {
+                newDist = 1 + rightDist;
+                hm.put(n + rightDist, newDist);
+            } else if (hasLeft) {
+                newDist = 1 + leftDist;
+                hm.put(n - leftDist, newDist);
+            }
+            hm.put(n, newDist);
+            var1 = Math.max(newDist, var1);
+        }
+        return var1;
+    }
+}

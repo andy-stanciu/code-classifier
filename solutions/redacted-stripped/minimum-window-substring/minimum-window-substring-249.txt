@@ -1,0 +1,41 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int n = s.length(), i = 0, j = 0, count = 0, min = Integer.MAX_VALUE, mini = -1, minj = -1;
+        HashMap<Character, Integer> charMap = new HashMap<>();
+        for (Character ch : t.toCharArray()) {
+            charMap.put(ch, charMap.getOrDefault(ch, 0) + 1);
+        }
+        count = charMap.size();
+        while (j < n) {
+            Character ch = s.charAt(j);
+            if (charMap.containsKey(ch)) {
+                charMap.put(ch, charMap.get(ch) - 1);
+                if (charMap.get(ch) == 0)
+                    count--;
+            }
+            while (count == 0) {
+                Character charAti = s.charAt(i);
+                if (min > (j - i + 1)) {
+                    min = j - i + 1;
+                    mini = i;
+                    minj = j;
+                }
+                if (charMap.containsKey(charAti)) {
+                    Integer occurrencesOfith = charMap.get(charAti);
+                    if (occurrencesOfith == 0) {
+                        charMap.put(charAti, 1);
+                        count++;
+                    } else {
+                        charMap.put(charAti, occurrencesOfith + 1);
+                    }
+                }
+                i++;
+            }
+            j++;
+        }
+        if (mini == -1)
+            return "";
+        return s.substring(mini, minj + 1);
+    }
+}

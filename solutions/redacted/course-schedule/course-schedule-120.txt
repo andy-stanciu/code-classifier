@@ -1,0 +1,42 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        //indegree of each node
+        int[] indegree = new int[param1];
+        //init graph
+        for (int i = 0; i < param1; i++) {
+            graph.put(i, new ArrayList<>());
+        }
+        //add edges
+        for (int i = 0; i < prerequisites.length; i++) {
+            //from [1]->[0]
+            graph.get(prerequisites[i][1]).add(prerequisites[i][0]);
+            indegree[prerequisites[i][0]]++;
+        }
+        //kahn\'s algo to calculate cycle in graph
+        Deque<Integer> queue = new ArrayDeque<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        //if this is equal to numCourses then true, else false
+        int var1 = 0;
+        while (!queue.isEmpty()) {
+            int var2 = queue.poll();
+            // take current course
+            var1++;
+            if (!graph.get(var2).isEmpty()) {
+                for (int next : graph.get(var2)) {
+                    indegree[next]--;
+                    if (indegree[next] == 0) {
+                        // covered all the prerequisites for next course, so can be taken
+                        queue.offer(next);
+                    }
+                }
+            }
+        }
+        return var1 == param1;
+    }
+}

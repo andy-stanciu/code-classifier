@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int[] indegree = new int[param1];
+        Set<Integer> set = new HashSet();
+        for (int[] pre : prerequisites) {
+            indegree[pre[0]]++;
+        }
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                set.add(i);
+            }
+        }
+        if (set.isEmpty()) {
+            return false;
+        }
+        while (!set.isEmpty()) {
+            Iterator<Integer> it = set.iterator();
+            int var1 = it.next();
+            set.remove(var1);
+            for (int[] pre : prerequisites) {
+                if (var1 == pre[1]) {
+                    indegree[pre[0]]--;
+                    if (indegree[pre[0]] == 0) {
+                        set.add(pre[0]);
+                    }
+                }
+            }
+        }
+        for (int num : indegree) {
+            if (num != 0)
+                return false;
+        }
+        return true;
+    }
+}

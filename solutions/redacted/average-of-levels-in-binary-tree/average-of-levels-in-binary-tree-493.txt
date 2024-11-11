@@ -1,0 +1,34 @@
+class Solution {
+
+    public List<Double> method1(TreeNode root) {
+        // Keep track of sum of values at each level
+        List<Double> list = new ArrayList<>();
+        // Keep track of number of values at each level
+        List<Integer> count = new ArrayList<>();
+        // Populate Lists
+        method1(root, 0, list, count);
+        // Caclulate Average for Each Level
+        for (int i = 0; i < list.size(); i++) list.set(i, list.get(i) / count.get(i));
+        return list;
+    }
+
+    // Recursively porcess all nodes
+    private void method1(TreeNode root, int level, List<Double> list, List<Integer> count) {
+        if (root == null)
+            // Non-Existent Node
+            return;
+        if (list.size() == level) {
+            // If new level initialize the lists
+            list.add(level, (double) root.val);
+            count.add(level, 1);
+        } else {
+            // Existing level so update the lists
+            list.set(level, root.val + list.get(level));
+            count.set(level, count.get(level) + 1);
+        }
+        // Go to next level
+        level++;
+        method1(root.left, level, list, count);
+        method1(root.right, level, list, count);
+    }
+}

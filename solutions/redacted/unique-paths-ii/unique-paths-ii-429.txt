@@ -1,0 +1,53 @@
+class Solution {
+
+    public int method1(int[][] arr) {
+        int m = arr.length;
+        int n = arr[0].length;
+        if (arr[m - 1][n - 1] == 1 || arr[0][0] == 1)
+            return 0;
+        int[][] dp = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (arr[i][j] != 1)
+                    dp[i][j] = -1;
+            }
+        }
+        // top - down approach
+        return memoization(0, 0, arr, m - 1, n - 1, dp);
+        //bottom - up  approach
+        // for(int i=m-1;i>=0;i--){
+        //     for(int j=n-1;j>=0;j--){
+        //         if(i == m-1 && j == n-1) dp[i][j] = 1;
+        //         else{
+        //             int right = 0,down = 0;
+        //             if(i < m-1 && arr[i][j] != 1)
+        //             down = dp[i+1][j];
+        //             if(j < n-1 && arr[i][j] != 1)
+        //             right = dp[i][j+1];
+        //             dp[i][j] = down+right;
+        //         }
+        //     }
+        // }
+        // return dp[0][0];
+    }
+
+    /**
+     * This function is for top down approach
+     */
+    public int memoization(int row, int col, int[][] arr, int m, int n, int[][] dp) {
+        if (row == m && col == n)
+            return 1;
+        if (arr[row][col] == 1)
+            return 0;
+        if (dp[row][col] != -1)
+            return dp[row][col];
+        //Can\'t go right
+        if (col == n)
+            return dp[row][col] = memoization(row + 1, col, arr, m, n, dp);
+        //Can\'t go down
+        if (row == m)
+            return dp[row][col] = memoization(row, col + 1, arr, m, n, dp);
+        else
+            return dp[row][col] = memoization(row + 1, col, arr, m, n, dp) + memoization(row, col + 1, arr, m, n, dp);
+    }
+}

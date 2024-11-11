@@ -1,0 +1,37 @@
+class Solution {
+
+    public boolean dfs(List<List<Integer>> graph, boolean[] visited, boolean[] resStack, int start) {
+        resStack[start] = true;
+        visited[start] = true;
+        for (int n : graph.get(start)) {
+            if (resStack[n]) {
+                return true;
+            }
+            if (!visited[n]) {
+                if (dfs(graph, visited, resStack, n)) {
+                    return true;
+                }
+            }
+        }
+        resStack[start] = false;
+        return false;
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] arr : prerequisites) {
+            graph.get(arr[0]).add(arr[1]);
+        }
+        boolean[] resStack = new boolean[numCourses];
+        boolean[] visited = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (dfs(graph, visited, resStack, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

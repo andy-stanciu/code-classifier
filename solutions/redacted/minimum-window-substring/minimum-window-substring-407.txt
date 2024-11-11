@@ -1,0 +1,38 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        Map<Character, Integer> tmap = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            tmap.put(c, tmap.getOrDefault(c, 0) + 1);
+        }
+        int var1 = 0;
+        int var2 = 0;
+        int matched = 0;
+        int minLen = s.length() + 1;
+        int var3 = 0;
+        while (var2 < s.length()) {
+            char ch = s.charAt(var2);
+            if (tmap.containsKey(ch)) {
+                tmap.put(ch, tmap.get(ch) - 1);
+                if (tmap.get(ch) == 0)
+                    matched++;
+            }
+            while (matched == tmap.size()) {
+                int var4 = var2 - var1 + 1;
+                if (var4 < minLen) {
+                    minLen = var4;
+                    var3 = var1;
+                }
+                char toBeDeleted = s.charAt(var1++);
+                if (tmap.containsKey(toBeDeleted)) {
+                    tmap.put(toBeDeleted, tmap.get(toBeDeleted) + 1);
+                    if (tmap.get(toBeDeleted) > 0) {
+                        matched--;
+                    }
+                }
+            }
+            var2++;
+        }
+        return minLen > s.length() ? "" : s.substring(var3, var3 + minLen);
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        // define a table
+        int[] arr = new int[128];
+        char[] s_arr = s.toCharArray();
+        char[] t_arr = t.toCharArray();
+        int counter = 0;
+        // Increment the counter of T by 1.
+        for (char ch : t_arr) {
+            arr[ch]++;
+        }
+        //define pointers.
+        int L = 0, R = 0;
+        //Define minLen
+        int minLen = Integer.MAX_VALUE;
+        //define ans
+        String ans = "";
+        //finding MinWindow
+        while (R < s_arr.length) {
+            char curChar = s_arr[R];
+            //expanding winow
+            if (--arr[curChar] >= 0)
+                counter++;
+            //shrinking window
+            while (counter == t_arr.length) {
+                if (minLen > R - L + 1) {
+                    minLen = R - L + 1;
+                    ans = s.substring(L, R + 1);
+                }
+                char leftChar = s_arr[L];
+                if (++arr[leftChar] > 0)
+                    counter--;
+                L++;
+            }
+            R++;
+        }
+        //returning ans.
+        return ans;
+    }
+}

@@ -1,0 +1,31 @@
+class Solution {
+
+    int count = 0;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) graph.add(new ArrayList<>());
+        for (int[] edge : prerequisites) {
+            graph.get(edge[1]).add(edge[0]);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (hasCycle(graph, new int[param1], i))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean hasCycle(List<List<Integer>> graph, int[] state, int idx) {
+        if (state[idx] == 1)
+            return false;
+        if (state[idx] == -1)
+            return true;
+        state[idx] = -1;
+        for (int neighbor : graph.get(idx)) {
+            if (hasCycle(graph, state, neighbor))
+                return true;
+        }
+        state[idx] = 1;
+        return false;
+    }
+}

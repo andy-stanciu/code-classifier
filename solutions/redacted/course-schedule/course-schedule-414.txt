@@ -1,0 +1,34 @@
+class Solution {
+
+    private static final HashSet<Integer> EMPTY = new HashSet<Integer>();
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        HashMap<Integer, HashSet<Integer>> adj = new HashMap<>();
+        int[] indegrees = new int[param1];
+        for (int[] prerequisitePair : prerequisites) {
+            int var1 = prerequisitePair[0];
+            int prerequisite = prerequisitePair[1];
+            adj.putIfAbsent(var1, new HashSet<Integer>());
+            adj.get(var1).add(prerequisite);
+            indegrees[prerequisite]++;
+        }
+        int visited = 0;
+        ArrayDeque<Integer> q = new ArrayDeque<>();
+        for (int var1 = 0; var1 < indegrees.length; var1++) {
+            if (indegrees[var1] == 0) {
+                q.offer(var1);
+            }
+        }
+        while (!q.isEmpty()) {
+            int var1 = q.poll();
+            visited++;
+            for (int nei : adj.getOrDefault(var1, EMPTY)) {
+                indegrees[nei]--;
+                if (indegrees[nei] == 0) {
+                    q.offer(nei);
+                }
+            }
+        }
+        return visited == param1;
+    }
+}

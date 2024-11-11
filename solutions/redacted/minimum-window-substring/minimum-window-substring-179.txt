@@ -1,0 +1,26 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        // Initialize frequency array for all ASCII characters
+        int[] targetFreq = new int[128];
+        for (char c : t.toCharArray()) {
+            targetFreq[c]++;
+        }
+        int left = 0, right = 0, minStart = 0, minLen = Integer.MAX_VALUE, count = t.length();
+        while (right < s.length()) {
+            // Expand the window
+            if (targetFreq[s.charAt(right++)]-- > 0)
+                count--;
+            // Contract the window if all characters are found
+            while (count == 0) {
+                if (right - left < minLen) {
+                    minLen = right - left;
+                    minStart = left;
+                }
+                if (++targetFreq[s.charAt(left++)] > 0)
+                    count++;
+            }
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart + minLen);
+    }
+}

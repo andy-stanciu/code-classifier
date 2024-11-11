@@ -1,0 +1,60 @@
+class Solution {
+
+    public int search(int[] arr, int target) {
+        int start = 0;
+        int end = arr.length - 1;
+        // pivot is basically rhe largest element
+        int pivot = findPivot(arr);
+        if (pivot == -1) {
+            // if no pivot that mean no rotation so do normal BS
+            return bs(arr, target, start, end);
+        }
+        if (arr[pivot] == target) {
+            // if pivot is target, return pivot
+            return pivot;
+        }
+        if (target >= arr[start]) {
+            // searching in first half i.e prior to pivot
+            return bs(arr, target, start, pivot - 1);
+        } else {
+            // searching in second half i.e after pivot
+            return bs(arr, target, pivot + 1, end);
+        }
+    }
+
+    public int findPivot(int[] arr) {
+        // finding pivot
+        int start = 0;
+        int end = arr.length - 1;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            // 4 case over here
+            if (mid < end && arr[mid] > arr[mid + 1]) {
+                return mid;
+            }
+            if (mid > start && arr[mid] < arr[mid - 1]) {
+                return mid - 1;
+            }
+            if (arr[mid] <= arr[start]) {
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return -1;
+    }
+
+    public int bs(int[] arr, int target, int start, int end) {
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (target < arr[mid]) {
+                end = mid - 1;
+            } else if (target > arr[mid]) {
+                start = mid + 1;
+            } else {
+                return mid;
+            }
+        }
+        return -1;
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        Integer[] counter = new Integer[256];
+        for (char ch : t.toCharArray()) {
+            if (counter[ch] == null) {
+                counter[ch] = 0;
+            }
+            counter[ch] += 1;
+        }
+        int resultLeft = 0;
+        int resultRight = 0;
+        int resultLength = Integer.MAX_VALUE;
+        char[] chars = s.toCharArray();
+        int left = 0;
+        int found = 0;
+        for (int i = 0; i < chars.length; i += 1) {
+            int ch = chars[i];
+            if (counter[ch] != null) {
+                counter[ch] -= 1;
+                if (counter[ch] >= 0) {
+                    found += 1;
+                }
+            }
+            while (found >= t.length()) {
+                int lChar = chars[left];
+                if (found == t.length() && resultLength > i + 1 - left) {
+                    resultLeft = left;
+                    resultRight = i + 1;
+                    resultLength = i + 1 - left;
+                }
+                if (counter[lChar] != null) {
+                    counter[lChar] += 1;
+                    if (counter[lChar] > 0) {
+                        found -= 1;
+                    }
+                }
+                left += 1;
+            }
+        }
+        return s.substring(resultLeft, resultRight);
+    }
+}

@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    private int recurse(TreeNode root, int[] ans) {
+        int leftVal = Integer.MIN_VALUE;
+        int rightVal = Integer.MIN_VALUE;
+        if (root.left != null) {
+            leftVal = recurse(root.left, ans);
+        }
+        if (root.right != null) {
+            rightVal = recurse(root.right, ans);
+        }
+        int rootVal = root.val;
+        if (leftVal != Integer.MIN_VALUE && rightVal != Integer.MIN_VALUE) {
+            ans[0] = Math.max(rootVal + leftVal + rightVal, ans[0]);
+        }
+        if (leftVal != Integer.MIN_VALUE) {
+            ans[0] = Math.max(rootVal + leftVal, ans[0]);
+        }
+        if (rightVal != Integer.MIN_VALUE) {
+            ans[0] = Math.max(rootVal + rightVal, ans[0]);
+        }
+        ans[0] = Math.max(rootVal, ans[0]);
+        int returnVal = Integer.MIN_VALUE;
+        if (leftVal != Integer.MIN_VALUE)
+            returnVal = Math.max(rootVal + leftVal, returnVal);
+        if (rightVal != Integer.MIN_VALUE)
+            returnVal = Math.max(rootVal + rightVal, returnVal);
+        returnVal = Math.max(rootVal, returnVal);
+        return returnVal;
+    }
+
+    public int maxPathSum(TreeNode root) {
+        int[] ans = { Integer.MIN_VALUE };
+        recurse(root, ans);
+        return ans[0];
+    }
+}

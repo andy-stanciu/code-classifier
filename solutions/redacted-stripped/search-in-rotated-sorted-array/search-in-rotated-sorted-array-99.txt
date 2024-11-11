@@ -1,0 +1,47 @@
+class Solution {
+
+    int getPivotElement(int[] nums, int left, int right) {
+        if (nums.length == 1) {
+            return 0;
+        }
+        if (nums[right] > nums[0]) {
+            return 0;
+        }
+        while (right >= left) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] > nums[mid + 1]) {
+                return mid + 1;
+            }
+            if (nums[mid - 1] > nums[mid]) {
+                return mid;
+            }
+            if (nums[mid] > nums[0]) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    int method1(int param1, int end, int[] nums, int target) {
+        int mid = 0;
+        while (param1 <= end) {
+            mid = (param1 + end) / 2;
+            if (target == nums[mid])
+                return mid;
+            else if (target > nums[mid])
+                param1 = mid + 1;
+            else
+                end = mid - 1;
+        }
+        return -1;
+    }
+
+    public int method2(int[] nums, int target) {
+        int p = getPivotElement(nums, 0, nums.length - 1);
+        int l = method1(0, p - 1, nums, target);
+        int h = method1(p, nums.length - 1, nums, target);
+        return (l != -1) ? l : h;
+    }
+}

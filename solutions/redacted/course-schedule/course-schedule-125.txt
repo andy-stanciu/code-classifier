@@ -1,0 +1,59 @@
+class Solution {
+
+    // to prevent infinte loop, store unique records
+    Set<Integer> set = new HashSet();
+
+    public boolean canFinish(int n, int[][] prearr) {
+        //keeping count of times a node has been visited, in-degree of any courses
+        int[] count = new int[n];
+        //with every course, it will store all the direct connected courses to it, as the prerequsite for this course
+        ArrayList<Integer>[] pre = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            //for all courses, add arrayLIst so we can added prerequisites for each course
+            pre[i] = new ArrayList();
+        }
+        for (int[] vis : prearr) {
+            //populate arrayList
+            //store course that has prerequiste
+            int parent = vis[0];
+            //store prerquisite
+            int child = vis[1];
+            //this course marked visited by increasing count
+            count[parent]++;
+            //eg. [0,1] = pre[1] = [0] , meaning 1 is a prerequiste for 0
+            pre[child].add(parent);
+        }
+        for (int i = 0; i < count.length; i++) {
+            if (!set.contains(i)) {
+                if (count[i] == 0) {
+                    // if no dependency on this course, then search back for it neighbours
+                    n = DFS(count, pre, i, n);
+                }
+            }
+        }
+        return n == 0 ? true : false;
+    }
+
+    public int DFS(int[] count, ArrayList<Integer>[] pre, int param1, int n) {
+        set.add(param1);
+        // no of courses to check
+        n--;
+        if (pre[param1].size() == 0) {
+            // no dependency on this course left, already covered
+            return n;
+        }
+        for (int neig : pre[param1]) {
+            // for all neighbours of current course
+            //like before, decrease count, we decreasing we are removing dependency on this course to be studied again
+            count[neig]--;
+            if (count[neig] == 0) {
+                //meaning, now this course doesn have any dependency, and can be studied now
+                if (!set.contains(neig)) {
+                    //search again for its neighbors
+                    n = DFS(count, pre, neig, n);
+                }
+            }
+        }
+        return n;
+    }
+}

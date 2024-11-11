@@ -1,0 +1,29 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s == null || t == null || s.length() < t.length()) {
+            return "";
+        }
+        int[] tFreq = new int[256];
+        for (char c : t.toCharArray()) {
+            tFreq[c]++;
+        }
+        int start = 0, minStart = 0, minLen = Integer.MAX_VALUE, count = 0;
+        for (int end = 0; end < s.length(); end++) {
+            if (--tFreq[s.charAt(end)] >= 0) {
+                count++;
+            }
+            while (count == t.length()) {
+                if (end - start + 1 < minLen) {
+                    minLen = end - start + 1;
+                    minStart = start;
+                }
+                if (++tFreq[s.charAt(start)] > 0) {
+                    count--;
+                }
+                start++;
+            }
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart + minLen);
+    }
+}

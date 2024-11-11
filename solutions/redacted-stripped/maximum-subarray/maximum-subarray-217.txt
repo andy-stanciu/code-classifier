@@ -1,0 +1,34 @@
+class Solution {
+
+    public int method1(int[] nums) {
+        int n = nums.length;
+        int res = dAndC(nums, 0, n - 1);
+        return res;
+    }
+
+    private int dAndC(int[] nums, int start, int end) {
+        if (start == end)
+            return nums[start];
+        int mid = start + (end - start) / 2;
+        int leftMax = dAndC(nums, start, mid);
+        int rightMax = dAndC(nums, mid + 1, end);
+        int cross = crossSum(nums, start, mid, end);
+        return Math.max(Math.max(leftMax, rightMax), cross);
+    }
+
+    private int crossSum(int[] nums, int start, int mid, int end) {
+        int leftMax = Integer.MIN_VALUE;
+        int lSum = 0;
+        for (int i = mid; i >= start; i--) {
+            lSum += nums[i];
+            leftMax = Math.max(leftMax, lSum);
+        }
+        int rightMax = Integer.MIN_VALUE;
+        int rSum = 0;
+        for (int i = mid + 1; i <= end; i++) {
+            rSum += nums[i];
+            rightMax = Math.max(rightMax, rSum);
+        }
+        return leftMax + rightMax;
+    }
+}

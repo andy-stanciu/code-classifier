@@ -1,0 +1,54 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        // Get the lengths of the strings s and t
+        int m = s.length();
+        int n = t.length();
+        // Initialize variables to store the minimum window length and starting index
+        int minLength = Integer.MAX_VALUE;
+        int startingIndex = -1;
+        // Variable to count how many characters of t are found in the current window
+        int cnt = 0;
+        // Hash array to track character frequencies in t
+        int[] hash = new int[256];
+        // Pointers to represent the current window\'s left and right boundaries
+        int left = 0;
+        int right = 0;
+        // Populate the hash array with the frequency of characters in t
+        for (int i = 0; i < n; i++) {
+            hash[t.charAt(i)]++;
+        }
+        // Expand the window by moving the right pointer
+        while (right < m) {
+            // If the character at the right pointer is part of t, increase the count
+            if (hash[s.charAt(right)] > 0) {
+                cnt++;
+            }
+            // Decrease the frequency of the current character in the hash array
+            hash[s.charAt(right)]--;
+            // Check if the current window contains all characters of t
+            while (cnt == n) {
+                // Update the minimum length and starting index if the current window is smaller
+                if ((right - left + 1) < minLength) {
+                    minLength = right - left + 1;
+                    startingIndex = left;
+                }
+                // Increase the frequency of the character at the left pointer back in the hash
+                // array
+                hash[s.charAt(left)]++;
+                // If the character at the left pointer is part of t and is no longer fully
+                // matched, decrease the count
+                if (hash[s.charAt(left)] > 0) {
+                    cnt--;
+                }
+                // Move the left pointer to the right
+                left++;
+            }
+            // Move the right pointer to the right
+            right++;
+        }
+        // If no valid window is found, return an empty string; otherwise, return the
+        // minimum window
+        return startingIndex == -1 ? "" : s.substring(startingIndex, startingIndex + minLength);
+    }
+}

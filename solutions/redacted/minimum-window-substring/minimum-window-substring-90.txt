@@ -1,0 +1,35 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        int n = s.length();
+        int m = t.length();
+        int left = 0, right = 0, minLength = Integer.MAX_VALUE, sIndex = -1, count = 0;
+        for (int i = 0; i < m; i++) {
+            if (map.containsKey(t.charAt(i)))
+                map.put(t.charAt(i), map.get(t.charAt(i)) + 1);
+            else
+                map.put(t.charAt(i), 1);
+        }
+        while (right < n) {
+            if (map.containsKey(s.charAt(right)) && map.get(s.charAt(right)) > 0) {
+                count++;
+            }
+            map.put(s.charAt(right), map.getOrDefault(s.charAt(right), -1) - 1);
+            while (count == m) {
+                if (right - left + 1 < minLength) {
+                    minLength = right - left + 1;
+                    sIndex = left;
+                }
+                map.put(s.charAt(left), map.get(s.charAt(left)) + 1);
+                if (map.get(s.charAt(left)) > 0) {
+                    count--;
+                }
+                left++;
+            }
+            right++;
+        }
+        System.out.println("sIndex ::" + sIndex + " --" + "minLength" + minLength);
+        return sIndex == -1 ? "" : s.substring(sIndex, sIndex + minLength);
+    }
+}

@@ -1,0 +1,42 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    double[] sums = new double[10000];
+
+    int[] counts = new int[10000];
+
+    int maxLevel = 0;
+
+    public List<Double> method1(TreeNode root) {
+        precalc(root, 0);
+        for (int l = 0; l <= maxLevel; ++l) sums[l] /= counts[l];
+        List<Double> result = new ArrayList<>(maxLevel + 1);
+        for (int l = 0; l <= maxLevel; ++l) result.add(sums[l]);
+        return result;
+    }
+
+    private void precalc(TreeNode n, int level) {
+        if (n == null)
+            return;
+        ++counts[level];
+        sums[level] += n.val;
+        if (level > maxLevel)
+            maxLevel = level;
+        precalc(n.left, ++level);
+        precalc(n.right, level);
+    }
+}

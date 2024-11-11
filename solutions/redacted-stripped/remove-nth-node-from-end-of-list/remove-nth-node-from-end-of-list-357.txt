@@ -1,0 +1,72 @@
+class Class1 {
+
+    int val;
+
+    Class1 next;
+
+    Class1(int val) {
+        this.val = val;
+    }
+
+    public static Class1 deserialize(String data) {
+        if (data == null || data.length() == 0 || data.equals("[]"))
+            return null;
+        String[] values = data.substring(1, data.length() - 1).split(",");
+        Class1 dummy = new Class1(0);
+        Class1 current = dummy;
+        for (String value : values) {
+            if (!value.trim().isEmpty()) {
+                current.next = new Class1(Integer.parseInt(value.trim()));
+                current = current.next;
+            }
+        }
+        return dummy.next;
+    }
+}
+
+public class Solution {
+
+    public Class1 method1(Class1 head, int n) {
+        Class1 dummy = new Class1(0);
+        dummy.next = head;
+        Class1 first = dummy;
+        Class1 second = dummy;
+        for (int i = 0; i <= n; i++) {
+            first = first.next;
+        }
+        while (first != null) {
+            first = first.next;
+            second = second.next;
+        }
+        second.next = second.next.next;
+        return dummy.next;
+    }
+
+    public static void method2(Class1 head) {
+        Class1 current = head;
+        while (current != null) {
+            System.out.print(current.val);
+            if (current.next != null) {
+                System.out.print(" -> ");
+            }
+            current = current.next;
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        Class1 head1 = Class1.deserialize("[1,2,3,4,5]");
+        int n1 = 2;
+        Class1 result1 = sol.method1(head1, n1);
+        method2(result1);
+        Class1 head2 = Class1.deserialize("[1]");
+        int n2 = 1;
+        Class1 result2 = sol.method1(head2, n2);
+        method2(result2);
+        Class1 head3 = Class1.deserialize("[1,2]");
+        int n3 = 1;
+        Class1 result3 = sol.method1(head3, n3);
+        method2(result3);
+    }
+}

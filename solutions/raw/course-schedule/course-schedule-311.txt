@@ -1,0 +1,50 @@
+class Solution {
+
+    // static class Edge{
+    //     int src,dest;
+    //     Edge(int x, int y){
+    //         this.src=x;
+    //         this.dest=y;
+    //     }
+    // }
+    public boolean dfs(List<List<Integer>> graph, boolean[] visited, int curr, Stack<Integer> stack, boolean[] recStack) {
+        visited[curr] = true;
+        recStack[curr] = true;
+        for (int i = 0; i < graph.get(curr).size(); i++) {
+            int tmp = graph.get(curr).get(i);
+            if (recStack[tmp]) {
+                return false;
+            }
+            if (!visited[tmp]) {
+                if (!dfs(graph, visited, tmp, stack, recStack)) {
+                    return false;
+                }
+            }
+        }
+        recStack[curr] = false;
+        return true;
+        // stack.push(curr);
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        Stack<Integer> stack = new Stack<>();
+        boolean[] visited = new boolean[numCourses];
+        boolean[] recStac = new boolean[numCourses];
+        // System.out.println(graph);
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i]) {
+                if (!dfs(graph, visited, i, stack, recStac)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int left = 0;
+        int right = 0;
+        int startIndex = -1;
+        int minLength = Integer.MAX_VALUE;
+        int cnt = 0;
+        int[] hash = new int[256];
+        //Fill the count for each character of the target String
+        for (int i = 0; i < t.length(); i++) {
+            hash[t.charAt(i)]++;
+        }
+        //Iterate to the last index of the String s
+        while (right < s.length()) {
+            if (hash[s.charAt(right)] > 0) {
+                //Indicates found one of the character
+                cnt++;
+            }
+            //Reduce the value by 1
+            hash[s.charAt(right)]--;
+            //Positive number indicates the total required characters
+            //Found one of the possible String
+            while (cnt == t.length()) {
+                //Chech if it is minimum or not
+                if (right - left + 1 < minLength) {
+                    minLength = right - left + 1;
+                    startIndex = left;
+                }
+                hash[s.charAt(left)]++;
+                //greater than zero indicates all the character is not present in substring
+                if (hash[s.charAt(left)] > 0) {
+                    cnt--;
+                }
+                left++;
+            }
+            //Keep on checking for every character
+            right += 1;
+        }
+        //If ans is found then return the String else return -1;
+        return startIndex == -1 ? "" : s.substring(startIndex, startIndex + minLength);
+    }
+}

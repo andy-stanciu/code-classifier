@@ -1,0 +1,39 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] preRequisites) {
+        List<Integer>[] graph = new List[numCourses];
+        Queue<Integer> courses = new LinkedList<>();
+        HashSet<Integer> taken = new HashSet<>();
+        boolean[] preRequisiteRoot = new boolean[numCourses];
+        int[] preCourse = new int[numCourses];
+        for (int i = 0; i < numCourses; ++i) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] edge : preRequisites) {
+            graph[edge[0]].add(edge[1]);
+            preCourse[edge[1]]++;
+            if (edge[0] == edge[1]) {
+                return false;
+            }
+        }
+        for (int i = 0; i < numCourses; ++i) {
+            if (preCourse[i] == 0) {
+                courses.add(i);
+            }
+        }
+        while (!courses.isEmpty()) {
+            int course = courses.poll();
+            taken.add(course);
+            for (int child : graph[course]) {
+                if (taken.contains(child)) {
+                    return false;
+                }
+                preCourse[child]--;
+                if (preCourse[child] == 0) {
+                    courses.add(child);
+                }
+            }
+        }
+        return taken.size() == numCourses;
+    }
+}

@@ -1,0 +1,35 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s.length() < t.length())
+            return "";
+        HashMap<Character, Integer> tCount = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            tCount.put(c, tCount.getOrDefault(c, 0) + 1);
+        }
+        int needCount = tCount.size();
+        int haveCount = 0;
+        int left = 0;
+        int[] var1 = { 0, Integer.MAX_VALUE };
+        HashMap<Character, Integer> var2 = new HashMap<>();
+        for (int right = 0; right < s.length(); right++) {
+            char c = s.charAt(right);
+            var2.put(c, var2.getOrDefault(c, 0) + 1);
+            if (var2.get(c).equals(tCount.get(c))) {
+                haveCount++;
+            }
+            while (haveCount == needCount) {
+                if (right - left < var1[1] - var1[0]) {
+                    var1[0] = left;
+                    var1[1] = right;
+                }
+                var2.put(s.charAt(left), var2.get(s.charAt(left)) - 1);
+                if (var2.get(s.charAt(left)) < tCount.getOrDefault(s.charAt(left), 0)) {
+                    haveCount--;
+                }
+                left++;
+            }
+        }
+        return var1[1] == Integer.MAX_VALUE ? "" : s.substring(var1[0], var1[1] + 1);
+    }
+}

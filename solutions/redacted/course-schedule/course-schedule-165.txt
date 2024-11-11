@@ -1,0 +1,46 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        // Build the graph
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            graph.put(i, new ArrayList<>());
+        }
+        for (int[] prereq : prerequisites) {
+            graph.get(prereq[1]).add(prereq[0]);
+        }
+        // Track visit states: 0 = unvisited, 1 = visiting, 2 = visited
+        int[] visited = new int[param1];
+        // Perform DFS on each course
+        for (int i = 0; i < param1; i++) {
+            if (visited[i] == 0 && hasCycle(graph, visited, i)) {
+                // Cycle detected
+                return false;
+            }
+        }
+        // No cycle detected
+        return true;
+    }
+
+    private boolean hasCycle(Map<Integer, List<Integer>> graph, int[] visited, int node) {
+        // If the node is currently being visited, a cycle is detected
+        if (visited[node] == 1) {
+            return true;
+        }
+        // If the node is already fully processed, skip it
+        if (visited[node] == 2) {
+            return false;
+        }
+        // Mark the node as visiting
+        visited[node] = 1;
+        // Visit all adjacent nodes
+        for (int neighbor : graph.get(node)) {
+            if (hasCycle(graph, visited, neighbor)) {
+                return true;
+            }
+        }
+        // Mark the node as fully processed
+        visited[node] = 2;
+        return false;
+    }
+}

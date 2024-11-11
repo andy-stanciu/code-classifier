@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<Integer>[] var1 = new ArrayList[param1];
+        int[] var2 = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            var1[i] = new ArrayList<Integer>();
+        }
+        for (int[] prerequisite : prerequisites) {
+            int var3 = prerequisite[1];
+            int var4 = prerequisite[0];
+            var1[var3].add(var4);
+            var2[var4]++;
+        }
+        Queue<Integer> var5 = new LinkedList<Integer>();
+        for (int i = 0; i < param1; i++) {
+            if (var2[i] == 0) {
+                var5.add(i);
+            }
+        }
+        return canFinish(var5, var2, var1);
+    }
+
+    private boolean canFinish(Queue<Integer> var5, int[] var2, ArrayList<Integer>[] var1) {
+        int var6 = 0;
+        while (!var5.isEmpty()) {
+            int var7 = var5.poll();
+            var6++;
+            for (int var4 : var1[var7]) {
+                var2[var4]--;
+                if (var2[var4] == 0) {
+                    var5.add(var4);
+                }
+            }
+        }
+        return var6 == var2.length;
+    }
+}

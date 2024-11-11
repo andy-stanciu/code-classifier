@@ -1,0 +1,108 @@
+class Solution {
+
+    class UnionFind {
+
+        //GroupSize is the same as the rank of an array
+        //Parent holds the parent of every index
+        //Initially parent[i] = i, means that every node is it\'s own root
+        int[] parent, groupSize;
+
+        int num_groups;
+
+        public UnionFind(int n) {
+            num_groups = n;
+            parent = new int[n];
+            groupSize = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                groupSize[i] = 1;
+            }
+        }
+
+        public int find(int node) {
+            int root = node;
+            //A node is a rootNode of a group when parent[node] = node itself
+            //So we find the root node of the group the node belongs to
+            while (parent[root] != root) {
+                root = parent[root];
+            }
+            //Path Compression
+            //We link every node in the group directly to the groups root
+            //This will help in directly determining the root of the group in future Unions
+            while (node != root) {
+                int next = parent[node];
+                parent[node] = root;
+                node = next;
+            }
+            return root;
+        }
+
+        public void union(int nodeP, int nodeQ) {
+            int rootP = find(nodeP);
+            int rootQ = find(nodeQ);
+            //If the root of both nodes is the same, it means it belongs to the same group
+            if (rootP == rootQ) {
+                return;
+            }
+            //We add the current group to the group with larger number of elements
+            //This is determined by the groupSize[] array
+            if (groupSize[rootP] > groupSize[rootQ]) {
+                parent[rootQ] = rootP;
+                groupSize[rootP] += groupSize[rootQ];
+            } else {
+                parent[rootP] = rootQ;
+                groupSize[rootQ] += groupSize[rootP];
+            }
+            //If there is a succesfull union, reduce the number of unique groups
+            //Even though this is never used in the solution, it\'s useful in problems where we
+            //have to find the number of groups/number of connected components
+            num_groups--;
+        }
+
+        //This function is not pertinent to this question
+        public int num_of_groups() {
+            return num_groups;
+        }
+
+        //This will find the group with the maximum number of nodes
+        //Therefore, this will return the longest consecutive subsequence
+        public int findBiggestGroup() {
+            int maxSize = 1;
+            for (int i = 0; i < parent.length; i++) {
+                //If it\'s the root of a group
+                if (i == parent[i]) {
+                    maxSize = Math.max(maxSize, groupSize[i]);
+                }
+            }
+            return maxSize;
+        }
+    }
+
+    public int method1(int[] nums) {
+        int n = nums.length;
+        if (n == 0) {
+            return 0;
+        }
+        UnionFind uf = new UnionFind(n);
+        //HashMap holding the indexes of the elements to be used to find consecutive elements for
+        //the union operation
+        HashMap<Integer, Integer> valToIdx = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            //If the hashMap already contains the same value, it means a duplicate, we ignore it
+            if (valToIdx.containsKey(nums[i])) {
+                continue;
+            }
+            //If the hashMap contains the value-1, union it
+            if (valToIdx.containsKey(nums[i] - 1)) {
+                uf.union(i, valToIdx.get(nums[i] - 1));
+            }
+            //If the hashMap contains the value+1, union it
+            if (valToIdx.containsKey(nums[i] + 1)) {
+                uf.union(i, valToIdx.get(nums[i] + 1));
+            }
+            //Add the current value to the HashMap
+            valToIdx.put(nums[i], i);
+        }
+        return uf.findBiggestGroup();
+    }
+}

@@ -1,0 +1,86 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        return usingMonotonicStack(nums);
+    }
+
+    public int usingMonotonicStack(int[] nums) {
+        int n = nums.length;
+        // we use array since we will occasionally push below stack top
+        int[] stack = new int[n];
+        // We will ensure stack entries are in strictly increasing order from 0th index to topIdx
+        // at least 1 num can be in any IS
+        int maxLIS = 1;
+        // stack is empty
+        int topIdx = -1;
+        for (int i = 0; i < n; i++) {
+            int num = nums[i];
+            int LISEndingAtCurr = 1;
+            if (topIdx == -1 || stack[topIdx] < num) {
+                // num can be added to top of stack
+                topIdx++;
+                stack[topIdx] = num;
+                // [0.. topIdx] is LIS
+                LISEndingAtCurr = topIdx + 1;
+            } else {
+                int idx = findStackPos(stack, topIdx, num);
+                stack[idx] = num;
+                // [0.. idx] is LIS
+                LISEndingAtCurr = idx + 1;
+            }
+            maxLIS = Math.max(maxLIS, LISEndingAtCurr);
+        }
+        return maxLIS;
+    }
+
+    private int findStackPos(int[] stack, int topIdx, int num) {
+        // if we are here that means stack[topIdx] >= num
+        if (stack[topIdx] == num) {
+            // LIS is same as that of topIdx
+            return topIdx;
+            // i.e. we either take num at curr idx (& skip topIdx) or pick one at topIdx
+        }
+        // since stack[topIdx] > num
+        // and stack[0, 1, 2... topIdx - 1, topIdx] are all strictly increasing
+        // find innder index i s.t. stack[i] >= num (just greater than num or equals to num)
+        // i.e. stack[i - 1] < num => stack [0,1.. i-1, i] is LIS even if we replace stack[i] with num
+        // and this is the maximum LIS that can be generated which ends at num
+        // Use Binary search to find such i index
+        int st = 0;
+        int en = topIdx;
+        // since stack.top > num so that is also one potential ans
+        int ans = topIdx;
+        while (st <= en) {
+            int mid = st + (en - st) / 2;
+            if (stack[mid] >= num) {
+                // one possible ans but we are looking for smallest stack[mid] >= nums
+                ans = mid;
+                en = mid - 1;
+            } else {
+                st = mid + 1;
+            }
+        }
+        return ans;
+    }
+
+    public int usingDP(int[] nums) {
+        int n = nums.length;
+        // LIS[i] : len of LIS ending at i (it must ends at i)
+        int[] LIS = new int[n];
+        // by default each elem is its own IS (not necessarily LIS)
+        Arrays.fill(LIS, 1);
+        int overAllMaxLIS = 1;
+        for (int i = 0; i < n; i++) {
+            int maxLIS = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (nums[i] > nums[j]) {
+                    // nums[i] can be added to LIS ending at j
+                    maxLIS = Math.max(maxLIS, LIS[j] + 1);
+                }
+            }
+            LIS[i] = maxLIS;
+            overAllMaxLIS = Math.max(overAllMaxLIS, maxLIS);
+        }
+        return overAllMaxLIS;
+    }
+}

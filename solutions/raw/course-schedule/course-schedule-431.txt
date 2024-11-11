@@ -1,0 +1,46 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if (prerequisites.length == 0)
+            return true;
+        // each contains the list of nodes for which it is prereq
+        // outgoing edges from the node
+        List<List<Integer>> prereq = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            prereq.add(new ArrayList<>());
+        }
+        for (int[] course : prerequisites) {
+            prereq.get(course[1]).add(course[0]);
+        }
+        boolean[] visited = new boolean[numCourses];
+        // recursion stack boolean array to track dfs members
+        boolean[] stack = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i] && isCycle(i, prereq, visited, stack)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isCycle(int node, List<List<Integer>> prereq, boolean[] visited, boolean[] stack) {
+        visited[node] = true;
+        stack[node] = true;
+        // visit all the neighbours of the current node
+        for (int nbr : prereq.get(node)) {
+            // if we are trying to visit a node and it already exists in the recursion stack, there will be cycle
+            if (stack[nbr])
+                return true;
+            // visit the neighbours if not
+            if (!visited[nbr]) {
+                // if cycle exists in the neighbours
+                if (isCycle(nbr, prereq, visited, stack)) {
+                    return true;
+                }
+            }
+        }
+        // when returning from dfs, remove from recursion stack --> false
+        stack[node] = false;
+        return false;
+    }
+}

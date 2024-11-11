@@ -1,0 +1,55 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int i = 0, j = 0;
+        HashMap<Character, Integer> map = new HashMap();
+        //storing t in map
+        for (int c = 0; c < t.length(); c++) {
+            char ch = t.charAt(c);
+            if (map.containsKey(ch))
+                map.put(ch, map.get(ch) + 1);
+            else
+                map.put(ch, 1);
+        }
+        int count = map.size();
+        // for getting window size
+        int min = Integer.MAX_VALUE;
+        // start of window
+        int start = 0;
+        while (j < s.length()) {
+            //calculations for j
+            char ch1 = s.charAt(j);
+            if (map.containsKey(ch1)) {
+                map.put(ch1, map.get(ch1) - 1);
+                if (map.get(ch1) == 0) {
+                    //reduce map size;
+                    count--;
+                }
+            }
+            //if(count>0) j++;
+            while (//substring found
+            count == 0) {
+                if (//storing window size
+                min > j - i + 1) {
+                    min = j - i + 1;
+                    start = i;
+                }
+                //calculations for i
+                if (map.containsKey(s.charAt(i))) {
+                    map.put(s.charAt(i), map.get(s.charAt(i)) + 1);
+                    if (map.get(s.charAt(i)) > 0) {
+                        // increase map size
+                        count++;
+                    }
+                }
+                //slide window
+                i++;
+            }
+            //slide window
+            j++;
+        }
+        if (min == Integer.MAX_VALUE)
+            return "";
+        return s.substring(start, start + min);
+    }
+}

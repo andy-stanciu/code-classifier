@@ -1,0 +1,30 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        if (nums.length == 1) {
+            return nums[0] == target ? 0 : -1;
+        }
+        if (nums[0] < nums[nums.length - 1]) {
+            var res = Arrays.binarySearch(nums, target);
+            return res < 0 ? -1 : res;
+        }
+        var middleIdx = nums.length / 2;
+        if (nums[0] < nums[middleIdx]) {
+            while (nums[middleIdx] < nums[middleIdx + 1]) {
+                middleIdx++;
+            }
+            middleIdx++;
+        } else {
+            while (middleIdx > 1 && nums[middleIdx - 1] < nums[middleIdx]) {
+                middleIdx--;
+            }
+        }
+        var delta = nums.length % 2 == 0 ? 0 : 1;
+        var res = Arrays.binarySearch(nums, 0, middleIdx, target);
+        if (res < 0) {
+            res = Arrays.binarySearch(nums, middleIdx, nums.length, target);
+            return res < 0 ? -1 : res;
+        }
+        return res;
+    }
+}

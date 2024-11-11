@@ -1,0 +1,26 @@
+class Solution {
+
+    public static int Largest(int[] arr, int i, int prevIndex, int[][] DP) {
+        if (i == arr.length) {
+            return 0;
+        }
+        if (DP[i][prevIndex + 1] != -1) {
+            return DP[i][prevIndex + 1];
+        }
+        int LeftSize = Largest(arr, i + 1, prevIndex, DP);
+        int RightSize = 0;
+        if (prevIndex == -1 || arr[i] > arr[prevIndex]) {
+            RightSize = 1 + Largest(arr, i + 1, i, DP);
+        }
+        DP[i][prevIndex + 1] = Math.max(LeftSize, RightSize);
+        return DP[i][prevIndex + 1];
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        int[][] DP = new int[nums.length][nums.length + 1];
+        for (int i = 0; i < nums.length; i++) {
+            Arrays.fill(DP[i], -1);
+        }
+        return Largest(nums, 0, -1, DP);
+    }
+}

@@ -1,0 +1,47 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        int[] map = new int[128];
+        int[] map2 = new int[128];
+        byte[] tb = t.getBytes();
+        byte[] ts = s.getBytes();
+        int g = 0;
+        int d = s.length();
+        int l = 0;
+        int min = d + 1;
+        int[] minTab = new int[2];
+        for (byte b : tb) {
+            map2[b] += 1;
+        }
+        int count = 0;
+        while (g < d) {
+            if (map2[ts[g]] > 0) {
+                if (map[ts[g]] < map2[ts[g]])
+                    count++;
+                map[ts[g]] += 1;
+            }
+            if (count == tb.length) {
+                while (l <= g) {
+                    if (g - l + 1 < min) {
+                        min = g - l + 1;
+                        minTab[0] = l;
+                        minTab[1] = g;
+                    }
+                    if (map2[ts[l]] > 0) {
+                        map[ts[l]] -= 1;
+                        if (map[ts[l]] < map2[ts[l]]) {
+                            l++;
+                            count--;
+                            break;
+                        }
+                    }
+                    l++;
+                }
+            }
+            g++;
+        }
+        return min == d + 1 ? "" : s.substring(minTab[0], minTab[1] + 1);
+    }
+}

@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> depMap = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            depMap.put(i, new ArrayList<>());
+        }
+        for (int[] edge : prerequisites) {
+            depMap.get(edge[1]).add(edge[0]);
+        }
+        int[] visitStatus = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (visitStatus[i] == 0) {
+                if (!checkDFS(depMap, visitStatus, i)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean checkDFS(Map<Integer, List<Integer>> depMap, int[] visitStatus, int param2) {
+        if (visitStatus[param2] == 1) {
+            return false;
+        }
+        if (visitStatus[param2] == 2) {
+            return true;
+        }
+        visitStatus[param2] = 1;
+        for (int prereq : depMap.get(param2)) {
+            if (!checkDFS(depMap, visitStatus, prereq)) {
+                return false;
+            }
+        }
+        visitStatus[param2] = 2;
+        return true;
+    }
+}

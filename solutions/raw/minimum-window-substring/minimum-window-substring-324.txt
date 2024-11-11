@@ -1,0 +1,68 @@
+class Solution {
+
+    private int indexFor(char c) {
+        return c > 96 ? c - 71 : c - 65;
+    }
+
+    private int getNextFrom(char[] s, int[] cntT, int[] cntS, int from) {
+        while (true) {
+            int i = indexFor(s[from]);
+            if (cntT[i] == 0)
+                ;
+            else if (cntT[i] == cntS[i])
+                break;
+            cntS[i]--;
+            from++;
+        }
+        return from;
+    }
+
+    private int getNextTo(char[] s, int[] cntS, char c, int to) {
+        for (; to < s.length; to++) {
+            cntS[indexFor(s[to])]++;
+            if (s[to] == c)
+                return to;
+        }
+        return to;
+    }
+
+    public String minWindow(String S, String T) {
+        if (S.length() < T.length())
+            return "";
+        char[] s = S.toCharArray();
+        int[] cntT = new int[52];
+        int[] cntS = new int[52];
+        int unique = 0;
+        for (char t : T.toCharArray()) {
+            if (cntT[indexFor(t)]++ == 0)
+                unique++;
+        }
+        int m = s.length, j = 0;
+        for (; j < m; j++) {
+            int i = indexFor(s[j]);
+            cntS[i]++;
+            if (cntS[i] == cntT[i])
+                unique--;
+            if (unique == 0)
+                break;
+        }
+        if (unique != 0)
+            return "";
+        int from = getNextFrom(s, cntT, cntS, 0), to = j;
+        int[] result = { from, to };
+        m = m - T.length() + 1;
+        for (; from < m; ) {
+            char c = s[from];
+            to = getNextTo(s, cntS, c, to + 1);
+            if (to == s.length)
+                break;
+            cntS[indexFor(c)]--;
+            from = getNextFrom(s, cntT, cntS, from + 1);
+            if (from < m && to - from < result[1] - result[0]) {
+                result[0] = from;
+                result[1] = to;
+            }
+        }
+        return S.substring(result[0], result[1] + 1);
+    }
+}

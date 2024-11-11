@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int n = prerequisites.length;
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int i = 0; i < n; i++) {
+            graph.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        int[] indegree = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            for (int it : graph.get(i)) {
+                indegree[it]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        ArrayList<Integer> topo = new ArrayList<>();
+        while (!q.isEmpty()) {
+            int front = q.peek();
+            q.remove();
+            topo.add(front);
+            for (int it : graph.get(front)) {
+                indegree[it]--;
+                if (indegree[it] == 0) {
+                    q.add(it);
+                }
+            }
+        }
+        return param1 == topo.size();
+    }
+}

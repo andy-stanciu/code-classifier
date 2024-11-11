@@ -1,0 +1,91 @@
+class Node {
+
+    int courseNum;
+
+    int incomingEdges;
+
+    Set<Node> neighbors;
+
+    public Node(int courseNum) {
+        this.courseNum = courseNum;
+        this.incomingEdges = 0;
+        this.neighbors = new HashSet<Node>();
+    }
+
+    public int getCourseNum() {
+        return this.courseNum;
+    }
+
+    public int getIncomingEdges() {
+        return this.incomingEdges;
+    }
+
+    public void incrementIncomingEdges() {
+        this.incomingEdges++;
+    }
+
+    public void decrementIncomingEdges() {
+        this.incomingEdges = this.incomingEdges - 1;
+    }
+
+    public Set<Node> getNeighbors() {
+        return this.neighbors;
+    }
+
+    public void addNeighbor(Node n) {
+        this.neighbors.add(n);
+    }
+}
+
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Topological sort returns the ordering of a directed acyclic graph
+        // Topological sort is not possible if the graph has cycles
+        // Node = class number
+        // Directed Edge = pre-requisite between two classes
+        // Create a data structure that maintains the number of incoming edges to each node, and neighbors
+        HashMap<Integer, Node> graph = new HashMap<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.put(i, new Node(i));
+        }
+        // Process the prerequisites 2D array - populate the incomingEdges and neighbors for each course
+        // Create a node class to maintain the number of incoming edges for the course and the downstream neighbors for the course
+        for (int i = 0; i < prerequisites.length; i++) {
+            // prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai
+            // "For example, the pair [0, 1], indicates that you have to take course 1 before course 0
+            // Increment the edgeCount (value) of prerequisities[i][0]
+            Node preReq = graph.get(prerequisites[i][1]);
+            Node preReqTarget = graph.get(prerequisites[i][0]);
+            // Incrememt incoming edges for the preReqTarget
+            preReqTarget.incrementIncomingEdges();
+            // Add the preReqTarget to the preReq neighbor set
+            preReq.addNeighbor(preReqTarget);
+        }
+        // Assess the topological sort
+        Queue<Integer> courseNoPreReq = new LinkedList<Integer>();
+        for (Map.Entry<Integer, Node> kvp : graph.entrySet()) {
+            if (kvp.getValue().getIncomingEdges() == 0) {
+                courseNoPreReq.add(kvp.getKey());
+            }
+        }
+        // Create a data structure to save the ordering of the topological sort. The "class schedule".
+        LinkedList<Integer> courseOrdering = new LinkedList<Integer>();
+        while (!courseNoPreReq.isEmpty()) {
+            Integer courseNum = courseNoPreReq.poll();
+            // Add nodes with no incoming edges to the course ordering data structure
+            courseOrdering.add(courseNum);
+            // "Remove" this courseNum deom graph - decrement the incoming edge count for their neighbors
+            // If the updated edge count is 0, then add to the queue
+            for (Node neighbor : graph.get(courseNum).getNeighbors()) {
+                neighbor.decrementIncomingEdges();
+                if (neighbor.getIncomingEdges() == 0) {
+                    courseNoPreReq.add(neighbor.getCourseNum());
+                }
+            }
+        }
+        // If there is a course ordering ("schedule") where the number of classes in the schedule != numCourses
+        // There was a cycle detected and there is no valid topological sort - ie, you cannot finish all the classes
+        return courseOrdering.size() == numCourses ? true : false;
+    }
+}

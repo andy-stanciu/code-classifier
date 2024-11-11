@@ -1,0 +1,51 @@
+class Solution {
+
+    public String method1(String sc, String tc) {
+        int m = sc.length();
+        int n = tc.length();
+        char[] s = sc.toCharArray();
+        char[] t = tc.toCharArray();
+        if (t.length > s.length) {
+            return "";
+        }
+        Map<Character, Integer> tMap = buildMap(t);
+        int left = 0;
+        int right = 0;
+        int numFound = 0;
+        int var1 = Integer.MAX_VALUE;
+        int bestLeft = -1;
+        int bestRight = -1;
+        while (right < s.length) {
+            if (tMap.containsKey(s[right])) {
+                if (tMap.get(s[right]) > 0) {
+                    numFound++;
+                }
+                tMap.put(s[right], tMap.get(s[right]) - 1);
+            }
+            while (left <= right && numFound == t.length) {
+                if (right - left + 1 < var1) {
+                    var1 = right - left + 1;
+                    bestLeft = left;
+                    bestRight = right;
+                }
+                if (tMap.containsKey(s[left])) {
+                    tMap.put(s[left], tMap.get(s[left]) + 1);
+                    if (tMap.get(s[left]) > 0) {
+                        numFound--;
+                    }
+                }
+                left++;
+            }
+            right++;
+        }
+        return bestLeft == -1 ? "" : sc.substring(bestLeft, bestRight + 1);
+    }
+
+    Map<Character, Integer> buildMap(char[] t) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c : t) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        return map;
+    }
+}

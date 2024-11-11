@@ -1,0 +1,29 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        int idx = 0;
+        int size = nums.length;
+        int prevIdx = -1;
+        int[][] dp = new int[nums.length][nums.length + 1];
+        for (int[] r : dp) {
+            Arrays.fill(r, -1);
+        }
+        return method1(nums, idx, prevIdx, size, dp);
+    }
+
+    public static int method1(int[] nums, int idx, int prevIdx, int size, int[][] dp) {
+        if (idx == size) {
+            return 0;
+        }
+        if (dp[idx][prevIdx + 1] != -1) {
+            return dp[idx][prevIdx + 1];
+        }
+        int notPick = 0 + method1(nums, idx + 1, prevIdx, size, dp);
+        int pick = 0;
+        if (prevIdx == -1 || nums[idx] > nums[prevIdx]) {
+            pick = 1 + method1(nums, idx + 1, idx, size, dp);
+        }
+        dp[idx][prevIdx + 1] = Math.max(notPick, pick);
+        return dp[idx][prevIdx + 1];
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    public boolean dfs(int param1, HashMap<Integer, List<Integer>> param2, HashSet<Integer> visited) {
+        // if current dfs already visited the node, return false because a loop is found.
+        if (visited.contains(param1))
+            return false;
+        // this means that the course can be taken and has no prerequisite, so return true
+        if (param2.get(param1) == null || param2.get(param1).isEmpty())
+            return true;
+        // if neither of above base conditions are true, add the node to visited set.
+        visited.add(param1);
+        // for each adjacent node of current node (prereqs of a course), run dfs and return false if it\'s
+        // dfs returns false
+        for (int prereq : param2.get(param1)) {
+            if (!dfs(prereq, param2, visited))
+                return false;
+        }
+        // once we have ensured all adjacent nodes are returning true meaning all prereqs can be taken,
+        // we remove the current node/course from visited, and make it\'s prereqs list empty to prevent reverification.
+        visited.remove(param1);
+        param2.put(param1, new ArrayList<Integer>());
+        // return true at the end because we have checked everything and would\'ve returned false if there was a loop.
+        return true;
+    }
+
+    public boolean canFinish(int param3, int[][] prerequisites) {
+        // maintain a list of prereqs for each course
+        HashMap<Integer, List<Integer>> param2 = new HashMap<>();
+        for (int[] param1 : prerequisites) param2.put(param1[0], new ArrayList<Integer>());
+        for (int[] param1 : prerequisites) param2.get(param1[0]).add(param1[1]);
+        // maintain a set of courses visited during the dfs
+        HashSet<Integer> visited = new HashSet<>();
+        // loop through every node in the graph because it can be a graph that isn\'t fully connected.
+        // perform dfs
+        for (int i = 0; i < param3; i++) {
+            if (!dfs(i, param2, visited))
+                return false;
+        }
+        return true;
+    }
+}

@@ -1,0 +1,38 @@
+class Solution {
+
+    public int method1(int[] nums) {
+        if (nums.length == 0)
+            return 0;
+        HashMap<Integer, Integer> map = new HashMap();
+        int max = 1;
+        for (int i = 0; i < nums.length; i++) {
+            int val = nums[i];
+            if (// don\'t need to process the same values again
+            map.containsKey(val))
+                continue;
+            Integer left = map.get(val - 1);
+            Integer right = map.get(val + 1);
+            if (left != null && right != null) {
+                map.put(left, right);
+                map.put(right, left);
+                // if left and right value exists then this operation only serves to mark that the key has been handled
+                map.put(val, val);
+            } else if (// if only one side exists, then the other side, the element takes for itself
+            left != null) {
+                right = val;
+                map.put(left, right);
+                map.put(right, left);
+            } else if (right != null) {
+                left = val;
+                map.put(left, right);
+                map.put(right, left);
+            } else {
+                map.put(val, val);
+                continue;
+            }
+            if (right - left + 1 > max)
+                max = right - left + 1;
+        }
+        return max;
+    }
+}

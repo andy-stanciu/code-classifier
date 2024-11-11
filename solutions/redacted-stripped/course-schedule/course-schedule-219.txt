@@ -1,0 +1,49 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<Integer>[] graph = createGraph(param1, prerequisites);
+        int[] indegree = new int[param1];
+        for (int v = 0; v < param1; v++) {
+            for (int w : graph[v]) {
+                indegree[w]++;
+            }
+        }
+        LinkedList<Integer> que = new LinkedList<>();
+        List<Integer> topologicalOrdering = new ArrayList<>();
+        int count = 0;
+        for (int v = 0; v < param1; v++) {
+            if (indegree[v] == 0)
+                que.addLast(v);
+        }
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                Integer rvtx = que.removeFirst();
+                topologicalOrdering.add(rvtx);
+                count++;
+                for (int nbr : graph[rvtx]) {
+                    if (--indegree[nbr] == 0)
+                        que.addLast(nbr);
+                }
+            }
+        }
+        if (count == param1)
+            return true;
+        return false;
+    }
+
+    public ArrayList<Integer>[] createGraph(int param1, int[][] prerequisites) {
+        ArrayList<Integer>[] graph = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] edge : prerequisites) {
+            if (edge.length >= 2) {
+                int u = edge[0];
+                int v = edge[1];
+                graph[u].add(v);
+            }
+        }
+        return graph;
+    }
+}

@@ -1,0 +1,53 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        HashMap<Integer, List<Integer>> var1 = new HashMap<>();
+        // Build the course graph from prerequisites
+        for (int[] pre : prerequisites) {
+            if (var1.containsKey(pre[1])) {
+                var1.get(pre[1]).add(pre[0]);
+            } else {
+                List<Integer> var2 = new LinkedList<>();
+                var2.add(pre[0]);
+                var1.put(pre[1], var2);
+            }
+        }
+        HashSet<Integer> visited = new HashSet<>();
+        HashSet<Integer> processed = new HashSet<>();
+        // Check each course for cycles
+        for (int var3 = 0; var3 < param1; var3++) {
+            if (!method1(var3, visited, processed, var1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Helper method to perform DFS and detect cycles
+    private boolean method1(int param2, HashSet<Integer> visited, HashSet<Integer> processed, HashMap<Integer, List<Integer>> var1) {
+        // If the course is already in the current DFS path, there\'s a cycle
+        if (visited.contains(param2)) {
+            return false;
+        }
+        // If the course has been fully processed already, skip it
+        if (processed.contains(param2)) {
+            return true;
+        }
+        // If the course has no prerequisites or has been fully processed
+        if (!var1.containsKey(param2)) {
+            return true;
+        }
+        // Mark the course as visited in the current path
+        visited.add(param2);
+        // Recursively check all prerequisites
+        for (int pre : var1.get(param2)) {
+            if (!method1(pre, visited, processed, var1)) {
+                return false;
+            }
+        }
+        // Remove the course from the current path and add it to the processed set
+        visited.remove(param2);
+        processed.add(param2);
+        return true;
+    }
+}

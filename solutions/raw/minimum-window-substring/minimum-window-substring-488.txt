@@ -1,0 +1,48 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        //idea is to make use of hashmap that stores required characters;
+        //as we shrink or grow the window we manipulate these required characters
+        //i++ = increase required character freq
+        //j++ = decrease required character freq
+        int i = 0;
+        int j = 0;
+        int n = s.length();
+        int o = t.length();
+        if (o > n)
+            return "";
+        int res = Integer.MAX_VALUE;
+        int matchCount = 0;
+        HashMap<Character, Integer> m = new HashMap();
+        for (int k = 0; k < t.length(); k++) m.put(t.charAt(k), m.getOrDefault(t.charAt(k), 0) + 1);
+        int start = 0;
+        int end = n - 1;
+        while (j < s.length()) {
+            if (m.containsKey(s.charAt(j))) {
+                m.put(s.charAt(j), m.get(s.charAt(j)) - 1);
+                if (m.get(s.charAt(j)) >= 0)
+                    matchCount++;
+            }
+            while (matchCount == o) {
+                if (res > (j - i + 1)) {
+                    start = i;
+                    end = j;
+                    res = j - i + 1;
+                }
+                if (m.containsKey(s.charAt(i))) {
+                    if (m.get(s.charAt(i)) == 0) {
+                        m.put(s.charAt(i), m.get(s.charAt(i)) + 1);
+                        matchCount--;
+                    } else {
+                        m.put(s.charAt(i), m.get(s.charAt(i)) + 1);
+                    }
+                }
+                i++;
+            }
+            j++;
+        }
+        if (res == Integer.MAX_VALUE)
+            return "";
+        return s.substring(start, end + 1);
+    }
+}

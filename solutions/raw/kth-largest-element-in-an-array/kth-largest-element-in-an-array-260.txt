@@ -1,0 +1,61 @@
+class Solution {
+
+    public int findKthLargest(int[] nums, int k) {
+        // Perform merge sort on the entire array
+        mergeSort(nums, 0, nums.length);
+        // Return the kth largest element (which is at index nums.length - k)
+        return nums[nums.length - k];
+    }
+
+    /**
+     * Recursive merge sort function.
+     */
+    public void mergeSort(int[] arr, int start, int end) {
+        // Base case: if the subarray has only one element, return
+        if (end - start == 1) {
+            return;
+        }
+        // Calculate the midpoint of the subarray
+        int mid = start + (end - start) / 2;
+        // Recursively sort the left and right halves of the subarray
+        mergeSort(arr, start, mid);
+        mergeSort(arr, mid, end);
+        // Merge the sorted halves
+        merge(arr, start, mid, end);
+    }
+
+    /**
+     * Merges two sorted subarrays into a single sorted subarray.
+     */
+    public void merge(int[] arr, int start, int mid, int end) {
+        // Create a temporary array to store the merged result
+        int[] mix = new int[end - start];
+        // Initialize indices for the left and right subarrays
+        int i = start;
+        int j = mid;
+        int k = 0;
+        // Merge smaller elements from the left and right subarrays
+        while (i < mid && j < end) {
+            if (arr[i] < arr[j]) {
+                mix[k] = arr[i];
+                i++;
+            } else {
+                mix[k] = arr[j];
+                j++;
+            }
+            k++;
+        }
+        // Copy any remaining elements from the left subarray
+        while (i < mid) {
+            mix[k++] = arr[i++];
+        }
+        // Copy any remaining elements from the right subarray
+        while (j < end) {
+            mix[k++] = arr[j++];
+        }
+        // Copy the merged result back into the original array
+        for (int l = 0; l < mix.length; l++) {
+            arr[start + l] = mix[l];
+        }
+    }
+}

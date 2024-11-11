@@ -1,0 +1,41 @@
+class Solution {
+
+    public List<String> generateParenthesis(int n) {
+        List<String> res = new ArrayList<>();
+        if (n == 0) {
+            res.add("");
+            return res;
+        }
+        parentheses(new StringBuilder(""), res, n, 0, "(");
+        return res;
+    }
+
+    public void parentheses(StringBuilder comb, List<String> res, int n, int val, String par) {
+        //This means there will be an unclosed parthesis because there needed to be a left closing the right one before hand
+        if (val < 0 && par.equals("(")) {
+            return;
+        }
+        //Base case is if length hits n * 2, number of parentheses for a string
+        if (comb.length() == n * 2) {
+            //Total being 0 means there was half lefts and half rights (Previous base case handled mismatching)
+            //Take into account duplicates
+            if (val == 0 && !res.contains(comb.toString())) {
+                res.add(comb.toString());
+            }
+            return;
+        }
+        //( will add one, ) will subtract 1
+        int add;
+        if (par.equals("("))
+            add = 1;
+        else
+            add = -1;
+        //Backtrack
+        comb.append(par);
+        parentheses(comb, res, n, val + add, "(");
+        comb.deleteCharAt(comb.length() - 1);
+        comb.append(par);
+        parentheses(comb, res, n, val + add, ")");
+        comb.deleteCharAt(comb.length() - 1);
+    }
+}

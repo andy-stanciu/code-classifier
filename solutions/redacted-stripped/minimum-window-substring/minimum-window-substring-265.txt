@@ -1,0 +1,47 @@
+class Solution {
+
+    private static final int ALPHABET = 256;
+
+    public String method1(String s, String t) {
+        int[] histogram = histogram(t);
+        int[] counters = new int[ALPHABET];
+        int size = s.length();
+        int resultL = -1;
+        int resultR = size;
+        for (int l = 0, r = 0; r < size; ) {
+            char rc = s.charAt(r++);
+            counters[rc]++;
+            while (l < r && matches(counters, histogram)) {
+                if (r - l < resultR - resultL) {
+                    resultL = l;
+                    resultR = r;
+                }
+                char lc = s.charAt(l++);
+                counters[lc]--;
+            }
+        }
+        if (resultL != -1) {
+            return s.substring(resultL, resultR);
+        } else {
+            return "";
+        }
+    }
+
+    private static boolean matches(int[] counters, int[] histogram) {
+        for (int i = 0; i < ALPHABET; i++) {
+            if (counters[i] < histogram[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static int[] histogram(String t) {
+        int[] result = new int[ALPHABET];
+        for (int i = 0, limit = t.length(); i < limit; i++) {
+            char c = t.charAt(i);
+            result[c]++;
+        }
+        return result;
+    }
+}

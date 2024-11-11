@@ -1,0 +1,40 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        HashMap<Character, Integer> tFreq = new HashMap<Character, Integer>();
+        HashMap<Character, Integer> sFreq = new HashMap<Character, Integer>();
+        for (char ch : t.toCharArray()) {
+            tFreq.put(ch, tFreq.getOrDefault(ch, 0) + 1);
+        }
+        int left = 0;
+        int min = Integer.MAX_VALUE;
+        String minString = "";
+        for (int right = 0; right < s.length(); right++) {
+            char ch = s.charAt(right);
+            sFreq.put(ch, sFreq.getOrDefault(ch, 0) + 1);
+            while (compareFreqMap(sFreq, tFreq)) {
+                int currMin = right - left + 1;
+                if (min > currMin) {
+                    min = currMin;
+                    minString = s.substring(left, right + 1);
+                }
+                char leftChar = s.charAt(left);
+                sFreq.put(leftChar, sFreq.getOrDefault(leftChar, 0) - 1);
+                left++;
+                //shrink left
+            }
+        }
+        return minString;
+    }
+
+    public boolean compareFreqMap(HashMap<Character, Integer> sFreq, HashMap<Character, Integer> tFreq) {
+        for (Map.Entry<Character, Integer> entry : tFreq.entrySet()) {
+            char ch = entry.getKey();
+            int val = entry.getValue();
+            if (!sFreq.containsKey(ch) || sFreq.get(ch) < val) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

@@ -1,0 +1,45 @@
+class Solution {
+
+    int count = 0;
+
+    public int uniquePathsWithObstacles(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        // track all visited pos till now
+        boolean[][] visited = new boolean[m][n];
+        // store values
+        int[][] dp = new int[m][n];
+        // if there are an obstacle at source or destination position
+        if (grid[0][0] == 1 || grid[m - 1][n - 1] == 1)
+            return 0;
+        // memorize the calculated values
+        dp[m - 1][n - 1] = 1;
+        // recursive call
+        rb(grid, visited, m, n, 0, 0, dp);
+        return dp[0][0];
+    }
+
+    private int rb(int[][] grid, boolean[][] visited, int m, int n, int i, int j, int[][] dp) {
+        // border conditions
+        if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] == 1 || visited[i][j])
+            return 0;
+        // is destination position
+        if (i == m - 1 && j == n - 1) {
+            // count++;
+            return dp[i][j];
+        }
+        // if current position is already processed
+        if (dp[i][j] != 0)
+            return dp[i][j];
+        // mark current pos visited
+        visited[i][j] = true;
+        // go right
+        int right = rb(grid, visited, m, n, i, j + 1, dp);
+        // go bottom;
+        int bottom = rb(grid, visited, m, n, i + 1, j, dp);
+        // backtracking
+        visited[i][j] = false;
+        dp[i][j] = right + bottom;
+        return dp[i][j];
+    }
+}

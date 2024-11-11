@@ -1,0 +1,40 @@
+class Solution {
+
+    ArrayList<ArrayList<Integer>> adjList = new ArrayList<>();
+
+    Set<Integer> visited;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        for (int var1 = 0; var1 < param1; var1++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int pre = 0; pre < prerequisites.length; pre++) {
+            adjList.get(prerequisites[pre][0]).add(prerequisites[pre][1]);
+        }
+        for (int var1 = 0; var1 < param1; var1++) {
+            visited = new HashSet<>();
+            if (dfs(var1) == false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean dfs(int var1) {
+        if (visited.contains(var1)) {
+            return false;
+        }
+        if (adjList.get(var1).isEmpty()) {
+            return true;
+        }
+        visited.add(var1);
+        for (Integer pre : adjList.get(var1)) {
+            if (dfs(pre) == false) {
+                return false;
+            }
+        }
+        adjList.get(var1).clear();
+        visited.remove(var1);
+        return true;
+    }
+}

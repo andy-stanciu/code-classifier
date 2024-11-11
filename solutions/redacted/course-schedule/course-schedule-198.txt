@@ -1,0 +1,47 @@
+class Solution {
+
+    ArrayList<ArrayList<Integer>> adjList = new ArrayList<>();
+
+    Set<Integer> visited;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        // Create empty adjacency list
+        for (int var1 = 0; var1 < param1; var1++) {
+            adjList.add(new ArrayList<>());
+        }
+        // Add prerequisites to adjList
+        for (int pre = 0; pre < prerequisites.length; pre++) {
+            adjList.get(prerequisites[pre][0]).add(prerequisites[pre][1]);
+        }
+        // Perform DFS on each class to check if it is valid
+        for (int var1 = 0; var1 < param1; var1++) {
+            visited = new HashSet<>();
+            if (dfs(var1) == false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean dfs(int var1) {
+        if (visited.contains(var1)) {
+            // loop detected
+            return false;
+        }
+        if (adjList.get(var1).isEmpty()) {
+            return true;
+        }
+        visited.add(var1);
+        // if class has no prerequisites, it is valid
+        for (Integer pre : adjList.get(var1)) {
+            if (dfs(pre) == false) {
+                return false;
+            }
+        }
+        // prerequisites were valid, so remove from adjList for the course
+        adjList.get(var1).clear();
+        // done visiting this class
+        visited.remove(var1);
+        return true;
+    }
+}

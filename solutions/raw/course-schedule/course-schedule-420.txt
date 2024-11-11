@@ -1,0 +1,81 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        //base case
+        if (numCourses == 1) {
+            return true;
+        }
+        //creating a graph
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        //checking graph is cyclic or acyclic
+        if (isCycle(graph)) {
+            return false;
+        }
+        //performing topological approach
+        int[] ans = new int[numCourses];
+        int[] indeg = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            for (int j = 0; j < graph.get(i).size(); j++) {
+                indeg[graph.get(i).get(j)]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < indeg.length; i++) {
+            if (indeg[i] == 0) {
+                q.add(i);
+            }
+        }
+        //applying BFS
+        int z = 0;
+        while (!q.isEmpty()) {
+            int curr = q.remove();
+            ans[z] = curr;
+            z++;
+            for (int i = 0; i < graph.get(curr).size(); i++) {
+                indeg[graph.get(curr).get(i)]--;
+                if (indeg[graph.get(curr).get(i)] == 0) {
+                    q.add(graph.get(curr).get(i));
+                }
+            }
+        }
+        return ans.length != 0 ? true : false;
+    }
+
+    //cycle detection code
+    public static boolean isCycle(ArrayList<ArrayList<Integer>> graph) {
+        boolean[] vis = new boolean[graph.size()];
+        boolean[] stack = new boolean[graph.size()];
+        for (int i = 0; i < graph.size(); i++) {
+            if (!vis[i]) {
+                if (isCycleUtil(graph, i, vis, stack)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean isCycleUtil(ArrayList<ArrayList<Integer>> graph, int curr, boolean[] vis, boolean[] stack) {
+        vis[curr] = true;
+        stack[curr] = true;
+        for (int i = 0; i < graph.get(curr).size(); i++) {
+            int e = graph.get(curr).get(i);
+            if (stack[e]) {
+                return true;
+            }
+            if (!vis[e]) {
+                if (isCycleUtil(graph, e, vis, stack)) {
+                    return true;
+                }
+            }
+        }
+        stack[curr] = false;
+        return false;
+    }
+}

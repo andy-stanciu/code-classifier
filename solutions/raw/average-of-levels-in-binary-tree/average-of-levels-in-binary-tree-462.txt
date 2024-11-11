@@ -1,0 +1,48 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<Double> averageOfLevels(TreeNode root) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        helper(root, 0, map);
+        List<Double> result = new ArrayList<>();
+        int level = 0;
+        while (true) {
+            List<Integer> levelNumbs = map.getOrDefault(level, null);
+            if (levelNumbs == null)
+                break;
+            double sum = 0;
+            int cnt = 0;
+            for (int n : levelNumbs) {
+                sum += (double) n;
+                cnt++;
+            }
+            result.add(sum / (double) cnt);
+            level++;
+        }
+        return result;
+    }
+
+    private void helper(TreeNode node, int level, Map<Integer, List<Integer>> map) {
+        if (node == null)
+            return;
+        List<Integer> levelNumbs = map.getOrDefault(level, new ArrayList<Integer>());
+        levelNumbs.add(node.val);
+        map.put(level, levelNumbs);
+        helper(node.left, level + 1, map);
+        helper(node.right, level + 1, map);
+    }
+}

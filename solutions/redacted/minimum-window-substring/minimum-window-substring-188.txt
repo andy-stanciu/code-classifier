@@ -1,0 +1,50 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        // Base case scenario : If there is no such substring, return the empty string "".
+        if (s == null || t == null || s.length() < t.length()) {
+            return "";
+        }
+        Map<Character, Integer> tMap = new HashMap<>();
+        Map<Character, Integer> sMap = new HashMap<>();
+        // Frequnecy data that will help us to indentify to move right or left
+        // In Sliding Window
+        for (int i = 0; i < t.length(); i++) {
+            char tele = t.charAt(i);
+            tMap.put(tele, tMap.getOrDefault(tele, 0) + 1);
+        }
+        int var1 = 0;
+        int minLength = Integer.MAX_VALUE;
+        int startIndex = 0;
+        int var2 = 0;
+        int tMapSize = tMap.size();
+        for (int var4 = 0; var4 < s.length(); var4++) {
+            char sele = s.charAt(var4);
+            sMap.put(sele, sMap.getOrDefault(sele, 0) + 1);
+            // We care about characters present in t string , And we are matching
+            // frequnecy of all element
+            if (tMap.containsKey(sele) && sMap.get(sele).equals(tMap.get(sele))) {
+                var2++;
+            }
+            // Once we Found that all element frequency is matched then we will
+            // look by narrowing space that is size can be done smaller
+            while (var2 == tMapSize) {
+                char seleAtLeft = s.charAt(var1);
+                int var3 = var4 - var1 + 1;
+                if (var3 < minLength) {
+                    minLength = var3;
+                    startIndex = var1;
+                }
+                // We will keep updating frequnecy as if any charcater doesn\'t matches
+                // We have to move in right direction
+                sMap.put(seleAtLeft, sMap.get(seleAtLeft) - 1);
+                if (tMap.containsKey(seleAtLeft) && sMap.get(seleAtLeft) < tMap.get(seleAtLeft)) {
+                    var2--;
+                }
+                var1++;
+            }
+        }
+        // Substring is really helpful as last test case of Long String was not matching
+        return (minLength == Integer.MAX_VALUE) ? "" : s.substring(startIndex, startIndex + minLength);
+    }
+}

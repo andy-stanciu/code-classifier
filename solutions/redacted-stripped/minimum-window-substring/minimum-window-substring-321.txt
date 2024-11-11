@@ -1,0 +1,39 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        int var1 = Integer.MAX_VALUE;
+        int requiredCount = t.length();
+        int startOfString = 0;
+        int endOfString = 0;
+        int i = 0, j = 0;
+        while (j < s.length()) {
+            char currChar = s.charAt(j);
+            if (map.containsKey(currChar) && map.get(currChar) > 0) {
+                requiredCount--;
+            }
+            map.put(currChar, map.getOrDefault(currChar, 0) - 1);
+            while (requiredCount == 0) {
+                int var2 = j - i + 1;
+                if (var2 < var1) {
+                    startOfString = i;
+                    endOfString = j;
+                    var1 = var2;
+                }
+                char at_i = s.charAt(i);
+                map.put(at_i, map.get(at_i) + 1);
+                if (map.get(at_i) > 0) {
+                    requiredCount++;
+                }
+                i++;
+            }
+            j++;
+        }
+        return var1 == Integer.MAX_VALUE ? "" : s.substring(startOfString, endOfString + 1);
+    }
+}

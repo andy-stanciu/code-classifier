@@ -1,0 +1,30 @@
+class Solution {
+
+    public int maxSubArray(int[] nums) {
+        return findMaxSum(nums, 0, nums.length - 1);
+    }
+
+    private int findMaxSum(int[] nums, int s, int e) {
+        if (s == e)
+            return nums[s];
+        int mid = s + (e - s) / 2;
+        int leftMax = findMaxSum(nums, s, mid);
+        int rightMax = findMaxSum(nums, mid + 1, e);
+        int arrMax = findMaxCrossSum(nums, s, mid, e);
+        return Math.max(leftMax, Math.max(rightMax, arrMax));
+    }
+
+    private int findMaxCrossSum(int[] nums, int s, int m, int e) {
+        int lSum = 0, lMax = Integer.MIN_VALUE;
+        for (int i = m; i >= s; i--) {
+            lSum += nums[i];
+            lMax = Math.max(lMax, lSum);
+        }
+        int rSum = 0, rMax = Integer.MIN_VALUE;
+        for (int i = m + 1; i <= e; i++) {
+            rSum += nums[i];
+            rMax = Math.max(rMax, rSum);
+        }
+        return lMax + rMax;
+    }
+}

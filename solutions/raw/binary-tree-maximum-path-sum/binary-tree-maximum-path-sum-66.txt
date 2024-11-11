@@ -1,0 +1,48 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    int res = Integer.MIN_VALUE;
+
+    public int maxPathSum(TreeNode root) {
+        max(root);
+        return res;
+    }
+
+    private int max(TreeNode root) {
+        if (root == null)
+            return 0;
+        if (root.left == null && root.right == null) {
+            res = Math.max(res, root.val);
+            return root.val;
+        }
+        //including only root
+        int possibility1 = root.val;
+        res = Math.max(possibility1, res);
+        //including max path of left subtree
+        int possibility2 = root.val + max(root.left);
+        res = Math.max(possibility2, res);
+        //including max path of right subtree
+        int possibility3 = root.val + max(root.right);
+        res = Math.max(possibility3, res);
+        //including max of both left and right subtree and root, this cannot be included in other other paths as an edge can be part of a path at-most once
+        //simplified version of root.val + max(root.left) + max(root.right)
+        int possibility4 = possibility2 + possibility3 - possibility1;
+        res = Math.max(possibility4, res);
+        //possibility 4 is not included here
+        return Math.max(possibility1, Math.max(possibility2, possibility3));
+    }
+}

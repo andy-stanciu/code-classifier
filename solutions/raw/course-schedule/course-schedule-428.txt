@@ -1,0 +1,47 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        ArrayList<Integer>[] adjList = getAdjList(prerequisites, numCourses);
+        boolean[] visited = new boolean[numCourses];
+        boolean[] pathVisited = new boolean[numCourses];
+        boolean isCycleExist = false;
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i]) {
+                isCycleExist = isCycleExistDFS(i, adjList, visited, pathVisited);
+            }
+            if (isCycleExist) {
+                break;
+            }
+        }
+        return !isCycleExist;
+    }
+
+    private boolean isCycleExistDFS(int currNode, ArrayList<Integer>[] adjList, boolean[] visited, boolean[] pathVisited) {
+        boolean isCycleExist = false;
+        visited[currNode] = true;
+        pathVisited[currNode] = true;
+        for (int node : adjList[currNode]) {
+            if (visited[node]) {
+                isCycleExist = pathVisited[node];
+            } else {
+                isCycleExist = isCycleExistDFS(node, adjList, visited, pathVisited);
+            }
+            if (isCycleExist) {
+                break;
+            }
+        }
+        pathVisited[currNode] = false;
+        return isCycleExist;
+    }
+
+    private ArrayList<Integer>[] getAdjList(int[][] arr, int n) {
+        ArrayList<Integer>[] adjList = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            adjList[i] = new ArrayList<Integer>();
+        }
+        for (int[] row : arr) {
+            adjList[row[0]].add(row[1]);
+        }
+        return adjList;
+    }
+}

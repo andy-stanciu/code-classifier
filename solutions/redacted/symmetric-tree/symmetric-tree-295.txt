@@ -1,0 +1,56 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Pair {
+
+    TreeNode node1, node2;
+
+    Pair(TreeNode node1, TreeNode node2) {
+        this.node1 = node1;
+        this.node2 = node2;
+    }
+}
+
+class Solution {
+
+    public boolean method1(TreeNode root) {
+        Queue<Pair> queue = new LinkedList<>();
+        //Only root node exists - then the tree is symmetrical
+        if (root.right == null && root.left == null)
+            return true;
+        //if root node has only left or right child - no symmetry
+        if (root.right == null || root.left == null)
+            return false;
+        queue.add(new Pair(root.left, root.right));
+        while (!queue.isEmpty()) {
+            Pair p = queue.remove();
+            TreeNode node1 = p.node1, node2 = p.node2;
+            //If both nodes null it means we have reached the end of tree
+            if (node1 == null && node2 == null)
+                continue;
+            //If any one node is null, it violates the rule of symmetry
+            if (node1 == null || node2 == null)
+                return false;
+            //If values not same return false, since symmetry rule violated
+            if (node1.val != node2.val)
+                return false;
+            //Put left child of node1 and right child of node2
+            queue.add(new Pair(node1.left, node2.right));
+            //Put right child of node1 and left child of node2
+            queue.add(new Pair(node1.right, node2.left));
+        }
+        return true;
+    }
+}

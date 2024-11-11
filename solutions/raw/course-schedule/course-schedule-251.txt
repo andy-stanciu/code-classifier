@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        int[] visited = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            map.put(i, new ArrayList<>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            int course = prerequisite[0], preCourse = prerequisite[1];
+            map.get(course).add(preCourse);
+        }
+        for (int i = 0; i < numCourses; i++) {
+            if (!topologicalSort(i, visited, map)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean topologicalSort(int course, int[] visited, Map<Integer, List<Integer>> map) {
+        if (visited[course] == 1) {
+            return true;
+        }
+        // detect if there is a cycle in the graph
+        if (visited[course] == -1) {
+            return false;
+        }
+        visited[course] = -1;
+        for (int preCourse : map.get(course)) {
+            if (!topologicalSort(preCourse, visited, map)) {
+                return false;
+            }
+        }
+        visited[course] = 1;
+        return true;
+    }
+}

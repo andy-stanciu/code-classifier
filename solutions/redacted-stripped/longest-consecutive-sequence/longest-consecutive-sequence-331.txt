@@ -1,0 +1,36 @@
+class Solution {
+
+    public int method1(int[] nums) {
+        HashMap<Integer, Integer> graph = new HashMap<>();
+        for (int num : nums) {
+            if (graph.containsKey(num - 1)) {
+                graph.put(num - 1, num);
+            }
+            if (graph.containsKey(num + 1)) {
+                graph.put(num, num + 1);
+            } else {
+                graph.put(num, null);
+            }
+        }
+        int[] res = new int[] { 0 };
+        Set<Integer> visited = new HashSet<>();
+        int M = Integer.MIN_VALUE;
+        for (int key : graph.keySet()) {
+            if (!visited.contains(key)) {
+                dfsLC(graph, visited, 1, res, key);
+                M = Math.max(M, res[0]);
+                res[0] = 0;
+            }
+        }
+        return Math.max(M, 0);
+    }
+
+    private void dfsLC(HashMap<Integer, Integer> graph, Set<Integer> visited, int i, int[] res, int key) {
+        visited.add(key);
+        if (graph.get(key) != null) {
+            dfsLC(graph, visited, i + 1, res, graph.get(key));
+        } else {
+            res[0] = i;
+        }
+    }
+}

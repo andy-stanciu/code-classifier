@@ -1,0 +1,50 @@
+class Solution {
+
+    public class Edge {
+
+        int src;
+
+        int dest;
+
+        public Edge(int src, int dest) {
+            this.src = src;
+            this.dest = dest;
+        }
+    }
+
+    public boolean isCycle(ArrayList<Edge>[] graph, boolean[] visitor, boolean[] recStack, int curr) {
+        visitor[curr] = true;
+        recStack[curr] = true;
+        for (Edge e : graph[curr]) {
+            if (recStack[e.dest])
+                return true;
+            else if (!visitor[e.dest] && isCycle(graph, visitor, recStack, e.dest)) {
+                return true;
+            }
+        }
+        recStack[curr] = false;
+        return false;
+    }
+
+    public void createGraph(int param1, int[][] prerequisites, ArrayList<Edge>[] graph) {
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<Edge>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph[prerequisites[i][1]].add(new Edge(prerequisites[i][1], prerequisites[i][0]));
+        }
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<Edge>[] graph = new ArrayList[param1];
+        createGraph(param1, prerequisites, graph);
+        boolean[] visitor = new boolean[param1];
+        boolean[] recStack = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!visitor[i] && isCycle(graph, visitor, recStack, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

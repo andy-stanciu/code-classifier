@@ -1,0 +1,53 @@
+class Solution {
+
+    public List<String> generateParenthesis(int n) {
+        //declare and initialize an empty string to hold each valid combination
+        String combination = "";
+        //ArrayList to store all the valid combinations
+        List<String> listOfValidCombinations = new ArrayList<String>();
+        //counter to keep track of no. of open (left) parentheses
+        int countOfOpen = 0;
+        // counter to keep track of no. of close(right) parentheses
+        int countOfClose = 0;
+        //calling the backtracking method
+        backtrack(listOfValidCombinations, combination, countOfOpen, countOfClose, n);
+        //return the final list of valid combinations computed by the backtacking method
+        return listOfValidCombinations;
+    }
+
+    public void backtrack(List<String> listOfValidCombinations, String combination, int countOfOpen, int countOfClose, int maxCount) {
+        /* The main idea here is:
+        1.  In order to generate valid combinations of parentheses, we need to make sure that
+            there is a closing parentheses for every open parentheses. This can be achieved by
+            taking care of the following points:
+            a.  At any point, no. of open parentheses > no. of closing parentheses
+            b.  If no. of open parentheses == no. of closing parentheses, we have obtained a valid pattern
+                (this will be our terminating condition for recursion)
+            
+        2.  We can repeat the process in point 1, until we have obatained all the possible combinations.
+        
+        */
+        /*if no. of open and closing parentheses is equal to n, add the  
+        combination to the list and return (and thus end the recursion)*/
+        if ((countOfOpen == maxCount) && (countOfClose == maxCount)) {
+            //terminating condition
+            listOfValidCombinations.add(combination);
+            return;
+        }
+        /*If no. of open parentheses is equal to n, it means we can add
+        another \'(\' to the exisiting pattern and increase the value of countOfOpen by 1*/
+        if (countOfOpen < maxCount) {
+            backtrack(listOfValidCombinations, combination + "(", countOfOpen + 1, countOfClose, maxCount);
+        }
+        /*If no. of closing parentheses is less than the no. of 
+        open parentheses is equal to n, it means we can add another \')\' 
+        to the exisiting pattern and increase the value of countOfClose by 1.
+        We need to understand here that the second if block will be executed
+        after the recursion from the first if block ends. In this way, we would
+        have tried all possible combinations possible at this stage by BACKTRACKING.
+        This is how backtracking is implemented here.*/
+        if (countOfClose < countOfOpen) {
+            backtrack(listOfValidCombinations, combination + ")", countOfOpen, countOfClose + 1, maxCount);
+        }
+    }
+}

@@ -1,0 +1,64 @@
+class Solution {
+
+    //index of pivot
+    int pivot = 0;
+
+    //index of target
+    int tarIdx = -1;
+
+    public int method1(int[] nums, int target) {
+        if (nums.length == 1) {
+            if (nums[0] == target) {
+                return 0;
+            } else {
+                return -1;
+            }
+        }
+        method3(nums, 0, nums.length - 1);
+        //System.out.println("pivot:" + pivot);
+        if (pivot == 0) {
+            //is fully ascended
+            method2(nums, 0, nums.length - 1, target);
+        } else {
+            if (nums[0] <= target && target <= nums[pivot - 1]) {
+                method2(nums, 0, pivot - 1, target);
+            } else {
+                method2(nums, pivot, nums.length - 1, target);
+            }
+        }
+        return tarIdx;
+    }
+
+    public void method2(int[] nums, int start, int end, int target) {
+        if (start > end)
+            return;
+        int mid = (start + end) / 2;
+        if (nums[mid] == target) {
+            tarIdx = mid;
+            return;
+        }
+        if (target < nums[mid]) {
+            method2(nums, start, mid - 1, target);
+        } else {
+            method2(nums, mid + 1, end, target);
+        }
+    }
+
+    public void method3(int[] nums, int start, int end) {
+        if (start >= end)
+            return;
+        if (end - start == 1) {
+            if (nums[start] > nums[end]) {
+                pivot = end;
+                return;
+            } else {
+                return;
+            }
+        }
+        if (nums[start] > nums[(start + end) / 2]) {
+            method3(nums, start, (start + end) / 2);
+        } else {
+            method3(nums, (start + end) / 2, end);
+        }
+    }
+}

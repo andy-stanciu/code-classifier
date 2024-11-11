@@ -1,0 +1,56 @@
+/*Inspiration- https://www.youtube.com/watch?v=nz5V5pOiT8w, good solution by greg hog. First look carefully at the question, if there are 5 numCourses, there will be 0,1,2,3,4 course number. It is written, they are labeled from 0 to numCourse-1. Now, their pre req may be in different orders. */
+//First, convert the input (actually the 2D array of pre req ) into a graph with adj list. I am using a hMap. Then create a states array of same size as of numsCourse. It will store the current state of the node/course among univisited(0), currently visiting(1) or Visited(2). Traverse from 0 to numCourses. Call dfs on each of the course recursively onto their adj neighbors as well.
+//Base case is that if the state is 1, we found a cycle since in the current dfs recursive call, we arrived at a node/course that we previously visited in this recursive call stack, so immediately return false. If state is 2, we return true but we are not done yet. If state is neighter 1 nor 2, that means we are going to visit it, so mark it as 1 in states and then recursively call dfs on each of the neighbors from its adj list. For each of them also, make sure the result is true, otherwise immediately return false.
+//If you visited all the courses in the neighbor list of this course, without a false case, that means you are good for this course, mark it visited(2) and return true.
+class Solution {
+
+    HashMap<Integer, List<Integer>> adjList;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        //first convert the pre req 2D array into a graph, that means have nodes and for each node, have an adjacency list.
+        //just renaming it to courses, easier that way.
+        int[][] var1 = prerequisites;
+        adjList = new HashMap<>();
+        for (int[] var2 : var1) {
+            int a = var2[0];
+            int b = var2[1];
+            if (!adjList.containsKey(a)) {
+                adjList.put(a, new ArrayList<Integer>());
+            }
+            adjList.get(a).add(b);
+            System.out.println(adjList.size());
+        }
+        //since all courses are 0 labeled, if numCourses=6, we are guaranteed to see 0,1,2,4,5, maybe in different orders.
+        //we will have three states 0-unvisited, 1-currently visiting, 2-visited.
+        int[] states = new int[param1];
+        for (int var2 = 0; var2 < param1; var2++) {
+            if (!dfs(var2, states)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(int var2, int[] states) {
+        //means this has been visited and has satisfied/vetted before
+        if (states[var2] == 2)
+            return true;
+        //hhmm, we are currently visiting it and we arrived at it again, that means a cycle.
+        if (states[var2] == 1)
+            return false;
+        //so if neighter, then it must be 0 or unvisited, so first mark them visiting before we traverse its neighbors.
+        states[var2] = 1;
+        if (adjList.containsKey(var2)) {
+            for (int neighbor : adjList.get(var2)) {
+                //traversing all neighbors of this course
+                if (!this.dfs(neighbor, states)) {
+                    return false;
+                }
+            }
+        }
+        //if all neighbors have been visited and we haven\'t found cycle for course, then mark it visited or vetted.
+        states[var2] = 2;
+        //meaning for this course, dfs is true and this course can be safely taken.
+        return true;
+    }
+}

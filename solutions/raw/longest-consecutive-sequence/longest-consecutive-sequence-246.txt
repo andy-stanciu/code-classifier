@@ -1,0 +1,49 @@
+class Solution {
+
+    HashMap<Integer, Integer> parent;
+
+    HashMap<Integer, Integer> rank;
+
+    int max = 1;
+
+    public int longestConsecutive(int[] nums) {
+        if (nums.length == 0)
+            return 0;
+        parent = new HashMap<>();
+        rank = new HashMap<>();
+        for (int i : nums) {
+            parent.put(i, i);
+            rank.put(i, 1);
+        }
+        for (int i : nums) {
+            if (parent.containsKey(i + 1)) {
+                connection(i, i + 1);
+            }
+        }
+        return max;
+    }
+
+    public void connection(int v1, int v2) {
+        int p1 = find(v1);
+        int p2 = find(v2);
+        if (p1 == p2)
+            return;
+        if (rank.get(p1) >= rank.get(p2)) {
+            parent.put(p2, parent.get(p1));
+            rank.put(p1, rank.get(p1) + rank.get(p2));
+            max = Math.max(max, rank.get(p1));
+        } else {
+            parent.put(p1, parent.get(p2));
+            rank.put(p2, rank.get(p2) + rank.get(p1));
+            max = Math.max(max, rank.get(p2));
+        }
+        return;
+    }
+
+    public int find(int p1) {
+        if (p1 != parent.get(p1)) {
+            parent.put(p1, find(parent.get(p1)));
+        }
+        return parent.get(p1);
+    }
+}

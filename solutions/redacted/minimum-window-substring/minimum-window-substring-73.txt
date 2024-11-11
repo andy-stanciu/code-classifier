@@ -1,0 +1,39 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        if (s.equals(t))
+            return s;
+        Map<Character, Integer> haveMap = new HashMap<>(), needMap = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            needMap.put(ch, needMap.getOrDefault(ch, 0) + 1);
+            haveMap.put(ch, 0);
+        }
+        int need = needMap.size(), have = 0, start = 0, minLen = Integer.MAX_VALUE;
+        String res = "";
+        for (int end = 0; end < s.length(); end++) {
+            char ch = s.charAt(end);
+            if (!needMap.containsKey(ch))
+                continue;
+            haveMap.put(ch, haveMap.get(ch) + 1);
+            if (haveMap.get(ch) == needMap.get(ch))
+                have++;
+            while (have == need) {
+                int len = end - start + 1;
+                if (len < minLen) {
+                    minLen = len;
+                    res = s.substring(start, end + 1);
+                }
+                ch = s.charAt(start);
+                if (haveMap.containsKey(ch)) {
+                    haveMap.put(ch, haveMap.get(ch) - 1);
+                    if (haveMap.get(ch) < needMap.get(ch))
+                        have--;
+                }
+                start++;
+            }
+        }
+        return res;
+    }
+}

@@ -1,0 +1,30 @@
+class Solution {
+
+    public int dfs(int i, int j, int[][] mat, int[][] stor, int n, int m) {
+        if (// if the robot moves out of matrix or robot moves into an obstacle
+        i < 0 || j < 0 || i == n || j == m || mat[i][j] == 1)
+            return 0;
+        if (// if the robot reaches the bottom right
+        i == n - 1 && j == m - 1)
+            return 1;
+        if (// if we already know whether a path exists from that coordinate or not then we return
+        stor[i][j] != -1)
+            return stor[i][j];
+        // move down
+        int r = dfs(i + 1, j, mat, stor, n, m);
+        // move right
+        int d = dfs(i, j + 1, mat, stor, n, m);
+        int k = r + d;
+        // storing values stting if the path exists from that coordinate or not .
+        stor[i][j] = k;
+        return stor[i][j];
+    }
+
+    public int uniquePathsWithObstacles(int[][] mat) {
+        int n = mat.length;
+        int m = mat[0].length;
+        int[][] stor = new int[n][m];
+        for (int[] x : stor) Arrays.fill(x, -1);
+        return dfs(0, 0, mat, stor, n, m);
+    }
+}

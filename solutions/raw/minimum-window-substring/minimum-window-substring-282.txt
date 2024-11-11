@@ -1,0 +1,47 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        int m = t.length();
+        int n = s.length();
+        // Step 1 : fill the map with chars of String t
+        for (int i = 0; i < m; i++) {
+            char ch = t.charAt(i);
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        // right left pointer for
+        int right = 0, left = 0;
+        // left index of minLength substring
+        int minLeft = 0;
+        //length of minimum possible  string
+        int minLength = Integer.MAX_VALUE;
+        //Number of unique chars of t required in s
+        int requiredChars = map.size();
+        // Step 2 : Make a Window and traverse on the String
+        while (right < s.length()) {
+            char ch = s.charAt(right);
+            if (map.containsKey(ch)) {
+                map.put(ch, map.getOrDefault(ch, 0) - 1);
+                if (map.get(ch) == 0) {
+                    requiredChars--;
+                }
+            }
+            while (requiredChars == 0) {
+                if (right - left + 1 < minLength) {
+                    minLength = right - left + 1;
+                    minLeft = left;
+                }
+                ch = s.charAt(left);
+                if (map.containsKey(ch)) {
+                    map.put(ch, map.get(ch) + 1);
+                    if (map.get(ch) > 0) {
+                        requiredChars++;
+                    }
+                }
+                left++;
+            }
+            right++;
+        }
+        return minLength == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + minLength);
+    }
+}

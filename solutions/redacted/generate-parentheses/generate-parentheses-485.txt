@@ -1,0 +1,53 @@
+class Solution {
+
+    class Class1 {
+
+        public String str;
+
+        public int opening;
+
+        public int closing;
+
+        public Class1(String str) {
+            this.str = str;
+            if (str.equals("(")) {
+                this.opening = 1;
+            }
+            if (str.equals(")")) {
+                this.closing = 1;
+            }
+        }
+
+        public Class1(String str, int opening, int closing) {
+            this.str = str;
+            this.opening = opening;
+            this.closing = closing;
+        }
+    }
+
+    public List<String> method1(int n) {
+        Queue<Class1> reserved = new LinkedList<>();
+        Class1 var1 = new Class1("(");
+        List<String> result = new ArrayList<>();
+        reserved.add(var1);
+        while (!reserved.isEmpty()) {
+            Class1 var2 = reserved.poll();
+            String currentStr = var2.str;
+            if (var2.opening == n && var2.closing == n) {
+                result.add(currentStr);
+            } else {
+                if (var2.opening < n) {
+                    Class1 var3 = new Class1(currentStr + "(", var2.opening + 1, var2.closing);
+                    reserved.add(var3);
+                }
+                if (var2.closing < n) {
+                    if (var2.opening > var2.closing) {
+                        Class1 var4 = new Class1(currentStr + ")", var2.opening, var2.closing + 1);
+                        reserved.add(var4);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}

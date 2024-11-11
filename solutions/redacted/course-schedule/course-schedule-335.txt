@@ -1,0 +1,50 @@
+class Solution {
+
+    boolean dfs(int curr, boolean[] vis, boolean[] stack, List<List<Integer>> l) {
+        if (stack[curr]) {
+            // Cycle detected
+            return true;
+        }
+        if (vis[curr]) {
+            // Already visited, no cycle
+            return false;
+        }
+        vis[curr] = true;
+        stack[curr] = true;
+        for (int n : l.get(curr)) {
+            if (dfs(n, vis, stack, l)) {
+                // Cycle detected in the subtree
+                return true;
+            }
+        }
+        stack[curr] = false;
+        // No cycle detected in the subtree
+        return false;
+    }
+
+    public boolean canFinish(int param1, int[][] pre) {
+        if (pre.length == 1 || pre.length == 0) {
+            return true;
+        }
+        List<List<Integer>> l = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            l.add(new ArrayList<>());
+        }
+        for (int i = 0; i < pre.length; i++) {
+            // Fix: use pre[i][1] to get the prerequisite course
+            l.get(pre[i][1]).add(pre[i][0]);
+        }
+        boolean[] vis = new boolean[param1];
+        boolean[] stack = new boolean[param1];
+        for (int i = 0; i < l.size(); i++) {
+            if (!vis[i]) {
+                if (dfs(i, vis, stack, l)) {
+                    // Cycle detected in the graph
+                    return false;
+                }
+            }
+        }
+        // No cycle detected
+        return true;
+    }
+}

@@ -1,0 +1,58 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int n = s.length();
+        int m = t.length();
+        HashMap<Character, Integer> mp = new HashMap<>();
+        HashMap<Character, Integer> temp = new HashMap<>();
+        int sz = 0;
+        for (int i = 0; i < m; i++) {
+            char ch = t.charAt(i);
+            if (mp.containsKey(ch)) {
+                int newVal = mp.get(ch) + 1;
+                mp.put(ch, newVal);
+            } else {
+                sz++;
+                mp.put(ch, 1);
+            }
+            if (temp.containsKey(ch)) {
+                int newVal = temp.get(ch) + 1;
+                temp.put(ch, newVal);
+            } else {
+                temp.put(ch, 1);
+            }
+        }
+        int i = 0, j = 0;
+        int currSize = 100000000;
+        int x = -1, y = -1;
+        while (i < n) {
+            char ch = s.charAt(i);
+            if (temp.containsKey(ch)) {
+                int newVal = temp.get(ch) - 1;
+                temp.put(ch, newVal);
+                if (newVal == 0) {
+                    sz--;
+                }
+            }
+            while (j <= i && sz == 0) {
+                // System.out.println(i);
+                if (currSize > i - j + 1) {
+                    currSize = i - j + 1;
+                    x = j;
+                    y = i;
+                }
+                if (temp.containsKey(s.charAt(j))) {
+                    int newVal = temp.get(s.charAt(j)) + 1;
+                    temp.put(s.charAt(j), newVal);
+                    if (newVal > 0)
+                        sz++;
+                }
+                j++;
+            }
+            i++;
+        }
+        if (x == -1 && y == -1)
+            return "";
+        return s.substring(x, y + 1);
+    }
+}

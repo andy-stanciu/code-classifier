@@ -1,0 +1,40 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        int min = Integer.MAX_VALUE;
+        int start = 0;
+        for (char x : t.toCharArray()) map.put(x, map.getOrDefault(x, 0) + 1);
+        int count = map.size();
+        int l = 0, r = 0;
+        char[] c = s.toCharArray();
+        while (r < c.length) {
+            map.put(c[r], map.getOrDefault(c[r], 0) - 1);
+            // If this character was in t, then it becomes 0 in s
+            if (map.get(c[r]) == 0)
+                count--;
+            while (count == 0) {
+                // If the length of this window is smaller, make this the new window
+                // Store its starting index and length of window for substring later
+                if (min > (r - l + 1)) {
+                    min = r - l + 1;
+                    start = l;
+                }
+                // start moving left index and increase the letter at the indexes value in the map
+                map.put(c[l], map.get(c[l]) + 1);
+                // If this current characters count goes above 0
+                // that means it was part of the string t
+                // So increment the value of count now, as we need to cover this as we
+                // slide the window
+                if (map.get(c[l]) > 0)
+                    count++;
+                l++;
+            }
+            r++;
+        }
+        // If min remains the MAX VALUE, return an empty string, (No substring found)
+        if (min == Integer.MAX_VALUE)
+            return "";
+        return s.substring(start, start + min);
+    }
+}

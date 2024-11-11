@@ -1,0 +1,46 @@
+class Solution {
+
+    private static final int WHITE = 0;
+
+    private static final int GRAY = 1;
+
+    private static final int BLACK = 2;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int n = param1;
+        int[][] adjMatrix = new int[param1][param1];
+        for (int[] edge : prerequisites) {
+            adjMatrix[edge[1]][edge[0]] = 1;
+        }
+        int[] isVisited = new int[n];
+        for (int i = 0; i < n; i++) {
+            isVisited[i] = WHITE;
+        }
+        boolean isCyclic = false;
+        for (int i = 0; i < n && !isCyclic; ++i) {
+            if (isCyclic(n, i, isVisited, adjMatrix)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isCyclic(int n, int node, int[] isVisited, int[][] adjMatrix) {
+        if (isVisited[node] == GRAY) {
+            return true;
+        }
+        if (isVisited[node] == BLACK) {
+            return false;
+        }
+        isVisited[node] = GRAY;
+        for (int i = 0; i < n; ++i) {
+            if (adjMatrix[node][i] == 1) {
+                if (isCyclic(n, i, isVisited, adjMatrix)) {
+                    return true;
+                }
+            }
+        }
+        isVisited[node] = BLACK;
+        return false;
+    }
+}

@@ -1,0 +1,42 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        boolean bFound = false;
+        int left = 0;
+        int right = 0;
+        int minLeft = 0;
+        int minRight = 0;
+        int minLen = Integer.MAX_VALUE;
+        Map<Character, Integer> tar = new HashMap<>();
+        Map<Character, Integer> window = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            tar.put(t.charAt(i), tar.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        for (int i = 0; i < s.length(); i++) {
+            window.put(s.charAt(i), window.getOrDefault(s.charAt(i), 0) + 1);
+            while (isMatch(window, tar)) {
+                bFound = true;
+                right = i;
+                if (minLen > (i - left)) {
+                    minLen = i - left;
+                    minLeft = left;
+                    minRight = right;
+                }
+                window.put(s.charAt(left), window.getOrDefault(s.charAt(left), 0) - 1);
+                left++;
+            }
+        }
+        if (!bFound)
+            return "";
+        return s.substring(minLeft, minRight + 1);
+    }
+
+    boolean isMatch(Map<Character, Integer> window, Map<Character, Integer> tar) {
+        for (Map.Entry<Character, Integer> x : tar.entrySet()) {
+            if (window.getOrDefault(x.getKey(), 0) < x.getValue()) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

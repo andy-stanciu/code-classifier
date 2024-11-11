@@ -1,0 +1,41 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s.length() < t.length() || t.isEmpty()) {
+            return "";
+        }
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            map.put(t.charAt(i), map.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        int left = 0;
+        int minLeft = 0;
+        int method1 = Integer.MAX_VALUE;
+        int charPatternCount = t.length();
+        for (int right = 0; right < s.length(); right++) {
+            char rightChar = s.charAt(right);
+            if (map.containsKey(rightChar)) {
+                int freq = map.get(rightChar);
+                if (freq > 0) {
+                    charPatternCount--;
+                }
+                map.put(rightChar, freq - 1);
+            }
+            while (charPatternCount == 0) {
+                if (right - left + 1 < method1) {
+                    method1 = right - left + 1;
+                    minLeft = left;
+                }
+                char leftChar = s.charAt(left);
+                if (map.containsKey(leftChar)) {
+                    map.put(leftChar, map.get(leftChar) + 1);
+                    if (map.get(leftChar) > 0) {
+                        charPatternCount++;
+                    }
+                }
+                left++;
+            }
+        }
+        return method1 == Integer.MAX_VALUE ? "" : s.substring(minLeft, method1 + minLeft);
+    }
+}

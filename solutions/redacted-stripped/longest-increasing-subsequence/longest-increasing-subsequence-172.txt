@@ -1,0 +1,28 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        int c = 0;
+        int[][] v = new int[nums.length + 1][nums.length + 1];
+        for (int[] x : v) {
+            Arrays.fill(x, -1);
+        }
+        return method1(0, nums, -1, v);
+    }
+
+    private int method1(int i, int[] nums, int li, int[][] v) {
+        if (i >= nums.length) {
+            return 0;
+        }
+        if (li == -1) {
+            return Math.max(1 + method1(i + 1, nums, i, v), method1(i + 1, nums, li, v));
+        }
+        if (v[i][li] == -1) {
+            int mlen = method1(i + 1, nums, li, v);
+            if (li == -1 || nums[i] > nums[li]) {
+                mlen = Math.max(mlen, 1 + method1(i + 1, nums, i, v));
+            }
+            v[i][li] = mlen;
+        }
+        return v[i][li];
+    }
+}

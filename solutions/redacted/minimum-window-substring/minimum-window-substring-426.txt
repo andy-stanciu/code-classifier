@@ -1,0 +1,44 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s == null || s.length() == 0 || t == null || t.length() == 0) {
+            return "";
+        }
+        Map<Character, Integer> characterCountMap = new HashMap<>();
+        for (char currentCharacter : t.toCharArray()) {
+            characterCountMap.put(currentCharacter, characterCountMap.getOrDefault(currentCharacter, 0) + 1);
+        }
+        int requiredCharacter = t.length();
+        int matchingCharacter = 0;
+        int var1 = 0;
+        int var2 = Integer.MAX_VALUE;
+        int start = 0;
+        for (int end = 0; end < s.length(); end++) {
+            char currentCharacter = s.charAt(end);
+            if (characterCountMap.containsKey(currentCharacter)) {
+                int currentCharacterCount = characterCountMap.get(currentCharacter);
+                if (currentCharacterCount > 0) {
+                    matchingCharacter++;
+                }
+                characterCountMap.put(currentCharacter, currentCharacterCount - 1);
+            }
+            while (matchingCharacter == requiredCharacter) {
+                int var3 = end - start + 1;
+                if (var3 < var2) {
+                    var1 = start;
+                    var2 = var3;
+                }
+                char charAtStart = s.charAt(start);
+                if (characterCountMap.containsKey(charAtStart)) {
+                    int currentCharacterCount = characterCountMap.get(charAtStart);
+                    if (currentCharacterCount == 0) {
+                        matchingCharacter--;
+                    }
+                    characterCountMap.put(charAtStart, currentCharacterCount + 1);
+                }
+                start++;
+            }
+        }
+        return var2 != Integer.MAX_VALUE ? s.substring(var1, var1 + var2) : "";
+    }
+}

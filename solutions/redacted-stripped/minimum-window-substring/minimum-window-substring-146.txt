@@ -1,0 +1,35 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        int[] arr = new int[126];
+        int[] ref = new int[126];
+        for (char i : t.toCharArray()) {
+            ref[(int) i]++;
+        }
+        int start = 0;
+        int len = 0;
+        int minStart = 0;
+        int minLen = Integer.MAX_VALUE;
+        int check = 0;
+        for (int i = 0; i < s.length(); i++) {
+            arr[(int) s.charAt(i)]++;
+            if (arr[(int) s.charAt(i)] == ref[(int) s.charAt(i)])
+                check += ref[(int) s.charAt(i)];
+            while (start < s.length() && arr[(int) s.charAt(start)] > ref[(int) s.charAt(start)]) {
+                arr[(int) s.charAt(start)]--;
+                start++;
+            }
+            if (check == t.length()) {
+                if (i - start + 1 < minLen) {
+                    minLen = i - start + 1;
+                    minStart = start;
+                }
+            }
+        }
+        if (minLen == Integer.MAX_VALUE)
+            return "";
+        return s.substring(minStart, minLen + minStart);
+    }
+}

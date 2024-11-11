@@ -1,0 +1,33 @@
+class Solution {
+
+    boolean isvalid(int[] map1, int[] map2) {
+        for (int i = 0; i < 128; i++) {
+            if (map1[i] > map2[i])
+                return false;
+        }
+        return true;
+    }
+
+    public String minWindow(String s, String t) {
+        int[] map1 = new int[128];
+        for (char ch : t.toCharArray()) map1[ch]++;
+        int n = s.length(), m = t.length();
+        int start = 0, end = 0, minlen = n + 1, minstart = 0;
+        int[] map2 = new int[128];
+        while (end < n) {
+            char ch1 = s.charAt(end);
+            map2[ch1]++;
+            end++;
+            while (isvalid(map1, map2)) {
+                if (minlen > end - start) {
+                    minlen = end - start;
+                    minstart = start;
+                }
+                char ch2 = s.charAt(start);
+                map2[ch2]--;
+                start++;
+            }
+        }
+        return minlen == n + 1 ? "" : s.substring(minstart, minstart + minlen);
+    }
+}

@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> preMap = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            preMap.put(i, new ArrayList<>());
+        }
+        for (int[] element : prerequisites) {
+            int var1 = element[0];
+            int preReq = element[1];
+            preMap.get(var1).add(preReq);
+        }
+        boolean[] visitedSet = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!dfs(i, preMap, visitedSet)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean dfs(int var1, Map<Integer, List<Integer>> preMap, boolean[] visitedSet) {
+        if (visitedSet[var1])
+            return false;
+        if (preMap.get(var1).size() == 0)
+            return true;
+        visitedSet[var1] = true;
+        for (Integer pre : preMap.get(var1)) {
+            if (!dfs(pre, preMap, visitedSet))
+                return false;
+        }
+        visitedSet[var1] = false;
+        preMap.get(var1).clear();
+        return true;
+    }
+}

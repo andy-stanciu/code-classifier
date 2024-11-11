@@ -1,0 +1,35 @@
+class Solution {
+
+    // Helper function to compute the maximum path sum at each node
+    private int method1(TreeNode root, int[] param1) {
+        // Base case: if the current node is null, return 0 (no contribution to the path sum)
+        if (root == null)
+            return 0;
+        // Recursively calculate the maximum path sum of the left subtree
+        // Use Math.max(0, ...) to ignore any negative contributions from the subtree
+        int var1 = Math.max(0, method1(root.left, param1));
+        // Recursively calculate the maximum path sum of the right subtree
+        // Also use Math.max(0, ...) to ignore negative contributions
+        int var2 = Math.max(0, method1(root.right, param1));
+        // Update the overall maximum path sum that includes the current node
+        // This is the sum of the current node\'s value and the maximum path sums from both left and right subtrees
+        param1[0] = Math.max(param1[0], var1 + var2 + root.val);
+        // Return the maximum path sum including the current node and either its left or right subtree
+        // This will help build up the maximum path as we traverse upwards in the tree
+        return root.val + Math.max(var1, var2);
+    }
+
+    // Main function to find the maximum path sum in the binary tree
+    public int method2(TreeNode root) {
+        // Initialize an array to store the overall maximum path sum
+        // We use an array to hold the result because Java uses pass-by-value, and we need to maintain
+        // a global reference to the maximum value as we recurse through the tree
+        int[] param1 = new int[1];
+        // Set the initial maximum path sum to the smallest possible integer value
+        param1[0] = Integer.MIN_VALUE;
+        // Call the helper function to compute the maximum path sum starting from the root
+        method1(root, param1);
+        // Return the overall maximum path sum found
+        return param1[0];
+    }
+}

@@ -1,0 +1,50 @@
+class Solution {
+
+    static class Edge {
+
+        int src;
+
+        int dest;
+
+        public Edge(int src, int dest) {
+            this.src = src;
+            this.dest = dest;
+        }
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            graph.get(prerequisite[0]).add(prerequisite[1]);
+        }
+        boolean[] visited = new boolean[param1];
+        boolean[] rec = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i] && isCycleDirected(graph, visited, i, rec)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isCycleDirected(List<List<Integer>> graph, boolean[] visited, int curr, boolean[] rec) {
+        visited[curr] = true;
+        rec[curr] = true;
+        for (int neighbor : graph.get(curr)) {
+            if (rec[neighbor]) {
+                // Cycle detected
+                return true;
+            } else if (!visited[neighbor]) {
+                if (isCycleDirected(graph, visited, neighbor, rec)) {
+                    return true;
+                }
+            }
+        }
+        // Remove the current element from the recursion stack
+        rec[curr] = false;
+        return false;
+    }
+}

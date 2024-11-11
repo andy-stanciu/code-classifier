@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        boolean[] visited = new boolean[numCourses];
+        Map<Integer, List<Integer>> adjList = new HashMap<>();
+        // edge = [course, prerequisite]
+        for (int[] edge : prerequisites) {
+            adjList.computeIfAbsent(edge[0], x -> new ArrayList<>()).add(edge[1]);
+        }
+        Set<Integer> set = new HashSet<>();
+        for (Integer course : adjList.keySet()) {
+            if (!visited[course] && !dfs(course, adjList, set, visited)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    boolean dfs(int course, Map<Integer, List<Integer>> adjList, Set<Integer> set, boolean[] visited) {
+        if (set.contains(course)) {
+            return false;
+        }
+        if (visited[course] || adjList.get(course) == null) {
+            return true;
+        }
+        set.add(course);
+        for (int prereq : adjList.get(course)) {
+            if (!dfs(prereq, adjList, set, visited)) {
+                return false;
+            }
+        }
+        set.remove(course);
+        visited[course] = true;
+        return true;
+    }
+}

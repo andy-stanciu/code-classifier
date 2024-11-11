@@ -1,0 +1,44 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (s == null || s.length() == 0 || t == null || t.length() == 0) {
+            return "";
+        }
+        Map<Character, Integer> characterCountMap = new HashMap<>();
+        for (char currentCharacter : t.toCharArray()) {
+            characterCountMap.put(currentCharacter, characterCountMap.getOrDefault(currentCharacter, 0) + 1);
+        }
+        int requiredCharacter = t.length();
+        int matchingCharacter = 0;
+        int minimumWindowStart = 0;
+        int minimumWindowLength = Integer.MAX_VALUE;
+        int start = 0;
+        for (int end = 0; end < s.length(); end++) {
+            char currentCharacter = s.charAt(end);
+            if (characterCountMap.containsKey(currentCharacter)) {
+                int currentCharacterCount = characterCountMap.get(currentCharacter);
+                if (currentCharacterCount > 0) {
+                    matchingCharacter++;
+                }
+                characterCountMap.put(currentCharacter, currentCharacterCount - 1);
+            }
+            while (matchingCharacter == requiredCharacter) {
+                int currentWindowLength = end - start + 1;
+                if (currentWindowLength < minimumWindowLength) {
+                    minimumWindowStart = start;
+                    minimumWindowLength = currentWindowLength;
+                }
+                char charAtStart = s.charAt(start);
+                if (characterCountMap.containsKey(charAtStart)) {
+                    int currentCharacterCount = characterCountMap.get(charAtStart);
+                    if (currentCharacterCount == 0) {
+                        matchingCharacter--;
+                    }
+                    characterCountMap.put(charAtStart, currentCharacterCount + 1);
+                }
+                start++;
+            }
+        }
+        return minimumWindowLength != Integer.MAX_VALUE ? s.substring(minimumWindowStart, minimumWindowStart + minimumWindowLength) : "";
+    }
+}

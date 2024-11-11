@@ -1,0 +1,34 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList[] graph = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) graph[i] = new ArrayList();
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph[prerequisites[i][0]].add(prerequisites[i][1]);
+        }
+        Set<Integer> visitedSet = new HashSet<>();
+        boolean[] var1 = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!dfs(graph, visitedSet, var1, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(ArrayList[] graph, Set<Integer> visitedSet, boolean[] var1, int param2) {
+        if (var1[param2])
+            return true;
+        if (visitedSet.contains(param2))
+            return false;
+        visitedSet.add(param2);
+        for (int i = 0; i < graph[param2].size(); i++) {
+            if (!dfs(graph, visitedSet, var1, (int) graph[param2].get(i))) {
+                return false;
+            }
+        }
+        visitedSet.remove(param2);
+        var1[param2] = true;
+        return true;
+    }
+}

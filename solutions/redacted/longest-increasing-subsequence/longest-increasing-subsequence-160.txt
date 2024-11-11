@@ -1,0 +1,90 @@
+class Solution {
+
+    // RECURSIVE APPROACH
+    int solveRec(int n, int[] nums, int curr, int prev) {
+        if (curr == n) {
+            return 0;
+        }
+        int take = 0;
+        // include
+        if (prev == -1 || nums[curr] > nums[prev]) {
+            take = 1 + solveRec(n, nums, curr + 1, curr);
+        }
+        int notTake = solveRec(n, nums, curr + 1, prev);
+        return Math.max(take, notTake);
+    }
+
+    // RECURSIVE + MEMOIZATION
+    int solveMem(int n, int[] nums, int curr, int prev, int[][] dp) {
+        if (curr == n) {
+            return 0;
+        }
+        if (dp[curr][prev + 1] != -1) {
+            return dp[curr][prev + 1];
+        }
+        int take = 0;
+        // include
+        if (prev == -1 || nums[curr] > nums[prev]) {
+            take = 1 + solveMem(n, nums, curr + 1, curr, dp);
+        }
+        int notTake = solveMem(n, nums, curr + 1, prev, dp);
+        return dp[curr][prev + 1] = Math.max(take, notTake);
+    }
+
+    // TABULATION
+    int solveTab(int[] nums) {
+        int n = nums.length;
+        int[][] dp = new int[n + 1][n + 1];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i][j] = 0;
+            }
+        }
+        for (int curr = n - 1; curr >= 0; curr--) {
+            for (int prev = curr - 1; prev >= -1; prev--) {
+                int take = 0;
+                // include
+                if (prev == -1 || nums[curr] > nums[prev]) {
+                    take = 1 + dp[curr + 1][curr + 1];
+                }
+                int notTake = dp[curr + 1][prev + 1];
+                dp[curr][prev + 1] = Math.max(take, notTake);
+            }
+        }
+        return dp[0][0];
+    }
+
+    // SpaceOptimize
+    int solveOpti(int[] nums) {
+        int n = nums.length;
+        int[] pres = new int[n + 1];
+        int[] next = new int[n + 1];
+        for (int curr = n - 1; curr >= 0; curr--) {
+            for (int prev = curr - 1; prev >= -1; prev--) {
+                int take = 0;
+                // include
+                if (prev == -1 || nums[curr] > nums[prev]) {
+                    take = 1 + next[curr + 1];
+                }
+                int notTake = next[prev + 1];
+                pres[prev + 1] = Math.max(take, notTake);
+            }
+            next = pres;
+        }
+        return next[0];
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        int[][] dp = new int[n + 1][n + 1];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        //    return solve(n,nums,0,-1);
+        // return solveMem(n,nums,0,-1,dp);
+        // return solveTab(nums);
+        return solveOpti(nums);
+    }
+}

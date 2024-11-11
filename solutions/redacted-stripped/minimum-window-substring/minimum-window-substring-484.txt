@@ -1,0 +1,39 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] targetFreq = new int[128];
+        int[] var1 = new int[128];
+        for (char c : t.toCharArray()) {
+            targetFreq[c]++;
+        }
+        int start = 0, end = 0;
+        int minStart = 0, minLen = Integer.MAX_VALUE;
+        int requiredCharCount = t.length();
+        while (end < s.length()) {
+            if (targetFreq[s.charAt(end)] > 0) {
+                if (var1[s.charAt(end)] < targetFreq[s.charAt(end)]) {
+                    requiredCharCount--;
+                }
+                var1[s.charAt(end)]++;
+            }
+            while (requiredCharCount == 0) {
+                if (end - start + 1 < minLen) {
+                    minStart = start;
+                    minLen = end - start + 1;
+                }
+                if (targetFreq[s.charAt(start)] > 0) {
+                    if (var1[s.charAt(start)] <= targetFreq[s.charAt(start)]) {
+                        requiredCharCount++;
+                    }
+                    var1[s.charAt(start)]--;
+                }
+                start++;
+            }
+            end++;
+        }
+        if (minLen == Integer.MAX_VALUE) {
+            return "";
+        }
+        return s.substring(minStart, minStart + minLen);
+    }
+}

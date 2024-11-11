@@ -1,0 +1,34 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Create graph and in-degree array
+        List<List<Integer>> graph = new ArrayList<>();
+        int[] inDegree = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        // Build the graph and count prerequisites (in-degree)
+        for (int[] prereq : prerequisites) {
+            graph.get(prereq[1]).add(prereq[0]);
+            inDegree[prereq[0]]++;
+        }
+        // Initialize queue with courses that have no prerequisites
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree[i] == 0)
+                queue.add(i);
+        }
+        // Process courses
+        int completed = 0;
+        while (!queue.isEmpty()) {
+            int course = queue.poll();
+            completed++;
+            for (int nextCourse : graph.get(course)) {
+                if (--inDegree[nextCourse] == 0)
+                    queue.add(nextCourse);
+            }
+        }
+        // Check if all courses can be completed
+        return completed == numCourses;
+    }
+}

@@ -1,0 +1,69 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    class TreeNodeDepth {
+
+        TreeNode n;
+
+        int depth;
+
+        public TreeNodeDepth(TreeNode n, int depth) {
+            this.n = n;
+            this.depth = depth;
+        }
+
+        @Override
+        public String toString() {
+            return "{n: " + n.val + ", depth: " + depth + "}";
+        }
+    }
+
+    public List<Double> averageOfLevels(TreeNode root) {
+        Queue<TreeNodeDepth> q = new LinkedList<>();
+        //List of vals where index = depth of the tree
+        List<List<Double>> l = new ArrayList<>();
+        q.add(new TreeNodeDepth(root, 0));
+        while (!q.isEmpty()) {
+            TreeNodeDepth nd = q.remove();
+            if (nd.depth < l.size()) {
+                List<Double> lint = l.get(nd.depth);
+                lint.add((double) nd.n.val);
+            } else {
+                List<Double> lint = new ArrayList<>();
+                lint.add((double) nd.n.val);
+                l.add(lint);
+            }
+            if (nd.n.left != null) {
+                q.add(new TreeNodeDepth(nd.n.left, nd.depth + 1));
+            }
+            if (nd.n.right != null) {
+                q.add(new TreeNodeDepth(nd.n.right, nd.depth + 1));
+            }
+        }
+        //Iterate over each depth and average all values in avgResult data-structure.
+        List<Double> avgResult = new ArrayList<>();
+        for (int i = 0; i < l.size(); i++) {
+            List<Double> lint = l.get(i);
+            Double sum = 0.0d;
+            for (int j = 0; j < lint.size(); j++) {
+                sum += lint.get(j);
+            }
+            avgResult.add(sum / lint.size());
+        }
+        return avgResult;
+    }
+}

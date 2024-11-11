@@ -1,0 +1,25 @@
+class Solution {
+
+    public static int lengthOfLIS(int[] nums) {
+        TreeSet<Integer> set = new TreeSet<>();
+        Map<Integer, Integer> map = new HashMap<>();
+        int max = 1;
+        for (int num : nums) {
+            Integer lower = set.lower(num);
+            if (lower != null) {
+                int lisLength = map.get(lower) + 1;
+                map.put(num, lisLength);
+                max = Math.max(max, lisLength);
+            } else {
+                map.put(num, 1);
+            }
+            Integer existing = set.ceiling(num);
+            while (existing != null && map.get(existing) <= map.get(num)) {
+                set.remove(existing);
+                existing = set.ceiling(num);
+            }
+            set.add(num);
+        }
+        return max;
+    }
+}

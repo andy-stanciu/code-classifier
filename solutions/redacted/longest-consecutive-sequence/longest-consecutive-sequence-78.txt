@@ -1,0 +1,69 @@
+class Solution {
+
+    public int method1(int[] nums) {
+        if (nums.length == 0)
+            return 0;
+        int n = nums.length;
+        UFDS uf = new UFDS(n);
+        HashMap<Integer, Integer> hm = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            if (hm.containsKey(nums[i]))
+                continue;
+            if (hm.containsKey(nums[i] - 1)) {
+                uf.union(i, hm.get(nums[i] - 1));
+            }
+            if (hm.containsKey(nums[i] + 1)) {
+                uf.union(i, hm.get(nums[i] + 1));
+            }
+            hm.put(nums[i], i);
+        }
+        return uf.max;
+    }
+
+    public class UFDS {
+
+        int[] id;
+
+        int[] size;
+
+        int max = 0;
+
+        public UFDS(int N) {
+            id = new int[N];
+            size = new int[N];
+            max = 1;
+            for (int i = 0; i < N; i++) {
+                id[i] = i;
+                size[i] = 1;
+            }
+        }
+
+        private int root(int i) {
+            while (i != id[i]) {
+                id[i] = id[id[i]];
+                i = id[i];
+            }
+            return i;
+        }
+
+        public boolean isConnnected(int p, int q) {
+            return root(p) == root(q);
+        }
+
+        public void union(int p, int q) {
+            int i = root(p);
+            int j = root(q);
+            if (i == j)
+                return;
+            if (size[i] < size[j]) {
+                id[i] = id[j];
+                size[j] += size[i];
+                max = Math.max(max, size[j]);
+            } else {
+                id[j] = id[i];
+                size[i] += size[j];
+                max = Math.max(max, size[i]);
+            }
+        }
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    public boolean dfs(int course, HashMap<Integer, List<Integer>> coursePrereq, HashSet<Integer> visited) {
+        // if current dfs already visited the node, return false because a loop is found.
+        if (visited.contains(course))
+            return false;
+        // this means that the course can be taken and has no prerequisite, so return true
+        if (coursePrereq.get(course) == null || coursePrereq.get(course).isEmpty())
+            return true;
+        // if neither of above base conditions are true, add the node to visited set.
+        visited.add(course);
+        // for each adjacent node of current node (prereqs of a course), run dfs and return false if it\'s
+        // dfs returns false
+        for (int prereq : coursePrereq.get(course)) {
+            if (!dfs(prereq, coursePrereq, visited))
+                return false;
+        }
+        // once we have ensured all adjacent nodes are returning true meaning all prereqs can be taken,
+        // we remove the current node/course from visited, and make it\'s prereqs list empty to prevent reverification.
+        visited.remove(course);
+        coursePrereq.put(course, new ArrayList<Integer>());
+        // return true at the end because we have checked everything and would\'ve returned false if there was a loop.
+        return true;
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // maintain a list of prereqs for each course
+        HashMap<Integer, List<Integer>> coursePrereq = new HashMap<>();
+        for (int[] course : prerequisites) coursePrereq.put(course[0], new ArrayList<Integer>());
+        for (int[] course : prerequisites) coursePrereq.get(course[0]).add(course[1]);
+        // maintain a set of courses visited during the dfs
+        HashSet<Integer> visited = new HashSet<>();
+        // loop through every node in the graph because it can be a graph that isn\'t fully connected.
+        // perform dfs
+        for (int i = 0; i < numCourses; i++) {
+            if (!dfs(i, coursePrereq, visited))
+                return false;
+        }
+        return true;
+    }
+}

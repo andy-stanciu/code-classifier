@@ -1,0 +1,58 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int l = 0;
+        int r = 0;
+        int n = s.length();
+        int st = -1;
+        int max = Integer.MAX_VALUE;
+        HashMap<Character, Integer> need = new HashMap<Character, Integer>();
+        for (int i = 0; i < t.length(); i++) {
+            char ch = t.charAt(i);
+            need.put(ch, need.getOrDefault(ch, 0) + 1);
+        }
+        HashMap<Character, Integer> h = new HashMap<Character, Integer>();
+        HashSet<Character> have = new HashSet<Character>();
+        while (l < n && r < n) {
+            if (have.size() == need.size()) {
+                if (r - l < max) {
+                    max = r - l;
+                    st = l;
+                }
+                char ch = s.charAt(l);
+                if (need.containsKey(ch))
+                    h.put(ch, h.get(ch) - 1);
+                l++;
+                if (need.containsKey(ch) && h.get(ch) < need.get(ch) && have.contains(ch))
+                    have.remove(ch);
+            } else {
+                char ch = s.charAt(r);
+                if (need.containsKey(ch)) {
+                    h.put(ch, h.getOrDefault(ch, 0) + 1);
+                    if (h.get(ch) >= need.get(ch))
+                        have.add(ch);
+                }
+                r++;
+            }
+        }
+        while (l < n) {
+            if (have.size() == need.size()) {
+                if (r - l < max) {
+                    max = r - l;
+                    st = l;
+                }
+            }
+            char ch = s.charAt(l);
+            if (need.containsKey(ch))
+                h.put(ch, h.get(ch) - 1);
+            if (need.containsKey(ch))
+                if (h.get(ch) < need.get(ch) && have.contains(ch))
+                    have.remove(ch);
+            l++;
+        }
+        if (st == -1)
+            return "";
+        else
+            return s.substring(st, st + max);
+    }
+}

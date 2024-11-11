@@ -1,0 +1,48 @@
+class Solution {
+
+    HashMap<Character, Integer> t_map;
+
+    HashMap<Character, Integer> map;
+
+    public String method1(String s, String t) {
+        t_map = new HashMap<>();
+        map = new HashMap<>();
+        char c;
+        int i = 0, j = 0, res_len = Integer.MAX_VALUE;
+        int m = s.length(), unique = 0;
+        int start = 0, end = 0;
+        for (char ch : t.toCharArray()) t_map.put(ch, t_map.getOrDefault(ch, 0) + 1);
+        unique = t_map.size();
+        while (j < m) {
+            c = s.charAt(j);
+            if (t_map.containsKey(c))
+                map.put(c, map.getOrDefault(c, 0) + 1);
+            while ((map.size() == unique) && equal_Freq()) {
+                if (res_len > (j - i + 1)) {
+                    res_len = j - i + 1;
+                    start = i;
+                    end = j + 1;
+                }
+                c = s.charAt(i);
+                if (t_map.containsKey(c))
+                    map.put(c, map.get(c) - 1);
+                i++;
+            }
+            j++;
+        }
+        return s.substring(start, end);
+    }
+
+    private boolean equal_Freq() {
+        char c;
+        int val1, val2;
+        for (Map.Entry<Character, Integer> entry : t_map.entrySet()) {
+            c = entry.getKey();
+            val1 = entry.getValue();
+            val2 = map.get(c);
+            if (val1 > val2)
+                return false;
+        }
+        return true;
+    }
+}

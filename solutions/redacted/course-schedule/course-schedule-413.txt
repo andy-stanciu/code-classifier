@@ -1,0 +1,41 @@
+class Solution {
+
+    private static final int NOT_VISITED = 0;
+
+    private static final int VISITING = 1;
+
+    private static final int VISITED = 2;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        HashMap<Integer, HashSet<Integer>> adj = new HashMap<>();
+        for (int[] prerequisite : prerequisites) {
+            adj.putIfAbsent(prerequisite[0], new HashSet<Integer>());
+            adj.get(prerequisite[0]).add(prerequisite[1]);
+        }
+        //System.out.println(adj);
+        int[] visting = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (containsCycle(i, param1, adj, visting)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean containsCycle(int param2, int param1, HashMap<Integer, HashSet<Integer>> adj, int[] visiting) {
+        if (visiting[param2] == VISITING) {
+            return true;
+        }
+        if (visiting[param2] == VISITED) {
+            return false;
+        }
+        visiting[param2] = VISITING;
+        for (int prerequisite : adj.getOrDefault(param2, new HashSet<Integer>())) {
+            if (containsCycle(prerequisite, param1, adj, visiting)) {
+                return true;
+            }
+        }
+        visiting[param2] = VISITED;
+        return false;
+    }
+}

@@ -1,0 +1,38 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        Map<Character, Integer> tmap = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            tmap.put(c, tmap.getOrDefault(c, 0) + 1);
+        }
+        int windowStartPointer = 0;
+        int windowEndPointer = 0;
+        int matched = 0;
+        int minLen = s.length() + 1;
+        int startSubString = 0;
+        while (windowEndPointer < s.length()) {
+            char ch = s.charAt(windowEndPointer);
+            if (tmap.containsKey(ch)) {
+                tmap.put(ch, tmap.get(ch) - 1);
+                if (tmap.get(ch) == 0)
+                    matched++;
+            }
+            while (matched == tmap.size()) {
+                int windowSize = windowEndPointer - windowStartPointer + 1;
+                if (windowSize < minLen) {
+                    minLen = windowSize;
+                    startSubString = windowStartPointer;
+                }
+                char toBeDeleted = s.charAt(windowStartPointer++);
+                if (tmap.containsKey(toBeDeleted)) {
+                    tmap.put(toBeDeleted, tmap.get(toBeDeleted) + 1);
+                    if (tmap.get(toBeDeleted) > 0) {
+                        matched--;
+                    }
+                }
+            }
+            windowEndPointer++;
+        }
+        return minLen > s.length() ? "" : s.substring(startSubString, startSubString + minLen);
+    }
+}

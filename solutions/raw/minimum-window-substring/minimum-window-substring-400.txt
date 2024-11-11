@@ -1,0 +1,53 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (s.length() < t.length())
+            return "";
+        String output = "";
+        int i = 0, j = 0;
+        boolean isFirst = true;
+        // Initialize frequency map for characters in t
+        Map<Character, Integer> targetMap = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            targetMap.put(ch, targetMap.getOrDefault(ch, 0) + 1);
+        }
+        // Initialize frequency map for the current window
+        Map<Character, Integer> windowMap = new HashMap<>();
+        while (j < s.length()) {
+            char charRight = s.charAt(j);
+            // Update the window map
+            windowMap.put(charRight, windowMap.getOrDefault(charRight, 0) + 1);
+            // Check if the current window covers all characters in t
+            boolean isAllCovered = true;
+            for (char ch : targetMap.keySet()) {
+                if (windowMap.getOrDefault(ch, 0) < targetMap.get(ch)) {
+                    isAllCovered = false;
+                    break;
+                }
+            }
+            // If all characters are covered, try to minimize the window
+            if (isAllCovered) {
+                while (i <= j && isAllCovered) {
+                    char charLeft = s.charAt(i);
+                    windowMap.put(charLeft, windowMap.get(charLeft) - 1);
+                    // Check if the updated window still covers all characters in t
+                    for (char ch : targetMap.keySet()) {
+                        if (windowMap.getOrDefault(ch, 0) < targetMap.get(ch)) {
+                            isAllCovered = false;
+                            break;
+                        }
+                    }
+                    // Update the output string
+                    if (j - i + 1 < output.length() || isFirst) {
+                        isFirst = false;
+                        output = s.substring(i, j + 1);
+                    }
+                    i++;
+                }
+            }
+            // Expand the window
+            j++;
+        }
+        return output;
+    }
+}

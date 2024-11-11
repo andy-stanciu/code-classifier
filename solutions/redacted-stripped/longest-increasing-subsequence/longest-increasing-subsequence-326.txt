@@ -1,0 +1,32 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        List<Integer> dp = new ArrayList<>();
+        dp.add(nums[0]);
+        int n = nums.length;
+        for (int i = 1; i < n; i++) {
+            if (nums[i] > dp.get(dp.size() - 1)) {
+                dp.add(nums[i]);
+            } else {
+                int index = bs(dp, nums[i]);
+                dp.set(index, nums[i]);
+            }
+        }
+        return dp.size();
+    }
+
+    public int bs(List<Integer> dp, int x) {
+        int low = 0;
+        int high = dp.size() - 1;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (dp.get(mid) == x)
+                return mid;
+            else if (dp.get(mid) > x)
+                high = mid - 1;
+            else
+                low = mid + 1;
+        }
+        return low;
+    }
+}

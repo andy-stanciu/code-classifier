@@ -1,0 +1,45 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        boolean[] vis = new boolean[param1];
+        boolean[] recStack = new boolean[param1];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < param1; i++) {
+            if (!vis[i]) {
+                if (dfsCheck(i, adj, vis, recStack, stack)) {
+                    return new int[0];
+                }
+            }
+        }
+        int[] result = new int[param1];
+        int index = 0;
+        while (!stack.isEmpty()) {
+            result[index++] = stack.pop();
+        }
+        return result;
+    }
+
+    private boolean dfsCheck(int node, ArrayList<ArrayList<Integer>> adj, boolean[] vis, boolean[] recStack, Stack<Integer> stack) {
+        vis[node] = true;
+        recStack[node] = true;
+        for (Integer neighbor : adj.get(node)) {
+            if (!vis[neighbor]) {
+                if (dfsCheck(neighbor, adj, vis, recStack, stack)) {
+                    return true;
+                }
+            } else if (recStack[neighbor]) {
+                return true;
+            }
+        }
+        recStack[node] = false;
+        stack.push(node);
+        return false;
+    }
+}

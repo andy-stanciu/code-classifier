@@ -1,0 +1,42 @@
+class Solution {
+
+    boolean dfs(int node, ArrayList<ArrayList<Integer>> param1, boolean[] path, boolean[] visit) {
+        visit[node] = true;
+        path[node] = true;
+        boolean cycle = false;
+        for (int var1 : param1.get(node)) {
+            if (!visit[var1]) {
+                cycle = cycle || dfs(var1, param1, path, visit);
+            } else if (path[var1]) {
+                cycle = true;
+                break;
+            }
+        }
+        path[node] = false;
+        return cycle;
+    }
+
+    public boolean canFinish(int param2, int[][] prerequisites) {
+        //  Cycle Detection using DFS
+        ArrayList<ArrayList<Integer>> param1 = new ArrayList<>();
+        for (int i = 0; i < param2; i++) {
+            param1.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int start = prerequisites[i][1];
+            int end = prerequisites[i][0];
+            param1.get(start).add(end);
+        }
+        boolean[] path = new boolean[param2];
+        boolean[] visit = new boolean[param2];
+        boolean ans = false;
+        for (int i = 0; i < param2; i++) {
+            if (!visit[i]) {
+                ans = ans || dfs(i, param1, path, visit);
+                if (ans)
+                    break;
+            }
+        }
+        return !ans;
+    }
+}

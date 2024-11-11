@@ -1,0 +1,39 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> map1 = new HashMap<>();
+        HashMap<Character, Integer> map2 = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            map2.put(c, map2.getOrDefault(c, 0) + 1);
+        }
+        int desiredCount = t.length();
+        int i = 0;
+        int j = 0;
+        int count = 0;
+        String ans = "";
+        char ch;
+        while (i < s.length()) {
+            ch = s.charAt(i);
+            map1.put(ch, map1.getOrDefault(ch, 0) + 1);
+            if (map1.get(ch) <= map2.getOrDefault(ch, 0)) {
+                count += 1;
+            }
+            if (count == desiredCount) {
+                while (j <= i && count == desiredCount) {
+                    String possibleAns = s.substring(j, i + 1);
+                    if (ans.length() == 0 || possibleAns.length() < ans.length()) {
+                        ans = possibleAns;
+                    }
+                    char ch2 = s.charAt(j);
+                    map1.put(ch2, map1.get(ch2) - 1);
+                    if (map1.getOrDefault(ch2, 0) < map2.getOrDefault(ch2, 0)) {
+                        count--;
+                    }
+                    j++;
+                }
+            }
+            i++;
+        }
+        return ans;
+    }
+}

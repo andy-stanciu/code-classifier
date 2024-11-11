@@ -1,0 +1,35 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int i = 0, j = 0;
+        Map<Character, Integer> slidingWindow = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            slidingWindow.put(c, slidingWindow.getOrDefault(c, 0) + 1);
+        }
+        int requiredCharacters = t.length();
+        int minLeft = 0, minRight = 0;
+        int minLen = Integer.MAX_VALUE;
+        while (j < s.length()) {
+            char current = s.charAt(j);
+            slidingWindow.put(current, slidingWindow.getOrDefault(current, 0) - 1);
+            if (slidingWindow.get(current) >= 0) {
+                requiredCharacters--;
+            }
+            while (requiredCharacters == 0) {
+                if (j - i + 1 < minLen) {
+                    minLen = j - i + 1;
+                    minLeft = i;
+                    minRight = j + 1;
+                }
+                char leftChar = s.charAt(i);
+                slidingWindow.put(leftChar, slidingWindow.get(leftChar) + 1);
+                if (slidingWindow.get(leftChar) > 0) {
+                    requiredCharacters++;
+                }
+                i++;
+            }
+            j++;
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minLeft, minRight);
+    }
+}

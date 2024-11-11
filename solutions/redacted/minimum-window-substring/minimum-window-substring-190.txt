@@ -1,0 +1,37 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] tCount = new int[128];
+        for (int i = 0; i < t.length(); i++) {
+            tCount[t.charAt(i)]++;
+        }
+        int uniqueCount = 0;
+        for (int i = 0; i < 128; i++) {
+            if (tCount[i] > 0)
+                uniqueCount++;
+        }
+        int i = 0, j = 0, minLen = Integer.MAX_VALUE, minIdx = -1;
+        int[] sCount = new int[128];
+        while (j < s.length()) {
+            char c = s.charAt(j);
+            sCount[c]++;
+            if (sCount[c] == tCount[c]) {
+                uniqueCount--;
+            }
+            while (uniqueCount == 0) {
+                if ((j - i + 1) < minLen) {
+                    minLen = j - i + 1;
+                    minIdx = i;
+                }
+                char startChar = s.charAt(i);
+                if (sCount[startChar] == tCount[startChar]) {
+                    uniqueCount++;
+                }
+                sCount[startChar]--;
+                i++;
+            }
+            j++;
+        }
+        return minIdx != -1 ? s.substring(minIdx, minIdx + minLen) : "";
+    }
+}

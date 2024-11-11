@@ -1,0 +1,43 @@
+class Solution {
+
+    private enum CourseStatus {
+
+        TAKEN, TAKING, NOT_TAKEN
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        ArrayList<Integer>[] coursePrerequisites = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            coursePrerequisites[i] = new ArrayList<Integer>();
+        }
+        for (int[] prerequisite : prerequisites) {
+            int previousCourse = prerequisite[1];
+            int nextCourse = prerequisite[0];
+            coursePrerequisites[previousCourse].add(nextCourse);
+        }
+        CourseStatus[] courseStatuses = new CourseStatus[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (!canFinish(coursePrerequisites, i, courseStatuses)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean canFinish(ArrayList<Integer>[] coursePrerequisites, int currentCourse, CourseStatus[] courseStatuses) {
+        if (courseStatuses[currentCourse] == CourseStatus.TAKING) {
+            return false;
+        } else if (courseStatuses[currentCourse] == CourseStatus.TAKEN) {
+            return true;
+        } else {
+            courseStatuses[currentCourse] = CourseStatus.TAKING;
+            for (int nextCourse : coursePrerequisites[currentCourse]) {
+                if (!canFinish(coursePrerequisites, nextCourse, courseStatuses)) {
+                    return false;
+                }
+            }
+            courseStatuses[currentCourse] = CourseStatus.TAKEN;
+            return true;
+        }
+    }
+}

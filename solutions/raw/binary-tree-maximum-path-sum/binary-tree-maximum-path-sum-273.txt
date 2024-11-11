@@ -1,0 +1,41 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public int maxPathSum(TreeNode root) {
+        int[] ans = { Integer.MIN_VALUE };
+        maxSumIncludingNode(root, ans);
+        return ans[0];
+    }
+
+    private int maxSumIncludingNode(TreeNode root, int[] ans) {
+        if (root == null)
+            return 0;
+        int left = maxSumIncludingNode(root.left, ans);
+        int right = maxSumIncludingNode(root.right, ans);
+        // first potential ans might be the root node connected only with its left child\'s max sum sequence
+        int rootAndLeft = left + root.val;
+        // second potential ans might be the root node connected with its left child\'s max sum sequence and right subsequnce both
+        int rootWithLeftAndRight = left + root.val + right;
+        // third potential ans might be the root node connected only with its right child\'s max sum sequence
+        int rootAndRight = root.val + right;
+        // fourth potential ans might be only the root node as part of the max sum sequence
+        int onlyRoot = root.val;
+        ans[0] = Math.max(Math.max(Math.max(rootAndLeft, rootWithLeftAndRight), Math.max(rootAndRight, onlyRoot)), ans[0]);
+        // we can\'t include the rootWithLeftAndRight here as in that case the root would occur multiple times which is not allowed
+        return Math.max(Math.max(rootAndLeft, rootAndRight), onlyRoot);
+    }
+}

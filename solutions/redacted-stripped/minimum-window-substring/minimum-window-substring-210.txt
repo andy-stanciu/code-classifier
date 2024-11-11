@@ -1,0 +1,46 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s.equals(" ") || t.equals(" ")) {
+            return " ";
+        }
+        int left = 0;
+        int right = 0;
+        int slength = s.length();
+        Map<Character, Integer> characterMap = new HashMap<>();
+        while (right < t.length()) {
+            characterMap.put(t.charAt(right), characterMap.getOrDefault(t.charAt(right), 0) + 1);
+            right++;
+        }
+        right = 0;
+        int requiredCount = t.length();
+        int maxLength = Integer.MAX_VALUE;
+        int currentWindwoSize = 0;
+        int startIndex = 0;
+        while (right < slength) {
+            char sCharByIndex = s.charAt(right);
+            Integer characterCountInMap = characterMap.getOrDefault(sCharByIndex, 0);
+            if (characterCountInMap > 0) {
+                requiredCount--;
+            }
+            characterMap.put(sCharByIndex, characterCountInMap - 1);
+            while (requiredCount == 0) {
+                currentWindwoSize = right - left + 1;
+                if (maxLength > currentWindwoSize) {
+                    maxLength = currentWindwoSize;
+                    startIndex = left;
+                }
+                char charByLeftIndex = s.charAt(left);
+                characterCountInMap = characterMap.getOrDefault(charByLeftIndex, 0);
+                characterCountInMap = characterCountInMap + 1;
+                characterMap.put(charByLeftIndex, characterCountInMap);
+                if (characterCountInMap > 0) {
+                    requiredCount++;
+                }
+                left++;
+            }
+            right++;
+        }
+        return maxLength != Integer.MAX_VALUE ? s.substring(startIndex, startIndex + maxLength) : "";
+    }
+}

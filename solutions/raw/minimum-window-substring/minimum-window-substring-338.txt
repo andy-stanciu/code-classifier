@@ -1,0 +1,39 @@
+public class Solution {
+
+    public String minWindow(String s, String t) {
+        int m = s.length();
+        int n = t.length();
+        if (n > m)
+            return "";
+        int[] mapS = new int[256];
+        int[] mapT = new int[256];
+        int count = 0, len = Integer.MAX_VALUE;
+        int startIndex = -1;
+        for (char ch : t.toCharArray()) {
+            mapT[ch]++;
+        }
+        int i = 0, j = 0;
+        while (j < m) {
+            mapS[s.charAt(j)]++;
+            if (mapS[s.charAt(j)] <= mapT[s.charAt(j)])
+                count++;
+            if (count == n) {
+                while (mapS[s.charAt(i)] > mapT[s.charAt(i)] || mapT[s.charAt(i)] == 0) {
+                    if (mapS[s.charAt(i)] > mapT[s.charAt(i)]) {
+                        mapS[s.charAt(i)]--;
+                    }
+                    i++;
+                }
+                if ((j - i + 1) < len) {
+                    len = j - i + 1;
+                    startIndex = i;
+                }
+            }
+            j++;
+        }
+        if (startIndex == -1) {
+            return "";
+        }
+        return s.substring(startIndex, startIndex + len);
+    }
+}

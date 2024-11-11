@@ -1,0 +1,66 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        int end = nums.length - 1;
+        // if the array is not rotated i.e. if the array is strictly increasing[eg: {1,2,3,4}], then
+        if (nums[0] < nums[end]) {
+            // directly return the index of target if present, else return -1
+            return method2(nums, 0, end, target);
+        }
+        // find the index of minimum element in nums
+        int start = 0;
+        int firstElement = nums[0];
+        while (start < end) {
+            int mid = (start + end) >> 1;
+            // if the current element is minimum, then store it\'s index and stop iteration
+            if (mid > 0 && nums[mid] < nums[mid - 1]) {
+                start = mid;
+                break;
+            }
+            if (nums[mid] >= firstElement) {
+                // to search in right sorted part
+                start = mid + 1;
+            } else {
+                // to search in left sorted part
+                end = mid;
+            }
+        }
+        // store the index of min element in nums
+        int var1 = start;
+        // if the minimum element is equal to the the target, then
+        if (nums[var1] == target) {
+            //directly return it\'s index
+            return var1;
+        }
+        start = 0;
+        end = nums.length - 1;
+        // if the target element is on the right sorted part, then
+        if (target < firstElement) {
+            // search from index of minimum element to the end of the array(nums)
+            start = var1;
+        } else {
+            // if the target element is on the left side of the sorted array
+            // search from 0 to one previous element from index of minimum element
+            end = var1 - 1;
+        }
+        // now as we know which sorted part(left or right) to search, do standard binary search
+        // search for the index of target if the target is present in the nums, else return -1
+        return method2(nums, start, end, target);
+    }
+
+    // standard binary search
+    private int method2(int[] nums, int start, int end, int target) {
+        while (start <= end) {
+            int mid = (start + end) >> 1;
+            if (nums[mid] == target) {
+                return mid;
+            }
+            if (nums[mid] < target) {
+                start = mid + 1;
+            } else {
+                end = mid - 1;
+            }
+        }
+        return -1;
+    }
+}

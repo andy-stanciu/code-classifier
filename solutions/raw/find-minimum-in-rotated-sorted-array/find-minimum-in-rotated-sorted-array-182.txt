@@ -1,0 +1,41 @@
+class Solution {
+
+    public static int binarySearch(int[] arr, int l, int r) {
+        if (r >= l) {
+            int m;
+            m = l + (r - l) / 2;
+            if (//case 1, found it just between the largest and the second smallest
+            m < r && l < m && arr[m] < arr[m - 1] && arr[m] < arr[m + 1])
+                return arr[m];
+            if (r == l)
+                //case 2, found it directly
+                return arr[m];
+            if (//checking if we are a the max, return next
+            arr[m] > arr[m + 1] && m < r)
+                return arr[m + 1];
+            if (//if the previuous if smaller but we are after k, return previous
+            arr[m] < arr[m - 1] && m > l)
+                return arr[m - 1];
+            if (//left side is sorted
+            arr[m] > arr[r])
+                // search right
+                return binarySearch(arr, m + 1, r);
+            if (//right side same sorted
+            arr[m] < arr[l])
+                //search left
+                return binarySearch(arr, l, m - 1);
+        }
+        return arr[0];
+    }
+
+    public int findMin(int[] nums) {
+        if (nums.length == 1)
+            //base case 1 elem
+            return nums[0];
+        if (nums.length == 2)
+            // base case 2 elems
+            return Math.min(nums[0], nums[1]);
+        //lets go
+        return binarySearch(nums, 0, nums.length - 1);
+    }
+}

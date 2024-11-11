@@ -1,0 +1,22 @@
+class Solution {
+
+    private static int f(int ind, int prev, int[] nums, int[][] dp) {
+        if (ind > nums.length)
+            return 0;
+        if (dp[ind][prev] != -1)
+            return dp[ind][prev];
+        int notTake = f(ind + 1, prev, nums, dp);
+        int take = 0;
+        if (prev == 0 || nums[ind - 1] > nums[prev - 1]) {
+            take = 1 + f(ind + 1, ind, nums, dp);
+        }
+        return dp[ind][prev] = Math.max(take, notTake);
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        int[][] dp = new int[n + 1][n + 1];
+        for (int[] val : dp) Arrays.fill(val, -1);
+        return f(1, 0, nums, dp);
+    }
+}

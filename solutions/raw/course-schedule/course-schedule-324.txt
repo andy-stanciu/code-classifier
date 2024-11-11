@@ -1,0 +1,68 @@
+class Solution {
+
+    boolean ans;
+
+    public boolean canFinish(int n, int[][] prerequisites) {
+        ans = true;
+        int[][] graph = new int[n][n];
+        int[] vis = new int[n];
+        int[] rec_tracker = new int[n];
+        for (int i = 0; i < n; i++) {
+            vis[i] = 0;
+            rec_tracker[i] = 0;
+            for (int j = 0; j < n; j++) {
+                graph[i][j] = 0;
+            }
+        }
+        creategraph(graph, prerequisites);
+        if (ans == false)
+            return false;
+        // for(int i=0;i<n;i++)
+        // {
+        //     for(int j=0;j<n;j++)
+        //     {
+        //         System.out.print(graph[i][j]);
+        //     }
+        //     System.out.println();
+        // }
+        for (int i = 0; i < n; i++) {
+            if (vis[i] == 0) {
+                checkcycle(n, graph, vis, rec_tracker, i);
+                if (ans == false)
+                    return ans;
+            }
+        }
+        return ans;
+    }
+
+    public void creategraph(int[][] graph, int[][] prerequisites) {
+        for (int i = 0; i < prerequisites.length; i++) {
+            int v = prerequisites[i][0];
+            int u = prerequisites[i][1];
+            if (u == v)
+                ans = false;
+            graph[u][v] = 1;
+        }
+    }
+
+    public void checkcycle(int n, int[][] graph, int[] vis, int[] rec_tracker, int cur) {
+        // System.out.print("Current : " + cur);
+        vis[cur] = 1;
+        rec_tracker[cur] = 1;
+        for (int i = 0; i < graph[cur].length; i++) {
+            // if edge exists
+            if (graph[cur][i] == 1) {
+                int neighbour = i;
+                // System.out.print(" neighbour : " + neighbour);
+                if (rec_tracker[neighbour] == 1) {
+                    System.out.print("Cycle found");
+                    ans = false;
+                    return;
+                } else if (vis[neighbour] == 0) {
+                    checkcycle(n, graph, vis, rec_tracker, neighbour);
+                }
+            }
+        }
+        rec_tracker[cur] = 0;
+    }
+}

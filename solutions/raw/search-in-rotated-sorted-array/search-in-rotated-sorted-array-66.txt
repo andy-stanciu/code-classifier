@@ -1,0 +1,76 @@
+class Solution {
+
+    public int search(int[] nums, int target) {
+        int pivot = bsearch(nums, 0, nums.length - 1);
+        if (target >= nums[pivot] && target <= nums[nums.length - 1]) {
+            return bsearch(nums, pivot, nums.length - 1, target);
+        } else {
+            return bsearch(nums, 0, pivot, target);
+        }
+    }
+
+    public int bsearch(int[] nums, int i, int j, int target) {
+        //System.out.println("Searching in range: " + i + "," + j);
+        if (i < 0 || j < 0 || i >= nums.length || j >= nums.length) {
+            return -1;
+        }
+        if (i == j) {
+            //System.out.println("i == j" + " i:" + i + " nums[i]: " + nums[i] + " target: " + target);
+            if (nums[i] == target) {
+                return i;
+            } else {
+                return -1;
+            }
+        }
+        if (i + 1 == j) {
+            if (nums[i] == target) {
+                return i;
+            } else if (nums[j] == target) {
+                return j;
+            }
+            return -1;
+        }
+        int mid = (i + j) / 2;
+        if (nums[mid] == target) {
+            return mid;
+        }
+        if (nums[mid] > nums[mid - 1]) {
+            //Sorted array
+            if (target < nums[mid]) {
+                return bsearch(nums, i, mid - 1, target);
+            } else {
+                return bsearch(nums, mid + 1, j, target);
+            }
+        } else {
+            //Descending sorted array
+            if (target < nums[mid]) {
+                return bsearch(nums, mid + 1, j, target);
+            } else {
+                return bsearch(nums, i, mid - 1, target);
+            }
+        }
+        //System.out.println("Landed up in the end..ret -1");
+        //return -1;
+    }
+
+    public int bsearch(int[] nums, int i, int j) {
+        if (i < 0 || j < 0 || i >= nums.length || j >= nums.length) {
+            return -1;
+        }
+        if (i + 1 == j) {
+            return nums[i] < nums[j] ? i : j;
+        }
+        if (i == j) {
+            return i;
+        }
+        int mid = (i + j) / 2;
+        if (nums[mid] < nums[mid - 1] && nums[mid] < nums[mid + 1]) {
+            return mid;
+        }
+        if (nums[mid] > nums[j]) {
+            return bsearch(nums, mid, j);
+        } else {
+            return bsearch(nums, i, mid);
+        }
+    }
+}

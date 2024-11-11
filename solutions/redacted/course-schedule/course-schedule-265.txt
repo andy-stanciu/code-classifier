@@ -1,0 +1,70 @@
+class Edge {
+
+    int src;
+
+    int dest;
+
+    Edge(int a, int b) {
+        this.src = a;
+        this.dest = b;
+    }
+}
+
+class Solution {
+
+    private static void createGraph(ArrayList<Edge>[] graph, int V, int[][] arr) {
+        for (int i = 0; i < V; i++) {
+            graph[i] = new ArrayList<Edge>();
+        }
+        for (int i = 0; i < arr.length; i++) {
+            int u = arr[i][1];
+            int v = arr[i][0];
+            graph[u].add(new Edge(u, v));
+        }
+    }
+
+    private static boolean isCycle(ArrayList<Edge>[] graph, boolean[] vis, int curr, boolean[] recStack) {
+        vis[curr] = true;
+        recStack[curr] = true;
+        for (int i = 0; i < graph[curr].size(); i++) {
+            Edge e = graph[curr].get(i);
+            if (recStack[e.dest])
+                return true;
+            else if (!vis[e.dest] && isCycle(graph, vis, e.dest, recStack))
+                return true;
+        }
+        recStack[curr] = false;
+        return false;
+    }
+
+    private static void topologicalSort(ArrayList<Edge>[] graph, boolean[] vis, int curr, Stack<Integer> s) {
+        vis[curr] = true;
+        for (int i = 0; i < graph[curr].size(); i++) {
+            Edge e = graph[curr].get(i);
+            if (!vis[e.dest]) {
+                topologicalSort(graph, vis, e.dest, s);
+            }
+        }
+        s.push(curr);
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int V = param1;
+        ArrayList<Edge>[] graph = new ArrayList[V];
+        createGraph(graph, V, prerequisites);
+        boolean[] visited = new boolean[V];
+        for (int i = 0; i < graph.length; i++) {
+            if (!visited[i] && isCycle(graph, visited, i, new boolean[V])) {
+                return false;
+            }
+        }
+        Stack<Integer> stack = new Stack<>();
+        Arrays.fill(visited, false);
+        for (int i = 0; i < graph.length; i++) {
+            if (!visited[i]) {
+                topologicalSort(graph, visited, i, stack);
+            }
+        }
+        return stack.size() == V;
+    }
+}

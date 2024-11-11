@@ -1,0 +1,49 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        //        \u5B58\u653E\u8282\u70B9\u7684\u5165\u5EA6
+        int[] degree = new int[numCourses];
+        //        \u5B58\u653E\u88AB\u4F9D\u8D56\u8BFE\u7A0B\u548C\u8BFE\u7A0B\u7684mapping\u5173\u7CFB
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int i = 0; i < numCourses; i++) {
+            //            \u4E3A\u4E86\u4FDD\u8BC1\u6700\u540E\u4E00\u4E2A\u8282\u70B9\u4E0D\u5728graph\u4F46\u540E\u7EED\u904D\u5386\u7684\u65F6\u5019\u62A5\u7A7A\u6307\u9488
+            graph.put(i, new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            //            \u8BA1\u7B97\u6BCF\u4E2A\u8282\u70B9\u7684\u51FA\u5EA6\uFF0C\u5165\u5EA6\u4E3A0\u7684\u624D\u662F\u53EF\u4EE5\u76F4\u63A5\u4E0A\u7684\u8BFE\u7A0B,index\u662F\u8BFE\u7A0B\uFF0Cvalue\u662F\u5165\u5EA6
+            degree[prerequisites[i][0]]++;
+            //            \u8BA1\u7B97\u6BCF\u4E2A\u8282\u70B9\u7684\u5FC5\u4FEE\u8BFE\u7A0B\uFF0Cindex\u662F\u5FC5\u4FEE\u8BFE\u7A0B\u8BFE\u7A0B\uFF0Cvalue\u662F\u8BFE\u7A0B
+            List<Integer> courses = new ArrayList<>();
+            courses.add(prerequisites[i][0]);
+            graph.putIfAbsent(prerequisites[i][1], courses).add(prerequisites[i][0]);
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        int count = 0;
+        for (int i = 0; i < degree.length; i++) {
+            if (degree[i] == 0) {
+                //                \u5C06\u5165\u5EA6\u4E3A0\u7684\u8282\u70B9\u5B58\u5230\u961F\u5217\u91CC\uFF0C\u540E\u7EED\u904D\u5386\u961F\u5217
+                queue.offer(i);
+                count++;
+            }
+        }
+        while (queue.size() != 0) {
+            //            poll\u51FA\u961F\u5217\u9996\u8282\u70B9
+            int course = queue.poll();
+            //            \u904D\u5386\u90A3\u4E9B\u5FC5\u987B\u5148\u5B8C\u6210course\u7684\u8BFE\u7A0B\u5217\u8868
+            List<Integer> pres = graph.get(course);
+            for (Integer pre : pres) {
+                //                \u5C06\u5EA6\u6570\u51CF1
+                degree[pre]--;
+                if (degree[pre] == 0) {
+                    queue.offer(pre);
+                    count++;
+                }
+            }
+        }
+        if (count == numCourses) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}

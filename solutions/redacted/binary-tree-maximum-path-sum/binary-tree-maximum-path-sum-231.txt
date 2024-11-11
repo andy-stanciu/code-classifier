@@ -1,0 +1,49 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    int ans = 0;
+
+    public int method1(TreeNode root) {
+        return find(root);
+    }
+
+    public int find(TreeNode root) {
+        if (root == null) {
+            return Integer.MIN_VALUE;
+        }
+        int var1 = method2(root.left);
+        int var2 = method2(root.right);
+        int var3 = root.val + var1 + var2;
+        var3 = Math.max(var3, find(root.right));
+        var3 = Math.max(var3, find(root.left));
+        var3 = Math.max(root.val, var3);
+        var3 = Math.max(var3, root.val + var1);
+        var3 = Math.max(var3, root.val + var2);
+        return var3;
+    }
+
+    public int method2(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int val = Math.max(method2(root.left), method2(root.right));
+        if (val < 0) {
+            val = 0;
+        }
+        return root.val + val;
+    }
+}

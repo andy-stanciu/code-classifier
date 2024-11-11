@@ -1,0 +1,54 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        // If s is shorter than t, no solution
+        if (s.length() < t.length())
+            return "";
+        // Step 1: Frequency map of characters in t
+        Map<Character, Integer> tCount = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            tCount.put(c, tCount.getOrDefault(c, 0) + 1);
+        }
+        // Step 2: Two pointers and a map to count characters in the current window
+        Map<Character, Integer> windowCount = new HashMap<>();
+        // Number of characters from t we have in the correct frequency
+        int have = 0;
+        // Number of unique characters in t
+        int need = tCount.size();
+        int left = 0, right = 0;
+        // Length of the minimum window
+        int minLen = Integer.MAX_VALUE;
+        // Starting index of the minimum window
+        int start = 0;
+        while (right < s.length()) {
+            // Step 3: Expand the window by adding the character at right pointer
+            char c = s.charAt(right);
+            windowCount.put(c, windowCount.getOrDefault(c, 0) + 1);
+            // If we have enough of character c as required by t
+            if (tCount.containsKey(c) && windowCount.get(c).intValue() == tCount.get(c).intValue()) {
+                have++;
+            }
+            // Step 4: When we have all the characters, try to shrink the window
+            while (have == need) {
+                // Update minimum window length if the current window is smaller
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    start = left;
+                }
+                // Remove the leftmost character from the window
+                char leftChar = s.charAt(left);
+                windowCount.put(leftChar, windowCount.get(leftChar) - 1);
+                // If the character at the left pointer is from t and its count is no longer sufficient
+                if (tCount.containsKey(leftChar) && windowCount.get(leftChar).intValue() < tCount.get(leftChar).intValue()) {
+                    have--;
+                }
+                // Shrink the window
+                left++;
+            }
+            // Expand the window
+            right++;
+        }
+        // Step 5: Return the result
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(start, start + minLen);
+    }
+}

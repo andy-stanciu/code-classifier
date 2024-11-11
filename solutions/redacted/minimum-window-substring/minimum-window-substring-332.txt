@@ -1,0 +1,40 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        Map<Character, Integer> needMap = new HashMap();
+        Map<Character, Integer> var1 = new HashMap();
+        for (char ch : t.toCharArray()) {
+            needMap.put(ch, needMap.getOrDefault(ch, 0) + 1);
+            var1.put(ch, 0);
+        }
+        String ans = "";
+        int need = t.length();
+        int have = 0;
+        int left = 0, right = 0;
+        while (right < s.length()) {
+            char ch = s.charAt(right);
+            if (var1.containsKey(ch)) {
+                var1.put(ch, var1.get(ch) + 1);
+                if (var1.get(ch) <= needMap.get(ch)) {
+                    have++;
+                }
+                while (need == have) {
+                    if ((right - left) + 1 < ans.length() || ans.equals(""))
+                        ans = s.substring(left, right + 1);
+                    ch = s.charAt(left);
+                    if (var1.containsKey(ch)) {
+                        var1.put(ch, var1.get(ch) - 1);
+                        if (var1.get(ch) < needMap.get(ch)) {
+                            have--;
+                        }
+                    }
+                    left++;
+                }
+            }
+            right++;
+        }
+        return ans;
+    }
+}

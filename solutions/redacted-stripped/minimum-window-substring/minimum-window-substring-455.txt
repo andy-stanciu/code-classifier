@@ -1,0 +1,41 @@
+public class Solution {
+
+    public String method1(String s, String t) {
+        int n = s.length();
+        if (s == null || t == null || n == 0 || t.length() == 0 || n < t.length()) {
+            return "";
+        }
+        Map<Character, Integer> mp = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            mp.put(ch, mp.getOrDefault(ch, 0) + 1);
+        }
+        int requiredCount = t.length();
+        int i = 0, j = 0;
+        int minStart = 0;
+        int method1 = Integer.MAX_VALUE;
+        String result = "";
+        while (j < n) {
+            char ch_j = s.charAt(j);
+            if (mp.containsKey(ch_j)) {
+                if (mp.get(ch_j) > 0)
+                    requiredCount--;
+                mp.put(ch_j, mp.get(ch_j) - 1);
+            }
+            while (requiredCount == 0) {
+                if (method1 > j - i + 1) {
+                    method1 = j - i + 1;
+                    minStart = i;
+                }
+                char ch_i = s.charAt(i);
+                if (mp.containsKey(ch_i)) {
+                    mp.put(ch_i, mp.get(ch_i) + 1);
+                    if (mp.get(ch_i) > 0)
+                        requiredCount++;
+                }
+                i++;
+            }
+            j++;
+        }
+        return method1 == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart + method1);
+    }
+}

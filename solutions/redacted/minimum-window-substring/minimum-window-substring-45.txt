@@ -1,0 +1,39 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        String result = "";
+        HashMap<Character, Integer> frequency = new HashMap<>();
+        HashMap<Character, Integer> running = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            frequency.put(c, frequency.getOrDefault(c, 0) + 1);
+        }
+        int startIndex = 0, ans = s.length();
+        for (int i = 0; i < s.length(); i++) {
+            if (frequency.containsKey(s.charAt(i))) {
+                running.put(s.charAt(i), running.getOrDefault(s.charAt(i), 0) + 1);
+                while (startIndex < s.length() && checkIfPresent(frequency, running)) {
+                    if (ans >= i - startIndex + 1) {
+                        ans = i - startIndex + 1;
+                        result = s.substring(startIndex, i + 1);
+                    }
+                    char begning = s.charAt(startIndex);
+                    if (running.containsKey(begning)) {
+                        running.put(begning, running.get(begning) - 1);
+                    }
+                    startIndex++;
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean checkIfPresent(HashMap<Character, Integer> frequency, HashMap<Character, Integer> running) {
+        for (Map.Entry<Character, Integer> entry : frequency.entrySet()) {
+            if (!running.containsKey(entry.getKey()))
+                return false;
+            if (entry.getValue() > running.get(entry.getKey()))
+                return false;
+        }
+        return true;
+    }
+}

@@ -1,0 +1,64 @@
+// Solution class for vertical tree traversal
+class Solution {
+
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        // TreeMap to store vertical and horizontal traversal data
+        TreeMap<Integer, TreeMap<Integer, PriorityQueue<Integer>>> map = new TreeMap<>();
+        // Queue for level order traversal
+        Queue<Tuple> q = new LinkedList<>();
+        q.offer(new Tuple(root, 0, 0));
+        // Level order traversal
+        while (!q.isEmpty()) {
+            Tuple tuple = q.poll();
+            TreeNode node = tuple.node;
+            int x = tuple.row;
+            int y = tuple.col;
+            // If x-coordinate not present in the map, add it
+            if (!map.containsKey(x)) {
+                map.put(x, new TreeMap<>());
+            }
+            // If y-coordinate(y= level) not present in the inner map, add it
+            if (!map.get(x).containsKey(y)) {
+                map.get(x).put(y, new PriorityQueue<>());
+            }
+            // Add node value to the priority queue at the specified coordinates
+            map.get(x).get(y).offer(node.val);
+            // Explore left child
+            if (node.left != null) {
+                q.offer(new Tuple(node.left, x - 1, y + 1));
+            }
+            // Explore right child
+            if (node.right != null) {
+                q.offer(new Tuple(node.right, x + 1, y + 1));
+            }
+        }
+        // Process the map to get the result
+        List<List<Integer>> result = new ArrayList<>();
+        for (TreeMap<Integer, PriorityQueue<Integer>> ys : map.values()) {
+            result.add(new ArrayList<>());
+            for (PriorityQueue<Integer> nodes : ys.values()) {
+                while (!nodes.isEmpty()) {
+                    result.get(result.size() - 1).add(nodes.poll());
+                }
+            }
+        }
+        return result;
+    }
+
+    // Tuple class to store TreeNode along with its row and column information
+    class Tuple {
+
+        TreeNode node;
+
+        int row;
+
+        int col;
+
+        public Tuple(TreeNode _node, int _row, int _col) {
+            node = _node;
+            row = _row;
+            col = _col;
+        }
+    }
+}
+// 100% working

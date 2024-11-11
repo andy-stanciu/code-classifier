@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<Integer>[] graph = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] pre : prerequisites) {
+            graph[pre[1]].add(pre[0]);
+        }
+        boolean[] completed = new boolean[param1];
+        boolean[] visited = new boolean[param1];
+        for (int var1 = 0; var1 < param1; var1++) {
+            if (!dfs(var1, completed, graph, visited)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean dfs(int var1, boolean[] completed, List<Integer>[] graph, boolean[] visited) {
+        if (visited[var1]) {
+            return false;
+        }
+        if (completed[var1]) {
+            return true;
+        }
+        visited[var1] = true;
+        for (int neighbor : graph[var1]) {
+            if (!dfs(neighbor, completed, graph, visited)) {
+                return false;
+            }
+        }
+        completed[var1] = true;
+        visited[var1] = false;
+        return true;
+    }
+}

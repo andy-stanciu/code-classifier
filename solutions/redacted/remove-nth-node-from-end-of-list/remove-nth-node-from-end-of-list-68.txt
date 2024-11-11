@@ -1,0 +1,64 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head, int n) {
+        ListNode root = head;
+        if (head.next == null && n > 0) {
+            root = null;
+            head = null;
+        }
+        // reverse list
+        ListNode prev = null;
+        ListNode next = null;
+        while (head != null) {
+            next = head.next;
+            head.next = prev;
+            prev = head;
+            head = next;
+        }
+        head = prev;
+        ListNode headBefore = head;
+        // now remove from list
+        while (head != null) {
+            //base case n==1 and head != null. remove current el
+            if (n == 1) {
+                head = head.next;
+                break;
+            }
+            // remove the link to the next element
+            if (n == 2) {
+                head.next = head.next.next;
+                break;
+            }
+            // decrement if n is greater than 2
+            n--;
+            head = head.next;
+        }
+        // only reset head if n > 1
+        // because we only removed the last element so the head is at
+        // the end already
+        if (n > 1) {
+            head = headBefore;
+        }
+        // now reverse list again
+        prev = null;
+        while (head != null) {
+            next = head.next;
+            head.next = prev;
+            prev = head;
+            head = next;
+        }
+        root = prev;
+        // return the head and boom, congrats you made it lol
+        return root;
+    }
+}

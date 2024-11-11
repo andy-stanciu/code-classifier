@@ -1,0 +1,41 @@
+public class Solution {
+
+    public String minWindow(String s, String t) {
+        if (s == null || t == null || s.length() == 0 || t.length() == 0) {
+            return "";
+        }
+        // Count the characters in t
+        Map<Character, Integer> tCount = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            tCount.put(c, tCount.getOrDefault(c, 0) + 1);
+        }
+        // Initialize pointers and variables
+        int left = 0, right = 0;
+        int minLen = Integer.MAX_VALUE;
+        String minWindow = "";
+        int requiredChars = tCount.size();
+        int formedChars = 0;
+        Map<Character, Integer> windowCount = new HashMap<>();
+        while (right < s.length()) {
+            char currentChar = s.charAt(right);
+            windowCount.put(currentChar, windowCount.getOrDefault(currentChar, 0) + 1);
+            if (tCount.containsKey(currentChar) && windowCount.get(currentChar).equals(tCount.get(currentChar))) {
+                formedChars++;
+            }
+            while (formedChars == requiredChars && left <= right) {
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    minWindow = s.substring(left, right + 1);
+                }
+                char leftChar = s.charAt(left);
+                windowCount.put(leftChar, windowCount.get(leftChar) - 1);
+                if (tCount.containsKey(leftChar) && windowCount.get(leftChar) < tCount.get(leftChar)) {
+                    formedChars--;
+                }
+                left++;
+            }
+            right++;
+        }
+        return minWindow;
+    }
+}

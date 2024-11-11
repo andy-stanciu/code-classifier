@@ -1,0 +1,38 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        int matched = 0;
+        int subStr = 0;
+        int minLen = s.length() + 1;
+        int l = 0;
+        for (int r = 0; r < s.length(); r++) {
+            char c = s.charAt(r);
+            if (map.containsKey(c)) {
+                map.put(c, map.get(c) - 1);
+                if (map.get(c) == 0) {
+                    matched++;
+                }
+            }
+            while (matched == map.size()) {
+                if (minLen > r - l + 1) {
+                    minLen = r - l + 1;
+                    subStr = l;
+                }
+                char deleted = s.charAt(l++);
+                if (map.containsKey(deleted)) {
+                    if (map.get(deleted) == 0) {
+                        matched--;
+                    }
+                    map.put(deleted, map.get(deleted) + 1);
+                }
+            }
+        }
+        return minLen > s.length() ? "" : s.substring(subStr, subStr + minLen);
+    }
+}

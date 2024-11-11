@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    Map<TreeNode, Integer> map = new HashMap<TreeNode, Integer>();
+
+    int maxPathSum = Integer.MIN_VALUE;
+
+    public int getMaxPathSum(TreeNode root) {
+        if (root == null)
+            return 0;
+        int lh = 0;
+        if (map.containsKey(root.left)) {
+            lh = map.get(root.left);
+        } else {
+            lh = getMaxPathSum(root.left);
+            map.put(root.left, lh);
+        }
+        int rh = 0;
+        if (map.containsKey(root.right)) {
+            rh = map.get(root.right);
+        } else {
+            rh = getMaxPathSum(root.right);
+            map.put(root.right, rh);
+        }
+        int pathSum = lh + rh + (root.val);
+        pathSum = Math.max(pathSum, Math.max(lh + root.val, rh + root.val));
+        maxPathSum = Math.max(Math.max(maxPathSum, pathSum), root.val);
+        return Math.max(Math.max(lh, rh) + (root.val), root.val);
+    }
+
+    public int maxPathSum(TreeNode root) {
+        if (root == null)
+            return 0;
+        maxPathSum = Integer.MIN_VALUE;
+        int path = getMaxPathSum(root);
+        return Math.max(maxPathSum, path);
+    }
+}

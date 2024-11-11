@@ -1,0 +1,61 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            map.put(t.charAt(i), map.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        int required = t.length();
+        int filtered = 0;
+        String ret = "";
+        Map<Character, Integer> map2 = new HashMap<>();
+        for (int i = 0, j = 0; j < s.length(); j++) {
+            if (map.containsKey(s.charAt(j))) {
+                map2.put(s.charAt(j), map2.getOrDefault(s.charAt(j), 0) + 1);
+                if (map2.getOrDefault(s.charAt(j), 0) <= map.get(s.charAt(j)))
+                    filtered++;
+            }
+            while (filtered >= required) {
+                if (ret.length() == 0 || j - i < ret.length()) {
+                    ret = s.substring(i, j + 1);
+                }
+                if (map.containsKey(s.charAt(i))) {
+                    map2.put(s.charAt(i), map2.getOrDefault(s.charAt(i), 0) - 1);
+                    if (map2.getOrDefault(s.charAt(i), 0) < map.get(s.charAt(i))) {
+                        filtered--;
+                    }
+                }
+                i++;
+            }
+        }
+        return ret;
+    }
+
+    public String method2(String s, String t) {
+        int[] tar = new int[128];
+        for (int i = 0; i < t.length(); i++) {
+            tar[t.charAt(i)]++;
+        }
+        int[] sar = new int[128];
+        String ret = "";
+        for (int i = 0, j = 0; j < s.length(); j++) {
+            sar[s.charAt(j)]++;
+            while (method3(sar, tar)) {
+                if (ret.length() == 0 || j - i < ret.length()) {
+                    ret = s.substring(i, j + 1);
+                }
+                sar[s.charAt(i)]--;
+                i++;
+            }
+        }
+        return ret;
+    }
+
+    boolean method3(int[] sar, int[] tar) {
+        for (int i = 0; i < 128; i++) {
+            if (sar[i] < tar[i])
+                return false;
+        }
+        return true;
+    }
+}

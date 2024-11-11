@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            int var1 = prerequisite[0];
+            int prereq = prerequisite[1];
+            adjList.get(prereq).add(var1);
+        }
+        int[] visited = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (visited[i] == 0 && !dfs(adjList, visited, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(List<List<Integer>> adjList, int[] visited, int var1) {
+        if (visited[var1] == 1) {
+            return false;
+        }
+        if (visited[var1] == 2) {
+            return true;
+        }
+        visited[var1] = 1;
+        for (int var2 : adjList.get(var1)) {
+            if (!dfs(adjList, visited, var2)) {
+                return false;
+            }
+        }
+        visited[var1] = 2;
+        return true;
+    }
+}

@@ -1,0 +1,39 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int[] resArray = new int[] { -1, -1 };
+        int len = Integer.MAX_VALUE;
+        HashMap<Character, Integer> need = new HashMap<>();
+        HashMap<Character, Integer> have = new HashMap<>();
+        int n = 0, h = 0;
+        for (int i = 0; i < t.length(); i++) {
+            need.put(t.charAt(i), need.getOrDefault(t.charAt(i), 0) + 1);
+            have.put(t.charAt(i), 0);
+            n++;
+        }
+        int i = 0;
+        for (int j = 0; j < s.length(); j++) {
+            if (need.containsKey(s.charAt(j))) {
+                have.put(s.charAt(j), have.get(s.charAt(j)) + 1);
+                if (need.get(s.charAt(j)) >= have.get(s.charAt(j)))
+                    h++;
+            }
+            while (h == n) {
+                if (j - i + 1 < len) {
+                    resArray[0] = i;
+                    resArray[1] = j;
+                    len = j - i + 1;
+                }
+                if (need.containsKey(s.charAt(i))) {
+                    have.put(s.charAt(i), have.get(s.charAt(i)) - 1);
+                    if (have.get(s.charAt(i)) < need.get(s.charAt(i)))
+                        h--;
+                }
+                i++;
+            }
+        }
+        if (resArray[0] == -1 && resArray[1] == -1)
+            return "";
+        return s.substring(resArray[0], resArray[1] + 1);
+    }
+}

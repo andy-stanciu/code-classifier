@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adjacencyList = new ArrayList<>(numCourses);
+        int[] inDegree = new int[numCourses];
+        // Initialize the adjacency list
+        for (int i = 0; i < numCourses; i++) {
+            adjacencyList.add(new ArrayList<>());
+        }
+        // Build the adjacency list and in-degree array
+        for (int[] prerequisite : prerequisites) {
+            int course = prerequisite[0];
+            int prerequisiteCourse = prerequisite[1];
+            adjacencyList.get(prerequisiteCourse).add(course);
+            inDegree[course]++;
+        }
+        // Perform topological sort
+        int count = 0;
+        List<Integer> topologicalOrder = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree[i] == 0) {
+                topologicalOrder.add(i);
+                count++;
+            }
+        }
+        int index = 0;
+        while (index < topologicalOrder.size()) {
+            int course = topologicalOrder.get(index++);
+            for (int neighbor : adjacencyList.get(course)) {
+                if (--inDegree[neighbor] == 0) {
+                    topologicalOrder.add(neighbor);
+                    count++;
+                }
+            }
+        }
+        return count == numCourses;
+    }
+}

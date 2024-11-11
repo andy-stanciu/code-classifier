@@ -1,0 +1,50 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (s == null || t == null || s.length() < t.length()) {
+            return "";
+        }
+        // Frequency arrays for characters in t and the current window in s
+        int[] targetFreq = new int[128];
+        int[] windowFreq = new int[128];
+        // Initialize target frequency array
+        for (char c : t.toCharArray()) {
+            targetFreq[c]++;
+        }
+        int left = 0, right = 0;
+        int minLength = Integer.MAX_VALUE;
+        // Start index of the minimum window
+        int start = 0;
+        // Total characters to be matched
+        int required = t.length();
+        // Number of characters that match the target frequency
+        int formed = 0;
+        // Traverse the string with the right pointer
+        while (right < s.length()) {
+            char c = s.charAt(right);
+            windowFreq[c]++;
+            // If the current character\'s frequency in the window is within the target\'s frequency
+            if (windowFreq[c] <= targetFreq[c]) {
+                formed++;
+            }
+            // Try to contract the window until it ceases to be valid
+            while (formed == required) {
+                // Update the minimum window size if a smaller valid window is found
+                if (right - left + 1 < minLength) {
+                    minLength = right - left + 1;
+                    start = left;
+                }
+                // Shrink the window by moving the left pointer
+                char leftChar = s.charAt(left);
+                windowFreq[leftChar]--;
+                if (windowFreq[leftChar] < targetFreq[leftChar]) {
+                    formed--;
+                }
+                left++;
+            }
+            // Expand the window by moving the right pointer
+            right++;
+        }
+        return minLength == Integer.MAX_VALUE ? "" : s.substring(start, start + minLength);
+    }
+}

@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        if (prerequisites.length == 0)
+            return true;
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        Queue<Integer> q = new LinkedList<>();
+        int[] indegree = new int[param1];
+        for (int[] edge : prerequisites) {
+            int ai = edge[0];
+            int bi = edge[1];
+            // bi -> ai
+            indegree[ai]++;
+            adjList.get(bi).add(ai);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        int nodesVisited = 0;
+        while (!q.isEmpty()) {
+            int node = q.remove();
+            nodesVisited++;
+            //remove this node i.e. all edges from it
+            for (int neighbor : adjList.get(node)) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0) {
+                    q.add(neighbor);
+                }
+            }
+        }
+        return nodesVisited == param1;
+    }
+}

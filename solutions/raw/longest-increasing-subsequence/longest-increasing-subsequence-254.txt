@@ -1,0 +1,57 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        int[] elements = new int[nums.length];
+        // because the i/p range is -104 <= nums[i] <= 104
+        Arrays.fill(elements, -10003);
+        int start = 0;
+        int end = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int n = nums[i];
+            if (end == 0 && elements[0] == -10003) {
+                elements[0] = n;
+                continue;
+            }
+            if (elements[end] < n) {
+                // the only time end will increase and the LIS array will expand is when we are adding another element in it - only in the condition where the new element is greater than the last element in LIS array
+                end++;
+                elements[end] = n;
+                continue;
+            }
+            placeTheElement(elements, start, end, n);
+        }
+        return end + 1;
+    }
+
+    public void placeTheElement(int[] nums, int start, int end, int target) {
+        int left = start;
+        int right = end;
+        // NOT REQUIRED - the block with \'edge case\' covers this condition as well
+        //  if(left == right && left == 0 && target < nums[left])
+        // {
+        //     nums[left] = target;
+        //     return;
+        // }
+        int index = -1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            // EDGE CASE :
+            // When the element to be replaced is the first one
+            // Also covers when there is only 1 element
+            if (mid == start && nums[mid] >= target) {
+                nums[mid] = target;
+                return;
+            }
+            if (nums[mid] >= target && nums[mid - 1] < target) {
+                index = mid;
+                break;
+            }
+            if (target < nums[mid]) {
+                right = mid - 1;
+            } else
+                left = mid + 1;
+        }
+        nums[index] = target;
+        return;
+    }
+}

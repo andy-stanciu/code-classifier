@@ -1,0 +1,54 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        /**
+         * Space O(n)
+         * After finish course i, you can take what course.
+         */
+        ArrayList<Integer>[] preq = new ArrayList[param1];
+        /**
+         * Space O(n)
+         * How many courses should take if you want to take course i.
+         */
+        int[] needTake = new int[param1];
+        /**
+         * Space O(n)
+         * How many courses should take if you want to take course i.
+         */
+        ArrayList<Integer> var1 = new ArrayList<>();
+        /**
+         * Time O(n)
+         * Complete preq and neetTake
+         */
+        for (int i = 0; i < prerequisites.length; i++) {
+            int want = prerequisites[i][0];
+            int first = prerequisites[i][1];
+            if (preq[first] == null)
+                preq[first] = new ArrayList<>();
+            preq[first].add(want);
+            needTake[want]++;
+        }
+        /**
+         * Time O(n)
+         * Fill the courses that already take
+         */
+        for (int i = 0; i < needTake.length; i++) {
+            if (needTake[i] == 0)
+                var1.add(i);
+        }
+        /**
+         * Time O(m*n)
+         */
+        // Time O(n)
+        for (int i = 0; i < var1.size(); i++) {
+            if (preq[var1.get(i)] != null) {
+                // Time (m)
+                for (int var2 : preq[var1.get(i)]) {
+                    if (--needTake[var2] == 0)
+                        var1.add(var2);
+                }
+            }
+        }
+        return var1.size() == param1;
+    }
+}

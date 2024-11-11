@@ -1,0 +1,59 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        // this is pretty similar to finding middle element of rotated array
+        // but now we have to modify it to do search instead
+        // the idea from before is that if middle is in left sorted portion we will
+        // have to search for min in right and vice versa
+        // now we will find which sorted portion the middle is in if value is in the range from low to high
+        // we will check there if not we will check on the other side until we narrow it down
+        int low = 0;
+        int high = nums.length - 1;
+        while (low <= high) {
+            int middle = (low + high) / 2;
+            if (nums[low] <= nums[high]) {
+                // we wil do normal binary search as this should be sorted
+                while (low <= high) {
+                    middle = (low + high) / 2;
+                    if (target == nums[middle]) {
+                        return middle;
+                    }
+                    if (target > nums[middle]) {
+                        low = middle + 1;
+                    } else {
+                        high = middle - 1;
+                    }
+                }
+                return -1;
+            }
+            if (target == nums[middle]) {
+                return middle;
+            }
+            if (target == nums[low]) {
+                return low;
+            }
+            if (target == nums[high]) {
+                return high;
+            }
+            // this means that the middle is in left sorted portion
+            if (nums[low] < nums[middle]) {
+                // target is in left side so we restrict down to left side only
+                if (target < nums[middle] && target >= nums[low]) {
+                    high = middle - 1;
+                } else // target not in left side so we will check the other side only
+                {
+                    low = middle + 1;
+                }
+            } else // middle is in the right side of the sorted array
+            {
+                if (target > nums[middle] && target <= nums[high]) {
+                    // target is in the right side so
+                    low = middle + 1;
+                } else {
+                    high = middle - 1;
+                }
+            }
+        }
+        return -1;
+    }
+}

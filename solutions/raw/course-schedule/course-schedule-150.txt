@@ -1,0 +1,39 @@
+class Solution {
+
+    public boolean dfs(int curr, ArrayList<ArrayList<Integer>> al, boolean[] stack, boolean[] visit) {
+        stack[curr] = true;
+        visit[curr] = true;
+        for (int neighbour : al.get(curr)) {
+            if (stack[neighbour]) {
+                return true;
+            } else if (!visit[neighbour]) {
+                // preform dfs.
+                if (dfs(neighbour, al, stack, visit))
+                    return true;
+            }
+        }
+        stack[curr] = false;
+        return false;
+    }
+
+    public boolean canFinish(int numCourses, int[][] pre) {
+        // generate graph.
+        ArrayList<ArrayList<Integer>> al = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            al.add(new ArrayList<>());
+        }
+        for (int i = 0; i < pre.length; i++) {
+            al.get(pre[i][0]).add(pre[i][1]);
+        }
+        // take a visited array and stack as array which track the element in the stack.
+        boolean[] visit = new boolean[numCourses];
+        boolean[] stack = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (!visit[i]) {
+                if (dfs(i, al, stack, visit))
+                    return false;
+            }
+        }
+        return true;
+    }
+}

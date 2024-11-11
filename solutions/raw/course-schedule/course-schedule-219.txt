@@ -1,0 +1,59 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        //Step1. Create a Graph
+        ArrayList<Integer>[] graph = createGraph(numCourses, prerequisites);
+        int[] indegree = new int[numCourses];
+        //Step 2 . Calculate the indegree of each vertice of the graph and store it in an array .
+        //The indegree of a vertex of a graph is defined as the no of incoming edges towards the vertex i.e , basically for the nbr of a vertex do indegree[nbr]++ ;
+        for (int v = 0; v < numCourses; v++) {
+            for (int w : graph[v]) {
+                indegree[w]++;
+            }
+        }
+        LinkedList<Integer> que = new LinkedList<>();
+        List<Integer> topologicalOrdering = new ArrayList<>();
+        int count = 0;
+        //Store the vertices with indegree 0 in an que
+        for (int v = 0; v < numCourses; v++) {
+            if (indegree[v] == 0)
+                que.addLast(v);
+        }
+        // BFS Traversal , keep iterating ntil the que becomes entry .
+        //-> For each iteration calculate the size , run a loop till size ! = 0
+        //     -> remove the first vertex from que , add to ans , count ++ (count variable will be indicative of whether nce the que is fully processed , if all nodes were visited once or not , meaning that if count ! = numOfVertices , meaning there existed a cycle in grah and topological sort is not applicable to cyclic graph . Topological Sort or Kahn\'s Algo works only on an acyclic directed graph )
+        // -> Then for every nbr of the removed vertex do --indegree[nbr] and check if its equal to 0 , then add to que else continue
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                Integer rvtx = que.removeFirst();
+                topologicalOrdering.add(rvtx);
+                count++;
+                for (int nbr : graph[rvtx]) {
+                    if (--indegree[nbr] == 0)
+                        que.addLast(nbr);
+                }
+            }
+        }
+        if (count == numCourses)
+            return true;
+        return false;
+    }
+
+    public ArrayList<Integer>[] createGraph(int numCourses, int[][] prerequisites) {
+        // Declared a grpah and initialised it with th e no of courses or vertices
+        ArrayList<Integer>[] graph = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        // Added the edges of the graph
+        for (int[] edge : prerequisites) {
+            if (edge.length >= 2) {
+                int u = edge[0];
+                int v = edge[1];
+                graph[u].add(v);
+            }
+        }
+        return graph;
+    }
+}

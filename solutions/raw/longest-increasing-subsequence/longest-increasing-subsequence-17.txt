@@ -1,0 +1,34 @@
+class Solution {
+
+    // Ye function recursive aur dynamic programming ka combination hai.
+    // dpFunc function ko call karte hain, jo ki longest increasing subsequence ka length return karta hai.
+    public int dpFunc(int[] arr, int ind, int prev_ind, int[] dp) {
+        // Agar hum array ke end tak pahunch jaate hain, toh wapas 0 return karte hain
+        if (ind == arr.length)
+            return 0;
+        // Agar current state already calculated hai, toh usse wapas return karte hain
+        if (dp[prev_ind + 1] != -1)
+            return dp[prev_ind + 1];
+        // Element ko na lene ka case
+        int notTake = 0 + dpFunc(arr, ind + 1, prev_ind, dp);
+        // Element ko lene ka case
+        int take = 0;
+        // Agar previous index -1 hai ya current element previous element se bada hai toh
+        if (prev_ind == -1 || arr[ind] > arr[prev_ind]) {
+            take = 1 + dpFunc(arr, ind + 1, ind, dp);
+        }
+        // Current state ko maximum value ke saath store karte hain
+        dp[prev_ind + 1] = Math.max(take, notTake);
+        return dp[prev_ind + 1];
+    }
+
+    // Ye function longest increasing subsequence ka length return karta hai
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        // DP array ko initialize karte hain aur usse -1 se fill karte hain
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, -1);
+        // Recursive function ko call karte hain
+        return dpFunc(nums, 0, -1, dp);
+    }
+}

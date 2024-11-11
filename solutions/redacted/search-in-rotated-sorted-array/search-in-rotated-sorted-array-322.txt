@@ -1,0 +1,59 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        return method3(nums, 0, nums.length - 1, target);
+    }
+
+    // Binary search in a sorted portion of the array
+    private int method2(int[] arr, int start, int end, int target) {
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (arr[mid] == target) {
+                return mid;
+            } else if (arr[mid] < target) {
+                start = mid + 1;
+            } else {
+                end = mid - 1;
+            }
+        }
+        // Element not found
+        return -1;
+    }
+
+    // Modified binary search for rotated sorted arrays
+    private int method3(int[] arr, int start, int end, int target) {
+        if (start > end) {
+            // Base case: Element not found
+            return -1;
+        }
+        int mid = start + (end - start) / 2;
+        if (arr[mid] == target) {
+            // Target found
+            return mid;
+        }
+        // Check if left half is sorted
+        if (method4(arr, start, mid)) {
+            // If target lies within the sorted left half
+            if (arr[start] <= target && target < arr[mid]) {
+                return method2(arr, start, mid - 1, target);
+            } else {
+                // Search the right half
+                return method3(arr, mid + 1, end, target);
+            }
+        } else // Otherwise, the right half must be sorted
+        {
+            // If target lies within the sorted right half
+            if (arr[mid] < target && target <= arr[end]) {
+                return method2(arr, mid + 1, end, target);
+            } else {
+                // Search the left half
+                return method3(arr, start, mid - 1, target);
+            }
+        }
+    }
+
+    // Function to check if the array is sorted between two indices
+    private boolean method4(int[] arr, int start, int end) {
+        return arr[start] <= arr[end];
+    }
+}

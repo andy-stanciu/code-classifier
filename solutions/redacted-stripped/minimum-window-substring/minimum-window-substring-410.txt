@@ -1,0 +1,49 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        return method2(s, t);
+    }
+
+    private String method2(String s, String t) {
+        Map<Character, Integer> reqCount = new HashMap<>();
+        Map<Character, Integer> var1 = new HashMap<>();
+        if (t.trim().equals(""))
+            return "";
+        for (char ch : t.toCharArray()) {
+            reqCount.put(ch, reqCount.getOrDefault(ch, 0) + 1);
+            var1.put(ch, 0);
+        }
+        int start = 0;
+        int end = 0;
+        int required = reqCount.size();
+        int var2 = 0;
+        int minSubLen = Integer.MAX_VALUE;
+        int[] subStartAndEnd = { -1, -1 };
+        while (end < s.length()) {
+            char toAcquire = s.charAt(end);
+            if (var1.containsKey(toAcquire)) {
+                var1.put(toAcquire, var1.get(toAcquire) + 1);
+                if (var1.get(toAcquire).equals(reqCount.get(toAcquire))) {
+                    var2 += 1;
+                }
+            }
+            while (var2 == required) {
+                int length = end - start + 1;
+                if (length < minSubLen) {
+                    subStartAndEnd[0] = start;
+                    subStartAndEnd[1] = end;
+                    minSubLen = length;
+                }
+                char toRemove = s.charAt(start);
+                if (var1.containsKey(toRemove)) {
+                    var1.put(toRemove, var1.get(toRemove) - 1);
+                    if (var1.get(toRemove) < reqCount.get(toRemove))
+                        var2 -= 1;
+                }
+                start += 1;
+            }
+            end += 1;
+        }
+        return minSubLen != Integer.MAX_VALUE ? s.substring(subStartAndEnd[0], subStartAndEnd[1] + 1) : "";
+    }
+}

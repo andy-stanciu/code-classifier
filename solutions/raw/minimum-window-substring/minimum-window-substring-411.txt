@@ -1,0 +1,92 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int[] tCount = new int[128];
+        int requiredChars = t.length();
+        for (char ch : t.toCharArray()) {
+            tCount[ch]++;
+        }
+        int left = 0, right = 0, minLen = Integer.MAX_VALUE, minLeft = 0;
+        while (right < s.length()) {
+            if (tCount[s.charAt(right)] > 0) {
+                requiredChars--;
+            }
+            tCount[s.charAt(right)]--;
+            while (requiredChars == 0) {
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    minLeft = left;
+                }
+                tCount[s.charAt(left)]++;
+                if (tCount[s.charAt(left)] > 0) {
+                    requiredChars++;
+                }
+                left++;
+            }
+            right++;
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + minLen);
+    }
+}
+/*class Solution {
+    public String minWindow(String s, String t) {
+
+        StringBuilder sb = new StringBuilder();
+
+        String res = sb.toString();
+
+        if (s.length() < t.length()) {
+            return res;
+        }
+
+        int tar = t.length();
+        String a = "";
+        int chi = Integer.MAX_VALUE;
+
+        for (int i = 0; i < s.length(); i++) {
+            StringBuilder sb1 = new StringBuilder();
+            for (int j = i; j < s.length(); j++) {
+                sb1.append(s.charAt(j));
+                if (sb1.length() >= t.length()) {
+                    if (check(sb1, t)) {
+                        int var = sb1.length();
+                        if (var < chi) {
+                            a = sb1.toString();
+                            chi = var;
+                        }
+                    }
+                }
+            }
+        }
+
+        return a;
+    }
+
+    public static boolean check(StringBuilder st, String ab) {
+
+        char[] ch = st.toString().toCharArray();
+        Arrays.sort(ch);
+
+        StringBuilder mt = new StringBuilder();
+
+        for (int i = 0; i < ch.length; i++) {
+            mt.append(ch[i]);
+        }
+
+        String s1 = mt.toString();
+
+        char[] ch2 = ab.toCharArray();
+        Arrays.sort(ch2);
+
+        StringBuilder mll = new StringBuilder();
+
+        for (int i = 0; i < ch2.length; i++) {
+            mll.append(ch2[i]);
+        }
+
+        String s2 = mll.toString();
+
+        return s1.contains(s2);
+    }
+}
+*/

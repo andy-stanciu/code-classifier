@@ -1,0 +1,36 @@
+class Solution {
+
+    boolean cycleChecker(ArrayList<ArrayList<Integer>> adj, int i, boolean[] visited, boolean[] stack) {
+        visited[i] = true;
+        stack[i] = true;
+        for (int j = 0; j < adj.get(i).size(); j++) {
+            int node = adj.get(i).get(j);
+            if (stack[node] == true) {
+                return true;
+            } else if (!visited[node] && cycle(adj, node, visited, stack)) {
+                return true;
+            }
+        }
+        stack[i] = false;
+        return false;
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        boolean[] visited = new boolean[param1];
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] arr : prerequisites) {
+            adj.get(arr[0]).add(arr[1]);
+        }
+        for (int i = 0; i < adj.size(); i++) {
+            if (!visited[i]) {
+                if (cycleChecker(adj, i, visited, new boolean[param1])) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}

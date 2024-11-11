@@ -1,0 +1,58 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int n = s.length();
+        int m = t.length();
+        HashSet<Character> t_set = new HashSet<>();
+        HashMap<Character, Integer> t_counter = new HashMap<>();
+        HashMap<Character, Integer> to_skip = new HashMap<>();
+        for (int i = 0; i < m; i++) {
+            if (!t_counter.containsKey(t.charAt(i))) {
+                t_counter.put(t.charAt(i), 0);
+            }
+            t_counter.put(t.charAt(i), t_counter.get(t.charAt(i)) + 1);
+            t_set.add(t.charAt(i));
+        }
+        int left = 0;
+        int right = 0;
+        int start = 0;
+        int end = 0;
+        int length = Integer.MAX_VALUE;
+        while (right < n) {
+            if (!t_set.contains(s.charAt(right))) {
+                right++;
+                continue;
+            }
+            if (t_counter.containsKey(s.charAt(right))) {
+                t_counter.put(s.charAt(right), t_counter.get(s.charAt(right)) - 1);
+            } else {
+                if (!to_skip.containsKey(s.charAt(right))) {
+                    to_skip.put(s.charAt(right), 0);
+                }
+                to_skip.put(s.charAt(right), to_skip.get(s.charAt(right)) + 1);
+            }
+            if (t_counter.containsKey(s.charAt(right)) && t_counter.get(s.charAt(right)) == 0) {
+                t_counter.remove(s.charAt(right));
+            }
+            while (t_counter.size() == 0) {
+                if (!t_set.contains(s.charAt(left))) {
+                    left++;
+                    continue;
+                }
+                if (to_skip.containsKey(s.charAt(left)) && to_skip.get(s.charAt(left)) > 0) {
+                    to_skip.put(s.charAt(left), to_skip.get(s.charAt(left)) - 1);
+                } else {
+                    t_counter.put(s.charAt(left), 1);
+                }
+                if (right - left < length) {
+                    length = right - left;
+                    start = left;
+                    end = right + 1;
+                }
+                left++;
+            }
+            right++;
+        }
+        return s.substring(start, end);
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        if (t.length() == 1 && s.length() == 1) {
+            if (t.charAt(0) == s.charAt(0))
+                return t;
+            else
+                return "";
+        }
+        int left = 0;
+        String res = s + t;
+        HashMap<Character, Integer> TMap = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            TMap.put(t.charAt(i), TMap.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        HashMap<Character, Integer> SMap = new HashMap<>();
+        int matchCount = 0;
+        for (int right = 0; right < s.length(); right++) {
+            char currChar = s.charAt(right);
+            SMap.put(currChar, SMap.getOrDefault(currChar, 0) + 1);
+            if (TMap.containsKey(currChar) && SMap.get(currChar) <= TMap.get(currChar)) {
+                matchCount++;
+            }
+            while (matchCount == t.length()) {
+                char removeChar = s.charAt(left);
+                SMap.put(removeChar, SMap.get(removeChar) - 1);
+                String temp = s.substring(left, right + 1);
+                if (TMap.containsKey(removeChar) && SMap.get(removeChar) < TMap.get(removeChar)) {
+                    matchCount--;
+                }
+                if (res.length() > temp.length()) {
+                    res = temp;
+                }
+                left++;
+            }
+        }
+        return res.equals(s + t) ? "" : res;
+    }
+}

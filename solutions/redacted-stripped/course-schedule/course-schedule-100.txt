@@ -1,0 +1,34 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int[] degree = new int[param1];
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adjList.add(i, new ArrayList<>());
+        }
+        for (int[] pres : prerequisites) {
+            int var1 = pres[1];
+            int pre = pres[0];
+            adjList.get(pre).add(var1);
+            degree[var1]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (degree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        int count = 0;
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            count++;
+            for (int nei : adjList.get(current)) {
+                degree[nei]--;
+                if (degree[nei] == 0) {
+                    queue.offer(nei);
+                }
+            }
+        }
+        return count == param1;
+    }
+}

@@ -1,0 +1,50 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        /**
+         * 1. have to keep a count because of duplicates || HashMap
+         */
+        Set<Character> set = new HashSet<>();
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            char ch = t.charAt(i);
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+            set.add(ch);
+        }
+        int totalLength = t.length();
+        int n = s.length();
+        String ans = s + "kartik";
+        int j = 0;
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            char ch = s.charAt(i);
+            if (map.containsKey(ch)) {
+                int val = map.get(ch);
+                if (val == 1) {
+                    count++;
+                }
+                map.put(ch, val - 1);
+                if (count == set.size()) {
+                    // update ans
+                    if (i - j + 1 < ans.length())
+                        ans = s.substring(j, i + 1);
+                    while (j <= i && (count == set.size())) {
+                        if (map.containsKey(s.charAt(j))) {
+                            int amt = map.get(s.charAt(j));
+                            if (amt == 0) {
+                                count--;
+                            }
+                            map.put(s.charAt(j), amt + 1);
+                        }
+                        if (i - j + 1 < ans.length())
+                            ans = s.substring(j, i + 1);
+                        j++;
+                    }
+                }
+            }
+        }
+        if (ans.length() > s.length())
+            return "";
+        return ans;
+    }
+}

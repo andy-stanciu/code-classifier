@@ -1,0 +1,55 @@
+class Solution {
+
+    int[] parent;
+
+    int[] size;
+
+    public int find(int x) {
+        if (parent[x] == x)
+            return x;
+        return parent[x] = find(parent[x]);
+    }
+
+    public void union(int x, int y) {
+        int xx = find(x);
+        int yy = find(y);
+        if (xx == yy)
+            return;
+        else if (size[xx] > size[yy]) {
+            parent[yy] = xx;
+            size[xx] += size[yy];
+        } else {
+            parent[xx] = yy;
+            size[yy] += size[xx];
+        }
+    }
+
+    public int longestConsecutive(int[] nums) {
+        int n = nums.length;
+        if (n == 0)
+            return 0;
+        parent = new int[n];
+        size = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            if (map.containsKey(nums[i]))
+                continue;
+            if (map.containsKey(nums[i] - 1)) {
+                union(i, map.get(nums[i] - 1));
+            }
+            if (map.containsKey(nums[i] + 1)) {
+                union(i, map.get(nums[i] + 1));
+            }
+            map.put(nums[i], i);
+        }
+        int max = 1;
+        for (int i = 0; i < n; i++) {
+            max = Math.max(max, size[i]);
+        }
+        return max;
+    }
+}

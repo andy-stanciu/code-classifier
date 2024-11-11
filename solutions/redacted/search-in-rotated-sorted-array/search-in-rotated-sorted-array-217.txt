@@ -1,0 +1,54 @@
+class Solution {
+
+    public int method1(int[] nums, int low, int high, int target) {
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] > target) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return -1;
+    }
+
+    public int method2(int[] nums, int target) {
+        int n = nums.length;
+        // Edge case for array with only one element
+        if (n == 1) {
+            return nums[0] == target ? 0 : -1;
+        }
+        // Find pivot
+        int low = 0;
+        int high = n - 1;
+        int pivot = -1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            // Check if mid is the rotation point
+            if (mid < n - 1 && nums[mid] > nums[mid + 1]) {
+                pivot = mid;
+                break;
+            } else if (mid > 0 && nums[mid] < nums[mid - 1]) {
+                pivot = mid - 1;
+                break;
+            }
+            // Decide which half to continue with
+            if (nums[mid] >= nums[0]) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        // If the array is not rotated
+        if (pivot == -1) {
+            return method1(nums, 0, n - 1, target);
+        }
+        // Try to find the target in both halves of the rotated array
+        int left = method1(nums, 0, pivot, target);
+        if (left != -1)
+            return left;
+        return method1(nums, pivot + 1, n - 1, target);
+    }
+}

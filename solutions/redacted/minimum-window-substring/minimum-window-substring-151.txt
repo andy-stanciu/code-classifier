@@ -1,0 +1,66 @@
+class Solution {
+
+    /*
+    algorithm:
+    - maintain a window of characters that match the characters in t
+    - create a map of characters in t with the number of times they appear, lets call it tMap
+    - create a map of characters in the window with the number of times they appear, lets call it windowMap
+
+    - loop over each character in s:
+        - in each iteration, update windowMap
+        - if occurance of character in windowMap is equal to occurance of character in tMap,
+          increment numCharsMatched. (no need to consider greater equal, since we only want to count it once)
+        - if numCharsMatched is equal to t.length(), we have a match, and:
+            - update minWindowSize
+            - we try to shrink the window as much as possible by shrinking the start of the window, until
+              the window is no longer a match (i.e. numCharsMatched is no longer equal to t.length())
+    */
+    public String method1(String s, String t) {
+        Map<Character, Integer> tMap = new HashMap<>();
+        Map<Character, Integer> var1 = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            tMap.put(c, tMap.getOrDefault(c, 0) + 1);
+        }
+        int var2 = Integer.MAX_VALUE;
+        int var3 = 0;
+        // startIndex of the window
+        int startIndex = 0;
+        // number of unique characters matched in the window (unique characters because it is convenient to use when
+        // using map)
+        int numMatched = 0;
+        // number of unique character in t
+        var tUniqueLength = tMap.size();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (tMap.containsKey(c)) {
+                var1.put(c, var1.getOrDefault(c, 0) + 1);
+                if (var1.get(c).equals(tMap.get(c))) {
+                    numMatched++;
+                }
+            }
+            // if the window is a match, we want to shrink it as much as possible, until it is no longer a match
+            while (numMatched == tUniqueLength) {
+                // first check if the current window is smaller than the minWindowSize
+                // +1 because i and startIndex are both inclusive
+                if (i - startIndex + 1 < var2) {
+                    var2 = i - startIndex + 1;
+                    var3 = startIndex;
+                }
+                // try to shrink the window by moving the startIndex
+                char startChar = s.charAt(startIndex);
+                if (tMap.containsKey(startChar)) {
+                    // update the occurance of the character in the window
+                    var1.put(startChar, var1.get(startChar) - 1);
+                    // once the occurance count in the window is less than occurance count in tMap, we decrement ]
+                    // numMatched, and we are no longer a match
+                    if (var1.get(startChar) < tMap.get(startChar)) {
+                        numMatched--;
+                    }
+                }
+                // else the character is not in t, so we can just move the startIndex
+                startIndex++;
+            }
+        }
+        return var2 == Integer.MAX_VALUE ? "" : s.substring(var3, var3 + var2);
+    }
+}

@@ -1,0 +1,66 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int l = 0, r = 0;
+        Class1 var1 = new Class1(t.toCharArray());
+        int ans = s.length() + 1;
+        int start = 0, end = 0;
+        while (r < s.length()) {
+            while (r < s.length() && !var1.isGood()) {
+                var1.add(s.charAt(r++));
+            }
+            while (l < s.length() && var1.isGood()) {
+                var1.remove(s.charAt(l++));
+            }
+            if (ans > r - l + 1) {
+                ans = r - l + 1;
+                start = l - 1;
+                end = r;
+            }
+        }
+        return ans == s.length() + 1 ? "" : s.substring(start, end);
+    }
+}
+
+class Class1 {
+
+    int[] sfreq;
+
+    int[] tfreq;
+
+    int currMatch = 0;
+
+    int tcharsCount = 0;
+
+    Class1(char[] tc) {
+        sfreq = new int[200];
+        tfreq = new int[200];
+        Set<Integer> tchars = new HashSet<>();
+        for (int i = 0; i < tc.length; i++) {
+            int index = tc[i];
+            tfreq[index]++;
+            tchars.add(index);
+        }
+        tcharsCount = tchars.size();
+    }
+
+    void add(char c) {
+        int index = c;
+        sfreq[index]++;
+        if (sfreq[index] == tfreq[index]) {
+            currMatch++;
+        }
+    }
+
+    void remove(char c) {
+        int index = c;
+        sfreq[index]--;
+        if (sfreq[index] == tfreq[index] - 1) {
+            currMatch--;
+        }
+    }
+
+    boolean isGood() {
+        return currMatch == tcharsCount;
+    }
+}

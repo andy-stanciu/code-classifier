@@ -1,0 +1,137 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    //Method1 : Recursive preorder traversal
+    public List<Double> averageOfLevels(TreeNode root) {
+        List<Double> result = new ArrayList<Double>();
+        if (root == null)
+            return result;
+        List<Double> sums = new ArrayList<Double>();
+        List<Integer> counts = new ArrayList<Integer>();
+        helper(root, 0, sums, counts);
+        for (int i = 0; i < sums.size(); i++) {
+            result.add(sums.get(i) / counts.get(i));
+        }
+        return result;
+    }
+
+    private void helper(TreeNode root, int level, List<Double> sums, List<Integer> counts) {
+        if (root == null)
+            return;
+        if (level <= sums.size() - 1) {
+            sums.set(level, sums.get(level) + root.val);
+            counts.set(level, counts.get(level) + 1);
+        } else {
+            sums.add(root.val * 1.0);
+            counts.add(1);
+        }
+        helper(root.left, level + 1, sums, counts);
+        helper(root.right, level + 1, sums, counts);
+    }
+
+    //Method 2: Iterative preorder traversal
+    public List<Double> averageOfLevels3(TreeNode root) {
+        List<Double> result = new ArrayList<Double>();
+        if (root == null)
+            return result;
+        List<Double> sums = new ArrayList<Double>();
+        List<Integer> counts = new ArrayList<Integer>();
+        Stack<Pair<TreeNode, Integer>> stack = new Stack<Pair<TreeNode, Integer>>();
+        stack.push(new Pair<TreeNode, Integer>(root, 0));
+        while (!stack.isEmpty()) {
+            Pair<TreeNode, Integer> temp = stack.pop();
+            TreeNode node = temp.getKey();
+            Integer level = temp.getValue();
+            if (level <= sums.size() - 1) {
+                sums.set(level, sums.get(level) + node.val);
+                counts.set(level, counts.get(level) + 1);
+            } else {
+                sums.add(node.val * 1.0);
+                counts.add(1);
+            }
+            if (node.right != null) {
+                stack.push(new Pair<TreeNode, Integer>(node.right, level + 1));
+            }
+            if (node.left != null) {
+                stack.push(new Pair<TreeNode, Integer>(node.left, level + 1));
+            }
+        }
+        for (int i = 0; i < sums.size(); i++) {
+            result.add(sums.get(i) / counts.get(i));
+        }
+        return result;
+    }
+
+    //Method 3: BFS using ArrayDeque
+    public List<Double> averageOfLevels2(TreeNode root) {
+        List<Double> result = new ArrayList<Double>();
+        Deque<TreeNode> nextLevel = new ArrayDeque<TreeNode>() {
+
+            {
+                offer(root);
+            }
+        };
+        while (!nextLevel.isEmpty()) {
+            Deque<TreeNode> currentLevel = new ArrayDeque<TreeNode>(nextLevel);
+            nextLevel.clear();
+            int size = currentLevel.size();
+            double total = 0.0;
+            for (TreeNode i : currentLevel) {
+                total += i.val;
+                if (i.left != null) {
+                    nextLevel.offer(i.left);
+                }
+                if (i.right != null) {
+                    nextLevel.offer(i.right);
+                }
+            }
+            result.add(total / size);
+        }
+        return result;
+    }
+
+    //TC: O(n) SC: O(n)
+    //Method 4: BFS using Queue
+    public List<Double> averageOfLevels1(TreeNode root) {
+        List<Double> result = new ArrayList<Double>();
+        if (root == null)
+            return result;
+        Queue<TreeNode> que = new LinkedList() {
+
+            {
+                offer(root);
+            }
+        };
+        while (!que.isEmpty()) {
+            int size = que.size();
+            double total = 0.0;
+            for (int i = 1; i <= size; i++) {
+                TreeNode temp = que.poll();
+                total += temp.val;
+                if (temp.left != null) {
+                    que.offer(temp.left);
+                }
+                if (temp.right != null) {
+                    que.offer(temp.right);
+                }
+            }
+            result.add(total / size);
+        }
+        return result;
+    }
+    //TC: O(n) SC: O(n)
+}

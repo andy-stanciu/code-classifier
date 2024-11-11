@@ -1,0 +1,75 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (s.length() < t.length()) {
+            return "";
+        }
+        Map<Character, Integer> dictS = new HashMap<>();
+        Map<Character, Integer> dictT = new HashMap<>();
+        String result = "";
+        int minLen;
+        int l = 0, r;
+        int minL, minR;
+        for (int i = 0; i < t.length(); i++) {
+            char c = t.charAt(i);
+            dictT.put(c, dictT.getOrDefault(c, 0) + 1);
+        }
+        int index = getFirstIndexSatisfiedSubstring(dictS, dictT, s);
+        if (index == -1) {
+            return result;
+        }
+        minLen = index + 1;
+        minL = 0;
+        minR = index + 1;
+        r = index;
+        while (l < s.length() && r < s.length()) {
+            char c = s.charAt(r);
+            if (!dictS.containsKey(c)) {
+                dictS.put(c, 0);
+            }
+            dictS.put(c, dictS.get(c) + 1);
+            while (l < s.length() && (!dictT.containsKey(s.charAt(l)) || dictS.get(s.charAt(l)) > dictT.get(s.charAt(l)))) {
+                dictS.put(s.charAt(l), dictS.get(s.charAt(l)) - 1);
+                l++;
+            }
+            if (r - l + 1 < minLen) {
+                minLen = r - l + 1;
+                minL = l;
+                minR = r + 1;
+            }
+            r++;
+        }
+        result = s.substring(minL, minR);
+        return result;
+    }
+
+    public int getFirstIndexSatisfiedSubstring(Map<Character, Integer> dictS, Map<Character, Integer> dictT, String s) {
+        Map<Character, Integer> dictTClone = new HashMap<>(dictT);
+        boolean isExistSubstring = false;
+        int index = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (!dictTClone.containsKey(c)) {
+                dictS.put(c, dictS.getOrDefault(c, 0) + 1);
+                continue;
+            }
+            int frequency = dictTClone.get(c);
+            frequency -= 1;
+            if (frequency == 0) {
+                dictTClone.remove(c);
+            } else {
+                dictTClone.put(c, frequency);
+            }
+            if (dictTClone.isEmpty()) {
+                isExistSubstring = true;
+                index = i;
+                break;
+            }
+            dictS.put(c, dictS.getOrDefault(c, 0) + 1);
+        }
+        if (!isExistSubstring) {
+            return -1;
+        }
+        return index;
+    }
+}

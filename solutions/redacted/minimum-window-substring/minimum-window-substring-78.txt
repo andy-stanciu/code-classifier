@@ -1,0 +1,34 @@
+class Solution {
+
+    public String method1(String s, String p) {
+        HashMap<Character, Integer> par = new HashMap<>();
+        for (int i = 0; i < p.length(); i++) {
+            char c = p.charAt(i);
+            par.put(c, par.getOrDefault(c, 0) + 1);
+        }
+        String res = "";
+        int start = 0;
+        int dc = p.length();
+        int count = 0;
+        HashMap<Character, Integer> child = new HashMap<>();
+        for (int end = 0; end < s.length(); end++) {
+            char ch = s.charAt(end);
+            child.put(ch, child.getOrDefault(ch, 0) + 1);
+            if (child.get(ch) <= par.getOrDefault(ch, 0))
+                count++;
+            while (start <= end && count == dc) {
+                if (res.length() == 0 || end - start + 1 < res.length()) {
+                    res = s.substring(start, end + 1);
+                }
+                char sc = s.charAt(start);
+                child.put(sc, child.get(sc) - 1);
+                if (child.get(sc) == 0)
+                    child.remove(sc);
+                if (child.getOrDefault(sc, 0) < par.getOrDefault(sc, 0))
+                    count--;
+                start++;
+            }
+        }
+        return res;
+    }
+}

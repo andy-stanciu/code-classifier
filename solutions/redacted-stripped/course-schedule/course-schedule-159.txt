@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean topologicalSortCheck(Map<Integer, List<Integer>> adj, int n, int[] indegree) {
+        Queue<Integer> queue = new LinkedList<>();
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                count++;
+                queue.offer(i);
+            }
+        }
+        while (!queue.isEmpty()) {
+            int u = queue.poll();
+            for (int v : adj.getOrDefault(u, new ArrayList<>())) {
+                indegree[v]--;
+                if (indegree[v] == 0) {
+                    count++;
+                    queue.offer(v);
+                }
+            }
+        }
+        return count == n;
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> adj = new HashMap<>();
+        int[] indegree = new int[param1];
+        for (int[] pair : prerequisites) {
+            int a = pair[0];
+            int b = pair[1];
+            adj.computeIfAbsent(b, k -> new ArrayList<>()).add(a);
+            indegree[a]++;
+        }
+        return topologicalSortCheck(adj, param1, indegree);
+    }
+}

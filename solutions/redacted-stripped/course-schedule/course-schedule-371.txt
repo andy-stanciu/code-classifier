@@ -1,0 +1,42 @@
+class Solution {
+
+    public boolean isCycleDFS(int src, ArrayList<ArrayList<Integer>> adj, boolean[] visited, boolean[] dfsVisited) {
+        visited[src] = true;
+        dfsVisited[src] = true;
+        ArrayList<Integer> nbrs = adj.get(src);
+        for (int i = 0; i < nbrs.size(); i++) {
+            if (!visited[nbrs.get(i)]) {
+                boolean result = isCycleDFS(nbrs.get(i), adj, visited, dfsVisited);
+                if (result)
+                    return true;
+            } else if (dfsVisited[nbrs.get(i)]) {
+                return true;
+            }
+        }
+        dfsVisited[src] = false;
+        return false;
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        if (prerequisites.length == 0) {
+            return true;
+        }
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList());
+        }
+        for (int[] t : prerequisites) {
+            adj.get(t[1]).add(t[0]);
+        }
+        boolean[] visited = new boolean[param1];
+        boolean[] dfsVisited = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                boolean result = isCycleDFS(i, adj, visited, dfsVisited);
+                if (result)
+                    return false;
+            }
+        }
+        return true;
+    }
+}

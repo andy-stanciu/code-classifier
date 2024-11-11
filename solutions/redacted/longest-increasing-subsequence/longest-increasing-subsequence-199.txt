@@ -1,0 +1,29 @@
+class Solution {
+
+    public static int bisectLeft(List<Integer> list, int value) {
+        int pos = Collections.binarySearch(list, value);
+        if (pos < 0) {
+            return -(pos + 1);
+        }
+        while (pos > 0 && list.get(pos - 1) == value) {
+            pos--;
+        }
+        return pos;
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        List<Integer> myList = new ArrayList<>();
+        int length = 1;
+        myList.add(nums[0]);
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] > myList.get(myList.size() - 1)) {
+                myList.add(nums[i]);
+                length++;
+            } else {
+                int index = bisectLeft(myList, nums[i]);
+                myList.set(index, nums[i]);
+            }
+        }
+        return length;
+    }
+}

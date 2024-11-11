@@ -1,0 +1,47 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int l = 0;
+        int tlen = t.length();
+        int slen = s.length();
+        if (slen < tlen) {
+            return "";
+        }
+        HashMap<Character, Integer> tMap = new HashMap<>();
+        HashMap<Character, Integer> sMap = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            char ch = t.charAt(i);
+            tMap.put(ch, tMap.getOrDefault(ch, 0) + 1);
+        }
+        boolean check = false;
+        String res = s;
+        for (int i = 0; i < slen; i++) {
+            char ch = s.charAt(i);
+            sMap.put(ch, sMap.getOrDefault(ch, 0) + 1);
+            while (compare(sMap, tMap)) {
+                check = true;
+                String x = s.substring(l, i + 1);
+                if (x.length() < res.length()) {
+                    res = x;
+                }
+                char ch1 = s.charAt(l++);
+                sMap.put(ch1, sMap.getOrDefault(ch1, 0) - 1);
+            }
+        }
+        if (!check) {
+            return "";
+        }
+        return res;
+    }
+
+    public boolean compare(HashMap<Character, Integer> smap, HashMap<Character, Integer> tmap) {
+        for (char ch : tmap.keySet()) {
+            int t = tmap.get(ch);
+            int s = smap.getOrDefault(ch, 0);
+            if (t > s) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

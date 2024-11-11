@@ -1,0 +1,35 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> tMap = new HashMap<>();
+        HashMap<Character, Integer> sMap = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            tMap.put(t.charAt(i), tMap.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        int has = 0;
+        int need = tMap.size();
+        String str = "";
+        int minLength = Integer.MAX_VALUE;
+        int l = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            sMap.put(c, sMap.getOrDefault(c, 0) + 1);
+            if (tMap.containsKey(c) && tMap.get(c).equals(sMap.get(c))) {
+                has++;
+            }
+            while (has == need) {
+                if (i - l + 1 < minLength) {
+                    minLength = i - l + 1;
+                    str = s.substring(l, i + 1);
+                }
+                char lc = s.charAt(l);
+                sMap.put(lc, sMap.get(lc) - 1);
+                if (tMap.containsKey(lc) && sMap.get(lc) < tMap.get(lc)) {
+                    has--;
+                }
+                l++;
+            }
+        }
+        return str;
+    }
+}

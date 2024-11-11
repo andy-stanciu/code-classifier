@@ -1,0 +1,26 @@
+class Solution {
+
+    Map<Integer, List<Integer>> map = new HashMap<>();
+
+    public void reverse(TreeNode root, int level) {
+        if (root == null)
+            return;
+        map.putIfAbsent(level, new ArrayList<>());
+        map.get(level).add(root.val);
+        reverse(root.left, level + 1);
+        reverse(root.right, level + 1);
+    }
+
+    private double method1(List<Integer> list) {
+        return list.stream().mapToDouble(d -> d).average().orElse(0.0);
+    }
+
+    public List<Double> method2(TreeNode root) {
+        reverse(root, 1);
+        List<Double> answer = new ArrayList<>();
+        for (Map.Entry<Integer, List<Integer>> m : map.entrySet()) {
+            answer.add(method1(m.getValue()));
+        }
+        return answer;
+    }
+}

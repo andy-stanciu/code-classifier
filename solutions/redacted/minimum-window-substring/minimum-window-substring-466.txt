@@ -1,0 +1,40 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> h1 = new HashMap<>();
+        int i = 0;
+        int j = 0;
+        int c = 0;
+        String ans = "";
+        for (int i1 = 0; i1 < t.length(); i1++) {
+            char a = t.charAt(i1);
+            int p = h1.getOrDefault(a, 0);
+            h1.put(a, p + 1);
+        }
+        int n = t.length();
+        int cnt = 0;
+        HashMap<Character, Integer> h2 = new HashMap<>();
+        while (i < s.length()) {
+            char ch = s.charAt(i);
+            h2.put(ch, h2.getOrDefault(ch, 0) + 1);
+            if (h2.get(ch) <= h1.getOrDefault(ch, 0))
+                cnt++;
+            if (cnt == n) {
+                while (j <= i && cnt == n) {
+                    if (ans.equals("") || ans.length() > i - j + 1)
+                        ans = (s.substring(j, i + 1));
+                    char p = s.charAt(j);
+                    if (h2.get(p) == 1)
+                        h2.remove(p);
+                    else
+                        h2.put(p, h2.get(p) - 1);
+                    if (h2.getOrDefault(p, 0) < h1.getOrDefault(p, 0))
+                        cnt--;
+                    j++;
+                }
+            }
+            i++;
+        }
+        return ans;
+    }
+}

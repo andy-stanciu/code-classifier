@@ -1,0 +1,44 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        HashMap<Integer, List<Integer>> var1 = new HashMap<>();
+        for (int[] pre : prerequisites) {
+            if (var1.containsKey(pre[1])) {
+                var1.get(pre[1]).add(pre[0]);
+            } else {
+                List<Integer> var2 = new LinkedList<>();
+                var2.add(pre[0]);
+                var1.put(pre[1], var2);
+            }
+        }
+        HashSet<Integer> visited = new HashSet<>();
+        HashSet<Integer> processed = new HashSet<>();
+        for (int var3 = 0; var3 < param1; var3++) {
+            if (!method1(var3, visited, processed, var1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean method1(int param2, HashSet<Integer> visited, HashSet<Integer> processed, HashMap<Integer, List<Integer>> var1) {
+        if (visited.contains(param2)) {
+            return false;
+        }
+        if (processed.contains(param2)) {
+            return true;
+        }
+        if (!var1.containsKey(param2)) {
+            return true;
+        }
+        visited.add(param2);
+        for (int pre : var1.get(param2)) {
+            if (!method1(pre, visited, processed, var1)) {
+                return false;
+            }
+        }
+        visited.remove(param2);
+        processed.add(param2);
+        return true;
+    }
+}

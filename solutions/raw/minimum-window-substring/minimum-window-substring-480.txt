@@ -1,0 +1,33 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int i = 0, j = 0, start_i = 0;
+        int n = s.length();
+        int minWin = Integer.MAX_VALUE;
+        int reqCount = t.length();
+        Map<Character, Integer> map = new HashMap<>();
+        for (int k = 0; k < t.length(); k++) {
+            char ch = t.charAt(k);
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        while (j < n) {
+            char ch = s.charAt(j);
+            if (map.getOrDefault(ch, 0) > 0)
+                reqCount--;
+            map.put(ch, map.getOrDefault(ch, 0) - 1);
+            while (reqCount == 0) {
+                if (minWin > (j - i + 1)) {
+                    minWin = j - i + 1;
+                    start_i = i;
+                }
+                char sh = s.charAt(i);
+                map.put(sh, map.get(sh) + 1);
+                if (map.get(sh) > 0)
+                    reqCount++;
+                i++;
+            }
+            j++;
+        }
+        return minWin == Integer.MAX_VALUE ? "" : s.substring(start_i, start_i + minWin);
+    }
+}

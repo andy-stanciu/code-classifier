@@ -1,0 +1,39 @@
+public class Solution {
+
+    public String minWindow(String s, String t) {
+        if (s == null || s.length() < t.length()) {
+            return "";
+        }
+        int[] targetCounts = new int[128];
+        int[] windowCounts = new int[128];
+        for (char c : t.toCharArray()) {
+            targetCounts[c]++;
+        }
+        int left = 0, right = 0;
+        int required = t.length();
+        int formed = 0;
+        int[] ans = { Integer.MAX_VALUE, 0, 0 };
+        while (right < s.length()) {
+            char currentChar = s.charAt(right);
+            windowCounts[currentChar]++;
+            if (targetCounts[currentChar] > 0 && windowCounts[currentChar] <= targetCounts[currentChar]) {
+                formed++;
+            }
+            while (left <= right && formed == required) {
+                char leftChar = s.charAt(left);
+                if (right - left + 1 < ans[0]) {
+                    ans[0] = right - left + 1;
+                    ans[1] = left;
+                    ans[2] = right;
+                }
+                windowCounts[leftChar]--;
+                if (targetCounts[leftChar] > 0 && windowCounts[leftChar] < targetCounts[leftChar]) {
+                    formed--;
+                }
+                left++;
+            }
+            right++;
+        }
+        return ans[0] == Integer.MAX_VALUE ? "" : s.substring(ans[1], ans[2] + 1);
+    }
+}

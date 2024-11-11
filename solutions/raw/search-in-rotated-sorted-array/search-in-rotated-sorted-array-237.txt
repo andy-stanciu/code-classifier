@@ -1,0 +1,79 @@
+class Solution {
+
+    public int search(int[] nums, int target) {
+        int N = nums.length;
+        if (N < 1) {
+            return -1;
+        }
+        if (N < 2) {
+            return nums[0] == target ? 0 : -1;
+        }
+        int lo = findLow(nums);
+        int hi = lo + N - 1;
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (nums[mid % N] == target) {
+                return mid % N;
+            }
+            if (nums[mid % N] < target) {
+                lo = mid + 1;
+            } else {
+                hi = mid;
+            }
+        }
+        if (nums[lo % N] == target) {
+            return lo % N;
+        }
+        return -1;
+    }
+
+    private int findLow(int[] arr) {
+        // 1) Finding the index of the smallest element, in O(N) time
+        // int lo = 0;
+        // int N = arr.length;
+        // while (lo < N) {
+        //     if (lo > 0 && arr[lo] < arr[lo - 1]) {
+        //         break;
+        //     }
+        //     lo++;
+        // }
+        // return lo % N;
+        // 2) Finding the index of the smallest element, in O(logN) time
+        int lo = 0;
+        int N = arr.length;
+        int hi = N - 1;
+        if (arr[lo] < arr[hi]) {
+            return lo;
+        }
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (mid > 0 && arr[mid] < arr[mid - 1]) {
+                return mid;
+            }
+            if (arr[mid] >= arr[lo] && arr[mid] > arr[hi]) {
+                lo = mid + 1;
+            } else {
+                hi = mid;
+            }
+        }
+        return lo;
+    }
+
+    private int regularBinarySearch(int[] arr, int lo, int hi, int target) {
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (arr[mid] == target) {
+                return mid;
+            }
+            if (arr[mid] < target) {
+                lo = mid + 1;
+            } else {
+                hi = mid;
+            }
+        }
+        if (arr[lo] == target) {
+            return lo;
+        }
+        return -1;
+    }
+}

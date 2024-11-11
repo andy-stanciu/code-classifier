@@ -1,0 +1,51 @@
+class Solution {
+
+    List<List<Integer>> adjList;
+
+    int[] visited;
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        //initialize adjList ans visited array
+        adjList = new ArrayList<>();
+        visited = new int[numCourses];
+        //build a graph
+        buildGraph(numCourses, prerequisites);
+        //iterate through each vertex
+        for (int i = 0; i < numCourses; i++) {
+            if (//check if its already been processed or not
+            visited[i] == 0)
+                if (//check, is there any cycle that includes this index??
+                isCycle(i))
+                    //if yes, then we found cycle,hence can\'t complete each course
+                    return false;
+        }
+        //we went through all vertices, did not find any cycle hece we can complete the course. i.e no two courses are dependent on each other.(DEADLOCk)
+        return true;
+    }
+
+    private void buildGraph(int vertices, int[][] edges) {
+        //initialize empty list for every vertex
+        for (int i = 0; i < vertices; i++) adjList.add(new ArrayList<Integer>());
+        //establish the edges between the vertices
+        for (int i = 0; i < edges.length; i++) adjList.get(edges[i][0]).add(edges[i][1]);
+    }
+
+    private boolean isCycle(int vertex) {
+        if (//we visited this vertex agaain, hence found cycle.
+        visited[vertex] == 2)
+            return true;
+        //set this as, processing vertex.
+        visited[vertex] = 2;
+        for (int neighbourVertex : adjList.get(vertex)) {
+            // check for its each neighbourVertexs
+            if (//check if neighbourVertex is already processed or not.
+            visited[neighbourVertex] != 1)
+                if (isCycle(neighbourVertex))
+                    //we found cycle in one of the neighbourVertex.
+                    return true;
+        }
+        //did not find any cycle, hence mark it as done and return false.
+        visited[vertex] = 1;
+        return false;
+    }
+}

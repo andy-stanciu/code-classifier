@@ -1,0 +1,31 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        String res = "";
+        int var1 = 0, matches = 0, minLen = Integer.MAX_VALUE;
+        Map<Character, Integer> counter = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            counter.put(c, counter.getOrDefault(c, 0) + 1);
+        }
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            counter.put(c, counter.getOrDefault(c, 0) - 1);
+            if (counter.get(c) >= 0) {
+                matches++;
+            }
+            while (matches == t.length()) {
+                if (minLen > i - var1 + 1) {
+                    minLen = i - var1 + 1;
+                    res = s.substring(var1, i + 1);
+                }
+                char leftChar = s.charAt(var1);
+                counter.put(leftChar, counter.get(leftChar) + 1);
+                if (counter.get(leftChar) > 0) {
+                    matches--;
+                }
+                var1++;
+            }
+        }
+        return res;
+    }
+}

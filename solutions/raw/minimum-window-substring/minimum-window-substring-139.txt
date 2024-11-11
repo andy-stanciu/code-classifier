@@ -1,0 +1,46 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (s.isEmpty() || t.isEmpty() || s.length() < t.length())
+            return "";
+        Map<Character, Integer> map = new HashMap<>();
+        Set<Character> charSet = new HashSet<>();
+        for (char c : t.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+            charSet.add(c);
+        }
+        int minLen = Integer.MAX_VALUE, start = 0, end = t.length() - 1;
+        int startS = 0, endS = -1;
+        for (int i = start; i <= end; i++) {
+            map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0) - 1);
+        }
+        while (end < s.length() && start <= end) {
+            if (checkSubstring(map, charSet)) {
+                if (end - start + 1 < minLen) {
+                    minLen = end - start + 1;
+                    startS = start;
+                    endS = end;
+                }
+                if (charSet.contains(s.charAt(start))) {
+                    map.put(s.charAt(start), map.getOrDefault(s.charAt(start), 0) + 1);
+                }
+                start++;
+                continue;
+            }
+            end++;
+            if (end == s.length()) {
+                break;
+            }
+            map.put(s.charAt(end), map.getOrDefault(s.charAt(end), 0) - 1);
+        }
+        return s.substring(startS, endS + 1);
+    }
+
+    public boolean checkSubstring(Map<Character, Integer> map, Set<Character> charSet) {
+        for (Character c : charSet) {
+            if (map.containsKey(c) && map.get(c) > 0)
+                return false;
+        }
+        return true;
+    }
+}

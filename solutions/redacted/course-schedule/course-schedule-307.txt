@@ -1,0 +1,41 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<Integer>[] graph = new ArrayList[param1];
+        boolean[] visited = new boolean[param1];
+        boolean[] nodes = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] arr : prerequisites) {
+            graph[arr[0]].add(arr[1]);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i] && isCyclic(graph, visited, nodes, i)) {
+                return false;
+            }
+            // if cycle is not found than that course is compeleted means visited true
+            visited[i] = true;
+        }
+        return true;
+    }
+
+    private boolean isCyclic(ArrayList<Integer>[] graph, boolean[] visited, boolean[] nodes, int src) {
+        // if courese comes twice than it is cycle than return true
+        if (nodes[src]) {
+            return true;
+        }
+        // if course is already completed (already visited )than return false
+        if (visited[src]) {
+            return false;
+        }
+        for (int i = 0; i < graph[src].size(); i++) {
+            nodes[src] = true;
+            if (isCyclic(graph, visited, nodes, graph[src].get(i))) {
+                return true;
+            }
+            nodes[src] = false;
+        }
+        return false;
+    }
+}

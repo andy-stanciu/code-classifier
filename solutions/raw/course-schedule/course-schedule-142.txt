@@ -1,0 +1,50 @@
+class Solution {
+
+    static class Edge {
+
+        int src;
+
+        int des;
+
+        Edge(int src, int des) {
+            this.src = src;
+            this.des = des;
+        }
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        ArrayList<Edge>[] graph = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int src = prerequisites[i][1];
+            int des = prerequisites[i][0];
+            graph[src].add(new Edge(src, des));
+        }
+        boolean[] vis = new boolean[numCourses];
+        boolean[] stack = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (!vis[i] && hasCycle(vis, stack, graph, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    boolean hasCycle(boolean[] vis, boolean[] stack, ArrayList<Edge>[] graph, int curr) {
+        stack[curr] = true;
+        vis[curr] = true;
+        for (int i = 0; i < graph[curr].size(); i++) {
+            Edge e = graph[curr].get(i);
+            if (stack[e.des]) {
+                return true;
+            }
+            if (!vis[e.des] && hasCycle(vis, stack, graph, e.des)) {
+                return true;
+            }
+        }
+        stack[curr] = false;
+        return false;
+    }
+}

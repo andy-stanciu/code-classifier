@@ -1,0 +1,37 @@
+class Solution {
+
+    Map<Integer, List<Integer>> m;
+
+    Set<Integer> s;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        m = new HashMap<>();
+        s = new HashSet<>();
+        for (int[] pre : prerequisites) {
+            if (!m.containsKey(pre[0])) {
+                m.put(pre[0], new ArrayList<>());
+            }
+            m.get(pre[0]).add(pre[1]);
+        }
+        for (int var1 = 0; var1 < param1; var1++) {
+            if (!dfs(var1))
+                return false;
+        }
+        return true;
+    }
+
+    public boolean dfs(int var1) {
+        if (m.get(var1) == null || m.get(var1).isEmpty())
+            return true;
+        if (s.contains(var1))
+            return false;
+        s.add(var1);
+        for (int c : m.get(var1)) {
+            if (!dfs(c))
+                return false;
+        }
+        s.remove(var1);
+        m.put(var1, new ArrayList<>());
+        return true;
+    }
+}

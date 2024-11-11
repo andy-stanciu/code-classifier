@@ -1,0 +1,35 @@
+class Solution {
+
+    public int findInsertionIndex(int[] nums, int val) {
+        int l = 0;
+        int r = nums.length - 1;
+        int res = nums.length;
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            if (nums[mid] < val) {
+                res = mid;
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        return res + 1;
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        int res = 0;
+        int n = nums.length;
+        int[] seq = new int[n + 1];
+        Arrays.fill(seq, Integer.MAX_VALUE);
+        seq[0] = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i++) {
+            int cur = nums[i];
+            int insertIndex = findInsertionIndex(seq, cur);
+            res = Math.max(res, insertIndex);
+            if (seq[insertIndex] >= cur) {
+                seq[insertIndex] = cur;
+            }
+        }
+        return res;
+    }
+}

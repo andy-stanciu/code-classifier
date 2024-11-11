@@ -1,0 +1,72 @@
+class Node {
+
+    int var1;
+
+    int incomingEdges;
+
+    Set<Node> neighbors;
+
+    public Node(int var1) {
+        this.var1 = var1;
+        this.incomingEdges = 0;
+        this.neighbors = new HashSet<Node>();
+    }
+
+    public int method1() {
+        return this.var1;
+    }
+
+    public int getIncomingEdges() {
+        return this.incomingEdges;
+    }
+
+    public void incrementIncomingEdges() {
+        this.incomingEdges++;
+    }
+
+    public void decrementIncomingEdges() {
+        this.incomingEdges = this.incomingEdges - 1;
+    }
+
+    public Set<Node> getNeighbors() {
+        return this.neighbors;
+    }
+
+    public void addNeighbor(Node n) {
+        this.neighbors.add(n);
+    }
+}
+
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        HashMap<Integer, Node> graph = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            graph.put(i, new Node(i));
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            Node preReq = graph.get(prerequisites[i][1]);
+            Node preReqTarget = graph.get(prerequisites[i][0]);
+            preReqTarget.incrementIncomingEdges();
+            preReq.addNeighbor(preReqTarget);
+        }
+        Queue<Integer> var2 = new LinkedList<Integer>();
+        for (Map.Entry<Integer, Node> kvp : graph.entrySet()) {
+            if (kvp.getValue().getIncomingEdges() == 0) {
+                var2.add(kvp.getKey());
+            }
+        }
+        LinkedList<Integer> var3 = new LinkedList<Integer>();
+        while (!var2.isEmpty()) {
+            Integer var1 = var2.poll();
+            var3.add(var1);
+            for (Node neighbor : graph.get(var1).getNeighbors()) {
+                neighbor.decrementIncomingEdges();
+                if (neighbor.getIncomingEdges() == 0) {
+                    var2.add(neighbor.method1());
+                }
+            }
+        }
+        return var3.size() == param1 ? true : false;
+    }
+}

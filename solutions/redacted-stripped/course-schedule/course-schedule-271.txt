@@ -1,0 +1,35 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < param1; i++) adjList.add(new ArrayList());
+        for (int[] edge : prerequisites) {
+            adjList.get(edge[1]).add(edge[0]);
+        }
+        boolean[] isVisited = new boolean[param1];
+        boolean[] isVisitedForCycle = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (isVisited[i] == false) {
+                if (isCycle(i, isVisited, adjList, isVisitedForCycle))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isCycle(int node, boolean[] isVisited, ArrayList<ArrayList<Integer>> adjList, boolean[] isVisitedForCycle) {
+        if (isVisitedForCycle[node] == true)
+            return true;
+        if (isVisited[node] == true)
+            return false;
+        isVisited[node] = true;
+        isVisitedForCycle[node] = true;
+        for (int val : adjList.get(node)) {
+            if (isCycle(val, isVisited, adjList, isVisitedForCycle)) {
+                return true;
+            }
+        }
+        isVisitedForCycle[node] = false;
+        return false;
+    }
+}

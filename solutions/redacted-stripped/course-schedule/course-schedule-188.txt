@@ -1,0 +1,34 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int[] incomingEdges = new int[param1];
+        Map<Integer, List<Integer>> adjList = new HashMap<>();
+        for (int[] prereq : prerequisites) {
+            List<Integer> children = adjList.getOrDefault(prereq[0], new ArrayList<Integer>());
+            children.add(prereq[1]);
+            adjList.put(prereq[0], children);
+            incomingEdges[prereq[1]]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (incomingEdges[i] == 0) {
+                q.add(i);
+            }
+        }
+        while (!q.isEmpty()) {
+            int var1 = q.remove();
+            for (int child : adjList.getOrDefault(var1, new ArrayList<Integer>())) {
+                incomingEdges[child]--;
+                if (incomingEdges[child] == 0) {
+                    q.add(child);
+                }
+            }
+        }
+        for (int i = 0; i < param1; i++) {
+            if (incomingEdges[i] > 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

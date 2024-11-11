@@ -1,0 +1,42 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s.length() == 0 || t.length() == 0 || s.length() < t.length()) {
+            return "";
+        }
+        Map<Character, Integer> targetFreq = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            targetFreq.put(c, targetFreq.getOrDefault(c, 0) + 1);
+        }
+        int left = 0;
+        int right = 0;
+        int minLen = Integer.MAX_VALUE;
+        int minLeft = 0;
+        int matchCount = 0;
+        while (right < s.length()) {
+            char currentChar = s.charAt(right);
+            if (targetFreq.containsKey(currentChar)) {
+                targetFreq.put(currentChar, targetFreq.get(currentChar) - 1);
+                if (targetFreq.get(currentChar) >= 0) {
+                    matchCount++;
+                }
+            }
+            while (matchCount == t.length()) {
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    minLeft = left;
+                }
+                char leftChar = s.charAt(left);
+                if (targetFreq.containsKey(leftChar)) {
+                    targetFreq.put(leftChar, targetFreq.get(leftChar) + 1);
+                    if (targetFreq.get(leftChar) > 0) {
+                        matchCount--;
+                    }
+                }
+                left++;
+            }
+            right++;
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + minLen);
+    }
+}

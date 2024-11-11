@@ -1,0 +1,43 @@
+class Solution {
+
+    public int method1(int[] nums) {
+        return method2(nums, 0, nums.length - 1);
+    }
+
+    public int method2(int[] nums, int left, int right) {
+        if (left == right) {
+            return nums[left];
+        }
+        int mid = (left + right) / 2;
+        int leftSum = method2(nums, left, mid);
+        int rightSum = method2(nums, mid + 1, right);
+        int centerSum = method3(nums, left, mid, right);
+        int sideSum = 0;
+        if (leftSum > rightSum) {
+            sideSum = leftSum;
+        } else {
+            sideSum = rightSum;
+        }
+        return (sideSum > centerSum) ? sideSum : centerSum;
+    }
+
+    public int method3(int[] nums, int left, int mid, int right) {
+        int sum = 0;
+        int leftSum = Integer.MIN_VALUE;
+        int rightSum = Integer.MIN_VALUE;
+        for (int i = mid; i >= left; i--) {
+            sum += nums[i];
+            if (sum > leftSum) {
+                leftSum = sum;
+            }
+        }
+        sum = 0;
+        for (int i = mid + 1; i <= right; i++) {
+            sum += nums[i];
+            if (sum > rightSum) {
+                rightSum = sum;
+            }
+        }
+        return leftSum + rightSum;
+    }
+}

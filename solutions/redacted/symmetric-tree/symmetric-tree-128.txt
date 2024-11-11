@@ -1,0 +1,68 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public boolean method1(TreeNode root) {
+        //Create Queue and add Root
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        //Iterate Over Queue and Validate Symmetric
+        while (!q.isEmpty()) {
+            //remove all nodes from queue, and add to \'temp\' list
+            List<TreeNode> temp = new ArrayList<>(q);
+            q.clear();
+            //validate if node\'s children are symmetric
+            //accumulate all val\'s from node\'s children including null -> toInt
+            List<Integer> tempVals = new ArrayList<>();
+            temp.forEach(node -> {
+                int left = Solution.toInt(node.left);
+                int right = Solution.toInt(node.right);
+                tempVals.add(left);
+                tempVals.add(right);
+            });
+            //validate if symmetric
+            if (!method1(tempVals))
+                return false;
+            //dump non-null list back to queue
+            temp.forEach(node -> {
+                if (node.left != null)
+                    q.add(node.left);
+                if (node.right != null)
+                    q.add(node.right);
+            });
+        }
+        return true;
+    }
+
+    public static Integer toInt(TreeNode n) {
+        if (n == null)
+            return -101;
+        else
+            return n.val;
+    }
+
+    public static boolean method1(List<Integer> list) {
+        int n = list.size();
+        //list must be of even size
+        if (n % 2 != 0)
+            return false;
+        //compare left-side to right-side
+        List<Integer> leftSideList = list.subList(0, n / 2);
+        List<Integer> rightSideList = list.subList(n / 2, n);
+        Collections.reverse(rightSideList);
+        return leftSideList.equals(rightSideList);
+    }
+}

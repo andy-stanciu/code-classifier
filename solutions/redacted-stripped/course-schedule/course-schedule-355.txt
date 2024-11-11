@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        if (prerequisites == null || prerequisites.length == 0)
+            return true;
+        int n = param1;
+        while (n != 0) {
+            adjList.add(new ArrayList<Integer>());
+            n -= 1;
+        }
+        int[] freq = new int[param1];
+        for (int[] preq : prerequisites) {
+            int v = preq[0];
+            int u = preq[1];
+            adjList.get(u).add(v);
+            freq[v]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (freq[i] == 0)
+                queue.offer(i);
+        }
+        int cnt = 0;
+        while (!queue.isEmpty()) {
+            int u = queue.poll();
+            cnt++;
+            for (int v : adjList.get(u)) {
+                freq[v] -= 1;
+                if (freq[v] == 0)
+                    queue.offer(v);
+            }
+        }
+        return cnt == param1;
+    }
+}

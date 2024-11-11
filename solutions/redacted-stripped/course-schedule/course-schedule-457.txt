@@ -1,0 +1,43 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> map = method1(prerequisites);
+        boolean[] vis = new boolean[param1];
+        for (int var1 = 0; var1 < param1; var1++) {
+            if (!dfs(var1, map, vis))
+                return false;
+        }
+        return true;
+    }
+
+    private static boolean dfs(int var1, Map<Integer, List<Integer>> map, boolean[] vis) {
+        List<Integer> dependencies = map.getOrDefault(var1, Collections.emptyList());
+        if (dependencies.isEmpty())
+            return vis[var1] = true;
+        if (vis[var1])
+            return false;
+        vis[var1] = true;
+        boolean res = true;
+        for (var dependency : dependencies) {
+            if (!dfs(dependency, map, vis)) {
+                res = false;
+                break;
+            }
+        }
+        vis[var1] = false;
+        map.put(var1, Collections.emptyList());
+        return res;
+    }
+
+    private static Map<Integer, List<Integer>> method1(int[][] prerequisites) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int i = 0; i < prerequisites.length; i++) {
+            var var1 = prerequisites[i][0];
+            var dependency = prerequisites[i][1];
+            var dependencies = map.getOrDefault(var1, new ArrayList<>());
+            dependencies.add(dependency);
+            map.put(var1, dependencies);
+        }
+        return map;
+    }
+}

@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<Double> method1(TreeNode root) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        helper(root, map, 0);
+        int n = map.size();
+        List<Double> result = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            List<Integer> g = map.get(i);
+            result.add(g.stream().mapToInt(Integer::intValue).average().getAsDouble());
+        }
+        return result;
+    }
+
+    public void helper(TreeNode root, Map<Integer, List<Integer>> map, int level) {
+        if (root == null) {
+            return;
+        }
+        helper(root.left, map, level + 1);
+        helper(root.right, map, level + 1);
+        int val = root.val;
+        if (map.containsKey(level)) {
+            map.get(level).add(val);
+        } else {
+            List<Integer> list = new ArrayList();
+            list.add(val);
+            map.put(level, list);
+        }
+    }
+}

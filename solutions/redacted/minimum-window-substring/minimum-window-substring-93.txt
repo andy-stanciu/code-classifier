@@ -1,0 +1,49 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> freqmap = new HashMap<>();
+        // [populate the map with t string ]
+        for (int i = 0; i < t.length(); i++) {
+            char ch = t.charAt(i);
+            freqmap.put(ch, freqmap.getOrDefault(ch, 0) + 1);
+        }
+        int uniquecharcount = freqmap.size();
+        int startidx = -1;
+        int var1 = 0;
+        int var2 = 0;
+        int minlen = Integer.MAX_VALUE;
+        int n = s.length();
+        while (var2 < n) {
+            char ch = s.charAt(var2);
+            if (freqmap.containsKey(ch)) {
+                // expanding phase
+                freqmap.put(ch, freqmap.get(ch) - 1);
+                if (freqmap.get(ch) == 0) {
+                    uniquecharcount--;
+                }
+            }
+            // shrinking phase
+            while (uniquecharcount == 0) {
+                // finding length
+                int len = var2 - var1 + 1;
+                if (len < minlen) {
+                    minlen = len;
+                    startidx = var1;
+                }
+                ch = s.charAt(var1);
+                if (freqmap.containsKey(ch)) {
+                    freqmap.put(ch, freqmap.get(ch) + 1);
+                    if (freqmap.get(ch) > 0) {
+                        uniquecharcount++;
+                    }
+                }
+                var1++;
+            }
+            var2++;
+        }
+        if (startidx == -1) {
+            return "";
+        }
+        return s.substring(startidx, startidx + minlen);
+    }
+}

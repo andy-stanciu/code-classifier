@@ -1,0 +1,40 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        Map<Integer, Integer> outDegree = new HashMap<>();
+        for (int[] pr : prerequisites) {
+            int x = pr[0];
+            int y = pr[1];
+            if (graph.containsKey(y)) {
+                graph.get(y).add(x);
+            } else {
+                List<Integer> l = new ArrayList<>();
+                l.add(x);
+                graph.put(y, l);
+            }
+            outDegree.put(x, outDegree.getOrDefault(x, 0) + 1);
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (!outDegree.containsKey(i))
+                queue.offer(i);
+        }
+        int var1 = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int currC = queue.poll();
+                var1++;
+                if (graph.containsKey(currC))
+                    for (int nei : graph.get(currC)) {
+                        outDegree.put(nei, outDegree.get(nei) - 1);
+                        if (outDegree.get(nei) == 0) {
+                            queue.offer(nei);
+                        }
+                    }
+            }
+        }
+        return var1 == param1;
+    }
+}

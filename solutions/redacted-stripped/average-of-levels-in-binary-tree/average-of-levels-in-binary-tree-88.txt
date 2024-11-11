@@ -1,0 +1,42 @@
+class Solution {
+
+    public List<Double> method1(TreeNode root) {
+        List<Double> result = new ArrayList<>();
+        List<TreeNode> levelTemp = new ArrayList<>();
+        result.add((double) root.val);
+        if (root.left != null) {
+            levelTemp.add(root.left);
+        }
+        if (root.right != null) {
+            levelTemp.add(root.right);
+        }
+        if (!levelTemp.isEmpty()) {
+            calculateAvrForLevel(levelTemp, result);
+        }
+        return result;
+    }
+
+    public void calculateAvrForLevel(List<TreeNode> currentLevelTemp, List<Double> result) {
+        double currentLevelAvr = 0;
+        int divider = 0;
+        List<TreeNode> nextLevelTemp = new ArrayList<>();
+        for (TreeNode var1 : currentLevelTemp) {
+            currentLevelAvr = Double.sum(currentLevelAvr, var1.val);
+            divider++;
+            if (var1.left != null) {
+                nextLevelTemp.add(var1.left);
+            }
+            if (var1.right != null) {
+                nextLevelTemp.add(var1.right);
+            }
+        }
+        if (divider != 0) {
+            result.add(currentLevelAvr / divider);
+        } else {
+            result.add(currentLevelAvr);
+        }
+        if (!nextLevelTemp.isEmpty()) {
+            calculateAvrForLevel(nextLevelTemp, result);
+        }
+    }
+}

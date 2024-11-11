@@ -1,0 +1,49 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        // DP
+        // return dynamicProgramming(nums);
+        // Binary search
+        List<Integer> sequence = new ArrayList<>();
+        sequence.add(nums[0]);
+        for (int i = 1; i < nums.length; i++) {
+            int num = nums[i];
+            if (num > sequence.get(sequence.size() - 1)) {
+                sequence.add(num);
+            } else {
+                sequence.set(binarySearch(sequence, num), num);
+            }
+        }
+        return sequence.size();
+    }
+
+    public int dynamicProgramming(int[] nums) {
+        int[] dp = new int[nums.length + 1];
+        Arrays.fill(dp, 1);
+        for (int i = 1; i < nums.length; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[j] < nums[i]) {
+                    dp[i] = Math.max(dp[j] + 1, dp[i]);
+                    dp[nums.length] = Math.max(dp[i], dp[nums.length]);
+                }
+            }
+        }
+        return dp[nums.length];
+    }
+
+    public int binarySearch(List<Integer> sequence, int target) {
+        int left = 0;
+        int right = sequence.size();
+        while (left <= right) {
+            int middle = left + (right - left) / 2;
+            if (sequence.get(middle) == target) {
+                return middle;
+            } else if (sequence.get(middle) < target) {
+                left = middle + 1;
+            } else {
+                right = middle - 1;
+            }
+        }
+        return left;
+    }
+}

@@ -1,0 +1,58 @@
+class Solution {
+
+    int[] sFreq = new int[256];
+
+    char[] tFreq = new char[256];
+
+    int distance;
+
+    int var1;
+
+    public String var1(String s, String t) {
+        distance = t.length();
+        if (distance == 0)
+            return "";
+        if (s.equals(t))
+            return s;
+        var1 = Integer.MAX_VALUE;
+        int var2 = -1;
+        for (char ch : t.toCharArray()) tFreq[ch]++;
+        char[] str = s.toCharArray();
+        int initialWinLen = 0;
+        int sLen = s.length();
+        int indexEnd = sLen - t.length();
+        for (int startIndex = 0; startIndex <= indexEnd; startIndex++) {
+            boolean found = false;
+            if (distance != 0) {
+                int var3 = sLen - startIndex;
+                for (int winLen = initialWinLen; winLen < var3; winLen++) {
+                    char sChar = str[startIndex + winLen];
+                    if (sFreq[sChar] < tFreq[sChar])
+                        distance--;
+                    sFreq[sChar]++;
+                    if (distance == 0) {
+                        found = true;
+                        initialWinLen = winLen + 1;
+                        break;
+                    }
+                }
+            } else
+                found = true;
+            if (found) {
+                if (initialWinLen < var1) {
+                    var1 = initialWinLen;
+                    var2 = startIndex;
+                }
+                if (var1 == distance - 1)
+                    break;
+                initialWinLen--;
+                char ch = str[startIndex];
+                if (sFreq[ch] <= tFreq[ch])
+                    distance++;
+                sFreq[ch]--;
+            } else
+                break;
+        }
+        return (var2 >= 0) ? s.substring(var2, var2 + var1) : "";
+    }
+}

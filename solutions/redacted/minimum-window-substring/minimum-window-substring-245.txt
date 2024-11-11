@@ -1,0 +1,38 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s.isEmpty() || t.isEmpty() || t.length() > s.length()) {
+            return "";
+        }
+        int l = 0, r = 0;
+        int rl = 0, rr = s.length();
+        String ans = "";
+        Map<Character, Integer> map = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        int count = t.length();
+        while (r < s.length()) {
+            char ch = s.charAt(r);
+            if (map.containsKey(ch)) {
+                map.put(ch, map.getOrDefault(ch, 0) - 1);
+                if (map.get(ch) >= 0)
+                    count--;
+            }
+            if (count == 0) {
+                while (!map.containsKey(s.charAt(l)) || map.get(s.charAt(l)) < 0) {
+                    if (map.containsKey(s.charAt(l))) {
+                        map.put(s.charAt(l), map.get(s.charAt(l)) + 1);
+                    }
+                    l++;
+                }
+                if ((r - l + 1) < (rr - rl + 1)) {
+                    rr = r;
+                    rl = l;
+                }
+            }
+            r++;
+        }
+        return (rr - rl + 1) > s.length() ? "" : s.substring(rl, rr + 1);
+    }
+}

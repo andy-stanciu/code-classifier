@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        int[] in = new int[numCourses];
+        List<Integer>[] gp = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            gp[i] = new ArrayList<Integer>();
+        }
+        for (int[] p : prerequisites) {
+            int src = p[0];
+            int des = p[1];
+            gp[des].add(src);
+            in[src]++;
+        }
+        LinkedList<Integer> q = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (in[i] == 0) {
+                q.add(i);
+            }
+        }
+        int count = 0;
+        while (!q.isEmpty()) {
+            int p = q.pollFirst();
+            count++;
+            for (int x : gp[p]) {
+                in[x]--;
+                if (in[x] == 0) {
+                    q.addLast(x);
+                }
+            }
+        }
+        if (count != numCourses)
+            return false;
+        return true;
+    }
+}

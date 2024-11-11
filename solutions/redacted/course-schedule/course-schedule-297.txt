@@ -1,0 +1,35 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        int[] indegree = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            int a = prerequisite[0];
+            int b = prerequisite[1];
+            adj.get(b).add(a);
+            indegree[a]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        int nodesVisited = 0;
+        // Push all the nodes with indegree zero in the queue.
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            nodesVisited++;
+            for (int adjacent : adj.get(node)) {
+                indegree[adjacent]--;
+                if (indegree[adjacent] == 0) {
+                    q.add(adjacent);
+                }
+            }
+        }
+        return nodesVisited == param1;
+    }
+}

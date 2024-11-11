@@ -1,0 +1,36 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s == null || t == null || s.length() < t.length())
+            return "";
+        int length = Integer.MAX_VALUE, sIdx = -1, count = 0;
+        int left = 0, right = 0;
+        HashMap<Character, Integer> hm = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            hm.put(t.charAt(i), hm.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        while (right < s.length()) {
+            if (hm.containsKey(s.charAt(right))) {
+                if (hm.get(s.charAt(right)) > 0)
+                    count += 1;
+                hm.put(s.charAt(right), hm.getOrDefault(s.charAt(right), 0) - 1);
+            }
+            right++;
+            while (count == t.length()) {
+                if (length > right - left) {
+                    length = right - left;
+                    sIdx = left;
+                }
+                if (hm.containsKey(s.charAt(left))) {
+                    hm.put(s.charAt(left), hm.getOrDefault(s.charAt(left), 0) + 1);
+                    if (hm.get(s.charAt(left)) > 0)
+                        count -= 1;
+                }
+                left++;
+            }
+        }
+        if (sIdx == -1)
+            return "";
+        return s.substring(sIdx, sIdx + length);
+    }
+}

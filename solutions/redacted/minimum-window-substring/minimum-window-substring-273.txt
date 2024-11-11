@@ -1,0 +1,52 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int n = s.length();
+        if (t.length() > n)
+            return "";
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            char ch = t.charAt(i);
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        int requiredCount = t.length();
+        int i = 0, j = 0;
+        int var1 = Integer.MAX_VALUE;
+        int start_i = 0;
+        while (j < n) {
+            char curr = s.charAt(j);
+            // why requiredCount-- ? ---> because of you need to this character and i found this one
+            // so that\'s why i did it
+            if (map.containsKey(curr) && map.get(curr) > 0)
+                requiredCount--;
+            // it is done it\'s work everytime because of you got current character one time and that\'s why
+            // i decreace frequency by 1.
+            map.put(curr, map.getOrDefault(curr, 0) - 1);
+            // if you requiredCount == 0 it means now you don\'t need any more character of t in substrig of s
+            // so now try to find minimum length string in s which has all characters of t by using i variable
+            while (requiredCount == 0) {
+                int var2 = j - i + 1;
+                // if you get currentWindowSize is less then minWindowSize so storing start_i = i because of
+                // our answer is starting from here.
+                if (var1 > var2) {
+                    var1 = var2;
+                    start_i = i;
+                }
+                // if you traverse one by one from i index so it\'s means you remove s.charAt(i) from substring
+                // so that\'s why in future you need this character.
+                map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0) + 1);
+                // if map.get(s.charAt(i) > 0) it means you need this character that\'s why requiredCount++;
+                if (map.get(s.charAt(i)) > 0) {
+                    requiredCount++;
+                }
+                // iterate by i
+                i++;
+            }
+            // iterate by j
+            j++;
+        }
+        // if at the and still minWindowSize is +infinity so it means you did\'n get any string in s for your ans.
+        // so return empty string other wise return substring from start_i to minWindowSize
+        return (var1 == Integer.MAX_VALUE) ? "" : s.substring(start_i, start_i + var1);
+    }
+}

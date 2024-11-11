@@ -1,0 +1,29 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        int l = 0, r = 0, startIndex = -1;
+        int minLen = Integer.MAX_VALUE;
+        int count = 0;
+        int n = s.length();
+        int m = t.length();
+        for (int i = 0; i < t.length(); i++) map.put(t.charAt(i), map.getOrDefault(t.charAt(i), 0) + 1);
+        while (r < n) {
+            if (map.containsKey(s.charAt(r)) && map.get(s.charAt(r)) > 0)
+                count++;
+            map.put(s.charAt(r), map.getOrDefault(s.charAt(r), 0) - 1);
+            while (count == m) {
+                if (r - l + 1 < minLen) {
+                    minLen = r - l + 1;
+                    startIndex = l;
+                }
+                map.put(s.charAt(l), map.getOrDefault(s.charAt(l), 0) + 1);
+                if (map.get(s.charAt(l)) > 0)
+                    count--;
+                l++;
+            }
+            r++;
+        }
+        return (startIndex == -1) ? "" : s.substring(startIndex, startIndex + minLen);
+    }
+}

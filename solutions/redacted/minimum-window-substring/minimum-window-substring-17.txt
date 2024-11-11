@@ -1,0 +1,44 @@
+public class Solution {
+
+    public boolean checkInclusion(String s1, String s2) {
+        // If the length of s1 is greater than s2, s1 cannot be a permutation of any substring of s2
+        if (s1.length() > s2.length())
+            return false;
+        // Create a frequency map of characters in s1
+        Map<Character, Integer> charCountMap = new HashMap<>();
+        for (char c : s1.toCharArray()) {
+            charCountMap.put(c, charCountMap.getOrDefault(c, 0) + 1);
+        }
+        int requiredCharCount = charCountMap.size();
+        int left = 0, right = 0;
+        int currentCharCount = requiredCharCount;
+        // Iterate over s2 with the sliding window technique
+        while (right < s2.length()) {
+            char rightChar = s2.charAt(right);
+            // If rightChar is part of s1, decrease its count in the map
+            if (charCountMap.containsKey(rightChar)) {
+                charCountMap.put(rightChar, charCountMap.get(rightChar) - 1);
+                // If the count reaches zero, we have all the required characters for this particular character
+                if (charCountMap.get(rightChar) == 0)
+                    currentCharCount--;
+            }
+            right++;
+            // If we have all the required characters, try to reduce the window size from the left
+            while (currentCharCount == 0) {
+                char leftChar = s2.charAt(left);
+                // If the window size matches the size of s1, we have found a valid permutation
+                if (right - left == s1.length())
+                    return true;
+                // If leftChar is part of s1, increase its count back in the map
+                if (charCountMap.containsKey(leftChar)) {
+                    charCountMap.put(leftChar, charCountMap.get(leftChar) + 1);
+                    // If the count becomes positive, we need more of this character
+                    if (charCountMap.get(leftChar) > 0)
+                        currentCharCount++;
+                }
+                left++;
+            }
+        }
+        return false;
+    }
+}

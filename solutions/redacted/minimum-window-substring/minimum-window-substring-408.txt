@@ -1,0 +1,34 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int current = 0;
+        int start = 0;
+        int minLength = Integer.MAX_VALUE;
+        String res = "";
+        HashMap<Character, Integer> tmap = new HashMap<>();
+        HashMap<Character, Integer> smap = new HashMap<>();
+        if (t.length() > s.length())
+            return "";
+        for (int i = 0; i < t.length(); i++) {
+            tmap.put(t.charAt(i), tmap.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        int required = tmap.size();
+        for (int i = 0; i < s.length(); i++) {
+            smap.put(s.charAt(i), smap.getOrDefault(s.charAt(i), 0) + 1);
+            if (tmap.containsKey(s.charAt(i)) && tmap.get(s.charAt(i)).equals(smap.get(s.charAt(i)))) {
+                current++;
+            }
+            while (current == required) {
+                if (minLength > i - start + 1) {
+                    minLength = i - start + 1;
+                    res = s.substring(start, i + 1);
+                }
+                if (tmap.containsKey(s.charAt(start)) && tmap.get(s.charAt(start)).equals(smap.get(s.charAt(start))))
+                    current--;
+                smap.put(s.charAt(start), smap.getOrDefault(s.charAt(start), 0) - 1);
+                start++;
+            }
+        }
+        return res;
+    }
+}

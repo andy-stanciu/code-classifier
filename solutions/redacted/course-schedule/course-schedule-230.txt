@@ -1,0 +1,45 @@
+class Solution {
+
+    //cycle detect bfs - without Kahns
+    // problem : each time we have to unvisit vis , to accomodate case when
+    // 0 -> null
+    // 1 -> 0
+    // so first by going to 0 , it will be marked vis , and at 1 it will see 0 as vis and return false (wrong)
+    // but when we univist vis , each time it has to go to all over graph , and repeated subproblems will be there , hence Kahns alogrithm will help us avoid that.
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int n = param1;
+        ArrayList<Integer>[] graph = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] p : prerequisites) {
+            graph[p[1]].add(p[0]);
+        }
+        // for(int i=0 ; i<numCourses ; i++){
+        //     System.out.print(i +" -> ");
+        //     for(int node : graph[i]){
+        //         System.out.print(node +", ");
+        //     }
+        //     System.out.println();
+        // }
+        int[] vis = new int[n];
+        for (int i = 0; i < n; i++) {
+            if (vis[i] == 0) {
+                //not vis yet
+                Queue<Integer> q = new LinkedList<>();
+                q.add(i);
+                while (!q.isEmpty()) {
+                    int curr = q.poll();
+                    vis[i] = 1;
+                    for (int next : graph[curr]) {
+                        if (vis[next] == 1)
+                            return false;
+                        q.add(next);
+                    }
+                    vis[i] = 0;
+                }
+            }
+        }
+        return true;
+    }
+}

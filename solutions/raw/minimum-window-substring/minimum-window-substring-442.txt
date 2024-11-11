@@ -1,0 +1,44 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (s == null || s.length() == 0 || t == null || t.length() == 0) {
+            return "";
+        }
+        // Create character frequency maps for strings s and t
+        Map<Character, Integer> tMap = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            tMap.put(c, tMap.getOrDefault(c, 0) + 1);
+        }
+        int left = 0;
+        int minLen = Integer.MAX_VALUE;
+        int minLeft = 0;
+        int count = 0;
+        // Create a character frequency map for the current window
+        Map<Character, Integer> windowMap = new HashMap();
+        for (int right = 0; right < s.length(); right++) {
+            char c = s.charAt(right);
+            // Update the windowMap
+            windowMap.put(c, windowMap.getOrDefault(c, 0) + 1);
+            // If the current character is in t and its frequency in the window is equal to or greater than its frequency in t
+            if (tMap.containsKey(c) && windowMap.get(c) <= tMap.get(c)) {
+                count++;
+            }
+            // If all characters in t are found in the current window
+            while (count == t.length()) {
+                // Update the minimum window length and left pointer
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    minLeft = left;
+                }
+                // Move the left pointer to shrink the window
+                char leftChar = s.charAt(left);
+                windowMap.put(leftChar, windowMap.get(leftChar) - 1);
+                if (tMap.containsKey(leftChar) && windowMap.get(leftChar) < tMap.get(leftChar)) {
+                    count--;
+                }
+                left++;
+            }
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + minLen);
+    }
+}

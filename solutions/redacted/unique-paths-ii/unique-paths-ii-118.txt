@@ -1,0 +1,43 @@
+class Solution {
+
+    public int method1(int[][] obstacleGrid) {
+        // Get the dimensions of the grid
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        // Create a 1D dp array to store the number of unique paths to each cell in the current row
+        int[] dp = new int[n];
+        // Initialize the starting position (top-left corner)
+        dp[0] = obstacleGrid[0][0] == 1 ? 0 : 1;
+        // Iterate through each cell in the grid
+        for (int i = 0; i < m; i++) {
+            // Temporary array for the current row
+            int[] temp = new int[n];
+            for (int j = 0; j < n; j++) {
+                // If the current cell contains an obstacle, set its paths to 0
+                if (obstacleGrid[i][j] == 1) {
+                    temp[j] = 0;
+                } else {
+                    // If it\'s the first cell in the row
+                    if (j == 0) {
+                        temp[j] = dp[j];
+                    } else {
+                        // Calculate paths from the left and the top cells
+                        temp[j] = dp[j] + temp[j - 1];
+                    }
+                }
+            }
+            // Update dp array with the current row\'s values
+            dp = temp;
+        }
+        // Return the number of unique paths to the bottom-right corner
+        return dp[n - 1];
+    }
+}
+/*
+Time Complexity: O(m * n)
+- We iterate through each cell in the grid exactly once.
+- Thus, the time complexity is O(m * n).
+
+Space Complexity: O(n)
+- The space complexity is reduced to O(n) because we use a 1D array to store only the current row\'s path counts.
+*/

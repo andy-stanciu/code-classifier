@@ -1,0 +1,49 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s == null || t == null || s.length() < t.length()) {
+            return "";
+        }
+        // Map to count characters in t
+        Map<Character, Integer> countMap = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            countMap.put(ch, countMap.getOrDefault(ch, 0) + 1);
+        }
+        int left = 0;
+        int right = 0;
+        int formed = 0;
+        int start = 0;
+        int required = countMap.size();
+        int minLen = Integer.MAX_VALUE;
+        // Map to count characters in the current window
+        Map<Character, Integer> var1 = new HashMap<>();
+        // Sliding window
+        while (right < s.length()) {
+            char c = s.charAt(right);
+            var1.put(c, var1.getOrDefault(c, 0) + 1);
+            // Check if current character c is part of t and its count matches
+            if (countMap.containsKey(c) && var1.get(c).intValue() == countMap.get(c).intValue()) {
+                formed++;
+            }
+            // Try to contract the window until it ceases to be \'desirable\'
+            while (left <= right && formed == required) {
+                c = s.charAt(left);
+                // Update minimum length and starting index if needed
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    start = left;
+                }
+                // Remove the leftmost character from the window
+                var1.put(c, var1.get(c) - 1);
+                // Check if we need to decrement formed
+                if (countMap.containsKey(c) && var1.get(c).intValue() < countMap.get(c).intValue()) {
+                    formed--;
+                }
+                left++;
+            }
+            right++;
+        }
+        // Return the minimum window substring or empty string
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(start, start + minLen);
+    }
+}

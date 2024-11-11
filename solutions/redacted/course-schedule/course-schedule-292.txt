@@ -1,0 +1,51 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> graph = createGraph(prerequisites);
+        return !isCycle(graph, param1);
+    }
+
+    public Map<Integer, List<Integer>> createGraph(int[][] prerequisites) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int i = 0; i < prerequisites.length; i++) {
+            int src = prerequisites[i][1];
+            int dest = prerequisites[i][0];
+            graph.putIfAbsent(src, new ArrayList<>());
+            graph.get(src).add(dest);
+        }
+        return graph;
+    }
+
+    public boolean isCycle(Map<Integer, List<Integer>> graph, int param1) {
+        boolean[] visited = new boolean[param1];
+        boolean[] stack = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                if (detectCycle(graph, i, visited, stack)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean detectCycle(Map<Integer, List<Integer>> graph, int curr, boolean[] visited, boolean[] stack) {
+        visited[curr] = true;
+        stack[curr] = true;
+        if (graph.containsKey(curr)) {
+            for (int i = 0; i < graph.get(curr).size(); i++) {
+                int neighbour = graph.get(curr).get(i);
+                if (stack[neighbour] == true) {
+                    return true;
+                }
+                if (!visited[neighbour]) {
+                    if (detectCycle(graph, neighbour, visited, stack)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        stack[curr] = false;
+        return false;
+    }
+}

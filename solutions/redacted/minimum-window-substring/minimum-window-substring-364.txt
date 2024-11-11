@@ -1,0 +1,53 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int m = s.length();
+        int n = t.length();
+        int[] freq = new int[60];
+        for (int i = 0; i < n; i++) {
+            char ch = t.charAt(i);
+            int index = (int) ch - 65;
+            freq[index] += 1;
+        }
+        int count = 0;
+        for (int i = 0; i < 60; i++) {
+            if (freq[i] != 0)
+                count++;
+        }
+        int start = 0;
+        int end = 0;
+        int min = Integer.MAX_VALUE;
+        String min_string = "";
+        int[] visited = new int[60];
+        while (end < m) {
+            char ch = s.charAt(end);
+            int index = (int) ch - 65;
+            visited[index] += 1;
+            if (freq[index] != 0) {
+                if (visited[index] == freq[index])
+                    count--;
+            }
+            if (count == 0) {
+                while (start <= end) {
+                    char ch2 = s.charAt(start);
+                    int ind = (int) ch2 - 65;
+                    if (freq[ind] == 0)
+                        start++;
+                    else if (freq[ind] <= visited[ind] - 1) {
+                        visited[ind] -= 1;
+                        start++;
+                    } else {
+                        break;
+                    }
+                }
+                int length = end - start + 1;
+                if (length < min) {
+                    min = length;
+                    min_string = s.substring(start, end == m ? end : end + 1);
+                }
+            }
+            end++;
+        }
+        return min_string;
+    }
+}

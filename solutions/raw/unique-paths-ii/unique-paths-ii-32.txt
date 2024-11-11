@@ -1,0 +1,54 @@
+/*
+ The idea is the same one similar to the unique path I problem. Only the change is we have serveral obstacles introduced through which the robot cannot pass.
+ 
+ 1. Express in terms of index : here we can express in terms of row and col as the robot can go either down which changes the row and right which changes the column,
+ 2. Do stuff on index and take the min/max/total ways : 
+
+Here we need total paths. Just introduce an extra base case and yes the problem is done.
+
+The extra case is already provided in the problem that the robot cannot move through the obstacles.
+Thats it
+if (row >= 0 && col >= 0 && currentCell == 1) just return 0 as there is no more moves possible for the robot.
+
+Memoization solution straight way : 
+
+TC : O(M* N)
+SC : O(StackSpace) + O(M * N)
+
+*/
+class Solution {
+
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int row = obstacleGrid.length;
+        int col = obstacleGrid[0].length;
+        if (obstacleGrid[0][0] == 1) {
+            return 0;
+        }
+        if (obstacleGrid[row - 1][col - 1] == 1) {
+            return 0;
+        }
+        int[][] dp = new int[row][col];
+        for (int[] d : dp) {
+            Arrays.fill(d, -1);
+        }
+        return findPath(obstacleGrid, row - 1, col - 1, dp);
+    }
+
+    private int findPath(int[][] grid, int row, int col, int[][] dp) {
+        if (row == 0 && col == 0) {
+            return 1;
+        }
+        if (row >= 0 && col >= 0 && grid[row][col] == 1) {
+            return 0;
+        }
+        if (row < 0 || col < 0) {
+            return 0;
+        }
+        if (dp[row][col] != -1) {
+            return dp[row][col];
+        }
+        int up = findPath(grid, row - 1, col, dp);
+        int left = findPath(grid, row, col - 1, dp);
+        return dp[row][col] = up + left;
+    }
+}

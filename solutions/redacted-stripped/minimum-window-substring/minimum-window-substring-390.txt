@@ -1,0 +1,45 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int sLen = s.length();
+        int tLen = t.length();
+        if (tLen > sLen)
+            return "";
+        HashMap<Character, Integer> hm = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            hm.put(c, hm.getOrDefault(c, 0) + 1);
+        }
+        int i = 0;
+        int j = 0;
+        int res_len = Integer.MAX_VALUE;
+        int start = 0;
+        int end = 0;
+        int count = hm.size();
+        while (j < sLen) {
+            char c = s.charAt(j);
+            if (hm.containsKey(c)) {
+                hm.put(c, hm.get(c) - 1);
+                if (hm.get(c) == 0) {
+                    count--;
+                }
+            }
+            while (count == 0) {
+                if (res_len > j - i + 1) {
+                    res_len = j - i + 1;
+                    start = i;
+                    end = j + 1;
+                }
+                char p = s.charAt(i);
+                if (hm.containsKey(p)) {
+                    hm.put(p, hm.get(p) + 1);
+                    if (hm.get(p) > 0) {
+                        count++;
+                    }
+                }
+                i++;
+            }
+            j++;
+        }
+        return s.substring(start, end);
+    }
+}

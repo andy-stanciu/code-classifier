@@ -1,0 +1,52 @@
+class Solution {
+
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        // Get the dimensions of the grid
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        // Create a 2D dp array to store the results of subproblems (memoization)
+        int[][] dp = new int[m][n];
+        // Initialize the dp array with -1 to indicate uncalculated states
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        // Call the helper function to calculate the number of unique paths
+        return helper(obstacleGrid, m - 1, n - 1, dp);
+    }
+
+    public int helper(int[][] grid, int row, int col, int[][] dp) {
+        // If out of bounds, return 0 as there are no valid paths
+        if (row < 0 || col < 0)
+            return 0;
+        // If there\'s an obstacle at the current cell, return 0 paths
+        if (grid[row][col] == 1)
+            return 0;
+        // If we reach the starting cell (0, 0), return 1 path
+        if (row == 0 && col == 0)
+            return 1;
+        // If the current state has been calculated before, return its value
+        if (dp[row][col] != -1)
+            return dp[row][col];
+        // Calculate paths from the left and the top cells
+        // Moving left
+        int left = helper(grid, row, col - 1, dp);
+        // Moving up
+        int up = helper(grid, row - 1, col, dp);
+        // Store the result in the dp array
+        dp[row][col] = left + up;
+        // Return the total number of unique paths from both directions
+        return dp[row][col];
+    }
+}
+/*
+Time Complexity: O(m * n)
+- Each cell is visited once, and its result is stored in the dp array.
+- Subsequent visits to a cell return the stored result in O(1) time.
+- Thus, the time complexity is O(m * n).
+
+Space Complexity: O(m * n)
+- The space complexity is due to the memoization table (dp) of size m * n.
+- Additionally, the recursion stack depth could go up to m + n in the worst case, but the dp array dominates the space complexity.
+*/

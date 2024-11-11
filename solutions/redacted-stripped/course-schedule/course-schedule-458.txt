@@ -1,0 +1,57 @@
+class Solution {
+
+    public static class Edge {
+
+        int s;
+
+        int d;
+
+        Edge(int a, int b) {
+            s = a;
+            d = b;
+        }
+    }
+
+    public static void create(ArrayList<Edge>[] graph, int n, int[][] all) {
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<Edge>();
+        }
+        for (int i = 0; i < all.length; i++) {
+            graph[all[i][0]].add(new Edge(all[i][0], all[i][1]));
+        }
+    }
+
+    public static boolean cycle(ArrayList<Edge>[] graph, boolean[] vis, boolean[] rec, int curr) {
+        vis[curr] = true;
+        rec[curr] = true;
+        for (int i = 0; i < graph[curr].size(); i++) {
+            if (!vis[graph[curr].get(i).d]) {
+                if (cycle(graph, vis, rec, graph[curr].get(i).d)) {
+                    return true;
+                }
+            } else if (rec[graph[curr].get(i).d]) {
+                return true;
+            }
+        }
+        rec[curr] = false;
+        return false;
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        if (param1 == 0 || param1 == 1 || prerequisites.length == 0) {
+            return true;
+        }
+        ArrayList<Edge>[] graph = new ArrayList[param1];
+        create(graph, param1, prerequisites);
+        boolean[] vis1 = new boolean[param1];
+        boolean[] rec = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!vis1[i]) {
+                if (cycle(graph, vis1, rec, i)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}

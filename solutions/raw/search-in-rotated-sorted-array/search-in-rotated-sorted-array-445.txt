@@ -1,0 +1,41 @@
+class Solution {
+
+    public int search(int[] nums, int target) {
+        int n = nums.length;
+        int low = 0, high = n - 1;
+        int idx = 0;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            int prev = (mid + n - 1) % n;
+            int next = (mid + 1) % n;
+            if (nums[mid] <= nums[prev] && nums[mid] <= nums[next]) {
+                idx = mid;
+                break;
+            } else if (nums[mid] >= nums[low] && nums[mid] >= nums[high]) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        int left = bs(nums, target, 0, idx - 1);
+        int right = bs(nums, target, idx, n - 1);
+        if (left != -1) {
+            return left;
+        }
+        return right;
+    }
+
+    public int bs(int[] nums, int target, int low, int high) {
+        if (low > high) {
+            return -1;
+        }
+        int mid = low + (high - low) / 2;
+        if (nums[mid] == target) {
+            return mid;
+        } else if (nums[mid] < target) {
+            return bs(nums, target, mid + 1, high);
+        } else {
+            return bs(nums, target, low, mid - 1);
+        }
+    }
+}

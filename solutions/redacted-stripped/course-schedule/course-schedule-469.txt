@@ -1,0 +1,45 @@
+class Solution {
+
+    private boolean[] visited;
+
+    private boolean[] onPath;
+
+    private boolean hasCycle = false;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<Integer>[] graph = buildGraph(param1, prerequisites);
+        visited = new boolean[param1];
+        onPath = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            dfsCheckCycle(graph, i);
+        }
+        return !hasCycle;
+    }
+
+    private void dfsCheckCycle(List<Integer>[] graph, int node) {
+        if (onPath[node]) {
+            hasCycle = true;
+        }
+        if (onPath[node] || visited[node]) {
+            return;
+        }
+        onPath[node] = true;
+        visited[node] = true;
+        for (int next : graph[node]) {
+            dfsCheckCycle(graph, next);
+        }
+        onPath[node] = false;
+    }
+
+    private List<Integer>[] buildGraph(int param1, int[][] prerequisites) {
+        List<Integer>[] graph = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] pre : prerequisites) {
+            int from = pre[1], to = pre[0];
+            graph[from].add(to);
+        }
+        return graph;
+    }
+}

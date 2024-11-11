@@ -1,0 +1,29 @@
+class Solution {
+
+    public List<String> method1(int n) {
+        List<String> result = new ArrayList<>();
+        HashMap<String, Integer> parenthesis = new HashMap<>();
+        parenthesis.put("(", 0);
+        parenthesis.put(")", 0);
+        backtrack(new StringBuilder(), parenthesis, n, result);
+        return result;
+    }
+
+    public void backtrack(StringBuilder path, HashMap<String, Integer> parenthesis, int n, List<String> result) {
+        if (parenthesis.get(")") + parenthesis.get("(") == n * 2) {
+            result.add(path.toString());
+            return;
+        }
+        for (String key : parenthesis.keySet()) {
+            parenthesis.put(key, parenthesis.get(key) + 1);
+            if (parenthesis.get(key) > n || parenthesis.get(")") > parenthesis.get("(")) {
+                parenthesis.put(key, parenthesis.get(key) - 1);
+                continue;
+            }
+            path.append(key);
+            backtrack(path, parenthesis, n, result);
+            path.deleteCharAt(path.length() - 1);
+            parenthesis.put(key, parenthesis.get(key) - 1);
+        }
+    }
+}

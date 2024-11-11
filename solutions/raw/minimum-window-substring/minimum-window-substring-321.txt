@@ -1,0 +1,42 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        int minWindowSize = Integer.MAX_VALUE;
+        int requiredCount = t.length();
+        int startOfString = 0;
+        int endOfString = 0;
+        int i = 0, j = 0;
+        while (j < s.length()) {
+            char currChar = s.charAt(j);
+            // checking if the char is present in t and its frequency is greater than 0 then only we subtract 1 from requiredCount.
+            if (map.containsKey(currChar) && map.get(currChar) > 0) {
+                requiredCount--;
+            }
+            map.put(currChar, map.getOrDefault(currChar, 0) - 1);
+            // if requiredCount == 0 , means we have all the required Character , we get one window and we try to minimize as small as possible.
+            while (requiredCount == 0) {
+                int currWindowSize = j - i + 1;
+                if (currWindowSize < minWindowSize) {
+                    startOfString = i;
+                    endOfString = j;
+                    minWindowSize = currWindowSize;
+                }
+                // if charAtI present in t, then we increase the requiredCount by 1 and do i++. if now we just do i++, and we calculate the window size.
+                char at_i = s.charAt(i);
+                map.put(at_i, map.get(at_i) + 1);
+                if (map.get(at_i) > 0) {
+                    requiredCount++;
+                }
+                i++;
+            }
+            j++;
+        }
+        return minWindowSize == Integer.MAX_VALUE ? "" : s.substring(startOfString, endOfString + 1);
+    }
+}

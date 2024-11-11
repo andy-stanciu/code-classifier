@@ -1,0 +1,49 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int n = t.length();
+        Map<Character, Integer> tmap = new HashMap<>();
+        Map<Character, Integer> smap = new HashMap<>();
+        //crreating frequency map for t
+        for (int i = 0; i < n; i++) {
+            char currentChar = t.charAt(i);
+            tmap.put(currentChar, tmap.getOrDefault(currentChar, 0) + 1);
+        }
+        //no of charcter we need
+        int need = 0;
+        //left counter
+        int l = 0;
+        // Initialize ans with a maximum value
+        int[] ans = { 0, Integer.MAX_VALUE };
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            //creating freq map for s ans puting charcter from s in smap which also exsists in tmap also
+            if (tmap.containsKey(ch)) {
+                smap.put(ch, smap.getOrDefault(ch, 0) + 1);
+                if (smap.get(ch).equals(tmap.get(ch))) {
+                    need++;
+                }
+            }
+            //when we get the needing charcters
+            while (need == tmap.size()) {
+                // Updating ans
+                int curRes = i - l + 1;
+                if (curRes < ans[1] - ans[0]) {
+                    ans[0] = l;
+                    ans[1] = i + 1;
+                }
+                //shrinking the window becz we need to find min len window
+                char popLeft = s.charAt(l);
+                if (smap.containsKey(popLeft)) {
+                    smap.put(popLeft, smap.get(popLeft) - 1);
+                    //checking that if poping elemnt extist in tmap we also decrease need
+                    if (smap.get(popLeft) < tmap.get(popLeft)) {
+                        need--;
+                    }
+                }
+                l++;
+            }
+        }
+        return ans[1] == Integer.MAX_VALUE ? "" : s.substring(ans[0], ans[1]);
+    }
+}

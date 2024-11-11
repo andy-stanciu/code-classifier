@@ -1,0 +1,52 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        //return solve(nums, -1, 0);
+        // int dp[][] = new int[nums.length][nums.length+1];
+        // for(int [] row: dp){
+        //     Arrays.fill(row, -1);
+        // }
+        // return solveMem(nums, -1,0, dp);
+        int[] lis = new int[nums.length];
+        //initially every element is a subsequence of its own so initializing with 1
+        Arrays.fill(lis, 1);
+        //now starting from the end we keep on updating the max length of subsequence possible
+        for (int i = nums.length - 1; i >= 0; i--) {
+            //for ith element we check if by including any element from the array having index j
+            //results in a longer subsequence
+            for (int j = i + 1; j < nums.length; j++) {
+                //if yes then we update the value for lis possible by considering i th element.
+                if (nums[j] > nums[i]) {
+                    lis[i] = Math.max(lis[i], 1 + lis[j]);
+                }
+            }
+        }
+        //returning the max value
+        Arrays.sort(lis);
+        return lis[lis.length - 1];
+    }
+
+    public int solve(int[] nums, int prev, int curr) {
+        if (curr == nums.length)
+            return 0;
+        int take = 0;
+        //prev = -1 when function called for the first time so we may consider taking the first element.
+        //for the rest of the cases we check the condition.
+        if (prev == -1 || nums[prev] < nums[curr])
+            take = 1 + solve(nums, curr, curr + 1);
+        int notTake = solve(nums, prev, curr + 1);
+        return Math.max(take, notTake);
+    }
+
+    public int solveMem(int[] nums, int prev, int curr, int[][] dp) {
+        if (curr == nums.length)
+            return 0;
+        if (dp[curr][prev + 1] != -1)
+            return dp[curr][prev + 1];
+        int take = 0;
+        if (prev == -1 || nums[prev] < nums[curr])
+            take = 1 + solveMem(nums, curr, curr + 1, dp);
+        int notTake = solveMem(nums, prev, curr + 1, dp);
+        return dp[curr][prev + 1] = Math.max(take, notTake);
+    }
+}

@@ -1,0 +1,35 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] val : prerequisites) {
+            adjList.get(val[0]).add(val[1]);
+        }
+        int[] vis = new int[param1];
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < param1; i++) {
+            if (vis[i] == 0) {
+                if (!dfs(i, vis, st, adjList))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(int node, int[] vis, Stack<Integer> st, List<List<Integer>> adjList) {
+        vis[node] = 1;
+        for (int neighbor : adjList.get(node)) {
+            if (vis[neighbor] == 1)
+                return false;
+            if (vis[neighbor] == 0 && !dfs(neighbor, vis, st, adjList)) {
+                return false;
+            }
+        }
+        vis[node] = 2;
+        st.push(node);
+        return true;
+    }
+}

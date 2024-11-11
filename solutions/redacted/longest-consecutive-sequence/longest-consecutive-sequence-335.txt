@@ -1,0 +1,37 @@
+class Solution {
+
+    public int method1(int[] nums) {
+        // maps an element to curr length of consecutive nums
+        HashMap<Integer, Integer> hm = new HashMap<>();
+        int var1 = 0;
+        for (int n : nums) {
+            if (hm.containsKey(n))
+                continue;
+            boolean hasLeft = hm.containsKey(n - 1);
+            boolean hasRight = hm.containsKey(n + 1);
+            // might be null
+            Integer leftDist = hm.get(n - 1);
+            Integer rightDist = hm.get(n + 1);
+            int newDist = 1;
+            // 10 1, 11
+            if (hasRight && hasLeft) {
+                // if new element is in middle
+                // need to update both ends, but no need to update anything else
+                newDist = 1 + leftDist + rightDist;
+                hm.put(n - leftDist, newDist);
+                hm.put(n + rightDist, newDist);
+            } else if (hasRight) {
+                // if n is at the leftsome of chain
+                newDist = 1 + rightDist;
+                hm.put(n + rightDist, newDist);
+            } else if (hasLeft) {
+                newDist = 1 + leftDist;
+                hm.put(n - leftDist, newDist);
+            }
+            // hash current element
+            hm.put(n, newDist);
+            var1 = Math.max(newDist, var1);
+        }
+        return var1;
+    }
+}

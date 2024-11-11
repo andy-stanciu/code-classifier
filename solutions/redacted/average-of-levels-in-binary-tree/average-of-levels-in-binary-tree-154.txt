@@ -1,0 +1,22 @@
+class Solution {
+
+    public List<Double> method1(TreeNode root) {
+        List<Double> ans = new ArrayList<>();
+        if (root == null)
+            return ans;
+        List<TreeNode> buffer = new ArrayList<>();
+        buffer.add(root);
+        while (!buffer.isEmpty()) {
+            Double sum = buffer.stream().map(it -> it.val).map(Integer::doubleValue).reduce(0.0, Double::sum);
+            ans.add(sum / buffer.size());
+            List<TreeNode> temps = buffer.stream().map(it -> {
+                final TreeNode left = it.left;
+                final TreeNode right = it.right;
+                return Arrays.asList(left, right);
+            }).flatMap(Collection::stream).filter(Objects::nonNull).collect(Collectors.toList());
+            buffer.clear();
+            buffer.addAll(temps);
+        }
+        return ans;
+    }
+}

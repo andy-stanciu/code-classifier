@@ -1,0 +1,131 @@
+class Solution {
+
+    /**
+     *        Implemented various solutions
+     *        1. recursive() is highly unoptimised solution where it checks if
+     *        every element can be picked or not picked to form a longest subsequence
+     *
+     *        2. optimisedRecursive() returns max LIS that can be formed starting from index i.
+     *        It starts from end and comes to 0th index
+     *        LIS of last element of array will be size 1 as it cant extend further in right
+     *        LIST of last -1 element will be max of ( 1 or 1 + LIS(last element))
+     *        1 because if thats the max its LIS can have or it can be extended with last element
+     *        similarly, LIS[i] = max(1, 1 + LIS[i + 1], 1 + LIS[i + 2].. )
+     *            provided nums[i + 1] > nums[i], nums[i + 2] > nums[i] so that it can form a LIS
+     *        We run this optimisedRecursive() for every index and then return max found so far
+     *
+     *        3. Iterative solution uses optimisedRecursive() logic without stack. It initially
+     *        puts all LIS as 1 in an array. It then starts from end and checks if LIS can be increased.
+     *        It uses same formula as optimisedRecursive() and computes LIS of every index, that is
+     *        max LIS that can be formed if it started from index i. Later we compute max of these LISs
+     *        and return the answer
+     */
+    public int lengthOfLIS(int[] nums) {
+        // O(2n) time complexity, O(n) space
+        // return recursive(nums, 0, -1);
+        // O(n2) time complexity O(n) space O(n) stack space
+        /**
+         *        int ans = 0;
+         *        for (int i = 0; i < nums.length; i++) {
+         *            ans = Math.max(ans, optimisedRecursive(nums, i));
+         *        }
+         *        return ans;
+         */
+        /**
+         *        // O(n2) time O(n) space
+         *
+         *        // this array says max LIS size that can be formed starting from index i.
+         *        int[] LIS = new int[nums.length];
+         *        // least possible LIS from any index is of size 1
+         *        Arrays.fill(LIS, 1);
+         *
+         *        int ans = 0;
+         *
+         *        // start from end index
+         *        for (int i = nums.length - 1; i >= 0; i--) {
+         *            // check if any index greater than current index i, whose num in array is
+         *            // bigger than nums[i] and has a LIS of size bigger from that index.
+         *            // if so, maximise our current LIS[i]
+         *            for (int j = i + 1; j < nums.length; j++) {
+         *                if (nums[j] > nums[i]) {
+         *                    LIS[i] = Math.max(LIS[i], LIS[j] + 1);
+         *                }
+         *            }
+         *            ans = Math.max(ans, LIS[i]);
+         *        }
+         *        return ans;
+         */
+        // Binary Search based O(nlogn) time O(n) space
+        List<Integer> lis = new ArrayList<>();
+        lis.add(nums[0]);
+        for (int i = 1; i < nums.length; i++) {
+            int num = nums[i];
+            if (num > lis.get(lis.size() - 1)) {
+                lis.add(num);
+            } else {
+                lis.set(findPos(lis, num), num);
+            }
+        }
+        return lis.size();
+    }
+
+    // lower bound search of num in array of LIS
+    private int findPos(List<Integer> lis, int num) {
+        int low = 0, high = lis.size() - 1, mid, ans = -1;
+        while (low <= high) {
+            mid = low + (high - low) / 2;
+            if (lis.get(mid) >= num) {
+                ans = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return ans;
+    }
+
+    Map<Integer, Integer> LISMap = new HashMap<>();
+
+    // return max LIS that can be formed starting from index position
+    private int optimisedRecursive(int[] nums, int index) {
+        if (index == nums.length - 1) {
+            return 1;
+        } else if (LISMap.containsKey(index)) {
+            return LISMap.get(index);
+        } else {
+            // by just taking current element as part of LIS
+            int ans = 1;
+            // check if the next set of numbers after nums[index] can extend current LIS
+            // that is next set of numbers which are larger than current index number
+            // and have a LIS from that index greater than current.
+            for (int next = index + 1; next < nums.length; next++) {
+                if (nums[next] > nums[index]) {
+                    ans = Math.max(ans, 1 + optimisedRecursive(nums, next));
+                }
+            }
+            LISMap.put(index, ans);
+            // System.out.println("LIS of " + nums[index] + " " + ans);
+            return ans;
+        }
+    }
+
+    Map<String, Integer> seen = new HashMap<>();
+
+    private int recursive(int[] nums, int index, int lastVisitedIndex) {
+        if (index == nums.length) {
+            return 0;
+        }
+        String key = index + "-" + lastVisitedIndex;
+        if (seen.containsKey(key))
+            return seen.get(key);
+        int ans = 0;
+        // dont pick current number at index
+        ans = Math.max(ans, recursive(nums, index + 1, lastVisitedIndex));
+        // conditionally pick current number at index
+        if (lastVisitedIndex == -1 || nums[index] > nums[lastVisitedIndex]) {
+            ans = Math.max(ans, 1 + recursive(nums, index + 1, index));
+        }
+        seen.put(key, ans);
+        return ans;
+    }
+}

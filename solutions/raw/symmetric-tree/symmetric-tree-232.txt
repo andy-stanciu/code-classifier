@@ -1,0 +1,65 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public boolean isSymmetric(TreeNode root) {
+        // p is on the left side of the mirror
+        TreeNode p = root.left;
+        // q is on the right side
+        TreeNode q = root.right;
+        // supposed to be faster than stack
+        Deque<TreeNode> stack = new ArrayDeque<TreeNode>();
+        while ((p != null && q != null) || !stack.isEmpty()) {
+            // Both are not null
+            // we can compare their value
+            // but this impl is iterative
+            // so we must check for left and right side
+            // of children nodes first
+            // remember that is a mirror
+            // left compares with right
+            // right compares with left
+            while (p != null && q != null) {
+                // right last out
+                stack.push(q);
+                // left first out
+                stack.push(p);
+                // p moves to the left
+                p = p.left;
+                // q moves to the right (IS A MIRROR!!)
+                q = q.right;
+            }
+            // Node p is null or q is null
+            // the only case we can continue
+            // is when both are null
+            // in that case we need to go back
+            // in the tree (pop from the stack)
+            if (p == null && q == null) {
+                p = stack.pop();
+                q = stack.pop();
+                if (p.val != q.val) {
+                    // Compare values
+                    return false;
+                }
+                // now compare the right with left
+                p = p.right;
+                // if both are null then there is no more child nodes, pop from stack in next iteration
+                q = q.left;
+            } else
+                return false;
+        }
+        return p == q;
+    }
+}

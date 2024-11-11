@@ -1,0 +1,32 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        boolean[] vis = new boolean[numCourses];
+        boolean[] path = new boolean[numCourses];
+        Stack<Integer> s = new Stack<>();
+        for (int i = 0; i < numCourses; i++) adj.add(new ArrayList<>());
+        for (int i = 0; i < prerequisites.length; i++) adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        for (int i = 0; i < numCourses; i++) if (!vis[i])
+            if (dfs(i, adj, vis, path, s))
+                return false;
+        return numCourses == s.size();
+    }
+
+    public boolean dfs(int i, List<List<Integer>> adj, boolean[] vis, boolean[] path, Stack<Integer> s) {
+        if (// If the node is already in the current path, there\'s a cycle
+        path[i])
+            return true;
+        if (// If the node has already been visited, we don\'t need to explore it again
+        vis[i])
+            return false;
+        vis[i] = true;
+        path[i] = true;
+        for (int x : adj.get(i)) if (dfs(x, adj, vis, path, s))
+            return true;
+        // Backtrack
+        path[i] = false;
+        s.push(i);
+        return false;
+    }
+}

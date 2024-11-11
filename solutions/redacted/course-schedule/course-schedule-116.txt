@@ -1,0 +1,75 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        HashMap<Integer, Class1> map = new HashMap<Integer, Class1>();
+        HashMap<Integer, List<Integer>> prerekList = new HashMap<Integer, List<Integer>>();
+        for (int i = 0; i < param1; i++) {
+            Class1 c = new Class1(i);
+            map.put(i, c);
+        }
+        for (int[] p : prerequisites) {
+            Class1 c = map.get(p[0]);
+            c.addPrerex();
+            if (prerekList.containsKey(p[1])) {
+                (prerekList.get(p[1])).add(p[0]);
+            } else {
+                List<Integer> d = new ArrayList<Integer>();
+                d.add(p[0]);
+                prerekList.put(p[1], d);
+            }
+        }
+        // load minheap
+        PriorityQueue<Class1> minHeap = new PriorityQueue<Class1>(new Class2());
+        for (int i = 0; i < param1; i++) {
+            minHeap.offer(map.get(i));
+        }
+        while (!minHeap.isEmpty()) {
+            Class1 var1 = minHeap.poll();
+            if (var1.prerex != 0) {
+                return false;
+            }
+            // get all courses that depend on currentCourse
+            if (prerekList.containsKey(var1.var2)) {
+                List<Integer> children = prerekList.get(var1.var2);
+                // for each child in children, reduce prereq count since currentCourse can be taken
+                for (Integer c : children) {
+                    (map.get(c)).removePrerex();
+                    minHeap.remove(map.get(c));
+                    minHeap.offer(map.get(c));
+                }
+            }
+        }
+        return minHeap.isEmpty();
+    }
+
+    public class Class1 {
+
+        int var2;
+
+        int prerex;
+
+        Class1(int cn) {
+            var2 = cn;
+            prerex = 0;
+        }
+
+        public void addPrerex() {
+            prerex++;
+        }
+
+        public void removePrerex() {
+            prerex--;
+        }
+    }
+
+    public class Class2 implements Comparator<Class1> {
+
+        @Override
+        public int compare(Class1 a, Class1 b) {
+            if (a.prerex < b.prerex) {
+                return -1;
+            }
+            return 1;
+        }
+    }
+}

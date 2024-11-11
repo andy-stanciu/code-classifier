@@ -1,0 +1,42 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            map.put(i, new ArrayList<>());
+        }
+        createAdj(map, prerequisites);
+        boolean[] visited = new boolean[param1];
+        boolean[] visiting = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i] && hasCycle(map, i, visited, visiting)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean hasCycle(Map<Integer, List<Integer>> map, int curr, boolean[] visited, boolean[] visiting) {
+        if (visited[curr]) {
+            return false;
+        }
+        if (visiting[curr]) {
+            return true;
+        }
+        visiting[curr] = true;
+        for (int nbr : map.get(curr)) {
+            if (hasCycle(map, nbr, visited, visiting)) {
+                return true;
+            }
+        }
+        visiting[curr] = false;
+        visited[curr] = true;
+        return false;
+    }
+
+    private void createAdj(Map<Integer, List<Integer>> map, int[][] prerequisites) {
+        for (int i = 0; i < prerequisites.length; i++) {
+            map.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+    }
+}

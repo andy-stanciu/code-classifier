@@ -1,0 +1,31 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        int[] indegree = new int[param1];
+        for (int i = 0; i < param1; i++) adj.add(new ArrayList<>());
+        for (int[] pre : prerequisites) {
+            adj.get(pre[1]).add(pre[0]);
+            indegree[pre[0]]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        int count = 0;
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                queue.add(i);
+                count++;
+            }
+        }
+        while (!queue.isEmpty()) {
+            int node = queue.remove();
+            for (int nbr : adj.get(node)) {
+                indegree[nbr]--;
+                if (indegree[nbr] == 0) {
+                    queue.add(nbr);
+                    count++;
+                }
+            }
+        }
+        return count == param1;
+    }
+}

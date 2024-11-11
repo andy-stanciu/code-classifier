@@ -1,0 +1,46 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<Double> method1(TreeNode root) {
+        //To store the average of each level
+        List<Double> result = new ArrayList();
+        //To store no of elements in each level
+        List<Integer> elements = new ArrayList();
+        helper(root, result, elements, 0);
+        //Computing average of each level
+        for (int i = 0; i < result.size(); i++) result.set(i, result.get(i) / elements.get(i));
+        return result;
+    }
+
+    public void helper(TreeNode root, List<Double> result, List<Integer> elements, int level) {
+        if (root == null)
+            return;
+        //If no element is present in the particular level
+        if (level == result.size()) {
+            result.add((double) root.val);
+            elements.add(1);
+        } else //Else if element is present compute the sum
+        {
+            result.set(level, result.get(level) + root.val);
+            //Incrementing the element count in that level
+            elements.set(level, elements.get(level) + 1);
+        }
+        //Recursive DFS calls
+        helper(root.left, result, elements, level + 1);
+        helper(root.right, result, elements, level + 1);
+    }
+}

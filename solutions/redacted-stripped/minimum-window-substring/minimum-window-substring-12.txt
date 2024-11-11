@@ -1,0 +1,43 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (t.length() > s.length()) {
+            return "";
+        }
+        int min = Integer.MAX_VALUE;
+        int si = 0;
+        int cnt = 0;
+        int l = 0;
+        int r = 0;
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (char i : t.toCharArray()) {
+            map.put(i, map.getOrDefault(i, 0) + 1);
+        }
+        int required = t.length();
+        while (r < s.length()) {
+            char rightChar = s.charAt(r);
+            if (map.containsKey(rightChar)) {
+                if (map.get(rightChar) > 0) {
+                    cnt++;
+                }
+                map.put(rightChar, map.get(rightChar) - 1);
+            }
+            while (cnt == required) {
+                if (r - l + 1 < min) {
+                    min = r - l + 1;
+                    si = l;
+                }
+                char leftChar = s.charAt(l);
+                if (map.containsKey(leftChar)) {
+                    map.put(leftChar, map.get(leftChar) + 1);
+                    if (map.get(leftChar) > 0) {
+                        cnt--;
+                    }
+                }
+                l++;
+            }
+            r++;
+        }
+        return min == Integer.MAX_VALUE ? "" : s.substring(si, si + min);
+    }
+}

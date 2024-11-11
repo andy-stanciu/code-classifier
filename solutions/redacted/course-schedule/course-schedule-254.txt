@@ -1,0 +1,47 @@
+class Solution {
+
+    List<List<Integer>> graph;
+
+    boolean[] stack;
+
+    boolean[] visited;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        graph = new ArrayList<>();
+        stack = new boolean[param1];
+        visited = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] each : prerequisites) {
+            graph.get(each[0]).add(each[1]);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                if (isCyclic(i)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isCyclic(int param2) {
+        if (stack[param2]) {
+            return true;
+        }
+        if (visited[param2]) {
+            return false;
+        }
+        visited[param2] = true;
+        stack[param2] = true;
+        List<Integer> pre = graph.get(param2);
+        for (Integer e : pre) {
+            if (isCyclic(e)) {
+                return true;
+            }
+        }
+        stack[param2] = false;
+        return false;
+    }
+}

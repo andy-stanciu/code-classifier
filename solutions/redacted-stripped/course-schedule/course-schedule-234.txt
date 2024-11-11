@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            adjList.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        int[] indegree = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            for (int adj : adjList.get(i)) {
+                indegree[adj]++;
+            }
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        ArrayList<Integer> topoSort = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            int p = queue.poll();
+            topoSort.add(p);
+            for (int it : adjList.get(p)) {
+                indegree[it]--;
+                if (indegree[it] == 0) {
+                    queue.add(it);
+                }
+            }
+        }
+        return topoSort.size() == param1;
+    }
+}

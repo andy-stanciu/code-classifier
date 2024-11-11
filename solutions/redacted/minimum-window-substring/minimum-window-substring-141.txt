@@ -1,0 +1,37 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s.length() < t.length())
+            return "";
+        Map<Character, Integer> mapCount = new HashMap();
+        Map<Character, Integer> var1 = new HashMap();
+        int haveSame = 0, needSame = 0;
+        int l = 0;
+        int minLength = Integer.MAX_VALUE;
+        String method1 = "";
+        for (int i = 0; i < t.length(); i++) {
+            mapCount.put(t.charAt(i), mapCount.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        needSame = mapCount.size();
+        for (int r = 0; r < s.length(); r++) {
+            char rVal = s.charAt(r);
+            var1.put(rVal, var1.getOrDefault(rVal, 0) + 1);
+            if (mapCount.containsKey(rVal) && (var1.get(rVal).intValue() == mapCount.get(rVal).intValue())) {
+                haveSame++;
+            }
+            while (l <= r && haveSame == needSame) {
+                char lVal = s.charAt(l);
+                if (r - l + 1 < minLength) {
+                    minLength = r - l + 1;
+                    method1 = s.substring(l, r + 1);
+                }
+                var1.put(lVal, var1.get(lVal) - 1);
+                if (mapCount.containsKey(lVal) && (var1.get(lVal).intValue() < mapCount.get(lVal).intValue())) {
+                    haveSame--;
+                }
+                l++;
+            }
+        }
+        return method1;
+    }
+}

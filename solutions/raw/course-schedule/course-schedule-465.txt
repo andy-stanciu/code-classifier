@@ -1,0 +1,43 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // initialize an incoming array to keep track of inComing edges for each course
+        int[] inComingCourse = new int[numCourses];
+        // Initialize an adjacency list graph to reresent the course pre-requisite
+        // each course is a node, adn its pre-requisite are represented as edges in the list
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        // we will iterate through the pre-requisite array and build its edge and nodes
+        for (int[] pre : prerequisites) {
+            int course = pre[0];
+            int preCourse = pre[1];
+            // this will represent how many pre-requisite course has ....
+            inComingCourse[course]++;
+            // will determine that pre course has to be taken to complete the given course in this iteration ...
+            graph.get(preCourse).add(course);
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inComingCourse[i] == 0) {
+                // means there is no pre-requisite for this course
+                queue.offer(i);
+            }
+        }
+        int courseTaken = 0;
+        while (!queue.isEmpty()) {
+            int currentCourse = queue.poll();
+            courseTaken++;
+            for (int neighbour : graph.get(currentCourse)) {
+                // decrement since course is now taken, so one less course
+                inComingCourse[neighbour]--;
+                if (inComingCourse[neighbour] == 0) {
+                    queue.offer(neighbour);
+                }
+            }
+        }
+        // if total course taken is equal to num of courses that means all courses can be done ...
+        return courseTaken == numCourses;
+    }
+}

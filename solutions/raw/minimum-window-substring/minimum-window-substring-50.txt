@@ -1,0 +1,43 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        // Store t freq in map
+        // if curr char preset in map and > 0 pick and reduce freq map and increase count
+        // if count == t , compare windowSize, if start present in map, map freq inc
+        // shift left window till count == t
+        int n = s.length();
+        if (t.length() > n)
+            return "";
+        Map<Character, Integer> map = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        int minWindowSize = Integer.MAX_VALUE;
+        int windowStart = 0;
+        int count = 0;
+        int minLeft = 0;
+        for (int windowEnd = 0; windowEnd < n; windowEnd++) {
+            if (map.containsKey(s.charAt(windowEnd))) {
+                if (map.get(s.charAt(windowEnd)) > 0) {
+                    count++;
+                }
+                map.put(s.charAt(windowEnd), map.get(s.charAt(windowEnd)) - 1);
+            }
+            while (count == t.length()) {
+                int currWindow = windowEnd - windowStart + 1;
+                if (currWindow < minWindowSize) {
+                    minWindowSize = currWindow;
+                    minLeft = windowStart;
+                }
+                if (map.containsKey(s.charAt(windowStart))) {
+                    map.put(s.charAt(windowStart), map.get(s.charAt(windowStart)) + 1);
+                    if (map.get(s.charAt(windowStart)) > 0) {
+                        count--;
+                    }
+                }
+                windowStart++;
+            }
+        }
+        return minWindowSize == Integer.MAX_VALUE ? "" : s.substring(minLeft, minWindowSize + minLeft);
+    }
+}

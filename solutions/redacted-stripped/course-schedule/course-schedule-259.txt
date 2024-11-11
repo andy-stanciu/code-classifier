@@ -1,0 +1,39 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] pre) {
+        ArrayList<ArrayList<Integer>> al = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            al.add(new ArrayList<>());
+        }
+        for (int i = 0; i < pre.length; i++) {
+            al.get(pre[i][1]).add(pre[i][0]);
+        }
+        return topoSort(param1, al);
+    }
+
+    boolean topoSort(int num, ArrayList<ArrayList<Integer>> al) {
+        int[] indegree = new int[num];
+        for (int i = 0; i < num; i++) {
+            {
+                for (int u : al.get(i)) indegree[u]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < num; i++) {
+            if (indegree[i] == 0)
+                q.add(i);
+        }
+        int count = 0;
+        while (!q.isEmpty()) {
+            int u = q.poll();
+            for (int j : al.get(u)) {
+                if (--indegree[j] == 0)
+                    q.add(j);
+            }
+            count++;
+        }
+        if (count != num)
+            return false;
+        return true;
+    }
+}

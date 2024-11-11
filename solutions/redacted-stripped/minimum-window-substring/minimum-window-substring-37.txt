@@ -1,0 +1,46 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        String ans = "";
+        Map<Character, Integer> mapT = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            char c = t.charAt(i);
+            mapT.put(c, mapT.getOrDefault(c, 0) + 1);
+        }
+        int match = 0;
+        int desiredMatch = t.length();
+        Map<Character, Integer> mapS = new HashMap<>();
+        int i = -1, j = -1;
+        while (true) {
+            boolean loop1 = false, loop2 = false;
+            while (i < s.length() - 1 && match < desiredMatch) {
+                i++;
+                char c = s.charAt(i);
+                mapS.put(c, mapS.getOrDefault(c, 0) + 1);
+                if (mapS.getOrDefault(c, 0) <= mapT.getOrDefault(c, 0)) {
+                    match++;
+                }
+                loop1 = true;
+            }
+            while (j < i && match == desiredMatch) {
+                int potAns = i - j;
+                if (ans.length() == 0 || potAns < ans.length()) {
+                    ans = s.substring(j + 1, i + 1);
+                }
+                j++;
+                char c = s.charAt(j);
+                if (mapS.get(c) == 1)
+                    mapS.remove(c);
+                else
+                    mapS.put(c, mapS.get(c) - 1);
+                if (mapS.getOrDefault(c, 0) < mapT.getOrDefault(c, 0)) {
+                    match--;
+                }
+                loop2 = true;
+            }
+            if (!loop1 && !loop2)
+                break;
+        }
+        return ans;
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        if (param1 == 0) {
+            return true;
+        }
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] pair : prerequisites) {
+            graph.get(pair[1]).add(pair[0]);
+        }
+        boolean[] visited = new boolean[param1];
+        boolean[] restack = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i] && !dfs(graph, i, visited, restack)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean dfs(List<List<Integer>> graph, int node, boolean[] visited, boolean[] restack) {
+        if (restack[node]) {
+            return false;
+        }
+        if (visited[node]) {
+            return true;
+        }
+        visited[node] = true;
+        restack[node] = true;
+        for (int i : graph.get(node)) {
+            if (!dfs(graph, i, visited, restack)) {
+                return false;
+            }
+        }
+        restack[node] = false;
+        return true;
+    }
+}

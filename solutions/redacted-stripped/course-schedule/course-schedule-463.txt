@@ -1,0 +1,34 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>(param1);
+        List<Integer> indegree = new ArrayList<>(param1);
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+            indegree.add(0);
+        }
+        for (int[] var1 : prerequisites) {
+            graph.get(var1[1]).add(var1[0]);
+            indegree.set(var1[0], indegree.get(var1[0]) + 1);
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < graph.size(); i++) {
+            if (indegree.get(i) == 0) {
+                q.add(i);
+            }
+        }
+        int nodeVisited = 0;
+        while (!q.isEmpty()) {
+            Integer curr = q.poll();
+            List<Integer> nextList = graph.get(curr);
+            nodeVisited++;
+            for (Integer next : nextList) {
+                indegree.set(next, indegree.get(next) - 1);
+                if (indegree.get(next) == 0) {
+                    q.add(next);
+                }
+            }
+        }
+        return nodeVisited == param1;
+    }
+}

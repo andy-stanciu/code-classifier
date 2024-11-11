@@ -1,0 +1,44 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+/*
+  * Idea: At evry node, if thats to be included in the final path, 
+   1. Its either a root node  =>  maxSumTillNode = Math.max(root.val, root.val+l+r);
+   2. Its either at node in the path => Math.max(root.val, root.val+Math.max(l,r));
+   3. Its ending of that path => above cases will cover this case
+
+   Max SUM would be max of the above 3 cases, and checking for all the nodes.
+ */
+class Solution {
+
+    int maxSum = Integer.MIN_VALUE;
+
+    public int maxPathSum(TreeNode root) {
+        getMaxSum(root);
+        return maxSum;
+    }
+
+    int getMaxSum(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int l = getMaxSum(root.left);
+        int r = getMaxSum(root.right);
+        int maxSumTillNode = Math.max(root.val, root.val + l + r);
+        int maxSumContainingNode = Math.max(root.val, root.val + Math.max(l, r));
+        maxSum = Math.max(maxSum, Math.max(maxSumContainingNode, maxSumTillNode));
+        return maxSumContainingNode;
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    Map<Character, Integer> sCharacterCountMap = new HashMap<>();
+
+    Map<Character, Integer> tCharacterCountMap = new HashMap<>();
+
+    public String minWindow(String s, String t) {
+        int min_length = s.length();
+        int length = s.length();
+        for (Character c : t.toCharArray()) {
+            tCharacterCountMap.put(c, tCharacterCountMap.getOrDefault(c, 0) + 1);
+        }
+        int start = 0, end = 0;
+        int startIndex = 0, endIndex = 0;
+        while (start < length && end < length) {
+            while (end < length && !doesSContainAllTCharacters()) {
+                sCharacterCountMap.put(s.charAt(end), sCharacterCountMap.getOrDefault(s.charAt(end), 0) + 1);
+                end++;
+            }
+            while (start < end && doesSContainAllTCharacters()) {
+                if ((end - start) <= min_length) {
+                    min_length = end - start;
+                    startIndex = start;
+                    endIndex = end;
+                }
+                sCharacterCountMap.put(s.charAt(start), sCharacterCountMap.get(s.charAt(start)) - 1);
+                start++;
+            }
+        }
+        return s.substring(startIndex, endIndex);
+    }
+
+    boolean doesSContainAllTCharacters() {
+        for (Character c : tCharacterCountMap.keySet()) {
+            if (sCharacterCountMap.getOrDefault(c, 0) < tCharacterCountMap.getOrDefault(c, 0))
+                return false;
+        }
+        return true;
+    }
+}

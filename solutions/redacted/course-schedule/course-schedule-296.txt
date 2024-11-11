@@ -1,0 +1,46 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        // Store indegree of each course
+        int[] indegreeCount = new int[param1];
+        // Map to store dependencies
+        HashMap<Integer, List<Integer>> dependencyMap = new HashMap<>();
+        // Populate indegree count and dependency map
+        for (int[] prerequisite : prerequisites) {
+            int var1 = prerequisite[0];
+            int var2 = prerequisite[1];
+            indegreeCount[var1]++;
+            if (!dependencyMap.containsKey(var2)) {
+                dependencyMap.put(var2, new ArrayList<>());
+            }
+            dependencyMap.get(var2).add(var1);
+        }
+        // Queue for BFS
+        Queue<Integer> queue = new LinkedList<>();
+        // Initialize count of courses that can be completed
+        int var3 = 0;
+        // Add courses with no dependencies to the queue
+        for (int i = 0; i < param1; i++) {
+            if (indegreeCount[i] == 0) {
+                queue.add(i);
+                var3++;
+            }
+        }
+        // Perform BFS
+        while (!queue.isEmpty()) {
+            int var4 = queue.poll();
+            List<Integer> var5 = dependencyMap.get(var4);
+            if (var5 != null) {
+                for (int var6 : var5) {
+                    indegreeCount[var6]--;
+                    if (indegreeCount[var6] == 0) {
+                        queue.add(var6);
+                        var3++;
+                    }
+                }
+            }
+        }
+        // Check if all courses can be completed
+        return var3 == param1;
+    }
+}

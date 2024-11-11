@@ -1,0 +1,67 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+public class Solution {
+
+    /**
+     * Removes the nth node from the end of the list.
+     *
+     * @param head the head of the linked list
+     * @param n the position of the node to be removed from the end (1-based index)
+     * @return the head of the linked list after the nth node has been removed
+     */
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        // Base case: If the list is empty, return the head as is
+        if (head == null)
+            return head;
+        // If the list has only one node and we need to remove it, return null
+        if (head.next == null)
+            return null;
+        // Recursively traverse the list to find and remove the nth node from the end
+        int found = removeRecursive(head, n);
+        // If the nth node is the head of the list, move the head to the next node
+        if (found != -1) {
+            head = head.next;
+        }
+        return head;
+    }
+
+    /**
+     * Recursively traverses the list and returns the position of the node relative
+     * to the end of the list.
+     *
+     * @param node the current node in the list
+     * @param n the position of the node to be removed from the end (1-based index)
+     * @return the relative position of the current node from the end of the list
+     */
+    private int removeRecursive(ListNode node, int n) {
+        // Base case: If we\'ve reached the last node, return 1 as the position from the end
+        if (node.next == null) {
+            return 1;
+        }
+        // Recursively calculate the position of the next node
+        int partialLength = removeRecursive(node.next, n);
+        // If the node to be removed is already found, return a negative value to propagate the result
+        if (partialLength < 0) {
+            return partialLength;
+        }
+        // Calculate the current node\'s position relative to the end of the list
+        int count = partialLength + 1;
+        // If the current node is just before the nth node from the end, remove the nth node
+        if (count == n + 1) {
+            // Set the next pointer to skip the nth node and remove it from the list
+            node.next = node.next.next == null ? null : node.next.next;
+            // Mark the node as found by returning -1
+            return -1;
+        }
+        // Return the current node\'s position to the previous recursive call
+        return count;
+    }
+}

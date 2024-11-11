@@ -1,0 +1,31 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        int min = Integer.MAX_VALUE;
+        int start = 0;
+        for (char x : t.toCharArray()) map.put(x, map.getOrDefault(x, 0) + 1);
+        int count = map.size();
+        int l = 0, r = 0;
+        char[] c = s.toCharArray();
+        while (r < c.length) {
+            map.put(c[r], map.getOrDefault(c[r], 0) - 1);
+            if (map.get(c[r]) == 0)
+                count--;
+            while (count == 0) {
+                if (min > (r - l + 1)) {
+                    min = r - l + 1;
+                    start = l;
+                }
+                map.put(c[l], map.get(c[l]) + 1);
+                if (map.get(c[l]) > 0)
+                    count++;
+                l++;
+            }
+            r++;
+        }
+        if (min == Integer.MAX_VALUE)
+            return "";
+        return s.substring(start, start + min);
+    }
+}

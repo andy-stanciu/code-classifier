@@ -1,0 +1,63 @@
+class Solution {
+
+    public class SegmentTree {
+
+        int[] tree;
+
+        int n;
+
+        public SegmentTree(int size) {
+            this.n = size;
+            int height = (int) (Math.ceil(Math.log(n) / Math.log(2)));
+            int maxSize = 2 * (int) Math.pow(2, height) - 1;
+            tree = new int[maxSize];
+        }
+
+        private void updateUtil(int ss, int se, int i, int newValue, int si) {
+            if (i < ss || i > se)
+                return;
+            if (ss == se) {
+                tree[si] = Math.max(tree[si], newValue);
+                return;
+            }
+            int mid = ss + (se - ss) / 2;
+            if (i <= mid)
+                updateUtil(ss, mid, i, newValue, 2 * si + 1);
+            else
+                updateUtil(mid + 1, se, i, newValue, 2 * si + 2);
+            tree[si] = Math.max(tree[2 * si + 1], tree[2 * si + 2]);
+        }
+
+        public void update(int i, int newValue) {
+            updateUtil(0, n - 1, i, newValue, 0);
+        }
+
+        public int queryUtil(int ss, int se, int qs, int qe, int si) {
+            if (qs <= ss && qe >= se)
+                return tree[si];
+            if (se < qs || ss > qe)
+                return 0;
+            int mid = ss + (se - ss) / 2;
+            return Math.max(queryUtil(ss, mid, qs, qe, 2 * si + 1), queryUtil(mid + 1, se, qs, qe, 2 * si + 2));
+        }
+
+        public int query(int qs, int qe) {
+            return queryUtil(0, n - 1, qs, qe, 0);
+        }
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        int[] sortedUnique = Arrays.stream(nums).distinct().sorted().toArray();
+        Map<Integer, Integer> valueToIndex = new HashMap<>();
+        for (int i = 0; i < sortedUnique.length; i++) {
+            valueToIndex.put(sortedUnique[i], i);
+        }
+        SegmentTree st = new SegmentTree(sortedUnique.length);
+        for (int num : nums) {
+            int idx = valueToIndex.get(num);
+            int maxLIS = st.query(0, idx - 1) + 1;
+            st.update(idx, maxLIS);
+        }
+        return st.query(0, sortedUnique.length - 1);
+    }
+}

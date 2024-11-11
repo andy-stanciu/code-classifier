@@ -1,0 +1,35 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        int[] inDegree = new int[numCourses];
+        List<Integer>[] adj = new ArrayList[numCourses];
+        // Initialize adjacency list
+        for (int i = 0; i < numCourses; i++) {
+            adj[i] = new ArrayList<>();
+        }
+        for (int[] prerequisite : prerequisites) {
+            int course = prerequisite[0];
+            int pre = prerequisite[1];
+            adj[pre].add(course);
+            inDegree[course]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree[i] == 0) {
+                q.offer(i);
+            }
+        }
+        List<Integer> ans = new ArrayList<>();
+        while (!q.isEmpty()) {
+            int front = q.poll();
+            ans.add(front);
+            for (int nbr : adj[front]) {
+                inDegree[nbr]--;
+                if (inDegree[nbr] == 0) {
+                    q.offer(nbr);
+                }
+            }
+        }
+        return ans.size() == numCourses;
+    }
+}

@@ -1,0 +1,42 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int[] indegree = new int[param1];
+        HashMap<Integer, List<Integer>> graph = new HashMap<>();
+        for (int[] pre : prerequisites) {
+            int from = pre[0];
+            int to = pre[1];
+            if (graph.containsKey(from)) {
+                List<Integer> nebs = graph.get(from);
+                nebs.add(to);
+                graph.put(from, nebs);
+            } else {
+                List<Integer> nebs = new ArrayList<>();
+                nebs.add(to);
+                graph.put(from, nebs);
+            }
+            indegree[to] += 1;
+        }
+        while (param1 > 0) {
+            int node = -1;
+            for (int i = 0; i < indegree.length; i++) {
+                if (indegree[i] == 0) {
+                    node = i;
+                }
+            }
+            if (node == -1) {
+                return false;
+            }
+            param1 -= 1;
+            indegree[node] = -1;
+            if (graph.get(node) == null) {
+                continue;
+            }
+            List<Integer> neighbors = graph.get(node);
+            for (int neighbor : neighbors) {
+                indegree[neighbor] -= 1;
+            }
+        }
+        return true;
+    }
+}

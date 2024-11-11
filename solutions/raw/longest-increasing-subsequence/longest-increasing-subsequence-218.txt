@@ -1,0 +1,35 @@
+class Solution {
+
+    public static int Largest(int[] arr, int i, int prevIndex, int[][] DP) {
+        // Base case: if we\'ve considered all elements
+        if (i == arr.length) {
+            // No more elements to add
+            return 0;
+        }
+        // Use memoization to avoid redundant calculations
+        if (DP[i][prevIndex + 1] != -1) {
+            return DP[i][prevIndex + 1];
+        }
+        // Exclude the current element
+        int LeftSize = Largest(arr, i + 1, prevIndex, DP);
+        int RightSize = 0;
+        // Include the current element if it\'s greater than the last included one
+        if (prevIndex == -1 || arr[i] > arr[prevIndex]) {
+            RightSize = 1 + Largest(arr, i + 1, i, DP);
+        }
+        // Store the maximum of both choices in the DP table
+        DP[i][prevIndex + 1] = Math.max(LeftSize, RightSize);
+        return DP[i][prevIndex + 1];
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        // DP array to memoize results, with size nums.length x (nums.length + 1)
+        int[][] DP = new int[nums.length][nums.length + 1];
+        for (int i = 0; i < nums.length; i++) {
+            Arrays.fill(DP[i], -1);
+        }
+        // Start the recursive function
+        // Pass -1 for prevIndex indicating no previous element
+        return Largest(nums, 0, -1, DP);
+    }
+}

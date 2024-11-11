@@ -1,0 +1,42 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int length1 = s.length();
+        int length2 = t.length();
+        if (length1 < length2) {
+            return "";
+        }
+        int[] tArray = new int[256];
+        int[] sArray = new int[256];
+        for (int i = 0; i < length2; i++) {
+            tArray[t.charAt(i)]++;
+        }
+        int start = 0;
+        int startIndex = -1;
+        int minLength = Integer.MAX_VALUE;
+        int count = 0;
+        for (int j = 0; j < length1; j++) {
+            sArray[s.charAt(j)]++;
+            if (sArray[s.charAt(j)] <= tArray[s.charAt(j)]) {
+                count++;
+            }
+            if (count == length2) {
+                while (sArray[s.charAt(start)] > tArray[s.charAt(start)] || tArray[s.charAt(start)] == 0) {
+                    if (sArray[s.charAt(start)] > tArray[s.charAt(start)]) {
+                        sArray[s.charAt(start)]--;
+                        start++;
+                    }
+                }
+                int windowLength = j - start + 1;
+                if (minLength > windowLength) {
+                    minLength = windowLength;
+                    startIndex = start;
+                }
+            }
+        }
+        if (startIndex == -1) {
+            return "";
+        }
+        return s.substring(startIndex, startIndex + minLength);
+    }
+}

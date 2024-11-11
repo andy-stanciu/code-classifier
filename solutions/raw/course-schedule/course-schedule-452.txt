@@ -1,0 +1,43 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<Integer>[] adj = new ArrayList[numCourses];
+        boolean[] visited = new boolean[numCourses];
+        for (int i = 0; i < adj.length; i++) {
+            adj[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            adj[prerequisites[i][0]].add(prerequisites[i][1]);
+        }
+        boolean[] good = new boolean[numCourses];
+        for (int course = 0; course < numCourses; course++) {
+            boolean temp = true;
+            if (!good[course] && adj[course].size() > 0) {
+                for (int c : adj[course]) {
+                    visited = new boolean[numCourses];
+                    visited[course] = true;
+                    temp = good[c] || run(visited, c, adj, good);
+                    if (!temp)
+                        return false;
+                }
+            }
+            good[course] = true;
+        }
+        return true;
+    }
+
+    public boolean run(boolean[] visited, int course, List<Integer>[] adj, boolean[] good) {
+        if (visited[course])
+            return false;
+        else
+            visited[course] = true;
+        for (Integer c : adj[course]) {
+            boolean r = good[c] || run(visited, c, adj, good);
+            if (!r) {
+                return false;
+            }
+        }
+        good[course] = true;
+        return true;
+    }
+}

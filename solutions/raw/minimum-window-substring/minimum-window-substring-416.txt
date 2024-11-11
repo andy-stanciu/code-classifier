@@ -1,0 +1,69 @@
+// class Solution {
+//     public String minWindow(String s, String t) {
+//         if(s.length()==0||s.length()<t.length())return "";
+//         Map<Character,Integer> m=new HashMap<>();
+//         for(char c:t.toCharArray()){
+//             m.put(c,m.getOrDefault(c,0)+1);
+//         }
+//         int count=0;
+//         int left=0;
+//         int minlen=Integer.MAX_VALUE;
+//         int right=0;
+//         for(int i=0;i<s.length();i++){
+//             if(m.containsKey(s.charAt(i))){
+//                 m.put(s.charAt(i),m.get(s.charAt(i))-1);
+//             if(m.get(s.charAt(i))>=0){
+//                 count++;
+//             }
+//             }
+//             while(count==t.length()){
+//                 if(minlen>i-left+1){
+//                     minlen=i-left+1;
+//                     right=left;
+//                 }
+//                 if(m.containsKey(s.charAt(left))){
+//                     m.put(s.charAt(left),m.get(s.charAt(left))+1);
+//                     if(m.get(s.charAt(left))>0){
+//                         count--;
+//                     }
+//                 }
+//                 left++;
+//             }
+//         }
+//         return minlen == Integer.MAX_VALUE ?"":s.substring(right,right+minlen);
+//     }
+// }
+class Solution {
+
+    public String minWindow(String s, String t) {
+        // if(s.length()==0||s.length()<t.length())return "";
+        int[] ans = new int[128];
+        for (char c : t.toCharArray()) {
+            ans[c]++;
+        }
+        int count = 0;
+        int left = 0;
+        int minlen = Integer.MAX_VALUE;
+        int right = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            ans[c]--;
+            if (ans[c] >= 0) {
+                count++;
+            }
+            while (count == t.length()) {
+                if (minlen > i - left + 1) {
+                    minlen = i - left + 1;
+                    right = left;
+                }
+                char ch = s.charAt(left);
+                ans[ch]++;
+                if (ans[ch] > 0) {
+                    count--;
+                }
+                left++;
+            }
+        }
+        return minlen == Integer.MAX_VALUE ? "" : s.substring(right, right + minlen);
+    }
+}

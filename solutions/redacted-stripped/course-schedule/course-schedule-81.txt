@@ -1,0 +1,42 @@
+class Solution {
+
+    private boolean cycle(int node, List<List<Integer>> adj, int V, int par, boolean[] visited, boolean[] dfsVisited) {
+        visited[node] = true;
+        dfsVisited[node] = true;
+        for (int nei : adj.get(node)) {
+            if (!visited[nei]) {
+                if (cycle(nei, adj, V, node, visited, dfsVisited))
+                    return true;
+            } else {
+                if (dfsVisited[nei]) {
+                    return true;
+                }
+            }
+        }
+        dfsVisited[node] = false;
+        return false;
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        int V = param1;
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int src = prerequisites[i][1];
+            int dest = prerequisites[i][0];
+            adj.get(src).add(dest);
+        }
+        boolean[] visited = new boolean[V];
+        boolean[] dfsVisited = new boolean[V];
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                if (cycle(i, adj, V, -1, visited, dfsVisited)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}

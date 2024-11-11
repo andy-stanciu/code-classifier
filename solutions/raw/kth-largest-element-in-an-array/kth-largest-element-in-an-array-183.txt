@@ -1,0 +1,47 @@
+class Solution {
+
+    public int findKthLargest(int[] nums, int k) {
+        BinaryHeap heap = new BinaryHeap();
+        heap.heapSort(nums);
+        return nums[nums.length - k];
+    }
+}
+
+class BinaryHeap {
+
+    int heapSize;
+
+    public void maxHeapify(int[] A, int i) {
+        int largest;
+        int l = leftChildIndex(i);
+        int r = rightChildIndex(i);
+        if (l < heapSize && A[l] > A[i]) {
+            largest = l;
+        } else
+            largest = i;
+        if (r < heapSize && A[r] > A[largest]) {
+            largest = r;
+        }
+        if (largest != i) {
+            swap(A, i, largest);
+            maxHeapify(A, largest);
+        }
+    }
+
+    //O(N) time
+    public void buildMaxHeap(int[] A) {
+        heapSize = A.length;
+        for (int i = (A.length / 2) - 1; i >= 0; i--) {
+            maxHeapify(A, i);
+        }
+    }
+
+    public void heapSort(int[] A) {
+        buildMaxHeap(A);
+        for (int i = A.length - 1; i >= 1; i--) {
+            swap(A, 0, i);
+            heapSize--;
+            maxHeapify(A, 0);
+        }
+    }
+}

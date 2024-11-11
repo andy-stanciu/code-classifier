@@ -1,0 +1,35 @@
+class Solution {
+
+    // Each course is maped to a list of its prerequisetes
+    Map<Integer, List<Integer>> preReq = new HashMap<>();
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        for (int[] pre : prerequisites) {
+            preReq.computeIfAbsent(pre[0], k -> new ArrayList<>()).add(pre[1]);
+        }
+        // completed courses
+        Set<Integer> taken = new HashSet<>();
+        for (int i = 0; i < numCourses; i++) {
+            dfs(i, new HashSet<>(), taken);
+        }
+        return taken.size() == numCourses;
+    }
+
+    boolean dfs(int cur, Set<Integer> vis, Set<Integer> taken) {
+        if (taken.contains(cur))
+            return true;
+        if (!preReq.containsKey(cur)) {
+            taken.add(cur);
+            return true;
+        }
+        if (vis.contains(cur))
+            return false;
+        vis.add(cur);
+        for (int p : preReq.get(cur)) {
+            if (!dfs(p, vis, taken))
+                return false;
+        }
+        taken.add(cur);
+        return true;
+    }
+}

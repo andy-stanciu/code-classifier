@@ -1,0 +1,31 @@
+class Solution {
+
+    public static int lengthOfLIS(int[] nums) {
+        TreeSet<Integer> set = new TreeSet<>();
+        Map<Integer, Integer> map = new HashMap<>();
+        int max = 1;
+        for (int num : nums) {
+            // Find the largest element less than the current element
+            Integer lower = set.lower(num);
+            if (lower != null) {
+                int lisLength = map.get(lower) + 1;
+                map.put(num, lisLength);
+                // Update the maximum LIS length found so far
+                max = Math.max(max, lisLength);
+            } else {
+                // Initialize the LIS length for the current element
+                map.put(num, 1);
+            }
+            // Remove all elements from the set that have LIS length less than or equal to the current number\'s LIS length
+            Integer existing = set.ceiling(num);
+            while (existing != null && map.get(existing) <= map.get(num)) {
+                set.remove(existing);
+                existing = set.ceiling(num);
+            }
+            // Add the current element to the TreeSet
+            set.add(num);
+        }
+        // Return the maximum LIS length
+        return max;
+    }
+}

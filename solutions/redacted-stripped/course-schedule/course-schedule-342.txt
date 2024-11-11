@@ -1,0 +1,48 @@
+class Solution {
+
+    public void dfs(int i, Map<Integer, List<Integer>> enable, Map<Integer, List<Integer>> prereq, Set<Integer> visited) {
+        visited.add(i);
+        prereq.remove(i);
+        if (enable.get(i) == null) {
+            return;
+        }
+        for (Integer j : enable.get(i)) {
+            prereq.get(j).remove(Integer.valueOf(i));
+            if (prereq.get(j).size() == 0) {
+                dfs(j, enable, prereq, visited);
+            }
+        }
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int[][] p = prerequisites;
+        Map<Integer, List<Integer>> enable = new HashMap<>();
+        Map<Integer, List<Integer>> prereq = new HashMap<>();
+        Set<Integer> visited = new HashSet<>();
+        for (int i = 0; i < p.length; i++) {
+            if (enable.containsKey(p[i][1])) {
+                enable.get(p[i][1]).add(p[i][0]);
+            } else {
+                enable.put(p[i][1], new ArrayList<Integer>());
+                enable.get(p[i][1]).add(p[i][0]);
+            }
+            if (prereq.containsKey(p[i][0])) {
+                prereq.get(p[i][0]).add(p[i][1]);
+            } else {
+                prereq.put(p[i][0], new ArrayList<Integer>());
+                prereq.get(p[i][0]).add(p[i][1]);
+            }
+        }
+        for (int i = 0; i < param1; i++) {
+            if (prereq.containsKey(i) == false || prereq.get(i).size() == 0) {
+                if (!visited.contains(i)) {
+                    dfs(i, enable, prereq, visited);
+                }
+            }
+        }
+        if (prereq.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+}

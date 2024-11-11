@@ -1,0 +1,41 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        //create graph
+        ArrayList<Integer>[] graph = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<Integer>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int u = prerequisites[i][0];
+            int v = prerequisites[i][1];
+            // non-DAG -- bidirected graph
+            if (graph[u].contains(u))
+                return false;
+            graph[u].add(v);
+        }
+        boolean[] visited = new boolean[param1];
+        boolean[] stack = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            // non-DAG -- cyclic graph
+            if (!visited[i] && hasCycleDirected(graph, visited, stack, i))
+                return false;
+        }
+        return true;
+    }
+
+    boolean hasCycleDirected(ArrayList<Integer>[] graph, boolean[] visited, boolean[] stack, int curr) {
+        if (stack[curr])
+            return true;
+        if (visited[curr])
+            return false;
+        visited[curr] = true;
+        stack[curr] = true;
+        for (int i = 0; i < graph[curr].size(); i++) {
+            if (hasCycleDirected(graph, visited, stack, graph[curr].get(i)))
+                return true;
+        }
+        stack[curr] = false;
+        return false;
+    }
+}

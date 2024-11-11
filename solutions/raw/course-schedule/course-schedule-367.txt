@@ -1,0 +1,40 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Create adjacency list to represent the graph
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        // Build the graph
+        for (int[] prerequisite : prerequisites) {
+            graph.get(prerequisite[1]).add(prerequisite[0]);
+        }
+        // Check for cycle using DFS
+        boolean[] visited = new boolean[numCourses];
+        boolean[] inStack = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i] && hasCycle(graph, i, visited, inStack)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean hasCycle(List<List<Integer>> graph, int node, boolean[] visited, boolean[] inStack) {
+        visited[node] = true;
+        inStack[node] = true;
+        for (int neighbor : graph.get(node)) {
+            if (!visited[neighbor]) {
+                if (hasCycle(graph, neighbor, visited, inStack)) {
+                    return true;
+                }
+            } else if (inStack[neighbor]) {
+                // Cycle found
+                return true;
+            }
+        }
+        inStack[node] = false;
+        return false;
+    }
+}

@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public int method1(TreeNode root) {
+        if (root == null)
+            return 0;
+        int var1 = root.val;
+        Stack<TreeNode> nodes = new Stack<>();
+        // max path from the node to the left or right(left or right can be optional)
+        Map<TreeNode, Integer> var2 = new HashMap<>();
+        nodes.push(root);
+        while (!nodes.isEmpty()) {
+            TreeNode node = nodes.pop();
+            // if all underlying nodes of the current node are already processed
+            if (var2.containsKey(node)) {
+                // get max left and right path if positive
+                int left = Math.max(0, var2.getOrDefault(node.left, 0));
+                int right = Math.max(0, var2.getOrDefault(node.right, 0));
+                // calculate and write max path from the current node to the left or right
+                var2.put(node, node.val + Math.max(left, right));
+                // calculate max path through this node
+                int var3 = node.val + left + right;
+                if (var3 > var1)
+                    var1 = var3;
+            } else {
+                // put node back for further processing once all underlying nodes are done
+                var2.put(node, 0);
+                nodes.push(node);
+                // and push its children to process before
+                if (node.left != null)
+                    nodes.push(node.left);
+                if (node.right != null)
+                    nodes.push(node.right);
+            }
+        }
+        return var1;
+    }
+}

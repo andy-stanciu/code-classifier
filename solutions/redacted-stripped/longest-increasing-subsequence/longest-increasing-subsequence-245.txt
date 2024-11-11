@@ -1,0 +1,95 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        return solveUsingBS(nums);
+    }
+
+    private int solveUsingRec(int[] nums, int curr, int prev) {
+        if (curr == nums.length) {
+            return 0;
+        }
+        int include = 0;
+        if (prev == -1 || nums[prev] < nums[curr]) {
+            include = 1 + solveUsingRec(nums, curr + 1, curr);
+        }
+        int exclude = solveUsingRec(nums, curr + 1, prev);
+        return Math.max(include, exclude);
+    }
+
+    private int solveUsingMem(int[] nums, int curr, int prev, int[][] dp) {
+        if (curr == nums.length) {
+            return 0;
+        }
+        if (dp[curr][prev + 1] != -1) {
+            return dp[curr][prev + 1];
+        }
+        int include = 0;
+        if (prev == -1 || nums[prev] < nums[curr]) {
+            include = 1 + solveUsingMem(nums, curr + 1, curr, dp);
+        }
+        int exclude = solveUsingMem(nums, curr + 1, prev, dp);
+        dp[curr][prev + 1] = Math.max(include, exclude);
+        return Math.max(include, exclude);
+    }
+
+    private int solveUsingTab(int[] nums) {
+        int[][] dp = new int[nums.length + 1][nums.length + 1];
+        for (int i = nums.length - 1; i >= 0; i--) {
+            for (int j = i - 1; j >= -1; j--) {
+                int include = 0;
+                if (j == -1 || nums[j] < nums[i]) {
+                    include = 1 + dp[i + 1][i + 1];
+                }
+                int exclude = dp[i + 1][j + 1];
+                dp[i][j + 1] = Math.max(include, exclude);
+            }
+        }
+        return dp[0][0];
+    }
+
+    private int solveUsingSO(int[] nums) {
+        int[] next = new int[nums.length + 1];
+        int[] curr = new int[nums.length + 1];
+        for (int i = nums.length - 1; i >= 0; i--) {
+            for (int j = i - 1; j >= -1; j--) {
+                int include = 0;
+                if (j == -1 || nums[j] < nums[i]) {
+                    include = 1 + next[i + 1];
+                }
+                int exclude = next[j + 1];
+                curr[j + 1] = Math.max(include, exclude);
+            }
+            System.arraycopy(curr, 0, next, 0, nums.length + 1);
+        }
+        return next[0];
+    }
+
+    private int solveUsingBS(int[] nums) {
+        List<Integer> ans = new ArrayList<Integer>();
+        ans.add(nums[0]);
+        for (int i = 0; i < nums.length; i++) {
+            if (ans.get(ans.size() - 1) < nums[i]) {
+                ans.add(nums[i]);
+            } else {
+                int index = binarySearch(ans, 0, ans.size() - 1, nums[i]);
+                ans.set(index, nums[i]);
+            }
+        }
+        return ans.size();
+    }
+
+    private int binarySearch(List<Integer> list, int s, int e, int target) {
+        while (s < e) {
+            int mid = (s + e) / 2;
+            if (list.get(mid) == target) {
+                return mid;
+            }
+            if (list.get(mid) > target) {
+                e = mid;
+            } else {
+                s = mid + 1;
+            }
+        }
+        return s;
+    }
+}

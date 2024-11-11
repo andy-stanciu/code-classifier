@@ -1,0 +1,43 @@
+class Solution {
+
+    public boolean canFinishUtil(int param1, ArrayList<Integer>[] adj, int[] indegree) {
+        //base case
+        boolean is0 = false;
+        boolean areAllNegative = true;
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0)
+                is0 = true;
+            if (indegree[i] >= 0)
+                areAllNegative = false;
+        }
+        if (areAllNegative)
+            return true;
+        if (!is0)
+            return false;
+        //else
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] < 0)
+                continue;
+            if (indegree[i] == 0) {
+                //go through all  the neighbors, reduce their indegrees by 1.
+                indegree[i] = -1;
+                for (int neighbor : adj[i]) {
+                    indegree[neighbor]--;
+                }
+            }
+        }
+        return canFinishUtil(param1, adj, indegree);
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<Integer>[] adj = new ArrayList[param1];
+        int[] indegree = new int[param1];
+        for (int i = 0; i < param1; i++) adj[i] = new ArrayList<Integer>();
+        for (int[] edge : prerequisites) {
+            //edge[1] --> edge[0]
+            adj[edge[1]].add(edge[0]);
+            indegree[edge[0]]++;
+        }
+        return canFinishUtil(param1, adj, indegree);
+    }
+}

@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] relations) {
+        List<Integer>[] pres = new List[param1];
+        for (int i = 0; i < param1; i++) {
+            pres[i] = new ArrayList<>();
+        }
+        for (int[] relation : relations) {
+            pres[relation[0]].add(relation[1]);
+        }
+        boolean[] var1 = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            boolean[] visited = new boolean[param1];
+            if (!dfs(pres, visited, i, var1))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean dfs(List<Integer>[] pres, boolean[] visited, int offset, boolean[] var1) {
+        if (var1[offset])
+            return true;
+        // offset >= visited.length is not really necessary, but keep it to avoid exception since we are visiting array element
+        if (offset >= visited.length || visited[offset]) {
+            return false;
+        }
+        visited[offset] = true;
+        List<Integer> var2 = pres[offset];
+        for (int pre : var2) {
+            if (!dfs(pres, visited, pre, var1)) {
+                return false;
+            }
+        }
+        visited[offset] = false;
+        var1[offset] = true;
+        return true;
+    }
+}

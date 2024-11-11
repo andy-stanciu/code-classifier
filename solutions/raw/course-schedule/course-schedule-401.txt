@@ -1,0 +1,40 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        HashMap<Integer, List<Integer>> pMap = new HashMap<>();
+        for (int i = 0; i < numCourses; i++) {
+            pMap.put(i, new ArrayList<>());
+        }
+        // Add all the edges
+        for (int[] p : prerequisites) {
+            pMap.get(p[1]).add(p[0]);
+        }
+        boolean result = true;
+        boolean[] visited = new boolean[numCourses];
+        boolean[] inStack = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            result = result && isValid(i, pMap, visited, inStack);
+        }
+        return result;
+    }
+
+    private boolean isValid(int course, HashMap<Integer, List<Integer>> pMap, boolean[] visited, boolean[] inStack) {
+        // if this node is found in the same loop, it\'s a cycle
+        if (inStack[course]) {
+            return false;
+        }
+        // if this node is already visited with different stack, then no-need to revisit
+        if (visited[course])
+            return true;
+        visited[course] = true;
+        inStack[course] = true;
+        List<Integer> pList = pMap.get(course);
+        boolean result = true;
+        for (int i = 0; i < pList.size(); i++) {
+            result = result && isValid(pList.get(i), pMap, visited, inStack);
+        }
+        // Need to remove the current node from the stack since we might visit again from different edge
+        inStack[course] = false;
+        return result;
+    }
+}

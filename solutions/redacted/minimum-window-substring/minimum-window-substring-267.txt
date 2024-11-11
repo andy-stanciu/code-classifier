@@ -1,0 +1,35 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] var1 = new int[128];
+        int[] target = new int[128];
+        if (t.length() > s.length())
+            return "";
+        for (char ch : t.toCharArray()) {
+            target[ch]++;
+        }
+        int left = 0, right = 0;
+        int minSize = 0, matchCount = 0;
+        int minLen = Integer.MAX_VALUE, minStart = 0;
+        while (right < s.length()) {
+            char ch = s.charAt(right);
+            var1[ch]++;
+            if (var1[ch] <= target[ch]) {
+                matchCount++;
+            }
+            while (matchCount == t.length()) {
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    minStart = left;
+                }
+                char leftChar = s.charAt(left);
+                var1[leftChar]--;
+                if (var1[leftChar] < target[leftChar])
+                    matchCount--;
+                left++;
+            }
+            right++;
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart + minLen);
+    }
+}

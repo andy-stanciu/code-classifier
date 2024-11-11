@@ -1,0 +1,23 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        int[][] dp = new int[nums.length + 1][nums.length + 2];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        return helper(nums, 0, -1, dp);
+    }
+
+    private int helper(int[] nums, int curr, int prev, int[][] dp) {
+        if (curr == nums.length)
+            return 0;
+        if (dp[curr][prev + 1] != -1)
+            return dp[curr][prev + 1];
+        int length = helper(nums, curr + 1, prev, dp);
+        if (prev < 0 || nums[curr] > nums[prev]) {
+            length = Math.max(length, 1 + helper(nums, curr + 1, curr, dp));
+        }
+        dp[curr][prev + 1] = length;
+        return length;
+    }
+}

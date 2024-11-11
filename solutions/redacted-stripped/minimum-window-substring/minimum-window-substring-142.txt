@@ -1,0 +1,53 @@
+class Solution {
+
+    private class Map {
+
+        int count;
+
+        Map(int c) {
+            this.count = c;
+        }
+    }
+
+    public String method1(String s, String t) {
+        Map[] map = new Map[123];
+        int mapLen = 0;
+        for (char ch : t.toCharArray()) {
+            if (map[ch] == null) {
+                map[ch] = new Map(0);
+                mapLen++;
+            }
+            map[ch].count++;
+        }
+        int left = 0;
+        int[] var1 = { -1, -1 };
+        int n = s.length();
+        int minlen = Integer.MAX_VALUE;
+        for (int right = 0; right < n; right++) {
+            char curr = s.charAt(right);
+            if (map[curr] != null) {
+                map[curr].count--;
+                if (map[curr].count == 0) {
+                    mapLen--;
+                }
+            }
+            while (mapLen == 0) {
+                char ch = s.charAt(left);
+                if (map[ch] != null) {
+                    map[ch].count++;
+                    int temp = right - left + 1;
+                    if (minlen > temp) {
+                        var1[0] = left;
+                        var1[1] = right + 1;
+                        minlen = temp;
+                    }
+                    if (map[ch].count == 1) {
+                        mapLen++;
+                    }
+                }
+                left++;
+            }
+        }
+        return minlen == Integer.MAX_VALUE ? "" : var1[0] == -1 ? "" : s.substring(var1[0], var1[1]);
+    }
+}

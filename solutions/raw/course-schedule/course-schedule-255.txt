@@ -1,0 +1,60 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Create a map to represent the adjacency list of the graph
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        // Initialize the adjacency list with empty lists for each course
+        for (int i = 0; i < numCourses; i++) {
+            map.put(i, new ArrayList<>());
+        }
+        // Populate the adjacency list with the prerequisites
+        createAdj(map, prerequisites);
+        // Arrays to keep track of visited nodes and nodes currently being visited
+        boolean[] visited = new boolean[numCourses];
+        boolean[] visiting = new boolean[numCourses];
+        // Check for cycles in each course
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i] && hasCycle(map, i, visited, visiting)) {
+                // If a cycle is found, return false indicating the courses cannot be finished
+                return false;
+            }
+        }
+        // If no cycles are found, return true indicating the courses can be finished
+        return true;
+    }
+
+    // Depth-first search to check for cycles starting from a given course
+    private boolean hasCycle(Map<Integer, List<Integer>> map, int curr, boolean[] visited, boolean[] visiting) {
+        // If this node has already been visited, there is no cycle
+        if (visited[curr]) {
+            return false;
+        }
+        // If this node is currently being visited, a cycle is found
+        if (visiting[curr]) {
+            return true;
+        }
+        // Mark this node as currently being visited
+        visiting[curr] = true;
+        // Recursively check for cycles in the neighboring nodes
+        for (int nbr : map.get(curr)) {
+            if (hasCycle(map, nbr, visited, visiting)) {
+                // If a cycle is found in any neighboring node, return true
+                return true;
+            }
+        }
+        // Mark this node as visited and no longer being visited
+        visiting[curr] = false;
+        visited[curr] = true;
+        // No cycle found for this node
+        return false;
+    }
+
+    // Helper function to populate the adjacency list with prerequisites
+    private void createAdj(Map<Integer, List<Integer>> map, int[][] prerequisites) {
+        for (int i = 0; i < prerequisites.length; i++) {
+            // Add each prerequisite course as a neighbor to the course in the adjacency
+            // list
+            map.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+    }
+}

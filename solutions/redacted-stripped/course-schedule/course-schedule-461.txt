@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int cources, int[][] prereq) {
+        List<List<Integer>> adj = new ArrayList();
+        int[] visited = new int[cources];
+        for (int i = 0; i < cources; i++) {
+            List<Integer> l0 = new ArrayList();
+            adj.add(l0);
+        }
+        for (int[] req : prereq) {
+            adj.get(req[0]).add(req[1]);
+        }
+        for (int i = 0; i < cources; i++) {
+            if (visited[i] == 0)
+                if (!DFS(i, adj, visited)) {
+                    return false;
+                }
+        }
+        return true;
+    }
+
+    public boolean DFS(int index, List<List<Integer>> adj, int[] visited) {
+        if (visited[index] == 2)
+            return true;
+        if (visited[index] == 1)
+            return false;
+        visited[index] = 1;
+        List<Integer> l1 = adj.get(index);
+        for (int child : l1) {
+            if (!DFS(child, adj, visited))
+                return false;
+        }
+        visited[index] = 2;
+        return true;
+    }
+}

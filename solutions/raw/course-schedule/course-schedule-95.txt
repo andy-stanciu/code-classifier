@@ -1,0 +1,63 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Create an adjacency list to represent the graph
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        // Fill the adjacency list with prerequisite relationships
+        for (int[] prerequisite : prerequisites) {
+            adjList.get(prerequisite[1]).add(prerequisite[0]);
+        }
+        // Arrays to track visited nodes and the recursion stack
+        boolean[] visited = new boolean[numCourses];
+        boolean[] recStack = new boolean[numCourses];
+        // Perform DFS for each course
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i]) {
+                if (hasCycle(i, adjList, visited, recStack)) {
+                    // If a cycle is found, return false
+                    return false;
+                }
+            }
+        }
+        // If no cycle is found, return true
+        return true;
+    }
+
+    // Helper method to detect cycles using DFS
+    private boolean hasCycle(int node, List<List<Integer>> adjList, boolean[] visited, boolean[] recStack) {
+        // Mark the current node as visited and add to recursion stack
+        visited[node] = true;
+        recStack[node] = true;
+        // Check for adjacent nodes (i.e., prerequisites)
+        for (int neighbor : adjList.get(node)) {
+            if (!visited[neighbor]) {
+                // Recursively visit the neighboring node
+                if (hasCycle(neighbor, adjList, visited, recStack)) {
+                    return true;
+                }
+            } else if (recStack[neighbor]) {
+                // If the neighbor is in the recursion stack, a cycle is detected
+                return true;
+            }
+        }
+        // Remove the current node from the recursion stack before returning
+        recStack[node] = false;
+        return false;
+    }
+
+    // Main method for testing
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        // Example 1
+        int[][] prerequisites1 = { { 1, 0 } };
+        // Output: true
+        System.out.println(solution.canFinish(2, prerequisites1));
+        // Example 2
+        int[][] prerequisites2 = { { 1, 0 }, { 0, 1 } };
+        // Output: false
+        System.out.println(solution.canFinish(2, prerequisites2));
+    }
+}

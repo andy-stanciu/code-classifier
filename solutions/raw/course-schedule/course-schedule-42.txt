@@ -1,0 +1,53 @@
+class Solution {
+
+    public boolean dfs(int node, int[] vis, int[] path, List<List<Integer>> g) {
+        // Mark the current node as visited
+        vis[node] = 1;
+        // Add the current node to the current path
+        path[node] = 1;
+        for (int it : g.get(node)) {
+            if (vis[it] == 0) {
+                // If the neighbor node hasn\'t been visited, recursively call DFS on it
+                if (dfs(it, vis, path, g)) {
+                    // If a cycle is found, return true
+                    return true;
+                }
+            } else if (path[it] == 1) {
+                // If the neighbor node is already in the current path, it means a cycle is present
+                // Return true to indicate the presence of a cycle in the graph
+                return true;
+            }
+        }
+        // Remove the current node from the path
+        path[node] = 0;
+        // No cycle found, return false
+        return false;
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Create an adjacency list representation of the courses and their prerequisites
+        List<List<Integer>> g = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            g.add(new ArrayList<>());
+        }
+        for (int[] it : prerequisites) {
+            // Add directed edges from prerequisites to courses
+            g.get(it[1]).add(it[0]);
+        }
+        // Track visited nodes during DFS
+        int[] vis = new int[numCourses];
+        // Track the current path being explored
+        int[] path = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (vis[i] == 0) {
+                // If a node hasn\'t been visited yet, start DFS on it
+                if (dfs(i, vis, path, g)) {
+                    // If a cycle is found, it is not possible to finish all courses
+                    return false;
+                }
+            }
+        }
+        // No cycles found, it is possible to finish all courses
+        return true;
+    }
+}

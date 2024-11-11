@@ -1,0 +1,23 @@
+class Solution {
+
+    int maxAnswer = 0;
+
+    public int maxPathSum(TreeNode root) {
+        maxAnswer = root.val;
+        dfs(root, 0);
+        return maxAnswer;
+    }
+
+    //returns max sum possible from this node
+    private int dfs(TreeNode root, int runningSum) {
+        if (root == null)
+            return 0;
+        //Math.max(0, ...) to simulate not using the value becuase it\'s negative and will only make path lesser
+        int left = Math.max(0, dfs(root.left, runningSum + root.val));
+        int right = Math.max(0, dfs(root.right, runningSum + root.val));
+        //check for if node is root of best path
+        maxAnswer = Math.max(maxAnswer, root.val + left + right);
+        //pass best value along in case this is a child of the best path
+        return Math.max(left, right) + root.val;
+    }
+}

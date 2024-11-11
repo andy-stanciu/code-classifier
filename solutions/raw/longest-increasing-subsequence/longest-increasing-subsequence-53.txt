@@ -1,0 +1,26 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        int N = nums.length;
+        //ind =N+1 , prev= N+1
+        int[][] dp = new int[N + 1][N + 1];
+        for (int i = 0; i <= N; i++) {
+            for (int j = 0; j <= N; j++) {
+                dp[i][j] = 0;
+            }
+        }
+        for (int index = N - 1; index >= 0; index--) {
+            for (int prev_index = index - 1; prev_index >= -1; prev_index--) {
+                //prev=index-1
+                int notTaken = 0 + dp[index + 1][prev_index + 1];
+                int taken = (int) -1e6;
+                if (prev_index == -1 || nums[index] > nums[prev_index]) {
+                    // index+1 for j as we shifted -1 AS 0
+                    taken = 1 + dp[index + 1][index + 1];
+                }
+                dp[index][prev_index + 1] = Math.max(notTaken, taken);
+            }
+        }
+        return dp[0][-1 + 1];
+    }
+}

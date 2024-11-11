@@ -1,0 +1,59 @@
+class Solution {
+
+    boolean[] path;
+
+    boolean[] visited;
+
+    //final result
+    boolean hasCycle = false;
+
+    //the graph
+    Map<Integer, List<Integer>> mp;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int n = param1;
+        path = new boolean[n + 1];
+        visited = new boolean[n + 1];
+        //initialize
+        mp = new HashMap<>();
+        // build grapth
+        buildGraph(prerequisites);
+        for (int i = 0; i < param1; i++) {
+            //traverse each node
+            traverse(mp, i);
+        }
+        //result
+        return !hasCycle;
+    }
+
+    public void traverse(Map<Integer, List<Integer>> mp, int idx) {
+        if (path[idx]) {
+            //if current node was found in path array
+            // there must be a cycle
+            hasCycle = true;
+        }
+        if (hasCycle || visited[idx])
+            return;
+        visited[idx] = true;
+        //we do backtracking here to try all possible path
+        path[idx] = true;
+        if (mp.get(idx) != null) {
+            //traverse
+            for (int i : mp.get(idx)) {
+                traverse(mp, i);
+            }
+        }
+        //backtracking ended
+        path[idx] = false;
+    }
+
+    public void buildGraph(int[][] prerequisites) {
+        for (int[] i : prerequisites) {
+            if (!mp.containsKey(i[1])) {
+                mp.put(i[1], new ArrayList<>());
+            }
+            // pre => cur, cur relys on pre courses
+            mp.get(i[1]).add(i[0]);
+        }
+    }
+}

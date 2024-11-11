@@ -1,0 +1,41 @@
+class Solution {
+
+    List<Integer>[] adj;
+
+    private boolean dfs(boolean[] tracker, boolean[] revTracker, int node) {
+        if (revTracker[node]) {
+            return true;
+        }
+        if (tracker[node]) {
+            return false;
+        }
+        tracker[node] = true;
+        revTracker[node] = true;
+        List<Integer> child = adj[node];
+        for (Integer c : child) {
+            if (dfs(tracker, revTracker, c)) {
+                return true;
+            }
+        }
+        revTracker[node] = false;
+        return false;
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        adj = new ArrayList[param1];
+        for (int i = 0; i < adj.length; i++) {
+            adj[i] = new ArrayList<>();
+        }
+        for (int[] i : prerequisites) {
+            adj[i[1]].add(i[0]);
+        }
+        boolean[] tracker = new boolean[param1];
+        boolean[] rev = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (dfs(tracker, rev, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

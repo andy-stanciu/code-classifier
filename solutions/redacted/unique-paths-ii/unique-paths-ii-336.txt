@@ -1,0 +1,35 @@
+class Solution {
+
+    public static int fMemoization(int i, int j, int[][] mat, int[][] dp) {
+        if (i < 0 || j < 0 || mat[i][j] == 1) {
+            // If out of bounds or obstacle encountered, return 0
+            return 0;
+        }
+        if (i == 0 && j == 0) {
+            // Base case: reached the starting position
+            return 1;
+        }
+        if (dp[i][j] != -1) {
+            // Return memoized value if available
+            return dp[i][j];
+        }
+        // Move up
+        int up = fMemoization(i - 1, j, mat, dp);
+        // Move left
+        int left = fMemoization(i, j - 1, mat, dp);
+        // Memoize and return the sum of paths
+        return dp[i][j] = up + left;
+    }
+
+    public int method1(int[][] obstacleGrid) {
+        int n = obstacleGrid.length;
+        int m = obstacleGrid[0].length;
+        // Correct dimensions
+        int[][] dp = new int[n][m];
+        for (int[] row : dp) {
+            // Initialize dp array with -1
+            Arrays.fill(row, -1);
+        }
+        return fMemoization(n - 1, m - 1, obstacleGrid, dp);
+    }
+}

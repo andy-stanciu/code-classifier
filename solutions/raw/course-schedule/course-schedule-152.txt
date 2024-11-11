@@ -1,0 +1,53 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        HashMap<Integer, List<Integer>> courseGraph = new HashMap<>();
+        // Build the course graph from prerequisites
+        for (int[] pre : prerequisites) {
+            if (courseGraph.containsKey(pre[1])) {
+                courseGraph.get(pre[1]).add(pre[0]);
+            } else {
+                List<Integer> nextCourses = new LinkedList<>();
+                nextCourses.add(pre[0]);
+                courseGraph.put(pre[1], nextCourses);
+            }
+        }
+        HashSet<Integer> visited = new HashSet<>();
+        HashSet<Integer> processed = new HashSet<>();
+        // Check each course for cycles
+        for (int currentCourse = 0; currentCourse < numCourses; currentCourse++) {
+            if (!courseSchedule(currentCourse, visited, processed, courseGraph)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Helper method to perform DFS and detect cycles
+    private boolean courseSchedule(int course, HashSet<Integer> visited, HashSet<Integer> processed, HashMap<Integer, List<Integer>> courseGraph) {
+        // If the course is already in the current DFS path, there\'s a cycle
+        if (visited.contains(course)) {
+            return false;
+        }
+        // If the course has been fully processed already, skip it
+        if (processed.contains(course)) {
+            return true;
+        }
+        // If the course has no prerequisites or has been fully processed
+        if (!courseGraph.containsKey(course)) {
+            return true;
+        }
+        // Mark the course as visited in the current path
+        visited.add(course);
+        // Recursively check all prerequisites
+        for (int pre : courseGraph.get(course)) {
+            if (!courseSchedule(pre, visited, processed, courseGraph)) {
+                return false;
+            }
+        }
+        // Remove the course from the current path and add it to the processed set
+        visited.remove(course);
+        processed.add(course);
+        return true;
+    }
+}

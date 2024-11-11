@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> adjList = new HashMap<>();
+        for (int i = 0; i < prerequisites.length; i++) {
+            adjList.putIfAbsent(prerequisites[i][0], new ArrayList<>());
+            adjList.get(prerequisites[i][0]).add(prerequisites[i][1]);
+            adjList.putIfAbsent(prerequisites[i][1], new ArrayList<>());
+        }
+        HashSet<Integer> visiting = new HashSet<>();
+        HashSet<Integer> visited = new HashSet<>();
+        for (int[] course : prerequisites) {
+            if (!visited.contains(course[0])) {
+                if (!topologicalSort(course[0], visiting, visited, adjList)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean topologicalSort(int node, HashSet<Integer> visiting, HashSet<Integer> visited, Map<Integer, List<Integer>> adjList) {
+        if (visiting.contains(node))
+            return false;
+        visiting.add(node);
+        for (int course : adjList.get(node)) {
+            if (!visited.contains(course)) {
+                if (topologicalSort(course, visiting, visited, adjList) == false)
+                    return false;
+            }
+        }
+        visited.add(node);
+        visiting.remove(node);
+        return true;
+    }
+}

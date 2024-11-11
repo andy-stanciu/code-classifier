@@ -1,0 +1,54 @@
+public class Solution {
+
+    public static int timeToBurnTree(BinaryTreeNode<Integer> root, int start) {
+        if (root == null)
+            return 0;
+        HashMap<BinaryTreeNode<Integer>, BinaryTreeNode<Integer>> mark = new HashMap<>();
+        BinaryTreeNode<Integer> tt = markParent(root, mark, start);
+        HashMap<BinaryTreeNode<Integer>, Boolean> visited = new HashMap<>();
+        Queue<BinaryTreeNode<Integer>> q = new LinkedList<>();
+        q.offer(tt);
+        visited.put(tt, true);
+        int currentLevel = 0;
+        while (!q.isEmpty()) {
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                BinaryTreeNode<Integer> cur = q.poll();
+                if (cur.left != null && !visited.containsKey(cur.left)) {
+                    q.offer(cur.left);
+                    visited.put(cur.left, true);
+                }
+                if (cur.right != null && !visited.containsKey(cur.right)) {
+                    q.offer(cur.right);
+                    visited.put(cur.right, true);
+                }
+                if (mark.containsKey(cur) && !visited.containsKey(mark.get(cur))) {
+                    q.offer(mark.get(cur));
+                    visited.put(mark.get(cur), true);
+                }
+            }
+            currentLevel++;
+        }
+        return currentLevel - 1;
+    }
+
+    static BinaryTreeNode<Integer> markParent(BinaryTreeNode<Integer> root, HashMap<BinaryTreeNode<Integer>, BinaryTreeNode<Integer>> mark, int start) {
+        Queue<BinaryTreeNode<Integer>> q = new LinkedList<>();
+        q.offer(root);
+        BinaryTreeNode<Integer> res = new BinaryTreeNode<Integer>(-1);
+        while (!q.isEmpty()) {
+            BinaryTreeNode<Integer> cur = q.poll();
+            if (cur.data == start)
+                res = cur;
+            if (cur.left != null) {
+                q.offer(cur.left);
+                mark.put(cur.left, cur);
+            }
+            if (cur.right != null) {
+                q.offer(cur.right);
+                mark.put(cur.right, cur);
+            }
+        }
+        return res;
+    }
+}

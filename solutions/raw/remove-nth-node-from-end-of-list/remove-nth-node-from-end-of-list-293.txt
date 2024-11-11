@@ -1,0 +1,85 @@
+class ListNode {
+
+    int val;
+
+    ListNode next;
+
+    ListNode() {
+    }
+
+    ListNode(int val) {
+        this.val = val;
+    }
+
+    ListNode(int val, ListNode next) {
+        this.val = val;
+        this.next = next;
+    }
+
+    // Deserialize a string like "[1,2,3,4,5]" into a ListNode chain
+    public static ListNode deserialize(String data) {
+        if (data == null || data.length() <= 2) {
+            return null;
+        }
+        // Remove the brackets and split the string by commas
+        String[] values = data.substring(1, data.length() - 1).split(",");
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        for (String value : values) {
+            current.next = new ListNode(Integer.parseInt(value.trim()));
+            current = current.next;
+        }
+        return dummy.next;
+    }
+
+    // Serialize the ListNode chain into a string like "[1,2,3,4,5]"
+    public static String serialize(ListNode head) {
+        StringBuilder result = new StringBuilder();
+        result.append("[");
+        ListNode current = head;
+        while (current != null) {
+            result.append(current.val);
+            current = current.next;
+            if (current != null) {
+                result.append(",");
+            }
+        }
+        result.append("]");
+        return result.toString();
+    }
+}
+
+class Solution {
+
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        // Create a dummy node to handle edge cases, such as when the head needs to be removed
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        // Initialize two pointers, both starting at the dummy node
+        ListNode first = dummy;
+        ListNode second = dummy;
+        // Move the first pointer `n + 1` steps ahead to maintain the gap
+        for (int i = 0; i <= n; i++) {
+            first = first.next;
+        }
+        // Move both pointers until the first reaches the end
+        while (first != null) {
+            first = first.next;
+            second = second.next;
+        }
+        // Second is now pointing to the node before the one to be removed
+        second.next = second.next.next;
+        // Return the modified list, which starts from dummy.next
+        return dummy.next;
+    }
+
+    public static void main(String[] args) {
+        // Create a linked list from a string representation
+        ListNode head = ListNode.deserialize("[1,2,3,4,5]");
+        Solution solution = new Solution();
+        ListNode result = solution.removeNthFromEnd(head, 2);
+        // Print the list after removal
+        // Expected output: [1,2,3,5]
+        System.out.println(ListNode.serialize(result));
+    }
+}

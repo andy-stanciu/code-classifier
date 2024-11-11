@@ -1,0 +1,44 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        String var1 = "";
+        int lengthOfS = s.length();
+        int lengthOfT = t.length();
+        if (lengthOfT > lengthOfS)
+            return var1;
+        Map<Character, Integer> tMap = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            tMap.put(c, tMap.getOrDefault(c, 0) + 1);
+        }
+        Map<Character, Integer> seen = new HashMap<>();
+        int countOfSeenChars = 0;
+        int left = 0;
+        int right = 0;
+        int minLength = Integer.MAX_VALUE;
+        while (right < lengthOfS) {
+            char letter = s.charAt(right);
+            if (tMap.containsKey(letter)) {
+                seen.put(letter, seen.getOrDefault(letter, 0) + 1);
+                if (seen.get(letter) <= tMap.get(letter)) {
+                    countOfSeenChars++;
+                }
+            }
+            while (countOfSeenChars == lengthOfT) {
+                if (right - left + 1 < minLength) {
+                    minLength = right - left + 1;
+                    var1 = s.substring(left, right + 1);
+                }
+                char leftChar = s.charAt(left);
+                if (tMap.containsKey(leftChar)) {
+                    seen.put(leftChar, seen.get(leftChar) - 1);
+                    if (seen.get(leftChar) < tMap.get(leftChar)) {
+                        countOfSeenChars--;
+                    }
+                }
+                left++;
+            }
+            right++;
+        }
+        return var1;
+    }
+}

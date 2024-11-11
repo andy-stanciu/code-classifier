@@ -1,0 +1,68 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<Class1> var1 = new ArrayList<Class1>();
+        for (int i = 0; i < param1; i++) {
+            var1.add(new Class1());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int[] p = prerequisites[i];
+            var1.get(p[0]).addPrereq(var1.get(p[1]));
+        }
+        int taken = 0;
+        while (taken < param1) {
+            int t = taken;
+            for (int i = 0; i < var1.size(); i++) {
+                Class1 c = var1.get(i);
+                if (c.canTake()) {
+                    c.take();
+                    var1.remove(c);
+                    taken++;
+                }
+            }
+            if (t == taken) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public class Class1 {
+
+        List<Class1> prereqs;
+
+        List<Class1> blocking;
+
+        public boolean canTake() {
+            return numPrereqs() == 0;
+        }
+
+        public int numPrereqs() {
+            return prereqs == null ? 0 : prereqs.size();
+        }
+
+        public void take() {
+            if (blocking != null) {
+                for (Class1 c : blocking) {
+                    c.prereqs.remove(this);
+                }
+                this.blocking.clear();
+            }
+        }
+
+        public void addBlocking(Class1 c) {
+            if (blocking == null) {
+                blocking = new ArrayList<>();
+            }
+            blocking.add(c);
+        }
+
+        public void addPrereq(Class1 c) {
+            if (prereqs == null) {
+                prereqs = new ArrayList<>();
+            }
+            prereqs.add(c);
+            c.addBlocking(this);
+        }
+    }
+}

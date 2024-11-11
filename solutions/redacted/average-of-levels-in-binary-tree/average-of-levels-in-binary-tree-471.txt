@@ -1,0 +1,116 @@
+/**
+ * COMMENT #1 - about the algorithm
+ *
+ * This algorithm implements Level Order Traversal, aka Breadth First Search (BFS).
+ * In plain words, it processes the nodes layer by layer, processing all the nodes in one
+ * layer before moving onto the next.
+ *
+ * It uses a queue to help with the processing. The queue is like queues you find in the
+ * real world; newcomers go to the back of the line: First in, First Out (FIFO queue).
+ * I use an ArrayDeque accessed through the Deque interface. ArrayDeque is a resizable-array
+ * implementation of the Deque interface, fast and efficient. The Deque interface supports
+ * element insertion and removal at both ends of the linear collection. It\'s useful for both FIFO (queues) and LIFO (stacks).
+ *
+ * Optimization: I\'m using a singleton instance of ArrayDeque, with an intial capacity of 5000.
+ *               That way, no resizing/memory reallocation/copying of the backing array occurs.
+ *               See comment inline for why it\'s 5000.
+ *
+ * The general procedure for layer-by-layer processing (Level Order Traversal) is:
+ * 1. Create an empty queue.
+ * 2. The root node goes in the queue.
+ * 3. Get the number of nodes in the queue, n.
+ * 4. For n times (the number of nodes at this layer), the front node...
+ *       (a) is removed from the queue,
+ *       (b) is visited (read its value to sum),
+ *       (c) has all its children added to the back of the queue
+ * 5. After iterating those n times, all the nodes for the layer have been processed,
+ *    and computations involving the whole layer can be done (like computing the average).
+ * 6. If there are nodes waiting in the queue, they are the nodes of the next layer;
+ *    so loop to 3-6. Otherwise, there are no more layers, and you\'re done.
+ *
+ * COMMENT #2 - sum is a long because...
+ *
+ * Given the problem constraint of Node.val:  -2^31 <= Node.val <= 2^31 - 1
+ * and the 10,000 nodes contraint, a question is: What is the maximum number of nodes in one layer?
+ *
+ * Sketching it out, we can see....
+ *
+ * Width   Count   Level
+ * 1       1       0
+ * 2       3       1
+ * 4       7       2
+ * 8       15      3
+ * 16      31      4
+ * 32      63      5
+ * 64      127     6
+ * 128     255     7
+ * 256     511     8
+ * 512     1023    9
+ * 1024    2047    10
+ * 2048    4095    11
+ * 4096    8191    12  <--- for 10,000 node tree, level 12 will have the most nodes, 4096 = 2^12
+ * 8192    16383   13
+ * 16384   32767   14
+ * 32768   65535   15
+ * 65536   131071  16
+ * 131072  262143  17
+ * 262144  524287  18
+ *
+ * So... a complete binary tree (every node other than the leaves has two children) with 10,000 nodes will have the most 4096 nodes in one level (level 12).
+ *
+ * Given that, what is the minimum and maximum sum value? It\'s 2^43
+ * max sum = maxnodes * maxval = 2^12 * -2^31 = 2^43
+ * min sum = maxnodes * minval = 2^12 * (2^31 - 1) = 2^43 - 2^12
+ *
+ * So, to avoid overflow, it\'s a long as Long.MIN_VALUE < min,max sum < Long.MAX_VAULE.
+ *
+ * Btw, I could have made it a double. Whole numbers can be stored in doubles --without losing precision-- from
+ * from -(2^53-1) to 2^53-1. But I"m choosing to keep it as a long, and cast it to a double later.
+ *
+ * COMMENT #3 - sum is cast to a double because...
+ *
+ * without the cast, the code doesn\'t complile:
+ *        incompatible types: long cannot be converted to Double
+ *
+ * So, it casts one of the operands from int to double, to make it a floating point operation.
+ * Then, per JLS 4.2.4 Floating-Point Operations:
+ * If at least one of the operands to a binary operator is of floating-point type, then the operation is a
+ * floating-point operation, even if the other is integral.
+ */
+class Solution {
+
+    // Sets initial capacity of ArrayDeque to 5000.
+    //   In a complete BT, level 12 will have 4096 nodes, and level 13 will have 1809 nodes. (See table above.)
+    //   After 905 nodes are processed from level 12, there will be 4096-905 nodes in the queue plus
+    //   the 1809 children of the nodes processed. That\'s 4096-905+1809= 5000 nodes.
+    private static final Deque<TreeNode> q = new ArrayDeque<>(5000);
+
+    public List<Double> method1(TreeNode root) {
+        List<Double> list = new ArrayList<>();
+        if (root == null)
+            return list;
+        // reuse the queue
+        q.clear();
+        q.add(root);
+        int n;
+        while ((n = q.size()) != 0) {
+            // See COMMENT #2 above - why this is a long
+            long sum = 0;
+            for (int i = 0; i < n; i++) {
+                // removes node from front of queue
+                TreeNode node = q.removeFirst();
+                // visits the node
+                sum += node.val;
+                // adds the node\'s children
+                if (node.left != null)
+                    q.addLast(node.left);
+                if (node.right != null)
+                    q.addLast(node.right);
+            }
+            // Add average to the list
+            // see COMMENT #3 above - why this is cast this way
+            list.add((double) sum / n);
+        }
+        return list;
+    }
+}

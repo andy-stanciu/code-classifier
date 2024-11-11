@@ -1,0 +1,42 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        // To track required character counts
+        int[] hash = new int[256];
+        for (char c : t.toCharArray()) {
+            hash[c]++;
+        }
+        int l = 0, r = 0, cnt = 0, minLen = Integer.MAX_VALUE, sIdx = -1;
+        // Number of distinct characters to match
+        int requiredMatches = t.length();
+        while (r < s.length()) {
+            // Expand the window by moving `r`
+            char rightChar = s.charAt(r);
+            if (hash[rightChar] > 0) {
+                cnt++;
+            }
+            hash[rightChar]--;
+            // Contract the window when a valid substring is found
+            while (cnt == requiredMatches) {
+                if (r - l + 1 < minLen) {
+                    minLen = r - l + 1;
+                    sIdx = l;
+                }
+                char leftChar = s.charAt(l);
+                hash[leftChar]++;
+                // Only decrement `cnt` when the left char is part of `t` and is essential
+                if (hash[leftChar] > 0) {
+                    cnt--;
+                }
+                // Move the left pointer to contract
+                l++;
+            }
+            // Move the right pointer to expand
+            r++;
+        }
+        // If no valid window was found, return an empty string
+        if (sIdx == -1)
+            return "";
+        return s.substring(sIdx, sIdx + minLen);
+    }
+}

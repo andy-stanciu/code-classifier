@@ -1,0 +1,36 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        Map<Character, Integer> tCharacterFreqMap = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            tCharacterFreqMap.put(c, tCharacterFreqMap.getOrDefault(c, 0) + 1);
+        }
+        int start = 0;
+        int minDistance = Integer.MAX_VALUE;
+        int resultStart = 0;
+        Map<Character, Integer> sCharacterFreqMap = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            sCharacterFreqMap.put(c, sCharacterFreqMap.getOrDefault(c, 0) + 1);
+            while (hasSubstringEverything(sCharacterFreqMap, tCharacterFreqMap)) {
+                if ((i - start + 1) < minDistance) {
+                    minDistance = i - start + 1;
+                    resultStart = start;
+                }
+                sCharacterFreqMap.put(s.charAt(start), sCharacterFreqMap.get(s.charAt(start)) - 1);
+                start++;
+            }
+        }
+        return minDistance != Integer.MAX_VALUE ? s.substring(resultStart, resultStart + minDistance) : "";
+    }
+
+    private boolean hasSubstringEverything(Map<Character, Integer> sMap, Map<Character, Integer> tMap) {
+        for (Map.Entry<Character, Integer> entry : tMap.entrySet()) {
+            Integer occurenceInS = sMap.get(entry.getKey());
+            if (occurenceInS == null || occurenceInS < entry.getValue()) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

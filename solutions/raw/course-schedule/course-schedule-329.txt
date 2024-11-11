@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        var processed = new Boolean[numCourses];
+        List<List<Integer>> adjLists = new ArrayList<>(numCourses);
+        for (int i = 0; i < numCourses; i++) {
+            adjLists.add(new ArrayList<>());
+        }
+        for (var preReq : prerequisites) {
+            adjLists.get(preReq[1]).add(preReq[0]);
+        }
+        for (int i = 0; i < numCourses; i++) {
+            if (!recurse(i, processed, adjLists)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean recurse(int course, Boolean[] processed, List<List<Integer>> adjLists) {
+        if (Boolean.TRUE.equals(processed[course])) {
+            return true;
+        }
+        if (Boolean.FALSE.equals(processed[course])) {
+            return false;
+        }
+        processed[course] = false;
+        for (var child : adjLists.get(course)) {
+            if (!recurse(child, processed, adjLists)) {
+                return false;
+            }
+        }
+        processed[course] = true;
+        return true;
+    }
+}

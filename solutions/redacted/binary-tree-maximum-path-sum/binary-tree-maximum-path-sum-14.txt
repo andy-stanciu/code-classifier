@@ -1,0 +1,41 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    //initialise a class level max variable
+    int max = Integer.MIN_VALUE;
+
+    public int method1(TreeNode root) {
+        if (root == null)
+            return 0;
+        method2(root);
+        return max;
+    }
+
+    public int method2(TreeNode root) {
+        //for leaf node, sum contribution=0
+        if (root == null)
+            return 0;
+        //if negative, will never contribute to max sum, so ignore
+        int var1 = Math.max(method2(root.left), 0);
+        int var2 = Math.max(method2(root.right), 0);
+        //sum at self node will be sum of all
+        int self = root.val + var2 + var1;
+        max = Math.max(max, self);
+        //now if we have to go up a node, contribution will come from any one side left or right
+        return Math.max(var2, var1) + root.val;
+    }
+}

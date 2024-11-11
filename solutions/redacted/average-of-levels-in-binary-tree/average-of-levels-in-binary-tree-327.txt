@@ -1,0 +1,27 @@
+class Solution {
+
+    public List<Double> method1(TreeNode root) {
+        Map<Integer, Double> sums = new HashMap<>();
+        Map<Integer, Double> counts = new HashMap<>();
+        traverse(root, 0, sums, counts);
+        List<Double> result = new ArrayList<>(sums.size());
+        for (int i = 0, limit = sums.size(); i < limit; i++) {
+            double sum = sums.get(i);
+            double count = counts.get(i);
+            double var1 = 1.0 * sum / count;
+            result.add(var1);
+        }
+        return result;
+    }
+
+    private static void traverse(TreeNode node, int level, Map<Integer, Double> sums, Map<Integer, Double> counts) {
+        sums.merge(level, (double) node.val, (ov, nv) -> ov + nv);
+        counts.merge(level, 1.0, (ov, nv) -> ov + nv);
+        if (node.left != null) {
+            traverse(node.left, level + 1, sums, counts);
+        }
+        if (node.right != null) {
+            traverse(node.right, level + 1, sums, counts);
+        }
+    }
+}

@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
+ * }
+ */
+class Solution {
+
+    public List<Double> averageOfLevels(TreeNode root) {
+        // create queue for BFS implementation
+        Queue<TreeNode> q = new LinkedList<>();
+        // answer arraylist
+        ArrayList<Double> ans = new ArrayList<>();
+        // add root node
+        q.add(root);
+        // initial size will be at least 1 according to constraints
+        double size = 1;
+        // outer loop runs till entire tree is traversed
+        while (!q.isEmpty()) {
+            // calculates current queue size which is the size of the curr layer in the tree
+            size = q.size();
+            // calculate number of nodes in the current layer
+            double num = size;
+            // initialise current layers sum to be 0
+            double sum = 0;
+            // inner loop runs until size is 0 where size is the size of the current layer
+            while (size-- > 0) {
+                // store the nodes in the queue in currNode one by one and add their sums
+                TreeNode currNode = q.remove();
+                sum += currNode.val;
+                // add each nodes siblings if they exist to the queue which will be processed as
+                // th next layer and will have that vlayers size value in next itiration
+                if (currNode.left != null)
+                    q.add(currNode.left);
+                if (currNode.right != null)
+                    q.add(currNode.right);
+            }
+            // after each layer is processed the sums of that layers nodes values is divided
+            // by total number of nodes in the layer we stored in \'num\' to find the average
+            // and add it to our ans arraylist
+            ans.add(sum / num);
+        }
+        // return the ans arraylist after entire tree is processed
+        return ans;
+    }
+}

@@ -1,0 +1,31 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        int[] tail = new int[n];
+        int len = 1;
+        tail[0] = nums[0];
+        for (int i = 1; i < n; i++) {
+            if (nums[i] > tail[len - 1]) {
+                tail[len] = nums[i];
+                len++;
+            } else {
+                int lowerBound = lowerBound(tail, 0, len - 1, nums[i]);
+                tail[lowerBound] = nums[i];
+            }
+        }
+        return len;
+    }
+
+    public int lowerBound(int[] tail, int low, int high, int target) {
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (tail[mid] >= target) {
+                high = mid;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return high;
+    }
+}

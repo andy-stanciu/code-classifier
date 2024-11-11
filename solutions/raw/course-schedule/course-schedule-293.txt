@@ -1,0 +1,47 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Create an adjacency list to represent the graph
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        // Fill the adjacency list with prerequisites
+        for (int[] prerequisite : prerequisites) {
+            int course = prerequisite[0];
+            int prereq = prerequisite[1];
+            adjList.get(prereq).add(course);
+        }
+        // Create an array to keep track of visited nodes
+        int[] visited = new int[numCourses];
+        // Perform DFS on each course
+        for (int i = 0; i < numCourses; i++) {
+            if (visited[i] == 0 && !dfs(adjList, visited, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(List<List<Integer>> adjList, int[] visited, int course) {
+        // If this course is being visited in the current DFS traversal, it means there is a cycle
+        if (visited[course] == 1) {
+            return false;
+        }
+        // If this course has already been visited in a previous traversal, no need to visit again
+        if (visited[course] == 2) {
+            return true;
+        }
+        // Mark this course as being visited
+        visited[course] = 1;
+        // Visit all the courses that depend on this course
+        for (int nextCourse : adjList.get(course)) {
+            if (!dfs(adjList, visited, nextCourse)) {
+                return false;
+            }
+        }
+        // Mark this course as completely visited
+        visited[course] = 2;
+        return true;
+    }
+}

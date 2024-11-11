@@ -1,0 +1,38 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (t.length() > s.length()) {
+            return "";
+        }
+        Map<Character, Integer> tmap = new HashMap<>();
+        Map<Character, Integer> smap = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            char ch = t.charAt(i);
+            tmap.put(ch, tmap.getOrDefault(ch, 0) + 1);
+        }
+        int i = 0, j = 0, count = 0;
+        int minLen = Integer.MAX_VALUE;
+        String minString = "";
+        while (j < s.length()) {
+            char newch = s.charAt(j);
+            smap.put(newch, smap.getOrDefault(newch, 0) + 1);
+            if (tmap.containsKey(newch) && smap.get(newch) <= tmap.get(newch)) {
+                count++;
+            }
+            while (count == t.length()) {
+                if (j - i + 1 < minLen) {
+                    minLen = j - i + 1;
+                    minString = s.substring(i, j + 1);
+                }
+                char removeChar = s.charAt(i);
+                smap.put(removeChar, smap.get(removeChar) - 1);
+                if (tmap.containsKey(removeChar) && smap.get(removeChar) < tmap.get(removeChar)) {
+                    count--;
+                }
+                i++;
+            }
+            j++;
+        }
+        return minString;
+    }
+}

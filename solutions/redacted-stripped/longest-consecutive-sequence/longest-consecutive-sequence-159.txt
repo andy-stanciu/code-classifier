@@ -1,0 +1,62 @@
+class Solution {
+
+    int[][] union;
+
+    public int method1(int[] nums) {
+        int n = nums.length;
+        int ans = 0;
+        var store = new HashMap<Integer, Integer>();
+        union = new int[n][3];
+        for (int i = 0; i < n; i++) {
+            if (store.containsKey(nums[i])) {
+                union[i][0] = -1;
+                union[i][1] = -1;
+                union[i][2] = -1;
+            } else {
+                store.put(nums[i], i);
+                union[i][0] = nums[i];
+                union[i][1] = i;
+                union[i][2] = 1;
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            int num = nums[i];
+            Integer idx = store.get(num + 1);
+            if (idx == null || union[i][1] == -1) {
+                continue;
+            } else {
+                unionFunc(i, store.get(num + 1));
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            ans = Math.max(union[i][2], ans);
+        }
+        return ans;
+    }
+
+    int find(int idx) {
+        if (idx == union[idx][1]) {
+            return idx;
+        } else {
+            int newIdx = find(union[idx][1]);
+            union[idx][1] = newIdx;
+            return newIdx;
+        }
+    }
+
+    void unionFunc(int idx1, int idx2) {
+        idx1 = find(idx1);
+        int rank1 = union[idx1][2];
+        idx2 = find(idx2);
+        int rank2 = union[idx2][2];
+        if (idx1 == idx2)
+            return;
+        if (rank1 > rank2) {
+            union[idx2][1] = idx1;
+            union[idx1][2] = rank2 + rank1;
+        } else {
+            union[idx1][1] = idx2;
+            union[idx2][2] = rank2 + rank1;
+        }
+    }
+}

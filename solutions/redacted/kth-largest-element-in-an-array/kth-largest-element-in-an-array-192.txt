@@ -1,0 +1,49 @@
+public class Solution {
+
+    public int method1(int[] nums, int k) {
+        // Convert k-th largest to the index in a sorted array (0-based)
+        return quickSelect(nums, 0, nums.length - 1, nums.length - k);
+    }
+
+    private int quickSelect(int[] nums, int left, int right, int k) {
+        // Base case: if the search range has one element
+        if (left == right)
+            return nums[left];
+        // Randomly choose a pivot index within the current range
+        int var1 = new Random().nextInt(right - left + 1) + left;
+        // Partition around the chosen pivot and get its sorted position
+        var1 = partition(nums, left, right, var1);
+        // Check if pivot is at the k-th position
+        if (var1 == k)
+            return nums[k];
+        else // If pivot is too small, search in the right half
+        if (var1 < k)
+            return quickSelect(nums, var1 + 1, right, k);
+        else
+            // If pivot is too large, search in the left half
+            return quickSelect(nums, left, var1 - 1, k);
+    }
+
+    private int partition(int[] nums, int left, int right, int var1) {
+        int pivot = nums[var1];
+        // Move pivot to the end of the range
+        swap(nums, var1, right);
+        var1 = left;
+        // Move elements less than pivot to the left of the partition
+        for (int i = left; i < right; i++) {
+            if (nums[i] < pivot) {
+                swap(nums, i, var1);
+                var1++;
+            }
+        }
+        // Move pivot to its final position
+        swap(nums, var1, right);
+        return var1;
+    }
+
+    private void swap(int[] nums, int x, int y) {
+        int temp = nums[x];
+        nums[x] = nums[y];
+        nums[y] = temp;
+    }
+}

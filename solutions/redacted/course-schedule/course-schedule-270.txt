@@ -1,0 +1,50 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        // Lets make a directed graph first
+        int[] indegree = new int[param1];
+        HashMap<Integer, List<Integer>> graph = new HashMap<>();
+        for (int[] pre : prerequisites) {
+            int from = pre[0];
+            int to = pre[1];
+            if (graph.containsKey(from)) {
+                List<Integer> nebs = graph.get(from);
+                nebs.add(to);
+                graph.put(from, nebs);
+            } else {
+                List<Integer> nebs = new ArrayList<>();
+                nebs.add(to);
+                graph.put(from, nebs);
+            }
+            // and also calculating indegree
+            indegree[to] += 1;
+        }
+        // Lets perform cycle detection using top sort
+        // do this till all our nodes are cancelled
+        while (param1 > 0) {
+            // get node with zero indegree
+            int node = -1;
+            for (int i = 0; i < indegree.length; i++) {
+                if (indegree[i] == 0) {
+                    node = i;
+                }
+            }
+            if (node == -1) {
+                // means if no zero indegree found,return false
+                return false;
+            }
+            // else we cancel that node and all other edges going out
+            param1 -= 1;
+            indegree[node] = -1;
+            if (graph.get(node) == null) {
+                continue;
+            }
+            // get neighbors
+            List<Integer> neighbors = graph.get(node);
+            for (int neighbor : neighbors) {
+                indegree[neighbor] -= 1;
+            }
+        }
+        return true;
+    }
+}

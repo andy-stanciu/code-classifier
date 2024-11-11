@@ -1,0 +1,76 @@
+class Solution {
+
+    public boolean dfs(int node, Boolean[] visited, Boolean[] pathVisited, List<List<Integer>> adj) {
+        visited[node] = true;
+        pathVisited[node] = true;
+        for (int ele : adj.get(node)) {
+            if (!visited[ele]) {
+                if (!dfs(ele, visited, pathVisited, adj))
+                    return false;
+            } else if (pathVisited[ele]) {
+                return false;
+            }
+        }
+        pathVisited[node] = false;
+        return true;
+    }
+
+    public boolean canFinishDFS(int V, List<List<Integer>> adj) {
+        Boolean[] visited = new Boolean[V];
+        Boolean[] pathVisited = new Boolean[V];
+        Arrays.fill(visited, false);
+        Arrays.fill(pathVisited, false);
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                if (!dfs(i, visited, pathVisited, adj))
+                    return false;
+                ;
+            }
+        }
+        return true;
+    }
+
+    public boolean canFinishBFS(int V, List<List<Integer>> adj) {
+        int[] inDegree = new int[V];
+        for (List<Integer> list : adj) {
+            for (int i : list) {
+                inDegree[i]++;
+            }
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < inDegree.length; i++) {
+            if (inDegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        int count = 0;
+        while (!queue.isEmpty()) {
+            int ele = queue.poll();
+            count++;
+            for (int it : adj.get(ele)) {
+                inDegree[it]--;
+                if (inDegree[it] == 0) {
+                    queue.offer(it);
+                }
+            }
+        }
+        return count == V;
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int[] eleArr = prerequisites[i];
+            adj.get(eleArr[0]).add(eleArr[1]);
+        }
+        //BFS (kahn\'s algo): start
+        // return canFinishBFS(numCourses,adj);
+        //BFS (kahn\'s algo): end
+        //DFS : start
+        return canFinishDFS(numCourses, adj);
+        //DFS : end
+    }
+}

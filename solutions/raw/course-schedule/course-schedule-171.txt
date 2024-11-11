@@ -1,0 +1,50 @@
+class Solution {
+
+    boolean[] vis = null;
+
+    boolean[] track = null;
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if (prerequisites.length == 1)
+            return true;
+        List<Integer>[] vertices = new List[numCourses];
+        int v = 0;
+        for (int[] c : prerequisites) {
+            if (vertices[c[0]] != null) {
+                vertices[c[0]].add(c[1]);
+            } else {
+                v++;
+                List<Integer> neighbors = new ArrayList<>();
+                neighbors.add(c[1]);
+                vertices[c[0]] = neighbors;
+            }
+        }
+        vis = new boolean[numCourses];
+        track = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (vertices[i] != null && isCyclic(i, vertices)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    boolean isCyclic(int i, List<Integer>[] vertices) {
+        if (track[i]) {
+            return true;
+        }
+        if (vis[i]) {
+            return false;
+        }
+        track[i] = true;
+        vis[i] = true;
+        if (vertices[i] != null)
+            for (int n : vertices[i]) {
+                if (isCyclic(n, vertices)) {
+                    return true;
+                }
+            }
+        track[i] = false;
+        return false;
+    }
+}

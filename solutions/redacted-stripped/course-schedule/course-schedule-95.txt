@@ -1,0 +1,46 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            adjList.get(prerequisite[1]).add(prerequisite[0]);
+        }
+        boolean[] visited = new boolean[param1];
+        boolean[] recStack = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                if (hasCycle(i, adjList, visited, recStack)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean hasCycle(int node, List<List<Integer>> adjList, boolean[] visited, boolean[] recStack) {
+        visited[node] = true;
+        recStack[node] = true;
+        for (int neighbor : adjList.get(node)) {
+            if (!visited[neighbor]) {
+                if (hasCycle(neighbor, adjList, visited, recStack)) {
+                    return true;
+                }
+            } else if (recStack[neighbor]) {
+                return true;
+            }
+        }
+        recStack[node] = false;
+        return false;
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        int[][] prerequisites1 = { { 1, 0 } };
+        System.out.println(solution.canFinish(2, prerequisites1));
+        int[][] prerequisites2 = { { 1, 0 }, { 0, 1 } };
+        System.out.println(solution.canFinish(2, prerequisites2));
+    }
+}

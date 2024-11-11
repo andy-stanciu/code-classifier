@@ -1,0 +1,39 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // array to keep track of the in-degree of each node
+        int[] indegree = new int[numCourses];
+        // list of list is used to calculate the indegree thats all
+        // i-th node => the course to be taken first
+        // elements of i-th node => the courses that can be taken after i-th course
+        List<List<Integer>> adj = new ArrayList<>();
+        //Creating Empty Lists
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        //Calculating the in-degree
+        for (int[] pre : prerequisites) {
+            adj.get(pre[1]).add(pre[0]);
+            indegree[pre[0]]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        //Which Have Zero Dependency we push them into the queue
+        //for(int i: indegree) if(i==0) queue.offer(i); - Appending the indegree, not the node - WRONG
+        for (int i = 0; i < numCourses; i++) if (indegree[i] == 0)
+            queue.offer(i);
+        //Lets Keep Track of all the number of nodes visited
+        // If there are no cycles this should be equal to the number of courses
+        int nodesVisited = 0;
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            nodesVisited += 1;
+            for (int neighbour : adj.get(node)) {
+                //Removing the edge "node -> neighbour"
+                indegree[neighbour]--;
+                if (indegree[neighbour] == 0)
+                    queue.offer(neighbour);
+            }
+        }
+        return nodesVisited == numCourses;
+    }
+}

@@ -1,0 +1,35 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] graph) {
+        if (graph.length == 0)
+            return true;
+        Map<Integer, List<Integer>> li = new HashMap<>();
+        int[] indegree = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            li.put(i, new ArrayList<>());
+        }
+        for (int i = 0; i < graph.length; i++) {
+            int[] node = graph[i];
+            li.get(node[1]).add(node[0]);
+            indegree[node[0]]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        int nodesVisited = 0;
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            nodesVisited++;
+            for (int neighbor : li.get(node)) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0) {
+                    queue.offer(neighbor);
+                }
+            }
+        }
+        return nodesVisited == param1;
+    }
+}

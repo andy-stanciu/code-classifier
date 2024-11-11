@@ -1,0 +1,44 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        if (nums.length == 0) {
+            return 0;
+        }
+        List<Integer> dp = new ArrayList<>();
+        for (int num : nums) {
+            int left = 0;
+            int right = dp.size();
+            // Binary search
+            while (left < right) {
+                int mid = left + (right - left) / 2;
+                if (dp.get(mid) < num) {
+                    left = mid + 1;
+                } else {
+                    right = mid;
+                }
+            }
+            // If the position is at end, append new num
+            if (left >= dp.size()) {
+                dp.add(num);
+            } else {
+                // Otherwise, replace element at found position
+                dp.set(left, num);
+            }
+        }
+        return dp.size();
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the number of elements in the array:");
+        int n = scanner.nextInt();
+        int[] nums = new int[n];
+        System.out.println("Enter the elements of the array:");
+        for (int i = 0; i < n; i++) {
+            nums[i] = scanner.nextInt();
+        }
+        Solution solution = new Solution();
+        int length = solution.lengthOfLIS(nums);
+        System.out.println("The length of the longest strictly increasing subsequence is: " + length);
+    }
+}

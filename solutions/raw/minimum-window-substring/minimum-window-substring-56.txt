@@ -1,0 +1,60 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int n = s.length(), targetLen = t.length();
+        HashMap<Character, Integer> reqMap = new HashMap<Character, Integer>();
+        //determines the freq of characters that are required for Matchig with "t"
+        //+ve freq determines the freq of that rquired characeter
+        //-ve freq determines excess availablity of "not required" characters
+        for (//filling the req Map with req chars from "t" string
+        int i = 0; //filling the req Map with req chars from "t" string
+        i < targetLen; //filling the req Map with req chars from "t" string
+        i++) {
+            char ch = t.charAt(i);
+            int prevCount = reqMap.getOrDefault(ch, 0);
+            reqMap.put(ch, prevCount + 1);
+        }
+        //=============================================================================
+        int low = 0;
+        int mnLen = Integer.MAX_VALUE;
+        String mnString = "";
+        int matchCount = 0;
+        for (int high = low; high < n; high++) {
+            char ch = s.charAt(high);
+            int prevCount = reqMap.getOrDefault(ch, 0);
+            //ch is required (+ve freq in reqMap) => increase MatchCount
+            if (prevCount > 0)
+                matchCount++;
+            reqMap.put(ch, prevCount - 1);
+            //if char is req, "required Freq" of that ch will decrease by 1
+            //if char is not req for matching,  freq will become -ve
+            //===========================================
+            if (//MATCH FOUND !!!! :)
+            matchCount == targetLen) {
+                while (//Try to shrink the window till the window become Invalid (MisMatch)
+                low <= high) {
+                    int len = high - low + 1;
+                    if (//record the current best Len
+                    len < mnLen) {
+                        mnLen = len;
+                        mnString = s.substring(low, high + 1);
+                    }
+                    char currCh = s.charAt(low);
+                    int prevChCount = reqMap.get(currCh);
+                    //remove "currCh" and increase the "requiredFreq"
+                    reqMap.put(currCh, prevChCount + 1);
+                    low++;
+                    if (//+vefreq tells that currCh is still required, window is Invalid
+                    reqMap.get(currCh) > 0) {
+                        //if removing "currCh" from window causes a mismatch, "BREAKK!!"
+                        matchCount--;
+                        break;
+                    }
+                }
+            }
+            //=====================================================
+        }
+        //========================================================================
+        return mnString;
+    }
+}

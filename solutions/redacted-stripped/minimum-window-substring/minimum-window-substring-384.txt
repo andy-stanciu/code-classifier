@@ -1,0 +1,45 @@
+class Solution {
+
+    String t;
+
+    public String method1(String s, String t) {
+        this.t = t;
+        if (s.length() < t.length()) {
+            return "";
+        }
+        Map<Character, Integer> tMap = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            tMap.put(c, tMap.getOrDefault(c, 0) + 1);
+        }
+        int left = 0;
+        int right = 0;
+        int method1 = Integer.MAX_VALUE;
+        int minStart = 0;
+        int count = tMap.size();
+        while (right < s.length()) {
+            char rightChar = s.charAt(right);
+            if (tMap.containsKey(rightChar)) {
+                tMap.put(rightChar, tMap.get(rightChar) - 1);
+                if (tMap.get(rightChar) == 0) {
+                    count--;
+                }
+            }
+            right++;
+            while (count == 0) {
+                if ((right - left) < method1) {
+                    minStart = left;
+                    method1 = right - left;
+                }
+                char leftChar = s.charAt(left);
+                if (tMap.containsKey(leftChar)) {
+                    tMap.put(leftChar, tMap.get(leftChar) + 1);
+                    if (tMap.get(leftChar) > 0) {
+                        count++;
+                    }
+                }
+                left++;
+            }
+        }
+        return method1 != Integer.MAX_VALUE ? s.substring(minStart, minStart + method1) : "";
+    }
+}

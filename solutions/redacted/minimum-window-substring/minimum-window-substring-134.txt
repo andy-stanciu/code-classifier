@@ -1,0 +1,44 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        Map<Character, Integer> tcount = new HashMap<>();
+        String result = "";
+        if (t.length() > s.length()) {
+            System.out.println(t.length());
+            System.out.println(s.length());
+            return result;
+        }
+        for (int i = 0; i < t.length(); i++) {
+            tcount.put(t.charAt(i), tcount.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        int left = 0;
+        int right = 0;
+        int formed = 0;
+        int required = tcount.size();
+        Map<Character, Integer> var1 = new HashMap<>();
+        int minLen = Integer.MAX_VALUE;
+        int[] method1 = { -1, 0, 0 };
+        while (right < s.length()) {
+            char c = s.charAt(right);
+            var1.put(c, var1.getOrDefault(c, 0) + 1);
+            if (tcount.containsKey(c) && tcount.get(c).intValue() == var1.get(c).intValue()) {
+                formed++;
+            }
+            while (left <= right && formed == required) {
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    method1[0] = left;
+                    method1[1] = right;
+                }
+                char cc = s.charAt(left);
+                var1.put(cc, var1.get(cc) - 1);
+                if (tcount.containsKey(cc) && tcount.get(cc).intValue() > var1.get(cc).intValue()) {
+                    formed--;
+                }
+                left++;
+            }
+            right++;
+        }
+        return method1[0] == -1 ? "" : s.substring(method1[0], method1[1] + 1);
+    }
+}

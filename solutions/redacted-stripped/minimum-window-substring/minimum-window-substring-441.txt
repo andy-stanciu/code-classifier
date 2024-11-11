@@ -1,0 +1,34 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] charFrequency = new int[128];
+        for (char c : t.toCharArray()) {
+            charFrequency[c]++;
+        }
+        int leftPointer = 0;
+        int rightPointer = 0;
+        int minLeft = 0;
+        int minLen = Integer.MAX_VALUE;
+        int counter = t.length();
+        while (rightPointer < s.length()) {
+            char currentChar = s.charAt(rightPointer);
+            if (charFrequency[currentChar] > 0) {
+                counter--;
+            }
+            charFrequency[currentChar]--;
+            rightPointer++;
+            while (counter == 0) {
+                if (minLen > rightPointer - leftPointer) {
+                    minLen = rightPointer - leftPointer;
+                    minLeft = leftPointer;
+                }
+                char leftChar = s.charAt(leftPointer);
+                charFrequency[leftChar]++;
+                if (charFrequency[leftChar] > 0)
+                    counter++;
+                leftPointer++;
+            }
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + minLen);
+    }
+}

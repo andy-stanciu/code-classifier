@@ -1,0 +1,34 @@
+class Solution {
+
+    public int search(int[] nums, int target) {
+        int roundIndex = findRoundIndex(nums);
+        return search(nums, roundIndex, 0, nums.length, target);
+    }
+
+    public int search(int[] nums, int roundIndex, int start, int end, int target) {
+        if (start > end)
+            return -1;
+        int mid = (start + end) / 2;
+        int element = getAt(mid, nums, roundIndex);
+        if (element == target) {
+            return (mid + roundIndex) % nums.length;
+        } else if (element < target) {
+            return search(nums, roundIndex, mid + 1, end, target);
+        } else {
+            return search(nums, roundIndex, start, mid - 1, target);
+        }
+    }
+
+    private int findRoundIndex(int[] nums) {
+        int i = 1;
+        while (i < nums.length && nums[i] >= nums[i - 1]) {
+            i++;
+        }
+        return i == nums.length ? 0 : i;
+    }
+
+    private int getAt(int index, int[] nums, int roundIndex) {
+        int i = (index += roundIndex) % nums.length;
+        return nums[i];
+    }
+}

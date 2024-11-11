@@ -1,0 +1,40 @@
+class Solution {
+
+    boolean[] visited;
+
+    boolean[] valid;
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        visited = new boolean[numCourses];
+        valid = new boolean[numCourses];
+        LinkedList<Integer>[] prereqs = new LinkedList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            prereqs[i] = new LinkedList<>();
+        }
+        for (int[] p : prerequisites) {
+            int course = p[0];
+            int prereq = p[1];
+            prereqs[course].add(prereq);
+        }
+        for (int i = 0; i < numCourses; i++) {
+            dfs(i, prereqs);
+        }
+        for (int i = 0; i < numCourses; i++) {
+            if (!valid[i])
+                return false;
+        }
+        return true;
+    }
+
+    public boolean dfs(int cur, LinkedList<Integer>[] prereqs) {
+        if (visited[cur])
+            return valid[cur];
+        visited[cur] = true;
+        for (Integer p : prereqs[cur]) {
+            if (!dfs(p, prereqs))
+                return false;
+        }
+        valid[cur] = true;
+        return true;
+    }
+}

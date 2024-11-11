@@ -1,0 +1,53 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        Map<Character, Integer> targetMap = new HashMap<>();
+        Map<Character, Integer> var1 = new HashMap<>();
+        // Populate the targetMap with character frequencies from string t.
+        for (char c : t.toCharArray()) {
+            targetMap.put(c, targetMap.getOrDefault(c, 0) + 1);
+        }
+        // Initialize pointers and counters.
+        // Left pointer of the window.
+        int left = 0;
+        // Minimum window length.
+        int minLen = Integer.MAX_VALUE;
+        // Left index of the minimum window.
+        int minLeft = 0;
+        // Count of characters in the current window.
+        int count = 0;
+        // Iterate through the string s using the right pointer.
+        for (int right = 0; right < s.length(); right++) {
+            char currentChar = s.charAt(right);
+            // Update the windowMap with the character at the right pointer.
+            var1.put(currentChar, var1.getOrDefault(currentChar, 0) + 1);
+            // If the character exists in the target and its count in the window is less than or equal to the target count, increment the count.
+            if (targetMap.containsKey(currentChar) && var1.get(currentChar) <= targetMap.get(currentChar)) {
+                count++;
+            }
+            // If all characters in the target are found in the current window.
+            while (count == t.length()) {
+                // Calculate the window length and update the minimum window if necessary.
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    minLeft = left;
+                }
+                // Move the left pointer to the right to shrink the window.
+                char leftChar = s.charAt(left);
+                var1.put(leftChar, var1.get(leftChar) - 1);
+                // If the removed character is in the target and its count in the window is less than the target count, decrement the count.
+                if (targetMap.containsKey(leftChar) && var1.get(leftChar) < targetMap.get(leftChar)) {
+                    count--;
+                }
+                // Move the left pointer to expand the window.
+                left++;
+            }
+        }
+        // Check if a valid window was found.
+        if (minLen == Integer.MAX_VALUE) {
+            return "";
+        }
+        // Extract and return the minimum window substring.
+        return s.substring(minLeft, minLeft + minLen);
+    }
+}

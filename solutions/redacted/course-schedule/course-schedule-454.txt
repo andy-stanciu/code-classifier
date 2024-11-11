@@ -1,0 +1,44 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        // highlevel: traverse pre[][], store pre for each course, store them into a int[] = indegree[]
+        //traverse again, find which indegree is 0, then find which course has this pre, indegree[x]--
+        int[] indegree = new int[param1];
+        // initialize the graph
+        List<List<Integer>> graph = new ArrayList<>(param1);
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        // traverse the pre[][], to add all the pre course into the listOfList, meanwhile update indegree
+        for (int[] pre : prerequisites) {
+            int x = pre[0];
+            int y = pre[1];
+            graph.get(y).add(x);
+            indegree[x]++;
+        }
+        // put all the  store all the course that have no pre course into a queue,
+        Queue<Integer> queue = new ArrayDeque<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        // BFS, generate all the courses from queue and expant all the course depend on those courses
+        while (!queue.isEmpty()) {
+            Integer cur = queue.poll();
+            for (Integer next : graph.get(cur)) {
+                indegree[next]--;
+                if (indegree[next] == 0) {
+                    queue.offer(next);
+                }
+            }
+        }
+        // if queue is empty, meaning all the courses
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

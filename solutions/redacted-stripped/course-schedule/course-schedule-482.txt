@@ -1,0 +1,53 @@
+class Solution {
+
+    public boolean canFinish(int n, int[][] prerequistites) {
+        if (prerequistites == null || prerequistites.length == 0)
+            return true;
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            map.put(i, new ArrayList<>());
+        }
+        for (int[] pre : prerequistites) {
+            map.get(pre[1]).add(pre[0]);
+        }
+        boolean[] visit = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            if (!bfs(i, map, visit))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean dfs(int nei, Map<Integer, List<Integer>> map, boolean[] visit) {
+        visit[nei] = true;
+        List<Integer> neiList = map.get(nei);
+        for (int var1 : neiList) {
+            if (visit[var1])
+                return false;
+            if (!dfs(var1, map, visit))
+                return false;
+        }
+        visit[nei] = false;
+        return true;
+    }
+
+    private boolean bfs(int nei, Map<Integer, List<Integer>> map, boolean[] visit) {
+        visit[nei] = true;
+        List<Integer> neiList = map.get(nei);
+        LinkedList<Integer> queue = new LinkedList<>();
+        for (int var1 : neiList) {
+            queue.add(var1);
+        }
+        while (!queue.isEmpty()) {
+            int var1 = queue.poll();
+            if (visit[var1])
+                return false;
+            List<Integer> pre = map.get(var1);
+            for (int co : pre) {
+                queue.add(co);
+            }
+        }
+        visit[nei] = false;
+        return true;
+    }
+}

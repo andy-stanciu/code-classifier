@@ -1,0 +1,73 @@
+class Solution {
+
+    // as all paths need to be explored we will use recursion
+    // we can move only down and right
+    // we need to make 2 calls from every box
+    // if we reach a border or an obstacle we return 0
+    // if we reach the traget we return 1
+    // the value of each box = helper(right) + helper(down);
+    // we will return the value at box (0,0) i.e. return helper(0,0);
+    /*
+        int[][] memo;
+        initialize with -1
+        directons[] = {0,1}, {1,0};
+        helper(i,j){
+            //base conditon
+            if(out of bounds or box[i][j] == 1){
+                return 0;
+            }
+            if(box[i][j] == m-1, n-1){
+                return 1;
+            }
+
+            if(memo[i][j] != -1){
+                return memo[i][j];
+            }
+
+            memo[i][j] = helper(right) + helper)(down);
+        }
+    */
+    // TC = O(N) as we would only traverse a box once since we are using Memo
+    private int[] right = new int[] { 0, 1 };
+
+    private int[] down = new int[] { 1, 0 };
+
+    private int m;
+
+    private int n;
+
+    private int[][] grid;
+
+    private int[][] memo;
+
+    public int method1(int[][] obstacleGrid) {
+        this.grid = obstacleGrid;
+        this.m = grid.length;
+        this.n = grid[0].length;
+        this.memo = new int[m][n];
+        if (grid[m - 1][n - 1] == 1) {
+            return 0;
+        }
+        for (int[] arr : memo) {
+            Arrays.fill(arr, -1);
+        }
+        return helper(0, 0);
+    }
+
+    private int helper(int row, int col) {
+        if (row < 0 || row >= m || col < 0 || col >= n || grid[row][col] == 1) {
+            return 0;
+        }
+        if (row == m - 1 && col == n - 1) {
+            return 1;
+        }
+        if (memo[row][col] != -1) {
+            return memo[row][col];
+        }
+        int rightRow = row + right[0];
+        int rightCol = col + right[1];
+        int downRow = row + down[0];
+        int downCol = col + down[1];
+        return memo[row][col] = helper(rightRow, rightCol) + helper(downRow, downCol);
+    }
+}

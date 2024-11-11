@@ -1,0 +1,42 @@
+/**
+ * Backtracking solution
+ *
+ * Time Complexity: Very loose Upper Bound O(2N * 2^(2N)). As each place has only 2 options.
+ *
+ * Since number of valid combinations is equal to n-th Catalan number. n-th
+ * Catalan number = 1/(n+1) * C(2n, n) which is bounded asymptotically by 4^N /
+ * (N * sqrt(N)). Thus time complexity will be O(4^N / sqrt(N)).
+ *
+ * Space Complexity: O(N) -> Recursion stack size. O(4^N / sqrt(N)) to save the
+ * valid combinations in result list.
+ *
+ * N = Input number.
+ */
+class Solution {
+
+    public List<String> method1(int n) {
+        List<String> result = new ArrayList<>();
+        if (n < 0) {
+            return result;
+        }
+        method2(result, n, n, new StringBuilder());
+        return result;
+    }
+
+    private void method2(List<String> result, int open, int close, StringBuilder sb) {
+        if (open == 0 && close == 0) {
+            result.add(sb.toString());
+            return;
+        }
+        if (open > 0) {
+            sb.append("(");
+            method2(result, open - 1, close, sb);
+            sb.setLength(sb.length() - 1);
+        }
+        if (open < close) {
+            sb.append(")");
+            method2(result, open, close - 1, sb);
+            sb.setLength(sb.length() - 1);
+        }
+    }
+}

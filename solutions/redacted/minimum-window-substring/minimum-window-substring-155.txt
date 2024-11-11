@@ -1,0 +1,45 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int n = s.length();
+        if (t.length() > n) {
+            return "";
+        }
+        Map<Character, Integer> map = new HashMap<>();
+        //Store the characters in the map
+        for (char ch : t.toCharArray()) {
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        int requiredCount = t.length();
+        int i = 0;
+        int j = 0;
+        int var1 = Integer.MAX_VALUE;
+        int start_i = 0;
+        while (j < n) {
+            char ch = s.charAt(j);
+            if (map.containsKey(ch) && map.get(ch) > 0) {
+                requiredCount--;
+            }
+            //Reduce the count from map
+            map.put(ch, map.getOrDefault(ch, 0) - 1);
+            while (requiredCount == 0) {
+                //After we have found the window we start to shring
+                int var2 = j - i + 1;
+                if (var1 > var2) {
+                    var1 = var2;
+                    //We store the value of the i
+                    start_i = i;
+                }
+                char startChar = s.charAt(i);
+                map.put(startChar, map.getOrDefault(startChar, 0) + 1);
+                if (map.containsKey(startChar) && map.get(startChar) > 0) {
+                    //THis is the new StartChar
+                    requiredCount++;
+                }
+                i++;
+            }
+            j++;
+        }
+        return var1 == Integer.MAX_VALUE ? "" : s.substring(start_i, start_i + var1);
+    }
+}

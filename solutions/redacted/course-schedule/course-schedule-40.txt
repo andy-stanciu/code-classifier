@@ -1,0 +1,50 @@
+/*
+This problem is same as detecting cycle in directed graph
+ * Basically we need to check that is there some numbers of courses available which have cyclic dependency on each other, if yes then all courses can\'t be completed
+ 
+ ex - [[1,0],[0,1]], here To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
+ 
+ ex - [[0,1],[1,2],[2,0],[3,4],[4,5]], here 0,1 and 2 have cyclic dependency, so it is impossible to complete all courses 
+*/
+/*
+Time Complexity - O(n+e) , n = numCourses, e=prerequisites.size()
+Space Complexity - O(n+e) + O(n) + O(n) 
+O(n+e) for adjList, O(n) for vis, O(n) for dfsvis
+*/
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int m = prerequisites.length, n, i;
+        if (m == 0)
+            return true;
+        else
+            n = prerequisites[0].length;
+        boolean[] vis = new boolean[param1];
+        boolean[] dfsvis = new boolean[param1];
+        // use adjacency list implementation
+        List<List<Integer>> adj = new ArrayList<>();
+        for (i = 0; i < param1; i++) adj.add(new ArrayList<>());
+        for (i = 0; i < m; i++) adj.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        // find that cycle is present or not
+        for (i = 0; i < param1; i++) {
+            if (!vis[i] && isCycledfs(i, adj, vis, dfsvis))
+                return false;
+        }
+        return true;
+    }
+
+    boolean isCycledfs(int node, List<List<Integer>> adj, boolean[] vis, boolean[] dfsvis) {
+        vis[node] = true;
+        dfsvis[node] = true;
+        for (Integer i : adj.get(node)) {
+            if (!vis[i]) {
+                if (isCycledfs(i, adj, vis, dfsvis))
+                    return true;
+            } else if (dfsvis[i])
+                return true;
+        }
+        // while traversing back mark not visited in dfsvis
+        dfsvis[node] = false;
+        return false;
+    }
+}

@@ -1,0 +1,60 @@
+class Solution {
+
+    class DisjointSet {
+
+        Map<Integer, Integer> size;
+
+        Map<Integer, Integer> parent;
+
+        public DisjointSet() {
+            size = new HashMap<>();
+            parent = new HashMap<>();
+        }
+
+        public void add(int val) {
+            size.put(val, 1);
+            parent.put(val, val);
+        }
+
+        public int findP(int val) {
+            if (parent.get(val) == val)
+                return val;
+            parent.put(val, findP(parent.get(val)));
+            return parent.get(val);
+        }
+
+        public void unionBySize(int a, int b) {
+            int parentA = findP(a);
+            int parentB = findP(b);
+            if (parentA != parentB) {
+                if (size.get(parentA) > size.get(parentB)) {
+                    parent.put(parentB, parentA);
+                    size.put(parentA, size.get(parentA) + size.get(parentB));
+                } else {
+                    parent.put(parentA, parentB);
+                    size.put(parentB, size.get(parentA) + size.get(parentB));
+                }
+            }
+        }
+    }
+
+    public int method1(int[] nums) {
+        DisjointSet ds = new DisjointSet();
+        for (int num : nums) {
+            ds.add(num);
+        }
+        for (int num : nums) {
+            if (ds.parent.containsKey(num + 1)) {
+                ds.unionBySize(num, num + 1);
+            }
+            if (ds.parent.containsKey(num - 1)) {
+                ds.unionBySize(num, num - 1);
+            }
+        }
+        int result = 0;
+        for (int num : nums) {
+            result = Math.max(result, ds.size.get(num));
+        }
+        return result;
+    }
+}

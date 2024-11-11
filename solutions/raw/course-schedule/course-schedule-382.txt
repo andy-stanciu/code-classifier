@@ -1,0 +1,68 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<Course> courses = new ArrayList<Course>();
+        for (int i = 0; i < numCourses; i++) {
+            courses.add(new Course());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int[] p = prerequisites[i];
+            courses.get(p[0]).addPrereq(courses.get(p[1]));
+        }
+        int taken = 0;
+        while (taken < numCourses) {
+            int t = taken;
+            for (int i = 0; i < courses.size(); i++) {
+                Course c = courses.get(i);
+                if (c.canTake()) {
+                    c.take();
+                    courses.remove(c);
+                    taken++;
+                }
+            }
+            if (t == taken) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public class Course {
+
+        List<Course> prereqs;
+
+        List<Course> blocking;
+
+        public boolean canTake() {
+            return numPrereqs() == 0;
+        }
+
+        public int numPrereqs() {
+            return prereqs == null ? 0 : prereqs.size();
+        }
+
+        public void take() {
+            if (blocking != null) {
+                for (Course c : blocking) {
+                    c.prereqs.remove(this);
+                }
+                this.blocking.clear();
+            }
+        }
+
+        public void addBlocking(Course c) {
+            if (blocking == null) {
+                blocking = new ArrayList<>();
+            }
+            blocking.add(c);
+        }
+
+        public void addPrereq(Course c) {
+            if (prereqs == null) {
+                prereqs = new ArrayList<>();
+            }
+            prereqs.add(c);
+            c.addBlocking(this);
+        }
+    }
+}

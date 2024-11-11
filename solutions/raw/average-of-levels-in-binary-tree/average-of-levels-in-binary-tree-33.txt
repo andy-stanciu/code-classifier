@@ -1,0 +1,46 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<Double> averageOfLevels(TreeNode root) {
+        int height = findHeight(root);
+        double[] sum = new double[height];
+        int[] count = new int[height];
+        findSum(root, sum, count, 0);
+        LinkedList<Double> list = new LinkedList();
+        for (int i = 0; i < height; i++) {
+            list.add(sum[i] / count[i]);
+        }
+        return list;
+    }
+
+    public int findHeight(TreeNode node) {
+        if (node == null)
+            return 0;
+        int left = findHeight(node.left);
+        int right = findHeight(node.right);
+        return 1 + Math.max(left, right);
+    }
+
+    public void findSum(TreeNode node, double[] arr, int[] count, int level) {
+        if (node == null)
+            return;
+        arr[level] += node.val;
+        count[level] += 1;
+        findSum(node.left, arr, count, level + 1);
+        findSum(node.right, arr, count, level + 1);
+    }
+}

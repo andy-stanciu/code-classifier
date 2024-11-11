@@ -1,0 +1,46 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        // len, start, end
+        int[] res = new int[3];
+        res[0] = -1;
+        if (s.length() < t.length())
+            return "";
+        // get mapT
+        Map<Character, Integer> mapT = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            mapT.put(c, mapT.getOrDefault(c, 0) + 1);
+        }
+        List<Integer> l = new ArrayList<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (mapT.containsKey(s.charAt(i)))
+                l.add(i);
+        }
+        Map<Character, Integer> mapS = new HashMap<>();
+        int right = 0;
+        int left = 0;
+        int meet = 0;
+        while (right < l.size()) {
+            int rightidx = l.get(right);
+            char c = s.charAt(rightidx);
+            mapS.put(c, mapS.getOrDefault(c, 0) + 1);
+            if (mapS.get(c) == mapT.get(c))
+                meet++;
+            while (meet == mapT.size()) {
+                int leftidx = l.get(left);
+                char cL = s.charAt(leftidx);
+                if (res[0] == -1 || rightidx - leftidx + 1 <= res[0]) {
+                    res[0] = rightidx - leftidx + 1;
+                    res[1] = leftidx;
+                    res[2] = rightidx;
+                }
+                mapS.put(cL, mapS.get(cL) - 1);
+                if (mapS.get(cL) == mapT.get(cL) - 1)
+                    meet--;
+                left++;
+            }
+            right++;
+        }
+        return res[0] == -1 ? "" : s.substring(res[1], res[2] + 1);
+    }
+}

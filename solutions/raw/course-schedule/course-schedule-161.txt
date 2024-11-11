@@ -1,0 +1,41 @@
+class Solution {
+
+    public boolean canFinish(int V, int[][] preq) {
+        //create adjacency graph & add from -> to into it
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] prerequisite : preq) {
+            int from = prerequisite[0];
+            int to = prerequisite[1];
+            adj.get(from).add(to);
+        }
+        //count indegree of nodes
+        int[] indegree = new int[V];
+        for (int i = 0; i < V; i++) {
+            for (int it : adj.get(i)) {
+                indegree[it]++;
+            }
+        }
+        //offer all nodes with 0 indegree & remove outdegree after adding
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < V; i++) {
+            if (indegree[i] == 0)
+                q.add(i);
+        }
+        //count nodes with 0 indegree
+        int count = 0;
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            count++;
+            for (int it : adj.get(node)) {
+                indegree[it]--;
+                if (indegree[it] == 0)
+                    q.add(it);
+            }
+        }
+        //if count is not equal to V its false
+        return count == V;
+    }
+}

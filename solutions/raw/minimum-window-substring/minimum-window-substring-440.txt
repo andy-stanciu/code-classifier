@@ -1,0 +1,39 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        String ans = "";
+        int mini = Integer.MAX_VALUE;
+        int i = 0;
+        int j = 0;
+        HashMap<Character, Integer> mp = new HashMap<>();
+        int requiredChars = t.length();
+        for (char ch : t.toCharArray()) {
+            mp.put(ch, mp.getOrDefault(ch, 0) + 1);
+        }
+        while (j < s.length()) {
+            char ch = s.charAt(j);
+            if (mp.containsKey(ch)) {
+                mp.put(ch, mp.get(ch) - 1);
+                if (mp.get(ch) >= 0) {
+                    requiredChars--;
+                }
+            }
+            while (requiredChars == 0) {
+                if (mini > j - i + 1) {
+                    mini = j - i + 1;
+                    ans = s.substring(i, j + 1);
+                }
+                char leftChar = s.charAt(i);
+                if (mp.containsKey(leftChar)) {
+                    mp.put(leftChar, mp.get(leftChar) + 1);
+                    if (mp.get(leftChar) > 0) {
+                        requiredChars++;
+                    }
+                }
+                i++;
+            }
+            j++;
+        }
+        return ans;
+    }
+}

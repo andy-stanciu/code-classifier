@@ -1,0 +1,48 @@
+class Solution {
+
+    public int search(int[] arr, int key) {
+        int pivot = findPivot(arr, key);
+        if (pivot == -1) {
+            return binarySearch(0, arr.length - 1, arr, key);
+        } else if (arr[pivot] == key) {
+            return pivot;
+        } else if (arr[0] <= key) {
+            return binarySearch(0, pivot - 1, arr, key);
+        }
+        return binarySearch(pivot + 1, arr.length - 1, arr, key);
+    }
+
+    public int findPivot(int[] arr, int key) {
+        int start = 0;
+        int end = arr.length - 1;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (mid < end && arr[mid] > arr[mid + 1]) {
+                return mid;
+            }
+            if (mid > start && arr[mid] < arr[mid - 1]) {
+                return mid - 1;
+            }
+            if (arr[start] >= arr[mid]) {
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return -1;
+    }
+
+    public int binarySearch(int start, int end, int[] arr, int key) {
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (arr[mid] == key) {
+                return mid;
+            } else if (key > arr[mid]) {
+                start = mid + 1;
+            } else {
+                end = mid - 1;
+            }
+        }
+        return -1;
+    }
+}

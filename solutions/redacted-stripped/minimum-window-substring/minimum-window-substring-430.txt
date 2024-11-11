@@ -1,0 +1,42 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int totalCharToMatch = t.length(), match = 0;
+        int sLen = s.length(), i = -1, j = -1;
+        String result = "";
+        Map<Character, Integer> countMap = new HashMap();
+        Map<Character, Integer> currentCount = new HashMap();
+        for (char c : t.toCharArray()) {
+            countMap.put(c, countMap.getOrDefault(c, 0) + 1);
+        }
+        while (true) {
+            boolean acquire = false, release = false;
+            while (i < sLen - 1 && match < totalCharToMatch) {
+                acquire = true;
+                i++;
+                char c = s.charAt(i);
+                currentCount.put(c, currentCount.getOrDefault(c, 0) + 1);
+                if (currentCount.get(c) <= countMap.getOrDefault(c, 0))
+                    match++;
+            }
+            while (match == totalCharToMatch && j < i) {
+                String tempAns = s.substring(j + 1, i + 1);
+                if (result.length() == 0 || result.length() > tempAns.length())
+                    result = tempAns;
+                release = true;
+                j++;
+                char c = s.charAt(j);
+                if (currentCount.get(c) == 1) {
+                    currentCount.remove(c);
+                } else {
+                    currentCount.put(c, currentCount.get(c) - 1);
+                }
+                if (currentCount.getOrDefault(c, 0) < countMap.getOrDefault(c, 0))
+                    match--;
+            }
+            if (release == false && acquire == false)
+                break;
+        }
+        return result;
+    }
+}

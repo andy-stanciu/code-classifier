@@ -1,0 +1,48 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (s == null || t == null || s.length() < t.length()) {
+            return "";
+        }
+        int[] tFreqs = new int[256];
+        boolean[] tChars = new boolean[256];
+        int distincts = 0;
+        for (char c : t.toCharArray()) {
+            tFreqs[c]++;
+            if (!tChars[c]) {
+                distincts++;
+                tChars[c] = true;
+            }
+        }
+        int[] sFreqs = new int[256];
+        int start = 0;
+        int minLow = -1;
+        int minHigh = s.length() + 1;
+        int matching = 0;
+        for (int end = 0; end < s.length(); end++) {
+            char c = s.charAt(end);
+            if (tChars[c]) {
+                sFreqs[c]++;
+                if (sFreqs[c] == tFreqs[c]) {
+                    matching++;
+                }
+                //System.out.println(start + " " + end + " " + matching + " " + distincts);
+                while (start <= end && matching == distincts) {
+                    if (minHigh - minLow > end - start) {
+                        minLow = start;
+                        minHigh = end;
+                    }
+                    char d = s.charAt(start);
+                    start++;
+                    if (tChars[d]) {
+                        sFreqs[d]--;
+                        if (sFreqs[d] == tFreqs[d] - 1) {
+                            matching--;
+                        }
+                    }
+                }
+            }
+        }
+        return minLow == -1 ? "" : s.substring(minLow, minHigh + 1);
+    }
+}

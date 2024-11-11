@@ -1,0 +1,47 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        //Initialize the adjacency list.
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        //For every index there exists a arraylist of its neighbouring nodes
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<>());
+        }
+        //Prerequisites every index has two values the value at index 1 is the node from where the edge is emerging and the value at index 0 is the node where the edge end.
+        for (int[] val : prerequisites) {
+            int var1 = val[0];
+            int var2 = val[1];
+            adj.get(var2).add(var1);
+        }
+        // The whole code is same as the kahn \'s algo we just have to check whether all the nodes are able to be reached in topo sort or not in order to detect the cycle.
+        Queue<Integer> q = new LinkedList<>();
+        int[] indegree = new int[param1];
+        int count = 0;
+        for (int i = 0; i < param1; i++) {
+            for (int it : adj.get(i)) {
+                indegree[it]++;
+            }
+        }
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                q.offer(i);
+            }
+        }
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            //Every time when the count updated it means we are reaching the new node whose neighbour we will going to explore.
+            count++;
+            for (int it : adj.get(node)) {
+                indegree[it]--;
+                if (indegree[it] == 0) {
+                    q.offer(it);
+                }
+            }
+        }
+        //Check whether the count is equal to number of nodes or not.
+        if (count == param1) {
+            return true;
+        }
+        return false;
+    }
+}

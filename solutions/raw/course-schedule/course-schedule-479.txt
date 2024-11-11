@@ -1,0 +1,45 @@
+class Solution {
+
+    private boolean[] visitedNodes = null;
+
+    private boolean[] currentPath = null;
+
+    private List<Integer>[] dependencies = null;
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        visitedNodes = new boolean[numCourses];
+        dependencies = new ArrayList[numCourses];
+        currentPath = new boolean[numCourses];
+        for (int[] pair : prerequisites) {
+            if (dependencies[pair[0]] == null) {
+                dependencies[pair[0]] = new ArrayList<Integer>();
+            }
+            dependencies[pair[0]].add(pair[1]);
+        }
+        for (int[] pair : prerequisites) {
+            if (!isAcyclic(pair[0])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isAcyclic(int node) {
+        if (currentPath[node]) {
+            return false;
+        } else if (visitedNodes[node]) {
+            return true;
+        }
+        currentPath[node] = true;
+        visitedNodes[node] = true;
+        if (dependencies[node] != null) {
+            for (Integer neighbor : dependencies[node]) {
+                if (!isAcyclic(neighbor)) {
+                    return false;
+                }
+            }
+        }
+        currentPath[node] = false;
+        return true;
+    }
+}

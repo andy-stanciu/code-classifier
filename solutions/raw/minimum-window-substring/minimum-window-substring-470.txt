@@ -1,0 +1,64 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int[] target_frequency_map = new int[128];
+        int[] window_frequency_map = new int[128];
+        for (Character c : t.toCharArray()) {
+            target_frequency_map[c] += 1;
+        }
+        int window_start = 0;
+        int len = s.length();
+        int target_len = t.length();
+        int required_character_count = t.length();
+        int target_counter = 0;
+        // We use this variable to keep track of
+        // length of substring we will encounter.
+        int minimum_length = Integer.MAX_VALUE;
+        String min_window = "";
+        for (int window_end = 0; window_end < len; window_end++) {
+            char c = s.charAt(window_end);
+            // we decrement the instance from target frequency map.
+            if (target_frequency_map[c] > 0) {
+                // Why?  if this character is present in this array
+                // and has count > 0, then it means we traversed
+                // across a required character.
+                required_character_count -= 1;
+            }
+            // why? we are decrementing this to keep track of the character
+            // which got consumed, when we are shifting the window we will
+            // increment it back.
+            target_frequency_map[c] -= 1;
+            // now that we run in to a substring of t, we will
+            // shift the window closer upto this condition gets satisfied.
+            // this will help in finding substrings which are smaller than
+            // the current one.
+            while (required_character_count == 0) {
+                char current_win_char = s.charAt(window_start);
+                // check the size of window.
+                if ((window_end - window_start + 1) < minimum_length) {
+                    min_window = s.substring(window_start, window_end + 1);
+                    minimum_length = window_end - window_start + 1;
+                }
+                // now that we are going to remove this character from window
+                // we increment it from target frequency map.
+                target_frequency_map[current_win_char] += 1;
+                // why this actually works though?
+                // it took me a while to understand this trick
+                // when you initially populate the frequency map for the target string
+                // you will have occurrences for required characters > 1
+                // for example if you have ABC, the map will be A => 1, B => 1, C => 1
+                // as you slide along substring, if you are decrementing the required characters
+                // then there is no way that its going to end up in negative
+                // so, if its greater than zero, since we added the count in prev step
+                // we can be absolutely sure that it is a required character
+                if (target_frequency_map[current_win_char] > 0) {
+                    required_character_count += 1;
+                }
+                // since we are removing the character at start,
+                // we have to see if
+                window_start += 1;
+            }
+        }
+        return min_window;
+    }
+}

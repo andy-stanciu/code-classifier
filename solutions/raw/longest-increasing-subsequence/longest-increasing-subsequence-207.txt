@@ -1,0 +1,25 @@
+class Solution {
+
+    int[][] dp;
+
+    int solve(int[] nums, int prev, int i) {
+        if (i >= nums.length)
+            return 0;
+        if (prev != -1 && dp[prev][i] != -1)
+            return dp[prev][i];
+        int take, skip;
+        take = skip = 0;
+        if (prev == -1 || nums[prev] < nums[i])
+            take = 1 + solve(nums, i, i + 1);
+        skip = solve(nums, prev, i + 1);
+        if (prev != -1)
+            dp[prev][i] = Math.max(take, skip);
+        return Math.max(take, skip);
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        dp = new int[nums.length][nums.length];
+        for (int[] a : dp) Arrays.fill(a, -1);
+        return solve(nums, -1, 0);
+    }
+}

@@ -1,0 +1,54 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        // Initialize a map to store the frequency string t.
+        Map<Character, Integer> tMap = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            tMap.put(c, tMap.getOrDefault(c, 0) + 1);
+        }
+        // Initialize variables for the sliding window approach
+        int left = 0, right = 0;
+        int count = 0;
+        int minlength = Integer.MAX_VALUE;
+        int startingIndex = 0;
+        // Iterate through string s using the sliding window approach
+        while (right < s.length()) {
+            char rightChar = s.charAt(right);
+            // If the current character is found in target, decrease its frequency in targetFreq
+            if (tMap.containsKey(rightChar)) {
+                tMap.put(rightChar, tMap.get(rightChar) - 1);
+                // If the frequency becomes 0 or negative, it means we found all occurrences of this character
+                if (tMap.get(rightChar) >= 0) {
+                    count++;
+                }
+            }
+            // Move the left pointer forward until the window no longer contains all characters from t
+            while (count == t.length()) {
+                // Update the minimum window substring if necessary
+                if (right - left + 1 < minlength) {
+                    minlength = right - left + 1;
+                    startingIndex = left;
+                }
+                char leftChar = s.charAt(left);
+                // If the left character is found in target, increase its frequency in targetFreq
+                if (tMap.containsKey(leftChar)) {
+                    tMap.put(leftChar, tMap.get(leftChar) + 1);
+                    // If the frequency becomes positive, it means we need to find this character again
+                    if (tMap.get(leftChar) > 0) {
+                        count--;
+                    }
+                }
+                // Move the left pointer forward
+                left++;
+            }
+            // Move the right pointer forward
+            right++;
+        }
+        // If minlength is still Integer.MAX_VALUE, no valid window was found
+        if (minlength == Integer.MAX_VALUE) {
+            return "";
+        }
+        // Return the minimum window substring from startingIndex with length minlength
+        return s.substring(startingIndex, startingIndex + minlength);
+    }
+}

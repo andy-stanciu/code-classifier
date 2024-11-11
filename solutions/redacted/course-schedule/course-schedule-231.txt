@@ -1,0 +1,34 @@
+class Solution {
+
+    //toposort bfs
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int n = param1;
+        ArrayList<Integer>[] graph = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        int[] indegree = new int[n];
+        for (int[] p : prerequisites) {
+            graph[p[1]].add(p[0]);
+            indegree[p[0]]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        List<Integer> ans = new ArrayList<>();
+        while (!q.isEmpty()) {
+            int curr = q.poll();
+            ans.add(curr);
+            for (int next : graph[curr]) {
+                indegree[next]--;
+                if (indegree[next] == 0) {
+                    q.add(next);
+                }
+            }
+        }
+        return ans.size() == n ? true : false;
+    }
+}

@@ -1,0 +1,34 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int start = 0;
+        int matches = 0;
+        int minLength = s.length() + 1;
+        int var1 = 0;
+        int sLength = s.length();
+        int tLength = t.length();
+        Map<Character, Integer> hm = new HashMap<>();
+        for (Character c : t.toCharArray()) hm.put(c, hm.getOrDefault(c, 0) + 1);
+        for (int i = 0; i < sLength; i++) {
+            Character rightChar = s.charAt(i);
+            if (hm.containsKey(rightChar)) {
+                hm.put(rightChar, hm.get(rightChar) - 1);
+                if (hm.get(rightChar) >= 0)
+                    matches++;
+            }
+            while (matches == tLength) {
+                if (minLength > i - start + 1) {
+                    minLength = i - start + 1;
+                    var1 = start;
+                }
+                Character leftChar = s.charAt(start++);
+                if (hm.containsKey(leftChar)) {
+                    if (hm.get(leftChar) == 0)
+                        matches--;
+                    hm.put(leftChar, hm.get(leftChar) + 1);
+                }
+            }
+        }
+        return (minLength > sLength) ? "" : s.substring(var1, var1 + minLength);
+    }
+}

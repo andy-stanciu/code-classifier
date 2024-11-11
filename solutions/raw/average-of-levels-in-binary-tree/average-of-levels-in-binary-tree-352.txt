@@ -1,0 +1,67 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<Double> averageOfLevels(TreeNode root) {
+        // Initialize a list to store average values of each level
+        List<Double> averages = new ArrayList<>();
+        // Return an empty list for an empty tree
+        if (root == null)
+            return averages;
+        // Initialize a queue for breadth-first traversal
+        ArrayList<TreeNode> queue = new ArrayList<>();
+        queue.add(root);
+        // Use null as a level delimiter
+        queue.add(null);
+        // Accumulator for the sum of values at the current level
+        double levelSum = 0;
+        // Count of nodes at the current level
+        int levelNodeCount = 0;
+        while (queue.size() != 1) {
+            // Continue until there\'s only one element (the final null)
+            // Dequeue the first node
+            TreeNode currentNode = queue.remove(0);
+            // Add the node\'s value to the current level\'s sum
+            levelSum += (double) currentNode.val;
+            levelNodeCount++;
+            if (queue.get(0) == null) {
+                // Check if the next element is a level delimiter
+                // Remove the delimiter
+                queue.remove(0);
+                // Add the left and right children to the queue if they exist
+                if (currentNode.left != null)
+                    queue.add(currentNode.left);
+                if (currentNode.right != null)
+                    queue.add(currentNode.right);
+                // Calculate and add the average for the current level
+                averages.add(levelSum / (double) levelNodeCount);
+                // Reset sum and count for the next level
+                levelSum = 0;
+                levelNodeCount = 0;
+                // Add a new delimiter for the next level
+                queue.add(null);
+            } else {
+                // If the next element is not a delimiter, add its children to the queue
+                if (currentNode.left != null)
+                    queue.add(currentNode.left);
+                if (currentNode.right != null)
+                    queue.add(currentNode.right);
+            }
+        }
+        // Return the list of average values for each level
+        return averages;
+    }
+}

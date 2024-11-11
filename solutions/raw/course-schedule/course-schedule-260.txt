@@ -1,0 +1,46 @@
+class Solution {
+
+    public boolean canFinish(int n, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        ArrayList<Integer> completed = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<Integer>());
+        }
+        for (int[] pair : prerequisites) {
+            int course = pair[0];
+            int preq = pair[1];
+            adj.get(preq).add(course);
+        }
+        System.out.println(adj);
+        boolean[] visited = new boolean[n];
+        boolean[] pathVis = new boolean[n];
+        Arrays.fill(visited, false);
+        Arrays.fill(pathVis, false);
+        boolean isCycle = false;
+        for (int i = 0; i < n; i++) {
+            if (visited[i] == false) {
+                if (dfs(adj, i, visited, pathVis, completed) == true)
+                    isCycle = true;
+            }
+        }
+        return (isCycle == false || completed.size() == n);
+    }
+
+    public boolean dfs(ArrayList<ArrayList<Integer>> adj, int root, boolean[] visited, boolean[] pathVis, ArrayList<Integer> completed) {
+        visited[root] = true;
+        pathVis[root] = true;
+        // if(adj.get(root).size()!=0)
+        //     completed.add(root);
+        for (int i : adj.get(root)) {
+            if (!visited[i]) {
+                completed.add(i);
+                if (dfs(adj, i, visited, pathVis, completed) == true)
+                    return true;
+            } else if (pathVis[i]) {
+                return true;
+            }
+        }
+        pathVis[root] = false;
+        return false;
+    }
+}

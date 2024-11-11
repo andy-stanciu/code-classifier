@@ -1,0 +1,41 @@
+class Solution {
+
+    private boolean detectPrerequisiteCycle(int param1, Map<Integer, Set<Integer>> adjcencyMap, int[] completed) {
+        if (completed[param1] == -1)
+            return true;
+        if (completed[param1] == 1)
+            return false;
+        // meaning it is currently exploring this node
+        completed[param1] = -1;
+        if (adjcencyMap.containsKey(param1)) {
+            // check is course has any dependency
+            for (int var1 : adjcencyMap.get(param1)) {
+                if (detectPrerequisiteCycle(var1, adjcencyMap, completed)) {
+                    return true;
+                }
+            }
+        }
+        // backtrack, mark as visited
+        completed[param1] = 1;
+        return false;
+    }
+
+    public boolean canFinish(int param2, int[][] prerequisites) {
+        // Also create completed array
+        // 0 -> incomplete
+        // 1 -> completed
+        // -1 -> re-doing it ??
+        int[] completed = new int[param2];
+        // start (prerequisite) -> vertices of the ending point ( to-do course A)
+        Map<Integer, Set<Integer>> adjcencyMap = new HashMap<>();
+        for (int[] prerequisite : prerequisites) {
+            adjcencyMap.computeIfAbsent(prerequisite[1], k -> new HashSet<>()).add(prerequisite[0]);
+        }
+        for (int i = 0; i < param2; i++) {
+            if (detectPrerequisiteCycle(i, adjcencyMap, completed)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

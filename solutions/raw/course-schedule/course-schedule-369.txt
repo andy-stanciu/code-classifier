@@ -1,0 +1,21 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer, Set<Integer>> courses = new HashMap<>();
+        for (int i = 0; i < numCourses; i++) {
+            courses.put(i, new HashSet<>());
+        }
+        for (int[] dependency : prerequisites) {
+            courses.get(dependency[0]).add(dependency[1]);
+        }
+        while (!courses.isEmpty()) {
+            Optional<Integer> achievableCourse = courses.entrySet().stream().filter(entry -> entry.getValue().isEmpty()).findAny().map(Map.Entry::getKey);
+            if (achievableCourse.isEmpty()) {
+                return false;
+            }
+            courses.remove(achievableCourse.get());
+            courses.values().forEach(dependencies -> dependencies.remove(achievableCourse.get()));
+        }
+        return true;
+    }
+}

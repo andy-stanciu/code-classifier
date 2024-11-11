@@ -1,0 +1,49 @@
+class Solution {
+
+    //Element 1, identify pre-req, identify pre-reqs for pre-req, keep going until satisfied
+    //If we identify a cyclic dependency, aka we come back to an element whose pre-reqs we\'re identifying while looking for the pre-req to a pre-req, we return false;
+    /*
+    -Start at first element
+    -Look for pre-req in other first elements, if it\'s there -> continue cycle with its pre-req
+        -Keep track of current classes in a set
+    -If at any point we identify a pre-req whose pre-req is at a higher level (class present in set), return false
+    -If a pre-req is not present as another class, we\'re good
+    -return true at end
+
+    Ex: [[0,1,2], [1, 3], [2, 4]]
+        [[1,0],[0,1]]
+    */
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Set<Integer> var1 = new HashSet<>();
+        Set<Integer> var2 = new HashSet<>();
+        for (int i = 0; i < prerequisites.length; i++) {
+            var1 = new HashSet<>();
+            //look for this course\'s pre-reqs
+            var1.add(prerequisites[i][0]);
+            if (!recurse(prerequisites, var1, prerequisites[i][1], var2)) {
+                //identify pre-req pre-reqs
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean recurse(int[][] preReqs, Set var1, int param2, Set var2) {
+        //check if course has pre-reqs
+        if (var1.contains(param2)) {
+            return false;
+        }
+        if (var2.contains(param2)) {
+            return true;
+        }
+        for (int i = 0; i < preReqs.length; i++) {
+            if (param2 == preReqs[i][0]) {
+                var1.add(param2);
+                param2 = preReqs[i][1];
+                return recurse(preReqs, var1, param2, var2);
+            }
+        }
+        var2.add(param2);
+        return true;
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    static Map<Integer, List<Integer>> map;
+
+    static int[] visited;
+
+    public static boolean isCyclic(int node) {
+        if (visited[node] == 2) {
+            return true;
+        }
+        if (visited[node] == 0) {
+            if (map.containsKey(node)) {
+                visited[node] = 2;
+                for (int i = 0; i < map.get(node).size(); i++) {
+                    if (isCyclic(map.get(node).get(i))) {
+                        return true;
+                    }
+                }
+            }
+        }
+        visited[node] = 1;
+        return false;
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        map = new HashMap<>();
+        for (int[] arr : prerequisites) {
+            if (map.containsKey(arr[0])) {
+                map.get(arr[0]).add(arr[1]);
+            } else {
+                List<Integer> l = new ArrayList<>();
+                l.add(arr[1]);
+                map.put(arr[0], l);
+            }
+        }
+        visited = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (isCyclic(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

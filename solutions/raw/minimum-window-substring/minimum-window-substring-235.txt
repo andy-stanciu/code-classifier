@@ -1,0 +1,62 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int count = 0;
+        Map<Character, Integer> tmap = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            tmap.put(c, tmap.getOrDefault(c, 0) + 1);
+        }
+        int i = 0;
+        int j = 0;
+        int size = Integer.MAX_VALUE;
+        int ri = 0;
+        while (j < s.length()) {
+            if (count < tmap.size()) {
+                char val = s.charAt(j);
+                if (tmap.containsKey(val)) {
+                    int c = tmap.get(val);
+                    tmap.put(val, c - 1);
+                    if (c - 1 == 0)
+                        count++;
+                }
+                j++;
+            } else {
+                char val = s.charAt(i);
+                if (tmap.containsKey(val)) {
+                    int c = tmap.get(val);
+                    if (c == 0)
+                        count--;
+                    tmap.put(val, c + 1);
+                }
+                i++;
+            }
+            if (count == tmap.size()) {
+                int tsize = j - i;
+                if (tsize < size) {
+                    ri = i;
+                    size = tsize;
+                }
+            }
+        }
+        while (count == tmap.size() && i <= s.length() - t.length()) {
+            char val = s.charAt(i);
+            if (tmap.containsKey(val)) {
+                int c = tmap.get(val);
+                if (c == 0)
+                    count--;
+                tmap.put(val, c + 1);
+            }
+            i++;
+            if (count == tmap.size()) {
+                int tsize = j - i;
+                if (tsize < size) {
+                    ri = i;
+                    size = tsize;
+                }
+            }
+        }
+        if (size == Integer.MAX_VALUE)
+            return "";
+        return s.substring(ri, ri + size);
+    }
+}

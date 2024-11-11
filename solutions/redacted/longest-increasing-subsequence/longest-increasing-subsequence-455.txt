@@ -1,0 +1,36 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        int len = nums.length;
+        int[][] dp = new int[len + 1][len + 1];
+        //assign all values to -1
+        for (int i = 0; i < len + 1; i++) {
+            for (int j = 0; j < len + 1; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        int ans = solve(nums, 0, -1, dp);
+        return ans;
+    }
+
+    int solve(int[] nums, int idx, int prev, int[][] dp) {
+        //base case
+        if (idx == nums.length)
+            return 0;
+        //return the stored values in dp array
+        if (dp[idx][prev + 1] != -1)
+            return dp[idx][prev + 1];
+        //take
+        int take = 0;
+        //when previous value is -1 or current element is greater than previous element.
+        if (prev == -1 || nums[prev] < nums[idx]) {
+            //increment by 1
+            take = 1 + solve(nums, idx + 1, idx, dp);
+        }
+        //not_take
+        // do not increment
+        int not_take = 0 + solve(nums, idx + 1, prev, dp);
+        //store the maximum value in dp array
+        return dp[idx][prev + 1] = Math.max(take, not_take);
+    }
+}

@@ -1,0 +1,77 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        // Method to search for a target in a rotated sorted array
+        if (nums == null || nums.length == 0) {
+            // Check for empty or null array
+            // Return -1 if empty
+            return -1;
+        }
+        // Using a Stack to store indices
+        Stack<Integer> stack = new Stack<>();
+        // Push the left index (initial value 0)
+        stack.push(0);
+        // Push the right index (initial value length - 1)
+        stack.push(nums.length - 1);
+        while (!stack.isEmpty()) {
+            // Continue searching until the stack is empty
+            // Pop the right index
+            int right = stack.pop();
+            // Pop the left index
+            int left = stack.pop();
+            if (left > right) {
+                // If left is greater than right, no valid range
+                // Go to the next iteration
+                continue;
+            }
+            // Calculate the middle index
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) {
+                // If target is found at mid
+                // Return the index
+                return mid;
+            }
+            // If the left half is sorted
+            if (nums[left] <= nums[mid]) {
+                // If target is in the left half
+                if (nums[left] <= target && target < nums[mid]) {
+                    // Update stack with left and mid-1
+                    stack.push(left);
+                    // Update stack with left and mid-1
+                    stack.push(mid - 1);
+                } else {
+                    // Update stack with mid+1 and right
+                    stack.push(mid + 1);
+                    // Update stack with mid+1 and right
+                    stack.push(right);
+                }
+            } else // If the right half is sorted
+            {
+                // If target is in the right half
+                if (nums[mid] < target && target <= nums[right]) {
+                    // Update stack with mid+1 and right
+                    stack.push(mid + 1);
+                    // Update stack with mid+1 and right
+                    stack.push(right);
+                } else {
+                    // Update stack with left and mid-1
+                    stack.push(left);
+                    // Update stack with left and mid-1
+                    stack.push(mid - 1);
+                }
+            }
+        }
+        // If target is not found, return -1
+        return -1;
+    }
+
+    public static void method2(String[] args) {
+        // Main method for testing
+        // Create an instance of Solution class
+        Solution solution = new Solution();
+        // Test the search method with different inputs
+        System.out.println(solution.method1(new int[] { 4, 5, 6, 7, 0, 1, 2 }, 0));
+        System.out.println(solution.method1(new int[] { 4, 5, 6, 7, 0, 1, 2 }, 3));
+        System.out.println(solution.method1(new int[] { 1 }, 0));
+    }
+}

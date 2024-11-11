@@ -1,0 +1,21 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Map<Integer, Set<Integer>> var1 = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            var1.put(i, new HashSet<>());
+        }
+        for (int[] dependency : prerequisites) {
+            var1.get(dependency[0]).add(dependency[1]);
+        }
+        while (!var1.isEmpty()) {
+            Optional<Integer> var2 = var1.entrySet().stream().filter(entry -> entry.getValue().isEmpty()).findAny().map(Map.Entry::getKey);
+            if (var2.isEmpty()) {
+                return false;
+            }
+            var1.remove(var2.get());
+            var1.values().forEach(dependencies -> dependencies.remove(var2.get()));
+        }
+        return true;
+    }
+}

@@ -1,0 +1,29 @@
+class Solution {
+
+    public int method1(int[][] obstacleGrid) {
+        if (obstacleGrid[0][0] == 1 || obstacleGrid[obstacleGrid.length - 1][obstacleGrid[0].length - 1] == 1)
+            return 0;
+        int[][] dp = new int[obstacleGrid.length][obstacleGrid[0].length];
+        for (int[] row : dp) Arrays.fill(row, -1);
+        return method1(obstacleGrid, dp, 0, 0);
+    }
+
+    int method1(int[][] obstacleGrid, int[][] dp, int row, int col) {
+        if (dp[row][col] != -1)
+            return dp[row][col];
+        int rows = obstacleGrid.length;
+        int cols = obstacleGrid[0].length;
+        if (row == rows - 1 && col == cols - 1)
+            return 1;
+        int var1 = 0;
+        if (col + 1 < cols && obstacleGrid[row][col + 1] != 1) {
+            dp[row][col + 1] = method1(obstacleGrid, dp, row, col + 1);
+            var1 += dp[row][col + 1];
+        }
+        if (row + 1 < rows && obstacleGrid[row + 1][col] != 1) {
+            dp[row + 1][col] = method1(obstacleGrid, dp, row + 1, col);
+            var1 += dp[row + 1][col];
+        }
+        return dp[row][col] = var1;
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    public int lowerBound(List<Integer> lis, int el) {
+        int low = 0;
+        int high = lis.size() - 1;
+        while (low <= high) {
+            int mid = (low + high) >> 1;
+            if (lis.get(mid) >= el)
+                high = mid - 1;
+            else
+                low = mid + 1;
+        }
+        return low;
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        List<Integer> lis = new ArrayList<>();
+        int[] insertedAt = new int[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            int el = nums[i];
+            int lb = lowerBound(lis, el);
+            if (lb == lis.size())
+                lis.add(el);
+            else
+                lis.set(lb, el);
+            insertedAt[i] = lb;
+        }
+        //printing solution
+        int currItem = lis.size() - 1;
+        List<Integer> actualLIS = new ArrayList<>();
+        for (int i = nums.length - 1; i >= 0; i--) {
+            if (insertedAt[i] == currItem) {
+                actualLIS.add(nums[i]);
+                currItem--;
+            }
+        }
+        Collections.reverse(actualLIS);
+        for (int el : actualLIS) System.out.print(el + " ");
+        return lis.size();
+    }
+}

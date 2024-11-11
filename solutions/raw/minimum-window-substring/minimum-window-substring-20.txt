@@ -1,0 +1,56 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        // Handle edge cases where the input strings are null or their lengths are not suitable for a valid window
+        if (s == null || t == null || s.length() == 0 || t.length() == 0 || s.length() < t.length()) {
+            return "";
+        }
+        // Create a HashMap to store the frequency of characters in string t
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        // Count the number of unique characters in t that need to be matched
+        int count = map.size();
+        // Initialize pointers for the sliding window
+        int i = 0, j = 0;
+        // Variables to track the start index and length of the minimum window
+        int leftIdx = 0;
+        int min = Integer.MAX_VALUE;
+        // Expand the window by moving the right pointer j
+        while (j < s.length()) {
+            char ch = s.charAt(j);
+            // If the character at j is part of t, update its count in the map
+            if (map.containsKey(ch)) {
+                map.put(ch, map.get(ch) - 1);
+                // If the count of the character becomes zero, decrement the unique character count
+                if (map.get(ch) == 0) {
+                    count--;
+                }
+            }
+            // When all characters from t are matched, try to shrink the window from the left
+            while (count == 0) {
+                // Update the minimum window size and starting index if a smaller window is found
+                if (j - i + 1 < min) {
+                    min = j - i + 1;
+                    leftIdx = i;
+                }
+                char leftCh = s.charAt(i);
+                // If the character at i is part of t, update its count in the map
+                if (map.containsKey(leftCh)) {
+                    map.put(leftCh, map.get(leftCh) + 1);
+                    // If the count of the character becomes positive, increment the unique character count
+                    if (map.get(leftCh) > 0) {
+                        count++;
+                    }
+                }
+                // Move the left pointer to the right to shrink the window
+                i++;
+            }
+            // Move the right pointer to the right to expand the window
+            j++;
+        }
+        // Return the smallest window substring if found; otherwise, return an empty string
+        return (min == Integer.MAX_VALUE) ? "" : s.substring(leftIdx, leftIdx + min);
+    }
+}

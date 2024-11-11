@@ -1,0 +1,40 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adjList = new ArrayList<>();
+        // adding the empty arraylist for each courses
+        for (int i = 0; i < numCourses; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        // add the direction like here [0,1] is 1->0(Course 0 depends on course 1)
+        for (int i = 0; i < prerequisites.length; i++) {
+            adjList.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        // to store the indegree of the courses(1->0 - add one indegree for all dependents like 0);
+        int[] indegree = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            for (int adj : adjList.get(i)) {
+                indegree[adj]++;
+            }
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        // add the elements in queue which have indegree 0(because there are no dependents on this)
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        ArrayList<Integer> topoSort = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            int p = queue.poll();
+            topoSort.add(p);
+            for (int it : adjList.get(p)) {
+                indegree[it]--;
+                if (indegree[it] == 0) {
+                    queue.add(it);
+                }
+            }
+        }
+        return topoSort.size() == numCourses;
+    }
+}

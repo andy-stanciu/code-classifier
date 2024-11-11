@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int[] indegreeCount = new int[param1];
+        HashMap<Integer, List<Integer>> dependencyMap = new HashMap<>();
+        for (int[] prerequisite : prerequisites) {
+            int var1 = prerequisite[0];
+            int var2 = prerequisite[1];
+            indegreeCount[var1]++;
+            if (!dependencyMap.containsKey(var2)) {
+                dependencyMap.put(var2, new ArrayList<>());
+            }
+            dependencyMap.get(var2).add(var1);
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        int var3 = 0;
+        for (int i = 0; i < param1; i++) {
+            if (indegreeCount[i] == 0) {
+                queue.add(i);
+                var3++;
+            }
+        }
+        while (!queue.isEmpty()) {
+            int var4 = queue.poll();
+            List<Integer> var5 = dependencyMap.get(var4);
+            if (var5 != null) {
+                for (int var6 : var5) {
+                    indegreeCount[var6]--;
+                    if (indegreeCount[var6] == 0) {
+                        queue.add(var6);
+                        var3++;
+                    }
+                }
+            }
+        }
+        return var3 == param1;
+    }
+}

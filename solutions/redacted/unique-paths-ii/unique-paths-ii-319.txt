@@ -1,0 +1,45 @@
+class Solution {
+
+    int[] x = { 1, 0 };
+
+    int[] y = { 0, 1 };
+
+    public int countWays(int[][] obstacleGrid, int m, int n, int i, int j, boolean[][] visited, int[][] dp) {
+        if (obstacleGrid[i][j] == 1) {
+            return 0;
+        }
+        if (i == m - 1 && j == n - 1) {
+            return 1;
+        }
+        if (dp[i][j] != -1) {
+            return dp[i][j];
+        }
+        visited[i][j] = true;
+        int ans = 0;
+        for (int k = 0; k < x.length; k++) {
+            int p = i + x[k];
+            int q = j + y[k];
+            if (p < 0 || q < 0 || p >= m || q >= n) {
+                continue;
+            }
+            if (visited[p][q] == true) {
+                continue;
+            }
+            ans += countWays(obstacleGrid, m, n, p, q, visited, dp);
+            visited[p][q] = false;
+        }
+        dp[i][j] = ans;
+        return ans;
+    }
+
+    public int method1(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        boolean[][] visited = new boolean[m][n];
+        int[][] dp = new int[m][n];
+        for (int[] arr : dp) {
+            Arrays.fill(arr, -1);
+        }
+        return countWays(obstacleGrid, m, n, 0, 0, visited, dp);
+    }
+}

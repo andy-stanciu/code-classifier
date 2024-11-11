@@ -1,0 +1,29 @@
+class Solution {
+
+    public int longestConsecutive(int[] nums) {
+        HashMap<Integer, Boolean> visited = new HashMap();
+        Stack<Integer> q = new Stack();
+        int currMax = 0, max = 0;
+        for (int num : nums) visited.put(num, false);
+        for (int num1 : nums) {
+            if (visited.containsKey(num1) && visited.get(num1))
+                continue;
+            q.add(num1);
+            while (!q.isEmpty()) {
+                int num = q.pop();
+                if (visited.containsKey(num) && visited.get(num))
+                    continue;
+                visited.put(num, true);
+                currMax++;
+                if (visited.containsKey(num - 1) && !visited.get(num - 1))
+                    q.add(num - 1);
+                if (visited.containsKey(num + 1) && !visited.get(num + 1))
+                    q.add(num + 1);
+                if (max < currMax)
+                    max = currMax;
+            }
+            currMax = 0;
+        }
+        return max;
+    }
+}

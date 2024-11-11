@@ -1,0 +1,46 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> adjacency = new HashMap<>();
+        Map<Integer, Integer> in_degree = new HashMap<>();
+        initMaps(adjacency, in_degree, numCourses, prerequisites);
+        // Initialize the queue with all courses having in-degree of 0
+        Deque<Integer> queue = new ArrayDeque<>();
+        for (Map.Entry<Integer, Integer> entry : in_degree.entrySet()) {
+            if (entry.getValue() == 0) {
+                queue.offer(entry.getKey());
+            }
+        }
+        // Kahn\'s algorithm for topological sorting
+        int processed = 0;
+        while (!queue.isEmpty()) {
+            int course = queue.pollFirst();
+            processed++;
+            List<Integer> neighbors = adjacency.get(course);
+            if (neighbors != null) {
+                for (int neighbor : neighbors) {
+                    in_degree.put(neighbor, in_degree.get(neighbor) - 1);
+                    if (in_degree.get(neighbor) == 0) {
+                        queue.offer(neighbor);
+                    }
+                }
+            }
+        }
+        return processed == numCourses;
+    }
+
+    private void initMaps(Map<Integer, List<Integer>> adjacency, Map<Integer, Integer> in_degree, int numCourses, int[][] prerequisites) {
+        // Initialize in-degree for all courses
+        for (int i = 0; i < numCourses; i++) {
+            in_degree.put(i, 0);
+            adjacency.put(i, new ArrayList<>());
+        }
+        // Build the adjacency list and in-degree map
+        for (int[] prerequisite : prerequisites) {
+            int source = prerequisite[1];
+            int target = prerequisite[0];
+            adjacency.get(source).add(target);
+            in_degree.put(target, in_degree.get(target) + 1);
+        }
+    }
+}

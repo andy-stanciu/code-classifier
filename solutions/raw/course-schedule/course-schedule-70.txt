@@ -1,0 +1,32 @@
+class Solution {
+
+    public boolean canFinish(int n, int[][] pre) {
+        List<Integer>[] graph = new List[n];
+        int[] indegree = new int[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList();
+        }
+        for (int[] t : pre) {
+            graph[t[1]].add(t[0]);
+            indegree[t[0]]++;
+        }
+        Queue<Integer> q = new LinkedList();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0)
+                q.add(i);
+        }
+        int count = 0;
+        while (!q.isEmpty()) {
+            int curr = q.poll();
+            for (int k : graph[curr]) {
+                indegree[k] -= 1;
+                if (indegree[k] == 0)
+                    q.add(k);
+            }
+            count++;
+        }
+        if (count != n)
+            return false;
+        return true;
+    }
+}

@@ -1,0 +1,34 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        // Create a sorted array of unique elements from nums
+        HashSet<Integer> set = new HashSet<>();
+        for (int num : nums) {
+            set.add(num);
+        }
+        int[] temp = new int[set.size()];
+        int k = 0;
+        for (int num : set) {
+            temp[k++] = num;
+        }
+        Arrays.sort(temp);
+        // dp[i][j] means Longest Common Subsequence with i elements from nums and j elements from sorted array
+        int[][] dp = new int[nums.length + 1][temp.length + 1];
+        // Fill dp array
+        for (int i = 1; i <= nums.length; i++) {
+            for (int j = 1; j <= temp.length; j++) {
+                if (nums[i - 1] == temp[j - 1]) {
+                    // Include
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    // Exclude
+                    dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j]);
+                }
+            }
+        }
+        return dp[nums.length][temp.length];
+    }
+}

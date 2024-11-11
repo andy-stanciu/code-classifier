@@ -1,0 +1,59 @@
+class Solution {
+
+    public int search(int[] nums, int target) {
+        return modifiedBinarySearch(nums, 0, nums.length - 1, target);
+    }
+
+    // Binary search in a sorted portion of the array
+    private int binarySearch(int[] arr, int start, int end, int target) {
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (arr[mid] == target) {
+                return mid;
+            } else if (arr[mid] < target) {
+                start = mid + 1;
+            } else {
+                end = mid - 1;
+            }
+        }
+        // Element not found
+        return -1;
+    }
+
+    // Modified binary search for rotated sorted arrays
+    private int modifiedBinarySearch(int[] arr, int start, int end, int target) {
+        if (start > end) {
+            // Base case: Element not found
+            return -1;
+        }
+        int mid = start + (end - start) / 2;
+        if (arr[mid] == target) {
+            // Target found
+            return mid;
+        }
+        // Check if left half is sorted
+        if (isSorted(arr, start, mid)) {
+            // If target lies within the sorted left half
+            if (arr[start] <= target && target < arr[mid]) {
+                return binarySearch(arr, start, mid - 1, target);
+            } else {
+                // Search the right half
+                return modifiedBinarySearch(arr, mid + 1, end, target);
+            }
+        } else // Otherwise, the right half must be sorted
+        {
+            // If target lies within the sorted right half
+            if (arr[mid] < target && target <= arr[end]) {
+                return binarySearch(arr, mid + 1, end, target);
+            } else {
+                // Search the left half
+                return modifiedBinarySearch(arr, start, mid - 1, target);
+            }
+        }
+    }
+
+    // Function to check if the array is sorted between two indices
+    private boolean isSorted(int[] arr, int start, int end) {
+        return arr[start] <= arr[end];
+    }
+}

@@ -1,0 +1,45 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s.length() < t.length())
+            return "";
+        String output = "";
+        int i = 0, j = 0;
+        boolean isFirst = true;
+        Map<Character, Integer> targetMap = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            targetMap.put(ch, targetMap.getOrDefault(ch, 0) + 1);
+        }
+        Map<Character, Integer> var1 = new HashMap<>();
+        while (j < s.length()) {
+            char charRight = s.charAt(j);
+            var1.put(charRight, var1.getOrDefault(charRight, 0) + 1);
+            boolean isAllCovered = true;
+            for (char ch : targetMap.keySet()) {
+                if (var1.getOrDefault(ch, 0) < targetMap.get(ch)) {
+                    isAllCovered = false;
+                    break;
+                }
+            }
+            if (isAllCovered) {
+                while (i <= j && isAllCovered) {
+                    char charLeft = s.charAt(i);
+                    var1.put(charLeft, var1.get(charLeft) - 1);
+                    for (char ch : targetMap.keySet()) {
+                        if (var1.getOrDefault(ch, 0) < targetMap.get(ch)) {
+                            isAllCovered = false;
+                            break;
+                        }
+                    }
+                    if (j - i + 1 < output.length() || isFirst) {
+                        isFirst = false;
+                        output = s.substring(i, j + 1);
+                    }
+                    i++;
+                }
+            }
+            j++;
+        }
+        return output;
+    }
+}

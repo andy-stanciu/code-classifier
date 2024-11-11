@@ -1,0 +1,60 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s == "" || t == "" || t.length() > s.length()) {
+            return "";
+        }
+        Map<Character, Integer> targetMap = new HashMap<>(t.chars().mapToObj(c -> (char) c).collect(Collectors.toMap(Function.identity(), c -> 1, (c, d) -> c + d)));
+        int startIndex = 0, endIndex = 0;
+        int matched = 0;
+        int minMatched = Integer.MAX_VALUE;
+        String matchedString = "";
+        Map<Character, Integer> sourceMap = new HashMap<>();
+        if (targetMap.containsKey(s.charAt(0))) {
+            sourceMap.putIfAbsent(s.charAt(0), 1);
+            if (targetMap.get(s.charAt(0)) == 1) {
+                matched = 1;
+                if (t.length() == 1) {
+                    return t;
+                }
+            }
+        }
+        while (endIndex < s.length()) {
+            if (startIndex == endIndex || matched < targetMap.size()) {
+                endIndex++;
+                if (endIndex >= s.length()) {
+                    break;
+                }
+                if (targetMap.containsKey(s.charAt(endIndex))) {
+                    sourceMap.merge(s.charAt(endIndex), 1, Integer::sum);
+                    if (targetMap.get(s.charAt(endIndex)).equals(sourceMap.get(s.charAt(endIndex)))) {
+                        matched++;
+                    }
+                    if (matched == targetMap.size()) {
+                        int currMatchedLength = endIndex - startIndex + 1;
+                        if (currMatchedLength <= minMatched) {
+                            minMatched = currMatchedLength;
+                            matchedString = s.substring(startIndex, endIndex + 1);
+                        }
+                    }
+                }
+            } else {
+                if (targetMap.containsKey(s.charAt(startIndex))) {
+                    sourceMap.merge(s.charAt(startIndex), -1, Integer::sum);
+                    if (targetMap.get(s.charAt(startIndex)) - 1 == sourceMap.get(s.charAt(startIndex))) {
+                        matched--;
+                    }
+                }
+                startIndex++;
+                if (matched == targetMap.size()) {
+                    int currMatchedLength = endIndex - startIndex + 1;
+                    if (currMatchedLength < minMatched) {
+                        minMatched = currMatchedLength;
+                        matchedString = s.substring(startIndex, endIndex + 1);
+                    }
+                }
+            }
+        }
+        return matchedString;
+    }
+}

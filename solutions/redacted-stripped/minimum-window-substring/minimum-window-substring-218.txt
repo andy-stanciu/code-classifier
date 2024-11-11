@@ -1,0 +1,39 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s == null || t == null || s.length() < t.length()) {
+            return "";
+        }
+        int[] tCount = new int[128];
+        int[] var1 = new int[128];
+        for (char c : t.toCharArray()) {
+            tCount[c]++;
+        }
+        int required = t.length();
+        int left = 0, right = 0;
+        int minLength = Integer.MAX_VALUE;
+        int minLeft = 0;
+        int formed = 0;
+        while (right < s.length()) {
+            char rightChar = s.charAt(right);
+            var1[rightChar]++;
+            if (tCount[rightChar] > 0 && var1[rightChar] <= tCount[rightChar]) {
+                formed++;
+            }
+            while (formed == required) {
+                if (right - left + 1 < minLength) {
+                    minLength = right - left + 1;
+                    minLeft = left;
+                }
+                char leftChar = s.charAt(left);
+                var1[leftChar]--;
+                if (tCount[leftChar] > 0 && var1[leftChar] < tCount[leftChar]) {
+                    formed--;
+                }
+                left++;
+            }
+            right++;
+        }
+        return minLength == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + minLength);
+    }
+}

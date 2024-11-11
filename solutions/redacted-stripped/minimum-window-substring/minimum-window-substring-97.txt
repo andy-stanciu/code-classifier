@@ -1,0 +1,43 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        int[] alp1 = new int[128];
+        int[] alp2 = new int[128];
+        int matchesT = 0;
+        for (char c : t.toCharArray()) {
+            alp1[c]++;
+        }
+        for (int i : alp1) {
+            if (i > 0)
+                matchesT++;
+        }
+        int countMatch = 0;
+        int start = 0, end = Integer.MAX_VALUE;
+        for (int i = 0, l = 0; i < s.length(); ++i) {
+            char ch = s.charAt(i);
+            if (alp1[ch] > 0) {
+                alp2[ch]++;
+                if (alp2[ch] == alp1[ch]) {
+                    countMatch++;
+                }
+            }
+            while (countMatch == matchesT) {
+                if (i - l + 1 < end - start) {
+                    start = l;
+                    end = i + 1;
+                }
+                char c = s.charAt(l);
+                if (alp1[c] > 0) {
+                    if (alp2[c] == alp1[c]) {
+                        countMatch--;
+                    }
+                    alp2[c]--;
+                }
+                l++;
+            }
+        }
+        return end == Integer.MAX_VALUE ? "" : s.substring(start, end);
+    }
+}

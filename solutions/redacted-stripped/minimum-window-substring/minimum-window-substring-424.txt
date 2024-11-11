@@ -1,0 +1,48 @@
+public class Solution {
+
+    public String method1(String s, String t) {
+        int n = s.length();
+        int m = t.length();
+        if (m > n) {
+            return "";
+        }
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < m; i++) {
+            map.put(t.charAt(i), map.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        int left = 0;
+        int right = 0;
+        int minLen = Integer.MAX_VALUE;
+        int minStart = 0;
+        int count = map.size();
+        while (right < n) {
+            char c = s.charAt(right);
+            if (map.containsKey(c)) {
+                map.put(c, map.get(c) - 1);
+                if (map.get(c) == 0) {
+                    count--;
+                }
+            }
+            right++;
+            while (count == 0) {
+                if (right - left < minLen) {
+                    minLen = right - left;
+                    minStart = left;
+                }
+                char leftChar = s.charAt(left);
+                if (map.containsKey(leftChar)) {
+                    map.put(leftChar, map.get(leftChar) + 1);
+                    if (map.get(leftChar) > 0) {
+                        count++;
+                    }
+                }
+                left++;
+            }
+        }
+        if (minLen == Integer.MAX_VALUE) {
+            return "";
+        } else {
+            return s.substring(minStart, minStart + minLen);
+        }
+    }
+}

@@ -1,0 +1,26 @@
+//This solution will give TLE
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        int[][] dp = new int[n][n + 1];
+        for (int i = 0; i < n; i++) for (int j = 0; j <= n; j++) dp[i][j] = -1;
+        return seq(nums, 0, 0, dp);
+    }
+
+    int seq(int[] nums, int ind, int prev, int[][] dp) {
+        if (ind >= nums.length)
+            return 0;
+        if (dp[ind][prev] != -1)
+            return dp[ind][prev];
+        int ans = Integer.MIN_VALUE;
+        for (int i = ind; i < nums.length; i++) {
+            int take = 0, notTake = 0;
+            notTake = seq(nums, i + 1, prev, dp);
+            if (prev == 0 || nums[i] > nums[prev - 1])
+                take = 1 + seq(nums, i + 1, i + 1, dp);
+            ans = Math.max(take, Math.max(notTake, ans));
+        }
+        return dp[ind][prev] = ans;
+    }
+}

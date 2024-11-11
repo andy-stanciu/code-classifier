@@ -1,0 +1,40 @@
+// Solution from NeetCode: https://www.youtube.com/watch?v=EgI5nU9etnU&ab_channel=NeetCode
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Create the adjacency list
+        Map<Integer, List<Integer>> preMap = new HashMap();
+        for (int i = 0; i < numCourses; i++) {
+            preMap.put(i, new ArrayList());
+        }
+        for (int[] edge : prerequisites) {
+            preMap.get(edge[0]).add(edge[1]);
+        }
+        for (int i = 0; i < numCourses - 1; i++) {
+            if (!dfs(i, preMap, new HashSet())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(int i, Map<Integer, List<Integer>> preMap, Set<Integer> visitSet) {
+        if (visitSet.contains(i)) {
+            return false;
+        }
+        List<Integer> pres = preMap.get(i);
+        if (pres.size() == 0) {
+            return true;
+        }
+        visitSet.add(i);
+        for (int pre : pres) {
+            if (!dfs(pre, preMap, visitSet)) {
+                return false;
+            }
+        }
+        visitSet.remove(i);
+        // Since we know this course can be complete, remove its pres
+        preMap.put(i, new ArrayList());
+        return true;
+    }
+}

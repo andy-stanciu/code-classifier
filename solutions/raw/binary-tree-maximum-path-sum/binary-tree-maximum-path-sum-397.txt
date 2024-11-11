@@ -1,0 +1,32 @@
+class Solution {
+
+    int maxPathSum = Integer.MIN_VALUE;
+
+    public int maxPathSum(TreeNode root) {
+        //similar idea as max diameter of binary tree
+        verticalPathSum(root);
+        return maxPathSum;
+    }
+
+    public int verticalPathSum(TreeNode curr) {
+        if (curr == null)
+            return 0;
+        int leftChildVerticalSum = verticalPathSum(curr.left);
+        int rightChildVerticalSum = verticalPathSum(curr.right);
+        //in every recursive call from parents perspective, we have 4 path options we can consider
+        //sum of parent node and left child max vertical sum
+        //sum of parent node and right child max vertical sum
+        //sum of parent node and both (left and right) child max vertical sums
+        //parent node value alone (single node path)
+        //we get the max of all of these options and set it to the max sum path found so far.
+        //then of course, return the max vertical path sum of the left or right child node PLUS the root node. UNless the left and right children return a negative sum. In that case, just return the current node value
+        int bestPathSumIncludingCurrNode = Math.max(Math.max(Math.max(leftChildVerticalSum + rightChildVerticalSum + curr.val, rightChildVerticalSum + curr.val), leftChildVerticalSum + curr.val), curr.val);
+        maxPathSum = Math.max(bestPathSumIncludingCurrNode, maxPathSum);
+        int maxVerticalPathSum = Math.max(leftChildVerticalSum, rightChildVerticalSum);
+        if (maxVerticalPathSum < 0)
+            //if the vertical paths of the (children to leaves) gives negative answer, no point in adding it
+            return curr.val;
+        else
+            return curr.val + maxVerticalPathSum;
+    }
+}

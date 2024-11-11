@@ -1,0 +1,34 @@
+class Solution {
+
+    int NOT_PROCESSED = 0, IN_PROCESS = 1, PROCESSED = 2;
+
+    public boolean canFinish(int n, int[][] pre) {
+        int[] visited = new int[n];
+        //create adjacency list
+        ArrayList<Integer>[] graph = new ArrayList[n];
+        for (int i = 0; i < n; i++) graph[i] = new ArrayList<>();
+        for (int i = 0; i < pre.length; i++) graph[pre[i][1]].add(pre[i][0]);
+        //visit each node & its neighbors
+        for (int i = 0; i < n; i++) if (isCyclic(graph, visited, i))
+            return false;
+        return true;
+    }
+
+    public boolean isCyclic(ArrayList<Integer>[] graph, int[] visited, int src) {
+        //cycle found
+        if (visited[src] == IN_PROCESS)
+            return true;
+        //all neighbors of src are already visited
+        if (visited[src] == PROCESSED)
+            return false;
+        // initially set src as IN_PROCESS
+        visited[src] = IN_PROCESS;
+        for (int nbr : graph[src]) {
+            if (isCyclic(graph, visited, nbr))
+                return true;
+        }
+        //set PROCESSED when all neighbors of src are visited
+        visited[src] = PROCESSED;
+        return false;
+    }
+}

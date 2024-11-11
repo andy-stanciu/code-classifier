@@ -1,0 +1,62 @@
+class Solution {
+
+    static int var1;
+
+    public void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    public int partition(int[] arr, int lo, int hi) {
+        int mid = (lo + hi) / 2;
+        int pivot = arr[mid], pivotIdx = mid;
+        int smallercount = 0;
+        for (int i = lo; i <= hi; i++) {
+            if (i == mid)
+                continue;
+            if (arr[i] <= pivot)
+                smallercount++;
+        }
+        int correctIdx = lo + smallercount;
+        swap(arr, pivotIdx, correctIdx);
+        //partition
+        int i = lo, j = hi;
+        while (i < correctIdx && j > correctIdx) {
+            if (arr[i] <= pivot)
+                i++;
+            else if (arr[j] > pivot)
+                j--;
+            else if (arr[i] > pivot && arr[j] <= pivot) {
+                swap(arr, i, j);
+            }
+        }
+        return correctIdx;
+    }
+
+    public void quickselect(int[] arr, int lo, int hi, int k) {
+        if (lo > hi)
+            return;
+        if (lo == hi) {
+            if (lo == k - 1)
+                var1 = arr[lo];
+            return;
+        }
+        int idx = partition(arr, lo, hi);
+        if (idx == k - 1) {
+            var1 = arr[idx];
+            return;
+        }
+        if (k - 1 < idx)
+            quickselect(arr, lo, idx - 1, k);
+        else
+            quickselect(arr, idx + 1, hi, k);
+    }
+
+    public int method1(int[] arr, int k) {
+        var1 = -1;
+        int n = arr.length;
+        quickselect(arr, 0, n - 1, n - k + 1);
+        return var1;
+    }
+}

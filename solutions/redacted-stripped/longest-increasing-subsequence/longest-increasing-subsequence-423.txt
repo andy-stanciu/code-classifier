@@ -1,0 +1,38 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        int[] lis = new int[nums.length];
+        Arrays.fill(lis, 1);
+        for (int i = nums.length - 1; i >= 0; i--) {
+            for (int j = i + 1; j < nums.length; j++) {
+                if (nums[j] > nums[i]) {
+                    lis[i] = Math.max(lis[i], 1 + lis[j]);
+                }
+            }
+        }
+        Arrays.sort(lis);
+        return lis[lis.length - 1];
+    }
+
+    public int solve(int[] nums, int prev, int curr) {
+        if (curr == nums.length)
+            return 0;
+        int take = 0;
+        if (prev == -1 || nums[prev] < nums[curr])
+            take = 1 + solve(nums, curr, curr + 1);
+        int notTake = solve(nums, prev, curr + 1);
+        return Math.max(take, notTake);
+    }
+
+    public int solveMem(int[] nums, int prev, int curr, int[][] dp) {
+        if (curr == nums.length)
+            return 0;
+        if (dp[curr][prev + 1] != -1)
+            return dp[curr][prev + 1];
+        int take = 0;
+        if (prev == -1 || nums[prev] < nums[curr])
+            take = 1 + solveMem(nums, curr, curr + 1, dp);
+        int notTake = solveMem(nums, prev, curr + 1, dp);
+        return dp[curr][prev + 1] = Math.max(take, notTake);
+    }
+}

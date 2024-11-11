@@ -1,0 +1,43 @@
+class Solution {
+
+    Map<Integer, Pair> map;
+
+    public List<Double> averageOfLevels(TreeNode root) {
+        map = new HashMap<>();
+        traverseTree(root, 0);
+        List<Double> list = new ArrayList<>(map.keySet().size());
+        for (Integer key : map.keySet()) {
+            Pair p = map.get(key);
+            list.add(p.sum * 1.0 / p.count);
+        }
+        return list;
+    }
+
+    private void traverseTree(TreeNode node, int lvl) {
+        if (node == null)
+            return;
+        if (map.containsKey(lvl)) {
+            Pair pair = map.get(lvl);
+            pair.sum += node.val;
+            pair.count++;
+        } else {
+            Pair pair = new Pair(node.val, 1);
+            map.put(lvl, pair);
+        }
+        lvl++;
+        traverseTree(node.left, lvl);
+        traverseTree(node.right, lvl);
+    }
+
+    class Pair {
+
+        long sum;
+
+        int count;
+
+        public Pair(long sum, int count) {
+            this.sum = sum;
+            this.count = count;
+        }
+    }
+}

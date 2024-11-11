@@ -1,0 +1,37 @@
+class Solution {
+
+    // method 3. bottom up approach(tabulation) + space optimization time O(M*N) space O(1)
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        // if grid is start or end with obstacle then return 0
+        if (obstacleGrid[0][0] == 1 || obstacleGrid[m - 1][n - 1] == 1)
+            return 0;
+        // fill the grid\'s bottom row and most right columns with 1 if no obstacle
+        int obs = 1;
+        for (int i = m - 1; i >= 0; i--) {
+            if (obstacleGrid[i][n - 1] == 1)
+                obs = 0;
+            obstacleGrid[i][n - 1] = obs;
+        }
+        obstacleGrid[m - 1][n - 1] = 0;
+        obs = 1;
+        for (int j = n - 1; j >= 0; j--) {
+            if (obstacleGrid[m - 1][j] == 1)
+                obs = 0;
+            obstacleGrid[m - 1][j] = obs;
+        }
+        // iterative fill the all value from m - 2, n - 2 back to up
+        for (int i = m - 2; i >= 0; i--) {
+            for (int j = n - 2; j >= 0; j--) {
+                // if the grid has obstacle then mark as 0 path
+                if (obstacleGrid[i][j] == 1)
+                    obstacleGrid[i][j] = 0;
+                else
+                    // else add the total path from bottom and right grid
+                    obstacleGrid[i][j] = obstacleGrid[i + 1][j] + obstacleGrid[i][j + 1];
+            }
+        }
+        return obstacleGrid[0][0];
+    }
+}

@@ -1,0 +1,30 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s == null || t == null || s.length() < t.length()) {
+            return "";
+        }
+        int[] map = new int[256];
+        for (char ch : t.toCharArray()) {
+            map[ch]++;
+        }
+        int l = 0, minLen = Integer.MAX_VALUE, sIdx = -1, cnt = 0;
+        for (int r = 0; r < s.length(); r++) {
+            if (map[s.charAt(r)] > 0)
+                cnt++;
+            map[s.charAt(r)]--;
+            while (cnt == t.length()) {
+                if (r - l + 1 < minLen) {
+                    sIdx = l;
+                    minLen = r - l + 1;
+                }
+                map[s.charAt(l)]++;
+                if (map[s.charAt(l)] > 0) {
+                    cnt--;
+                }
+                l++;
+            }
+        }
+        return sIdx == -1 ? "" : s.substring(sIdx, sIdx + minLen);
+    }
+}

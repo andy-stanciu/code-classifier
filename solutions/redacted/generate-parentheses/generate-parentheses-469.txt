@@ -1,0 +1,59 @@
+class Solution {
+
+    /*instead of class we can use this evertime to check no of open and close brackets 
+    //find open and close brackets
+        for(int i = 0 ; i < pos.length();i++){
+            char c = pos.charAt(i);
+            if(c == \'(\'){
+                open = open+1;
+            }
+            if(c == \')\'){
+                close = close+1;
+            }  
+        }*/
+    class Pos {
+
+        int open;
+
+        int close;
+
+        String bracket;
+
+        Pos(int open, int close, String bracket) {
+            this.open = open;
+            this.close = close;
+            this.bracket = bracket;
+        }
+    }
+
+    public List<String> method1(int n) {
+        Stack<Pos> stack = new Stack<>();
+        List<String> res = new ArrayList();
+        //we can only add open bracket
+        stack.push(new Pos(1, 0, "("));
+        while (!stack.isEmpty()) {
+            Pos pos = stack.pop();
+            int close = pos.close;
+            int open = pos.open;
+            String bracket = pos.bracket;
+            if (close == n && open == n) {
+                //no more possibilities so add to res
+                res.add(pos.bracket);
+            }
+            if (open < n) {
+                //only possibility is add open
+                StringBuilder sb = new StringBuilder();
+                sb.append(bracket);
+                sb.append("(");
+                stack.push(new Pos(open + 1, close, sb.toString()));
+            }
+            if (close < open) {
+                StringBuilder sb1 = new StringBuilder();
+                sb1.append(bracket);
+                sb1.append(")");
+                stack.push(new Pos(open, close + 1, sb1.toString()));
+            }
+        }
+        return res;
+    }
+}

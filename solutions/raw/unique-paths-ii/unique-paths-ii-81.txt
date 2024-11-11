@@ -1,0 +1,42 @@
+class Solution {
+
+    int gSum = 0;
+
+    public boolean isValid(int row, int col, int[][] oGrid) {
+        if (row < 0 || oGrid.length <= row) {
+            return false;
+        }
+        if (col < 0 || oGrid[0].length <= col) {
+            return false;
+        }
+        return true;
+    }
+
+    // start -> 2 -> x -> 3 -> end
+    public int dfs(int row, int col, HashMap<String, Integer> gCache, int[][] oGrid) {
+        if (gCache.containsKey(row + "-" + col)) {
+            return gCache.get(row + "-" + col);
+        }
+        if (oGrid[row][col] == 1) {
+            //rock
+            return 0;
+        }
+        if (row == oGrid.length - 1 && col == oGrid[0].length - 1) {
+            return 1;
+        }
+        int localSum = 0;
+        if (isValid(row + 1, col, oGrid)) {
+            localSum += dfs(row + 1, col, gCache, oGrid);
+        }
+        if (isValid(row, col + 1, oGrid)) {
+            localSum += dfs(row, col + 1, gCache, oGrid);
+        }
+        gCache.put(row + "-" + col, localSum);
+        return localSum;
+    }
+
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        gSum = 0;
+        return dfs(0, 0, new HashMap<String, Integer>(), obstacleGrid);
+    }
+}

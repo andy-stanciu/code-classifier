@@ -1,0 +1,54 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    //tree can have negative values as well
+    int max = Integer.MIN_VALUE;
+
+    public int maxPathSum(TreeNode root) {
+        calculatePath(root);
+        //return the max calculated path
+        return max;
+    }
+
+    public int calculatePath(TreeNode root) {
+        if (root == null)
+            return 0;
+        int leftSum = calculatePath(root.left);
+        int rightSum = calculatePath(root.right);
+        //if
+        // 20 current sum will be leftsum+rightsum + root.val
+        //15 7
+        if (leftSum < 0 && rightSum < 0) {
+            max = Math.max(max, root.val);
+            return root.val;
+        } else if (leftSum < 0)
+            max = Math.max(max, root.val + rightSum);
+        else if (rightSum < 0)
+            max = Math.max(max, root.val + leftSum);
+        else
+            max = Math.max(max, root.val + leftSum + rightSum);
+        /**
+         *        for the parent return the max from left or right subtree
+         *        as it can only take 1 path
+         *          -10
+         *              20
+         *            15  7
+         *            only path is -10 + 20 + max(15,7)
+         */
+        return root.val + Math.max(leftSum, rightSum);
+    }
+}

@@ -1,0 +1,60 @@
+class Solution {
+
+    Graph graph;
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        graph = new Graph(numCourses);
+        for (int[] edge : prerequisites) {
+            graph.addEdge(edge[0], edge[1]);
+        }
+        return !graph.isCyclic();
+    }
+}
+
+class Graph {
+
+    private Map<Integer, List<Integer>> adjList;
+
+    private Set<Integer> visited;
+
+    int N;
+
+    public Graph(int N) {
+        this.adjList = new HashMap<Integer, List<Integer>>();
+        this.visited = new HashSet<Integer>();
+        this.N = N;
+    }
+
+    public void addEdge(int src, int dest) {
+        List<Integer> item = adjList.getOrDefault(src, new ArrayList<Integer>());
+        item.add(dest);
+        adjList.put(src, item);
+    }
+
+    public boolean isCyclic() {
+        Set<Integer> inPath = new HashSet<Integer>();
+        for (int i = 0; i < N; i++) {
+            if (!visited.contains(i)) {
+                if (cyclicDFS(i, inPath))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean cyclicDFS(int src, Set<Integer> inPath) {
+        visited.add(src);
+        inPath.add(src);
+        List<Integer> children = adjList.getOrDefault(src, new ArrayList<Integer>());
+        for (Integer child : children) {
+            if (!inPath.contains(child)) {
+                if (!visited.contains(child) && cyclicDFS(child, inPath))
+                    return true;
+            } else {
+                return true;
+            }
+        }
+        inPath.remove(src);
+        return false;
+    }
+}

@@ -1,0 +1,48 @@
+class Solution {
+
+    public int method1(int[] nums, int low, int high, int target) {
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] > target) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return -1;
+    }
+
+    public int method2(int[] nums, int target) {
+        int n = nums.length;
+        if (n == 1) {
+            return nums[0] == target ? 0 : -1;
+        }
+        int low = 0;
+        int high = n - 1;
+        int pivot = -1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (mid < n - 1 && nums[mid] > nums[mid + 1]) {
+                pivot = mid;
+                break;
+            } else if (mid > 0 && nums[mid] < nums[mid - 1]) {
+                pivot = mid - 1;
+                break;
+            }
+            if (nums[mid] >= nums[0]) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        if (pivot == -1) {
+            return method1(nums, 0, n - 1, target);
+        }
+        int left = method1(nums, 0, pivot, target);
+        if (left != -1)
+            return left;
+        return method1(nums, pivot + 1, n - 1, target);
+    }
+}

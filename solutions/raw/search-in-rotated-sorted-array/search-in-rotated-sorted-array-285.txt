@@ -1,0 +1,47 @@
+class Solution {
+
+    public int search(int[] nums, int target) {
+        int k = findStartingIdx(nums);
+        System.out.println(k);
+        int k1 = findNumber(nums, target, 0, k - 1);
+        int k2 = findNumber(nums, target, k, nums.length - 1);
+        System.out.println(k1 + " " + k2);
+        if (k1 == -1) {
+            return k2;
+        } else if (k2 == -1) {
+            return k1;
+        }
+        return -1;
+    }
+
+    public int findStartingIdx(int[] nums) {
+        int l = 0;
+        int h = nums.length - 1;
+        int idx = -1;
+        while (l <= h) {
+            int mid = l + (h - l) / 2;
+            if (nums[mid] <= nums[nums.length - 1]) {
+                // ideal condition
+                idx = mid;
+                h = mid - 1;
+            } else if (nums[mid] > nums[nums.length - 1]) {
+                l = mid + 1;
+            }
+        }
+        return idx;
+    }
+
+    public int findNumber(int[] nums, int x, int low, int high) {
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (x < nums[mid]) {
+                high = mid - 1;
+            } else if (x > nums[mid]) {
+                low = mid + 1;
+            } else {
+                return mid;
+            }
+        }
+        return -1;
+    }
+}

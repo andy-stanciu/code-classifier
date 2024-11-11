@@ -1,0 +1,47 @@
+class Solution {
+
+    List<Integer> l = new ArrayList<>();
+
+    int bfs(List<List<Integer>> e, int v) {
+        // will store the indegree of nodes
+        int[] indeg = new int[v];
+        for (int i = 0; i < v; i++) {
+            // calculating indegrees
+            for (int node : e.get(i)) {
+                indeg[node]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < v; i++) {
+            // nodes having 0 indegree will be addded to the stack s
+            if (indeg[i] == 0)
+                q.add(i);
+        }
+        while (!q.isEmpty()) {
+            // removing nodes from stack in fifo manner
+            int node = q.poll();
+            l.add(node);
+            for (int j : e.get(node)) {
+                // decreasing the indegree of that adjacent nodes which recieves the current node
+                indeg[j]--;
+                if (// if adjancent nodes indeg becomes 0 then they are added to the stack
+                indeg[j] == 0)
+                    q.add(j);
+            }
+        }
+        return l.size();
+    }
+
+    public boolean canFinish(int v, int[][] g) {
+        List<List<Integer>> e = new ArrayList<>();
+        for (int i = 0; i < v; i++) {
+            e.add(new ArrayList<>());
+        }
+        for (int i = 0; i < g.length; i++) {
+            e.get(g[i][1]).add(g[i][0]);
+        }
+        if (bfs(e, v) == v)
+            return true;
+        return false;
+    }
+}

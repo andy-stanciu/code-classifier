@@ -1,0 +1,30 @@
+class Solution {
+
+    int count = 0;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) graph.add(new ArrayList<>());
+        int[] indegree = new int[param1];
+        for (int[] edge : prerequisites) {
+            graph.get(edge[1]).add(edge[0]);
+            indegree[edge[0]]++;
+        }
+        LinkedList<Integer> q = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0)
+                q.offer(i);
+        }
+        int res = 0;
+        while (!q.isEmpty()) {
+            int temp = q.poll();
+            res++;
+            for (int neighbor : graph.get(temp)) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0)
+                    q.offer(neighbor);
+            }
+        }
+        return res == param1;
+    }
+}

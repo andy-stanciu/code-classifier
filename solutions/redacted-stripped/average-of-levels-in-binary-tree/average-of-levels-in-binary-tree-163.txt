@@ -1,0 +1,42 @@
+class Solution {
+
+    public List<Double> method1(TreeNode root) {
+        List<Double> res = new ArrayList<>();
+        if (root == null)
+            return res;
+        Queue<TreeNode> q = new ArrayDeque<>();
+        q.add(root);
+        q.add(new TreeNode(-1001));
+        Queue<Integer> lst = new ArrayDeque<>();
+        while (!q.isEmpty()) {
+            TreeNode node = q.poll();
+            if (node.val == -1001) {
+                if (q.isEmpty())
+                    break;
+                int n = lst.size();
+                double sum = 0;
+                while (!lst.isEmpty()) {
+                    sum += lst.poll();
+                }
+                if (n != 0)
+                    res.add(sum / n);
+                lst = new ArrayDeque<>();
+                q.add(new TreeNode(-1001));
+                continue;
+            }
+            lst.add(node.val);
+            if (node.left != null)
+                q.add(node.left);
+            if (node.right != null)
+                q.add(node.right);
+        }
+        int n = lst.size();
+        double sum = 0;
+        while (!lst.isEmpty()) {
+            sum += lst.poll();
+        }
+        if (n != 0)
+            res.add(sum / n);
+        return res;
+    }
+}

@@ -1,0 +1,33 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int[] mp = new int[128];
+        int s_size = s.length();
+        int t_size = t.length();
+        int min_len = Integer.MAX_VALUE;
+        int start = 0;
+        int min_start = 0;
+        for (char c : t.toCharArray()) {
+            mp[c]++;
+        }
+        int requiredChars = t_size;
+        for (int end = 0; end < s_size; end++) {
+            if (mp[s.charAt(end)] > 0) {
+                requiredChars--;
+            }
+            mp[s.charAt(end)]--;
+            while (requiredChars == 0) {
+                if (end - start < min_len) {
+                    min_start = start;
+                    min_len = end - start;
+                }
+                mp[s.charAt(start)]++;
+                if (mp[s.charAt(start)] > 0) {
+                    requiredChars++;
+                }
+                start++;
+            }
+        }
+        return min_len == Integer.MAX_VALUE ? "" : s.substring(min_start, min_start + min_len + 1);
+    }
+}

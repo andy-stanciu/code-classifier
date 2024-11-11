@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int n, int[][] pre) {
+        List<List<Integer>> g = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            g.add(new ArrayList<>());
+        }
+        for (int[] edge : pre) {
+            g.get(edge[0]).add(edge[1]);
+        }
+        boolean[] vis = new boolean[n];
+        boolean[] curStack = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            if (!vis[i]) {
+                if (dfs(i, g, vis, curStack))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(int i, List<List<Integer>> g, boolean[] vis, boolean[] curStack) {
+        vis[i] = true;
+        curStack[i] = true;
+        for (int j : g.get(i)) {
+            if (!vis[j]) {
+                if (dfs(j, g, vis, curStack))
+                    return true;
+            } else if (curStack[j]) {
+                return true;
+            }
+        }
+        curStack[i] = false;
+        return false;
+    }
+}

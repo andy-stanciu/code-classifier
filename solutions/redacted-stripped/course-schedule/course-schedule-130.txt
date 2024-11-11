@@ -1,0 +1,41 @@
+class Solution {
+
+    private static final List<Integer> EMPTY_LIST = Collections.emptyList();
+
+    private static final int UNVISITED = 0;
+
+    private static final int VISITING = 1;
+
+    private static final int CHECKED = 2;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> var1 = new HashMap<>();
+        int[] status = new int[param1];
+        for (int[] pair : prerequisites) {
+            var1.computeIfAbsent(pair[0], k -> new ArrayList<>()).add(pair[1]);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (!dfs(i, var1, status)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(int param2, Map<Integer, List<Integer>> var1, int[] status) {
+        if (status[param2] == CHECKED) {
+            return true;
+        } else if (status[param2] == VISITING) {
+            return false;
+        }
+        status[param2] = VISITING;
+        List<Integer> var2 = var1.getOrDefault(param2, EMPTY_LIST);
+        for (int pre : var2) {
+            if (!dfs(pre, var1, status)) {
+                return false;
+            }
+        }
+        status[param2] = CHECKED;
+        return true;
+    }
+}

@@ -1,0 +1,42 @@
+class Solution {
+
+    public int findKthLargest(int[] nums, int k) {
+        //to get max value
+        int mx = nums[0];
+        //to get min value
+        int mn = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            mx = Math.max(mx, nums[i]);
+            mn = Math.min(mn, nums[i]);
+        }
+        //find largest absolute value
+        int size = Math.max(mx, -1 * mn);
+        //array for +ve numbers
+        int[] arrP = new int[size + 1];
+        //array for -ve numbers
+        int[] arrN = new int[size + 1];
+        /* arrP[i] denotes the total occurances of positive i,
+            where as arrN[i] denotes total occurances of -i value.
+        */
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] < 0) {
+                arrN[(-1 * nums[i])]++;
+            } else
+                arrP[nums[i]]++;
+        }
+        //to keep track of cur largest number
+        int cur = 0;
+        //start finding the largest number from the last value of positive array follwing the negative array traversal from 1st index(largest -ve value) of arrN.
+        for (int i = size; i >= 0; i--) {
+            cur += arrP[i];
+            if (cur >= k)
+                return i;
+        }
+        for (int i = 1; i <= size; i++) {
+            cur += arrN[i];
+            if (cur >= k)
+                return (-1 * i);
+        }
+        return -1;
+    }
+}

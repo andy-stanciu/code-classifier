@@ -1,0 +1,57 @@
+class Solution {
+
+    public List<String> method1(int n) {
+        List<String> list = new ArrayList();
+        backTracking(list, new StringBuilder(), 0, 0, n);
+        return list;
+    }
+
+    public void backTracking(List<String> list, StringBuilder str, int open, int close, int max) {
+        if (str.length() == max * 2) {
+            list.add(str.toString());
+            return;
+        }
+        if (open < max) {
+            backTracking(list, str.append("("), open + 1, close, max);
+            str.deleteCharAt(str.length() - 1);
+        }
+        if (close < open) {
+            backTracking(list, str.append(")"), open, close + 1, max);
+            str.deleteCharAt(str.length() - 1);
+        }
+    }
+
+    List<String> method1(int n) {
+        List<String> list = new ArrayList();
+        Deque<ParenthesisString> deque = new LinkedList();
+        deque.push(new ParenthesisString("", 0, 0));
+        while (!deque.isEmpty()) {
+            ParenthesisString object = deque.poll();
+            if (object.str.length() == n * 2) {
+                list.add(object.str);
+            }
+            if (object.open < n) {
+                deque.push(new ParenthesisString(object.str + "(", object.open + 1, object.close));
+            }
+            if (object.close < object.open) {
+                deque.push(new ParenthesisString(object.str + ")", object.open, object.close + 1));
+            }
+        }
+        return list;
+    }
+
+    class ParenthesisString {
+
+        String str;
+
+        int open;
+
+        int close;
+
+        ParenthesisString(String str, int open, int close) {
+            this.str = str;
+            this.open = open;
+            this.close = close;
+        }
+    }
+}

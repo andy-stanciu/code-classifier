@@ -1,0 +1,42 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int prev = prerequisites[i][1];
+            int next = prerequisites[i][0];
+            graph.get(prev).add(next);
+        }
+        boolean[] vis = new boolean[numCourses];
+        boolean[] recS = new boolean[numCourses];
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < graph.size(); i++) {
+            if (!vis[i]) {
+                boolean isPossible = dfs(i, vis, recS, st, graph);
+                if (!isPossible) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean dfs(int curr, boolean[] vis, boolean[] recS, Stack<Integer> st, List<List<Integer>> graph) {
+        vis[curr] = true;
+        recS[curr] = true;
+        boolean isPossible = true;
+        for (Integer neighbours : graph.get(curr)) {
+            if (!vis[neighbours] && !recS[neighbours] && isPossible) {
+                isPossible = dfs(neighbours, vis, recS, st, graph);
+            } else if (recS[neighbours]) {
+                return false;
+            }
+        }
+        st.push(curr);
+        recS[curr] = false;
+        return isPossible;
+    }
+}

@@ -1,0 +1,37 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        HashSet<Integer> set = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            set.add(nums[i]);
+        }
+        int[] arr1 = new int[set.size()];
+        int i = 0;
+        for (int key : set) {
+            arr1[i] = key;
+            i++;
+        }
+        Arrays.sort(arr1);
+        return lcstab(nums, nums.length, arr1, arr1.length);
+    }
+
+    public static int lcstab(int[] arr, int n, int[] arr1, int m) {
+        int[][] dp = new int[n + 1][m + 1];
+        for (int i = 0; i < dp.length; i++) {
+            dp[i][0] = 0;
+        }
+        for (int i = 0; i < dp[0].length; i++) {
+            dp[0][i] = 0;
+        }
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 1; j < m + 1; j++) {
+                if (arr[i - 1] == arr1[j - 1]) {
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j]);
+                }
+            }
+        }
+        return dp[n][m];
+    }
+}

@@ -1,0 +1,75 @@
+class Solution {
+
+    public String minWindow(String s, String p) {
+        if (p.length() > s.length()) {
+            return "";
+        }
+        //for temporary purpose to check possible candidates of answer
+        int[] count1 = new int[256];
+        //checking purpose char array for p
+        int[] count2 = new int[256];
+        //original purpose char array for p
+        int[] count3 = new int[256];
+        int max = 0;
+        for (int k = 0; k < p.length(); k++) {
+            count2[p.charAt(k)]++;
+            count3[p.charAt(k)]++;
+            //max stores total numbers of elements of p
+            max++;
+        }
+        String res = "";
+        int min = Integer.MAX_VALUE;
+        String curr = "";
+        int i = 0;
+        while (i < s.length() + 1) {
+            if (max != 0) {
+                if (i >= s.length()) {
+                    break;
+                }
+                String n = new String(s.charAt(i) + "");
+                //updating the candidates elements frequency
+                count1[s.charAt(i)]++;
+                if (count2[s.charAt(i)] > 0) {
+                    count2[s.charAt(i)]--;
+                    //updating no of elements present in possible answer
+                    max--;
+                }
+                //max will become 0 when test candidate is ready
+                //as now all the elements present in p is present in the candidate
+                res = res + n;
+                i++;
+            }
+            if (max == 0) {
+                //this means all characters of p is present in substring res
+                if (res.length() == p.length()) {
+                    //minimum possible answer
+                    return res;
+                } else if (min > res.length()) {
+                    //updating
+                    min = res.length();
+                    curr = res;
+                }
+                //checking if front elements are useful or not if they are present in pattern p
+                if (count3[res.charAt(0)] == 0 || count1[res.charAt(0)] > count3[res.charAt(0)]) {
+                    int x = 0, index = 0;
+                    //even if front elements are present in p but their frequency is higher so :
+                    while (count3[res.charAt(x)] == 0 || count1[res.charAt(x)] > count3[res.charAt(x)]) {
+                        count1[res.charAt(x)]--;
+                        x++;
+                        index++;
+                    }
+                    //updating the answer
+                    res = res.substring(index, res.length());
+                } else {
+                    //checking for for more possible answer by making the answer not suitable for
+                    //the solution by removing the first element and updating it in the count arrays
+                    count1[res.charAt(0)]--;
+                    count2[res.charAt(0)]++;
+                    res = res.substring(1, res.length());
+                    max++;
+                }
+            }
+        }
+        return curr;
+    }
+}

@@ -1,0 +1,33 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] hash = new int[256];
+        int l = 0;
+        int r = 0;
+        for (char c : t.toCharArray()) {
+            hash[c]++;
+        }
+        int cnt = 0;
+        int len = Integer.MAX_VALUE;
+        int si = -1;
+        while (r < s.length()) {
+            if (hash[s.charAt(r)] > 0) {
+                cnt++;
+            }
+            hash[s.charAt(r)]--;
+            while (cnt == t.length()) {
+                if (r - l + 1 < len) {
+                    len = r - l + 1;
+                    si = l;
+                }
+                hash[s.charAt(l)]++;
+                if (hash[s.charAt(l)] > 0) {
+                    cnt--;
+                }
+                l++;
+            }
+            r++;
+        }
+        return si == -1 ? "" : s.substring(si, si + len);
+    }
+}

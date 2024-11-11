@@ -1,0 +1,73 @@
+class Class1 {
+
+    int val;
+
+    Class1 next;
+
+    Class1() {
+    }
+
+    Class1(int val) {
+        this.val = val;
+    }
+
+    Class1(int val, Class1 next) {
+        this.val = val;
+        this.next = next;
+    }
+
+    public static Class1 deserialize(String data) {
+        if (data == null || data.length() <= 2) {
+            return null;
+        }
+        String[] values = data.substring(1, data.length() - 1).split(",");
+        Class1 dummy = new Class1(0);
+        Class1 current = dummy;
+        for (String value : values) {
+            current.next = new Class1(Integer.parseInt(value.trim()));
+            current = current.next;
+        }
+        return dummy.next;
+    }
+
+    public static String serialize(Class1 head) {
+        StringBuilder result = new StringBuilder();
+        result.append("[");
+        Class1 current = head;
+        while (current != null) {
+            result.append(current.val);
+            current = current.next;
+            if (current != null) {
+                result.append(",");
+            }
+        }
+        result.append("]");
+        return result.toString();
+    }
+}
+
+class Solution {
+
+    public Class1 method1(Class1 head, int n) {
+        Class1 dummy = new Class1(0);
+        dummy.next = head;
+        Class1 first = dummy;
+        Class1 second = dummy;
+        for (int i = 0; i <= n; i++) {
+            first = first.next;
+        }
+        while (first != null) {
+            first = first.next;
+            second = second.next;
+        }
+        second.next = second.next.next;
+        return dummy.next;
+    }
+
+    public static void main(String[] args) {
+        Class1 head = Class1.deserialize("[1,2,3,4,5]");
+        Solution solution = new Solution();
+        Class1 result = solution.method1(head, 2);
+        System.out.println(Class1.serialize(result));
+    }
+}

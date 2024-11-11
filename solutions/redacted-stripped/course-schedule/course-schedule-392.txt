@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<Integer>[] arr = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            arr[i] = new ArrayList<Integer>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            arr[prerequisites[i][0]].add(prerequisites[i][1]);
+        }
+        boolean[] visited = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (visited[i] == false) {
+                if (hasLoop(arr, i, visited, new boolean[param1]) == true) {
+                    return (false);
+                }
+            }
+        }
+        return (true);
+    }
+
+    public boolean hasLoop(ArrayList[] arr, int n, boolean[] visited, boolean[] prev) {
+        visited[n] = true;
+        prev[n] = true;
+        for (int i = 0; i < arr[n].size(); i++) {
+            if (prev[(int) arr[n].get(i)] == true) {
+                return (true);
+            } else {
+                if (visited[(int) arr[n].get(i)] == false && hasLoop(arr, (int) arr[n].get(i), visited, prev.clone()) == true) {
+                    return (true);
+                }
+            }
+        }
+        return (false);
+    }
+}

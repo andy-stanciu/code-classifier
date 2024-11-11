@@ -1,0 +1,82 @@
+class Solution {
+
+    int wordSize;
+
+    Prerequists[] prerequists;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        if (param1 <= 0 || prerequisites.length <= 0) {
+            return true;
+        }
+        wordSize = wordIndex(param1 - 1) + 1;
+        prerequists = new Prerequists[param1];
+        int length = prerequisites.length;
+        for (int i = 0; i < length; i++) {
+            int[] pair = prerequisites[i];
+            if (!checkCycle(pair[0], pair[1])) {
+                return false;
+            }
+            pair = prerequisites[length - 1 - i];
+            if (!checkCycle(pair[0], pair[1])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkCycle(int param2, int param3) {
+        if (param2 == param3) {
+            return false;
+        }
+        Prerequists tpres = prerequists[param3];
+        if (tpres == null) {
+            tpres = prerequists[param3] = new Prerequists(wordSize);
+        }
+        Prerequists fpres = prerequists[param2];
+        if (fpres == null) {
+            fpres = prerequists[param2] = new Prerequists(tpres.words);
+        } else {
+            fpres.copy(tpres);
+        }
+        if (fpres.method2(param2)) {
+            return false;
+        }
+        fpres.method1(param3);
+        return true;
+    }
+
+    static class Prerequists {
+
+        final long[] words;
+
+        public Prerequists(int size) {
+            this.words = new long[size];
+        }
+
+        public Prerequists(long[] words) {
+            this.words = Arrays.copyOf(words, words.length);
+        }
+
+        public void copy(Prerequists pres) {
+            for (int i = 0; i < words.length; i++) {
+                this.words[i] |= pres.words[i];
+            }
+        }
+
+        public void method1(int param4) {
+            this.words[wordIndex(param4)] |= bitMask(param4);
+        }
+
+        public boolean method2(int param4) {
+            return (this.words[wordIndex(param4)] & bitMask(param4)) != 0;
+        }
+
+        private static long bitMask(int param4) {
+            return 1L << (param4 & 63);
+        }
+    }
+
+    private static int wordIndex(int param4) {
+        return param4 >> 6;
+    }
+}

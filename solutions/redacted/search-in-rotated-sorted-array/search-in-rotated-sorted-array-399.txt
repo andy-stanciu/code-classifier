@@ -1,0 +1,56 @@
+class Solution {
+
+    private int method1(int[] nums, int start, int end) {
+        if (end >= start) {
+            //  System.out.println("start :"+start+" end:"+end);
+            int mid = start + (end - start) / 2;
+            int before_mid = mid - 1;
+            int after_mid = mid + 1;
+            if (before_mid >= 0) {
+                before_mid = nums[before_mid];
+            } else {
+                before_mid = Integer.MIN_VALUE;
+            }
+            if (after_mid < nums.length) {
+                after_mid = nums[after_mid];
+            } else {
+                after_mid = Integer.MAX_VALUE;
+            }
+            if (before_mid < nums[mid] && after_mid < nums[mid]) {
+                return mid;
+            }
+            if (nums[mid] >= nums[start]) {
+                return method1(nums, mid + 1, end);
+            } else if (nums[mid] < nums[start]) {
+                return method1(nums, start, mid - 1);
+            }
+        }
+        return -1;
+    }
+
+    private int method2(int start, int end, int target, int[] nums) {
+        if (end >= start) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] > target) {
+                return method2(start, mid - 1, target, nums);
+            }
+            return method2(mid + 1, end, target, nums);
+        }
+        return -1;
+    }
+
+    public int method3(int[] nums, int target) {
+        // find the element that is peek point
+        // split the array into two and do the binary search
+        int pivot_ele = method1(nums, 0, nums.length - 1);
+        int first_ele = method2(0, pivot_ele, target, nums);
+        int second_ele = method2(pivot_ele + 1, nums.length - 1, target, nums);
+        // System.out.println("pivot_ele :"+pivot_ele);
+        if (first_ele == -1) {
+            return second_ele;
+        }
+        return first_ele;
+    }
+}

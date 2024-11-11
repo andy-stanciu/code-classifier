@@ -1,0 +1,68 @@
+class Solution {
+
+    public int findKthLargest(int[] nums, int k) {
+        int largest = Integer.MIN_VALUE;
+        int smallest = Integer.MAX_VALUE;
+        for (int i : nums) {
+            smallest = Math.min(i, smallest);
+            largest = Math.max(i, largest);
+        }
+        if (largest < 0) {
+            // It means there are all negative number. So, No need find from the positive number
+            largest = 0;
+        }
+        if (smallest < 0) {
+            smallest = (-1 * smallest);
+        }
+        // contains count of all positive numbers
+        int[] posCount = new int[largest + 1];
+        // contains count of all negative numbers
+        int[] negCount = new int[smallest + 1];
+        for (int i : nums) {
+            if (i < 0) {
+                negCount[(i * -1)]++;
+            } else {
+                posCount[i]++;
+            }
+        }
+        int i = posCount.length - 1;
+        int kthLargest = 0;
+        // for negative number the iterator i should move to n-1 to 0 (n = size of posCount array)
+        // because the most positive number is most larger the number as compare to other positive number
+        while (k != 0) {
+            if (i < 0) {
+                break;
+            }
+            if (posCount[i] > 0) {
+                kthLargest = i;
+                posCount[i]--;
+                k--;
+            }
+            if (posCount[i] <= 0) {
+                i--;
+            }
+        }
+        // If kth largest element is not found in positive count array
+        if (k != 0) {
+            int j = 0;
+            // for negative number the iterator j should move to 0 to n-1 (n = size of negCount array)
+            // because the lesser the negative number more larger the number as compare to other negative number
+            while (k != 0) {
+                if (j == negCount.length) {
+                    break;
+                }
+                if (negCount[j] > 0) {
+                    kthLargest = j;
+                    negCount[j]--;
+                    k--;
+                }
+                if (negCount[j] <= 0) {
+                    j++;
+                }
+            }
+            // kth largest is from negative count array so it should be negative
+            kthLargest = (-1 * kthLargest);
+        }
+        return kthLargest;
+    }
+}

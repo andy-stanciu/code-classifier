@@ -1,0 +1,36 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int n = s.length(), m = t.length();
+        Map<Character, Integer> tarMap = new HashMap<>(), curMap = new HashMap<Character, Integer>();
+        int i = 0;
+        while (i < m) {
+            char ch = t.charAt(i++);
+            tarMap.put(ch, tarMap.getOrDefault(ch, 0) + 1);
+        }
+        int l = 0, r = 0, count = 0, minLen = 0, start = 0;
+        while (r < n || count == m) {
+            if (count < m) {
+                char ch = s.charAt(r++);
+                curMap.put(ch, curMap.getOrDefault(ch, 0) + 1);
+                if (tarMap.containsKey(ch) && tarMap.get(ch) >= curMap.get(ch)) {
+                    count++;
+                }
+            } else {
+                char ch = s.charAt(l++);
+                if (tarMap.containsKey(ch) && tarMap.get(ch) >= curMap.get(ch)) {
+                    count--;
+                }
+                if (curMap.get(ch) == 1)
+                    curMap.remove(ch);
+                else
+                    curMap.put(ch, curMap.get(ch) - 1);
+            }
+            if (count == m && (minLen == 0 || r - l < minLen)) {
+                minLen = r - l;
+                start = l;
+            }
+        }
+        return s.substring(start, start + minLen);
+    }
+}

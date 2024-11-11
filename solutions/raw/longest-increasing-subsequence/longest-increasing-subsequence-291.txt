@@ -1,0 +1,23 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        // DP Table: ordered TreeSet dp[i] is the smallest ending
+        // tail num that can construct a subsequence of length TreeSet.size().
+        // In other words, dpTail[0] is the smallest number, dpTail[1] is the
+        // smallest ending number that can form a subsequence of 2, keep updating
+        // as we iterate through nums
+        TreeSet<Integer> dpTail = new TreeSet();
+        int maxLen = 0;
+        for (int num : nums) {
+            if (!dpTail.isEmpty() && dpTail.last() > num) {
+                // Binary Search (via TreeSet.lower) on dpTail to find the
+                // longest subsequence with ending tail just bigger or equal than this num
+                Integer prevTail = dpTail.ceiling(num);
+                dpTail.remove(prevTail);
+            }
+            // this num is always useful (unless it\'s a duplicate, which we wasted an extra adding step)
+            dpTail.add(num);
+        }
+        return dpTail.size();
+    }
+}

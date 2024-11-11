@@ -1,0 +1,34 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int[] inDegree = new int[param1];
+        List<List<Integer>> adjList = new ArrayList<>(param1);
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int[] prerequisite = prerequisites[i];
+            adjList.get(prerequisite[1]).add(prerequisite[0]);
+            inDegree[prerequisite[0]]++;
+        }
+        Queue<Integer> deque = new ArrayDeque<>();
+        for (int i = 0; i < param1; i++) {
+            if (inDegree[i] == 0) {
+                deque.offer(i);
+            }
+        }
+        int count = 0;
+        while (!deque.isEmpty()) {
+            int node = deque.poll();
+            count++;
+            for (int i = 0; i < adjList.get(node).size(); i++) {
+                int neighbor = adjList.get(node).get(i);
+                inDegree[neighbor]--;
+                if (inDegree[neighbor] == 0) {
+                    deque.offer(neighbor);
+                }
+            }
+        }
+        return count == param1;
+    }
+}

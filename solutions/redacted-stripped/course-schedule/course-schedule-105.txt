@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        if (param1 == 0 || prerequisites.length == 0)
+            return true;
+        Map<Integer, List<Integer>> adjList = new HashMap<>();
+        int[] inDegree = new int[param1];
+        for (int[] prerequisite : prerequisites) {
+            int var1 = prerequisite[0];
+            int preReq = prerequisite[1];
+            if (!adjList.containsKey(preReq)) {
+                adjList.put(preReq, new ArrayList<>());
+            }
+            adjList.get(preReq).add(var1);
+            inDegree[var1]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (inDegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        int var2 = 0;
+        while (!queue.isEmpty()) {
+            int var1 = queue.poll();
+            var2++;
+            if (adjList.containsKey(var1)) {
+                for (int neighbor : adjList.get(var1)) {
+                    inDegree[neighbor]--;
+                    if (inDegree[neighbor] == 0) {
+                        queue.offer(neighbor);
+                    }
+                }
+            }
+        }
+        return var2 == param1;
+    }
+}

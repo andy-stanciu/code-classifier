@@ -1,0 +1,87 @@
+//OPTIMAL APPROACH 1
+class Solution {
+
+    public int method1(int[] nums) {
+        int var1 = 0;
+        Map<Integer, Boolean> exploreMap = new HashMap<>();
+        // Step 1: Initialize all numbers as unvisited
+        for (int num : nums) {
+            exploreMap.put(num, Boolean.FALSE);
+        }
+        // Step 2: Iterate over each number in the array
+        for (int num : nums) {
+            // Skip if the number is already explored
+            if (exploreMap.get(num)) {
+                continue;
+            }
+            // Mark the current number as explored
+            // This does not re-add the number to the map; it just updates the value for the  existing key (num) from Boolean.FALSE to Boolean.TRUE.
+            exploreMap.put(num, Boolean.TRUE);
+            int currentLength = 1;
+            // Step 3: Check in the forward direction (num + 1)
+            int nextNum = num + 1;
+            while (exploreMap.containsKey(nextNum) && !exploreMap.get(nextNum)) {
+                currentLength++;
+                // Mark as explored
+                exploreMap.put(nextNum, Boolean.TRUE);
+                nextNum++;
+            }
+            // Step 4: Check in the reverse direction (num - 1)
+            int prevNum = num - 1;
+            while (exploreMap.containsKey(prevNum) && !exploreMap.get(prevNum)) {
+                currentLength++;
+                // Fix: Mark prevNum, not nextNum
+                exploreMap.put(prevNum, Boolean.TRUE);
+                prevNum--;
+            }
+            // Step 5: Update the longest consecutive sequence length
+            var1 = Math.max(var1, currentLength);
+        }
+        return var1;
+    }
+}
+//BRUTE APPROACH
+// class Solution {
+//     public int longestConsecutive(int[] nums) {
+//         if (nums.length == 0) return 0;
+//         Arrays.sort(nums); // O(n log n)
+//         int longestStreak = 1;
+//         int currentStreak = 1;
+//         for (int i = 1; i < nums.length; i++) {
+//             if (nums[i] != nums[i - 1]) {
+//                 if (nums[i] == nums[i - 1] + 1) {
+//                     currentStreak += 1;
+//                 } else {
+//                     longestStreak = Math.max(longestStreak, currentStreak);
+//                     currentStreak = 1;
+//                 }
+//             }
+//         }
+//         return Math.max(longestStreak, currentStreak);
+//     }
+// }
+//OPTIMAL APPROACH 2
+// class Solution {
+//     public int longestConsecutive(int[] nums) {
+//         if (nums.length == 0) return 0;
+//         HashSet<Integer> set = new HashSet<>();
+//         for (int num : nums) {
+//             set.add(num);
+//         }
+//         int longestStreak = 0;
+//         for (int num : set) {
+//             // Only start counting if this is the start of a sequence
+//             if (!set.contains(num - 1)) {
+//                 int currentNum = num;
+//                 int currentStreak = 1;
+//                 // Count the consecutive numbers
+//                 while (set.contains(currentNum + 1)) {
+//                     currentNum += 1;
+//                     currentStreak += 1;
+//                 }
+//                 longestStreak = Math.max(longestStreak, currentStreak);
+//             }
+//         }
+//         return longestStreak;
+//     }
+// }

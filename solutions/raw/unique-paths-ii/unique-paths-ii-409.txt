@@ -1,0 +1,57 @@
+class Solution {
+
+    int[][] grid;
+
+    private void init() {
+        boolean obstacle = false;
+        for (int i = grid[0].length - 2; i >= 0; i--) {
+            //initalizing last row to be ones (if applicable)
+            if (obstacle) {
+                grid[grid.length - 1][i] = 0;
+            } else {
+                if (grid[grid.length - 1][i] == 1) {
+                    obstacle = true;
+                    grid[grid.length - 1][i] = 0;
+                } else {
+                    grid[grid.length - 1][i] = 1;
+                }
+            }
+        }
+        obstacle = false;
+        for (int i = grid.length - 1; i >= 0; i--) {
+            //initalizing last column to be ones (if applicable)
+            if (obstacle) {
+                grid[i][grid[i].length - 1] = 0;
+            } else {
+                if (grid[i][grid[i].length - 1] == 1) {
+                    obstacle = true;
+                    grid[i][grid[i].length - 1] = 0;
+                } else {
+                    grid[i][grid[i].length - 1] = 1;
+                }
+            }
+        }
+    }
+
+    private void cost() {
+        for (int i = grid.length - 2; i >= 0; i--) {
+            for (int j = grid[i].length - 2; j >= 0; j--) {
+                if (grid[i][j] == 1) {
+                    grid[i][j] = 0;
+                } else {
+                    grid[i][j] = grid[i + 1][j] + grid[i][j + 1];
+                }
+            }
+        }
+    }
+
+    public int uniquePathsWithObstacles(int[][] grid) {
+        if (grid[0][0] == 1 || grid[grid.length - 1][grid[0].length - 1] == 1) {
+            return 0;
+        }
+        this.grid = grid;
+        init();
+        cost();
+        return grid[0][0];
+    }
+}

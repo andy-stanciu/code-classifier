@@ -1,0 +1,52 @@
+class Solution {
+
+    static class Stack {
+
+        private int currentPos;
+
+        private TreeNode[] nodes;
+
+        Stack(int capacity) {
+            nodes = new TreeNode[capacity];
+        }
+
+        void push(TreeNode node) {
+            nodes[currentPos++] = node;
+        }
+
+        TreeNode pop() {
+            return nodes[--currentPos];
+        }
+
+        boolean isEmpty() {
+            return currentPos == 0;
+        }
+    }
+
+    public boolean method1(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        Stack var1 = new Stack(100);
+        var1.push(root.left);
+        var1.push(root.right);
+        while (!var1.isEmpty()) {
+            TreeNode node1 = var1.pop();
+            TreeNode node2 = var1.pop();
+            if (node1 == null || node2 == null) {
+                if (node1 != node2) {
+                    return false;
+                }
+                continue;
+            }
+            if (node1.val != node2.val) {
+                return false;
+            }
+            var1.push(node1.left);
+            var1.push(node2.right);
+            var1.push(node1.right);
+            var1.push(node2.left);
+        }
+        return var1.isEmpty();
+    }
+}

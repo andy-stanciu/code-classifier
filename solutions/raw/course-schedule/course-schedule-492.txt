@@ -1,0 +1,53 @@
+class Solution {
+
+    public boolean checkDag(ArrayList<Integer>[] graph, int curr, boolean[] visited, boolean[] recStack) {
+        visited[curr] = true;
+        recStack[curr] = true;
+        for (int j = 0; j < graph[curr].size(); j++) {
+            int ne = graph[curr].get(j);
+            if (recStack[ne] == true) {
+                // System.out.println("neighbour is in recStack"+ne);
+                return false;
+            }
+            if (visited[ne] == false) {
+                //System.out.println("neighbour is unvisited"+ne);
+                boolean res = checkDag(graph, ne, visited, recStack);
+                if (res == false) {
+                    return false;
+                }
+            }
+        }
+        recStack[curr] = false;
+        return true;
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        //Inorder to complete these all courses
+        //Graph should be a DAG
+        //so just we can check wether given directed graph contains a cycle using dfs approach
+        if (prerequisites.length == 0) {
+            return true;
+        }
+        int n = numCourses;
+        ArrayList<Integer>[] graph = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph[prerequisites[i][1]].add(prerequisites[i][0]);
+        }
+        boolean[] visited = new boolean[n];
+        boolean[] recStack = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            if (visited[i] == false) {
+                //System.out.println("v"+i);
+                boolean res = checkDag(graph, i, visited, recStack);
+                if (res == false) {
+                    return false;
+                }
+            }
+        }
+        return true;
+        //return  checkDag(prerequisites,0,visited,recStack);
+    }
+}

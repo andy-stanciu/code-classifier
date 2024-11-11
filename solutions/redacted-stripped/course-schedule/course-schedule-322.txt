@@ -1,0 +1,43 @@
+class Solution {
+
+    private void calIndeg(int[] indeg, ArrayList<Integer>[] adj) {
+        for (int i = 0; i < adj.length; i++) {
+            for (int j = 0; j < adj[i].size(); j++) {
+                int dest = adj[i].get(j);
+                indeg[dest]++;
+            }
+        }
+    }
+
+    public boolean canFinish(int n, int[][] pre) {
+        ArrayList<Integer>[] adj = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            adj[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < pre.length; i++) {
+            adj[pre[i][1]].add(pre[i][0]);
+        }
+        int[] indeg = new int[n];
+        calIndeg(indeg, adj);
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (indeg[i] == 0) {
+                q.add(i);
+            }
+        }
+        if (q.isEmpty())
+            return false;
+        int count = 0;
+        while (!q.isEmpty()) {
+            int curr = q.poll();
+            count++;
+            for (int i = 0; i < adj[curr].size(); i++) {
+                int dest = adj[curr].get(i);
+                indeg[dest]--;
+                if (indeg[dest] == 0)
+                    q.add(dest);
+            }
+        }
+        return count == n;
+    }
+}

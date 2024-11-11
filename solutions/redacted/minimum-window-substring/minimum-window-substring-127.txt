@@ -1,0 +1,44 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int minLen = Integer.MAX_VALUE;
+        // Initialize sIdx to -1 as the starting index
+        int sIdx = -1;
+        for (int i = 0; i < s.length(); i++) {
+            // Array to store frequency of characters in \'t\'
+            int[] hash = new int[256];
+            int cnt = 0;
+            // Count the frequency of each character in string t
+            for (int j = 0; j < t.length(); j++) {
+                hash[t.charAt(j)]++;
+            }
+            // Try to find the smallest window starting from index i
+            for (int j = i; j < s.length(); j++) {
+                // j should start from i, not 0
+                if (hash[s.charAt(j)] > 0) {
+                    // Check if the character is in \'t\'
+                    // Increment count when we find a character from \'t\'
+                    cnt++;
+                    // Decrement the character count
+                    hash[s.charAt(j)]--;
+                }
+                // When we have found all characters of \'t\'
+                if (cnt == t.length()) {
+                    if (j - i + 1 < minLen) {
+                        // Check if the current window is the smallest
+                        minLen = j - i + 1;
+                        // Update the start index
+                        sIdx = i;
+                    }
+                    // We can break since we found a valid window
+                    break;
+                }
+            }
+        }
+        // If we never found a valid window, return an empty string
+        if (sIdx == -1)
+            return "";
+        // Use substring method to get the result
+        return s.substring(sIdx, sIdx + minLen);
+    }
+}

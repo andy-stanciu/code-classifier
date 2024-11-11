@@ -1,0 +1,40 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int n = t.length();
+        Map<Character, Integer> tmap = new HashMap<>();
+        Map<Character, Integer> smap = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            char currentChar = t.charAt(i);
+            tmap.put(currentChar, tmap.getOrDefault(currentChar, 0) + 1);
+        }
+        int need = 0;
+        int l = 0;
+        int[] ans = { 0, Integer.MAX_VALUE };
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (tmap.containsKey(ch)) {
+                smap.put(ch, smap.getOrDefault(ch, 0) + 1);
+                if (smap.get(ch).equals(tmap.get(ch))) {
+                    need++;
+                }
+            }
+            while (need == tmap.size()) {
+                int curRes = i - l + 1;
+                if (curRes < ans[1] - ans[0]) {
+                    ans[0] = l;
+                    ans[1] = i + 1;
+                }
+                char popLeft = s.charAt(l);
+                if (smap.containsKey(popLeft)) {
+                    smap.put(popLeft, smap.get(popLeft) - 1);
+                    if (smap.get(popLeft) < tmap.get(popLeft)) {
+                        need--;
+                    }
+                }
+                l++;
+            }
+        }
+        return ans[1] == Integer.MAX_VALUE ? "" : s.substring(ans[0], ans[1]);
+    }
+}

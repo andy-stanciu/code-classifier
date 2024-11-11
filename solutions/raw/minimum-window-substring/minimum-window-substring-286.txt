@@ -1,0 +1,50 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int m = s.length();
+        Map<Character, Integer> tmap = new HashMap<>();
+        Map<Character, Integer> smap = new HashMap<>();
+        for (char a : t.toCharArray()) {
+            // Stores t\'s char freq
+            tmap.put(a, tmap.getOrDefault(a, 0) + 1);
+        }
+        // req num of unique chars
+        int required = tmap.size();
+        // tracks the current num of unique chars whoes frequencies reuirements are met
+        int formed = 0;
+        // sliding window
+        int i = 0, j = 0;
+        // stores the lowest window size
+        int low = 0, high = 0, length = Integer.MAX_VALUE;
+        while (j < m) {
+            char c = s.charAt(j);
+            if (tmap.containsKey(c)) {
+                // only if t has the char store it in smap
+                smap.put(c, smap.getOrDefault(c, 0) + 1);
+                if (// if the needed char freq is met, we increment formed
+                smap.get(c).intValue() == tmap.get(c).intValue())
+                    formed++;
+            }
+            while (formed == required) {
+                // reducing the window size
+                if (j - i + 1 < length) {
+                    // making sure we always have the smallest window
+                    length = j - i + 1;
+                    low = i;
+                    high = j + 1;
+                }
+                char temp = s.charAt(i);
+                if (smap.containsKey(temp)) {
+                    // removing chars to make window small
+                    smap.put(temp, smap.get(temp) - 1);
+                    if (// updating formed accordingly
+                    smap.get(temp) < tmap.get(temp))
+                        formed--;
+                }
+                i++;
+            }
+            j++;
+        }
+        return s.substring(low, high);
+    }
+}

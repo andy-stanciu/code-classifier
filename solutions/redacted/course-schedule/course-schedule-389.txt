@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean dfs(List<List<Integer>> adj, boolean[] isVisited, int index, HashSet<Integer> set) {
+        if (!set.contains(index)) {
+            isVisited[index] = true;
+            set.add(index);
+            for (int i = 0; i < adj.get(index).size(); i++) {
+                if (!dfs(adj, isVisited, adj.get(index).get(i), set))
+                    return false;
+            }
+            isVisited[index] = false;
+        } else {
+            if (isVisited[index])
+                return false;
+        }
+        return true;
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        HashSet<Integer> set = new HashSet<>();
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            adj.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        boolean[] isVisited = new boolean[param1];
+        for (int i = 0; i < adj.size(); i++) {
+            if (!set.contains(i))
+                if (!dfs(adj, isVisited, i, set))
+                    return false;
+        }
+        return true;
+    }
+}

@@ -1,0 +1,42 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        /*
+            [[1,0],[0,2],[2,1]]
+            0 -> 1
+            2 -> 0
+            1 -> 2
+        */
+        for (int[] prerequisite : prerequisites) {
+            adjList.get(prerequisite[1]).add(prerequisite[0]);
+        }
+        int[] visited = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (visited[i] == 0 && !dfs(adjList, i, visited)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(List<List<Integer>> adjList, int course, int[] visited) {
+        visited[course] = 1;
+        /*
+            0->1-2->0
+         */
+        for (int neighbor : adjList.get(course)) {
+            if (visited[neighbor] == 1) {
+                //circle
+                return false;
+            } else if (visited[neighbor] == 0 && !dfs(adjList, neighbor, visited)) {
+                return false;
+            }
+        }
+        visited[course] = 2;
+        return true;
+    }
+}

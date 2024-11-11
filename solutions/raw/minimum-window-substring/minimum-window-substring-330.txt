@@ -1,0 +1,36 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int[] charCount = new int[128];
+        int left = 0;
+        int right = 0;
+        int minLength = Integer.MAX_VALUE;
+        int minStart = 0;
+        int foundChar = 0;
+        //count the characters in the string t
+        for (char i : t.toCharArray()) {
+            charCount[i]++;
+        }
+        while (right < s.length()) {
+            //expand the window until the character in t found
+            if (charCount[s.charAt(right)] > 0) {
+                foundChar++;
+            }
+            charCount[s.charAt(right)]--;
+            right++;
+            // Shrink the window while maintaining all characters in t
+            while (foundChar == t.length()) {
+                if (right - left < minLength) {
+                    minLength = right - left;
+                    minStart = left;
+                }
+                charCount[s.charAt(left)]++;
+                if (charCount[s.charAt(left)] > 0) {
+                    foundChar--;
+                }
+                left++;
+            }
+        }
+        return minLength == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart + minLength);
+    }
+}

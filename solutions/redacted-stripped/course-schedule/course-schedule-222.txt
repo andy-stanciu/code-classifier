@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<Integer>[] graph = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] prerequisite : prerequisites) {
+            graph[prerequisite[0]].add(prerequisite[1]);
+        }
+        int[] visited = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!findCycle(graph, visited, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean findCycle(List<Integer>[] graph, int[] visited, int pos) {
+        if (visited[pos] == 1) {
+            return false;
+        }
+        if (visited[pos] == 2) {
+            return true;
+        }
+        visited[pos] = 1;
+        for (int num : graph[pos]) {
+            if (!findCycle(graph, visited, num)) {
+                return false;
+            }
+        }
+        visited[pos] = 2;
+        return true;
+    }
+}

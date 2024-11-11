@@ -1,0 +1,52 @@
+class Solution {
+
+    static class Stack {
+
+        private int currentPos;
+
+        private TreeNode[] nodes;
+
+        Stack(int capacity) {
+            nodes = new TreeNode[capacity];
+        }
+
+        void push(TreeNode node) {
+            nodes[currentPos++] = node;
+        }
+
+        TreeNode pop() {
+            return nodes[--currentPos];
+        }
+
+        boolean isEmpty() {
+            return currentPos == 0;
+        }
+    }
+
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        Stack tree = new Stack(100);
+        tree.push(root.left);
+        tree.push(root.right);
+        while (!tree.isEmpty()) {
+            TreeNode node1 = tree.pop();
+            TreeNode node2 = tree.pop();
+            if (node1 == null || node2 == null) {
+                if (node1 != node2) {
+                    return false;
+                }
+                continue;
+            }
+            if (node1.val != node2.val) {
+                return false;
+            }
+            tree.push(node1.left);
+            tree.push(node2.right);
+            tree.push(node1.right);
+            tree.push(node2.left);
+        }
+        return tree.isEmpty();
+    }
+}

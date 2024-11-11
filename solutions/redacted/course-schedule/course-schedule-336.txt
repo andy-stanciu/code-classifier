@@ -1,0 +1,44 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int[] incomingEdges = new int[param1];
+        List<Integer>[] graph = new ArrayList[param1];
+        for (int i = 0; i < graph.length; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            // u is dependent on v;
+            int u = prerequisites[i][0];
+            int v = prerequisites[i][1];
+            incomingEdges[u]++;
+            //indicates directed edge from v to u => u is dependent on v
+            graph[v].add(u);
+        }
+        Queue<Integer> queue = new ArrayDeque<Integer>();
+        for (int i = 0; i < incomingEdges.length; i++) {
+            if (incomingEdges[i] == 0) {
+                queue.add(i);
+            }
+        }
+        while (queue.size() > 0) {
+            //in this case our node u is dependency of v
+            int u = queue.poll();
+            for (int i = 0; i < graph[u].size(); i++) {
+                // v is dependent on u
+                int v = graph[u].get(i);
+                //solving adj nodes dependency for u
+                incomingEdges[v]--;
+                if (incomingEdges[v] == 0) {
+                    queue.add(v);
+                }
+            }
+        }
+        boolean ans = false;
+        for (int i = 0; i < incomingEdges.length; i++) {
+            if (incomingEdges[i] != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

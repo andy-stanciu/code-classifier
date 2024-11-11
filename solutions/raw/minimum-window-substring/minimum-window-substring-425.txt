@@ -1,0 +1,61 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        Map<Character, Integer> requiredCharacters = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            requiredCharacters.put(c, requiredCharacters.getOrDefault(c, 0) + 1);
+        }
+        int startPointer = 0;
+        int endPointer = 0;
+        int countOfRequiredConditions = requiredCharacters.size();
+        String result = null;
+        while (endPointer < s.length()) {
+            char seen = s.charAt(endPointer);
+            if (requiredCharacters.containsKey(seen)) {
+                int times = requiredCharacters.get(seen) - 1;
+                requiredCharacters.put(seen, times);
+                // when times is 0 it means we\'ve met that character enough, so we can reduce number of remaining
+                // conditions as the condition for that specific character (seen) is now satisfied
+                if (times == 0) {
+                    countOfRequiredConditions--;
+                }
+            }
+            // read the next char and extend the window until meet all conditions
+            if (countOfRequiredConditions > 0) {
+                endPointer++;
+            }
+            // all conditions are satisfied, let\'s make the window smaller by moving the left (start) pointer to
+            // right
+            if (countOfRequiredConditions == 0) {
+                // we will continue to make the window smaller from the left side until we remove one of the required
+                // chars from the window
+                while (countOfRequiredConditions == 0) {
+                    // if after making the window one char smaller we still have all the required chars, lets accept
+                    // this new window as the valid smallest sub string
+                    if (result == null || endPointer - startPointer + 1 < result.length()) {
+                        result = s.substring(startPointer, endPointer + 1);
+                    }
+                    // find the most left char to remove it from window in order to make the window smaller
+                    char startingWith = s.charAt(startPointer);
+                    if (requiredCharacters.containsKey(startingWith)) {
+                        int times = requiredCharacters.get(startingWith) + 1;
+                        requiredCharacters.put(startingWith, times);
+                        // if this most left char is one of the required, and we need to see it for at least one more
+                        // time, then we are destroying one satisfied condition, and we need to move the right slider
+                        // again to extend the window to see if we can satisfy this condition again and if the new
+                        // window would be smaller
+                        if (times == 1) {
+                            // by adding 1 to the count of required condition, we are breaking the inner loop to go back
+                            // to  the right-extending part
+                            countOfRequiredConditions++;
+                        }
+                    }
+                    startPointer++;
+                }
+                endPointer++;
+            }
+        }
+        // if result still null, we couldn\'t find any valid answer, let\'s return empty string
+        return result == null ? "" : result;
+    }
+}

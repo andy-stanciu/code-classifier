@@ -1,0 +1,37 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s.length() < t.length() || s.length() == 0 || t.length() == 0)
+            return "";
+        if (s.equals(t))
+            return s;
+        String result = "";
+        HashMap<Character, Integer> pattern = new HashMap<>();
+        HashMap<Character, Integer> var1 = new HashMap<>();
+        for (char c : t.toCharArray()) pattern.put(c, pattern.getOrDefault(c, 0) + 1);
+        int have = 0;
+        int need = t.length();
+        int l = 0;
+        int minLength = s.length();
+        for (int r = 0; r < s.length(); r++) {
+            char curChar = s.charAt(r);
+            var1.put(curChar, var1.getOrDefault(curChar, 0) + 1);
+            if (pattern.containsKey(curChar) && var1.get(curChar) <= pattern.get(curChar)) {
+                have++;
+            }
+            while (have == need) {
+                if (r - l + 1 <= minLength) {
+                    minLength = r - l + 1;
+                    result = s.substring(l, r + 1);
+                }
+                char leftChar = s.charAt(l);
+                var1.put(leftChar, var1.get(leftChar) - 1);
+                if (pattern.containsKey(leftChar) && var1.get(leftChar) < pattern.get(leftChar)) {
+                    have--;
+                }
+                l++;
+            }
+        }
+        return result;
+    }
+}

@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        ArrayList[] graph = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) graph[i] = new ArrayList();
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph[prerequisites[i][0]].add(prerequisites[i][1]);
+        }
+        // used to monitor the course currently in check to be completed or not
+        Set<Integer> visitedSet = new HashSet<>();
+        // used to monitor completed course
+        boolean[] completedCourses = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (!dfs(graph, visitedSet, completedCourses, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(ArrayList[] graph, Set<Integer> visitedSet, boolean[] completedCourses, int course) {
+        // if a current course is completable which is already identified prviously so no need to process again
+        if (completedCourses[course])
+            return true;
+        // If we got the same course currently in process to check for completion so can\'t be completed due to cyclic dependecy
+        if (visitedSet.contains(course))
+            return false;
+        visitedSet.add(course);
+        for (int i = 0; i < graph[course].size(); i++) {
+            if (!dfs(graph, visitedSet, completedCourses, (int) graph[course].get(i))) {
+                return false;
+            }
+        }
+        visitedSet.remove(course);
+        completedCourses[course] = true;
+        return true;
+    }
+}

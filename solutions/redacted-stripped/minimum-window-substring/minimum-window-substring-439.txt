@@ -1,0 +1,40 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] tCount = new int[128];
+        int[] var1 = new int[128];
+        for (char c : t.toCharArray()) {
+            tCount[c]++;
+        }
+        int left = 0;
+        int right = 0;
+        int minLen = Integer.MAX_VALUE;
+        int minLeft = 0;
+        int required = t.length();
+        while (right < s.length()) {
+            char currentChar = s.charAt(right);
+            if (tCount[currentChar] > 0) {
+                var1[currentChar]++;
+                if (var1[currentChar] <= tCount[currentChar]) {
+                    required--;
+                }
+            }
+            while (required == 0) {
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    minLeft = left;
+                }
+                char leftChar = s.charAt(left);
+                if (tCount[leftChar] > 0) {
+                    var1[leftChar]--;
+                    if (var1[leftChar] < tCount[leftChar]) {
+                        required++;
+                    }
+                }
+                left++;
+            }
+            right++;
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + minLen);
+    }
+}

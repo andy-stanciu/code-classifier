@@ -1,0 +1,62 @@
+class Solution {
+
+    class Edge {
+
+        int dest;
+
+        Edge(int d) {
+            this.dest = d;
+        }
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        ArrayList<Edge>[] graph = new ArrayList[numCourses];
+        //array of arraylist
+        createGraph(graph, numCourses, prerequisites);
+        boolean[] visited = new boolean[numCourses];
+        //to check for cycle
+        boolean[] recursionStack = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i]) {
+                if (isCyclic(graph, i, visited, recursionStack)) {
+                    // If there is a cycle, return false
+                    return false;
+                }
+            }
+        }
+        // If there is no cycle, return true
+        return true;
+    }
+
+    public void createGraph(ArrayList<Edge>[] graph, int numCourses, int[][] prerequisites) {
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new ArrayList<Edge>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            //storing the end vertices from the given array
+            int src = prerequisites[i][1];
+            int dest = prerequisites[i][0];
+            graph[src].add(new Edge(dest));
+        }
+    }
+
+    public boolean isCyclic(ArrayList<Edge>[] graph, int curr, boolean[] visited, boolean[] recursionStack) {
+        visited[curr] = true;
+        recursionStack[curr] = true;
+        for (Edge neighbor : graph[curr]) {
+            int dest = neighbor.dest;
+            if (!visited[dest]) {
+                //for the inner cycle ( in any subgraph rooted at that neighbour)
+                if (isCyclic(graph, dest, visited, recursionStack)) {
+                    return true;
+                }
+            } else if (//back edge is detected
+            recursionStack[dest]) {
+                return true;
+            }
+        }
+        //after processesing all the neighbours the recursion stack of current node is set to false
+        recursionStack[curr] = false;
+        return false;
+    }
+}

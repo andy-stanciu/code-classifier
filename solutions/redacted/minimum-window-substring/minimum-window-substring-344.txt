@@ -1,0 +1,62 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        Map<Character, Integer> map = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        Map<Character, Integer> tmpMap = new HashMap<>();
+        int low = 0;
+        int high = -1;
+        for (int i = 0; i < s.length(); ++i) {
+            char ch = s.charAt(i);
+            if (!map.containsKey(ch))
+                continue;
+            tmpMap.put(ch, tmpMap.getOrDefault(ch, 0) + 1);
+            if (method2(map, tmpMap)) {
+                high = i;
+                break;
+            }
+        }
+        if (high == -1)
+            return "";
+        String res = s.substring(low, high + 1);
+        while (high < s.length()) {
+            char chLow = s.charAt(low);
+            if (!tmpMap.containsKey(chLow)) {
+                ++low;
+            } else {
+                int count = tmpMap.get(chLow);
+                if (count > map.get(chLow)) {
+                    --count;
+                    ++low;
+                    tmpMap.put(chLow, count);
+                } else {
+                    ++high;
+                    if (high == s.length())
+                        break;
+                    char chHigh = s.charAt(high);
+                    if (tmpMap.containsKey(chHigh)) {
+                        tmpMap.put(chHigh, tmpMap.get(chHigh) + 1);
+                    }
+                }
+            }
+            if (high - low < res.length())
+                res = s.substring(low, high + 1);
+        }
+        return res;
+    }
+
+    private boolean method2(Map<Character, Integer> original, Map<Character, Integer> map) {
+        if (original.size() > map.size())
+            return false;
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+            char ch = entry.getKey();
+            if (entry.getValue() < original.get(ch))
+                return false;
+        }
+        return true;
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s == null || s.length() < t.length() || s.length() == 0) {
+            return "";
+        }
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            if (map.containsKey(c))
+                map.put(c, map.get(c) + 1);
+            else
+                map.put(c, 1);
+        }
+        int mapCounter = map.size();
+        int n = s.length();
+        int l = 0, r = 0;
+        int start = 0, maxLen = 0;
+        for (r = 0; r < n; r++) {
+            char curR = s.charAt(r);
+            if (map.containsKey(curR)) {
+                map.put(curR, map.get(curR) - 1);
+                if (map.get(curR) == 0)
+                    mapCounter--;
+                if (mapCounter == 0) {
+                    while (l < n && mapCounter == 0) {
+                        char curL = s.charAt(l);
+                        if (map.containsKey(curL)) {
+                            map.put(curL, map.get(curL) + 1);
+                            if (map.get(curL) > 0)
+                                mapCounter++;
+                        }
+                        l++;
+                    }
+                    if (maxLen > r - l + 2 || maxLen == 0) {
+                        maxLen = (r - l) + 2;
+                        start = l - 1;
+                    }
+                }
+            }
+        }
+        return s.substring(start, start + maxLen);
+    }
+}

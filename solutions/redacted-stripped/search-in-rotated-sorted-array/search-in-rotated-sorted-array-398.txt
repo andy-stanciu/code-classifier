@@ -1,0 +1,52 @@
+class Solution {
+
+    static int method1(int[] nums, int target) {
+        int peak = method2(nums);
+        if (peak == -1) {
+            return method3(nums, target, 0, nums.length - 1);
+        }
+        if (nums[peak] == target) {
+            return peak;
+        } else {
+            if (target >= nums[0]) {
+                return method3(nums, target, 0, peak - 1);
+            } else {
+                return method3(nums, target, peak + 1, nums.length - 1);
+            }
+        }
+    }
+
+    private static int method2(int[] arr) {
+        int start = 0;
+        int end = arr.length - 1;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (mid < end && arr[mid] > arr[mid + 1]) {
+                return mid;
+            } else if (start < mid && arr[mid - 1] > arr[mid]) {
+                return mid - 1;
+            } else {
+                if (arr[start] >= arr[mid]) {
+                    end = mid - 1;
+                } else {
+                    start = mid + 1;
+                }
+            }
+        }
+        return -1;
+    }
+
+    private static int method3(int[] arr, int target, int start, int end) {
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (arr[mid] == target) {
+                return mid;
+            } else if (arr[mid] > target) {
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return -1;
+    }
+}

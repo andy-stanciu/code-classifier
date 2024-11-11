@@ -1,0 +1,35 @@
+class Solution {
+
+    public static boolean canFinish(int param1, int[][] prerequisites) {
+        int[] inDegree = new int[param1];
+        int visited = 0;
+        HashMap<Integer, List<Integer>> adjMatrix = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            adjMatrix.put(i, new ArrayList());
+        }
+        for (int[] pre : prerequisites) {
+            int node = pre[1];
+            int neighbour = pre[0];
+            adjMatrix.get(neighbour).add(node);
+            inDegree[node]++;
+        }
+        // now i will insert the node with zero inorder to the queue
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < inDegree.length; i++) {
+            if (inDegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            visited += 1;
+            for (int neighbour : adjMatrix.get(node)) {
+                inDegree[neighbour]--;
+                if (inDegree[neighbour] == 0) {
+                    q.add(neighbour);
+                }
+            }
+        }
+        return param1 == visited;
+    }
+}

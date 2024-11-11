@@ -1,0 +1,70 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        // If the string \'t\' is empty, we return an empty result (nothing to search for)
+        if (t.equals(""))
+            return "";
+        // If \'t\' is longer than \'s\', it\'s impossible to find a valid window, return empty
+        if (t.length() > s.length())
+            return "";
+        // HashMap to store the frequency of each character in \'t\'
+        HashMap<Character, Integer> countT = new HashMap<>();
+        // HashMap to track the characters in the current window of \'s\'
+        HashMap<Character, Integer> window = new HashMap<>();
+        // Populate the countT map with the characters of \'t\' and their frequencies
+        for (char c : t.toCharArray()) {
+            countT.put(c, countT.getOrDefault(c, 0) + 1);
+        }
+        // \'have\' keeps track of how many unique characters in \'t\' are fully satisfied in the window
+        int have = 0;
+        // \'need\' is the total number of unique characters we need to match in \'s\'
+        int need = countT.size();
+        // Two pointers for the sliding window: \'l\' is the left, \'r\' is the right
+        int l = 0, r = 0;
+        // Variables to store the start and end of the smallest window found
+        int start = -1, end = -1;
+        // \'resLen\' tracks the length of the smallest valid window
+        int resLen = Integer.MAX_VALUE;
+        // Expand the window by moving the right pointer \'r\' across string \'s\'
+        while (r < s.length()) {
+            char right = s.charAt(r);
+            // Add the right character to the window map and update its count
+            window.put(right, window.getOrDefault(right, 0) + 1);
+            // If the current character\'s count matches the required count in \'t\'
+            // Increase \'have\' since we now fully satisfy one more character from \'t\'
+            if (countT.containsKey(right) && window.get(right).equals(countT.get(right))) {
+                have++;
+            }
+            // If all characters from \'t\' are satisfied in the window (have == need)
+            // We try to shrink the window from the left to find the smallest valid window
+            while (have == need) {
+                // Check if this window is smaller than any previous window
+                if ((r - l + 1) < resLen) {
+                    // Update the result with the new start and end of this smaller window
+                    start = l;
+                    end = r;
+                    // Update the smallest window length
+                    resLen = r - l + 1;
+                }
+                // Move the left pointer to shrink the window
+                char left = s.charAt(l);
+                window.put(left, window.get(left) - 1);
+                // If the character at the left is no longer fully satisfied after shrinking
+                // Reduce \'have\' since we\'re missing a character now
+                if (countT.containsKey(left) && window.get(left) < countT.get(left)) {
+                    have--;
+                }
+                // Increment the left pointer to continue shrinking
+                l++;
+            }
+            // Expand the window by moving the right pointer
+            r++;
+        }
+        // If we found a valid window, return the corresponding substring
+        if (resLen != Integer.MAX_VALUE) {
+            return s.substring(start, end + 1);
+        }
+        // If no valid window was found, return an empty string
+        return "";
+    }
+}

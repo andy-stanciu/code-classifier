@@ -1,0 +1,33 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int[] indegree = new int[param1];
+        List<List<Integer>> g = new ArrayList<>(param1);
+        List<Integer> topo = new ArrayList<Integer>(param1);
+        Queue<Integer> listSource = new ArrayDeque<>();
+        for (int i = 0; i < param1; i++) {
+            g.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            g.get(prerequisites[i][1]).add(prerequisites[i][0]);
+            indegree[prerequisites[i][0]]++;
+        }
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0)
+                listSource.add(i);
+        }
+        while (!listSource.isEmpty()) {
+            int u = listSource.poll();
+            topo.add(u);
+            for (int i = 0; i < g.get(u).size(); i++) {
+                indegree[g.get(u).get(i)]--;
+                if (indegree[g.get(u).get(i)] == 0)
+                    listSource.add(g.get(u).get(i));
+            }
+        }
+        if (topo.size() < param1)
+            return false;
+        else
+            return true;
+    }
+}

@@ -1,0 +1,45 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // 0: unvisited, 1: visiting, 2: visited
+        int[] visited = new int[numCourses];
+        Map<Integer, List<Integer>> adjList = new HashMap<>();
+        // Initialize adjacency list
+        for (int i = 0; i < numCourses; i++) {
+            adjList.put(i, new ArrayList<>());
+        }
+        // Build the adjacency list for the graph
+        for (int[] edge : prerequisites) {
+            adjList.get(edge[1]).add(edge[0]);
+        }
+        // Check each course
+        for (int course = 0; course < numCourses; course++) {
+            if (visited[course] == 0 && !dfs(course, adjList, visited)) {
+                return false;
+            }
+        }
+        // No cycles detected
+        return true;
+    }
+
+    boolean dfs(int course, Map<Integer, List<Integer>> adjList, int[] visited) {
+        if (visited[course] == 1) {
+            // cycle detected
+            return false;
+        }
+        if (visited[course] == 2) {
+            // already processed
+            return true;
+        }
+        // mark as visiting
+        visited[course] = 1;
+        for (int prereq : adjList.get(course)) {
+            if (!dfs(prereq, adjList, visited)) {
+                return false;
+            }
+        }
+        // mark as visited
+        visited[course] = 2;
+        return true;
+    }
+}

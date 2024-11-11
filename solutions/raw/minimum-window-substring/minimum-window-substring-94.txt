@@ -1,0 +1,31 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        int count = 0;
+        int[] hash = new int[256];
+        int sIndex = -1;
+        int n = s.length();
+        int m = t.length();
+        int minLen = Integer.MAX_VALUE;
+        int left = 0;
+        int right = 0;
+        for (int j = 0; j < m; j++) hash[t.charAt(j)]++;
+        while (right < n) {
+            if (hash[s.charAt(right)] > 0)
+                count++;
+            hash[s.charAt(right)]--;
+            while (count == m) {
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    sIndex = left;
+                }
+                hash[s.charAt(left)]++;
+                if (hash[s.charAt(left)] > 0)
+                    count--;
+                left++;
+            }
+            right++;
+        }
+        return sIndex == -1 ? "" : s.substring(sIndex, sIndex + minLen);
+    }
+}

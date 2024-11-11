@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        if (prerequisites.length == 0)
+            return true;
+        List<List<Integer>> prereq = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            prereq.add(new ArrayList<>());
+        }
+        for (int[] var1 : prerequisites) {
+            prereq.get(var1[1]).add(var1[0]);
+        }
+        boolean[] visited = new boolean[param1];
+        boolean[] stack = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i] && isCycle(i, prereq, visited, stack)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isCycle(int node, List<List<Integer>> prereq, boolean[] visited, boolean[] stack) {
+        visited[node] = true;
+        stack[node] = true;
+        for (int nbr : prereq.get(node)) {
+            if (stack[nbr])
+                return true;
+            if (!visited[nbr]) {
+                if (isCycle(nbr, prereq, visited, stack)) {
+                    return true;
+                }
+            }
+        }
+        stack[node] = false;
+        return false;
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] p : prerequisites) {
+            int var1 = p[0];
+            int var2 = p[1];
+            graph.get(var2).add(var1);
+        }
+        Stack<Integer> st = new Stack<>();
+        boolean[] visited = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                if (!topo(i, graph, visited, st)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static boolean topo(int var1, List<List<Integer>> graph, boolean[] visited, Stack<Integer> st) {
+        visited[var1] = true;
+        for (int neighbor : graph.get(var1)) {
+            if (visited[neighbor] && !st.contains(neighbor)) {
+                return false;
+            }
+            if (!visited[neighbor]) {
+                if (!topo(neighbor, graph, visited, st)) {
+                    return false;
+                }
+            }
+        }
+        st.push(var1);
+        return true;
+    }
+}

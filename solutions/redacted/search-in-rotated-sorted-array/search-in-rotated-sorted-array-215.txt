@@ -1,0 +1,42 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        //rot-stores position of nums[0](smallest element) in rotatted array
+        int rot;
+        int low = 0;
+        int high = nums.length - 1;
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (nums[high] > nums[mid]) {
+                //we know that mid..high is sorted so to find smallest element,we do
+                //high=mid and NOT high=mid-1 as mid can also be the  smallest element
+                high = mid;
+            } else {
+                /*we know now that mid..high is not sorted as if it was nums[mid] should have been 
+				lesser than nums[high],so there must be a point where rotation tkes place,lets try 
+				to find position of smallest element*/
+                low = mid + 1;
+            }
+        }
+        //as low contains the position of our smallest element
+        rot = low;
+        low = 0;
+        high = nums.length - 1;
+        if (nums[rot] <= target && nums[high] >= target) {
+            low = rot;
+        } else {
+            high = rot - 1;
+        }
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] > target) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return -1;
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int p = 0, q = 0;
+        if (s.length() < t.length()) {
+            return "";
+        }
+        HashMap<Character, Integer> hm1 = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            hm1.put(t.charAt(i), hm1.getOrDefault(t.charAt(i), 0) + 1);
+        }
+        HashMap<Character, Integer> hm2 = new HashMap<>();
+        int match = 0;
+        int x = 0, y = 0, len = Integer.MAX_VALUE;
+        while (q < s.length()) {
+            char ch1 = s.charAt(q);
+            hm2.put(ch1, hm2.getOrDefault(ch1, 0) + 1);
+            if (hm1.containsKey(ch1) && hm2.get(ch1) <= hm1.get(ch1)) {
+                match++;
+            }
+            while (p <= q && match == t.length()) {
+                char ch2 = s.charAt(p);
+                if (match == t.length() && len > q - p + 1) {
+                    len = q - p + 1;
+                    x = p;
+                    y = q;
+                }
+                hm2.put(ch2, hm2.get(ch2) - 1);
+                if (hm1.containsKey(ch2) && hm2.get(ch2) < hm1.get(ch2)) {
+                    match--;
+                }
+                p++;
+            }
+            q++;
+        }
+        if (len == Integer.MAX_VALUE) {
+            return "";
+        }
+        return s.substring(x, y + 1);
+    }
+}

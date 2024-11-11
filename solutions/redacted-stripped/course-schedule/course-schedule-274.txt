@@ -1,0 +1,74 @@
+class Solution {
+
+    public static class Edge {
+
+        int str;
+
+        int end;
+
+        Edge(int s, int e) {
+            this.str = s;
+            this.end = e;
+        }
+    }
+
+    public static Boolean isCycle(ArrayList<Edge>[] graphs, boolean[] visit, int currt, boolean[] rec) {
+        visit[currt] = true;
+        rec[currt] = true;
+        for (int i = 0; i < graphs[currt].size(); i++) {
+            int val = graphs[currt].get(i).end;
+            if (rec[val]) {
+                return true;
+            } else if (!visit[val]) {
+                if (isCycle(graphs, visit, val, rec)) {
+                    return true;
+                }
+            }
+        }
+        rec[currt] = false;
+        return false;
+    }
+
+    public static void create_graph(ArrayList<Edge>[] graphs, int[][] arr) {
+        for (int i = 0; i < graphs.length; i++) {
+            graphs[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < arr.length; i++) {
+            graphs[arr[i][0]].add(new Edge(arr[i][0], arr[i][1]));
+        }
+        return;
+    }
+
+    public static boolean run_isCycle(ArrayList<Edge>[] graphs, boolean[] visit, int len) {
+        boolean ans = false;
+        for (int i = 0; i < visit.length; i++) {
+            if (!visit[i]) {
+                ans = isCycle(graphs, visit, i, new boolean[len]);
+            }
+            if (ans == true) {
+                break;
+            }
+        }
+        if (ans == true) {
+            ans = false;
+        } else {
+            ans = true;
+        }
+        return ans;
+    }
+
+    public boolean canFinish(int param1, int[][] arr) {
+        int len = -1;
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                len = Math.max(len, arr[i][j]);
+            }
+        }
+        len += 1;
+        ArrayList<Edge>[] graphs = new ArrayList[len];
+        boolean[] visit = new boolean[len];
+        create_graph(graphs, arr);
+        boolean final_ans = run_isCycle(graphs, visit, len);
+        return final_ans;
+    }
+}

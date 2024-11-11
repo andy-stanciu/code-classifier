@@ -1,0 +1,27 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int[] indegrees = new int[param1];
+        List<Integer>[] var1 = new ArrayList[param1];
+        for (int i = 0; i < param1; ++i) var1[i] = new ArrayList<>();
+        for (int[] pre : prerequisites) {
+            indegrees[pre[0]]++;
+            var1[pre[1]].add(pre[0]);
+        }
+        Deque<Integer> queue = new ArrayDeque<>();
+        for (int i = 0; i < param1; ++i) {
+            if (indegrees[i] == 0)
+                queue.add(i);
+        }
+        int count = 0;
+        while (!queue.isEmpty()) {
+            int var2 = queue.remove();
+            count += 1;
+            for (int next : var1[var2]) {
+                if (--indegrees[next] == 0)
+                    queue.add(next);
+            }
+        }
+        return count == param1;
+    }
+}

@@ -1,0 +1,23 @@
+class Solution {
+
+    private int maxAnswer = Integer.MIN_VALUE;
+
+    public int maxPathSum(TreeNode root) {
+        DFS(root);
+        return maxAnswer;
+    }
+
+    int DFS(TreeNode node) {
+        if (node == null)
+            return 0;
+        int maxPathInLeftSubTree = DFS(node.left);
+        int maxPathInRightSubTree = DFS(node.right);
+        int maxPathSumWithCurrentNode = maxPathInLeftSubTree + maxPathInRightSubTree + node.val;
+        // This is propagated upwards,
+        // If the current node with including it\'s subtrees has negative sum
+        // DO NOT propagate that.
+        int maxPathToBePropagated = Math.max(0, Math.max(maxPathInLeftSubTree, maxPathInRightSubTree) + node.val);
+        maxAnswer = Math.max(maxAnswer, maxPathSumWithCurrentNode);
+        return maxPathToBePropagated;
+    }
+}

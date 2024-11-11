@@ -1,0 +1,40 @@
+class Solution {
+
+    public int findKthLargest(int[] nums, int k) {
+        int[] count = new int[20002];
+        Arrays.fill(count, 0);
+        /**
+         *  LOGIC
+         *
+         *            Values
+         *            -10000 ----- 0 ----- 10000
+         *
+         *            count array
+         *            from idx pov   : 0 -------- 10000 ------- 20000
+         *                                    leg1        leg2
+         *            from value pov  : -10000 ---  0 ---------- 10000
+         */
+        for (int i = 0; i < nums.length; i++) {
+            int d = nums[i];
+            if (d < 0) {
+                // leg1
+                // if value is less than 0, order in count array gets reversed. Hence subtracting from 10000.
+                count[10000 - Math.abs(d)] += 1;
+            } else {
+                // leg 2
+                // if value is greater than 0, then start putting value from 10000
+                count[d + 10000] += 1;
+            }
+        }
+        int top = 20001;
+        while (k != 0) {
+            if (count[top] != 0) {
+                k--;
+                count[top]--;
+            } else {
+                top--;
+            }
+        }
+        return top >= 10000 ? top - 10000 : -(10000 - top);
+    }
+}

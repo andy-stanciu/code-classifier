@@ -1,0 +1,37 @@
+class Solution {
+
+    Map<Integer, List<Integer>> m;
+
+    Set<Integer> s;
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        m = new HashMap<>();
+        s = new HashSet<>();
+        for (int[] pre : prerequisites) {
+            if (!m.containsKey(pre[0])) {
+                m.put(pre[0], new ArrayList<>());
+            }
+            m.get(pre[0]).add(pre[1]);
+        }
+        for (int course = 0; course < numCourses; course++) {
+            if (!dfs(course))
+                return false;
+        }
+        return true;
+    }
+
+    public boolean dfs(int course) {
+        if (m.get(course) == null || m.get(course).isEmpty())
+            return true;
+        if (s.contains(course))
+            return false;
+        s.add(course);
+        for (int c : m.get(course)) {
+            if (!dfs(c))
+                return false;
+        }
+        s.remove(course);
+        m.put(course, new ArrayList<>());
+        return true;
+    }
+}

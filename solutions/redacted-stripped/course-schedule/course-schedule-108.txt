@@ -1,0 +1,53 @@
+class Solution {
+
+    static class Vertex {
+
+        String color;
+
+        ArrayList<Integer> neighbours;
+
+        Vertex() {
+            this.color = "white";
+            this.neighbours = new ArrayList<Integer>();
+        }
+    }
+
+    private static boolean dfsVisit(Vertex[] graph, int curr, boolean[] recStack) {
+        graph[curr].color = "grey";
+        recStack[curr] = true;
+        for (int i = 0; i < graph[curr].neighbours.size(); i++) {
+            int n = graph[curr].neighbours.get(i);
+            if (graph[n].color.equals("white") && dfsVisit(graph, n, recStack)) {
+                return true;
+            } else if (recStack[n]) {
+                return true;
+            }
+        }
+        graph[curr].color = "black";
+        recStack[curr] = false;
+        return false;
+    }
+
+    private static void createGraph(Vertex[] graph, int[][] prerequisites) {
+        for (int i = 0; i < graph.length; i++) {
+            graph[i] = new Vertex();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int dest = prerequisites[i][0];
+            int src = prerequisites[i][1];
+            graph[src].neighbours.add(dest);
+        }
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Vertex[] graph = new Vertex[param1];
+        createGraph(graph, prerequisites);
+        boolean[] recStack = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (graph[i].color.equals("white") && dfsVisit(graph, i, recStack)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

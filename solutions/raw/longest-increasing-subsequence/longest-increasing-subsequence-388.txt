@@ -1,0 +1,64 @@
+class Solution {
+
+    // //Recurrsion
+    // public int lengthOfLIS(int[] nums) {
+    //     int n= nums.length;
+    //     return f(nums, 0, -1);  // 0:ind , -1:prev_ind
+    // }
+    // public int f(int[] nums, int ind, int prev_ind){
+    //     if(ind == nums.length) return 0;  // base case, if arr gets out of bound then stop
+    //     int take=0;
+    //     if(prev_ind == -1 || nums[ind] > nums[prev_ind]){  // if prev_ind -1 is for the first ele then take or when  curr > prev then also take
+    //         take= 1 + f(nums, ind+1, ind);
+    //     }
+    //     int notTake= 0 + f(nums, ind+1, prev_ind);  // not Take
+    //     return Math.max(take, notTake);  // Max of bot for longest increasing subseq
+    // }
+    //Memoizaiton
+    // public int lengthOfLIS(int[] nums) {
+    //     int n= nums.length;
+    //     int dp[][]= new int[n][n+1];  // note for prev_ind it contains values for -1 -> n-1 so taking size as n+1
+    //     for (int row[] : dp) {
+    //         Arrays.fill(row, -1);
+    //     }
+    //     return f(nums, 0, -1, dp);  // 0:ind , -1:prev_ind
+    // }
+    // public int f(int[] nums, int ind, int prev_ind, int[][] dp){
+    //     if(ind == nums.length) return 0;  // base case, if arr gets out of bound then stop
+    //     if(dp[ind][prev_ind+1] != -1){  // using prev_ind+1 everytime in dp[ind][prev_ind+1] bcz shifting of index
+    //         return dp[ind][prev_ind+1];
+    //     }
+    //     int take=0;
+    //     if(prev_ind == -1 || nums[ind] > nums[prev_ind]){  // if prev_ind -1 is for the first ele then take or when  curr > prev then also take
+    //         take= 1 + f(nums, ind+1, ind, dp);
+    //     }
+    //     int notTake= 0 + f(nums, ind+1, prev_ind, dp);  // not Take
+    //     return dp[ind][prev_ind+1]= Math.max(take, notTake);  // Max of bot for longest increasing subseq
+    // }
+    //Tabulation
+    public int lengthOfLIS(int[] nums) {
+        // Tabu  TC: N ^ 2
+        int n = nums.length;
+        // dp[n+1][] bcz down in first iteration for n-1 we are doing dp[i+1][] in take so thats why
+        int[][] dp = new int[n + 1][n + 1];
+        // dp[][n+1] bcz we are shifting the indexs ahead by 1 because of the -1 indes
+        for (int i = 0; i <= n; i++) {
+            // base case no ned to write bcz all index are vy default 0
+            dp[n][i] = 0;
+        }
+        for (int i = n - 1; i >= 0; i--) {
+            for (int prev = i - 1; prev >= -1; prev--) {
+                // prev= i-1 bcz prev will be just befor index while filling the dp
+                int take = 0;
+                if (prev == -1 || nums[i] > nums[prev])
+                    // in the second cell also we are doing i+1 bcz shifting ind by 1 so its i+1(second cell indicates prev)
+                    take = 1 + dp[i + 1][i + 1];
+                // in the second cell also we are doing prev+1 bcz shifting ind by 1 so its prev+1
+                int notTake = 0 + dp[i + 1][prev + 1];
+                dp[i][prev + 1] = Math.max(take, notTake);
+            }
+        }
+        //in second cell [-1 +1] i.e returning[0][0] bcz treating prev as +1 instead of returning dp[-1] we will return dp[0]
+        return dp[0][-1 + 1];
+    }
+}

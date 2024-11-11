@@ -1,0 +1,37 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        Map<Character, Integer> target = new HashMap<>();
+        Map<Character, Integer> var1 = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            target.put(ch, target.getOrDefault(ch, 0) + 1);
+        }
+        int left = 0, right = 0;
+        int start = 0;
+        int len = Integer.MAX_VALUE;
+        int required = target.size();
+        while (right < s.length()) {
+            char ch = s.charAt(right);
+            var1.put(ch, var1.getOrDefault(ch, 0) + 1);
+            if (target.containsKey(ch) && target.get(ch).equals(var1.get(ch))) {
+                required--;
+            }
+            while (required == 0) {
+                if (right + 1 - left < len) {
+                    start = left;
+                    len = right + 1 - left;
+                }
+                char leftChar = s.charAt(left);
+                var1.put(leftChar, var1.get(leftChar) - 1);
+                if (target.containsKey(leftChar) && target.get(leftChar) > var1.get(leftChar)) {
+                    required++;
+                }
+                left++;
+            }
+            right++;
+        }
+        if (len == Integer.MAX_VALUE)
+            return "";
+        return s.substring(start, start + len);
+    }
+}

@@ -1,0 +1,42 @@
+class Solution {
+
+    public int method1(int[] nums, int k) {
+        int n = nums.length;
+        if (n == 1)
+            return nums[0];
+        select(nums, 0, n - 1, k);
+        return nums[k - 1];
+    }
+
+    private void select(int[] nums, int left, int right, int k) {
+        if (left < right) {
+            int p = partition(nums, left, right);
+            if (p < k - 1) {
+                select(nums, p + 1, right, k);
+            } else if (p > k - 1) {
+                select(nums, left, p - 1, k);
+            }
+        }
+    }
+
+    private int partition(int[] nums, int left, int right) {
+        int pivotIdx = ((right - left) / 2) + left;
+        int loc = left;
+        //swap the last element and pivot element
+        int temp = nums[pivotIdx];
+        nums[pivotIdx] = nums[right];
+        nums[right] = temp;
+        int pivot = nums[right];
+        for (int i = left; i < right; i++) {
+            if (nums[i] > pivot) {
+                int t = nums[i];
+                nums[i] = nums[loc];
+                nums[loc++] = t;
+            }
+        }
+        int t = nums[loc];
+        nums[loc] = nums[right];
+        nums[right] = t;
+        return loc;
+    }
+}

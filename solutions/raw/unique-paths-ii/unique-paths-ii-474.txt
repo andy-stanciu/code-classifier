@@ -1,0 +1,46 @@
+class Solution {
+
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int rows = obstacleGrid.length;
+        int cols = obstacleGrid[0].length;
+        int[][] adjGraph = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                //Initialize table with all 0s
+                adjGraph[i][j] = 0;
+            }
+        }
+        //Base Condition
+        //Top Left corner
+        if (obstacleGrid[0][0] == 1) {
+            //Starting point has obstacle and robot cannot move forward
+            return 0;
+        }
+        //1st Row
+        for (int i = 0; i < cols; i++) {
+            if (obstacleGrid[0][i] == 1) {
+                break;
+            }
+            //One way to reach at this point
+            adjGraph[0][i] = 1;
+        }
+        //1st Column
+        for (int i = 0; i < rows; i++) {
+            if (obstacleGrid[i][0] == 1) {
+                break;
+            }
+            //One way to reach at this point
+            adjGraph[i][0] = 1;
+        }
+        //Traverse and cache solutions in topological sort order
+        for (int i = 1; i < rows; i++) {
+            for (int j = 1; j < cols; j++) {
+                if (obstacleGrid[i][j] == 1) {
+                    continue;
+                }
+                adjGraph[i][j] = adjGraph[i - 1][j] + adjGraph[i][j - 1];
+            }
+        }
+        return adjGraph[rows - 1][cols - 1];
+    }
+}

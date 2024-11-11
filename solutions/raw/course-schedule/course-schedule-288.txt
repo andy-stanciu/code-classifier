@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        ArrayList<Integer>[] coursePrerequisites = new ArrayList[numCourses];
+        int[] courseDegrees = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            coursePrerequisites[i] = new ArrayList<Integer>();
+        }
+        for (int[] prerequisite : prerequisites) {
+            int previousCourse = prerequisite[1];
+            int nextCourse = prerequisite[0];
+            coursePrerequisites[previousCourse].add(nextCourse);
+            courseDegrees[nextCourse]++;
+        }
+        Queue<Integer> courseQueue = new LinkedList<Integer>();
+        for (int i = 0; i < numCourses; i++) {
+            if (courseDegrees[i] == 0) {
+                courseQueue.add(i);
+            }
+        }
+        return canFinish(courseQueue, courseDegrees, coursePrerequisites);
+    }
+
+    private boolean canFinish(Queue<Integer> courseQueue, int[] courseDegrees, ArrayList<Integer>[] coursePrerequisites) {
+        int courseTaken = 0;
+        while (!courseQueue.isEmpty()) {
+            int currCourse = courseQueue.poll();
+            courseTaken++;
+            for (int nextCourse : coursePrerequisites[currCourse]) {
+                courseDegrees[nextCourse]--;
+                if (courseDegrees[nextCourse] == 0) {
+                    courseQueue.add(nextCourse);
+                }
+            }
+        }
+        return courseTaken == courseDegrees.length;
+    }
+}

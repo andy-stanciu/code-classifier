@@ -1,0 +1,54 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        //if t length > slength then return empty string
+        if (s.length() < t.length()) {
+            return "";
+        }
+        //make frequency map for String t character
+        HashMap<Character, Integer> tmap = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            char ch = t.charAt(i);
+            tmap.put(ch, tmap.getOrDefault(ch, 0) + 1);
+        }
+        //mismatch character
+        int mmc = t.length();
+        int i = 0;
+        int j = 0;
+        HashMap<Character, Integer> smap = new HashMap<>();
+        String ans = "";
+        while (true) {
+            while (mmc > 0 && i < s.length()) {
+                //till it is out of range or acquired
+                char ch = s.charAt(i);
+                smap.put(ch, smap.getOrDefault(ch, 0) + 1);
+                //acquired charcter value in smap <= tmap then dec mmc other don\'t bec then wo kam ka bnd acquired nhi hua hai
+                if (smap.getOrDefault(ch, 0) <= tmap.getOrDefault(ch, 0)) {
+                    mmc--;
+                }
+                i++;
+            }
+            // mmc == 0 so answer to ek mila hai but we are trying to find minmum length ans by releasing character
+            while (mmc == 0 && j < i) {
+                String pans = s.substring(j, i);
+                if (ans.length() == 0) {
+                    ans = pans;
+                } else if (pans.length() < ans.length()) {
+                    ans = pans;
+                }
+                //character relase
+                char ch = s.charAt(j);
+                smap.put(ch, smap.getOrDefault(ch, 0) - 1);
+                //if frequency dec then kam ka bnda relase ho gya hai so increase mmc
+                if (smap.getOrDefault(ch, 0) < tmap.getOrDefault(ch, 0)) {
+                    mmc++;
+                }
+                j++;
+            }
+            if (i == s.length()) {
+                break;
+            }
+        }
+        return ans;
+    }
+}

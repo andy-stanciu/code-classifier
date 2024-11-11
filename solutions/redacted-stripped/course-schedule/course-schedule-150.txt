@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean dfs(int curr, ArrayList<ArrayList<Integer>> al, boolean[] stack, boolean[] visit) {
+        stack[curr] = true;
+        visit[curr] = true;
+        for (int neighbour : al.get(curr)) {
+            if (stack[neighbour]) {
+                return true;
+            } else if (!visit[neighbour]) {
+                if (dfs(neighbour, al, stack, visit))
+                    return true;
+            }
+        }
+        stack[curr] = false;
+        return false;
+    }
+
+    public boolean canFinish(int param1, int[][] pre) {
+        ArrayList<ArrayList<Integer>> al = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            al.add(new ArrayList<>());
+        }
+        for (int i = 0; i < pre.length; i++) {
+            al.get(pre[i][0]).add(pre[i][1]);
+        }
+        boolean[] visit = new boolean[param1];
+        boolean[] stack = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!visit[i]) {
+                if (dfs(i, al, stack, visit))
+                    return false;
+            }
+        }
+        return true;
+    }
+}

@@ -1,0 +1,46 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        Map<Character, Integer> targetChars = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            targetChars.put(c, targetChars.getOrDefault(c, 0) + 1);
+        }
+        int left = 0;
+        int minLen = Integer.MAX_VALUE;
+        int minStart = 0;
+        int remainingChars = t.length();
+        // Iterate over the string s with a sliding window
+        for (int right = 0; right < s.length(); right++) {
+            char currentChar = s.charAt(right);
+            if (targetChars.containsKey(currentChar)) {
+                int count = targetChars.get(currentChar);
+                if (count > 0) {
+                    // This character is required in the window, decrease the remaining count
+                    remainingChars--;
+                }
+                targetChars.put(currentChar, count - 1);
+            }
+            // If all characters from t are included in the window, try to minimize the window
+            while (remainingChars == 0) {
+                // Update the minimum window substring if a smaller length is found
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    minStart = left;
+                }
+                // Move the left pointer to try to shrink the window
+                char leftChar = s.charAt(left);
+                if (targetChars.containsKey(leftChar)) {
+                    int count = targetChars.get(leftChar);
+                    if (count == 0) {
+                        // We are excluding a required character, increase the remaining count
+                        remainingChars++;
+                    }
+                    targetChars.put(leftChar, count + 1);
+                }
+                left++;
+            }
+        }
+        // Return the minimum window substring if found, otherwise return an empty string
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart + minLen);
+    }
+}

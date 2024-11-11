@@ -1,0 +1,66 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int l = 0, r = 0;
+        int mini = s.length(), minl = -1, minr = -1;
+        HashMap<Character, Integer> ta = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            if (ta.containsKey(t.charAt(i))) {
+                ta.put(t.charAt(i), ta.get(t.charAt(i)) + 1);
+            } else {
+                ta.put(t.charAt(i), 1);
+            }
+        }
+        HashMap<Character, Integer> sa = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (sa.containsKey(s.charAt(i))) {
+                sa.put(s.charAt(i), sa.get(s.charAt(i)) + 1);
+            } else {
+                sa.put(s.charAt(i), 1);
+            }
+            if (isEqual(ta, sa)) {
+                System.out.println("--" + i + "=" + l);
+                r = i;
+                mini = Math.min(mini, r - l + 1);
+                if (mini == r - l + 1) {
+                    minl = l;
+                    minr = r;
+                }
+                while (r >= l) {
+                    sa.put(s.charAt(l), sa.get(s.charAt(l)) - 1);
+                    l++;
+                    if (isEqual(ta, sa)) {
+                        System.out.println("-0-" + i + "=" + l);
+                        mini = Math.min(mini, r - l + 1);
+                        if (mini == r - l + 1) {
+                            minl = l;
+                            minr = r;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+            // char c = s.charAt(i);
+            // while(ta.containsKey(c) && sa.get(c) > ta.get(c)) {
+            //     char ch = s.charAt(l);
+            //     sa.put(ch, sa.get(ch)-1);
+            //     l++;
+            // }
+        }
+        if (minl == -1)
+            return "";
+        return s.substring(minl, minr + 1);
+    }
+
+    private boolean isEqual(HashMap<Character, Integer> ta, HashMap<Character, Integer> sa) {
+        for (HashMap.Entry<Character, Integer> entry : ta.entrySet()) {
+            char c = entry.getKey();
+            int v = entry.getValue();
+            if (sa.containsKey(c) && sa.get(c) >= v)
+                continue;
+            return false;
+        }
+        return true;
+    }
+}

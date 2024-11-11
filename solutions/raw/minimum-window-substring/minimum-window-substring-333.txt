@@ -1,0 +1,62 @@
+class Solution {
+
+    public Map<Character, Integer> smap, tmap;
+
+    public String minWindow(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        if (s.equals(t))
+            return s;
+        String ans = new String(s);
+        boolean anyStringMatch = false;
+        smap = new HashMap<>();
+        tmap = new HashMap<>();
+        for (char ch : t.toCharArray()) tmap.put(ch, tmap.getOrDefault(ch, 0) + 1);
+        int left = 0;
+        for (int right = 0; right < s.length(); right++) {
+            char ch = s.charAt(right);
+            smap.put(ch, smap.getOrDefault(ch, 0) + 1);
+            if (smap.size() >= tmap.size()) {
+                if (compare()) {
+                    anyStringMatch = true;
+                    while (left < right && smap.size() >= tmap.size()) {
+                        char leftChar = s.charAt(left);
+                        if (tmap.containsKey(leftChar)) {
+                            int leftCharSize = smap.get(leftChar);
+                            int requiredSize = tmap.get(leftChar);
+                            if (leftCharSize <= requiredSize) {
+                                break;
+                            } else if (leftCharSize > requiredSize) {
+                                smap.put(leftChar, smap.get(leftChar) - 1);
+                            }
+                        } else {
+                            if (smap.get(leftChar) == 1) {
+                                smap.remove(leftChar);
+                            } else {
+                                smap.put(leftChar, smap.get(leftChar) - 1);
+                            }
+                        }
+                        left++;
+                    }
+                    int len = right - left + 1;
+                    if (len < ans.length()) {
+                        ans = "" + s.substring(left, right + 1);
+                    }
+                }
+            }
+        }
+        if (anyStringMatch == false)
+            return "";
+        return ans;
+    }
+
+    public boolean compare() {
+        for (char key : tmap.keySet()) {
+            if (smap.containsKey(key) == false)
+                return false;
+            if (smap.get(key) < tmap.get(key))
+                return false;
+        }
+        return true;
+    }
+}

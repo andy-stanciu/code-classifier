@@ -1,0 +1,38 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        //to track a-z & A-Z
+        int[] tElements = new int[123];
+        for (char c : t.toCharArray()) {
+            //count frequency of letters
+            tElements[c]++;
+        }
+        char[] S = s.toCharArray();
+        int minLength = Integer.MAX_VALUE, start = 0;
+        //Letters to be found
+        int find = t.length();
+        //sliding window
+        int left = 0, right = 0;
+        while (right < S.length) {
+            //to slide right limit
+            if (tElements[S[right]] > 0)
+                find--;
+            tElements[S[right]]--;
+            right++;
+            while (find == 0) {
+                //to slide left limit when all required characters are found
+                if (right - left < minLength) {
+                    start = left;
+                    minLength = right - left;
+                }
+                if (tElements[S[left]] == 0)
+                    find++;
+                tElements[S[left]]++;
+                left++;
+            }
+        }
+        if (minLength == Integer.MAX_VALUE)
+            return new String();
+        return s.substring(start, start + minLength);
+    }
+}

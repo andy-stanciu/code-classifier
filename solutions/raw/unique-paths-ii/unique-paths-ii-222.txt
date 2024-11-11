@@ -1,0 +1,34 @@
+class Solution {
+
+    public int uniquePathsWithObstacles(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        // If the starting point has an obstacle, return 0 as no paths are possible
+        if (grid[0][0] == 1) {
+            return 0;
+        }
+        // Initialize a DP array with the same dimensions as the grid
+        int[][] dp = new int[m][n];
+        // The starting point has one unique path to itself
+        dp[0][0] = 1;
+        // Fill the DP array
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    // No paths through an obstacle
+                    dp[i][j] = 0;
+                } else {
+                    if (i > 0) {
+                        // Paths from the cell above
+                        dp[i][j] += dp[i - 1][j];
+                    }
+                    if (j > 0) {
+                        // Paths from the cell to the left
+                        dp[i][j] += dp[i][j - 1];
+                    }
+                }
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+}

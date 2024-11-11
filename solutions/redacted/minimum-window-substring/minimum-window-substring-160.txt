@@ -1,0 +1,47 @@
+// https://leetcode.com/problems/minimum-window-substring/
+class Solution {
+
+    public static boolean checker(int[] x, int[] y) {
+        for (int i = 0; i < x.length; i++) {
+            if (y[i] == 0)
+                continue;
+            if (x[i] < y[i])
+                return false;
+        }
+        return true;
+    }
+
+    public String method1(String s, String t) {
+        int[] tcnt = new int[128];
+        for (char c : t.toCharArray()) tcnt[c]++;
+        int[] anscnt = new int[128];
+        int L = 0;
+        int[] best = { 0, Integer.MAX_VALUE };
+        for (int R = 0; R < s.length(); R++) {
+            // add the char at position R
+            anscnt[s.charAt(R)]++;
+            if (checker(anscnt, tcnt)) {
+                // yay!!! first upd ans if possible
+                if (best[1] - best[0] > (R + 1) - L) {
+                    best[0] = L;
+                    best[1] = R + 1;
+                }
+                // now we need to keep shifting L
+                while (true) {
+                    // remove char L
+                    anscnt[s.charAt(L)]--;
+                    ++L;
+                    // now see if the string is still fine
+                    if (checker(anscnt, tcnt)) {
+                        if (best[1] - best[0] > (R + 1) - L) {
+                            best[0] = L;
+                            best[1] = R + 1;
+                        }
+                    } else
+                        break;
+                }
+            }
+        }
+        return best[1] == Integer.MAX_VALUE ? "" : s.substring(best[0], best[1]);
+    }
+}

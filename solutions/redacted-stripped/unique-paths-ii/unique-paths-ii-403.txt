@@ -1,0 +1,42 @@
+class Solution {
+
+    int maxRow, maxCol;
+
+    int[][] obstacleGrid;
+
+    int[][] directions = new int[][] { { 0, 1 }, { 1, 0 } };
+
+    int[][] memo;
+
+    public int method1(int[][] obstacleGrid) {
+        this.obstacleGrid = obstacleGrid;
+        maxRow = obstacleGrid.length;
+        maxCol = obstacleGrid[0].length;
+        if (obstacleGrid[0][0] == 1 || obstacleGrid[maxRow - 1][maxCol - 1] == 1)
+            return 0;
+        memo = new int[maxRow][maxCol];
+        for (int[] arr : memo) Arrays.fill(arr, -1);
+        return dp(0, 0);
+    }
+
+    public int dp(int currRow, int currCol) {
+        if (currRow == maxRow - 1 && currCol == maxCol - 1)
+            return 1;
+        if (memo[currRow][currCol] != -1)
+            return memo[currRow][currCol];
+        int answer = 0;
+        for (int[] direction : directions) {
+            int nextRow = currRow + direction[0];
+            int nextCol = currCol + direction[1];
+            if (isValid(nextRow, nextCol)) {
+                answer += dp(nextRow, nextCol);
+            }
+        }
+        memo[currRow][currCol] = answer;
+        return answer;
+    }
+
+    public boolean isValid(int row, int col) {
+        return 0 <= row && 0 <= col && row < maxRow && col < maxCol && obstacleGrid[row][col] != 1;
+    }
+}

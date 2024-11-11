@@ -1,0 +1,54 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        // character counts for t
+        Map<Character, Integer> t_charCounts = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            t_charCounts.put(c, t_charCounts.getOrDefault(c, 0) + 1);
+        }
+        int left = 0;
+        int right = 0;
+        char[] arr = s.toCharArray();
+        // for each window, we need to make sure character counts in s >= character counts in t for characters in t
+        // number of characters which satisfy the above condition
+        int have = 0;
+        // number of unique characters in t
+        int need = t_charCounts.size();
+        int method1 = Integer.MAX_VALUE;
+        int var1 = -1;
+        int var2 = -1;
+        Map<Character, Integer> s_charCounts = new HashMap<>();
+        while (right < arr.length) {
+            // update in character counts of s
+            int s_count = s_charCounts.getOrDefault(arr[right], 0) + 1;
+            s_charCounts.put(arr[right], s_count);
+            int t_count = t_charCounts.getOrDefault(arr[right], 0);
+            // check if this character appears more or equal number of times in s compared to t
+            if (t_count > 0 && s_count == t_count) {
+                // increase have count by 1
+                have++;
+            }
+            // the window satisfies the given condition: the window is a substring of t
+            // now we want to find minimum such substring. So we keep moving left pointer and check if this condition still holds true.
+            while (left <= right && have >= need) {
+                if (method1 > right - left + 1) {
+                    method1 = right - left + 1;
+                    var1 = left;
+                    var2 = right;
+                }
+                // update in character counts of s
+                int s_left_count = s_charCounts.getOrDefault(arr[left], 0) - 1;
+                s_charCounts.put(arr[left], s_left_count);
+                int t_left_count = t_charCounts.getOrDefault(arr[left], 0);
+                left++;
+                // if by moving the left pointer, the count of the character is less in s compared to t
+                // we reduce `have` as this window is no longer substring of t
+                if (t_left_count > 0 && s_left_count < t_left_count) {
+                    have--;
+                }
+            }
+            right++;
+        }
+        return var1 >= 0 ? s.substring(var1, var2 + 1) : "";
+    }
+}

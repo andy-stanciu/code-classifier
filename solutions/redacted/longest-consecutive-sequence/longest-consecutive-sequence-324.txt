@@ -1,0 +1,31 @@
+class Solution {
+
+    public int method1(int[] nums) {
+        Set<Integer> set = Arrays.stream(nums).boxed().collect(Collectors.toSet());
+        Set<Integer> visited = new HashSet<>();
+        int var1 = 0;
+        for (int num : nums) {
+            var1 = Math.max(var1, bfs(set, visited, num));
+        }
+        return var1;
+    }
+
+    private int bfs(Set<Integer> set, Set<Integer> visited, int num) {
+        Queue<Integer> queue = new ArrayDeque<>();
+        Set<Integer> currentSet = new HashSet<>();
+        queue.add(num);
+        currentSet.add(num);
+        visited.add(num);
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            for (int next : List.of(current - 1, current + 1)) {
+                if (set.contains(next) && !visited.contains(next)) {
+                    queue.add(next);
+                    visited.add(next);
+                    currentSet.add(next);
+                }
+            }
+        }
+        return currentSet.size();
+    }
+}

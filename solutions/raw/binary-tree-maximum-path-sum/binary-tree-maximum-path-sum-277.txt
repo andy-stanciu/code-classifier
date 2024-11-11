@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    Integer[] sum = new Integer[1];
+
+    public int maxPathSum(TreeNode root) {
+        sum[0] = Integer.MIN_VALUE;
+        if (root == null) {
+            return 0;
+        }
+        Integer res = dfs(root);
+        return sum[0] > res ? sum[0] : res;
+    }
+
+    public Integer dfs(TreeNode root) {
+        if (root.left == null && root.right == null) {
+            sum[0] = sum[0] > root.val ? sum[0] : root.val;
+            return root.val;
+        }
+        int leftVal = 0;
+        int rightVal = 0;
+        if (root.left != null) {
+            leftVal = dfs(root.left);
+        }
+        if (root.right != null) {
+            rightVal = dfs(root.right);
+        }
+        int leftrightrootSum = root.val + leftVal + rightVal;
+        int rootleftSum = root.val + leftVal;
+        int rootRightSum = root.val + rightVal;
+        sum[0] = sum[0] > root.val ? sum[0] : root.val;
+        sum[0] = sum[0] > leftrightrootSum ? sum[0] : leftrightrootSum;
+        sum[0] = sum[0] > rootleftSum ? sum[0] : rootleftSum;
+        sum[0] = sum[0] > rootRightSum ? sum[0] : rootRightSum;
+        int max1 = Math.max(root.val, rootleftSum);
+        return Math.max(max1, rootRightSum);
+    }
+}

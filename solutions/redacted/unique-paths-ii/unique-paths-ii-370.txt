@@ -1,0 +1,42 @@
+class Solution {
+
+    public int method1(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        int[][] dp = new int[m][n];
+        int down = 0;
+        int right = 0;
+        dp[m - 1][n - 1] = 1;
+        for (int i = m - 1; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+                if (obstacleGrid[i][j] == 1) {
+                    dp[i][j] = 0;
+                    continue;
+                }
+                down = 0;
+                right = 0;
+                if (i == m - 1 && j == n - 1) {
+                    dp[i][j] = 1;
+                    continue;
+                }
+                if (i < m - 1)
+                    down = dp[i + 1][j];
+                if (j < n - 1)
+                    right = dp[i][j + 1];
+                dp[i][j] = right + down;
+            }
+        }
+        return dp[0][0];
+    }
+
+    public int traverse(int i, int j, int[][] obstacleGrid, int[][] memo) {
+        if (i >= obstacleGrid.length || j >= obstacleGrid[0].length || obstacleGrid[i][j] == 1)
+            return 0;
+        if (i == obstacleGrid.length - 1 && j == obstacleGrid[0].length - 1)
+            return 1;
+        if (memo[i][j] > 0)
+            return memo[i][j];
+        memo[i][j] = traverse(i + 1, j, obstacleGrid, memo) + traverse(i, j + 1, obstacleGrid, memo);
+        return memo[i][j];
+    }
+}

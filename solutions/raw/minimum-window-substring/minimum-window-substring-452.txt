@@ -1,0 +1,49 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        Map<Character, Integer> needMap = new HashMap<>();
+        Map<Character, Integer> haveMap = new HashMap<>();
+        for (Character ch : t.toCharArray()) {
+            if (needMap.containsKey(ch)) {
+                int count = needMap.get(ch);
+                needMap.put(ch, count + 1);
+            } else {
+                needMap.put(ch, 1);
+            }
+        }
+        int have = 0, need = t.length();
+        int minLen = Integer.MAX_VALUE;
+        int i = 0, j = 0;
+        int l = i, r = j;
+        while (j < s.length()) {
+            char ch = s.charAt(j);
+            if (needMap.containsKey(ch)) {
+                if (haveMap.containsKey(ch)) {
+                    int count = haveMap.get(ch);
+                    haveMap.put(ch, count + 1);
+                } else {
+                    haveMap.put(ch, 1);
+                }
+                if (haveMap.get(ch) <= needMap.get(ch))
+                    have++;
+            }
+            while (have == need) {
+                if (j - i + 1 < minLen) {
+                    l = i;
+                    r = j;
+                    minLen = j - i + 1;
+                }
+                char ch2 = s.charAt(i);
+                if (haveMap.containsKey(ch2)) {
+                    int count = haveMap.get(ch2);
+                    haveMap.put(ch2, count - 1);
+                    if (haveMap.get(ch2) < needMap.get(ch2))
+                        have--;
+                }
+                i++;
+            }
+            j++;
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(l, r + 1);
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        //add right
+        //window invalid -->
+        // s= s.toUpperCase();
+        // t = t.toUpperCase();
+        int[] carr = new int[128];
+        for (char e : t.toCharArray()) {
+            carr[e]++;
+        }
+        int counter = t.length();
+        int left = 0;
+        int right = 0;
+        int minLen = Integer.MAX_VALUE;
+        ;
+        int head = 0;
+        for (; right < s.length(); right++) {
+            if (carr[s.charAt(right)] > 0) {
+                counter--;
+            }
+            carr[s.charAt(right)]--;
+            for (; counter == 0; left++) {
+                //if valid window
+                //find answer
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    head = left;
+                }
+                carr[s.charAt(left)]++;
+                if (carr[s.charAt(left)] > 0) {
+                    //if invalidity occurs
+                    //make window invalid
+                    counter++;
+                }
+            }
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(head, head + minLen);
+    }
+}

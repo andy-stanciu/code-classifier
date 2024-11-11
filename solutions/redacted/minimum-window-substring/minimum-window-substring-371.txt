@@ -1,0 +1,51 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        // Check if the input string s is null or empty
+        if (s == null || s.length() == 0)
+            return "";
+        // Initialize an array to store the frequency of characters in string t
+        int[] map = new int[128];
+        // Populate the map with the frequency of characters in string t
+        for (char c : t.toCharArray()) {
+            map[c]++;
+        }
+        // Initialize variables to keep track of the minimum window
+        int count = 0;
+        int minLen = Integer.MAX_VALUE;
+        int minStart = -1;
+        int minEnd = -1;
+        // Pointers for the sliding window
+        int lo = 0;
+        int hi = 0;
+        // Iterate through the characters in string s
+        for (hi = 0; hi < s.length(); hi++) {
+            // Update count if the character at hi is present in string t
+            if (map[s.charAt(hi)] > 0) {
+                count++;
+            }
+            // Decrease the frequency of the character at hi in the map
+            map[s.charAt(hi)]--;
+            // Check if the current window contains all characters of string t
+            if (count == t.length()) {
+                // Shrink the window from the left until a valid window is found
+                while (lo < hi && map[s.charAt(lo)] < 0) {
+                    map[s.charAt(lo)]++;
+                    lo++;
+                }
+                // Update minimum window if the current window is smaller
+                if (minLen > hi - lo + 1) {
+                    minLen = hi - lo + 1;
+                    minStart = lo;
+                    minEnd = hi + 1;
+                }
+                // Increase the frequency of the character at lo in the map
+                map[s.charAt(lo)]++;
+                lo++;
+                count--;
+            }
+        }
+        // Return the minimum window substring or an empty string if not found
+        return minStart == -1 ? "" : s.substring(minStart, minEnd);
+    }
+}

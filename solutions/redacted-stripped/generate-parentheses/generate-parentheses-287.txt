@@ -1,0 +1,75 @@
+class Solution {
+
+    class Node {
+
+        public String val;
+
+        public Node left;
+
+        public Node right;
+
+        public int open;
+
+        public int close;
+    }
+
+    public List<String> method1(int n) {
+        Node root = new Node();
+        root.open = 0;
+        root.close = 0;
+        List<String> list = new ArrayList<>();
+        method2(root, n);
+        printLeafNodes(root, list);
+        return list;
+    }
+
+    void printLeafNodes(Node root, List<String> list) {
+        if (root == null)
+            return;
+        if (root.left == null && root.right == null) {
+            System.out.print(root.val + " ");
+            list.add(root.val);
+            return;
+        }
+        if (root.left != null)
+            printLeafNodes(root.left, list);
+        if (root.right != null)
+            printLeafNodes(root.right, list);
+    }
+
+    public void method2(Node node, int n) {
+        if (node.open == n && node.close == n)
+            return;
+        if (node.open == n) {
+            Node newNode = createNode(node, ")");
+            node.left = newNode;
+            newNode.close = node.close + 1;
+            method2(node.left, n);
+        } else if (node.open == node.close) {
+            Node newNode = createNode(node, "(");
+            node.left = newNode;
+            newNode.open = node.open + 1;
+            method2(node.left, n);
+        } else if (node.open > node.close) {
+            Node newNode = createNode(node, "(");
+            node.left = newNode;
+            newNode.open = node.open + 1;
+            method2(node.left, n);
+            newNode = createNode(node, ")");
+            node.right = newNode;
+            newNode.close = node.close + 1;
+            method2(node.right, n);
+        }
+    }
+
+    public Node createNode(Node node, String openClose) {
+        Node newNode = new Node();
+        if (Objects.nonNull(node.val))
+            newNode.val = node.val + openClose;
+        else
+            newNode.val = openClose;
+        newNode.open = node.open;
+        newNode.close = node.close;
+        return newNode;
+    }
+}

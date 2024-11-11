@@ -1,0 +1,39 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        // Initialize a 2D array to store subproblem solutions.
+        // dp[i][j] represents the length of the LIS starting at index i with previous element ending at index j.
+        int[][] dp = new int[nums.length][nums.length + 1];
+        // Initialize the array with -1, indicating that the subproblem has not been solved yet.
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        // Call the solve function to find the length of the LIS starting from index 0 with no previous element.
+        return solve(nums, dp, 0, -1);
+    }
+
+    // Recursive function to solve the problem.
+    public int solve(int[] nums, int[][] dp, int curr, int prev) {
+        // Base case: If we have reached the end of the array, return 0.
+        if (curr == nums.length) {
+            return 0;
+        }
+        // If the solution to the current subproblem has already been calculated, return it.
+        if (dp[curr][prev + 1] != -1) {
+            return dp[curr][prev + 1];
+        }
+        // Initialize variables to store the length of LIS including and excluding the current element.
+        int include = 0;
+        // If the current element is greater than the previous element, it can be included in the LIS.
+        if (prev == -1 || nums[curr] > nums[prev]) {
+            // Include the current element and move to the next index.
+            include = 1 + solve(nums, dp, curr + 1, curr);
+        }
+        // Exclude the current element and move to the next index.
+        int exclude = solve(nums, dp, curr + 1, prev);
+        // Store the maximum of include and exclude in the dp array to avoid recomputation.
+        dp[curr][prev + 1] = Math.max(include, exclude);
+        // Return the result for the current subproblem.
+        return dp[curr][prev + 1];
+    }
+}

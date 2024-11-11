@@ -1,0 +1,95 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        var var1 = new Class1(s, t);
+        // handle single-char string
+        var1.captureResult();
+        while (var1.canExpand() || var1.canShrink()) {
+            var1.captureResult();
+            while (var1.canShrink()) {
+                var1.shrink();
+                var1.captureResult();
+            }
+            var1.expand();
+        }
+        return var1.getResult();
+    }
+
+    private static class Class1 {
+
+        final char[] text;
+
+        final int[] freqRequired = new int[128];
+
+        final int[] freqCurrent = new int[128];
+
+        final Set<Character> required = new HashSet<>();
+
+        int l, r;
+
+        int resultIdx = -1, resultLength = 0;
+
+        Class1(String text, String reqs) {
+            this.text = text.toCharArray();
+            for (char c : reqs.toCharArray()) {
+                freqRequired[c]++;
+                required.add(c);
+            }
+            addChar(this.text[r]);
+        }
+
+        boolean isSatisfied() {
+            return required.isEmpty();
+        }
+
+        boolean canExpand() {
+            return r < text.length - 1;
+        }
+
+        boolean canShrink() {
+            return l < r && isSatisfied();
+        }
+
+        void expand() {
+            if (!canExpand())
+                return;
+            char c = text[++r];
+            addChar(c);
+        }
+
+        private void addChar(char c) {
+            if (freqRequired[c] > 0) {
+                freqCurrent[c]++;
+                if (freqCurrent[c] >= freqRequired[c]) {
+                    required.remove(c);
+                }
+            }
+        }
+
+        void shrink() {
+            char c = text[l++];
+            if (freqRequired[c] > 0) {
+                freqCurrent[c]--;
+                if (freqCurrent[c] < freqRequired[c]) {
+                    required.add(c);
+                }
+            }
+        }
+
+        void captureResult() {
+            if (isSatisfied()) {
+                int len = r - l + 1;
+                if (resultLength == 0 || len < resultLength) {
+                    resultLength = len;
+                    resultIdx = l;
+                }
+            }
+        }
+
+        String getResult() {
+            return resultIdx == -1 ? "" : new String(text, resultIdx, resultLength);
+        }
+    }
+}

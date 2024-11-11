@@ -1,0 +1,64 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        // Check for invalid inputs
+        if (s == null || s.length() == 0 || t == null || t.length() == 0 || s.length() < t.length())
+            return "";
+        // Initialize character frequency maps for s and t
+        // Frequency map for characters in string t
+        int[] tFreq = new int[128];
+        // Frequency map for characters in string s
+        int[] sFreq = new int[128];
+        for (char c : t.toCharArray()) {
+            // Count the frequency of each character in t
+            tFreq[c]++;
+        }
+        // Pointer for the start of the window
+        int start = 0;
+        // Pointer for the end of the window
+        int end = 0;
+        // Minimum window size
+        int minSize = Integer.MAX_VALUE;
+        // Start index of the minimum window
+        int minStart = 0;
+        // Number of characters from t required to be in the window
+        int requiredChars = t.length();
+        // Slide the window through string s
+        while (end < s.length()) {
+            char c = s.charAt(end);
+            // If character from s is also in t
+            if (tFreq[c] > 0) {
+                if (sFreq[c] < tFreq[c]) {
+                    // Increment requiredChars if we found a required character
+                    requiredChars--;
+                }
+                // Increment the frequency count for character c in s
+                sFreq[c]++;
+            }
+            // If the window contains all characters from t
+            while (requiredChars == 0) {
+                // Update minSize and minStart if the current window is smaller
+                if (end - start + 1 < minSize) {
+                    minSize = end - start + 1;
+                    minStart = start;
+                }
+                char startChar = s.charAt(start);
+                // If character from s is also in t
+                if (tFreq[startChar] > 0) {
+                    // If removing startChar breaks the window, increment requiredChars
+                    if (sFreq[startChar] == tFreq[startChar]) {
+                        requiredChars++;
+                    }
+                    // Decrease the frequency count for startChar
+                    sFreq[startChar]--;
+                }
+                // Move the start pointer to the right
+                start++;
+            }
+            // Move the end pointer to the right
+            end++;
+        }
+        // Return the minimum window substring or an empty string if no such substring exists
+        return minSize == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart + minSize);
+    }
+}

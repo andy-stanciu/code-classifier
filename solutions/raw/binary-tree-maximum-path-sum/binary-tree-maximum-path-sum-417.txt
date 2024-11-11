@@ -1,0 +1,59 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    //Global variable which stores the maximum path sum
+    public int maxSum = -999999;
+
+    public int maxPathSum(TreeNode root) {
+        //Callback to the recursive function
+        recursion(root);
+        //Return the maximum path sum
+        return maxSum;
+    }
+
+    public int recursion(TreeNode curr) {
+        //Once we reach a null node we return 0 because nothing is
+        //going to be added to the sum
+        if (curr == null) {
+            return 0;
+        }
+        //Variables that store the path sum of the left sub tree and
+        //the path sum of the right sub tree in respect to the current node
+        int sumL = 0;
+        int sumR = 0;
+        //This value will store the local sum of current node, left sum
+        //and right sum
+        int localSum;
+        //Check if the value alone of the current node excedes the
+        //current maximum path sum "maxSum"
+        int currentValue = curr.val;
+        maxSum = Math.max(maxSum, currentValue);
+        //Peform the recursion on the left and
+        //right sides
+        sumL += recursion(curr.left);
+        sumR += recursion(curr.right);
+        //Summation of both sides in case there is a
+        //continuos path and no need to go to the upper nodes
+        int tmp = Math.max(sumL + sumR, Math.max(sumL, sumR));
+        maxSum = Math.max(maxSum, (currentValue + tmp));
+        //Obtain the highest local sum to return it to
+        //the higher up nodes in case it is needed
+        localSum = Math.max(currentValue + sumL, currentValue + sumR);
+        localSum = Math.max(localSum, currentValue);
+        return localSum;
+    }
+}

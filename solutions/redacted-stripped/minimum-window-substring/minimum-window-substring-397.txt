@@ -1,0 +1,45 @@
+class Solution {
+
+    public String method1(String s1, String t1) {
+        char[] s = s1.toCharArray();
+        char[] t = t1.toCharArray();
+        int n = s.length;
+        Map<Character, Integer> map = new HashMap<>();
+        for (char x : t) map.put(x, map.getOrDefault(x, 0) + 1);
+        int l = 0, r = 0;
+        int ct = map.size();
+        int minLen = n + 1;
+        String ans = "";
+        while (r < n) {
+            if (map.containsKey(s[r])) {
+                map.put(s[r], map.get(s[r]) - 1);
+                if (map.get(s[r]) == 0)
+                    ct--;
+            }
+            if (ct == 0) {
+                if (r - l + 1 < minLen) {
+                    minLen = r - l + 1;
+                    ans = s1.substring(l, r + 1);
+                }
+                while (l < r && ct == 0) {
+                    if (!map.containsKey(s[l])) {
+                        l++;
+                    } else {
+                        if (map.get(s[l]) == 0)
+                            ct++;
+                        map.put(s[l], map.get(s[l]) + 1);
+                        l++;
+                    }
+                    if (ct == 0) {
+                        if (r - l + 1 < minLen) {
+                            minLen = r - l + 1;
+                            ans = s1.substring(l, r + 1);
+                        }
+                    }
+                }
+            }
+            r++;
+        }
+        return ans;
+    }
+}

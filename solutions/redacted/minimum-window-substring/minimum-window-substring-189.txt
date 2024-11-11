@@ -1,0 +1,38 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] countarr = new int[130];
+        int l = 0;
+        int n = s.length();
+        int min = Integer.MAX_VALUE;
+        int[] arr = new int[2];
+        int[] target = new int[130];
+        int countUniqueSource = 0;
+        int countUniqueTarget = 0;
+        for (char c : t.toCharArray()) {
+            if (target[c] == 0)
+                countUniqueTarget++;
+            target[c]++;
+        }
+        for (int r = 0; r < n; r++) {
+            char c = s.charAt(r);
+            countarr[c]++;
+            if (countarr[c] == target[c])
+                countUniqueSource++;
+            while (countUniqueSource == countUniqueTarget) {
+                int var1 = r - l + 1;
+                if (min > var1) {
+                    min = var1;
+                    arr[0] = l;
+                    arr[1] = r + 1;
+                }
+                char left = s.charAt(l);
+                countarr[left]--;
+                if (countarr[left] < target[left])
+                    countUniqueSource--;
+                l++;
+            }
+        }
+        return s.substring(arr[0], arr[1]);
+    }
+}

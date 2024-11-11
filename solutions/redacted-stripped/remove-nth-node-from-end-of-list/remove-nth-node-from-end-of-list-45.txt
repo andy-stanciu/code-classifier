@@ -1,0 +1,52 @@
+class Solution {
+
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        TreeMap<Integer, TreeMap<Integer, PriorityQueue<Integer>>> map = new TreeMap<>();
+        Queue<Tuple> q = new LinkedList<>();
+        q.offer(new Tuple(root, 0, 0));
+        while (!q.isEmpty()) {
+            Tuple tuple = q.poll();
+            TreeNode var1 = tuple.var1;
+            int x = tuple.row;
+            int y = tuple.col;
+            if (!map.containsKey(x)) {
+                map.put(x, new TreeMap<>());
+            }
+            if (!map.get(x).containsKey(y)) {
+                map.get(x).put(y, new PriorityQueue<>());
+            }
+            map.get(x).get(y).offer(var1.val);
+            if (var1.left != null) {
+                q.offer(new Tuple(var1.left, x - 1, y + 1));
+            }
+            if (var1.right != null) {
+                q.offer(new Tuple(var1.right, x + 1, y + 1));
+            }
+        }
+        List<List<Integer>> result = new ArrayList<>();
+        for (TreeMap<Integer, PriorityQueue<Integer>> ys : map.values()) {
+            result.add(new ArrayList<>());
+            for (PriorityQueue<Integer> var2 : ys.values()) {
+                while (!var2.isEmpty()) {
+                    result.get(result.size() - 1).add(var2.poll());
+                }
+            }
+        }
+        return result;
+    }
+
+    class Tuple {
+
+        TreeNode var1;
+
+        int row;
+
+        int col;
+
+        public Tuple(TreeNode param1, int _row, int _col) {
+            var1 = param1;
+            row = _row;
+            col = _col;
+        }
+    }
+}

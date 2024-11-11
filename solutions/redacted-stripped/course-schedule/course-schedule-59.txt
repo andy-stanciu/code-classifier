@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        if (prerequisites.length == 0)
+            return true;
+        List<List<Integer>> var1 = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            var1.add(new ArrayList<Integer>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            var1.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        int[] visited = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!dfs(var1, visited, i))
+                return false;
+        }
+        return true;
+    }
+
+    public boolean dfs(List<List<Integer>> var1, int[] visited, int param2) {
+        visited[param2] = 1;
+        List<Integer> var2 = var1.get(param2);
+        for (int i = 0; i < var2.size(); i++) {
+            int var3 = var2.get(i);
+            if (visited[var3] == 1)
+                return false;
+            if (visited[var3] == 0) {
+                if (!dfs(var1, visited, var3))
+                    return false;
+            }
+        }
+        visited[param2] = 2;
+        return true;
+    }
+}

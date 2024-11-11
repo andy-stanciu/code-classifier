@@ -1,0 +1,32 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        String ans = "";
+        // start,end
+        int i = 0, j = 0;
+        int[] mp = new int[128];
+        int count = t.length(), len = Integer.MAX_VALUE, sIndex = 0;
+        for (char c : t.toCharArray()) // use ascii value to store frequency
+        mp[c]++;
+        char[] sArray = s.toCharArray();
+        while (j < sArray.length) {
+            if (//while checking for condition do increment of index and reducing of frequency
+            mp[sArray[j++]]-- > 0) {
+                count--;
+            }
+            while (count == 0) {
+                if (j - i < len) {
+                    // storing start index for substring
+                    sIndex = i;
+                    // storing length for substring to be found
+                    len = j - i;
+                }
+                if (mp[sArray[i++]]++ == 0) {
+                    count++;
+                }
+            }
+        }
+        ans = len == Integer.MAX_VALUE ? new String() : new String(sArray, sIndex, len);
+        return ans;
+    }
+}

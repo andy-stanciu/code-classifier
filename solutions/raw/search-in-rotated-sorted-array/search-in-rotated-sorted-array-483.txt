@@ -1,0 +1,41 @@
+class Solution {
+
+    private int fPivot(int[] nums, int n) {
+        int low = 0;
+        int high = n - 1;
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (nums[mid] > nums[high]) {
+                low = mid + 1;
+            } else {
+                high = mid;
+            }
+        }
+        return low;
+    }
+
+    private int search(int low, int high, int[] nums, int target) {
+        int found = -1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (target == nums[mid]) {
+                return mid;
+            } else if (target > nums[mid]) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return found;
+    }
+
+    public int search(int[] nums, int target) {
+        int pivot = fPivot(nums, nums.length);
+        int found = search(0, pivot - 1, nums, target);
+        if (found != -1) {
+            return found;
+        }
+        found = search(pivot, nums.length - 1, nums, target);
+        return found;
+    }
+}

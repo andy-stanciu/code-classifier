@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // to store the Max-Path-Sum
+    static int maxSum = 0;
+
+    public int maxPathSum(TreeNode root) {
+        maxSum = Integer.MIN_VALUE;
+        calcMaxSum(root);
+        return maxSum;
+    }
+
+    private int calcMaxSum(TreeNode node) {
+        if (node == null)
+            return 0;
+        // Visit Left Sub-Tree
+        int l = calcMaxSum(node.left);
+        // Visit Right Sub-Tree
+        int r = calcMaxSum(node.right);
+        // Check whether :
+        // 1. Current Node + Left-Sub-Tree + Right-Sub-Tree give you a higher Max-Path-Sum
+        // So a path from Left-Subtree ==> Current Node ==> Right Sub Tree
+        if (maxSum < node.val + l + r)
+            maxSum = node.val + l + r;
+        // 2. Current Node + Left-Sub-Tree give you a higher Max-Path-Sum
+        // So a path from Left-Subtree ==> Current Node
+        if (maxSum < node.val + l)
+            maxSum = node.val + l;
+        // 3. Current Node + Right-Sub-Tree give you a higher Max-Path-Sum
+        if (maxSum < node.val + r)
+            maxSum = node.val + r;
+        // 4. Current Node gives you a higher Max-Path-Sum
+        // E.g. When Left & Right Sub-Trees have a negative sum and current node is positive
+        // Then we would prefer returning current node only and not add either of the
+        // sub trees
+        if (maxSum < node.val)
+            maxSum = node.val;
+        // Final check to ensure that we return the Max Possible Path Sum upto a visited node.
+        // - If we want to return a PathSum of a subtree then we would also have
+        // to add the current node\'s value because the
+        // current node + current node\'s left/right subtree when returned will form a path
+        // with current nodes parent
+        // - But if Current Node\'s Value is > then Sum Of either left/right subtree then
+        // we should. return current node\'s value only
+        return Math.max(l, r) + node.val > node.val ? Math.max(l, r) + node.val : node.val;
+    }
+}

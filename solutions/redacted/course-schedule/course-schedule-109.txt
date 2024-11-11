@@ -1,0 +1,44 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> adj = new HashMap<>();
+        for (int[] pre : prerequisites) {
+            adj.computeIfAbsent(pre[0], k -> new ArrayList<>()).add(pre[1]);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (adj.get(i) == null)
+                adj.put(i, new ArrayList<>());
+        }
+        Set<Integer> visited = new HashSet<>();
+        List<Integer> current = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            if (visited.contains(i))
+                continue;
+            current.add(i);
+            if (dfs(adj, visited, current) == false)
+                return false;
+        }
+        return true;
+    }
+
+    private boolean dfs(Map<Integer, List<Integer>> adj, Set<Integer> vis, List<Integer> curr) {
+        if (curr.isEmpty()) {
+            return true;
+        }
+        int len = curr.size();
+        if (vis.contains(curr.get(len - 1))) {
+            curr.remove(len - 1);
+            return true;
+        }
+        for (int v : adj.get(curr.get(len - 1))) {
+            if (curr.contains(v))
+                return false;
+            curr.add(v);
+            if (!dfs(adj, vis, curr))
+                return false;
+        }
+        vis.add(curr.get(len - 1));
+        curr.remove(len - 1);
+        return true;
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> targetMap = new HashMap<>();
+        HashMap<Character, Integer> var1 = new HashMap<>();
+        for (char tchar : t.toCharArray()) {
+            targetMap.put(tchar, targetMap.getOrDefault(tchar, 0) + 1);
+            var1.put(tchar, var1.getOrDefault(tchar, 0) + 1);
+        }
+        int i = 0, j = 0, start = -1, end = -1;
+        int min = Integer.MAX_VALUE;
+        HashMap<Character, Integer> currMap = new HashMap<>();
+        char[] sarr = s.toCharArray();
+        while (j < s.length()) {
+            char schar = sarr[j];
+            if (var1.size() != 0 && var1.get(schar) != null) {
+                var1.put(schar, var1.getOrDefault(schar, 0) - 1);
+                if (var1.get(schar) == 0) {
+                    var1.remove(schar);
+                }
+            }
+            currMap.put(schar, currMap.getOrDefault(schar, 0) + 1);
+            if (var1.size() == 0) {
+                //The current window has all characters from "t",  but its length is not necessarily minimum
+                char first = sarr[i];
+                //find minimum length by removing redundant characters from the beginning of the string
+                while (targetMap.get(first) == null || currMap.get(first) > targetMap.get(first)) {
+                    //Remove characters from beginning
+                    currMap.put(first, currMap.getOrDefault(first, 0) - 1);
+                    i++;
+                    first = sarr[i];
+                }
+                int currLen = j - i;
+                if (currLen < min) {
+                    min = currLen;
+                    start = i;
+                    end = j;
+                }
+            }
+            j++;
+        }
+        return start != -1 ? s.substring(start, end + 1) : "";
+    }
+}

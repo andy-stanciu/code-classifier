@@ -1,0 +1,40 @@
+class Solution {
+
+    public String method1(String s, String p) {
+        int sw = 0, se = 0, match = 0, minlen = Integer.MAX_VALUE, count = 0, beg = 0, end = 0;
+        HashMap<Character, Integer> map = new HashMap<>(p.length());
+        char[] arr = s.toCharArray();
+        //used to track the chars which are present in required min frequency in current window
+        Set<Character> set = new HashSet<>();
+        for (char c : p.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        for (se = 0; se < arr.length; se++) {
+            if (map.containsKey(arr[se])) {
+                map.put(arr[se], map.get(arr[se]) - 1);
+                //char present in window with min required frequency
+                if (map.get(arr[se]) <= 0) {
+                    set.add(arr[se]);
+                }
+            }
+            //now try reducing the window when size is matched
+            while (set.size() == map.size()) {
+                //update min len, pattern found
+                if (minlen > (se - sw + 1)) {
+                    beg = sw;
+                    end = se + 1;
+                    minlen = se - sw + 1;
+                }
+                if (map.containsKey(arr[sw])) {
+                    map.put(arr[sw], map.get(arr[sw]) + 1);
+                    //now reduce set size if required
+                    if (map.get(arr[sw]) > 0) {
+                        set.remove(arr[sw]);
+                    }
+                }
+                sw++;
+            }
+        }
+        return s.substring(beg, end);
+    }
+}

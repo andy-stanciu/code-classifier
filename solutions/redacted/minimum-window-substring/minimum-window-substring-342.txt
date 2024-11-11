@@ -1,0 +1,66 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        // Nothing to find, or it\'s the same
+        if (s.isEmpty() || t.isEmpty()) {
+            return "";
+        } else if (s.equals(t)) {
+            return s;
+        }
+        // Get the count of required characters
+        Map<Character, Integer> required = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            required.put(c, required.getOrDefault(c, 0) + 1);
+        }
+        // Number of unique keys
+        int requiredUniqueCharacters = required.size();
+        /* Count of unique characters completely fulfilled
+		 * Increment only when you find a required character
+		 * And it\'s enough characters to satisfy the requirement
+		 */
+        int foundUniqueCharacters = 0;
+        // string index pointers
+        int left = 0, right = 0;
+        // Tracking count of all characters in the window right now
+        Map<Character, Integer> var1 = new HashMap<>();
+        // Index of the beginning / end characters required
+        int[] answer = new int[] { 0, Integer.MAX_VALUE };
+        // Start opening the window
+        while (right < s.length()) {
+            // Get the character on the right
+            char c = s.charAt(right);
+            // Increment the count for it
+            var1.put(c, var1.getOrDefault(c, 0) + 1);
+            // If it\'s a required character, and it meets the minimum count required
+            if (required.containsKey(c) && var1.get(c).equals(required.get(c))) {
+                foundUniqueCharacters++;
+            }
+            // Start shrinking the window while
+            while (left <= right && foundUniqueCharacters == requiredUniqueCharacters) {
+                // Get the character on the right
+                c = s.charAt(left);
+                // Store new answer if it\'s shorter
+                if (right - left < answer[1] - answer[0]) {
+                    answer[0] = left;
+                    answer[1] = right;
+                }
+                // Decrement the count for it
+                var1.put(c, var1.getOrDefault(c, 0) - 1);
+                // If it\'s a required character, and it no longer meets the minimum count required
+                if (required.containsKey(c) && var1.get(c).intValue() < required.get(c).intValue()) {
+                    foundUniqueCharacters--;
+                }
+                // Move the pointer until it\'s no longer valid
+                left++;
+            }
+            // Move the pointer until the end
+            right++;
+        }
+        // Not answer found
+        if (answer[1] == Integer.MAX_VALUE) {
+            return "";
+        }
+        // Add one to include the last character
+        return s.substring(answer[0], answer[1] + 1);
+    }
+}

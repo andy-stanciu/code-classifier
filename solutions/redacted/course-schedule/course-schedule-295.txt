@@ -1,0 +1,45 @@
+class Solution {
+
+    List<Integer>[] graph;
+
+    boolean[] explored;
+
+    boolean[] visited;
+
+    public boolean canFinish(int n, int[][] prerequisites) {
+        graph = new ArrayList[n];
+        visited = new boolean[n];
+        explored = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] e : prerequisites) {
+            graph[e[0]].add(e[1]);
+        }
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                boolean result = dfs(i);
+                if (!result) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(int i) {
+        visited[i] = true;
+        for (int j : graph[i]) {
+            if (!visited[j]) {
+                boolean result = dfs(j);
+                if (!result) {
+                    return false;
+                }
+            } else if (!explored[j]) {
+                return false;
+            }
+        }
+        explored[i] = true;
+        return true;
+    }
+}

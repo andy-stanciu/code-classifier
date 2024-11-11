@@ -1,0 +1,40 @@
+class Solution {
+
+    private static boolean dfs(int src, ArrayList<ArrayList<Integer>> list, boolean[] vis, int[] path) {
+        vis[src] = true;
+        path[src] = 1;
+        // path marked.
+        for (int node : list.get(src)) {
+            if (!vis[node]) {
+                if (dfs(node, list, vis, path))
+                    return true;
+            } else if (vis[node] && path[node] == 1) {
+                return true;
+            }
+        }
+        path[src] = -1;
+        return false;
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // just check that using dfs can we visit all courses are not.
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            list.add(new ArrayList<>());
+        }
+        boolean[] vis = new boolean[numCourses];
+        int[] path = new int[numCourses];
+        // directed graph.
+        for (int[] edge : prerequisites) {
+            list.get(edge[1]).add(edge[0]);
+        }
+        // detect for cycle and unvisited.
+        for (int i = 0; i < numCourses; i++) {
+            if (vis[i] == false) {
+                if (dfs(i, list, vis, path))
+                    return false;
+            }
+        }
+        return true;
+    }
+}

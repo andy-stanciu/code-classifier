@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    int max = Integer.MIN_VALUE;
+
+    public int method1(TreeNode root) {
+        if (root == null)
+            return 0;
+        getMax(root);
+        return max;
+    }
+
+    private int getMax(TreeNode node) {
+        if (node.left == null && node.right == null) {
+            max = Math.max(max, node.val);
+            return node.val;
+        }
+        int left = 0;
+        int right = 0;
+        if (node.left != null) {
+            left = getMax(node.left);
+        }
+        if (node.right != null) {
+            right = getMax(node.right);
+        }
+        int myLeftTotal = left + node.val;
+        int myRightTotal = right + node.val;
+        int myTotal = left + right + node.val;
+        int myTotalMax = Math.max(node.val, Math.max(myTotal, Math.max(myLeftTotal, myRightTotal)));
+        max = Math.max(max, myTotalMax);
+        //System.out.println("At node " + node.val + " myTotalMax = " + myTotalMax + " and max = " + max);
+        return Math.max(node.val, Math.max(myLeftTotal, myRightTotal));
+    }
+}
+/*
+return max (including me, not including me)
+= max(myvalue + max(le))
+*/

@@ -1,0 +1,38 @@
+class Solution {
+
+    List<List<Integer>> adjList;
+
+    int[] visited;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        adjList = new ArrayList<>(param1);
+        visited = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            adjList.get(prerequisite[1]).add(prerequisite[0]);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (visited[i] == 0 && dfs(i))
+                return false;
+        }
+        return true;
+    }
+
+    public boolean dfs(int i) {
+        visited[i] = 1;
+        // visit all its neighbours
+        for (int n : adjList.get(i)) {
+            if (visited[n] == 0) {
+                if (dfs(n))
+                    return true;
+            } else if (visited[n] == 1)
+                return true;
+            //detect cycle (if there is a cycle then it\'s not possible)
+        }
+        visited[i] = 2;
+        // if the node is not in cycle i would be marked as 2
+        return false;
+    }
+}

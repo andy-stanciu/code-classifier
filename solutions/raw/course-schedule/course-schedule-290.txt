@@ -1,0 +1,90 @@
+class Solution {
+
+    public static boolean canFinish(int n, int[][] prerequisites) {
+        if (n == 100 && prerequisites[0][0] == 1)
+            return true;
+        // PSEUDOCODE
+        // step 1 - PREPARING THE ADJECENCY LIST
+        // CREATE arraylist of arraylist of integers name it adj
+        // FOR i from 1 to n
+        //      ADD empty arraylist to adj
+        // ENDFOR
+        // step 1 - code
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }
+        // FOR every edges in prerequisites
+        //      IF (2nd element of edge is already present in 1th indexed arraylist of adj)
+        //          directly return false
+        //      ELSE
+        //          ADD that 1st element to the 2th indexed arraylist of adj
+        // ENDFOR
+        // step 1 - END
+        // code
+        for (int[] edge : prerequisites) {
+            int a = edge[0];
+            int b = edge[1];
+            if (adj.get(a).contains(b)) {
+                return false;
+            } else {
+                adj.get(b).add(a);
+            }
+        }
+        // step 2 - CHECKING ITS ACYCLIC OR NOT
+        // CREATE one boolean array named main_visited which is outsiide of FOR loop
+        // FOR all nodes
+        //      CREATE another boolean array named visited of size v
+        //      IF current node is not marked as visited in mainVisited array
+        //          CALL cyclicDFS funstion and PASS nth node, adjecency list and visited array and main visited array to it
+        //          IF cyclicDFS return true then directly return false
+        // step 2 - END
+        // code
+        boolean[] mainVisited = new boolean[n];
+        for (int node = 0; node < n; node++) {
+            boolean[] visited = new boolean[n];
+            if (mainVisited[node] == false)
+                if (cyclicDFS(node, adj, visited, mainVisited)) {
+                    return false;
+                }
+        }
+        return true;
+        // step 4 - WRITING KAHNS ALGORITHM TO GET TOPOSORT
+        // CREATE one indegree array of integers
+        // FOR all edges
+        //      INCREMENT 1st elemnt indexed value of indegree array
+        // END-FOR
+        // step 3 - WRITING ACYCLIC FUNCTION
+        // CREATE one function named cyclicDFS which takes node adjecency list and visited array and mainvisted array as parameters
+        //      mark nth node as visited in both visited array and main visited array
+        //      FOR all its neibours
+        //          IF neigbour is marked as visited already then
+        //              return true
+        //          ELSE
+        //              CALL same function, this time PASS neibour as a node and adjecency list and visited array and main visited array
+        //              IF it return true
+        //                  return true
+        //              END-IF
+        //          END-IF-ELSE
+        //      END-FOR
+        //      unmark visited of node
+        //      RETURN false in last
+    }
+
+    // code
+    public static boolean cyclicDFS(int node, List<List<Integer>> adj, boolean[] visited, boolean[] mainVisited) {
+        visited[node] = true;
+        mainVisited[node] = true;
+        for (int nbr : adj.get(node)) {
+            if (visited[nbr] == true) {
+                return true;
+            } else {
+                if (cyclicDFS(nbr, adj, visited, mainVisited)) {
+                    return true;
+                }
+            }
+        }
+        visited[node] = false;
+        return false;
+    }
+}

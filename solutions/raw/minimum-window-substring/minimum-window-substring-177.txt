@@ -1,0 +1,44 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        int[] count = new int[128];
+        int match = 0;
+        Set<Character> set = new HashSet<>();
+        for (char c : t.toCharArray()) {
+            if (count[c] == 0) {
+                match++;
+                set.add(c);
+            }
+            count[c]++;
+        }
+        int minL = 0;
+        int min = Integer.MAX_VALUE;
+        int l = 0;
+        for (int r = 0; r < s.length(); r++) {
+            char c = s.charAt(r);
+            if (set.contains(c)) {
+                count[c]--;
+                if (count[c] == 0)
+                    match--;
+            }
+            while (match == 0) {
+                int len = r - l + 1;
+                if (len <= min) {
+                    min = len;
+                    minL = l;
+                }
+                char d = s.charAt(l++);
+                if (set.contains(d)) {
+                    if (count[d] == 0)
+                        match++;
+                    count[d]++;
+                }
+            }
+        }
+        if (min == Integer.MAX_VALUE)
+            return "";
+        return s.substring(minL, minL + min);
+    }
+}

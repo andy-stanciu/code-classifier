@@ -1,0 +1,48 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<List<java.lang.Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        // Populate the graph with edges based on the prerequisites
+        for (int i = 0; i < prerequisites.length; i++) {
+            int[] prerequisite = prerequisites[i];
+            graph.get(prerequisite[1]).add(prerequisite[0]);
+        }
+        // Create an array to keep track of the visit state of each course
+        // 0 = not visited, 1 = visiting, 2 = visited
+        int[] visitState = new int[numCourses];
+        // Perform DFS on each course
+        for (int i = 0; i < numCourses; i++) {
+            if (hasCycle(graph, visitState, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean hasCycle(List<List<java.lang.Integer>> graph, int[] visitState, int course) {
+        if (visitState[course] == 1) {
+            // Currently visiting this course, so we found a cycle
+            return true;
+        }
+        if (visitState[course] == 2) {
+            // Already visited this course, no cycle from this course
+            return false;
+        }
+        // Mark this course as visiting
+        visitState[course] = 1;
+        // Visit all the adjacent courses
+        List<java.lang.Integer> neighbors = graph.get(course);
+        for (int i = 0; i < neighbors.size(); i++) {
+            int neighbor = neighbors.get(i);
+            if (hasCycle(graph, visitState, neighbor)) {
+                return true;
+            }
+        }
+        // Mark this course as visited
+        visitState[course] = 2;
+        return false;
+    }
+}

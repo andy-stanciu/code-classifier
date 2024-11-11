@@ -1,0 +1,32 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] hash = new int[256];
+        for (int i = 0; i < t.length(); i++) {
+            hash[t.charAt(i)]++;
+        }
+        int min = Integer.MAX_VALUE;
+        int count = 0;
+        int startIndex = -1;
+        int ws = 0;
+        int we = 0;
+        while (we < s.length()) {
+            if (hash[s.charAt(we)] > 0)
+                count++;
+            hash[s.charAt(we)]--;
+            while (ws <= we && count == t.length()) {
+                if (we - ws + 1 < min) {
+                    min = we - ws + 1;
+                    startIndex = ws;
+                }
+                //restore the previous count
+                hash[s.charAt(ws)]++;
+                if (hash[s.charAt(ws)] > 0)
+                    count--;
+                ws++;
+            }
+            we++;
+        }
+        return (startIndex != -1) ? s.substring(startIndex, startIndex + min) : "";
+    }
+}

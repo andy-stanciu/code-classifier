@@ -1,0 +1,38 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (s == null || s.length() == 0 || t == null || t.length() == 0) {
+            return "";
+        }
+        HashMap<Character, Integer> tFreq = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            tFreq.put(c, tFreq.getOrDefault(c, 0) + 1);
+        }
+        int left = 0;
+        int minLen = Integer.MAX_VALUE;
+        int minLeft = 0;
+        int required = tFreq.size();
+        int formed = 0;
+        HashMap<Character, Integer> var1 = new HashMap<>();
+        for (int right = 0; right < s.length(); right++) {
+            char c = s.charAt(right);
+            var1.put(c, var1.getOrDefault(c, 0) + 1);
+            if (tFreq.containsKey(c) && var1.get(c).intValue() == tFreq.get(c).intValue()) {
+                formed++;
+            }
+            while (left <= right && formed == required) {
+                char leftChar = s.charAt(left);
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    minLeft = left;
+                }
+                var1.put(leftChar, var1.get(leftChar) - 1);
+                if (tFreq.containsKey(leftChar) && var1.get(leftChar).intValue() < tFreq.get(leftChar).intValue()) {
+                    formed--;
+                }
+                left++;
+            }
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + minLen);
+    }
+}

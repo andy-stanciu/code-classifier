@@ -1,0 +1,30 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        char[] a = s.toCharArray();
+        char[] b = t.toCharArray();
+        int len = a.length, l = 0, r = 0, ans, count = 0, startind = -1;
+        int[] hash = new int[150];
+        ans = Integer.MAX_VALUE;
+        for (char c : b) {
+            hash[(int) c]++;
+        }
+        while (r < len) {
+            if (hash[(int) a[r]] > 0)
+                count++;
+            hash[(int) a[r]]--;
+            while (count == b.length) {
+                if (r - l + 1 < ans) {
+                    ans = r - l + 1;
+                    startind = l;
+                }
+                hash[(int) a[l]]++;
+                if (hash[(int) a[l]] > 0)
+                    count--;
+                l++;
+            }
+            r++;
+        }
+        return startind == -1 ? "" : s.substring(startind, ans + startind);
+    }
+}

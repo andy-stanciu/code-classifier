@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean dfs(int node, int[] vis, int[] path, List<List<Integer>> g) {
+        vis[node] = 1;
+        path[node] = 1;
+        for (int it : g.get(node)) {
+            if (vis[it] == 0) {
+                if (dfs(it, vis, path, g)) {
+                    return true;
+                }
+            } else if (path[it] == 1) {
+                return true;
+            }
+        }
+        path[node] = 0;
+        return false;
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> g = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            g.add(new ArrayList<>());
+        }
+        for (int[] it : prerequisites) {
+            g.get(it[1]).add(it[0]);
+        }
+        int[] vis = new int[param1];
+        int[] path = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (vis[i] == 0) {
+                if (dfs(i, vis, path, g)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}

@@ -1,0 +1,56 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Create a HashMap to store the prerequisites of each course
+        HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+        // Iterate through the prerequisites array
+        for (int[] pre : prerequisites) {
+            // Extract the course and its prerequisite from the prerequisites array
+            int a = pre[0];
+            int b = pre[1];
+            // Add the prerequisite to the list of prerequisites for the course
+            if (!map.containsKey(a))
+                map.put(a, new ArrayList<>());
+            if (!map.containsKey(b))
+                map.put(b, new ArrayList<>());
+            map.get(a).add(b);
+        }
+        // Create a HashSet to keep track of visited courses during DFS traversal
+        Set<Integer> visitSet = new HashSet<>();
+        // Iterate through each course
+        for (int crs = 0; crs < numCourses; crs++) {
+            // Perform DFS traversal on the course to check if it has any cycle
+            if (!dfs(crs, map, visitSet)) {
+                return false;
+            }
+        }
+        // If DFS traversal completes for all courses without detecting any cycle, return true
+        return true;
+    }
+
+    // Depth-first search (DFS) method to check for cycles in the graph
+    public boolean dfs(int crs, HashMap<Integer, ArrayList<Integer>> map, Set<Integer> visitSet) {
+        // If the course is already visited, it indicates a cycle
+        if (visitSet.contains(crs)) {
+            return false;
+        }
+        // If the course has no prerequisites, it\'s a leaf node and doesn\'t form a cycle
+        if (!map.containsKey(crs) || map.get(crs).isEmpty())
+            return true;
+        // Mark the current course as visited
+        visitSet.add(crs);
+        // Iterate through each prerequisite of the current course
+        for (int pre : map.get(crs)) {
+            // Recursively perform DFS on the prerequisite
+            if (!dfs(pre, map, visitSet)) {
+                // If a cycle is detected in any branch, return false
+                return false;
+            }
+        }
+        // Remove the current course from the visit set and map since the DFS traversal for it is complete
+        visitSet.remove(crs);
+        map.remove(crs);
+        // Return true if no cycle is detected for the current course
+        return true;
+    }
+}

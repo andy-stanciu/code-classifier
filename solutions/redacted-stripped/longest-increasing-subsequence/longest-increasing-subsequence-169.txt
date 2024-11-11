@@ -1,0 +1,29 @@
+class Solution {
+
+    int[][] dp;
+
+    int n;
+
+    public int solve(int[] nums, int prev, int cur) {
+        if (cur == n)
+            return 0;
+        if (prev != -1 && dp[prev][cur] != -1)
+            return dp[prev][cur];
+        int take = 0;
+        if (prev == -1 || nums[cur] > nums[prev])
+            take = 1 + solve(nums, cur, cur + 1);
+        int skip = solve(nums, prev, cur + 1);
+        if (prev != -1)
+            dp[prev][cur] = Math.max(take, skip);
+        return Math.max(take, skip);
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        n = nums.length;
+        dp = new int[n + 1][n + 1];
+        for (int[] i : dp) {
+            Arrays.fill(i, -1);
+        }
+        return solve(nums, -1, 0);
+    }
+}

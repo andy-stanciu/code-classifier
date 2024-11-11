@@ -1,0 +1,44 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        Map<Character, Integer> requiredCharacters = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            requiredCharacters.put(c, requiredCharacters.getOrDefault(c, 0) + 1);
+        }
+        int startPointer = 0;
+        int endPointer = 0;
+        int countOfRequiredConditions = requiredCharacters.size();
+        String result = null;
+        while (endPointer < s.length()) {
+            char seen = s.charAt(endPointer);
+            if (requiredCharacters.containsKey(seen)) {
+                int times = requiredCharacters.get(seen) - 1;
+                requiredCharacters.put(seen, times);
+                if (times == 0) {
+                    countOfRequiredConditions--;
+                }
+            }
+            if (countOfRequiredConditions > 0) {
+                endPointer++;
+            }
+            if (countOfRequiredConditions == 0) {
+                while (countOfRequiredConditions == 0) {
+                    if (result == null || endPointer - startPointer + 1 < result.length()) {
+                        result = s.substring(startPointer, endPointer + 1);
+                    }
+                    char startingWith = s.charAt(startPointer);
+                    if (requiredCharacters.containsKey(startingWith)) {
+                        int times = requiredCharacters.get(startingWith) + 1;
+                        requiredCharacters.put(startingWith, times);
+                        if (times == 1) {
+                            countOfRequiredConditions++;
+                        }
+                    }
+                    startPointer++;
+                }
+                endPointer++;
+            }
+        }
+        return result == null ? "" : result;
+    }
+}

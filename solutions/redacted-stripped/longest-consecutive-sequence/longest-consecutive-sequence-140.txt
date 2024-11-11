@@ -1,0 +1,84 @@
+class Solution {
+
+    class UnionFind {
+
+        int[] parent, groupSize;
+
+        int num_groups;
+
+        public UnionFind(int n) {
+            num_groups = n;
+            parent = new int[n];
+            groupSize = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                groupSize[i] = 1;
+            }
+        }
+
+        public int find(int node) {
+            int root = node;
+            while (parent[root] != root) {
+                root = parent[root];
+            }
+            while (node != root) {
+                int next = parent[node];
+                parent[node] = root;
+                node = next;
+            }
+            return root;
+        }
+
+        public void union(int nodeP, int nodeQ) {
+            int rootP = find(nodeP);
+            int rootQ = find(nodeQ);
+            if (rootP == rootQ) {
+                return;
+            }
+            if (groupSize[rootP] > groupSize[rootQ]) {
+                parent[rootQ] = rootP;
+                groupSize[rootP] += groupSize[rootQ];
+            } else {
+                parent[rootP] = rootQ;
+                groupSize[rootQ] += groupSize[rootP];
+            }
+            num_groups--;
+        }
+
+        public int num_of_groups() {
+            return num_groups;
+        }
+
+        public int findBiggestGroup() {
+            int maxSize = 1;
+            for (int i = 0; i < parent.length; i++) {
+                if (i == parent[i]) {
+                    maxSize = Math.max(maxSize, groupSize[i]);
+                }
+            }
+            return maxSize;
+        }
+    }
+
+    public int method1(int[] nums) {
+        int n = nums.length;
+        if (n == 0) {
+            return 0;
+        }
+        UnionFind uf = new UnionFind(n);
+        HashMap<Integer, Integer> valToIdx = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            if (valToIdx.containsKey(nums[i])) {
+                continue;
+            }
+            if (valToIdx.containsKey(nums[i] - 1)) {
+                uf.union(i, valToIdx.get(nums[i] - 1));
+            }
+            if (valToIdx.containsKey(nums[i] + 1)) {
+                uf.union(i, valToIdx.get(nums[i] + 1));
+            }
+            valToIdx.put(nums[i], i);
+        }
+        return uf.findBiggestGroup();
+    }
+}

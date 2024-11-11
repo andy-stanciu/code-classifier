@@ -1,0 +1,28 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        Map<Character, Integer> mpp = new HashMap<>();
+        for (char it : t.toCharArray()) mpp.put(it, mpp.getOrDefault(it, 0) + 1);
+        int i = 0, j = 0;
+        int counter = t.length();
+        int len = Integer.MAX_VALUE;
+        int start = 0;
+        while (j < s.length()) {
+            if (mpp.containsKey(s.charAt(j)) && mpp.get(s.charAt(j)) > 0)
+                --counter;
+            mpp.put(s.charAt(j), mpp.getOrDefault(s.charAt(j), 0) - 1);
+            ++j;
+            while (counter == 0) {
+                if (j - i < len) {
+                    len = j - i;
+                    start = i;
+                }
+                mpp.put(s.charAt(i), mpp.getOrDefault(s.charAt(i), 0) + 1);
+                if (mpp.containsKey(s.charAt(i)) && mpp.get(s.charAt(i)) > 0)
+                    ++counter;
+                ++i;
+            }
+        }
+        return len != Integer.MAX_VALUE ? s.substring(start, start + len) : "";
+    }
+}

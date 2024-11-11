@@ -1,0 +1,48 @@
+class Solution {
+
+    int[] degree;
+
+    int count;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        degree = new int[param1];
+        count = 0;
+        List<Integer>[] graph = buildGraph(param1, prerequisites);
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < degree.length; i++) {
+            if (degree[i] == 0) {
+                queue.add(i);
+                count++;
+            }
+        }
+        while (queue.size() != 0) {
+            int var1 = queue.poll();
+            for (int i = 0; i < graph[var1].size(); i++) {
+                int pointer = (int) graph[var1].get(i);
+                degree[pointer]--;
+                if (degree[pointer] == 0) {
+                    queue.add(pointer);
+                    count++;
+                }
+            }
+        }
+        if (count == param1)
+            return true;
+        else
+            return false;
+    }
+
+    public List<Integer>[] buildGraph(int param1, int[][] prerequisites) {
+        List<Integer>[] graph = new LinkedList[param1];
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new LinkedList<>();
+        }
+        for (int[] edge : prerequisites) {
+            int from = edge[1];
+            int to = edge[0];
+            graph[from].add(to);
+            degree[to]++;
+        }
+        return graph;
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        //find shortest substring that contains sub(t) in str(s).
+        if (t.length() > s.length() || s.isEmpty() || t.isEmpty())
+            return "";
+        //not adding null checks
+        int[] reqCharCount = new int[128];
+        for (char c : t.toCharArray()) {
+            reqCharCount[c]++;
+        }
+        //var initialization:
+        int left = 0, minWindow = Integer.MAX_VALUE, requiredChars = t.length();
+        String result = "";
+        for (int right = 0; right < s.length(); right++) {
+            //reqCharCount contains the no of times a char is still needed in the window
+            //from the substring;
+            reqCharCount[s.charAt(right)]--;
+            //check if current char at right end is a required chars,
+            //if yes then decrease counter.
+            if (reqCharCount[s.charAt(right)] >= 0)
+                requiredChars--;
+            // when all required chars have been found, we will try shrinking the window from
+            //left side.
+            while (requiredChars == 0) {
+                if (right - left + 1 < minWindow) {
+                    minWindow = right - left + 1;
+                    result = s.substring(left, right + 1);
+                }
+                //shift the left pointer, i.e. remove the left most char from window
+                //increase corresponding count in reqCharCount
+                reqCharCount[s.charAt(left)]++;
+                //check if the last removed left char is an absent required char, if so,
+                if (reqCharCount[s.charAt(left)] > 0)
+                    requiredChars++;
+                left++;
+            }
+        }
+        return result;
+    }
+}

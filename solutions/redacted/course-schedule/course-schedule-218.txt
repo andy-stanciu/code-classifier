@@ -1,0 +1,49 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        Queue<Integer> q = new LinkedList<>();
+        //creating adjecency List from the matrix
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<>());
+        }
+        int m = prerequisites.length;
+        for (int i = 0; i < m; i++) {
+            adj.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        // created indegree array as used in topo sort using bfs
+        int[] indegree = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            for (int it : adj.get(i)) {
+                indegree[it]++;
+            }
+        }
+        //find the nodes whoes indegree is 0 i.e. they dont have any
+        //incomming edge
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        int cnt = 0;
+        // perform actual task
+        while (!q.isEmpty()) {
+            int node = q.peek();
+            q.remove();
+            //same as to add a node in ans array of topo sort
+            cnt++;
+            for (int it : adj.get(node)) {
+                indegree[it]--;
+                if (indegree[it] == 0) {
+                    q.add(it);
+                }
+            }
+        }
+        //these condition returns the final ans
+        //if cnt != numCourses it shows the graph is cyclic
+        //so if the graph is cyclic then its false else its true
+        if (cnt == param1)
+            return true;
+        return false;
+    }
+}

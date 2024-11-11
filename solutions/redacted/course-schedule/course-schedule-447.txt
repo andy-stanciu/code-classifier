@@ -1,0 +1,44 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        // construct adjacency list of the given graph
+        Map<Integer, List<Integer>> adjList = new HashMap<>();
+        for (int i = 0; i < prerequisites.length; i++) {
+            int src = prerequisites[i][0];
+            int dest = prerequisites[i][1];
+            List<Integer> neighbours = adjList.getOrDefault(src, new ArrayList<Integer>());
+            neighbours.add(dest);
+            adjList.put(src, neighbours);
+        }
+        // I cannot finish all the courses if there is cycle in the graph
+        int[] visited = new int[param1];
+        // visited[i] is -1 if the node is visited on the DFS path.
+        // visited[i] is 1 if the node and all its neighbours are visited
+        for (int i = 0; i < param1; i++) {
+            // DFS on unvisited nodes to detect cycle
+            if (visited[i] == 0 && detectCycle(adjList, visited, i) == true) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean detectCycle(Map<Integer, List<Integer>> adjList, int[] visited, int curr) {
+        if (visited[curr] == -1) {
+            return true;
+        }
+        if (visited[curr] == 1) {
+            return false;
+        }
+        visited[curr] = -1;
+        if (adjList.containsKey(curr)) {
+            for (int neighbour : adjList.get(curr)) {
+                if (detectCycle(adjList, visited, neighbour)) {
+                    return true;
+                }
+            }
+        }
+        visited[curr] = 1;
+        return false;
+    }
+}

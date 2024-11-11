@@ -1,0 +1,122 @@
+// Solution 1 -- DP
+class Solution {
+
+    public int maxSubArray(int[] nums) {
+        int n = nums.length;
+        int maxSum = nums[0];
+        int currSum = nums[0];
+        for (int i = 1; i < n; i++) {
+            currSum = Math.max(currSum, 0) + nums[i];
+            maxSum = Math.max(currSum, maxSum);
+        }
+        return maxSum;
+    }
+}
+/**
+ *  Solution 2 -- Improved D&C
+ * // I need to return multiple values so I need a customize class
+ * class SubArrayInfo {
+ *     int bestSubArray;
+ *     int bestPrefix;
+ *     int bestSuffix;
+ *     int sum;
+ *
+ *     public SubArrayInfo (int bestSubArray, int bestPrefix, int bestSuffix, int sum) {
+ *         this.bestSubArray = bestSubArray;
+ *         this.bestPrefix = bestPrefix;
+ *         this.bestSuffix = bestSuffix;
+ *         this.sum = sum;
+ *     }
+ * }
+ *
+ * class Solution {
+ *     // Improved D&C Solution by strengthen the recurrsion
+ *     public int maxSubArray(int[] nums) {
+ *         // Recursively call the helper function
+ *         return findMaxSubArray(nums, 0, nums.length - 1).bestSubArray;
+ *     }
+ *
+ *     private SubArrayInfo findMaxSubArray(int[] nums, int left, int right) {
+ *         if (left >= right) {
+ *             return new SubArrayInfo(nums[right], nums[right], nums[right], nums[right]);
+ *         }
+ *
+ *         int mid = (left + right)/2;
+ *
+ *         SubArrayInfo leftSubArrayInfo = findMaxSubArray(nums, left, mid);
+ *         SubArrayInfo rightSubArrayInfo = findMaxSubArray(nums, mid+1, right);
+ *
+ *         int bestMid = leftSubArrayInfo.bestSuffix + rightSubArrayInfo.bestPrefix;
+ *         int bestSubArray = Math.max(leftSubArrayInfo.bestSubArray, Math.max(rightSubArrayInfo.bestSubArray, bestMid));
+ *         int bestPrefix = Math.max(leftSubArrayInfo.bestPrefix, leftSubArrayInfo.sum + rightSubArrayInfo.bestPrefix);
+ *         int bestSuffix = Math.max(rightSubArrayInfo.bestSuffix, rightSubArrayInfo.sum + leftSubArrayInfo.bestSuffix);
+ *         int sum = leftSubArrayInfo.sum + rightSubArrayInfo.sum;
+ *
+ *         return new SubArrayInfo(bestSubArray, bestPrefix, bestSuffix, sum);
+ *
+ *     }
+ * }
+ */
+/**
+ *  Solution 3 -- Normal D&C with O(nlgn) time and O(lgn) space
+ * class Solution {
+ *     // D&C Solution
+ *
+ *     public int maxSubArray(int[] nums) {
+ *         // Recursively call the helper function
+ *         return findMaxSubArray(nums, 0, nums.length - 1);
+ *     }
+ *
+ *     private int findMaxSubArray(int[] nums, int left, int right) {
+ *         if (left >= right) {
+ *             return nums[right];
+ *         }
+ *         int mid = (left + right)/2;
+ *
+ *         int bestLeftSum = findMaxSubArray(nums, left, mid);
+ *         int bestRightSum = findMaxSubArray(nums, mid+1, right);
+ *
+ *         // Calulate left longest suffix
+ *         int currLeftSum = 0;
+ *         int leftSuffix = Integer.MIN_VALUE;
+ *         for (int i = mid; i >= left; i--) {
+ *             currLeftSum += nums[i];
+ *             if (currLeftSum > leftSuffix){
+ *                 leftSuffix = currLeftSum;
+ *             }
+ *         }
+ *
+ *         // Calculate right longest prefix
+ *         int currRightSum = 0;
+ *         int rightPrefix = Integer.MIN_VALUE;
+ *         for (int i = mid+1; i <= right; i++) {
+ *             currRightSum += nums[i];
+ *             if (currRightSum > rightPrefix) {
+ *                 rightPrefix = currRightSum;
+ *             }
+ *         }
+ *
+ *         int bestMidSum = leftSuffix + rightPrefix;
+ *
+ *         return Math.max(bestLeftSum, Math.max(bestRightSum, bestMidSum));
+ *     }
+ *
+ * }
+ */
+/**
+ *  Solution 4 -- Brute Force, will timeout since O(n^2)
+ *  class Solution {
+ *     public int maxSubArray(int[] nums) {
+ *         // Brute Force
+ *         int maxSubArray = Integer.MIN_VALUE;
+ *         for (int i = 0; i < nums.length; i++) {
+ *             int currSubArray = 0;
+ *             for (int j = i; j < nums.length; j++) {
+ *                 currSubArray += nums[j];
+ *                 maxSubArray = Math.max(maxSubArray, currSubArray);
+ *             }
+ *         }
+ *         return maxSubArray;
+ *     }
+ * }
+ */

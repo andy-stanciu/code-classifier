@@ -1,0 +1,48 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Graph g = new Graph(numCourses);
+        for (int[] arr : prerequisites) g.addEdge(arr[1], arr[0]);
+        return g.topSort();
+    }
+
+    class Graph {
+
+        ArrayList<ArrayList<Integer>> graph;
+
+        int[] indegree;
+
+        int v;
+
+        Graph(int v) {
+            graph = new ArrayList<>(v);
+            this.v = v;
+            indegree = new int[v];
+            for (int i = 0; i < v; i++) graph.add(new ArrayList<>());
+        }
+
+        void addEdge(int u, int v) {
+            graph.get(u).add(v);
+            indegree[v]++;
+        }
+
+        boolean topSort() {
+            Queue<Integer> q = new LinkedList<>();
+            for (int i = 0; i < v; i++) {
+                if (indegree[i] == 0)
+                    q.offer(i);
+            }
+            int c = 0;
+            while (!q.isEmpty()) {
+                int t = q.poll();
+                c++;
+                for (int v : graph.get(t)) {
+                    indegree[v]--;
+                    if (indegree[v] == 0)
+                        q.offer(v);
+                }
+            }
+            return c == v;
+        }
+    }
+}

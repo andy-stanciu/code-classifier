@@ -1,0 +1,37 @@
+class Solution {
+
+    public int findKthLargest(int[] nums, int k) {
+        int[] arr = new int[10002];
+        int[] neg_arr = new int[10002];
+        int i, neg_flag = 0;
+        for (i = 0; i < nums.length; i++) {
+            if (nums[i] < 0) {
+                nums[i] -= 2 * nums[i];
+                neg_arr[nums[i]]++;
+                neg_flag = 1;
+            } else {
+                arr[nums[i]]++;
+            }
+        }
+        int count = 0;
+        for (i = 10000; i >= 0; i--) {
+            if (arr[i] > 0) {
+                count += arr[i];
+                if (count >= k) {
+                    return i;
+                }
+            }
+        }
+        if (neg_flag == 1) {
+            for (i = 0; i < 10001; i++) {
+                if (neg_arr[i] > 0) {
+                    count += neg_arr[i];
+                    if (count >= k) {
+                        return -i;
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+}

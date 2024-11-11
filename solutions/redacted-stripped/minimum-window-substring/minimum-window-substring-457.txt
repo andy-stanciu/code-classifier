@@ -1,0 +1,65 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        String ans = "";
+        int ansLen = Integer.MAX_VALUE;
+        int n = s.length(), m = t.length();
+        if (m > n)
+            return ans;
+        Map<Character, Integer> tt = new HashMap<>();
+        Map<Character, Integer> ss = new HashMap<>();
+        for (int i = 0; i < m; i++) {
+            char c = t.charAt(i);
+            if (!tt.containsKey(c))
+                tt.put(c, 1);
+            else
+                tt.put(c, tt.get(c) + 1);
+        }
+        int l = 0, r = 0;
+        int ansL = 0, ansR = 0;
+        while (r < n) {
+            int oldR = r;
+            while (r < n && !satisfy(tt, ss)) {
+                char c = s.charAt(r);
+                if (!ss.containsKey(c))
+                    ss.put(c, 1);
+                else
+                    ss.put(c, ss.get(c) + 1);
+                r++;
+            }
+            if (r - l < ansLen && satisfy(tt, ss)) {
+                ansL = l;
+                ansR = r + 1;
+                ansLen = r - l;
+            }
+            int oldL = l;
+            while (l < r && satisfy(tt, ss)) {
+                char c = s.charAt(l);
+                if (ss.get(c) == 1)
+                    ss.remove(c);
+                else
+                    ss.put(c, ss.get(c) - 1);
+                l++;
+            }
+            if (r - l < ansLen && oldL != l) {
+                ansL = l - 1;
+                ansR = r;
+                ansLen = r - l;
+            }
+        }
+        if (ansR != 0)
+            ans = s.substring(ansL, ansR);
+        return ans;
+    }
+
+    private static boolean satisfy(Map<Character, Integer> tgt, Map<Character, Integer> curr) {
+        for (Map.Entry<Character, Integer> x : tgt.entrySet()) {
+            char key = x.getKey();
+            int val = x.getValue();
+            if (curr.get(key) == null || curr.get(key) < val) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

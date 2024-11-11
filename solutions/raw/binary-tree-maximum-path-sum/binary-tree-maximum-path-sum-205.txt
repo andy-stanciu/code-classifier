@@ -1,0 +1,27 @@
+public class Solution {
+
+    private final int SUM_EMPTY_INDICATOR = Integer.MIN_VALUE;
+
+    private final int SUM_NEUTRAL_ELEMENT = 0;
+
+    public int maxPathSum(TreeNode root) {
+        int[] arrayWithResult = { SUM_EMPTY_INDICATOR };
+        postOrderDfs(root, arrayWithResult);
+        return arrayWithResult[0];
+    }
+
+    private int postOrderDfs(TreeNode node, int[] arrayWithResult) {
+        if (node == null) {
+            return SUM_EMPTY_INDICATOR;
+        }
+        int maxLeft = Math.max(SUM_NEUTRAL_ELEMENT, postOrderDfs(node.left, arrayWithResult));
+        int maxRight = Math.max(SUM_NEUTRAL_ELEMENT, postOrderDfs(node.right, arrayWithResult));
+        int nodeAsStartOrTerminationNodeScenario = Math.max(maxLeft, maxRight) + node.val;
+        int nodeAsLeftAndRightSubtreeJoinPointScenario = maxLeft + node.val + maxRight;
+        int maxPath = Math.max(nodeAsLeftAndRightSubtreeJoinPointScenario, nodeAsStartOrTerminationNodeScenario);
+        if (maxPath > arrayWithResult[0]) {
+            arrayWithResult[0] = maxPath;
+        }
+        return nodeAsStartOrTerminationNodeScenario;
+    }
+}

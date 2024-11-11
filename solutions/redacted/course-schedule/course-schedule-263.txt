@@ -1,0 +1,41 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        Map<Integer, Integer> indegree = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            graph.put(i, new ArrayList<>());
+            indegree.put(i, 0);
+        }
+        for (int[] prereq : prerequisites) {
+            int dependee = prereq[0];
+            int depender = prereq[1];
+            graph.get(depender).add(dependee);
+            indegree.put(dependee, indegree.get(dependee) + 1);
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (Map.Entry<Integer, Integer> entry : indegree.entrySet()) {
+            if (entry.getValue() == 0)
+                queue.add(entry.getKey());
+        }
+        List<Integer> ans = new ArrayList<>();
+        while (true) {
+            int size = queue.size();
+            while (size > 0) {
+                int key = queue.poll();
+                ans.add(key);
+                for (int neighbor : graph.get(key)) {
+                    indegree.put(neighbor, indegree.get(neighbor) - 1);
+                    if (indegree.get(neighbor) == 0) {
+                        queue.add(neighbor);
+                    }
+                }
+                size -= 1;
+            }
+            if (queue.size() == 0) {
+                break;
+            }
+        }
+        return ans.size() == param1;
+    }
+}

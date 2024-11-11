@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] pair : prerequisites) {
+            int var1 = pair[0];
+            int prerequisite = pair[1];
+            graph.get(var1).add(prerequisite);
+        }
+        int[] visited = new int[param1];
+        for (int var1 = 0; var1 < param1; var1++) {
+            if (hasCycle(var1, visited, graph)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean hasCycle(int var1, int[] visited, List<List<Integer>> graph) {
+        if (visited[var1] == 1) {
+            return true;
+        }
+        if (visited[var1] == 2) {
+            return false;
+        }
+        visited[var1] = 1;
+        for (int prerequisite : graph.get(var1)) {
+            if (hasCycle(prerequisite, visited, graph)) {
+                return true;
+            }
+        }
+        visited[var1] = 2;
+        return false;
+    }
+}

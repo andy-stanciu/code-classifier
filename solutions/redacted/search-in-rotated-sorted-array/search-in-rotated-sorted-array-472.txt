@@ -1,0 +1,52 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        int pivot = method3(nums);
+        // if pivot is not found means the array is not rotated just do simple binary search
+        if (pivot == -1) {
+            return method2(nums, target, 0, nums.length - 1);
+        }
+        // if pivot is found, you have found 2 asc sorted arrays
+        if (nums[pivot] == target) {
+            return pivot;
+        }
+        if (target >= nums[0]) {
+            return method2(nums, target, 0, pivot - 1);
+        }
+        return method2(nums, target, pivot + 1, nums.length - 1);
+    }
+
+    int method2(int[] arr, int target, int start, int end) {
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (arr[mid] == target) {
+                return mid;
+            } else if (arr[mid] > target) {
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return -1;
+    }
+
+    int method3(int[] arr) {
+        int start = 0;
+        int end = arr.length - 1;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (mid < end && arr[mid] > arr[mid + 1]) {
+                return mid;
+            }
+            if (mid > start && arr[mid] < arr[mid - 1]) {
+                return mid - 1;
+            }
+            if (arr[mid] >= arr[start]) {
+                start = mid + 1;
+            } else {
+                end = mid - 1;
+            }
+        }
+        return -1;
+    }
+}

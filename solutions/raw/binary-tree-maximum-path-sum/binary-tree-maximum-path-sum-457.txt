@@ -1,0 +1,49 @@
+class Solution {
+
+    /**
+     *        Intuition: Try to solve this similar to longest path
+     *                    Intead of length of path calculate weight (sum) of the path
+     *
+     *        A global variable for final result
+     *        Using post-order DFS,
+     *        At each node:
+     *            - Get left and right pathSum
+     *            - Update the value of global result variable with max of a path passing thru current node. Max path passing thru current node could be:
+     *                - just the current node
+     *                - current node + leftSum + rightSum
+     *                - current node + leftSum
+     *                - current node + rightSum
+     *            - return the max path optionally of either of the children (use similar case like above, but can\'t conside both children at the same time)
+     */
+    int maxSumResult = Integer.MIN_VALUE;
+
+    public int maxPathSum(TreeNode root) {
+        getMathPathValue(root);
+        return maxSumResult;
+    }
+
+    private int getMathPathValue(TreeNode current) {
+        if (current == null)
+            return 0;
+        int leftPathSum = getMathPathValue(current.left);
+        int rightPathSum = getMathPathValue(current.right);
+        // A path that passes thru current node could be max. And the nodes contributing to it maybe:
+        //      - current.val + leftSum + rightPathSum
+        //      - only current.val
+        //      - current + either childSum
+        int currentMax = (leftPathSum + rightPathSum + current.val);
+        currentMax = Math.max(current.val, currentMax);
+        currentMax = Math.max(currentMax, current.val + leftPathSum);
+        currentMax = Math.max(currentMax, current.val + rightPathSum);
+        // Update such a path if found as max
+        maxSumResult = Math.max(maxSumResult, currentMax);
+        // We need to return UP the max (sub) path found till now
+        //  Similar to above case, it could be only the current node (OR) it could be either children with current
+        //  NOTE: It cannot be both children, then it\'s NO LONGER A PATH but a branch
+        int onePathMax = current.val;
+        onePathMax = Math.max(onePathMax, current.val + rightPathSum);
+        onePathMax = Math.max(onePathMax, current.val + leftPathSum);
+        // This returned (sub) path will be used in upper node path sum calculation
+        return onePathMax;
+    }
+}

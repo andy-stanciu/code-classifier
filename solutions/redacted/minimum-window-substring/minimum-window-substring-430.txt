@@ -1,0 +1,76 @@
+class Solution {
+
+    // BruteForce Technique
+    // public String minWindow(String s, String t) {
+    //     int min=Integer.MAX_VALUE, totalCharToMatch=t.length();
+    //     int sLen= s.length();
+    //     String str="";
+    //     Map<Character, Integer> countMap = new HashMap();
+    //     for(char c: t.toCharArray()){
+    //         countMap.put(c, countMap.getOrDefault(c, 0)+1);
+    //     }
+    //     for(int i=0; i<sLen; i++ ){
+    //         int len=0;
+    //         Map<Character, Integer> count = new HashMap();
+    //         for(int j= i; j< sLen; j++){
+    //             char c = s.charAt(j);
+    //             if(countMap.containsKey(c)){
+    //                 if(!count.containsKey(c) || count.containsKey(c) && count.get(c)<countMap.get(c) ){
+    //                     count.put(c, count.getOrDefault(c,0)+1);
+    //                     len++;
+    //                 }else{
+    //                     count.put(c, count.getOrDefault(c,0)+1);
+    //                 }
+    //             }
+    //             if(len==totalCharToMatch){
+    //                 if(min > (j-i)){
+    //                     min = j-i;
+    //                     str = s.substring(i, j+1);
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return str;
+    // }
+    public String method1(String s, String t) {
+        int totalCharToMatch = t.length(), match = 0;
+        int sLen = s.length(), i = -1, j = -1;
+        String result = "";
+        Map<Character, Integer> countMap = new HashMap();
+        Map<Character, Integer> currentCount = new HashMap();
+        for (char c : t.toCharArray()) {
+            countMap.put(c, countMap.getOrDefault(c, 0) + 1);
+        }
+        while (true) {
+            boolean acquire = false, release = false;
+            //acquire
+            while (i < sLen - 1 && match < totalCharToMatch) {
+                acquire = true;
+                i++;
+                char c = s.charAt(i);
+                currentCount.put(c, currentCount.getOrDefault(c, 0) + 1);
+                if (currentCount.get(c) <= countMap.getOrDefault(c, 0))
+                    match++;
+            }
+            //release
+            while (match == totalCharToMatch && j < i) {
+                String tempAns = s.substring(j + 1, i + 1);
+                if (result.length() == 0 || result.length() > tempAns.length())
+                    result = tempAns;
+                release = true;
+                j++;
+                char c = s.charAt(j);
+                if (currentCount.get(c) == 1) {
+                    currentCount.remove(c);
+                } else {
+                    currentCount.put(c, currentCount.get(c) - 1);
+                }
+                if (currentCount.getOrDefault(c, 0) < countMap.getOrDefault(c, 0))
+                    match--;
+            }
+            if (release == false && acquire == false)
+                break;
+        }
+        return result;
+    }
+}

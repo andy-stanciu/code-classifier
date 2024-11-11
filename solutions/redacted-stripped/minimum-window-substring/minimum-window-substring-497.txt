@@ -1,0 +1,42 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        Map<Character, Integer> t_charCounts = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            t_charCounts.put(c, t_charCounts.getOrDefault(c, 0) + 1);
+        }
+        int left = 0;
+        int right = 0;
+        char[] arr = s.toCharArray();
+        int have = 0;
+        int need = t_charCounts.size();
+        int method1 = Integer.MAX_VALUE;
+        int var1 = -1;
+        int var2 = -1;
+        Map<Character, Integer> s_charCounts = new HashMap<>();
+        while (right < arr.length) {
+            int s_count = s_charCounts.getOrDefault(arr[right], 0) + 1;
+            s_charCounts.put(arr[right], s_count);
+            int t_count = t_charCounts.getOrDefault(arr[right], 0);
+            if (t_count > 0 && s_count == t_count) {
+                have++;
+            }
+            while (left <= right && have >= need) {
+                if (method1 > right - left + 1) {
+                    method1 = right - left + 1;
+                    var1 = left;
+                    var2 = right;
+                }
+                int s_left_count = s_charCounts.getOrDefault(arr[left], 0) - 1;
+                s_charCounts.put(arr[left], s_left_count);
+                int t_left_count = t_charCounts.getOrDefault(arr[left], 0);
+                left++;
+                if (t_left_count > 0 && s_left_count < t_left_count) {
+                    have--;
+                }
+            }
+            right++;
+        }
+        return var1 >= 0 ? s.substring(var1, var2 + 1) : "";
+    }
+}

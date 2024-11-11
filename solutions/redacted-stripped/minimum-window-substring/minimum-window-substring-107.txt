@@ -1,0 +1,48 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        HashMap<Character, Integer> temp = new HashMap<Character, Integer>();
+        int freq = 1;
+        for (int i = 0; i < t.length(); i++) {
+            freq = 1;
+            if (temp.get(t.charAt(i)) != null)
+                freq = temp.get(t.charAt(i)) + 1;
+            temp.put(t.charAt(i), freq);
+        }
+        int count = temp.size();
+        int left = 0;
+        int right = 0;
+        int l = 0;
+        int r = 0;
+        int minString = Integer.MAX_VALUE;
+        int m = 0;
+        String var1 = "";
+        while (right < s.length()) {
+            if (temp.get(s.charAt(right)) != null) {
+                freq = temp.get(s.charAt(right)) - 1;
+                temp.put(s.charAt(right), freq);
+                if (freq == 0)
+                    count--;
+            }
+            while (count == 0 && left <= right) {
+                m = right - left;
+                if (m < minString) {
+                    minString = m;
+                    l = left;
+                    r = right;
+                    var1 = s.substring(l, r + 1);
+                }
+                if (temp.get(s.charAt(left)) != null) {
+                    temp.put(s.charAt(left), temp.get(s.charAt(left)) + 1);
+                    if (temp.get(s.charAt(left)) == 1)
+                        count++;
+                }
+                left++;
+            }
+            right++;
+        }
+        return var1;
+    }
+}

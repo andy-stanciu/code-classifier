@@ -1,0 +1,43 @@
+class Solution {
+
+    // This is DFS solution, there was BFS solution in the submissions
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        // Create the adjacency list
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            adjList.get(prerequisite[1]).add(prerequisite[0]);
+        }
+        // 0 = unvisited, 1 = visiting, 2 = visited
+        int[] visited = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (hasCycle(i, adjList, visited)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean hasCycle(int param2, List<List<Integer>> adjList, int[] visited) {
+        if (visited[param2] == 1) {
+            // Cycle detected
+            return true;
+        }
+        if (visited[param2] == 2) {
+            // Already fully processed
+            return false;
+        }
+        // Mark the course as visiting
+        visited[param2] = 1;
+        for (int neighbor : adjList.get(param2)) {
+            if (hasCycle(neighbor, adjList, visited)) {
+                return true;
+            }
+        }
+        // Mark the course as visited
+        visited[param2] = 2;
+        return false;
+    }
+}

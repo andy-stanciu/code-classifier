@@ -1,0 +1,45 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        //create adjacency list
+        ArrayList<Integer>[] var1 = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            var1[i] = new ArrayList();
+        }
+        for (int[] p : prerequisites) {
+            var1[p[0]].add(p[1]);
+        }
+        boolean[] processing = new boolean[param1];
+        boolean[] checkedNoCycle = new boolean[param1];
+        for (int var2 = 0; var2 < param1; var2++) {
+            //check current course causing cycle
+            if (isCycle(var2, var1, processing, checkedNoCycle))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean isCycle(int var2, ArrayList<Integer>[] var1, boolean[] processing, boolean[] checkedNoCycle) {
+        //Is this course already passed cycle detection
+        if (checkedNoCycle[var2])
+            return false;
+        //currently processing means cycle detected
+        if (processing[var2])
+            return true;
+        //current courses is not dependent upon any other course
+        if (var1[var2].size() == 0)
+            return false;
+        //mark current course as processing
+        processing[var2] = true;
+        for (int neighbor : var1[var2]) {
+            if (isCycle(neighbor, var1, processing, checkedNoCycle)) {
+                return true;
+            }
+        }
+        //now processing of current current course is finished
+        processing[var2] = false;
+        //mark current course as checked and not found cycle
+        checkedNoCycle[var2] = true;
+        return false;
+    }
+}

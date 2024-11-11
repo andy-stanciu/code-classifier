@@ -1,0 +1,97 @@
+class Solution {
+
+    public void createAdj(int n, int[][] pre, ArrayList<ArrayList<Integer>> adj) {
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<Integer>());
+        }
+        for (int i = 0; i < pre.length; i++) {
+            int u = pre[i][0];
+            int v = pre[i][1];
+            adj.get(v).add(u);
+        }
+    }
+
+    public boolean isDirect(int i, ArrayList<ArrayList<Integer>> adj) {
+        for (int j : adj.get(i)) {
+            if (adj.get(j).contains(i)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasCycle(int i, ArrayList<ArrayList<Integer>> adj, boolean[] vis, boolean[] dfsVis, int parent) {
+        if (vis[i] == true) {
+            return true;
+        }
+        if (dfsVis[i] == true) {
+            return false;
+        }
+        vis[i] = true;
+        dfsVis[i] = true;
+        boolean ans = false;
+        for (int j : adj.get(i)) {
+            if (vis[j] == false) {
+                ans = hasCycle(j, adj, vis, dfsVis, i);
+                if (ans)
+                    return ans;
+            } else if (dfsVis[j] == true) {
+                return true;
+            }
+        }
+        vis[i] = false;
+        return false;
+    }
+
+    public void topo(int i, ArrayList<ArrayList<Integer>> adj, boolean[] vis, Stack<Integer> st) {
+        vis[i] = true;
+        for (int j : adj.get(i)) {
+            if (vis[j] == false) {
+                topo(j, adj, vis, st);
+            }
+        }
+        st.push(i);
+    }
+
+    public boolean canFinish(int n, int[][] pre) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        boolean[] vis = new boolean[n];
+        boolean[] dfsVis = new boolean[n];
+        createAdj(n, pre, adj);
+        boolean check = false;
+        for (int i = 0; i < n; i++) {
+            if (vis[i] == false) {
+                boolean direct = isDirect(i, adj);
+                boolean cycle = hasCycle(i, adj, vis, dfsVis, i);
+                if (direct == false && cycle == false) {
+                    check = true;
+                    break;
+                }
+            }
+        }
+        Stack<Integer> st = new Stack<>();
+        vis = new boolean[n];
+        if (check == false) {
+            return false;
+        }
+        if (check) {
+            for (int i = 0; i < n; i++) {
+                if (vis[i] == false) {
+                    topo(i, adj, vis, st);
+                }
+            }
+        }
+        HashMap<Integer, Integer> temp = new HashMap<>();
+        int x = 0;
+        while (st.size() > 0) {
+            temp.put(st.pop(), x++);
+        }
+        for (int i = 0; i < pre.length; i++) {
+            if (temp.get(pre[i][0]) == null || temp.get(pre[i][1]) == null) {
+            } else if (temp.get(pre[i][0]) <= temp.get(pre[i][1])) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

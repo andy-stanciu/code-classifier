@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean topo(ArrayList<ArrayList<Integer>> graph, int curr, boolean[] vis, boolean[] top) {
+        vis[curr] = true;
+        top[curr] = true;
+        for (int i = 0; i < graph.get(curr).size(); i++) {
+            int t = graph.get(curr).get(i);
+            if (top[t]) {
+                return true;
+            }
+            if (!vis[t]) {
+                if (topo(graph, t, vis, top))
+                    return true;
+            }
+        }
+        top[curr] = false;
+        return false;
+    }
+
+    public boolean canFinish(int n, int[][] pre) {
+        boolean[] vis = new boolean[n];
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int i = 0; i < pre.length; i++) {
+            graph.get(pre[i][1]).add(pre[i][0]);
+        }
+        for (int i = 0; i < graph.size(); i++) {
+            if (!vis[i]) {
+                if (topo(graph, i, vis, new boolean[n])) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}

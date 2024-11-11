@@ -1,0 +1,65 @@
+class Solution {
+
+    public List<String> generateParenthesis(int n) {
+        if (n < 1)
+            return Collections.emptyList();
+        var iterations = new LinkedList<Iteration>();
+        iterations.offer(new Iteration(n, n, ""));
+        var result = new ArrayList<String>();
+        final Consumer<Iteration> processIteration = (iteration) -> {
+            if (iteration.isFinal()) {
+                result.add(iteration.value);
+            } else {
+                iterations.offer(iteration);
+            }
+        };
+        while (!iterations.isEmpty()) {
+            var i = iterations.poll();
+            var nextIterations = i.getNextIterations();
+            nextIterations.left.ifPresent(processIteration::accept);
+            nextIterations.right.ifPresent(processIteration::accept);
+        }
+        return result;
+    }
+}
+
+class Iteration {
+
+    final int remainingLefts;
+
+    final int remainingRights;
+
+    final String value;
+
+    Iteration(final int rl, final int rr, final String v) {
+        remainingLefts = rl;
+        remainingRights = rr;
+        value = v;
+    }
+
+    Pair<Iteration> getNextIterations() {
+        var nextIterations = new Pair<Iteration>();
+        if (remainingLefts > 0) {
+            nextIterations.left = Optional.of(new Iteration(remainingLefts - 1, remainingRights, value + "("));
+        }
+        if (remainingLefts < remainingRights) {
+            nextIterations.right = Optional.of(new Iteration(remainingLefts, remainingRights - 1, value + ")"));
+        }
+        return nextIterations;
+    }
+
+    String getResult() {
+        return value;
+    }
+
+    boolean isFinal() {
+        return remainingLefts == 0 && remainingRights == 0;
+    }
+}
+
+public class Pair<T> {
+
+    Optional<T> left = Optional.empty();
+
+    Optional<T> right = Optional.empty();
+}

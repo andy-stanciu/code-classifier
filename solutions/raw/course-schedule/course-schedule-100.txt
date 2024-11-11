@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        int[] degree = new int[numCourses];
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adjList.add(i, new ArrayList<>());
+        }
+        for (int[] pres : prerequisites) {
+            int course = pres[1];
+            int pre = pres[0];
+            adjList.get(pre).add(course);
+            // increase degree on course
+            degree[course]++;
+        }
+        // Initialize and process the queue
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (degree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        int count = 0;
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            count++;
+            for (int nei : adjList.get(current)) {
+                degree[nei]--;
+                if (degree[nei] == 0) {
+                    queue.offer(nei);
+                }
+            }
+        }
+        return count == numCourses;
+    }
+}

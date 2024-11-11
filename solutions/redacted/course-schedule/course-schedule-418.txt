@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> preReq = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            preReq.put(i, new ArrayList<>());
+        }
+        boolean[] visited = new boolean[param1];
+        Set<Integer> var1 = new HashSet<>();
+        for (int i = 0; i < prerequisites.length; i++) {
+            preReq.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        for (Integer var2 : preReq.keySet()) {
+            visited = new boolean[param1];
+            if (cannotPass(var2, preReq, visited, var1))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean cannotPass(Integer var2, Map<Integer, List<Integer>> preReq, boolean[] visited, Set<Integer> var1) {
+        if (visited[var2]) {
+            return true;
+        }
+        visited[var2] = true;
+        for (Integer n : preReq.get(var2)) {
+            if (!var1.contains(n)) {
+                if (cannotPass(n, preReq, visited, var1)) {
+                    return true;
+                }
+            }
+        }
+        var1.add(var2);
+        return false;
+    }
+}

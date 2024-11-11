@@ -1,0 +1,46 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] charT = new int[128];
+        int[] charS = new int[128];
+        int left = 0;
+        int right = 0;
+        if (t.length() > s.length() || s.equals("") || t.equals(""))
+            return "";
+        if (s.equals(t))
+            return s;
+        for (int i = 0; i < t.length(); i++) {
+            charT[t.charAt(i)]++;
+        }
+        String ans = "";
+        int maxLength = Integer.MAX_VALUE;
+        while (right < s.length()) {
+            charS[s.charAt(right)]++;
+            boolean flag = false;
+            while (left <= right && Contains(charS, charT)) {
+                charS[s.charAt(left)]--;
+                left++;
+                flag = true;
+            }
+            if (flag) {
+                if (maxLength > right - left + 2) {
+                    System.out.println(left + " " + right);
+                    ans = s.substring(left - 1, right + 1);
+                    maxLength = Math.min(maxLength, right - left + 2);
+                }
+            }
+            right++;
+        }
+        return ans;
+    }
+
+    public boolean Contains(int[] a, int[] b) {
+        // System.out.println("inside contains");
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] < b[i])
+                return false;
+        }
+        // System.out.println(" contains true");
+        return true;
+    }
+}

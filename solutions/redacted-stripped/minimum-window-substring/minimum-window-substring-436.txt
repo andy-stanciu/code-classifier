@@ -1,0 +1,42 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] targetCount = new int[256];
+        int[] var1 = new int[256];
+        int left = 0;
+        int right = 0;
+        int required = 0;
+        for (char c : t.toCharArray()) {
+            targetCount[c]++;
+            if (targetCount[c] == 1) {
+                required++;
+            }
+        }
+        int formed = 0;
+        int method1 = Integer.MAX_VALUE;
+        int var2 = 0;
+        int startIndex = 0;
+        while (right < s.length()) {
+            char rc = s.charAt(right);
+            var1[rc]++;
+            if (var1[rc] == targetCount[rc]) {
+                formed++;
+            }
+            while (left <= right && formed == required) {
+                var2 = right - left + 1;
+                if (var2 < method1) {
+                    method1 = var2;
+                    startIndex = left;
+                }
+                char lc = s.charAt(left);
+                var1[lc]--;
+                if (var1[lc] < targetCount[lc]) {
+                    formed--;
+                }
+                left++;
+            }
+            right++;
+        }
+        return method1 == Integer.MAX_VALUE ? "" : s.substring(startIndex, startIndex + method1);
+    }
+}

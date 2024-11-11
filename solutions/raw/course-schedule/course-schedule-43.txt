@@ -1,0 +1,42 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        //create a graph
+        List<Integer>[] graph = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new ArrayList();
+        }
+        for (int[] arr : prerequisites) {
+            graph[arr[1]].add(arr[0]);
+        }
+        //when we find any visited node to be true doing dfs we can,
+        //it might be a back edge to it\'s ancestor i.e. a cycle or
+        //it might be another node hence no cycle. To check if it is
+        //ancestor instack is used to track all nodes in stack during dfs.
+        boolean[] visited = new boolean[numCourses];
+        boolean[] instack = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (isCycle(i, visited, graph, instack)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    boolean isCycle(int vertex, boolean[] visited, List<Integer>[] graph, boolean[] instack) {
+        if (instack[vertex] == true) {
+            return true;
+        }
+        if (visited[vertex] == true) {
+            return false;
+        }
+        visited[vertex] = true;
+        instack[vertex] = true;
+        for (int child : graph[vertex]) {
+            if (isCycle(child, visited, graph, instack))
+                return true;
+        }
+        instack[vertex] = false;
+        return false;
+    }
+}

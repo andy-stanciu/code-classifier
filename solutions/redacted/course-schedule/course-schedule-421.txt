@@ -1,0 +1,41 @@
+class Solution {
+
+    Map<Integer, List<Integer>> adjacencyMap = null;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        adjacencyMap = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            adjacencyMap.put(i, new ArrayList<>());
+        }
+        for (int j = 0; j < prerequisites.length; j++) {
+            List<Integer> list = adjacencyMap.get(prerequisites[j][0]);
+            list.add(prerequisites[j][1]);
+        }
+        for (int k = 0; k < param1; k++) {
+            if (!dfs(k, new HashSet<>())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean dfs(int param2, Set<Integer> visited) {
+        if (visited.contains(param2)) {
+            return false;
+        }
+        visited.add(param2);
+        List<Integer> list = adjacencyMap.get(param2);
+        if (list.isEmpty()) {
+            return true;
+        }
+        for (Integer c : list) {
+            if (!dfs(c, visited)) {
+                return false;
+            }
+            visited.remove(c);
+        }
+        //set empty list
+        adjacencyMap.put(param2, new ArrayList<>());
+        return true;
+    }
+}

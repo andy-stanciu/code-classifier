@@ -1,0 +1,42 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        if (param1 == 0 || prerequisites.length == 0)
+            return true;
+        ArrayList[] graph = new ArrayList[param1];
+        //populating the graph
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<Integer>();
+        }
+        //populating the prerequisites
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph[prerequisites[i][1]].add(prerequisites[i][0]);
+        }
+        int[] visited = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!dfs(i, graph, visited)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(int param2, ArrayList[] children, int[] visited) {
+        // System.out.println("course"+course+"  visited[course]"+visited[course]);
+        if (visited[param2] == 1) {
+            return false;
+        }
+        visited[param2] = 1;
+        for (int i = 0; i < children[param2].size(); i++) {
+            int val = (int) children[param2].get(i);
+            // System.out.println("val"+val+"  visited[val]"+visited[val]);
+            if (visited[val] == 1)
+                return false;
+            if (visited[val] == 0 && !dfs(val, children, visited)) {
+                return false;
+            }
+        }
+        visited[param2] = 2;
+        return true;
+    }
+}

@@ -1,0 +1,55 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        // create a hashmap to store the frequencies of the characters in t
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        // initialize the left and right pointers of the window
+        int left = 0;
+        int right = 0;
+        // initialize the count of the matched characters
+        int count = 0;
+        // initialize the length and start index of the minimum window
+        int minLen = Integer.MAX_VALUE;
+        int minStart = 0;
+        // while the right pointer is within the string s
+        while (right < s.length()) {
+            // get the current character at the right pointer
+            char c = s.charAt(right);
+            // if the character is in the hashmap, decrement its frequency
+            if (map.containsKey(c)) {
+                map.put(c, map.get(c) - 1);
+                // if the frequency becomes zero, increase the count
+                if (map.get(c) == 0) {
+                    count++;
+                }
+            }
+            // move the right pointer to the next position
+            right++;
+            // while the count is equal to the size of the hashmap, meaning we have found a valid window
+            while (count == map.size()) {
+                // update the minimum window if needed
+                if (right - left < minLen) {
+                    minLen = right - left;
+                    minStart = left;
+                }
+                // get the current character at the left pointer
+                char d = s.charAt(left);
+                // if the character is in the hashmap, increment its frequency
+                if (map.containsKey(d)) {
+                    map.put(d, map.get(d) + 1);
+                    // if the frequency becomes positive, decrease the count
+                    if (map.get(d) > 0) {
+                        count--;
+                    }
+                }
+                // move the left pointer to the next position
+                left++;
+            }
+        }
+        // return the minimum window or an empty string if not found
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart + minLen);
+    }
+}

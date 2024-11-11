@@ -1,0 +1,31 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int[] mapped = new int[123];
+        int[] cache = new int[123];
+        for (char c : t.toCharArray()) {
+            mapped[c]++;
+        }
+        int left = 0, right = 0, counter = 0, minL = s.length() + 1, start = 0;
+        char[] cs = s.toCharArray();
+        while (right < s.length()) {
+            char temp = cs[right++];
+            cache[temp]++;
+            if (mapped[temp] > 0 && cache[temp] <= mapped[temp]) {
+                counter++;
+            }
+            while (left < right && counter == t.length()) {
+                if ((right - left) < minL) {
+                    start = left;
+                    minL = right - left;
+                }
+                char t1 = cs[left++];
+                cache[t1]--;
+                if (mapped[t1] > 0 && cache[t1] < mapped[t1]) {
+                    counter--;
+                }
+            }
+        }
+        return minL == s.length() + 1 ? "" : s.substring(start, start + minL);
+    }
+}

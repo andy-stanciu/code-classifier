@@ -1,0 +1,33 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> tCharsToCount = new HashMap<>();
+        for (char ch : t.toCharArray()) {
+            tCharsToCount.put(ch, tCharsToCount.getOrDefault(ch, 0) + 1);
+        }
+        int var1 = 0;
+        int var2 = Integer.MAX_VALUE;
+        int unmatched = tCharsToCount.size();
+        int left = 0;
+        for (int right = 0; right < s.length(); right++) {
+            char rightCh = s.charAt(right);
+            tCharsToCount.put(rightCh, tCharsToCount.getOrDefault(rightCh, 0) - 1);
+            if (tCharsToCount.get(rightCh) == 0) {
+                tCharsToCount.remove(rightCh);
+                unmatched--;
+            }
+            while (unmatched == 0) {
+                if (var2 > right - left + 1) {
+                    var2 = right - left + 1;
+                    var1 = left;
+                }
+                char leftCh = s.charAt(left);
+                tCharsToCount.put(leftCh, tCharsToCount.getOrDefault(leftCh, 0) + 1);
+                if (tCharsToCount.get(leftCh) > 0)
+                    unmatched++;
+                left++;
+            }
+        }
+        return (var2 == Integer.MAX_VALUE) ? "" : s.substring(var1, var1 + var2);
+    }
+}

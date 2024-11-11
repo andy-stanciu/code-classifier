@@ -1,0 +1,70 @@
+class Solution {
+
+    class Counter {
+
+        int counter;
+
+        public Counter(int init) {
+            counter = init;
+        }
+    }
+
+    class Cource {
+
+        int prer = 0;
+
+        List<Cource> dependent = null;
+
+        Counter counter;
+
+        Integer i;
+
+        public Cource(Counter counter, Integer i) {
+            this.counter = counter;
+            this.i = i;
+        }
+
+        public void addDependant(Cource c) {
+            if (dependent == null)
+                dependent = new ArrayList<>();
+            dependent.add(c);
+            c.incDep();
+        }
+
+        public void decAll() {
+            if (dependent != null) {
+                for (Cource c : dependent) c.decDep();
+            }
+        }
+
+        public void incDep() {
+            prer++;
+        }
+
+        public void decDep() {
+            prer--;
+            counter.counter--;
+            if (prer == 0) {
+                prer = -1;
+                decAll();
+            }
+        }
+    }
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        Cource[] var1 = new Cource[param1];
+        Counter counter = new Counter(prerequisites.length);
+        for (int i = 0; i < param1; i++) {
+            var1[i] = new Cource(counter, i);
+        }
+        for (int[] dep : prerequisites) {
+            var1[dep[1]].addDependant(var1[dep[0]]);
+        }
+        for (Cource c : var1) {
+            if (c.prer == 0) {
+                c.decAll();
+            }
+        }
+        return counter.counter == 0;
+    }
+}

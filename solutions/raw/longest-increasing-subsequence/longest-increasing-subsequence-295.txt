@@ -1,0 +1,35 @@
+class Solution {
+
+    public int lengthOfLIS(int[] a) {
+        int n = a.length;
+        int[] b = new int[n];
+        b[0] = a[0];
+        int idx = 1;
+        for (int i = 1; i < n; i++) {
+            if (a[i] < b[0]) {
+                b[0] = a[i];
+            } else if (a[i] > b[idx - 1]) {
+                b[idx] = a[i];
+                idx++;
+            } else {
+                int pos = bs(b, 0, idx - 1, a[i]);
+                b[pos] = a[i];
+            }
+        }
+        return idx;
+    }
+
+    static int bs(int[] a, int l, int h, int k) {
+        while (l < h) {
+            int m = l + (h - l) / 2;
+            if (a[m] == k) {
+                return m;
+            } else if (a[m] < k) {
+                l = m + 1;
+            } else {
+                h = m;
+            }
+        }
+        return l;
+    }
+}

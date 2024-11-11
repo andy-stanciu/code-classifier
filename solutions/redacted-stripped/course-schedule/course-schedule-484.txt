@@ -1,0 +1,48 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        if (prerequisites == null || prerequisites.length == 0)
+            return true;
+        Set<Integer> visited = new HashSet<>();
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int[] pair : prerequisites) {
+            map.putIfAbsent(pair[0], new ArrayList<Integer>());
+            map.get(pair[0]).add(pair[1]);
+        }
+        for (int startVertex : map.keySet()) {
+            visited = new HashSet<>();
+            if (!dfs(map, startVertex, visited)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    Map<Integer, Boolean> dp = new HashMap<>();
+
+    boolean dfs(Map<Integer, List<Integer>> in, int curr, Set<Integer> visited) {
+        if (dp.containsKey(curr)) {
+            return dp.get(curr);
+        }
+        if (visited.contains(curr)) {
+            dp.put(curr, false);
+            return false;
+        }
+        visited.add(curr);
+        if (!in.containsKey(curr)) {
+            visited.remove(curr);
+            dp.put(curr, true);
+            return true;
+        }
+        List<Integer> adj = in.get(curr);
+        for (int next : adj) {
+            if (!dfs(in, next, visited)) {
+                dp.put(curr, false);
+                return false;
+            }
+        }
+        visited.remove(curr);
+        dp.put(curr, true);
+        return true;
+    }
+}

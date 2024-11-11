@@ -1,0 +1,57 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    int var1 = Integer.MIN_VALUE;
+
+    public int var1(TreeNode root) {
+        if (root == null)
+            return 0;
+        if (root.left == null && root.right == null)
+            return root.val;
+        method1(root);
+        return Math.max(var1, method1(root));
+    }
+
+    public int method1(TreeNode root) {
+        // Base case
+        if (root == null)
+            return 0;
+        if (root.left == null && root.right == null)
+            return root.val;
+        // Recursion and processing
+        int var2 = method1(root.right);
+        int var3 = method1(root.left);
+        int var4 = var2 + var3 + root.val;
+        // Handle for negative value cases
+        if (root.right == null) {
+            var1 = Math.max(var3, Math.max(var4, var1));
+        } else if (root.left == null) {
+            var1 = Math.max(var2, Math.max(var4, var1));
+        } else if (root.right != null && root.left != null) {
+            var1 = Math.max(Math.max(var2, var3), Math.max(var4, var1));
+        }
+        var1 = Math.max(var1, root.val);
+        // Similar way,handle for returned value
+        if (root.right == null) {
+            return Math.max((var3 + root.val), root.val);
+        }
+        if (root.left == null) {
+            return Math.max((var2 + root.val), root.val);
+        }
+        return Math.max(Math.max(var2 + root.val, var3 + root.val), root.val);
+    }
+}

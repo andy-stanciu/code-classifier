@@ -1,0 +1,40 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if (prerequisites.length == 0) {
+            return true;
+        }
+        Map<Integer, Set<Integer>> map = new HashMap<>();
+        for (int[] prerequisite : prerequisites) {
+            int course = prerequisite[0];
+            int requirement = prerequisite[1];
+            map.computeIfAbsent(course, k -> new HashSet<>()).add(requirement);
+        }
+        for (int i = 0; i < numCourses; i++) {
+            Set<Integer> seen = new HashSet<>();
+            boolean resolved = resolve(map, i, seen);
+            if (!resolved) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean resolve(Map<Integer, Set<Integer>> map, int course, Set<Integer> seen) {
+        Set<Integer> dependences = map.get(course);
+        if (dependences == null) {
+            return true;
+        }
+        if (!seen.add(course)) {
+            return false;
+        }
+        for (int dependency : dependences) {
+            boolean resolved = resolve(map, dependency, seen);
+            if (!resolved) {
+                return false;
+            }
+        }
+        map.remove(course);
+        return true;
+    }
+}

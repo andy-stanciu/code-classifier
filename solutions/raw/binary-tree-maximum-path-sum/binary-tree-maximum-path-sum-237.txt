@@ -1,0 +1,45 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    int globalMax = Integer.MIN_VALUE;
+
+    public int maxPathSum(TreeNode root) {
+        rec(root);
+        return globalMax;
+    }
+
+    private int rec(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int left = rec(root.left);
+        int right = rec(root.right);
+        int val = root.val;
+        int leftPath = val + left;
+        int rightPath = val + right;
+        int completePath = val + left + right;
+        // Until this node, lets find Max (val, val+left, val+right, val+right+left)
+        int currPath = Math.max(val, leftPath);
+        currPath = Math.max(currPath, rightPath);
+        currPath = Math.max(currPath, completePath);
+        globalMax = Math.max(currPath, globalMax);
+        // We can return only leftPath or rightPath because currnode can be part of only one path.
+        int returnPath = Math.max(val, leftPath);
+        returnPath = Math.max(returnPath, rightPath);
+        return returnPath;
+    }
+}

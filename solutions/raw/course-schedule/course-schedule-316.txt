@@ -1,0 +1,43 @@
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if (prerequisites.length == 0) {
+            return true;
+        }
+        Map<Integer, Set<Integer>> map = new HashMap();
+        for (int[] pre : prerequisites) {
+            int first = pre[0];
+            int second = pre[1];
+            map.putIfAbsent(first, new HashSet());
+            map.get(first).add(second);
+        }
+        Set<Integer> starts = map.keySet();
+        while (!starts.isEmpty()) {
+            int next = starts.iterator().next();
+            if (!canFinish(map, starts, new HashSet(), next)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean canFinish(Map<Integer, Set<Integer>> map, Set<Integer> starts, Set<Integer> visited, int i) {
+        if (!map.containsKey(i)) {
+            starts.remove(i);
+            return true;
+        }
+        if (visited.contains(i)) {
+            return false;
+        }
+        visited.add(i);
+        Set<Integer> nexts = map.get(i);
+        for (int next : nexts) {
+            if (!canFinish(map, starts, visited, next)) {
+                return false;
+            }
+        }
+        visited.remove(i);
+        starts.remove(i);
+        return true;
+    }
+}

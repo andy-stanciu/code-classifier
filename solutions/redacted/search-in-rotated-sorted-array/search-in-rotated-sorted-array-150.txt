@@ -1,0 +1,56 @@
+class Solution {
+
+    int[] arr;
+
+    public int method1(int[] nums, int target) {
+        arr = nums;
+        if (nums.length == 1) {
+            if (target == nums[0])
+                return 0;
+            else
+                return -1;
+        }
+        int len = nums.length - 1;
+        int pivotele = pivot(0, len);
+        if (target >= nums[pivotele] && target <= nums[len])
+            return method2(pivotele, len, target);
+        else
+            return method2(0, pivotele - 1, target);
+    }
+
+    private int method2(int low, int high, int target) {
+        if (low == high) {
+            if (arr[low] == target)
+                return low;
+            else
+                return -1;
+        }
+        if (high < low)
+            return -1;
+        int mid = (high + low) / 2;
+        if (target == arr[mid])
+            return mid;
+        if (arr[low] <= target && target < arr[mid])
+            return method2(low, mid - 1, target);
+        else if (arr[high] >= target && target > arr[mid])
+            return method2(mid + 1, high, target);
+        else
+            return -1;
+    }
+
+    public int pivot(int low, int high) {
+        if (high - low == 1) {
+            if (arr[high] > arr[low])
+                return low;
+            else
+                return high;
+        }
+        int mid = (high + low) / 2;
+        if (arr[low] > arr[mid])
+            return pivot(low, mid);
+        else if (arr[high] < arr[mid])
+            return pivot(mid, high);
+        else
+            return arr[low];
+    }
+}

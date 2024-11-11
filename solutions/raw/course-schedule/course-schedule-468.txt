@@ -1,0 +1,48 @@
+class Solution {
+
+    boolean res = true;
+
+    boolean[] visited;
+
+    boolean[] onpath;
+
+    public boolean canFinish(int numCourses, int[][] pairs) {
+        //dfs
+        visited = new boolean[numCourses];
+        onpath = new boolean[numCourses];
+        HashMap<Integer, List<Integer>> adj = new HashMap<>();
+        for (int[] pair : pairs) {
+            if (!adj.containsKey(pair[1])) {
+                adj.put(pair[1], new ArrayList<>());
+            }
+            adj.get(pair[1]).add(pair[0]);
+        }
+        //need loop as courses may not all conected
+        for (int i = 0; i < numCourses; ++i) {
+            if (visited[i])
+                continue;
+            dfs(i, adj);
+        }
+        return res;
+    }
+
+    private void dfs(int curr, HashMap<Integer, List<Integer>> adj) {
+        //base case: if has cycle, can not complete all
+        if (onpath[curr]) {
+            res = false;
+            return;
+        }
+        if (visited[curr])
+            return;
+        //check current node
+        visited[curr] = true;
+        onpath[curr] = true;
+        //check nexts
+        if (adj.containsKey(curr)) {
+            for (int next : adj.get(curr)) {
+                dfs(next, adj);
+            }
+        }
+        onpath[curr] = false;
+    }
+}

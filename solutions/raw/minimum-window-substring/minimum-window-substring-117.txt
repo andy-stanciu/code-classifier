@@ -1,0 +1,47 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        String minSubstring = "";
+        int lengthOfS = s.length();
+        int lengthOfT = t.length();
+        if (lengthOfT > lengthOfS)
+            return minSubstring;
+        Map<Character, Integer> tMap = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            tMap.put(c, tMap.getOrDefault(c, 0) + 1);
+        }
+        // start the sliding window
+        Map<Character, Integer> seen = new HashMap<>();
+        int countOfSeenChars = 0;
+        int left = 0;
+        int right = 0;
+        int minLength = Integer.MAX_VALUE;
+        while (right < lengthOfS) {
+            char letter = s.charAt(right);
+            if (tMap.containsKey(letter)) {
+                seen.put(letter, seen.getOrDefault(letter, 0) + 1);
+                if (seen.get(letter) <= tMap.get(letter)) {
+                    countOfSeenChars++;
+                }
+            }
+            // shrink the sliding window
+            while (countOfSeenChars == lengthOfT) {
+                // update minSubstring
+                if (right - left + 1 < minLength) {
+                    minLength = right - left + 1;
+                    minSubstring = s.substring(left, right + 1);
+                }
+                char leftChar = s.charAt(left);
+                if (tMap.containsKey(leftChar)) {
+                    seen.put(leftChar, seen.get(leftChar) - 1);
+                    if (seen.get(leftChar) < tMap.get(leftChar)) {
+                        countOfSeenChars--;
+                    }
+                }
+                left++;
+            }
+            right++;
+        }
+        return minSubstring;
+    }
+}

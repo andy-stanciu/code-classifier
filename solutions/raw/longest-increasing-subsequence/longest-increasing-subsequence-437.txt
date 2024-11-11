@@ -1,0 +1,75 @@
+class Solution {
+
+    // public int solve(int idx, int prev, int[] nums, int[][] mem) {
+    // // base case
+    // if (idx == nums.length) {
+    // return 0;
+    // }
+    // if (mem[idx][prev + 1] != -1) {
+    // return mem[idx][prev + 1];
+    // }
+    // // nottake
+    // int nottake = solve(idx + 1, prev, nums, mem);
+    // // take
+    // int take = Integer.MIN_VALUE;
+    // if (prev == -1 || nums[idx] > nums[prev]) {
+    // take = 1 + solve(idx + 1, idx, nums, mem);
+    // }
+    // return (mem[idx][prev + 1] = Math.max(take, nottake));
+    // }
+    // public int lengthOfLIS(int[] nums) {
+    // int[][] mem = new int[nums.length][nums.length + 1];
+    // for (int i = 0; i < mem.length; i++) {
+    // Arrays.fill(mem[i], -1);
+    // }
+    // return solve(0, -1, nums, mem);
+    // }
+    // public int lengthOfLIS(int[] nums) {
+    // int[][] dp = new int[nums.length+1][nums.length + 1];
+    // for (int idx = nums.length - 1; idx >= 0; idx--) {
+    // for (int prev = idx - 1; prev >= -1; prev--) {
+    // // nottake
+    // int nottake = dp[idx + 1][prev+1];
+    // // take
+    // int take = Integer.MIN_VALUE;
+    // if (prev == -1 || nums[idx] > nums[prev]) {
+    // take = 1 + dp[idx + 1][idx+1];
+    // }
+    // dp[idx][prev + 1] = Math.max(take, nottake);
+    // }
+    // }
+    // return dp[0][0];
+    // }
+    // public int lengthOfLIS(int[] nums) {
+    //     int[] dp = new int[nums.length];
+    //     Arrays.fill(dp, 1);
+    //     int ans = 1;
+    //     for (int i = 1; i < dp.length; i++) {
+    //         for (int j = 0; j < i; j++) {
+    //             if (nums[j] < nums[i]) {
+    //                 dp[i] = Math.max(dp[i], dp[j] + 1);
+    //                 ans = Math.max(ans, dp[i]);
+    //             }
+    //         }
+    //     }
+    //     return ans;
+    // }
+    public int lengthOfLIS(int[] nums) {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(nums[0]);
+        int ans = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] > list.get(list.size() - 1)) {
+                list.add(nums[i]);
+                ans++;
+            } else {
+                int ind = Collections.binarySearch(list, nums[i]);
+                if (ind < 0) {
+                    ind = -ind - 1;
+                }
+                list.set(ind, nums[i]);
+            }
+        }
+        return ans;
+    }
+}

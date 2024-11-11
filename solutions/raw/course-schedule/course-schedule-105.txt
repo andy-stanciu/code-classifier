@@ -1,0 +1,66 @@
+/**
+ * Kahn\'s algorithm is a method for topological sorting of a directed acyclic graph (DAG). Topological sorting is a linear ordering of vertices such that for every directed edge
+ * \\U0001d462\u2192\\U0001d463   u\u2192v, vertex \\U0001d462  u comes before vertex \\U0001d463  v in the ordering. Kahn\'s algorithm is particularly useful in scenarios where you need to resolve dependencies, such as course prerequisites.
+ *
+ * How Kahn\'s Algorithm Works
+ * In-Degree Calculation:
+ *
+ * Start by calculating the in-degree (the number of incoming edges) for each vertex in the graph. This helps identify which vertices have no prerequisites.
+ * Initialize Queue:
+ *
+ * Create a queue and enqueue all vertices with an in-degree of 0 (these are the courses that can be taken immediately).
+ * Process the Queue:
+ *
+ * While the queue is not empty:
+ * Dequeue a vertex, which is part of the topological order.
+ * For each outgoing edge from this vertex to its neighbors:
+ * Decrease the in-degree of the neighbor by 1 (indicating that one of its prerequisites has been completed).
+ * If the in-degree of a neighbor becomes 0, enqueue it.
+ * Check for Completion:
+ *
+ * Keep a count of how many vertices (courses) have been processed. After processing, if this count equals the total number of vertices, a valid topological sort exists, and thus all courses can be completed. If not, it indicates a cycle, meaning not all courses can be taken.
+ */
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if (numCourses == 0 || prerequisites.length == 0)
+            return true;
+        Map<Integer, List<Integer>> adjList = new HashMap<>();
+        int[] inDegree = new int[numCourses];
+        /**
+         *            Construct an adjacency list with prerequisite as keys.
+         *            Use inDegree to see how many courses we need to complete for a course ar index position of inDegree
+         */
+        for (int[] prerequisite : prerequisites) {
+            int course = prerequisite[0];
+            int preReq = prerequisite[1];
+            if (!adjList.containsKey(preReq)) {
+                adjList.put(preReq, new ArrayList<>());
+            }
+            adjList.get(preReq).add(course);
+            // adding all the prerequisite count
+            inDegree[course]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree[i] == 0) {
+                // Adding all the courses without prerequisites to the queue first
+                queue.offer(i);
+            }
+        }
+        int coursesComplete = 0;
+        while (!queue.isEmpty()) {
+            int course = queue.poll();
+            coursesComplete++;
+            if (adjList.containsKey(course)) {
+                for (int neighbor : adjList.get(course)) {
+                    inDegree[neighbor]--;
+                    if (inDegree[neighbor] == 0) {
+                        queue.offer(neighbor);
+                    }
+                }
+            }
+        }
+        return coursesComplete == numCourses;
+    }
+}

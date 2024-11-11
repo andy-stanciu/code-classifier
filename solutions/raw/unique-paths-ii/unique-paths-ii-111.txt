@@ -1,0 +1,27 @@
+class Solution {
+
+    public int helper(int m, int n, int[][] memo, int[][] obstacleGrid) {
+        //this condition should give in the first \'if\' condition as if we dont give it here if the i/p -> [[1]], then ArrayBoundException hits ,also we should give the condition "m >= 0 && n >= 0 "  as to bypass the same exception for the next recursive call "int left = helper(m, n - 1, memo, obstacleGrid);"
+        if (m >= 0 && n >= 0 && obstacleGrid[m][n] == 1)
+            return 0;
+        if (m == 0 && n == 0)
+            return 1;
+        if (m < 0 || n < 0)
+            return 0;
+        if (memo[m][n] != -1)
+            return memo[m][n];
+        int left = helper(m, n - 1, memo, obstacleGrid);
+        int upper = helper(m - 1, n, memo, obstacleGrid);
+        return memo[m][n] = left + upper;
+    }
+
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        int[][] memo = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            Arrays.fill(memo[i], -1);
+        }
+        return helper(m - 1, n - 1, memo, obstacleGrid);
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        Map<Character, Integer> countMap = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            int chCnt = countMap.containsKey(t.charAt(i)) ? countMap.get(t.charAt(i)) : 0;
+            countMap.put(t.charAt(i), chCnt + 1);
+        }
+        Queue<Integer> indexQueue = new LinkedList<>();
+        int minLen = Integer.MAX_VALUE, tCount = 0;
+        String ans = "";
+        for (int i = 0; i < s.length(); i++) {
+            if (countMap.containsKey(s.charAt(i))) {
+                indexQueue.add(i);
+                int chCnt = countMap.get(s.charAt(i));
+                countMap.put(s.charAt(i), chCnt - 1);
+                if (countMap.get(s.charAt(i)) >= 0) {
+                    tCount += 1;
+                }
+            }
+            if (tCount == t.length()) {
+                int stIdx = indexQueue.poll();
+                while (countMap.get(s.charAt(stIdx)) < 0) {
+                    int newCnt = countMap.get(s.charAt(stIdx)) + 1;
+                    countMap.put(s.charAt(stIdx), newCnt);
+                    stIdx = indexQueue.poll();
+                }
+                int chCnt = countMap.get(s.charAt(stIdx));
+                countMap.put(s.charAt(stIdx), chCnt + 1);
+                tCount -= 1;
+                int len = i + 1 - stIdx;
+                if (len < minLen) {
+                    minLen = len;
+                    ans = s.substring(stIdx, i + 1);
+                }
+            }
+        }
+        return ans;
+    }
+}

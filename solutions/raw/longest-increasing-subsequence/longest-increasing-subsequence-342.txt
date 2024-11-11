@@ -1,0 +1,27 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        // DP: T:O(N*logN) S:O(N) 1d array to track the smallest last subseq at each size
+        int len = nums.length, pos = 0;
+        int[] sizes = new int[len + 1];
+        Arrays.fill(sizes, Integer.MIN_VALUE);
+        for (int val : nums) {
+            int left = 0, right = pos;
+            // standard binary search
+            while (left < right) {
+                int mid = left + (right - left) / 2;
+                if (val > sizes[mid])
+                    left = mid + 1;
+                else
+                    right = mid;
+                // System.out.println(left + "|" + right + "|" + val);
+            }
+            if (// current is biggest, increase size
+            sizes[left] == Integer.MIN_VALUE)
+                pos++;
+            // update same or higher
+            sizes[left] = val;
+        }
+        return pos;
+    }
+}

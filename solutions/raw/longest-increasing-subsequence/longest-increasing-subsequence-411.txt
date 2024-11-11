@@ -1,0 +1,53 @@
+class Solution {
+
+    // tabulation
+    public int lengthOfLIS(int[] a) {
+        int len = a.length;
+        int[][] dp = new int[len + 1][len + 1];
+        int take = 0, not;
+        for (int i = len - 1; i >= 0; i--) {
+            for (int prev = i - 1; prev >= -1; prev--) {
+                take = 0;
+                not = 0 + dp[i + 1][prev + 1];
+                if (prev == -1 || a[i] > a[prev])
+                    take = 1 + dp[i + 1][i + 1];
+                dp[i][prev + 1] = Math.max(not, take);
+            }
+        }
+        return dp[0][0];
+    }
+}
+/*
+
+// memoization
+
+class Solution {
+    int memo(int i , int prev , int n , int a[], int dp[][]){
+
+        if(i==n) return 0;
+
+        int take=0, not;
+
+        if(dp[i][prev+1]!=-1) return dp[i][prev+1];
+        not=0+memo(i+1,prev,n,a,dp);
+
+        if(prev==-1 || a[i]>a[prev])
+        take=1+memo(i+1,i,n,a,dp);
+
+        return dp[i][prev+1]=Math.max(take,not);
+
+    }
+    public int lengthOfLIS(int[] a) {
+
+        int len=a.length;
+        int dp[][]=new int[len][len+1];
+
+        for(int i=0;i<len ;i++){
+            for(int j=0;j<=len;j++)
+            dp[i][j]=-1;
+        }
+
+        return memo(0,-1,len,a,dp);
+    }
+}
+*/

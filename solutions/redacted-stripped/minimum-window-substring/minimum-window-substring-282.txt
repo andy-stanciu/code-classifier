@@ -1,0 +1,41 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        int m = t.length();
+        int n = s.length();
+        for (int i = 0; i < m; i++) {
+            char ch = t.charAt(i);
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        int right = 0, left = 0;
+        int minLeft = 0;
+        int minLength = Integer.MAX_VALUE;
+        int requiredChars = map.size();
+        while (right < s.length()) {
+            char ch = s.charAt(right);
+            if (map.containsKey(ch)) {
+                map.put(ch, map.getOrDefault(ch, 0) - 1);
+                if (map.get(ch) == 0) {
+                    requiredChars--;
+                }
+            }
+            while (requiredChars == 0) {
+                if (right - left + 1 < minLength) {
+                    minLength = right - left + 1;
+                    minLeft = left;
+                }
+                ch = s.charAt(left);
+                if (map.containsKey(ch)) {
+                    map.put(ch, map.get(ch) + 1);
+                    if (map.get(ch) > 0) {
+                        requiredChars++;
+                    }
+                }
+                left++;
+            }
+            right++;
+        }
+        return minLength == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + minLength);
+    }
+}

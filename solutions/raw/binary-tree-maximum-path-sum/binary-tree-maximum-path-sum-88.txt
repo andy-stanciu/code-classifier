@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    int maxSum = Integer.MIN_VALUE;
+
+    public int maxPathSum(TreeNode root) {
+        int sum = maxSum(root);
+        return Math.max(root.val, Math.max(sum, maxSum));
+    }
+
+    int maxSum(TreeNode root) {
+        if (root == null)
+            return 0;
+        if (root.left == null && root.right == null) {
+            // check to see if single node is greater than the global max sum
+            this.maxSum = Math.max(root.val, maxSum);
+            return root.val;
+        }
+        int rightSum = maxSum(root.right);
+        int leftSum = maxSum(root.left);
+        int splitSum = root.val;
+        if (leftSum >= 0) {
+            splitSum = splitSum + leftSum;
+        }
+        if (rightSum >= 0) {
+            splitSum = splitSum + rightSum;
+        }
+        // check to see if sum using this node as root is greater than max sum of all roots
+        this.maxSum = Math.max(splitSum, maxSum);
+        // figure out the max sum of using this node as a node in a branch from a parent.
+        int max = Math.max(leftSum, rightSum);
+        if (max >= 0) {
+            return max + root.val;
+        } else {
+            return root.val;
+        }
+    }
+}

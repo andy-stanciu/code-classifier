@@ -1,0 +1,45 @@
+class NumberNode {
+
+    public int value;
+
+    public NumberNode next;
+
+    public NumberNode(int value) {
+        this.value = value;
+        this.next = null;
+    }
+}
+
+class Solution {
+
+    public int longestConsecutive(int[] nums) {
+        HashMap<Integer, NumberNode> nodeMap = new HashMap<>();
+        int length = 0;
+        for (int n : nums) {
+            if (!nodeMap.containsKey(n)) {
+                NumberNode nn = new NumberNode(n);
+                nodeMap.put(n, nn);
+                if (nodeMap.containsKey(n - 1)) {
+                    nodeMap.get(n - 1).next = nn;
+                }
+                if (nodeMap.containsKey(n + 1)) {
+                    nn.next = nodeMap.get(n + 1);
+                }
+            }
+        }
+        HashMap<Integer, Boolean> visited = new HashMap<>();
+        for (int key : nodeMap.keySet()) {
+            if (visited.get(key) == null) {
+                int newLength = 0;
+                NumberNode node = nodeMap.get(key);
+                while (node != null) {
+                    newLength++;
+                    visited.put(node.value, true);
+                    node = node.next;
+                }
+                length = Math.max(length, newLength);
+            }
+        }
+        return length;
+    }
+}

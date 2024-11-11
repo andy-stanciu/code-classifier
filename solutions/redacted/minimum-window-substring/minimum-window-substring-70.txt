@@ -1,0 +1,48 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        Map<Character, Integer> targetMap = populateMap(t);
+        int first = 0;
+        int second = 0;
+        Map<Character, Integer> var1 = new HashMap<>();
+        String method1 = new String();
+        while (second < s.length()) {
+            while (second < s.length() && !method2(var1, targetMap)) {
+                char currentChar = s.charAt(second);
+                if (targetMap.containsKey(currentChar)) {
+                    var1.put(currentChar, var1.getOrDefault(currentChar, 0) + 1);
+                }
+                second++;
+            }
+            while (first < second && method2(var1, targetMap)) {
+                String var2 = s.substring(first, second);
+                if (method1.isBlank() || method1.length() > var2.length()) {
+                    method1 = var2;
+                }
+                char currentChar = s.charAt(first);
+                if (var1.containsKey(currentChar)) {
+                    var1.put(currentChar, var1.get(currentChar) - 1);
+                }
+                first++;
+            }
+        }
+        return method1.isBlank() ? "" : method1;
+    }
+
+    private boolean method2(Map<Character, Integer> tempMap, Map<Character, Integer> targetMap) {
+        for (Map.Entry<Character, Integer> entry : targetMap.entrySet()) {
+            if (!tempMap.containsKey(entry.getKey()) || tempMap.get(entry.getKey()) < targetMap.get(entry.getKey())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Map<Character, Integer> populateMap(String t) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        return map;
+    }
+}

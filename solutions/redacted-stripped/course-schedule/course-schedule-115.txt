@@ -1,0 +1,33 @@
+class Solution {
+
+    private boolean detectPrerequisiteCycle(int param1, Map<Integer, Set<Integer>> adjcencyMap, int[] completed) {
+        if (completed[param1] == -1)
+            return true;
+        if (completed[param1] == 1)
+            return false;
+        completed[param1] = -1;
+        if (adjcencyMap.containsKey(param1)) {
+            for (int var1 : adjcencyMap.get(param1)) {
+                if (detectPrerequisiteCycle(var1, adjcencyMap, completed)) {
+                    return true;
+                }
+            }
+        }
+        completed[param1] = 1;
+        return false;
+    }
+
+    public boolean canFinish(int param2, int[][] prerequisites) {
+        int[] completed = new int[param2];
+        Map<Integer, Set<Integer>> adjcencyMap = new HashMap<>();
+        for (int[] prerequisite : prerequisites) {
+            adjcencyMap.computeIfAbsent(prerequisite[1], k -> new HashSet<>()).add(prerequisite[0]);
+        }
+        for (int i = 0; i < param2; i++) {
+            if (detectPrerequisiteCycle(i, adjcencyMap, completed)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

@@ -1,0 +1,45 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int counter = 0;
+        if (param1 <= 0) {
+            return true;
+        }
+        // Initialize inDegree array and adjacency list
+        int[] inDegree = new int[param1];
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        // Build the graph and update inDegree for each node
+        for (int[] edge : prerequisites) {
+            int parent = edge[1];
+            int child = edge[0];
+            graph.get(parent).add(child);
+            inDegree[child]++;
+        }
+        // Initialize the queue with courses having no prerequisites (inDegree = 0)
+        Queue<Integer> sources = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (inDegree[i] == 0) {
+                sources.offer(i);
+            }
+        }
+        // Process nodes with no prerequisites
+        while (!sources.isEmpty()) {
+            // dequeue
+            int var1 = sources.poll();
+            counter++;
+            // Process all the children of the current course
+            for (int child : graph.get(var1)) {
+                inDegree[child]--;
+                if (inDegree[child] == 0) {
+                    // enqueue child if inDegree becomes 0
+                    sources.offer(child);
+                }
+            }
+        }
+        // If we processed all courses, return true
+        return counter == param1;
+    }
+}

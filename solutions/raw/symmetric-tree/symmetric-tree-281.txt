@@ -1,0 +1,88 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Pair {
+
+    TreeNode node;
+
+    String str;
+
+    Pair(TreeNode node, String str) {
+        this.node = node;
+        this.str = str;
+    }
+}
+
+// creating a pair class to track left or right.
+class Solution {
+
+    public boolean isPali(ArrayList<Pair> lis) {
+        int i = 0, j = lis.size() - 1;
+        // simple logic
+        // if values are equal then check its positions. left should have right and vice versa.
+        while (i < j) {
+            if ((lis.get(i).node.val != lis.get(j).node.val) || (lis.get(i).str.equals("left") && lis.get(j).str.equals("left")) || (lis.get(i).str.equals("right") && lis.get(j).str.equals("right"))) {
+                return false;
+            }
+            i++;
+            j--;
+        }
+        return true;
+    }
+
+    public boolean solve(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        Queue<Pair> q = new LinkedList<>();
+        q.offer(new Pair(root, ""));
+        TreeNode dumb = new TreeNode(-1000000);
+        while (!q.isEmpty()) {
+            int size = q.size();
+            ArrayList<Pair> lis = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                Pair rem = q.poll();
+                if (rem.node.val == -1000000) {
+                    lis.add(new Pair(rem.node, rem.str));
+                    //dumb node don\'t have left and right becoz we created it .
+                    continue;
+                }
+                if (rem.str.length() != 0) {
+                    lis.add(new Pair(rem.node, rem.str));
+                }
+                if (rem.node.left != null) {
+                    q.offer(new Pair(rem.node.left, "left"));
+                } else {
+                    // filling gaps with dumb node
+                    q.offer(new Pair(dumb, "left"));
+                }
+                if (rem.node.right != null) {
+                    q.offer(new Pair(rem.node.right, "right"));
+                } else {
+                    // filling gaps with dumb node.
+                    q.offer(new Pair(dumb, "right"));
+                }
+            }
+            if (!isPali(lis)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isSymmetric(TreeNode root) {
+        return solve(root);
+    }
+}

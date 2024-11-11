@@ -1,0 +1,35 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        //initialize a hashmap to store string t character count
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < t.length(); ++i) map.merge(t.charAt(i), 1, Integer::sum);
+        //bool to check if a matching substring is present in s
+        //used to deal with corner cases
+        boolean hasmatched = false;
+        //two ints to store the indices of the best result
+        int besti = 0, bestj = s.length() - 1;
+        //basic sliding window loop
+        for (int i = 0, j = 0; j < s.length(); ++j) {
+            //decrease the count in the map if the character
+            //from string t is present in s
+            map.computeIfPresent(s.charAt(j), (k, v) -> v - 1);
+            //same as map.values().stream().allMatch(k -> k <= 0)
+            while (!map.values().stream().anyMatch(k -> k > 0)) {
+                //update the bool
+                hasmatched = true;
+                //keep track of min length
+                if (j - i < bestj - besti) {
+                    besti = i;
+                    bestj = j;
+                }
+                //move the left pointer and update the map if
+                //the answer is found to try reducing its length
+                map.computeIfPresent(s.charAt(i), (k, v) -> v + 1);
+                i++;
+            }
+        }
+        //return the best substring or empty string if nothing matched
+        return hasmatched ? s.substring(besti, bestj + 1) : "";
+    }
+}

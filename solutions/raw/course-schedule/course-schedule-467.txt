@@ -1,0 +1,55 @@
+class Solution {
+
+    boolean[] visited;
+
+    boolean[] onPath;
+
+    boolean hasCycle = false;
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // initialization
+        visited = new boolean[numCourses];
+        onPath = new boolean[numCourses];
+        // create graph
+        List<Integer>[] graph = buildGraph(numCourses, prerequisites);
+        // traverse
+        for (int s = 0; s < numCourses; s++) {
+            if (!visited[s]) {
+                traverse(graph, s);
+            }
+        }
+        // if has cycle, then the courses could not be finished.
+        return !hasCycle;
+    }
+
+    public List<Integer>[] buildGraph(int numCourses, int[][] prerequisites) {
+        // create a 2D linked list
+        List<Integer>[] graph = new LinkedList[numCourses];
+        // add the vetrice to the linked list
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new LinkedList<>();
+        }
+        // add the edges to the linked list
+        for (int[] p : prerequisites) {
+            int from = p[0];
+            int to = p[1];
+            graph[from].add(to);
+        }
+        return graph;
+    }
+
+    public void traverse(List<Integer>[] graph, int s) {
+        if (onPath[s]) {
+            hasCycle = true;
+        }
+        if (hasCycle || visited[s])
+            return;
+        visited[s] = true;
+        onPath[s] = true;
+        for (int neighbor : graph[s]) {
+            traverse(graph, neighbor);
+        }
+        // set back to false when one path finished
+        onPath[s] = false;
+    }
+}

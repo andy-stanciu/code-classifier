@@ -1,0 +1,37 @@
+class Solution {
+
+    public boolean dfs(ArrayList<ArrayList<Integer>> adj, int[] visit, int[] path, int u) {
+        visit[u] = 1;
+        path[u] = 1;
+        for (int i : adj.get(u)) {
+            if (visit[i] == 0) {
+                if (!dfs(adj, visit, path, i))
+                    return false;
+            } else if (path[i] == 1)
+                return false;
+        }
+        path[u] = 0;
+        return true;
+    }
+
+    public boolean canFinish(int n, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int u = prerequisites[i][0];
+            int v = prerequisites[i][1];
+            adj.get(u).add(v);
+        }
+        int[] visit = new int[n];
+        int[] path = new int[n];
+        for (int i = 0; i < n; i++) {
+            if (visit[i] == 0) {
+                if (!dfs(adj, visit, path, i))
+                    return false;
+            }
+        }
+        return true;
+    }
+}

@@ -1,0 +1,38 @@
+public class Solution {
+
+    // Map with key as level of the tree,
+    // map[level] = {sum of the level, number of elements in the level}
+    Map<Integer, Pair<Double, Double>> mp = new HashMap<>();
+
+    // Function to calculate the sum and count of nodes at each level
+    void avg(TreeNode root, int l) {
+        // If the node is a leaf node, return
+        if (root == null)
+            return;
+        // Add the current value to the sum of this level
+        mp.putIfAbsent(l, new Pair<>(0.0, 0.0));
+        Pair<Double, Double> pair = mp.get(l);
+        pair.first += root.val;
+        // Increase the number of elements in the current level
+        pair.second++;
+        // Traverse left subtree
+        avg(root.left, l + 1);
+        // Traverse right subtree
+        avg(root.right, l + 1);
+    }
+
+    // Function to compute the average of levels in a binary tree
+    public List<Double> method1(TreeNode root) {
+        // Resultant list
+        List<Double> ans = new ArrayList<>();
+        // Calculate sum and count of nodes at each level
+        avg(root, 0);
+        // Iterate over the map to compute the average at each level
+        for (Map.Entry<Integer, Pair<Double, Double>> entry : mp.entrySet()) {
+            double sum = entry.getValue().first;
+            double count = entry.getValue().second;
+            ans.add(sum / count);
+        }
+        return ans;
+    }
+}

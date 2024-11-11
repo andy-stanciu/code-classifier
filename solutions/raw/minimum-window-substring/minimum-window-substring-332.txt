@@ -1,0 +1,40 @@
+class Solution {
+
+    public String minWindow(String s, String t) {
+        if (t.length() > s.length())
+            return "";
+        Map<Character, Integer> needMap = new HashMap();
+        Map<Character, Integer> window = new HashMap();
+        for (char ch : t.toCharArray()) {
+            needMap.put(ch, needMap.getOrDefault(ch, 0) + 1);
+            window.put(ch, 0);
+        }
+        String ans = "";
+        int need = t.length();
+        int have = 0;
+        int left = 0, right = 0;
+        while (right < s.length()) {
+            char ch = s.charAt(right);
+            if (window.containsKey(ch)) {
+                window.put(ch, window.get(ch) + 1);
+                if (window.get(ch) <= needMap.get(ch)) {
+                    have++;
+                }
+                while (need == have) {
+                    if ((right - left) + 1 < ans.length() || ans.equals(""))
+                        ans = s.substring(left, right + 1);
+                    ch = s.charAt(left);
+                    if (window.containsKey(ch)) {
+                        window.put(ch, window.get(ch) - 1);
+                        if (window.get(ch) < needMap.get(ch)) {
+                            have--;
+                        }
+                    }
+                    left++;
+                }
+            }
+            right++;
+        }
+        return ans;
+    }
+}

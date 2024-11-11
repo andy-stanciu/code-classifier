@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean canFinish(final int param1, final int[][] prereq) {
+        List<List<Integer>> adj = new ArrayList<>();
+        int[] inDegree = new int[param1];
+        adjAndInDegree(param1, prereq, adj, inDegree);
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < inDegree.length; i++) {
+            if (inDegree[i] == 0) {
+                q.offer(i);
+            }
+        }
+        int topoCount = 0;
+        while (!q.isEmpty()) {
+            int curr = q.poll();
+            topoCount++;
+            for (int i : adj.get(curr)) {
+                inDegree[i]--;
+                if (inDegree[i] == 0) {
+                    q.offer(i);
+                }
+            }
+        }
+        return topoCount == param1;
+    }
+
+    private void adjAndInDegree(final int param1, final int[][] prereq, List<List<Integer>> adj, int[] inDegree) {
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prereq.length; i++) {
+            adj.get(prereq[i][1]).add(prereq[i][0]);
+            inDegree[prereq[i][0]]++;
+        }
+    }
+}

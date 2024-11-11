@@ -1,0 +1,29 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        int n = s.length(), m = t.length(), l = 0, r = 0, minLen = 1000000001, count = 0, sIndex = -1;
+        int[] hash = new int[256];
+        for (int i = 0; i < m; i++) {
+            hash[t.charAt(i)]++;
+        }
+        while (r < n) {
+            if (hash[s.charAt(r)] > 0) {
+                count++;
+            }
+            hash[s.charAt(r)]--;
+            while (count == m) {
+                if (r - l + 1 < minLen) {
+                    minLen = r - l + 1;
+                    sIndex = l;
+                }
+                hash[s.charAt(l)]++;
+                if (hash[s.charAt(l)] > 0) {
+                    count = count - 1;
+                }
+                l++;
+            }
+            r++;
+        }
+        return sIndex == -1 ? "" : s.substring(sIndex, sIndex + minLen);
+    }
+}

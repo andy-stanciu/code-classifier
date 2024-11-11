@@ -1,0 +1,29 @@
+class Solution {
+
+    public String method1(String s, String t) {
+        HashMap<Character, Integer> b = new HashMap<>(), a = new HashMap<>();
+        int need = 0, have = 0, ans_l = -1, ans_r = Integer.MAX_VALUE, l = 0;
+        for (char c : t.toCharArray()) {
+            b.put(c, b.getOrDefault(c, 0) + 1);
+            if (b.get(c) == 1)
+                need++;
+        }
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            a.put(c, a.getOrDefault(c, 0) + 1);
+            if (a.get(c).equals(b.get(c)))
+                have++;
+            while (have == need) {
+                if (i - l < ans_r - ans_l) {
+                    ans_l = l;
+                    ans_r = i;
+                }
+                a.put(s.charAt(l), a.get(s.charAt(l)) - 1);
+                if (a.get(s.charAt(l)) < b.getOrDefault(s.charAt(l), 0))
+                    have--;
+                l++;
+            }
+        }
+        return ans_l == -1 ? "" : s.substring(ans_l, ans_r + 1);
+    }
+}

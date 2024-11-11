@@ -1,0 +1,39 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] matrix) {
+        boolean[] vis = new boolean[param1];
+        boolean[] path = new boolean[param1];
+        List<List<Integer>> al = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            al.add(new ArrayList<>());
+        }
+        for (int[] arr : matrix) {
+            al.get(arr[1]).add(arr[0]);
+        }
+        System.out.println(al);
+        for (int i = 0; i < param1; i++) {
+            if (!vis[i]) {
+                if (dfs(al, vis, path, i)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    static boolean dfs(List<List<Integer>> al, boolean[] vis, boolean[] path, int src) {
+        vis[src] = true;
+        path[src] = true;
+        for (int ele : al.get(src)) {
+            if (!vis[ele]) {
+                if (dfs(al, vis, path, ele)) {
+                    return true;
+                }
+            } else if (path[ele]) {
+                return true;
+            }
+        }
+        path[src] = false;
+        return false;
+    }
+}

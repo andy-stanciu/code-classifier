@@ -1,0 +1,34 @@
+class Solution {
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        int m = prerequisites.length, n, i;
+        if (m == 0)
+            return true;
+        else
+            n = prerequisites[0].length;
+        boolean[] vis = new boolean[param1];
+        boolean[] dfsvis = new boolean[param1];
+        List<List<Integer>> adj = new ArrayList<>();
+        for (i = 0; i < param1; i++) adj.add(new ArrayList<>());
+        for (i = 0; i < m; i++) adj.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        for (i = 0; i < param1; i++) {
+            if (!vis[i] && isCycledfs(i, adj, vis, dfsvis))
+                return false;
+        }
+        return true;
+    }
+
+    boolean isCycledfs(int node, List<List<Integer>> adj, boolean[] vis, boolean[] dfsvis) {
+        vis[node] = true;
+        dfsvis[node] = true;
+        for (Integer i : adj.get(node)) {
+            if (!vis[i]) {
+                if (isCycledfs(i, adj, vis, dfsvis))
+                    return true;
+            } else if (dfsvis[i])
+                return true;
+        }
+        dfsvis[node] = false;
+        return false;
+    }
+}

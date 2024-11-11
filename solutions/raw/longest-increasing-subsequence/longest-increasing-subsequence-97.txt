@@ -1,0 +1,32 @@
+class Solution {
+
+    public int lengthOfLIS(int[] nums) {
+        int N = nums.length;
+        int[] dp = new int[N];
+        dp[0] = nums[0];
+        int j = 0;
+        for (int i = 1; i < N; i++) {
+            if (nums[i] > dp[j]) {
+                dp[++j] = nums[i];
+            } else {
+                int index = binarySearch(dp, j, nums[i]);
+                dp[index] = nums[i];
+            }
+        }
+        return j + 1;
+    }
+
+    public int binarySearch(int[] nums, int end, int val) {
+        int start = 0;
+        while (start <= end) {
+            int mid = (start + end) / 2;
+            if (nums[mid] == val)
+                return mid;
+            else if (val < nums[mid])
+                end = mid - 1;
+            else
+                start = mid + 1;
+        }
+        return start;
+    }
+}

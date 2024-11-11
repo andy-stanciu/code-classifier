@@ -1,0 +1,88 @@
+class Solution {
+
+    int wordSize;
+
+    Prerequists[] prerequists;
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if (numCourses <= 0 || prerequisites.length <= 0) {
+            return true;
+        }
+        wordSize = wordIndex(numCourses - 1) + 1;
+        prerequists = new Prerequists[numCourses];
+        int length = prerequisites.length;
+        for (int i = 0; i < length; i++) {
+            // From start to end
+            int[] pair = prerequisites[i];
+            if (!checkCycle(pair[0], pair[1])) {
+                return false;
+            }
+            // From end to start
+            pair = prerequisites[length - 1 - i];
+            if (!checkCycle(pair[0], pair[1])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkCycle(int fcourse, int tcourse) {
+        if (fcourse == tcourse) {
+            return false;
+        }
+        Prerequists tpres = prerequists[tcourse];
+        if (tpres == null) {
+            tpres = prerequists[tcourse] = new Prerequists(wordSize);
+        }
+        Prerequists fpres = prerequists[fcourse];
+        // Copy prerequists
+        if (fpres == null) {
+            fpres = prerequists[fcourse] = new Prerequists(tpres.words);
+        } else {
+            fpres.copy(tpres);
+        }
+        // Depend on itself, cycle detected
+        if (fpres.hasCourse(fcourse)) {
+            return false;
+        }
+        // Add course prerequist
+        fpres.addCourse(tcourse);
+        return true;
+    }
+
+    static class Prerequists {
+
+        final long[] words;
+
+        public Prerequists(int size) {
+            this.words = new long[size];
+        }
+
+        public Prerequists(long[] words) {
+            this.words = Arrays.copyOf(words, words.length);
+        }
+
+        public void copy(Prerequists pres) {
+            for (int i = 0; i < words.length; i++) {
+                this.words[i] |= pres.words[i];
+            }
+        }
+
+        public void addCourse(int course) {
+            this.words[wordIndex(course)] |= bitMask(course);
+        }
+
+        public boolean hasCourse(int course) {
+            return (this.words[wordIndex(course)] & bitMask(course)) != 0;
+        }
+
+        private static long bitMask(int course) {
+            return 1L << (course & 63);
+        }
+    }
+
+    private static int wordIndex(int course) {
+        // divide by 64 since long is 64 bits
+        return course >> 6;
+    }
+}
