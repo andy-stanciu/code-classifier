@@ -1,0 +1,26 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int[][] dp = new int[param1.length][amount + 1];
+        for (int[] arr : dp) {
+            Arrays.fill(arr, -1);
+        }
+        return method2(param1.length - 1, param1, amount, dp) == (int) (1e9) ? -1 : method2(param1.length - 1, param1, amount, dp);
+    }
+
+    int method2(int index, int[] param1, int amount, int[][] dp) {
+        if (index == 0) {
+            if (amount % param1[index] == 0)
+                return amount / param1[index];
+            return (int) (1e9);
+        }
+        if (dp[index][amount] != -1)
+            return dp[index][amount];
+        int notTake = 0 + method2(index - 1, param1, amount, dp);
+        int take = (int) (1e9);
+        if (amount >= param1[index]) {
+            take = 1 + method2(index, param1, amount - param1[index], dp);
+        }
+        return dp[index][amount] = Math.min(notTake, take);
+    }
+}

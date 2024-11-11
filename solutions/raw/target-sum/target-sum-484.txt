@@ -1,0 +1,20 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        Map<Integer, Integer> sums = new HashMap();
+        sums.put(0, 1);
+        for (int num : nums) {
+            Map<Integer, Integer> sumsNext = new HashMap();
+            for (int k : sums.keySet()) {
+                // Increment for when adding num to subtotal
+                int currSum = sumsNext.getOrDefault(k + num, 0);
+                sumsNext.put(k + num, currSum + sums.get(k));
+                // Increment for when subtracting num from subtotal
+                int currSub = sumsNext.getOrDefault(k - num, 0);
+                sumsNext.put(k - num, currSub + sums.get(k));
+            }
+            sums = sumsNext;
+        }
+        return sums.getOrDefault(target, 0);
+    }
+}

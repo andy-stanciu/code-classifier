@@ -1,0 +1,43 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        //Dummy linked list which will be the final result
+        ListNode dummy = new ListNode();
+        // Dummy list\'s tail pointer
+        ListNode tail = dummy;
+        int currSum = 0;
+        int carry = 0;
+        while (l1 != null || l2 != null) {
+            // The checks are to avoid edge cases in case lists are of uneven length
+            if (carry != 1)
+                currSum = (l1 != null ? l1.val : 0) + (l2 != null ? l2.val : 0);
+            else
+                currSum = (l1 != null ? l1.val : 0) + (l2 != null ? l2.val : 0) + 1;
+            if (currSum < 10) {
+                carry = 0;
+                tail.next = new ListNode(currSum);
+            } else {
+                // Carry will be 1 always, sum of 2 single digits cant exceed 18 hence carry cant exceed 1
+                carry = 1;
+                tail.next = new ListNode(currSum % 10);
+            }
+            tail = tail.next;
+            l1 = (l1 != null ? l1.next : l1);
+            l2 = (l2 != null ? l2.next : l2);
+        }
+        if (carry == 1) {
+            tail.next = new ListNode(carry);
+        }
+        return dummy.next;
+    }
+}

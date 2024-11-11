@@ -1,0 +1,46 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> ans = new ArrayList<>();
+        TreeNode curr = root;
+        while (curr != null) {
+            // If there is no left child, visit the node and go to the right child
+            if (curr.left == null) {
+                ans.add(curr.val);
+                curr = curr.right;
+            } else {
+                // Find the inorder predecessor of the current node
+                TreeNode pred = curr.left;
+                while (pred.right != null && pred.right != curr) {
+                    pred = pred.right;
+                }
+                // If the right child of predecessor is null, establish the link
+                if (pred.right == null) {
+                    pred.right = curr;
+                    curr = curr.left;
+                } else // If there is already a link, remove it and visit the node
+                {
+                    pred.right = null;
+                    ans.add(curr.val);
+                    curr = curr.right;
+                }
+            }
+        }
+        return ans;
+    }
+}

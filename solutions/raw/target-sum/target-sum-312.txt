@@ -1,0 +1,27 @@
+class Solution {
+
+    int recur(int[][] dp, int i, int target, int cur, int[] nums, int sum) {
+        if (i == nums.length) {
+            if (cur == target)
+                return 1;
+            else
+                return 0;
+        }
+        if (dp[i][sum + cur] != -1)
+            return dp[i][cur + sum];
+        int sub = recur(dp, i + 1, target, cur - nums[i], nums, sum);
+        int add = recur(dp, i + 1, target, cur + nums[i], nums, sum);
+        dp[i][cur + sum] = add + sub;
+        return dp[i][cur + sum];
+    }
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int n = nums.length;
+        int sum = 0;
+        for (int i : nums) sum += i;
+        int[][] dp = new int[n][2 * sum + 1];
+        for (int i = 0; i < dp.length; i++) Arrays.fill(dp[i], -1);
+        recur(dp, 0, target, 0, nums, sum);
+        return dp[0][sum];
+    }
+}

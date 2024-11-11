@@ -1,0 +1,35 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        int[][] dp = new int[coins.length][amount + 1];
+        for (int[] eacharr : dp) {
+            Arrays.fill(eacharr, -1);
+        }
+        int result = func(coins, n - 1, amount, dp);
+        return result == Integer.MAX_VALUE ? -1 : result;
+    }
+
+    public int func(int[] arr, int indx, int target, int[][] dp) {
+        if (target == 0) {
+            return 0;
+        }
+        if (dp[indx][target] != -1)
+            return dp[indx][target];
+        if (indx == 0) {
+            if (target % arr[indx] == 0)
+                return target / arr[indx];
+            else
+                return Integer.MAX_VALUE;
+        }
+        int np = func(arr, indx - 1, target, dp);
+        int p = Integer.MAX_VALUE;
+        if (arr[indx] <= target) {
+            int res = func(arr, indx, target - arr[indx], dp);
+            if (res != Integer.MAX_VALUE) {
+                p = 1 + res;
+            }
+        }
+        return dp[indx][target] = Math.min(np, p);
+    }
+}

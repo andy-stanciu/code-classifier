@@ -1,0 +1,39 @@
+class Solution {
+
+    int[][] dp;
+
+    public void subsetsum(int[] nums, int n, int sum) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < sum; j++) {
+                if (i == 0)
+                    dp[0][j] = 0;
+                if (j == 0)
+                    dp[i][0] = 1;
+            }
+        }
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < sum; j++) {
+                // condittion for nottake should be written first
+                // otherwise it will update dp[i][0] this we don\'t want
+                //notake
+                dp[i][j] = dp[i - 1][j];
+                if (//take
+                nums[i - 1] <= j)
+                    dp[i][j] += dp[i - 1][j - nums[i - 1]];
+            }
+        }
+    }
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for (int val : nums) {
+            sum += val;
+        }
+        if (target > sum || (sum - target) % 2 != 0)
+            return 0;
+        sum = (sum - target) / 2;
+        this.dp = new int[nums.length + 1][sum + 1];
+        subsetsum(nums, nums.length + 1, sum + 1);
+        return this.dp[nums.length][sum];
+    }
+}

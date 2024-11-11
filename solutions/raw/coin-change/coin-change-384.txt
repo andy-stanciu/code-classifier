@@ -1,0 +1,32 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, -1);
+        int ans = recurWithDPMinCoins(coins, amount, dp);
+        return ans != Integer.MAX_VALUE ? ans : -1;
+    }
+
+    public int recurWithDPMinCoins(int[] coins, int amount, int[] dp) {
+        if (amount == 0)
+            return 0;
+        int ans = Integer.MAX_VALUE;
+        for (int i = 0; i < coins.length; i++) {
+            if (amount - coins[i] >= 0) {
+                int subAns = -1;
+                //check in the dp memory for current amount result previuosly computed
+                if (dp[amount - coins[i]] != -1) {
+                    subAns = dp[amount - coins[i]];
+                } else {
+                    subAns = recurWithDPMinCoins(coins, amount - coins[i], dp);
+                }
+                // we need minimum number of coins make up that amount
+                if (subAns != Integer.MAX_VALUE && (subAns + 1) < ans) {
+                    ans = subAns + 1;
+                }
+            }
+        }
+        dp[amount] = ans;
+        return ans;
+    }
+}

@@ -1,0 +1,28 @@
+class Solution {
+
+    public int getMinCoins(int[] coins, Integer[][] dp, int amount, int ind) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (ind == 0) {
+            return 1000000;
+        }
+        if (dp[ind][amount] != null) {
+            return dp[ind][amount];
+        }
+        int take = 1000000;
+        if (amount >= coins[ind - 1]) {
+            //Don\'t increase index
+            take = 1 + getMinCoins(coins, dp, amount - coins[ind - 1], ind);
+        }
+        int notTake = 0 + getMinCoins(coins, dp, amount, ind - 1);
+        return dp[ind][amount] = Math.min(take, notTake);
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        int totalCoins = coins.length;
+        Integer[][] dp = new Integer[totalCoins + 1][amount + 1];
+        int ans = getMinCoins(coins, dp, amount, totalCoins);
+        return (ans == 1000000) ? -1 : ans;
+    }
+}

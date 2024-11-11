@@ -1,0 +1,57 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        if (param1 == null || param1.length == 0)
+            return null;
+        PriorityQueue<ListNode> minHeap = new PriorityQueue<>((a, b) -> a.val - b.val);
+        for (ListNode node : param1) {
+            if (node != null) {
+                minHeap.add(node);
+            }
+        }
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        while (!minHeap.isEmpty()) {
+            ListNode smallest = minHeap.poll();
+            current.next = smallest;
+            current = current.next;
+            if (smallest.next != null) {
+                minHeap.add(smallest.next);
+            }
+        }
+        return dummy.next;
+    }
+
+    public static void main(String[] args) {
+        ListNode list1 = new ListNode(1);
+        list1.next = new ListNode(4);
+        list1.next.next = new ListNode(5);
+        ListNode list2 = new ListNode(1);
+        list2.next = new ListNode(3);
+        list2.next.next = new ListNode(4);
+        ListNode list3 = new ListNode(2);
+        list3.next = new ListNode(6);
+        ListNode[] param1 = { list1, list2, list3 };
+        Solution solution = new Solution();
+        ListNode var1 = solution.method1(param1);
+        printList(var1);
+    }
+
+    public static void printList(ListNode node) {
+        while (node != null) {
+            System.out.print(node.val + " -> ");
+            node = node.next;
+        }
+        System.out.println("null");
+    }
+}

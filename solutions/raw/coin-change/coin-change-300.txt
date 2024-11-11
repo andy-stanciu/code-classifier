@@ -1,0 +1,36 @@
+class Solution {
+
+    int[] a;
+
+    public int coinChange(int[] coins, int amount) {
+        if (amount == 0)
+            return 0;
+        if (amount >= Integer.MAX_VALUE)
+            return -1;
+        a = new int[amount + 1];
+        Arrays.fill(a, -1);
+        a[0] = 0;
+        int ans = subCoinChange(coins, amount);
+        return (ans == Integer.MAX_VALUE) ? -1 : ans;
+    }
+
+    public int subCoinChange(int[] coins, int amount) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (amount < 0) {
+            return Integer.MAX_VALUE;
+        }
+        if (a[amount] != -1)
+            return a[amount];
+        int ans = Integer.MAX_VALUE;
+        for (int i = 0; i < coins.length; i++) {
+            if (amount - coins[i] >= 0) {
+                int subAns = subCoinChange(coins, amount - coins[i]);
+                if (subAns != Integer.MAX_VALUE)
+                    ans = Math.min(ans, subAns + 1);
+            }
+        }
+        return a[amount] = ans;
+    }
+}

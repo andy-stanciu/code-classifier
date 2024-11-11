@@ -1,0 +1,40 @@
+class Solution {
+
+    private int[] nums;
+
+    private int[][] cache;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        // p
+        //(s-p) -- sum of nums to be neg
+        // t = p - (s-p)
+        // 2p-s = t
+        // p = (s+t)/2 -- how many p to be selected
+        int s = 0;
+        int n = nums.length;
+        this.nums = nums;
+        for (int num : nums) s += num;
+        target += s;
+        // s+t must be non neg, or cannot reach target
+        if (target < 0 || target % 2 != 0)
+            return 0;
+        target /= 2;
+        cache = new int[n][target + 1];
+        for (int i = 0; i < n; ++i) {
+            Arrays.fill(cache[i], -1);
+        }
+        return dfs(n - 1, target);
+    }
+
+    private int dfs(int i, int c) {
+        if (i < 0) {
+            return c == 0 ? 1 : 0;
+        }
+        if (cache[i][c] != -1)
+            return cache[i][c];
+        if (c < nums[i]) {
+            return cache[i][c] = dfs(i - 1, c);
+        }
+        return cache[i][c] = dfs(i - 1, c) + dfs(i - 1, c - nums[i]);
+    }
+}

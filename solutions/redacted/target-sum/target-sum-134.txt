@@ -1,0 +1,28 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        // time complexity:- O(2^n);- 674ms
+        // return recursion(nums,0,target,0);
+        // memoization
+        Integer[][] memo = new Integer[nums.length + 1][2 * 1001 + 1];
+        return memoization(nums, 0, param1, 0, memo);
+    }
+
+    private int recursion(int[] nums, int param2, int param1, int indx) {
+        if (param2 == param1 && indx == nums.length)
+            return 1;
+        if (indx >= nums.length)
+            return 0;
+        return recursion(nums, param2 + nums[indx], param1, indx + 1) + recursion(nums, param2 - nums[indx], param1, indx + 1);
+    }
+
+    private int memoization(int[] nums, int param2, int param1, int indx, Integer[][] memo) {
+        if (param2 == param1 && indx == nums.length)
+            return 1;
+        if (indx >= nums.length)
+            return 0;
+        if (memo[indx][param2 + 1001] != null)
+            return memo[indx][param2 + 1001];
+        return memo[indx][param2 + 1001] = memoization(nums, param2 + nums[indx], param1, indx + 1, memo) + memoization(nums, param2 - nums[indx], param1, indx + 1, memo);
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int total = 0;
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            total += nums[i];
+        }
+        if (target > total || (target + total) < 0 || (target + total) % 2 != 0)
+            return 0;
+        target = (total - target) / 2;
+        int ans = findsum(nums, target, n);
+        return ans;
+    }
+
+    public int findsum(int[] nums, int target, int n) {
+        int[][] dp = new int[n + 1][target + 1];
+        for (int i = 0; i <= target; i++) {
+            dp[0][i] = 0;
+        }
+        for (int j = 0; j <= n; j++) {
+            dp[j][0] = 1;
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= target; j++) {
+                if (nums[i - 1] <= j) {
+                    dp[i][j] = dp[i - 1][j - nums[i - 1]] + dp[i - 1][j];
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= target; j++) {
+                System.out.print(dp[i][j]);
+            }
+            System.out.println();
+        }
+        return dp[n][target];
+    }
+}

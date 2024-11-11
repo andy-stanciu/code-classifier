@@ -1,0 +1,41 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        String l1StrVal = this.getValor(l1).toString();
+        String l2StrVal = this.getValor(l2).toString();
+        ListNode response = new ListNode();
+        int i1 = l1StrVal.length() - 1, i2 = l2StrVal.length() - 1;
+        int sobra = 0;
+        this.calcVal(response, l1StrVal, l2StrVal, i1, i2, sobra);
+        return response.next;
+    }
+
+    private void calcVal(ListNode no, String l1Str, String l2Str, int i1, int i2, int sobra) {
+        if (sobra > 0 || i1 >= 0 || i2 >= 0) {
+            Integer sum = sobra;
+            if (i1 >= 0)
+                sum += l1Str.charAt(i1--) - 48;
+            if (i2 >= 0)
+                sum += l2Str.charAt(i2--) - 48;
+            String sumStr = sum.toString();
+            int resp = 0;
+            if (sumStr.length() > 1) {
+                sobra = Integer.valueOf(sumStr.substring(0, sumStr.length() - 1));
+                resp = Integer.valueOf(sumStr.substring(sumStr.length() - 1, sumStr.length())).intValue();
+            } else {
+                sobra = 0;
+                resp = Integer.valueOf(sumStr).intValue();
+            }
+            no.next = new ListNode(resp);
+            this.calcVal(no.next, l1Str, l2Str, i1, i2, sobra);
+        }
+    }
+
+    private StringBuilder getValor(ListNode no) {
+        StringBuilder str = new StringBuilder();
+        if (no.next != null)
+            str.append(this.getValor(no.next));
+        str.append(Integer.valueOf(no.val));
+        return str;
+    }
+}

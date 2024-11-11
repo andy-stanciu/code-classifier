@@ -1,0 +1,43 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        //Similar to find the total subsets count with given difference
+        int n = nums.length;
+        int var1 = 0;
+        for (int x : nums) {
+            var1 += x;
+        }
+        if (param1 > var1 || (param1 + var1) % 2 != 0)
+            return 0;
+        // S1 + S2 = Sum
+        // S1 - S2 = target
+        // S1 = (sum + target)/2
+        //Most Important
+        int var2 = (var1 + param1) / 2;
+        return find(nums, n, var2);
+    }
+
+    public int find(int[] nums, int n, int var1) {
+        //Initialisation
+        int[][] dp = new int[n + 1][var1 + 1];
+        //Base-Case Transformation
+        for (int i = 0; i < var1 + 1; i++) {
+            dp[0][i] = 0;
+        }
+        for (int i = 0; i < n + 1; i++) {
+            dp[i][0] = 1;
+        }
+        //Main-Logic
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 0; j < var1 + 1; j++) {
+                if (//Consider it
+                nums[i - 1] <= j) {
+                    dp[i][j] = dp[i - 1][j - nums[i - 1]] + dp[i - 1][j];
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        return dp[n][var1];
+    }
+}

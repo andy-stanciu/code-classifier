@@ -1,0 +1,83 @@
+class Solution {
+
+    public int countTargetSets(int[] arr, int ind, int target, int[][] dp) {
+        if (target == 0) {
+            return 1;
+        }
+        if (ind == 0) {
+            if (arr[0] == target) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        if (dp[ind][target] != -1) {
+            return dp[ind][target];
+        }
+        int nottake = countTargetSets(arr, ind - 1, target, dp);
+        int take = 0;
+        if (arr[ind] <= target) {
+            take = countTargetSets(arr, ind - 1, target - arr[ind], dp);
+        }
+        return dp[ind][target] = take + nottake;
+    }
+
+    public int findTargetSumWays(int[] arr, int target) {
+        int sum = 0;
+        for (int i = 0; i < arr.length; i++) {
+            sum += arr[i];
+        }
+        int st = sum + target;
+        if (sum < Math.abs(target)) {
+            return 0;
+            //System.out.println(0);
+        } else if (st % 2 != 0) {
+            return 0;
+        } else {
+            int count = 0;
+            for (//counting the zeroes
+            int i = 0; //counting the zeroes
+            i < arr.length; //counting the zeroes
+            i++) {
+                if (arr[i] == 0) {
+                    count++;
+                }
+            }
+            if (//when zeroes present inside the list.
+            count > 0) {
+                List<Integer> list = new ArrayList<>();
+                for (int i = 0; i < arr.length; i++) {
+                    if (arr[i] != 0) {
+                        list.add(arr[i]);
+                    }
+                }
+                System.out.println("list=" + list);
+                int[] arr1 = new int[list.size()];
+                for (int i = 0; i < list.size(); i++) {
+                    arr1[i] = list.get(i);
+                }
+                double a = Math.pow(2, count);
+                int ZeroPower = (int) a;
+                //new target
+                int s1 = (sum + target) / 2;
+                int[][] dp = new int[arr1.length][s1 + 1];
+                for (int[] row : dp) {
+                    Arrays.fill(row, -1);
+                }
+                int ans = countTargetSets(arr1, arr1.length - 1, s1, dp);
+                System.out.println("ans=" + ans);
+                int finalAns = ans * ZeroPower;
+                return finalAns;
+            } else {
+                //new target
+                int s1 = (sum + target) / 2;
+                int[][] dp = new int[arr.length][s1 + 1];
+                for (int[] row : dp) {
+                    Arrays.fill(row, -1);
+                }
+                int ans = countTargetSets(arr, arr.length - 1, s1, dp);
+                return ans;
+            }
+        }
+    }
+}

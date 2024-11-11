@@ -1,0 +1,24 @@
+//TC and SC  - O(len(coins) * amount)
+class Solution {
+
+    int max_amt;
+
+    public int coinChange(int[] coins, int amount) {
+        int[][] memo = new int[coins.length + 1][amount + 1];
+        max_amt = amount + 1;
+        int res = fewCoins(coins, amount, coins.length - 1, memo);
+        return res >= max_amt ? -1 : res;
+    }
+
+    private int fewCoins(int[] coins, int amt, int pos, int[][] memo) {
+        if (pos == -1 || amt <= 0) {
+            return amt == 0 ? 0 : max_amt;
+        }
+        if (memo[pos][amt] != 0)
+            return memo[pos][amt];
+        int va = 1 + fewCoins(coins, amt - coins[pos], pos, memo);
+        int vna = fewCoins(coins, amt, pos - 1, memo);
+        memo[pos][amt] = Math.min(va, vna);
+        return memo[pos][amt];
+    }
+}

@@ -1,0 +1,27 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        if (amount == 0) {
+            // Edge case: 0 amount requires 0 coins
+            return 0;
+        }
+        // Array to store minimum coins needed for amounts 0 to amount
+        final int[] dp = new int[amount + 1];
+        // Initialize with a large value (e.g., Integer.MAX_VALUE)
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        // Base case: 0 amount needs 0 coins
+        dp[0] = 0;
+        for (int currentAmount = 1; currentAmount <= amount; currentAmount++) {
+            for (int var1 : param1) {
+                // Iterate through each coin denomination
+                int difference = currentAmount - var1;
+                // Optimized condition: Check if difference is feasible and dp[difference] is valid
+                if (difference >= 0 && dp[difference] != Integer.MAX_VALUE) {
+                    dp[currentAmount] = Math.min(dp[currentAmount], dp[difference] + 1);
+                }
+            }
+        }
+        // Return -1 if impossible, else minimum coins
+        return dp[amount] == Integer.MAX_VALUE ? -1 : dp[amount];
+    }
+}

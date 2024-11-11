@@ -1,0 +1,39 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int n = nums.length;
+        int total = 0;
+        for (int i = 0; i < n; i++) {
+            total += nums[i];
+        }
+        int d = param1;
+        int targ = total - d;
+        if (targ % 2 != 0) {
+            return 0;
+        }
+        if (targ < 0) {
+            return 0;
+        }
+        targ = targ / 2;
+        int[][] dp = new int[n + 1][targ + 1];
+        return findNuberOfsubset(targ, nums, n, dp);
+    }
+
+    public int findNuberOfsubset(int param1, int[] arr, int n, int[][] dp) {
+        int mod = 1000000007;
+        for (int i = 0; i < n; i++) {
+            dp[i][0] = 1;
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= param1; j++) {
+                int nottake = dp[i - 1][j] % mod;
+                int take = 0;
+                if (j >= arr[i - 1]) {
+                    take = dp[i - 1][j - arr[i - 1]] % mod;
+                }
+                dp[i][j] = take + nottake;
+            }
+        }
+        return dp[n][param1] % mod;
+    }
+}

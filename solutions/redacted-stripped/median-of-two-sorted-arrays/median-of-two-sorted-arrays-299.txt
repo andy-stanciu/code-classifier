@@ -1,0 +1,33 @@
+class Solution {
+
+    public double method1(int[] nums1, int[] nums2) {
+        int m = nums1.length, n = nums2.length;
+        if (m > n) {
+            return method1(nums2, nums1);
+        }
+        int start = 0, end = m;
+        int halfLength = (m + n + 1) / 2;
+        while (start <= end) {
+            int partitionX = start + (end - start) / 2;
+            int partitionY = halfLength - partitionX;
+            int maxX = partitionX == 0 ? Integer.MIN_VALUE : nums1[partitionX - 1];
+            int maxY = partitionY == 0 ? Integer.MIN_VALUE : nums2[partitionY - 1];
+            int minX = partitionX == m ? Integer.MAX_VALUE : nums1[partitionX];
+            int minY = partitionY == n ? Integer.MAX_VALUE : nums2[partitionY];
+            if (maxX <= minY && maxY <= minX) {
+                int leftMax = Math.max(maxX, maxY);
+                int rightMin = Math.min(minX, minY);
+                if ((m + n) % 2 == 0) {
+                    return (leftMax + rightMin) / 2.0;
+                } else {
+                    return leftMax;
+                }
+            } else if (maxX > minY) {
+                end = partitionX - 1;
+            } else {
+                start = partitionX + 1;
+            }
+        }
+        throw new IllegalArgumentException("Arrays are not sorted");
+    }
+}

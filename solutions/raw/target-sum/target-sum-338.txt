@@ -1,0 +1,21 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int n = nums.length;
+        int total = Arrays.stream(nums).sum();
+        int[] dp = new int[2 * total + 1];
+        dp[nums[0] + total] = 1;
+        dp[-nums[0] + total] += 1;
+        for (int i = 1; i < n; i++) {
+            int[] next = new int[2 * total + 1];
+            for (int j = -total; j <= total; j++) {
+                if (dp[j + total] > 0) {
+                    next[j + total + nums[i]] += dp[j + total];
+                    next[j + total - nums[i]] += dp[j + total];
+                }
+            }
+            dp = next;
+        }
+        return Math.abs(target) > total ? 0 : dp[target + total];
+    }
+}

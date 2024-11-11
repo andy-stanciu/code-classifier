@@ -1,0 +1,33 @@
+class Solution {
+
+    Integer n = null;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        n = nums.length;
+        int sum = 0;
+        for (int s : nums) sum += s;
+        int[][] dp = new int[n + 1][2 * sum + 1];
+        for (int i = 0; i <= n; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        return findWays(nums, target, 0, 0, 0, dp, sum);
+    }
+
+    private int findWays(int[] nums, int target, int curSum, int index, int count, int[][] dp, int totalSum) {
+        // in dp we\'re storing data using dp[index][curSum + totalSum]
+        // here we\'re using curSum + totalSum because curSums can be < 0, and in these cases array
+        // exception occurs (eg. dp[2][-3])
+        // so we\'re extending array indexing by totalSum so we can accomodate all positive and negetive values of
+        // curSums in dp
+        if (n == index && curSum == target) {
+            return ++count;
+        }
+        if (n == index) {
+            return 0;
+        }
+        if (dp[index][curSum + totalSum] != -1)
+            return dp[index][curSum + totalSum];
+        dp[index][curSum + totalSum] = findWays(nums, target, curSum + nums[index], index + 1, count, dp, totalSum) + findWays(nums, target, curSum - nums[index], index + 1, count, dp, totalSum);
+        return dp[index][curSum + totalSum];
+    }
+}

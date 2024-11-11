@@ -1,0 +1,25 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int[][] dp = new int[param1.length][amount + 1];
+        for (int[] a : dp) Arrays.fill(a, -1);
+        int ans = method2(0, param1, amount, dp);
+        if (ans >= (int) 1e9)
+            return -1;
+        return ans;
+    }
+
+    public int method2(int i, int[] param1, int target, int[][] dp) {
+        if (target == 0)
+            return 0;
+        if (i >= param1.length)
+            return (int) 1e9;
+        if (param1[i] > target)
+            return method2(i + 1, param1, target, dp);
+        if (dp[i][target] != -1)
+            return dp[i][target];
+        int l = 1 + method2(i, param1, target - param1[i], dp);
+        int r = method2(i + 1, param1, target, dp);
+        return dp[i][target] = Math.min(l, r);
+    }
+}

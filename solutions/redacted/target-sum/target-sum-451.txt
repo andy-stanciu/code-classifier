@@ -1,0 +1,27 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int var1 = 0;
+        for (int i = 0; i < nums.length; i++) var1 += nums[i];
+        if (param1 > var1 || param1 < -var1 || (param1 + var1) % 2 == 1)
+            return 0;
+        var1 = (var1 + param1) / 2;
+        int[][] dp = new int[nums.length + 1][var1 + 1];
+        for (int i = 0; i < dp.length; i++) {
+            for (int j = 0; j < dp[0].length; j++) {
+                if (i == 0)
+                    dp[i][j] = 0;
+                if (j == 0)
+                    dp[i][j] = 1;
+                if (i - 1 >= 0) {
+                    if (// ith item\'s magnitude is greater than weight(i.e,j) then skip it
+                    nums[i - 1] > j)
+                        dp[i][j] = dp[i - 1][j];
+                    else
+                        dp[i][j] = dp[i - 1][j] + dp[i - 1][j - nums[i - 1]];
+                }
+            }
+        }
+        return dp[nums.length][var1];
+    }
+}

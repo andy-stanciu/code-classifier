@@ -1,0 +1,35 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int[] rows : dp) {
+            Arrays.fill(rows, -1);
+        }
+        int ans = helper(param1, n - 1, amount, dp);
+        if (ans >= Math.pow(10, 9)) {
+            return -1;
+        }
+        return ans;
+    }
+
+    int helper(int[] param1, int idx, int target, int[][] dp) {
+        if (idx == 0) {
+            if (target % param1[idx] == 0) {
+                return target / param1[idx];
+            } else {
+                return (int) Math.pow(10, 9);
+            }
+        }
+        if (dp[idx][target] != -1) {
+            return dp[idx][target];
+        }
+        int notTake = helper(param1, idx - 1, target, dp);
+        int take = (int) Math.pow(10, 9);
+        if (param1[idx] <= target) {
+            take = 1 + helper(param1, idx, target - param1[idx], dp);
+        }
+        dp[idx][target] = Math.min(notTake, take);
+        return dp[idx][target];
+    }
+}

@@ -1,0 +1,55 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        int n = nums.length;
+        for (int it : nums) sum += it;
+        if ((target + sum) % 2 != 0 || (target + sum) < 0)
+            return 0;
+        int tar = (target + sum) / 2;
+        int[][] dp = new int[n][tar + 1];
+        //Top Down Approach
+        // for(int i=0;i<n;i++){
+        //     for(int j=0;j<=tar;j++){
+        //         dp[i][j] = -1;
+        //     }
+        // }
+        // return helper(nums,tar,n-1,dp);
+        //Bottom Up Approach
+        if (nums[0] == 0)
+            dp[0][0] = 2;
+        else
+            dp[0][0] = 1;
+        if (nums[0] <= tar && nums[0] != 0) {
+            dp[0][nums[0]] = 1;
+        }
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j <= tar; j++) {
+                int notTake = dp[i - 1][j];
+                int take = 0;
+                if (j >= nums[i])
+                    take = dp[i - 1][j - nums[i]];
+                dp[i][j] = take + notTake;
+            }
+        }
+        return dp[n - 1][tar];
+    }
+
+    public int helper(int[] nums, int tar, int idx, int[][] dp) {
+        if (idx == 0) {
+            if (tar == 0 && nums[0] == 0)
+                return 2;
+            else if (tar == nums[0] || tar == 0)
+                return 1;
+            else
+                return 0;
+        }
+        if (dp[idx][tar] != -1)
+            return dp[idx][tar];
+        int notTake = helper(nums, tar, idx - 1, dp);
+        int take = 0;
+        if (tar >= nums[idx])
+            take = helper(nums, tar - nums[idx], idx - 1, dp);
+        return dp[idx][tar] = take + notTake;
+    }
+}

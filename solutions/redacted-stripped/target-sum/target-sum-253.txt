@@ -1,0 +1,26 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        if (param1 < 0)
+            param1 = -param1;
+        int var1 = 0;
+        for (int num : nums) var1 += num;
+        if (param1 > var1)
+            return 0;
+        int n = nums.length;
+        int[][] dp = new int[n][2 * var1 + 1];
+        if (nums[n - 1] == 0)
+            dp[n - 1][var1] = 2;
+        else {
+            dp[n - 1][nums[n - 1] + var1] = 1;
+            dp[n - 1][-nums[n - 1] + var1] = 1;
+        }
+        for (int i = n - 2; i >= 0; i--) for (int k = 0; k < 2 * var1 + 1; k++) {
+            if (dp[i + 1][k] == 0)
+                continue;
+            dp[i][k + nums[i]] += dp[i + 1][k];
+            dp[i][k - nums[i]] += dp[i + 1][k];
+        }
+        return dp[0][param1 + var1];
+    }
+}

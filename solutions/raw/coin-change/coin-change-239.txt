@@ -1,0 +1,31 @@
+class Solution {
+
+    public int coinChange(int[] arr, int coin) {
+        Map<Integer, Integer> memo = new HashMap<>();
+        return dpUtil(coin, arr, memo);
+    }
+
+    public int dpUtil(int coin, int[] arr, Map<Integer, Integer> memo) {
+        if (coin == 0) {
+            return 0;
+        }
+        if (coin < 0) {
+            return -1;
+        }
+        if (memo.containsKey(coin)) {
+            return memo.get(coin);
+        }
+        int minCoin = -1;
+        for (int cur : arr) {
+            int curResult = dpUtil(coin - cur, arr, memo);
+            if (curResult != -1) {
+                int minCoinResult = curResult + 1;
+                if (minCoinResult < minCoin || minCoin == -1) {
+                    minCoin = minCoinResult;
+                }
+            }
+        }
+        memo.put(coin, minCoin);
+        return minCoin;
+    }
+}

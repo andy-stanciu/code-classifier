@@ -1,0 +1,30 @@
+class Solution {
+
+    public int sol(int[] a, int t, int n, int[][] dp) {
+        if (n == 0) {
+            if (t % a[n] == 0) {
+                return t / a[n];
+            }
+            return 100000000;
+        }
+        if (dp[n][t] != 0) {
+            return dp[n][t];
+        }
+        int notake = 0 + sol(a, t, n - 1, dp);
+        int take = 100000000;
+        if (a[n] <= t) {
+            take = 1 + sol(a, t - a[n], n, dp);
+        }
+        return dp[n][t] = Math.min(notake, take);
+    }
+
+    public int coinChange(int[] coins, int a) {
+        int n = coins.length;
+        int ans = sol(coins, a, n - 1, new int[n][a + 1]);
+        if (ans >= 100000000) {
+            return -1;
+        } else {
+            return ans;
+        }
+    }
+}

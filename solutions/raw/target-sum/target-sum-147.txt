@@ -1,0 +1,26 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        // Determine the maximum possible sum based on the elements in nums
+        int maxSum = 0;
+        for (int num : nums) {
+            maxSum += num;
+        }
+        // dp array to store counts of sums encountered so far
+        int length = (maxSum << 1);
+        int[] dp = new int[++length];
+        // Initialize with a sum of 0 and count of 1
+        dp[maxSum] = 1;
+        for (int num : nums) {
+            int[] next = new int[length];
+            for (int i = 0; i < length; i++) {
+                if (dp[i] > 0) {
+                    next[i + num] += dp[i];
+                    next[i - num] += dp[i];
+                }
+            }
+            dp = next;
+        }
+        return target + maxSum < 0 || target + maxSum >= length ? 0 : dp[target + maxSum];
+    }
+}

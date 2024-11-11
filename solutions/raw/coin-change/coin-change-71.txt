@@ -1,0 +1,33 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        if (amount == 0) {
+            return 0;
+        }
+        Map<Integer, Integer> cache = new HashMap<>();
+        int ans = dfs(coins, amount, cache);
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+
+    public int dfs(int[] coins, int amount, Map<Integer, Integer> cache) {
+        if (cache.containsKey(amount)) {
+            return cache.get(amount);
+        }
+        if (amount < 0) {
+            return Integer.MAX_VALUE;
+        }
+        if (amount == 0) {
+            return 0;
+        }
+        List<Integer> results = new ArrayList<>();
+        for (int coin : coins) {
+            int res = dfs(coins, amount - coin, cache);
+            if (res != Integer.MAX_VALUE)
+                results.add(res + 1);
+        }
+        int ans = Integer.MAX_VALUE;
+        for (int res : results) ans = Math.min(ans, res);
+        cache.put(amount, ans);
+        return ans;
+    }
+}

@@ -1,0 +1,73 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int ans = method2(param1, amount);
+        return (ans == Integer.MAX_VALUE) ? -1 : ans;
+    }
+
+    int method2(int[] param1, int amount) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (amount < 0) {
+            return Integer.MAX_VALUE;
+        }
+        int var1 = Integer.MAX_VALUE;
+        for (int i = 0; i < param1.length; i++) {
+            int ans = method2(param1, amount - param1[i]);
+            if (ans != Integer.MAX_VALUE) {
+                var1 = Math.min(var1, 1 + ans);
+            }
+        }
+        return var1;
+    }
+}
+
+class Solution {
+
+    int[] dp;
+
+    public int method1(int[] param1, int amount) {
+        dp = new int[amount + 1];
+        Arrays.fill(dp, -1);
+        int ans = method2(param1, amount);
+        return (ans == Integer.MAX_VALUE) ? -1 : ans;
+    }
+
+    int method2(int[] param1, int amount) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (amount < 0) {
+            return Integer.MAX_VALUE;
+        }
+        if (dp[amount] != -1) {
+            return dp[amount];
+        }
+        int var1 = Integer.MAX_VALUE;
+        for (int i = 0; i < param1.length; i++) {
+            int ans = method2(param1, amount - param1[i]);
+            if (ans != Integer.MAX_VALUE) {
+                var1 = Math.min(var1, 1 + ans);
+            }
+        }
+        return dp[amount] = var1;
+    }
+}
+
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+        for (int i = 1; i <= amount; i++) {
+            for (int j = 0; j < param1.length; j++) {
+                if (i - param1[j] >= 0 && dp[i - param1[j]] != Integer.MAX_VALUE) {
+                    dp[i] = Math.min(dp[i], 1 + dp[i - param1[j]]);
+                }
+            }
+        }
+        return (dp[amount] == Integer.MAX_VALUE) ? -1 : dp[amount];
+    }
+}

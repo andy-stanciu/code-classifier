@@ -1,0 +1,70 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        Arrays.sort(coins);
+        int[] dp = new int[amount + 1];
+        for (int i = 0; i <= amount; i++) dp[i] = Integer.MAX_VALUE;
+        dp[0] = 0;
+        return helper3(coins, amount, dp);
+    }
+
+    public int helper3(int[] coins, int amount, int[] dp) {
+        int ans = Integer.MAX_VALUE;
+        for (int i = 1; i <= amount; i++) {
+            for (int j = coins.length - 1; j >= 0; j--) {
+                if (i - coins[j] >= 0 && dp[i - coins[j]] != -1)
+                    dp[i] = Math.min(dp[i], 1 + dp[i - coins[j]]);
+            }
+            if (dp[i] == Integer.MAX_VALUE)
+                dp[i] = -1;
+        }
+        return dp[amount];
+    }
+
+    public int helper2(int[] coins, int amount, int[] dp) {
+        if (amount < 0)
+            return -1;
+        if (amount == 0)
+            return 0;
+        int ans = Integer.MAX_VALUE;
+        if (dp[amount] != -1)
+            return dp[amount];
+        for (int i = coins.length - 1; i >= 0; i--) {
+            int temp = helper2(coins, amount - coins[i], dp);
+            if (temp != -1)
+                ans = Math.min(ans, 1 + temp);
+        }
+        dp[amount] = ans;
+        if (ans == Integer.MAX_VALUE)
+            dp[amount] = -1;
+        return dp[amount];
+    }
+
+    public int helper1(int[] coins, int amount) {
+        if (amount < 0)
+            return -1;
+        if (amount == 0)
+            return 0;
+        int ans = Integer.MAX_VALUE;
+        for (int i = coins.length - 1; i >= 0; i--) {
+            int temp = helper1(coins, amount - coins[i]);
+            if (temp != -1)
+                ans = Math.min(ans, 1 + temp);
+        }
+        return (ans == Integer.MAX_VALUE) ? -1 : ans;
+    }
+
+    public int helper(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        dp[0] = 0;
+        for (int i = 1; i < coins.length; i++) dp[i] = -1;
+        for (int i = 1; i <= amount; i++) {
+            for (int j = coins.length - 1; j >= 0; j--) {
+                if (i - coins[j] >= 0 && dp[i - coins[j]] != -1)
+                    dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
+            }
+        }
+        for (int i : dp) System.out.print(i + " ");
+        return dp[amount];
+    }
+}

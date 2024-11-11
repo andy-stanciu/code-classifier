@@ -1,0 +1,24 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        long[][] memo = new long[coins.length][amount + 1];
+        for (long[] row : memo) Arrays.fill(row, -1);
+        long count = getMinCoins(coins.length - 1, amount, coins, memo);
+        return count == Integer.MAX_VALUE ? -1 : (int) count;
+    }
+
+    private long getMinCoins(int n, int target, int[] coins, long[][] memo) {
+        if (target == 0)
+            return 0;
+        if (n == 0)
+            return target % coins[n] == 0 ? target / coins[n] : Integer.MAX_VALUE;
+        if (memo[n][target] != -1)
+            return memo[n][target];
+        if (coins[n] <= target) {
+            memo[n][target] = Math.min(1L + getMinCoins(n, target - coins[n], coins, memo), getMinCoins(n - 1, target, coins, memo));
+        } else {
+            memo[n][target] = getMinCoins(n - 1, target, coins, memo);
+        }
+        return memo[n][target];
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        //Similar to find the total subsets count with given difference
+        int n = nums.length;
+        int sum = 0;
+        for (int x : nums) {
+            sum += x;
+        }
+        if (target > sum || (target + sum) % 2 != 0)
+            return 0;
+        // S1 + S2 = Sum
+        // S1 - S2 = target
+        // S1 = (sum + target)/2
+        //Most Important
+        int req_sum = (sum + target) / 2;
+        return find(nums, n, req_sum);
+    }
+
+    public int find(int[] nums, int n, int sum) {
+        //Initialisation
+        int[][] dp = new int[n + 1][sum + 1];
+        //Base-Case Transformation
+        for (int i = 0; i < sum + 1; i++) {
+            dp[0][i] = 0;
+        }
+        for (int i = 0; i < n + 1; i++) {
+            dp[i][0] = 1;
+        }
+        //Main-Logic
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 0; j < sum + 1; j++) {
+                if (//Consider it
+                nums[i - 1] <= j) {
+                    dp[i][j] = dp[i - 1][j - nums[i - 1]] + dp[i - 1][j];
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        return dp[n][sum];
+    }
+}

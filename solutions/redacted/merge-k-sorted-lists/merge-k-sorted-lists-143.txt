@@ -1,0 +1,58 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        ListNode dummy = new ListNode();
+        ListNode head = dummy;
+        int count = 0;
+        for (ListNode node : param1) if (node != null)
+            count++;
+        ListNode[] heap = new ListNode[count];
+        int r = heap.length;
+        for (ListNode node : param1) if (node != null) {
+            heap[--r] = node;
+            heapify(heap, r, heap.length);
+        }
+        int n = heap.length;
+        while (n > 0) {
+            ListNode top = heap[0];
+            head.next = top;
+            head = top;
+            if (heap[0].next == null) {
+                swap(heap, 0, --n);
+            } else
+                heap[0] = heap[0].next;
+            heapify(heap, 0, n);
+        }
+        return dummy.next;
+    }
+
+    public void heapify(ListNode[] heap, int i, int n) {
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
+        int min = i;
+        if (left < n && heap[left].val < heap[min].val)
+            min = left;
+        if (right < n && heap[right].val < heap[min].val)
+            min = right;
+        if (min != i) {
+            swap(heap, i, min);
+            heapify(heap, min, n);
+        }
+    }
+
+    public void swap(ListNode[] heap, int i, int j) {
+        ListNode temp = heap[i];
+        heap[i] = heap[j];
+        heap[j] = temp;
+    }
+}

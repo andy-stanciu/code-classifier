@@ -1,0 +1,28 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        // Initialize all table values as Infinite
+        // Base case (If given value V is 0)
+        dp[0] = 0;
+        // Compute minimum coins required for all
+        // values from 1 to V
+        int n = coins.length;
+        for (int i = 1; i <= amount; i++) {
+            // Go through all coins smaller than i
+            for (int j = 0; j < n; j++) {
+                if (coins[j] <= i) {
+                    int sub_res = dp[i - coins[j]];
+                    if (sub_res != Integer.MAX_VALUE && sub_res + 1 < dp[i]) {
+                        dp[i] = sub_res + 1;
+                    }
+                }
+            }
+        }
+        if (dp[amount] == Integer.MAX_VALUE) {
+            return -1;
+        }
+        return dp[amount];
+    }
+}

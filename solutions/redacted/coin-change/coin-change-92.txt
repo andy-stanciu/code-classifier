@@ -1,0 +1,30 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        // dp approach
+        int[] dp = new int[amount + 1];
+        // note: dont fill the dp array with 0 as it it can lead to errors as it represents min_coins
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        // as 0 coins are reqd to make 0
+        dp[0] = 0;
+        // here we subdivide the problem into more smaller subproblems and find the min amt of coins required for it
+        // the index of each dp array represent the smaller subproblem amount
+        for (int k = 1; k <= amount; k++) {
+            for (int j = 0; j < param1.length; j++) {
+                if (param1[j] <= k) {
+                    // rem amt -> if its not possible to make the rem amt then there the dp value would be integer.max_value.
+                    if (// here what it basically means is that if a coin is less than equal to amt to be made we take the coin and add it with the min_coins reqd to make the rem amt
+                    dp[k - param1[j]] != Integer.MAX_VALUE) {
+                        // if there are more than 1 denomination using which we can form then we have to take the min of it
+                        dp[k] = Math.min(dp[k], 1 + dp[k - param1[j]]);
+                    }
+                }
+            }
+        }
+        if (dp[amount] == Integer.MAX_VALUE) {
+            return -1;
+        } else {
+            return dp[amount];
+        }
+    }
+}

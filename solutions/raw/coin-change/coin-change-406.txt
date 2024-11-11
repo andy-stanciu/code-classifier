@@ -1,0 +1,62 @@
+//either the remainder exists or the number that thr remainder can divide exists
+class Solution {
+
+    //bfs solution covering all different kinds of combination
+    public int coinChangeBFS(int[] coins, int amount) {
+        if (coins == null || coins.length == 0 || amount < 1)
+            return 0;
+        //brute force bfs
+        Deque<Integer> diffCosts = new ArrayDeque<Integer>();
+        boolean[] visited = new boolean[amount + 1];
+        diffCosts.addFirst(amount);
+        //level of bst tree
+        int level = 0;
+        while (!diffCosts.isEmpty()) {
+            int size = diffCosts.size();
+            while (size-- > 0) {
+                int curAmount = diffCosts.removeLast();
+                if (curAmount == 0)
+                    return level;
+                for (int n : coins) {
+                    int currentCost = curAmount - n;
+                    if (currentCost >= 0 && !visited[currentCost]) {
+                        visited[currentCost] = true;
+                        diffCosts.addFirst(currentCost);
+                    }
+                }
+            }
+            ++level;
+        }
+        return -1;
+    }
+
+    //we are solving with dp here the idea is that
+    //we will create a dp array which will store the number of minimum coins we need
+    //to reach that amount
+    public int coinChange(int[] coins, int amount) {
+        //size will be amount + 1 bcaz at dp[0] cost will be 0
+        int[] dp = new int[amount + 1];
+        //filling it with amount + 1 to compare at the end whether
+        //we were able to reach the amount or not
+        Arrays.fill(dp, amount + 1);
+        //initialize dp
+        dp[0] = 0;
+        for (int i = 1; i <= amount; i++) {
+            for (int c : coins) {
+                //if the amount we are looking for should we greater than the
+                //coin we have
+                if (i >= c) {
+                    //coins for i
+                    ///dp[i-c] returns the previous instance of the same coin
+                    //we used and we do +1 for current coin count
+                    dp[i] = Math.min(dp[i], dp[i - c] + 1);
+                }
+            }
+        }
+        /**
+         *        if dp amount is still amount  +1 that means we couldnot reach it so
+         *        return -1 else return dp[amount]
+         */
+        return dp[amount] == amount + 1 ? -1 : dp[amount];
+    }
+}

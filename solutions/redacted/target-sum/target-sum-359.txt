@@ -1,0 +1,29 @@
+class Solution {
+
+    Map<Integer, Map<Integer, Integer>> cache;
+
+    int[] nums;
+
+    public int method1(int[] nums, int param1) {
+        cache = new HashMap<>();
+        this.nums = nums;
+        return dp(param1, 0);
+    }
+
+    private int dp(int param1, int numsIndex) {
+        if (numsIndex == nums.length) {
+            return param1 == 0 ? 1 : 0;
+        } else {
+            Map<Integer, Integer> var1 = cache.getOrDefault(param1, new HashMap<>());
+            if (var1.containsKey(numsIndex)) {
+                return var1.get(numsIndex);
+            }
+            int res = dp(param1 + nums[numsIndex], numsIndex + 1);
+            res += dp(param1 - nums[numsIndex], numsIndex + 1);
+            var1 = cache.getOrDefault(param1, new HashMap<>());
+            var1.put(numsIndex, res);
+            cache.put(param1, var1);
+            return res;
+        }
+    }
+}

@@ -1,0 +1,49 @@
+class Solution {
+
+    int validCombinations = 0;
+
+    //suffixSums for knowing max sum of numbers after this index
+    int[] suffixSum;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        //stores all valid combination sum values found till now, and their freq
+        HashMap<Integer, Integer> sumMap = new HashMap<Integer, Integer>();
+        sumMap.put(0, 1);
+        //calculating and putting in suffix sums
+        suffixSum = new int[nums.length];
+        int sum = 0;
+        for (int i = nums.length - 1; i >= 0; i--) {
+            sum += nums[i];
+            suffixSum[i] = sum;
+        }
+        findAllValidCombinations(nums, target, 0, sumMap);
+        return validCombinations;
+    }
+
+    void findAllValidCombinations(int[] nums, int target, int index, HashMap<Integer, Integer> sumMap) {
+        Iterator<Map.Entry<Integer, Integer>> iter = sumMap.entrySet().iterator();
+        HashMap<Integer, Integer> newMap = new HashMap<Integer, Integer>();
+        while (iter.hasNext()) {
+            Map.Entry<Integer, Integer> pair = (Map.Entry) iter.next();
+            //the sum till now (pair.getKey()) can reach target if all rest of the numbers are 100% positive or 100% negative
+            if (((pair.getKey() + suffixSum[index]) >= target) && ((pair.getKey() - suffixSum[index]) <= target)) {
+                //current char has + sign
+                int key1 = pair.getKey() + nums[index];
+                //current char has - sign
+                int key2 = pair.getKey() - nums[index];
+                newMap.put(key1, newMap.getOrDefault(key1, 0) + pair.getValue());
+                newMap.put(key2, newMap.getOrDefault(key2, 0) + pair.getValue());
+            }
+        }
+        if (index == nums.length - 1) {
+            for (int key : newMap.keySet()) {
+                //valid combination
+                if (key == target) {
+                    validCombinations += newMap.get(key);
+                }
+            }
+        } else {
+            findAllValidCombinations(nums, target, index + 1, newMap);
+        }
+    }
+}

@@ -1,0 +1,29 @@
+class Solution {
+
+    public int method1(int[] arr, int param1) {
+        int n = arr.length;
+        int var1 = 0;
+        for (int i : arr) var1 += i;
+        if (var1 - param1 < 0 || (var1 - param1) % 2 != 0)
+            return 0;
+        param1 = (var1 - param1) / 2;
+        int[][] dp = new int[n][param1 + 1];
+        if (arr[0] == 0)
+            dp[0][0] = 2;
+        else
+            dp[0][0] = 1;
+        if (arr[0] != 0 && param1 >= arr[0])
+            dp[0][arr[0]] = 1;
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j <= param1; j++) {
+                int pick = 0;
+                if (j >= arr[i]) {
+                    pick = dp[i - 1][j - arr[i]];
+                }
+                int notPick = dp[i - 1][j];
+                dp[i][j] = pick + notPick;
+            }
+        }
+        return dp[n - 1][param1];
+    }
+}

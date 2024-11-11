@@ -1,0 +1,87 @@
+class Solution {
+
+    // Recursion
+    /*
+    public int coinChange(int[] coins, int amount) {
+        int ans = helper(coins , amount , 0);
+        if(ans >= 1000000000) return -1 ;
+        return ans;
+    }
+    
+     private int helper(int[] coins, int amount , int i){
+         if(i == coins.length-1){
+             if(amount%coins[i] == 0) return amount/coins[i] ;
+             else return 1000000000;
+         }
+         
+         int notTake = helper(coins , amount , i+1);
+         
+         int take = Integer.MAX_VALUE;
+         if(amount >= coins[i]){
+             take = 1 + helper(coins , amount-coins[i] , i);
+         }
+        
+         
+         return Math.min(take , notTake);
+     } 
+     */
+    // DP MEMOIZATION
+    /*
+    public int coinChange(int[] coins, int amount) {
+        int ans = -1 , n = coins.length;
+        
+        int[][] dp = new int[n][amount+1] ;
+        for(int i=0 ; i<n ; i++){
+            Arrays.fill ( dp[i] , -1);
+        }
+        ans = helper(coins , amount , n-1 , dp);
+        if(ans >= 100000000) return -1;
+        else return ans;
+        
+     } 
+    
+    private int helper(int[] coins, int amount , int i , int[][] dp){
+        if(i == 0){
+            if(amount % coins[0]  == 0) return (amount / coins[0]);
+            else return 100000000;   // Don\'t return Integer.MAX_VALUE; As it might get add up to some count in take portion.So, to avoid Overflow. And can not return 0 as it might get add up to some count in take portion ans can give wrong ans
+        }
+        
+        if(dp[i][amount] != -1) return dp[i][amount];
+        
+        int take = Integer.MAX_VALUE;
+        int notTake = helper(coins , amount , i-1 , dp);
+        if(coins[i] <= amount){
+            take = 1 + helper(coins , amount-coins[i] , i , dp) ;
+        }
+        
+        dp[i][amount] =  Math.min(take , notTake);
+        return dp[i][amount];
+    }
+    */
+    // TBALULATION
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int j = 0; j <= amount; j++) {
+            if (j % param1[0] == 0) {
+                dp[0][j] = j / param1[0];
+            } else {
+                dp[0][j] = 100000000;
+            }
+        }
+        for (int i = 1; i < n; i++) {
+            for (int amt = 0; amt <= amount; amt++) {
+                int take = Integer.MAX_VALUE;
+                int notTake = dp[i - 1][amt];
+                if (param1[i] <= amt) {
+                    take = 1 + dp[i][amt - param1[i]];
+                }
+                dp[i][amt] = Math.min(take, notTake);
+            }
+        }
+        if (dp[n - 1][amount] >= 100000000) {
+            return -1;
+        }
+        return dp[n - 1][amount];
+    }
+}

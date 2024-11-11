@@ -1,0 +1,38 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int n = nums.length;
+        if (n == 1 && (nums[0] == param1 || -1 * nums[0] == param1))
+            return 1;
+        else if (n == 1)
+            return 0;
+        int var1 = 0;
+        for (int num : nums) {
+            var1 += num;
+        }
+        if (param1 > var1 || param1 < -var1) {
+            return 0;
+        }
+        int range = 2 * var1 + 1;
+        int[][] dp = new int[n][range];
+        for (int[] row : dp) Arrays.fill(row, Integer.MIN_VALUE);
+        return f(0, 0, param1, n, nums, dp, var1);
+    }
+
+    public int f(int index, int var1, int param1, int n, int[] arr, int[][] dp, int param2) {
+        if (index == n - 1) {
+            if (var1 + arr[n - 1] == param1 || var1 - arr[n - 1] == param1) {
+                if (arr[n - 1] == 0)
+                    return 2;
+                else
+                    return 1;
+            } else
+                return 0;
+        }
+        if (dp[index][var1 + param2] != Integer.MIN_VALUE)
+            return dp[index][var1 + param2];
+        int plusway = f(index + 1, var1 + arr[index], param1, n, arr, dp, param2);
+        int minusway = f(index + 1, var1 - arr[index], param1, n, arr, dp, param2);
+        return dp[index][var1 + param2] = plusway + minusway;
+    }
+}

@@ -1,0 +1,129 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        //Overall DFS solution
+        //Start with everything +
+        //then go back one, change + to minus
+        //carry on in loop, when reach - then go back to previous card
+        //repeat until gone back to all cards (twice as first card can be negative)
+        //stack s is the cumulative sum up until that point
+        //numbers stack is just the same as the array - possibly redundant
+        Stack<Integer> s = new Stack<>();
+        Stack<Integer> numbers = new Stack<>();
+        int count = 0;
+        int card;
+        int loop = 0;
+        int zeros = 0;
+        int[] cumsum = new int[nums.length];
+        int[] cumcount = new int[nums.length];
+        HashMap<String, Integer> cache = new HashMap<String, Integer>();
+        int cumul = 0;
+        String key;
+        //Sort the array, will help with timings later
+        Arrays.sort(nums);
+        // Reverse the array, want in desc order
+        int length = nums.length;
+        for (int i = 0; i < length / 2; i++) {
+            int temp = nums[i];
+            nums[i] = nums[length - 1 - i];
+            nums[length - 1 - i] = temp;
+        }
+        for (int i = nums.length - 1; i >= 0; i--) {
+            //work backward with cumulative sums
+            cumul += nums[i];
+            cumsum[i] = cumul;
+        }
+        for (int num : nums) {
+            if (num == 0) {
+                //zeros unnecessarily double computation time
+                zeros++;
+            }
+            if (s.empty()) {
+                s.push(num);
+            } else if (s.peek() - cumsum[s.size()] > target) {
+                //reason for cum sums and sort in desc order
+                //if from current total, no way to get back "down" to target number, abort path
+                s.push(s.peek() - num);
+            } else if (s.peek() + cumsum[s.size()] < target) {
+                //same principle as above but reverse
+                return 0;
+            } else {
+                s.push(s.peek() + num);
+            }
+        }
+        if (s.peek() == target) {
+            count++;
+            //first add to cum count
+            for (int i = 0; i < cumcount.length; i++) {
+                cumcount[i] = cumcount[i] + 1;
+            }
+        }
+        while (true) {
+            //keep track of counts
+            //will be some redundency, where sum at position i will be the same
+            //instead of recaulculating everything, if hit same sum at position i, get result from hashmap
+            key = s.size() + "," + s.peek();
+            cache.put(key, cumcount[s.size() - 1]);
+            card = s.pop();
+            cumcount[s.size()] = 0;
+            //System.out.println(Arrays.toString(cumcount));
+            while (!s.empty()) {
+                // go back to end or first positive
+                if (card > s.peek()) {
+                    // if +
+                    // automatically push to negative
+                    s.push(s.peek() - (card - s.peek()));
+                    break;
+                } else if (card == s.peek()) {
+                    // if zero
+                    numbers.push(0);
+                } else {
+                    numbers.push(s.peek() - card);
+                }
+                key = s.size() + "," + s.peek();
+                cache.put(key, cumcount[s.size() - 1]);
+                card = s.pop();
+                cumcount[s.size()] = 0;
+                //System.out.println(Arrays.toString(cumcount));
+            }
+            if (s.empty()) {
+                if (card > 0) {
+                    s.push(-1 * card);
+                } else {
+                    break;
+                }
+            }
+            while (!numbers.empty()) {
+                card = numbers.pop();
+                if (s.peek() - cumsum[s.size()] > target) {
+                    s.push(s.peek() - card);
+                } else if (s.peek() + cumsum[s.size()] < target) {
+                    numbers.push(card);
+                    break;
+                } else {
+                    s.push(s.peek() + card);
+                }
+                key = s.size() + "," + s.peek();
+                if (cache.containsKey(key) && (!numbers.empty())) {
+                    count += cache.get(key);
+                    for (int i = 0; i < s.size(); i++) {
+                        cumcount[i] = cumcount[i] + cache.get(key);
+                    }
+                    //System.out.println(key + ":" + cache.get(key));
+                    break;
+                }
+            }
+            if (s.peek() == target && numbers.empty()) {
+                count++;
+                //System.out.println("Match");
+                //first add to cum count
+                for (int i = 0; i < cumcount.length; i++) {
+                    cumcount[i] = cumcount[i] + 1;
+                }
+            }
+        }
+        //every zero can be plus zero or minus zero, so essentially doubles possible combinations
+        count = count * (int) Math.pow(2, zeros);
+        return count;
+    }
+}

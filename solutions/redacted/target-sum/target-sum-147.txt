@@ -1,0 +1,26 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        // Determine the maximum possible sum based on the elements in nums
+        int var1 = 0;
+        for (int num : nums) {
+            var1 += num;
+        }
+        // dp array to store counts of sums encountered so far
+        int length = (var1 << 1);
+        int[] dp = new int[++length];
+        // Initialize with a sum of 0 and count of 1
+        dp[var1] = 1;
+        for (int num : nums) {
+            int[] next = new int[length];
+            for (int i = 0; i < length; i++) {
+                if (dp[i] > 0) {
+                    next[i + num] += dp[i];
+                    next[i - num] += dp[i];
+                }
+            }
+            dp = next;
+        }
+        return param1 + var1 < 0 || param1 + var1 >= length ? 0 : dp[param1 + var1];
+    }
+}

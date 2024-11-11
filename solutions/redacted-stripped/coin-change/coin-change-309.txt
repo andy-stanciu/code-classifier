@@ -1,0 +1,58 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        Arrays.sort(param1);
+        boolean allMultiply = true;
+        for (int i = 1; i < param1.length; ++i) {
+            if (param1[i] % param1[0] != 0) {
+                allMultiply = false;
+                break;
+            }
+        }
+        if (allMultiply && (amount % param1[0]) != 0) {
+            return -1;
+        }
+        int minCount = Integer.MAX_VALUE;
+        int[] counts = new int[param1.length];
+        int i = param1.length - 1;
+        int count = amount / param1[i];
+        int amount1 = amount - count * param1[i];
+        if (amount1 == 0) {
+            return count;
+        }
+        if (param1[0] * (count + 1) == amount) {
+            return count + 1;
+        }
+        if (count == amount / param1[0]) {
+            return -1;
+        }
+        counts[i] = count;
+        amount = amount1;
+        while (true) {
+            if (count >= minCount || i <= 0) {
+                count -= counts[i];
+                amount += counts[i] * param1[i];
+                do {
+                    ++i;
+                    if (i >= param1.length) {
+                        return minCount < Integer.MAX_VALUE ? minCount : -1;
+                    }
+                } while (counts[i] == 0);
+                --counts[i];
+                --count;
+                amount += param1[i];
+            }
+            --i;
+            counts[i] = 0;
+            while (amount >= param1[i]) {
+                amount -= param1[i];
+                ++counts[i];
+            }
+            count += counts[i];
+            if (amount == 0 && count < minCount) {
+                minCount = count;
+            }
+        }
+    }
+}

@@ -1,0 +1,28 @@
+class Solution {
+
+    Integer n = null;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        n = nums.length;
+        Map<Map.Entry<Integer, Integer>, Integer> dp = new HashMap<>();
+        return findWays(nums, target, 0, 0, 0, dp);
+    }
+
+    private int findWays(int[] nums, int target, int curSum, int index, int count, Map<Map.Entry<Integer, Integer>, Integer> dp) {
+        if (n == index && curSum == target) {
+            count++;
+            dp.put(Map.entry(index, curSum), count);
+            return count;
+        }
+        if (n == index) {
+            dp.put(Map.entry(index, curSum), 0);
+            return 0;
+        }
+        Map.Entry<Integer, Integer> entry = Map.entry(index, curSum);
+        if (dp.containsKey(entry))
+            return (int) dp.get(entry);
+        int tot = findWays(nums, target, curSum + nums[index], index + 1, count, dp) + findWays(nums, target, curSum - nums[index], index + 1, count, dp);
+        dp.put(Map.entry(index, curSum), tot);
+        return tot;
+    }
+}

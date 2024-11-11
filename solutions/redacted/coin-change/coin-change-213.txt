@@ -1,0 +1,36 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        // unbounded knapsack variation
+        int n = param1.length;
+        int m = amount;
+        int INF = Integer.MAX_VALUE - 1;
+        int[][] dp = new int[n + 1][m + 1];
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= m; j++) {
+                if (j == 0) {
+                    dp[i][j] = 0;
+                } else if (i == 0) {
+                    dp[i][j] = INF;
+                } else {
+                    dp[i][j] = INF;
+                }
+            }
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                int v = param1[i - 1];
+                if (v <= j) {
+                    // incl
+                    int incl = dp[i][j - v] + 1;
+                    // excl
+                    int excl = dp[i - 1][j];
+                    dp[i][j] = Math.min(incl, excl);
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        return dp[n][m] == INF ? -1 : dp[n][m];
+    }
+}

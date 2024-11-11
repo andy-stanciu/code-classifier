@@ -1,0 +1,38 @@
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        if (param1 == null || param1.length == 0)
+            return null;
+        return method2(param1, 0, param1.length - 1);
+    }
+
+    private ListNode method2(ListNode[] param1, int si, int ei) {
+        if (si == ei) {
+            return param1[si];
+        }
+        if (si + 1 == ei) {
+            return method3(param1[si], param1[ei]);
+        }
+        int mid = si + (ei - si) / 2;
+        ListNode left = method2(param1, si, mid);
+        ListNode right = method2(param1, mid + 1, ei);
+        return method3(left, right);
+    }
+
+    private ListNode method3(ListNode l1, ListNode l2) {
+        ListNode temp = new ListNode(0);
+        ListNode curr = temp;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                curr.next = l1;
+                l1 = l1.next;
+            } else {
+                curr.next = l2;
+                l2 = l2.next;
+            }
+            curr = curr.next;
+        }
+        curr.next = (l1 != null) ? l1 : l2;
+        return temp.next;
+    }
+}

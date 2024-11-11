@@ -1,0 +1,52 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        // 2D DP array where dp[i][j] represents the minimum number of coins
+        // needed to make amount j using the first i types of coins
+        int[][] dp = new int[n + 1][amount + 1];
+        // Initialization: If amount is 0, we need 0 coins
+        for (int i = 0; i < (n + 1); i++) {
+            // 0 coins needed for amount 0
+            dp[i][0] = 0;
+        }
+        // Initialization: If no coins are available, and amount > 0, it\'s impossible to form that amount
+        for (int i = 1; i < (amount + 1); i++) {
+            // -1 indicates that it\'s not possible to form the amount
+            dp[0][i] = -1;
+        }
+        /* 
+         dp[i][j] => Minimum number of coins needed to make amount j
+         using the first i types of coins
+        */
+        for (int i = 1; i < (n + 1); i++) {
+            for (int j = 1; j < (amount + 1); j++) {
+                // If the current coin can be included in the solution
+                if (param1[i - 1] <= j) {
+                    // Using the current coin
+                    int include = dp[i][j - param1[i - 1]];
+                    // Not using the current coin
+                    int exclude = dp[i - 1][j];
+                    // Check if both include and exclude are impossible
+                    if (include == -1 && exclude == -1) {
+                        dp[i][j] = -1;
+                    } else // If include is impossible, use exclude
+                    if (include == -1) {
+                        dp[i][j] = exclude;
+                    } else // If exclude is impossible, use include and add one coin
+                    if (exclude == -1) {
+                        dp[i][j] = include + 1;
+                    } else // Both include and exclude are possible, choose the minimum
+                    {
+                        dp[i][j] = Math.min(include + 1, exclude);
+                    }
+                } else {
+                    // If the current coin cannot be included, use the result from the previous set of coins
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        // Return the result for the full amount using all available coins
+        return dp[n][amount];
+    }
+}

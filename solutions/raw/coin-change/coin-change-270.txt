@@ -1,0 +1,30 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int result = numberOfCoins(coins, amount);
+        return result == Integer.MAX_VALUE ? -1 : result;
+    }
+
+    Map<Integer, Integer> memo = new HashMap<>();
+
+    private int numberOfCoins(int[] coins, int target) {
+        if (target == 0) {
+            return 0;
+        }
+        if (target < 0) {
+            return Integer.MAX_VALUE;
+        }
+        if (memo.containsKey(target)) {
+            return memo.get(target);
+        }
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i < coins.length; i++) {
+            int result = numberOfCoins(coins, target - coins[i]);
+            if (result != Integer.MAX_VALUE) {
+                min = Math.min(min, result + 1);
+            }
+        }
+        memo.put(target, min);
+        return min;
+    }
+}

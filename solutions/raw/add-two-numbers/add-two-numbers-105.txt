@@ -1,0 +1,74 @@
+/*
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    // Head of the resulting linked list
+    ListNode head;
+
+    // Tail of the resulting linked list
+    ListNode tail;
+
+    // Method to add a new node to the linked list
+    public void add(int x) {
+        // Create a new ListNode with value x
+        ListNode newNode = new ListNode(x);
+        if (head == null) {
+            // If the list is empty, set the new node as both head and tail
+            head = newNode;
+            tail = newNode;
+            return;
+        }
+        // Add the new node to the end of the list
+        tail.next = newNode;
+        // Update the tail to point to the new node
+        tail = newNode;
+    }
+
+    // Method to add two numbers represented by linked lists
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        // Variable to store the carry when adding digits
+        int carry = 0;
+        // Iterate through both input linked lists until both are exhausted
+        while (l1 != null && l2 != null) {
+            // Calculate sum of current digits
+            int sum = l1.val + l2.val + carry;
+            // Add the least significant digit to the result
+            add(sum % 10);
+            // Update carry for the next iteration
+            carry = sum / 10;
+            // Move to the next node in the first linked list
+            l1 = l1.next;
+            // Move to the next node in the second linked list
+            l2 = l2.next;
+        }
+        // If there are remaining nodes in the first linked list, continue adding
+        while (l1 != null) {
+            int sum = l1.val + carry;
+            add(sum % 10);
+            carry = sum / 10;
+            l1 = l1.next;
+        }
+        // If there are remaining nodes in the second linked list, continue adding
+        while (l2 != null) {
+            int sum = l2.val + carry;
+            add(sum % 10);
+            carry = sum / 10;
+            l2 = l2.next;
+        }
+        // If there is still a carry after processing both lists, add it as a new node
+        while (carry > 0) {
+            add(carry % 10);
+            carry /= 10;
+        }
+        // Return the head of the resulting linked list
+        return head;
+    }
+}

@@ -1,0 +1,33 @@
+class Solution {
+
+    public int tabulation(int[] arr, int sum, int[][] dp) {
+        for (int idx = arr.length - 1; idx >= 0; idx--) {
+            for (int csum = 0; csum <= sum; csum++) {
+                if (csum == 0) {
+                    dp[idx][csum] = 0;
+                    continue;
+                }
+                int stay = csum - arr[idx] >= 0 ? dp[idx][csum - arr[idx]] + 1 : (int) 1e5;
+                int move = idx + 1 < arr.length ? dp[idx + 1][csum] : (int) 1e5;
+                dp[idx][csum] = Math.min(stay, move);
+            }
+        }
+        return dp[0][sum];
+    }
+
+    // public int recur(int[] arr,int idx,int csum){
+    //     if(csum==0) return 0;
+    //     if(csum<0 || idx==arr.length){
+    //         return (int)1e5;
+    //     }
+    //     int stay=recur(arr,idx,csum-arr[idx])+1;
+    //     int move=recur(arr,idx+1,csum);
+    //     return Math.min(stay,move);
+    // }
+    public int method1(int[] arr, int sum) {
+        //  int ans=recur(arr,0,sum);
+        int[][] dp = new int[arr.length][sum + 1];
+        int ans = tabulation(arr, sum, dp);
+        return ans == (int) 1e5 ? -1 : ans;
+    }
+}

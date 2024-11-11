@@ -1,0 +1,51 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        HashSet<Integer> visAmt = new HashSet<Integer>();
+        if (amount == 0) {
+            return 0;
+        }
+        List<Integer> queue = new ArrayList<Integer>();
+        Arrays.sort(coins);
+        for (int i = 0; i < coins.length; i++) {
+            if (coins[i] > amount) {
+                break;
+            }
+            if (coins[i] == amount) {
+                return 1;
+            }
+            queue.add(coins[i]);
+        }
+        queue.add(-1);
+        int cnt = 1;
+        while (!queue.isEmpty()) {
+            int first = queue.remove(0);
+            if (first == -1) {
+                cnt++;
+                if (queue.isEmpty()) {
+                    break;
+                }
+                queue.add(-1);
+            } else {
+                int remAmount = amount - first;
+                if (visAmt.contains(remAmount)) {
+                    continue;
+                }
+                visAmt.add(remAmount);
+                if (remAmount == 0) {
+                    return cnt;
+                }
+                for (int i = 0; i < coins.length; i++) {
+                    if (coins[i] > remAmount) {
+                        break;
+                    }
+                    if (coins[i] == remAmount) {
+                        return cnt + 1;
+                    }
+                    queue.add(first + coins[i]);
+                }
+            }
+        }
+        return -1;
+    }
+}

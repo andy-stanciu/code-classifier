@@ -1,0 +1,46 @@
+class Solution {
+
+    static class Pair implements Comparable<Pair> {
+
+        int val, index;
+
+        public Pair(int val, int index) {
+            this.val = val;
+            this.index = index;
+        }
+
+        @Override
+        public int compareTo(Pair o) {
+            return this.val - o.val;
+        }
+    }
+
+    public ListNode method1(ListNode[] param1) {
+        ListNode head = null;
+        ListNode tail = null;
+        PriorityQueue<Pair> pq = new PriorityQueue();
+        for (int i = 0; i < param1.length; i++) {
+            if (param1[i] != null) {
+                pq.add(new Pair(param1[i].val, i));
+            }
+        }
+        int minIndex;
+        while (pq.isEmpty() == false) {
+            minIndex = pq.peek().index;
+            pq.poll();
+            if (head == null) {
+                head = param1[minIndex];
+                tail = param1[minIndex];
+            } else {
+                tail.next = param1[minIndex];
+                tail = tail.next;
+            }
+            param1[minIndex] = param1[minIndex].next;
+            tail.next = null;
+            if (param1[minIndex] != null) {
+                pq.add(new Pair(param1[minIndex].val, minIndex));
+            }
+        }
+        return head;
+    }
+}

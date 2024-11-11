@@ -1,0 +1,35 @@
+class Solution {
+
+    int[] cache;
+
+    public int coinChange(int[] coins, int amount) {
+        if (amount < 1)
+            return 0;
+        //it save the min count change for amount >=1
+        cache = new int[amount + 1];
+        return getMinCount(coins, amount);
+    }
+
+    public int getMinCount(int[] coins, int remainingAmount) {
+        if (remainingAmount < 0)
+            return -1;
+        if (remainingAmount == 0)
+            return 0;
+        if (cache[remainingAmount] != 0)
+            return cache[remainingAmount];
+        //find the min count, for this remaining amount
+        int minCount = Integer.MAX_VALUE;
+        //try every coin
+        for (int coin : coins) {
+            int count = getMinCount(coins, remainingAmount - coin);
+            //if min count found for remainign amoutn,
+            //add the 1 to the count
+            if (count >= 0) {
+                minCount = Math.min(minCount, count + 1);
+            }
+        }
+        //save in the cache for
+        cache[remainingAmount] = minCount == Integer.MAX_VALUE ? -1 : minCount;
+        return cache[remainingAmount];
+    }
+}

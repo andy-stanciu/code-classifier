@@ -1,0 +1,55 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        PriorityQueue<Integer> queue = new PriorityQueue<>();
+        for (int i = 0; i < param1.length; i++) {
+            while (param1[i] != null) {
+                queue.add(param1[i].val);
+                param1[i] = param1[i].next;
+            }
+        }
+        // queue to ListNode
+        ListNode root = new ListNode();
+        ListNode currentNode = root;
+        while (queue.peek() != null) {
+            currentNode.next = new ListNode(queue.poll());
+            currentNode = currentNode.next;
+        }
+        return root.next;
+    }
+
+    public ListNode method2(ListNode[] param1) {
+        Map<Integer, Integer> map = new TreeMap<>();
+        for (int i = 0; i < param1.length; i++) {
+            while (param1[i] != null) {
+                int val = param1[i].val;
+                if (map.containsKey(param1[i].val)) {
+                    map.put(val, map.get(val) + 1);
+                } else {
+                    map.put(val, 1);
+                }
+                param1[i] = param1[i].next;
+            }
+        }
+        // map to ListNode
+        ListNode root = new ListNode();
+        ListNode currentNode = root;
+        for (Map.Entry<Integer, Integer> element : map.entrySet()) {
+            for (int i = 0; i < element.getValue(); i++) {
+                currentNode.next = new ListNode(element.getKey());
+                currentNode = currentNode.next;
+            }
+        }
+        return root.next;
+    }
+}

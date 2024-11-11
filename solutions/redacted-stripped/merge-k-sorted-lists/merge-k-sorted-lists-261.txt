@@ -1,0 +1,74 @@
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        ListNode start = null;
+        ListNode move = start;
+        boolean tag = true;
+        for (int i = 0; i < param1.length; i++) {
+            ListNode r = param1[i];
+            if (r != null && tag) {
+                move = r;
+                start = r;
+                r = r.next;
+                tag = false;
+            }
+            while (r != null) {
+                move.next = r;
+                move = move.next;
+                r = r.next;
+            }
+        }
+        return method2(start);
+    }
+
+    static ListNode method2(ListNode start) {
+        if (start == null || start.next == null) {
+            return start;
+        }
+        ListNode mid = mid(start);
+        ListNode second = mid.next;
+        mid.next = null;
+        ListNode first = method2(start);
+        ListNode last = method2(second);
+        return sort(first, last);
+    }
+
+    static ListNode mid(ListNode start) {
+        ListNode f = start;
+        ListNode s = start;
+        while (f.next != null && f.next.next != null) {
+            f = f.next.next;
+            s = s.next;
+        }
+        return s;
+    }
+
+    static ListNode sort(ListNode head, ListNode head1) {
+        ListNode res = null;
+        if (head.val > head1.val) {
+            res = head1;
+            head1 = head1.next;
+        } else {
+            res = head;
+            head = head.next;
+        }
+        ListNode move = res;
+        while (head != null && head1 != null) {
+            if (head.val > head1.val) {
+                move.next = head1;
+                head1 = head1.next;
+            } else {
+                move.next = head;
+                head = head.next;
+            }
+            move = move.next;
+        }
+        if (head1 != null) {
+            move.next = head1;
+        }
+        if (head != null) {
+            move.next = head;
+        }
+        return res;
+    }
+}

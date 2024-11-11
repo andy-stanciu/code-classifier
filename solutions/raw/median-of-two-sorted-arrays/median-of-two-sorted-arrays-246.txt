@@ -1,0 +1,34 @@
+class Solution {
+
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int len1 = nums1.length;
+        int len2 = nums2.length;
+        if (len2 < len1) {
+            return findMedianSortedArrays(nums2, nums1);
+        }
+        int start = 0, end = len1, totalLen = len1 + len2 + 1;
+        int halfLen = totalLen / 2;
+        double median = 0;
+        while (start <= end) {
+            int midA = start + (end - start) / 2;
+            int midB = halfLen - midA;
+            int leftMaxA = (midA == 0) ? Integer.MIN_VALUE : nums1[midA - 1];
+            int leftMaxB = (midB == 0) ? Integer.MIN_VALUE : nums2[midB - 1];
+            int rightMinA = (midA == len1) ? Integer.MAX_VALUE : nums1[midA];
+            int rightMinB = (midB == len2) ? Integer.MAX_VALUE : nums2[midB];
+            if (leftMaxA <= rightMinB && leftMaxB <= rightMinA) {
+                if ((len1 + len2) % 2 == 1) {
+                    median = Math.max(leftMaxA, leftMaxB);
+                } else {
+                    median = (Math.max(leftMaxA, leftMaxB) + Math.min(rightMinA, rightMinB)) / 2.0;
+                }
+                break;
+            } else if (leftMaxA > rightMinB) {
+                end = midA - 1;
+            } else {
+                start = midA + 1;
+            }
+        }
+        return median;
+    }
+}

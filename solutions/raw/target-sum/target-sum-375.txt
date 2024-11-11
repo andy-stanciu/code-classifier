@@ -1,0 +1,23 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        HashMap<String, Integer> hash = new HashMap();
+        return DFS(nums, target, 0, 0, hash);
+    }
+
+    public int DFS(int[] nums, int target, int sum, int index, HashMap<String, Integer> hash) {
+        String key = index + "," + sum;
+        if (index == nums.length) {
+            if (sum == target)
+                return 1;
+            else
+                return 0;
+        }
+        if (hash.containsKey(key))
+            return hash.get(key);
+        int add = DFS(nums, target, sum + nums[index], index + 1, hash);
+        int subtract = DFS(nums, target, sum - nums[index], index + 1, hash);
+        hash.put(key, add + subtract);
+        return hash.get(key);
+    }
+}

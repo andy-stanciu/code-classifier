@@ -1,0 +1,35 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        if (param1.length == 1) {
+            if (amount % param1[0] != 0)
+                return -1;
+            else
+                return amount / param1[0];
+        }
+        int[][] dp = new int[amount + 1][param1.length];
+        for (int[] e : dp) {
+            Arrays.fill(e, Integer.MAX_VALUE);
+        }
+        int ans = helper(param1, amount, param1.length - 1, dp);
+        if (ans == Integer.MAX_VALUE - 1)
+            return -1;
+        return ans;
+    }
+
+    public int helper(int[] arr, int amt, int idx, int[][] dp) {
+        if (idx < 0 || amt < 0) {
+            return Integer.MAX_VALUE - 1;
+        }
+        if (amt == 0) {
+            return 0;
+        }
+        if (dp[amt][idx] != Integer.MAX_VALUE) {
+            return dp[amt][idx];
+        }
+        int x = helper(arr, amt - arr[idx], idx, dp) + 1;
+        int y = helper(arr, amt, idx - 1, dp);
+        dp[amt][idx] = Math.min(x, y);
+        return Math.min(x, y);
+    }
+}

@@ -1,0 +1,30 @@
+class Solution {
+
+    public int solve(int[] param1, int amount, int i, int[][] dp) {
+        int n = param1.length;
+        if (amount == 0) {
+            return 0;
+        }
+        if (i >= n || amount < 0) {
+            return Integer.MAX_VALUE - 1;
+        }
+        if (dp[i][amount] != -1) {
+            return dp[i][amount];
+        }
+        int include = Integer.MAX_VALUE;
+        if (amount >= param1[i]) {
+            include = 1 + solve(param1, amount - param1[i], i, dp);
+        }
+        int exclude = solve(param1, amount, i + 1, dp);
+        return dp[i][amount] = Math.min(include, exclude);
+    }
+
+    public int method1(int[] param1, int amount) {
+        int[][] dp = new int[param1.length][amount + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        int result = solve(param1, amount, 0, dp);
+        return result == Integer.MAX_VALUE - 1 ? -1 : result;
+    }
+}

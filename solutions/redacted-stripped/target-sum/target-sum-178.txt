@@ -1,0 +1,23 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        if (nums.length == 1) {
+            return (nums[0] - param1 == 0 || nums[0] + param1 == 0) ? 1 : 0;
+        }
+        int[][] dp = new int[25][2005];
+        int offset = 1000;
+        int m = nums.length;
+        dp[0][0 + offset] = 1;
+        for (int i = 1; i <= m; i++) {
+            for (int j = -1000; j <= 1000; j++) {
+                if (j - nums[i - 1] >= -1000 && j - nums[i - 1] <= 1000) {
+                    dp[i][j + offset] += dp[i - 1][j - nums[i - 1] + offset];
+                }
+                if (j + nums[i - 1] >= -1000 && j + nums[i - 1] <= 1000) {
+                    dp[i][j + offset] += dp[i - 1][j + nums[i - 1] + offset];
+                }
+            }
+        }
+        return dp[m][param1 + offset];
+    }
+}

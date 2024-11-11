@@ -1,0 +1,35 @@
+class Solution {
+
+    public int helper(int[] nums, int target, int i, int sum, int[][] dp) {
+        // Base case
+        if (i == nums.length) {
+            // If the current sum equals the target, we found a valid way
+            return sum == target ? 1 : 0;
+        }
+        // since the target can be negative => we have to shift the value of sum
+        // We add 1000 to shift range to positive side
+        int sumIndex = sum + 1000;
+        // Check if already calculated
+        if (dp[i][sumIndex] != Integer.MAX_VALUE) {
+            return dp[i][sumIndex];
+        }
+        // Recursive cases
+        // Choice 1: +
+        int add = helper(nums, target, i + 1, sum + nums[i], dp);
+        // Choice 2: -
+        int subtract = helper(nums, target, i + 1, sum - nums[i], dp);
+        // Return the total number of ways
+        return dp[i][sumIndex] = add + subtract;
+    }
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int[][] dp = new int[nums.length][2001];
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = 0; j < 2001; j++) {
+                dp[i][j] = Integer.MAX_VALUE;
+            }
+        }
+        // Start the recursive process with the initial index and sum
+        return helper(nums, target, 0, 0, dp);
+    }
+}

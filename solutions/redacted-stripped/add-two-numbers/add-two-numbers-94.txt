@@ -1,0 +1,61 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        int len1 = getLength(l1);
+        int len2 = getLength(l2);
+        if (len1 < len2) {
+            l1 = padList(l1, len2 - len1);
+        } else if (len2 < len1) {
+            l2 = padList(l2, len1 - len2);
+        }
+        CarryNode result = method2(l1, l2);
+        if (result.carry != 0) {
+            ListNode newHead = new ListNode(result.carry);
+            newHead.next = result.node;
+            return newHead;
+        }
+        return result.node;
+    }
+
+    private CarryNode method2(ListNode l1, ListNode l2) {
+        if (l1 == null && l2 == null) {
+            return new CarryNode(null, 0);
+        }
+        CarryNode result = method2(l1.next, l2.next);
+        int sum = l1.val + l2.val + result.carry;
+        ListNode newNode = new ListNode(sum % 10);
+        newNode.next = result.node;
+        return new CarryNode(newNode, sum / 10);
+    }
+
+    private int getLength(ListNode head) {
+        int length = 0;
+        while (head != null) {
+            length++;
+            head = head.next;
+        }
+        return length;
+    }
+
+    private ListNode padList(ListNode head, int param1) {
+        while (param1 > 0) {
+            ListNode newNode = new ListNode(0);
+            newNode.next = head;
+            head = newNode;
+            param1--;
+        }
+        return head;
+    }
+
+    private class CarryNode {
+
+        ListNode node;
+
+        int carry;
+
+        CarryNode(ListNode node, int carry) {
+            this.node = node;
+            this.carry = carry;
+        }
+    }
+}

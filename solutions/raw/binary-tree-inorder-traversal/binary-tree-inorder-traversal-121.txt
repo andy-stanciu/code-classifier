@@ -1,0 +1,78 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    static void inorder(TreeNode root, List<Integer> arr) {
+        if (root == null)
+            return;
+        if (root.left != null)
+            inorder(root.left, arr);
+        arr.add(root.val);
+        if (root.right != null)
+            inorder(root.right, arr);
+    }
+
+    static void inorder2(TreeNode root, List<Integer> arr) {
+        Stack<TreeNode> st = new Stack<>();
+        if (root == null)
+            return;
+        st.add(root);
+        while (st.size() > 0) {
+            TreeNode temp = st.peek();
+            if (temp.left != null) {
+                st.push(temp.left);
+                temp.left = null;
+            } else {
+                st.pop();
+                arr.add(temp.val);
+                if (temp.right != null)
+                    st.push(temp.right);
+            }
+        }
+    }
+
+    static void morrisTraversal(TreeNode root, List<Integer> arr) {
+        //s.c=O(1)
+        if (root == null)
+            return;
+        TreeNode curr = root;
+        while (curr != null) {
+            if (curr.left != null) {
+                TreeNode pred = curr.left;
+                while (pred.right != null && pred.right != curr) {
+                    pred = pred.right;
+                }
+                if (pred.right == null) {
+                    pred.right = curr;
+                    curr = curr.left;
+                } else {
+                    pred.right = null;
+                    arr.add(curr.val);
+                    curr = curr.right;
+                }
+            } else {
+                arr.add(curr.val);
+                curr = curr.right;
+            }
+        }
+    }
+
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> arr = new ArrayList<>();
+        morrisTraversal(root, arr);
+        return arr;
+    }
+}

@@ -1,0 +1,25 @@
+class Solution {
+
+    Map<String, Integer> map = new HashMap<>();
+
+    public int findTargetSumWays(int[] nums, int target) {
+        map = new HashMap<>();
+        return solve(nums, target, nums.length - 1);
+    }
+
+    int solve(int[] nums, int tgt, int ind) {
+        if (ind < 0) {
+            if (tgt == 0)
+                return 1;
+            return 0;
+        }
+        String key = tgt + "()" + ind;
+        if (map.containsKey(key)) {
+            return map.get(key);
+        }
+        int pos = solve(nums, tgt - nums[ind], ind - 1);
+        int neg = solve(nums, tgt + nums[ind], ind - 1);
+        map.put(key, pos + neg);
+        return pos + neg;
+    }
+}

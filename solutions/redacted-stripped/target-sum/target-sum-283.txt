@@ -1,0 +1,28 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int var1 = 0;
+        for (int i : nums) var1 += i;
+        if (var1 < param1 || (var1 - param1) % 2 != 0)
+            return 0;
+        int t = (var1 - param1) / 2;
+        int[] dp = new int[t + 1];
+        dp[0] = 1;
+        if (nums[0] <= t)
+            dp[nums[0]] = 1;
+        if (nums[0] == 0)
+            dp[0] = 2;
+        for (int row = 1; row < nums.length; row++) {
+            int[] temp = new int[t + 1];
+            for (int col = 0; col <= t; col++) {
+                int notPick = dp[col];
+                int pick = 0;
+                if (nums[row] <= col)
+                    pick = dp[col - nums[row]];
+                temp[col] = pick + notPick;
+            }
+            dp = temp;
+        }
+        return dp[t];
+    }
+}

@@ -1,0 +1,29 @@
+class Solution {
+
+    static long find(int n, int[] param1, int sum, long[][] dp) {
+        // System.out.println("sum="+sum);
+        if (sum < 0)
+            return Integer.MAX_VALUE;
+        if (sum == 0)
+            return 0;
+        if (n <= 0)
+            return Integer.MAX_VALUE;
+        if (dp[n][sum] != -1)
+            return dp[n][sum];
+        long taken = Integer.MAX_VALUE, notTaken = Integer.MAX_VALUE;
+        if (param1[n - 1] <= sum)
+            taken = 1 + find(n, param1, sum - param1[n - 1], dp);
+        notTaken = find(n - 1, param1, sum, dp);
+        return dp[n][sum] = Math.min(taken, notTaken);
+    }
+
+    public int method1(int[] param1, int amount) {
+        long[][] dp = new long[param1.length + 1][amount + 1];
+        for (int i = 0; i < dp.length; i++) Arrays.fill(dp[i], -1);
+        // System.out.println("find value is "+find(coins.length,coins,amount,dp));
+        if (find(param1.length, param1, amount, dp) >= Integer.MAX_VALUE)
+            return -1;
+        else
+            return (int) find(param1.length, param1, amount, dp);
+    }
+}

@@ -1,0 +1,29 @@
+class Solution {
+
+    static int dfs(int index, int[] coins, int amount, int[][] dp) {
+        if (index == 0) {
+            if (amount % coins[0] == 0)
+                return amount / coins[0];
+            else
+                return 100000009;
+        }
+        if (dp[index][amount] != -1)
+            return dp[index][amount];
+        int not_pick = 0 + dfs(index - 1, coins, amount, dp);
+        int pick = Integer.MAX_VALUE;
+        if (amount >= coins[index]) {
+            pick = 1 + dfs(index, coins, amount - coins[index], dp);
+        }
+        return dp[index][amount] = Math.min(pick, not_pick);
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int[] temp : dp) {
+            Arrays.fill(temp, -1);
+        }
+        int result = dfs(n - 1, coins, amount, dp);
+        return result == 100000009 ? -1 : result;
+    }
+}

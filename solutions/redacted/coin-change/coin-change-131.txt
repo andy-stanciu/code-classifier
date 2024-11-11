@@ -1,0 +1,40 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int[] memo = new int[amount + 1];
+        // -1 indicates that the amount has not been solved yet
+        Arrays.fill(memo, -1);
+        // Solve the problem using a helper function with memoization
+        int result = method2(param1, amount, memo);
+        // If result is Integer.MAX_VALUE, it means no solution was found, return -1
+        return result == Integer.MAX_VALUE ? -1 : result;
+    }
+
+    private int method2(int[] param1, int amount, int[] memo) {
+        // Base case: if amount is 0, no coins are needed
+        if (amount == 0) {
+            return 0;
+        }
+        // Base case: if amount is negative, return a large number indicating impossible
+        if (amount < 0) {
+            return Integer.MAX_VALUE;
+        }
+        // Check if this subproblem has already been solved
+        if (memo[amount] != -1) {
+            return memo[amount];
+        }
+        // Initialize the minimum coins needed to be a large value
+        int var1 = Integer.MAX_VALUE;
+        // Try every coin and compute the minimum number of coins required
+        for (int var2 : param1) {
+            int result = method2(param1, amount - var2, memo);
+            if (result != Integer.MAX_VALUE) {
+                // +1 because we used one coin
+                var1 = Math.min(var1, result + 1);
+            }
+        }
+        // Memoize the result for the current amount
+        memo[amount] = var1;
+        return var1;
+    }
+}

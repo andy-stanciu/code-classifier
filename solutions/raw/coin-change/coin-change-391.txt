@@ -1,0 +1,31 @@
+class Solution {
+
+    public int find(int[] coins, int amount, int n, int[][] dp) {
+        if (n == 0) {
+            if (amount % coins[0] == 0)
+                return amount / coins[0];
+            return (int) Math.pow(10, 9);
+        }
+        if (dp[n][amount] != -1)
+            return dp[n][amount];
+        int dont = find(coins, amount, n - 1, dp);
+        int take = (int) Math.pow(10, 9);
+        if (amount >= coins[n])
+            take = 1 + find(coins, amount - coins[n], n, dp);
+        dp[n][amount] = Math.min(take, dont);
+        return Math.min(take, dont);
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int i = 0; i < dp.length; i++) {
+            for (int j = 0; j < dp[i].length; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        if (find(coins, amount, n - 1, dp) == (int) Math.pow(10, 9))
+            return -1;
+        return find(coins, amount, coins.length - 1, dp);
+    }
+}

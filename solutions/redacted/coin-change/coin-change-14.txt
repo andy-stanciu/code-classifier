@@ -1,0 +1,36 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        if (amount == 0)
+            return 0;
+        Map<Integer, Integer> dp = new HashMap<>();
+        int result = dfs(param1, amount, dp);
+        return result == Integer.MAX_VALUE ? -1 : result;
+    }
+
+    private int dfs(int[] param1, int remaining, Map<Integer, Integer> dp) {
+        if (remaining < 0)
+            return Integer.MAX_VALUE;
+        if (remaining == 0)
+            return 0;
+        if (dp.containsKey(remaining))
+            return dp.get(remaining);
+        int var1 = Integer.MAX_VALUE;
+        for (int var2 : param1) {
+            int res = dfs(param1, remaining - var2, dp);
+            if (res != Integer.MAX_VALUE) {
+                var1 = Math.min(var1, 1 + res);
+            }
+        }
+        dp.put(remaining, var1);
+        return var1;
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        int[] param1 = { 1, 2, 5 };
+        int amount = 11;
+        // Output: 3
+        System.out.println(solution.method1(param1, amount));
+    }
+}

@@ -1,0 +1,50 @@
+class Solution {
+
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        // Create a max heap (reversed priority queue)
+        PriorityQueue<Integer> maxheap = new PriorityQueue<>(Collections.reverseOrder());
+        // Calculate total length of both arrays combined
+        int len = nums1.length + nums2.length;
+        // Calculate how many elements to put in the heap (half the total length + 1 for odd lengths)
+        int heaplen = (int) (len / 2) + 1;
+        // Initialize indices for both arrays
+        int i = 0, j = 0;
+        // Loop until the heap has enough elements (half the combined length)
+        while (maxheap.size() < heaplen) {
+            int curr_val = 0;
+            // If both arrays still have elements
+            if (i < nums1.length && j < nums2.length) {
+                // Compare the current elements of both arrays and take the smaller one
+                if (nums1[i] < nums2[j]) {
+                    curr_val = nums1[i];
+                    // Move to the next element in nums1
+                    i++;
+                } else {
+                    curr_val = nums2[j];
+                    // Move to the next element in nums2
+                    j++;
+                }
+            } else // If nums1 is fully traversed, take elements from nums2
+            if (i >= nums1.length && j < nums2.length) {
+                curr_val = nums2[j];
+                // Move to the next element in nums2
+                j++;
+            } else // If nums2 is fully traversed, take elements from nums1
+            if (j >= nums2.length && i < nums1.length) {
+                curr_val = nums1[i];
+                // Move to the next element in nums1
+                i++;
+            }
+            // Add the current value to the max heap
+            maxheap.add(curr_val);
+        }
+        // If the total length is odd, the median is the root of the max heap
+        if (len % 2 != 0) {
+            // Return the largest of the first half elements
+            return (double) maxheap.poll();
+        }
+        // If the total length is even, we need to get the two middle elements
+        // Average the two middle elements
+        return (maxheap.poll() + maxheap.poll()) / 2.0;
+    }
+}

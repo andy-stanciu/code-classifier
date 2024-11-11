@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> postorder = new ArrayList<>();
+        if (root == null)
+            return postorder;
+        Stack<TreeNode> s1 = new Stack<>();
+        TreeNode curr = root;
+        while (!s1.isEmpty() || curr != null) {
+            // travel to the left most node of tree
+            if (curr != null) {
+                s1.push(curr);
+                curr = curr.left;
+            } else {
+                // when left most node is null, check for right node
+                TreeNode temp = s1.peek().right;
+                // if right node is null, process the root
+                if (temp == null) {
+                    // will process the right nodes
+                    temp = s1.pop();
+                    postorder.add(temp.val);
+                    // will process root and left nodes
+                    // to check if right node was processed, if yes process the root node
+                    while (!s1.isEmpty() && s1.peek().right == temp) {
+                        temp = s1.peek();
+                        s1.pop();
+                        postorder.add(temp.val);
+                    }
+                } else {
+                    // if there is a unprocessed right node
+                    curr = temp;
+                }
+            }
+        }
+        return postorder;
+    }
+}

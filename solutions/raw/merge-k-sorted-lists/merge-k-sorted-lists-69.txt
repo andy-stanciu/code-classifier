@@ -1,0 +1,41 @@
+class Solution {
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        PriorityQueue<ListNode> pq = new PriorityQueue<ListNode>(new ListNodeComparator());
+        // Storing head of all k-lists in priorityQueue
+        for (ListNode x : lists) if (x != null)
+            pq.add(x);
+        ListNode head = null, temp = null;
+        while (!pq.isEmpty()) {
+            // pq returns the listNode with smallest value
+            ListNode x = pq.remove();
+            // If this is the last element of the list
+            if (x.next != null) {
+                pq.add(x.next);
+            }
+            x.next = null;
+            // appending it to the list
+            if (head == null) {
+                head = x;
+                temp = head;
+            } else {
+                temp.next = x;
+                temp = temp.next;
+            }
+        }
+        return head;
+    }
+}
+
+// Comparator class for the priority queue to comapre listNode according to the values
+class ListNodeComparator implements Comparator<ListNode> {
+
+    public int compare(ListNode x, ListNode y) {
+        if (x.val > y.val)
+            return 1;
+        else if (x.val < y.val)
+            return -1;
+        else
+            return 0;
+    }
+}

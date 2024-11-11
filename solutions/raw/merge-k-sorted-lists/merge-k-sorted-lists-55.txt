@@ -1,0 +1,59 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        // If the length of the array is 0, there are no linked lists to merge, return null
+        if (lists.length == 0) {
+            return null;
+        }
+        // Create a priority queue to hold the nodes of all the linked lists
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        // Add all the nodes to the priority queue
+        for (int i = 0; i < lists.length; i++) {
+            ListNode head = lists[i];
+            // Traverse each linked list and add its nodes to the priority queue
+            while (head != null) {
+                pq.add(head.val);
+                head = head.next;
+            }
+        }
+        // If the priority queue is empty, return null
+        if (pq.size() == 0) {
+            return null;
+        }
+        // Create a new linked list to hold the merged nodes
+        ListNode newHead = null;
+        ListNode newTail = null;
+        // Traverse the priority queue and create a new linked list with the nodes in sorted order
+        while (!pq.isEmpty()) {
+            // Get the smallest element from the priority queue
+            int val = pq.poll();
+            // If it\'s the first node, create a new linked list
+            if (newHead == null) {
+                ListNode temp = new ListNode(val);
+                newHead = temp;
+                newTail = temp;
+            } else // Otherwise, add it to the existing linked list
+            {
+                ListNode temp = new ListNode(val);
+                newTail.next = temp;
+                newTail = newTail.next;
+            }
+        }
+        // Set the next pointer of the last node to null
+        if (newTail != null) {
+            newTail.next = null;
+        }
+        // Return the new linked list
+        return newHead;
+    }
+}

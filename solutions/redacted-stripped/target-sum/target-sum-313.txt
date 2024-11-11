@@ -1,0 +1,78 @@
+class Solution {
+
+    public int method1(int[] arr, int ind, int param1, int[][] dp) {
+        if (param1 == 0) {
+            return 1;
+        }
+        if (ind == 0) {
+            if (arr[0] == param1) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        if (dp[ind][param1] != -1) {
+            return dp[ind][param1];
+        }
+        int nottake = method1(arr, ind - 1, param1, dp);
+        int take = 0;
+        if (arr[ind] <= param1) {
+            take = method1(arr, ind - 1, param1 - arr[ind], dp);
+        }
+        return dp[ind][param1] = take + nottake;
+    }
+
+    public int method2(int[] arr, int param1) {
+        int var1 = 0;
+        for (int i = 0; i < arr.length; i++) {
+            var1 += arr[i];
+        }
+        int st = var1 + param1;
+        if (var1 < Math.abs(param1)) {
+            return 0;
+        } else if (st % 2 != 0) {
+            return 0;
+        } else {
+            int count = 0;
+            for (//counting the zeroes
+            int i = 0; //counting the zeroes
+            i < arr.length; i++) {
+                if (arr[i] == 0) {
+                    count++;
+                }
+            }
+            if (count > 0) {
+                List<Integer> list = new ArrayList<>();
+                for (int i = 0; i < arr.length; i++) {
+                    if (arr[i] != 0) {
+                        list.add(arr[i]);
+                    }
+                }
+                System.out.println("list=" + list);
+                int[] arr1 = new int[list.size()];
+                for (int i = 0; i < list.size(); i++) {
+                    arr1[i] = list.get(i);
+                }
+                double a = Math.pow(2, count);
+                int ZeroPower = (int) a;
+                int s1 = (var1 + param1) / 2;
+                int[][] dp = new int[arr1.length][s1 + 1];
+                for (int[] row : dp) {
+                    Arrays.fill(row, -1);
+                }
+                int ans = method1(arr1, arr1.length - 1, s1, dp);
+                System.out.println("ans=" + ans);
+                int finalAns = ans * ZeroPower;
+                return finalAns;
+            } else {
+                int s1 = (var1 + param1) / 2;
+                int[][] dp = new int[arr.length][s1 + 1];
+                for (int[] row : dp) {
+                    Arrays.fill(row, -1);
+                }
+                int ans = method1(arr, arr.length - 1, s1, dp);
+                return ans;
+            }
+        }
+    }
+}

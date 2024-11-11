@@ -1,0 +1,29 @@
+class Solution {
+
+    public int findTargetSumWays(int[] a, int sum) {
+        int n = a.length, i, j, arraySum = 0;
+        for (i = 0; i < n; i++) arraySum += a[i];
+        if (arraySum < sum || -arraySum > sum)
+            return 0;
+        int dpColSize = 2 * arraySum + 1;
+        int[][] dp = new int[n][dpColSize];
+        for (i = 0; i < dpColSize; i++) {
+            int curr = i - arraySum;
+            if (curr == a[0] || curr == -a[0])
+                dp[0][i] = 1;
+            if (a[0] == 0)
+                dp[0][arraySum] = 2;
+        }
+        for (i = 1; i < n; i++) {
+            for (j = 0; j < dpColSize; j++) {
+                int add = 0, sub = 0;
+                if (j - a[i] >= 0)
+                    add = dp[i - 1][j - a[i]];
+                if (j + a[i] < dpColSize)
+                    sub = dp[i - 1][j + a[i]];
+                dp[i][j] = add + sub;
+            }
+        }
+        return dp[n - 1][arraySum - sum];
+    }
+}

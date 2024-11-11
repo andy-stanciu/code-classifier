@@ -1,0 +1,43 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int n = nums.length;
+        return countPartitions(n, param1, nums);
+    }
+
+    public static int countPartitions(int n, int d, int[] arr) {
+        int var1 = 0;
+        for (int i = 0; i < arr.length; i++) {
+            var1 += arr[i];
+        }
+        if (var1 - d < 0 || ((var1 - d) % 2) != 0) {
+            return 0;
+        }
+        return findWays(arr, (var1 - d) / 2);
+    }
+
+    public static int findWays(int[] num, int k) {
+        int n = num.length;
+        int[] prev = new int[k + 1];
+        if (// 2 cases -pick and not pick
+        num[0] == 0)
+            prev[0] = 2;
+        else
+            prev[0] = 1;
+        if (num[0] != 0 && num[0] <= k)
+            prev[num[0]] = 1;
+        for (int ind = 1; ind < n; ind++) {
+            int[] cur = new int[k + 1];
+            for (int param1 = 0; param1 <= k; param1++) {
+                int notTaken = prev[param1];
+                int taken = 0;
+                if (num[ind] <= param1) {
+                    taken = prev[param1 - num[ind]];
+                }
+                cur[param1] = (notTaken + taken);
+            }
+            prev = cur;
+        }
+        return prev[k];
+    }
+}

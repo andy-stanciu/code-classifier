@@ -1,0 +1,32 @@
+class Solution {
+
+    int[][][] cache;
+
+    int[] nums;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = Math.abs(target);
+        for (int num : nums) sum += num;
+        int[][][] cache = new int[2][sum + 1][nums.length + 1];
+        this.cache = cache;
+        this.nums = nums;
+        for (int i = 0; i != cache[0].length; i++) {
+            Arrays.fill(cache[0][i], -1);
+            Arrays.fill(cache[1][i], -1);
+        }
+        return getWays(target, 0);
+    }
+
+    private int getWays(int curSum, int pos) {
+        if (pos == nums.length)
+            if (curSum == 0)
+                return 1;
+            else
+                return 0;
+        int dim = (curSum >= 0) ? 1 : 0;
+        int sign = dim == 1 ? 1 : -1;
+        if (cache[dim][sign * curSum][pos] == -1)
+            cache[dim][sign * curSum][pos] = getWays(curSum + nums[pos], pos + 1) + getWays(curSum - nums[pos], pos + 1);
+        return cache[dim][sign * curSum][pos];
+    }
+}

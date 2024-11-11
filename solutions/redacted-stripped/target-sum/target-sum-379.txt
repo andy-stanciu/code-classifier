@@ -1,0 +1,33 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        HashMap<Integer, HashMap<Integer, Integer>> map = new HashMap<>();
+        int count = answer(nums, 0, 0, param1, map);
+        return count;
+    }
+
+    public int answer(int[] nums, int index, int param2, int param1, HashMap<Integer, HashMap<Integer, Integer>> map) {
+        if (index == nums.length) {
+            if (param2 == param1)
+                return 1;
+            else
+                return 0;
+        }
+        if (map.containsKey(index)) {
+            HashMap<Integer, Integer> temp = map.get(index);
+            if (temp.containsKey(param2))
+                return temp.get(param2);
+        }
+        int count = answer(nums, index + 1, param2 + nums[index], param1, map);
+        count += answer(nums, index + 1, param2 - nums[index], param1, map);
+        if (map.containsKey(index)) {
+            HashMap<Integer, Integer> temp = map.get(index);
+            temp.put(param2, count);
+        } else {
+            HashMap<Integer, Integer> temp = new HashMap<>();
+            temp.put(param2, count);
+            map.put(index, temp);
+        }
+        return count;
+    }
+}

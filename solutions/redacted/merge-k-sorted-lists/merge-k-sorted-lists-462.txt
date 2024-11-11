@@ -1,0 +1,59 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public static ListNode method1(ListNode[] param1) {
+        return partion(param1, 0, param1.length - 1);
+    }
+
+    public static ListNode partion(ListNode[] param1, int s, int e) {
+        if (s == e)
+            return param1[s];
+        if (s < e) {
+            int q = (s + e) / 2;
+            ListNode l1 = partion(param1, s, q);
+            ListNode l2 = partion(param1, q + 1, e);
+            return method2(l1, l2);
+        } else
+            return null;
+    }
+
+    //This function is from Merge Two Sorted Lists.
+    public static ListNode method2(ListNode list1, ListNode list2) {
+        if (list1 == null)
+            return list2;
+        if (list2 == null)
+            return list1;
+        // create ans Node for store all possible answers
+        ListNode ans = new ListNode(0);
+        ListNode curr = ans;
+        while (list1 != null && list2 != null) {
+            // compare both value which one is small
+            if (list1.val <= list2.val) {
+                curr.next = list1;
+                list1 = list1.next;
+            } else {
+                curr.next = list2;
+                list2 = list2.next;
+            }
+            // reassign the curr value
+            curr = curr.next;
+        }
+        // If one list is exhausted, append the rest of the other list
+        if (list1 != null) {
+            curr.next = list1;
+        }
+        if (list2 != null) {
+            curr.next = list2;
+        }
+        return ans.next;
+    }
+}

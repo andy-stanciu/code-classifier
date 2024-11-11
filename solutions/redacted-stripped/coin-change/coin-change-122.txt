@@ -1,0 +1,29 @@
+class Solution {
+
+    public long method1(int i, int[] param1, int amount, long[][] dp) {
+        if (i == -1) {
+            if (// no more coint neeedeed
+            amount == 0)
+                return 0;
+            else
+                return Integer.MAX_VALUE;
+        }
+        if (dp[i][amount] != -1)
+            return dp[i][amount];
+        long skip = method1(i - 1, param1, amount, dp);
+        if (amount - param1[i] < 0)
+            return dp[i][amount] = skip;
+        long pick = 1 + method1(i, param1, amount - param1[i], dp);
+        return dp[i][amount] = Math.min(skip, pick);
+    }
+
+    public int method2(int[] param1, int amount) {
+        int n = param1.length;
+        long[][] dp = new long[n][amount + 1];
+        for (int i = 0; i < dp.length; i++) for (int j = 0; j < dp[0].length; j++) dp[i][j] = -1;
+        int ans = (int) method1(n - 1, param1, amount, dp);
+        if (ans == Integer.MAX_VALUE)
+            return -1;
+        return ans;
+    }
+}

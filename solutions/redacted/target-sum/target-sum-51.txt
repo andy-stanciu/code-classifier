@@ -1,0 +1,34 @@
+class Solution {
+
+    public int method1(int[] nums, int S) {
+        /// can be divided into  two subsets of negative and potive  that adds upto S
+        //sum(P) - sum(N) = target
+        //sum(P) + sum(N) + sum(P) - sum(N) = target + sum(P) + sum(N)
+        //  2 * sum(P) = target + sum(nums)
+        // so postive sum=(S+ totalsum)/2 must be even
+        //and we will find total no of ways to get this positive sum
+        int var1 = 0;
+        for (int i = 0; i < nums.length; i++) {
+            var1 += nums[i];
+        }
+        // if netsum<target or if newS is not even since all nums are integer return 0
+        if (var1 < S || (S + var1) % 2 != 0) {
+            return 0;
+        }
+        int newS = (S + var1) / 2;
+        // finding subsets which have sum=newS
+        int[] dp = new int[newS + 1];
+        // for sum ==0 we have 1 way dont take any element
+        dp[0] = 1;
+        // rest all 0 prefellid
+        // top down dp
+        for (int i = 0; i < nums.length; i++) {
+            // j reprents target sum
+            for (int j = newS; j >= nums[i]; j--) {
+                // adding already present ways to the ways if we take that nums[i]
+                dp[j] = dp[j] + dp[j - nums[i]];
+            }
+        }
+        return dp[newS];
+    }
+}

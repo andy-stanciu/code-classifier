@@ -1,0 +1,32 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        Integer[][] dp = new Integer[param1.length][amount + 1];
+        int result = method2(param1.length - 1, param1, amount, dp);
+        return result == Integer.MAX_VALUE ? -1 : result;
+    }
+
+    public int method2(int ind, int[] param1, int amount, Integer[][] dp) {
+        if (amount == 0)
+            return 0;
+        if (ind < 0)
+            return Integer.MAX_VALUE;
+        if (ind == 0) {
+            if (amount % param1[0] == 0)
+                return amount / param1[0];
+            else
+                return Integer.MAX_VALUE;
+        }
+        if (dp[ind][amount] != null)
+            return dp[ind][amount];
+        int notpick = method2(ind - 1, param1, amount, dp);
+        int pick = Integer.MAX_VALUE;
+        if (param1[ind] <= amount) {
+            int res = method2(ind, param1, amount - param1[ind], dp);
+            if (res != Integer.MAX_VALUE) {
+                pick = 1 + res;
+            }
+        }
+        return dp[ind][amount] = Math.min(pick, notpick);
+    }
+}

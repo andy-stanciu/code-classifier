@@ -1,0 +1,33 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        // Creating a 2D array to store subproblem solutions.
+        // dp[i][j] represents the number of ways to achieve a sum of \'j - 1000\' using the first \'i\' elements of nums.
+        int[][] dp = new int[nums.length][2001];
+        // Initializing the array with Integer.MIN_VALUE to indicate that the subproblem hasn\'t been solved yet.
+        for (int[] row : dp) {
+            Arrays.fill(row, Integer.MIN_VALUE);
+        }
+        // Calling the recursive function to solve the problem.
+        return solve(nums, param1, dp, 0, 0);
+    }
+
+    // Recursive function to calculate the number of ways to achieve the target sum.
+    private int solve(int[] nums, int param1, int[][] dp, int curr, int param2) {
+        // Base case: If all elements of nums have been processed, check if the totalSum equals the target.
+        if (curr == nums.length) {
+            return param2 == param1 ? 1 : 0;
+        }
+        // If the current subproblem has been solved before, return the cached result.
+        if (dp[curr][param2 + 1000] != Integer.MIN_VALUE) {
+            return dp[curr][param2 + 1000];
+        }
+        // Recursively calculate the number of ways to achieve the target sum by including and excluding the current element.
+        int include = solve(nums, param1, dp, curr + 1, param2 + nums[curr]);
+        int exclude = solve(nums, param1, dp, curr + 1, param2 - nums[curr]);
+        // Cache the result in the dp array for future reference.
+        dp[curr][param2 + 1000] = include + exclude;
+        // Return the total number of ways to achieve the target sum.
+        return dp[curr][param2 + 1000];
+    }
+}

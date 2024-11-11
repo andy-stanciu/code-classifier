@@ -1,0 +1,134 @@
+class Solution {
+
+    public int rec(int indx, int target, int[] arr) {
+        //base case and indx,target
+        //target and number of coins can never be equals to 0
+        if (indx == 0) {
+            if (target % arr[0] == 0)
+                return target / arr[0];
+            else
+                return (int) Math.pow(10, 9);
+        }
+        //applying all possibles stuffs
+        int nottaken = (int) Math.pow(10, 9);
+        int taken = (int) Math.pow(10, 9);
+        if (indx >= 1)
+            nottaken = rec(indx - 1, target, arr);
+        if (arr[indx] <= target)
+            taken = 1 + rec(indx, target - arr[indx], arr);
+        return Math.min(taken, nottaken);
+    }
+
+    public int memo(int indx, int target, int[] arr, int[][] dp) {
+        //base case and indx,target
+        //target and number of coins can never be equals to 0
+        if (indx == 0) {
+            if (target % arr[0] == 0)
+                return target / arr[0];
+            else
+                return (int) Math.pow(10, 9);
+        }
+        if (dp[indx][target] != -1)
+            return dp[indx][target];
+        //applying all possibles stuffs
+        int nottaken = (int) Math.pow(10, 9);
+        int taken = (int) Math.pow(10, 9);
+        if (indx >= 1)
+            nottaken = rec(indx - 1, target, arr);
+        if (arr[indx] <= target)
+            taken = 1 + rec(indx, target - arr[indx], arr);
+        dp[indx][target] = Math.min(taken, nottaken);
+        return dp[indx][target];
+    }
+
+    public static int tab(int indx, int target, int[] arr, int[][] dp) {
+        //step-1=base case
+        for (int i = 0; i <= target; i++) {
+            if (i % arr[0] == 0)
+                dp[0][i] = i / arr[0];
+            else
+                //we use pow(10,9)in tplace on Integer.MAX_VALUE to avoid stack overflow;
+                dp[0][i] = (int) Math.pow(10, 9);
+        }
+        int nottaken = (int) Math.pow(10, 9);
+        int taken = (int) Math.pow(10, 9);
+        //step2-looking at the changing indx and forming the nested loops
+        for (int i = 1; i <= indx; i++) {
+            for (int j = 0; j <= target; j++) {
+                //step3-paste the code form memo
+                if (i >= 1)
+                    nottaken = dp[i - 1][j];
+                if (arr[i] <= j)
+                    taken = 1 + dp[i][j - arr[i]];
+                dp[i][j] = Math.min(taken, nottaken);
+            }
+        }
+        return dp[indx][target];
+    }
+
+    public int memo1(int indx, int target, int[] arr, int[][] dp) {
+        //base case and indx,target
+        //target and number of coins can never be equals to 0
+        if (indx == 0) {
+            if (target % arr[0] == 0)
+                return target / arr[0];
+            else
+                return (int) Math.pow(10, 9);
+        }
+        if (dp[indx][target] != -1)
+            return dp[indx][target];
+        //applying all possibles stuffs
+        int nottaken = (int) Math.pow(10, 9);
+        int taken = (int) Math.pow(10, 9);
+        if (indx >= 1)
+            nottaken = rec(indx - 1, target, arr);
+        if (arr[indx] <= target)
+            taken = 1 + rec(indx, target - arr[indx], arr);
+        dp[indx][target] = Math.min(taken, nottaken);
+        return dp[indx][target];
+    }
+
+    public static int optimal(int indx, int target, int[] arr) {
+        //step-1=base case
+        int[] prev = new int[target + 1];
+        for (int i = 0; i <= target; i++) {
+            if (i % arr[0] == 0)
+                prev[i] = i / arr[0];
+            else
+                //we use pow(10,9)in tplace on Integer.MAX_VALUE to avoid stack overflow;
+                prev[i] = (int) Math.pow(10, 9);
+        }
+        int nottaken = (int) Math.pow(10, 9);
+        int taken = (int) Math.pow(10, 9);
+        //step2-looking at the changing indx and forming the nested loops
+        for (int i = 1; i <= indx; i++) {
+            int[] curr = new int[target + 1];
+            for (int j = 0; j <= target; j++) {
+                //step3-paste the code form memo
+                if (i >= 1)
+                    nottaken = prev[j];
+                if (arr[i] <= j)
+                    taken = 1 + curr[j - arr[i]];
+                curr[j] = Math.min(taken, nottaken);
+            }
+            prev = curr;
+        }
+        return prev[target];
+    }
+
+    public int method1(int[] param1, int amount) {
+        int[][] dp = new int[param1.length][amount + 1];
+        //    for(int row[]:dp){
+        //     for(int it:row){
+        //         row[it]=0;
+        //     }
+        //    }
+        //  for (int row[] : dp)
+        //         Arrays.fill(row, 0);
+        int ans = optimal(param1.length - 1, amount, param1);
+        if (ans >= (int) Math.pow(10, 9))
+            return -1;
+        else
+            return ans;
+    }
+}

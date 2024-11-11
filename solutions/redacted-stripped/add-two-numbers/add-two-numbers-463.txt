@@ -1,0 +1,71 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        int carry = 0;
+        int l1Len = 0, l2Len = 0;
+        ListNode resNode = new ListNode(-1);
+        ;
+        ListNode cur = l1;
+        ListNode cur1 = l2;
+        while (cur != null) {
+            l1Len += 1;
+            cur = cur.next;
+        }
+        while (cur1 != null) {
+            l2Len += 1;
+            cur1 = cur1.next;
+        }
+        cur = l1;
+        cur1 = l2;
+        while (cur != null && cur1 != null) {
+            int res = cur.val + cur1.val + carry;
+            carry = res / 10;
+            if (resNode.val == -1) {
+                resNode = new ListNode(res % 10);
+            } else {
+                ListNode curr = resNode;
+                ListNode newNode = new ListNode(res % 10);
+                while (curr.next != null) curr = curr.next;
+                curr.next = newNode;
+            }
+            cur = cur.next;
+            cur1 = cur1.next;
+            if (cur1 == null && cur == null && res >= 10) {
+                ListNode newNode = new ListNode(carry);
+                ListNode cu = resNode;
+                while (cu.next != null) cu = cu.next;
+                cu.next = newNode;
+            }
+        }
+        if (cur != null) {
+            while (cur != null) {
+                int res = cur.val + carry;
+                carry = res / 10;
+                ListNode curr = resNode;
+                ListNode newNode = new ListNode(res % 10);
+                while (curr.next != null) curr = curr.next;
+                curr.next = newNode;
+                cur = cur.next;
+                if (cur == null && res >= 10) {
+                    newNode = new ListNode(carry);
+                    curr.next.next = newNode;
+                }
+            }
+        } else if (cur1 != null) {
+            while (cur1 != null) {
+                int res = cur1.val + carry;
+                carry = res / 10;
+                ListNode curr = resNode;
+                ListNode newNode = new ListNode(res % 10);
+                while (curr.next != null) curr = curr.next;
+                curr.next = newNode;
+                cur1 = cur1.next;
+                if (cur1 == null && res >= 10) {
+                    newNode = new ListNode(carry);
+                    curr.next.next = newNode;
+                }
+            }
+        }
+        return resNode;
+    }
+}

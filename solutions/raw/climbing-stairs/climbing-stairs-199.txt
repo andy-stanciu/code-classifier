@@ -1,0 +1,56 @@
+//the sole purpose of using BigInteger instead of int and long is to avoid an overflow
+class Solution {
+
+    private BigInteger factorial(BigInteger n) {
+        //reslut = 1;
+        BigInteger result = BigInteger.valueOf(1);
+        while (n.compareTo(BigInteger.ONE) >= 0) {
+            //n >= 1
+            //result *= n;
+            result = result.multiply(n);
+            //n--;
+            n = n.subtract(BigInteger.ONE);
+        }
+        return result;
+    }
+
+    public int climbStairs(int n) {
+        int numOfOnes = n;
+        int numOfTwos = 0;
+        // 1+1+1+....+1 -> n one\'s
+        int totalPermutations = 1;
+        while (numOfOnes - 2 >= 0) {
+            //we add two one\'s in the number, making the total number of digits less by one
+            //therefore the following:
+            //- by adding 1 and 1 (two digits) we will now have number 2 (one digit)
+            //=> total number of digits is decreased by 1
+            //=> we now have two 1\'s less
+            //=> we now have one 2 more
+            //example1: 1+1+1+1 -> 2+1+1
+            n--;
+            numOfOnes -= 2;
+            numOfTwos += 1;
+            //now we have to calculate all the possible permutations of one\'s and two\'s with n
+            //possible placements
+            //basically, this is what\'s called permutations with repetition in maths
+            //factorial(n) -> all the possible permutations if there were n digits, but since
+            //digits 1 and 2 could be found multiple times, we have to remove all the repeated
+            //permutations hence the .divide(temp) part
+            //where temp represents the number of repetitions
+            //we need to take few extra steps just because the function factorial
+            //could return hudge numbers and cause an overflow so we\'ll use BigInteger instead of
+            //int or long
+            BigInteger nBig = BigInteger.valueOf(n);
+            BigInteger onesBig = BigInteger.valueOf(numOfOnes);
+            BigInteger twosBig = BigInteger.valueOf(numOfTwos);
+            if (numOfOnes > 0) {
+                BigInteger temp = factorial(onesBig).multiply(factorial(twosBig));
+                totalPermutations += factorial(nBig).divide(temp).intValue();
+                // totalPermutations += n!/(numofOnes!*numOfTwos!);
+            } else
+                //2+2+2+....+2
+                totalPermutations += 1;
+        }
+        return totalPermutations;
+    }
+}

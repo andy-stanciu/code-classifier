@@ -1,0 +1,25 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int res = getMin(coins, amount, new int[amount]);
+        return res == Integer.MAX_VALUE ? -1 : res;
+    }
+
+    private int getMin(int[] coins, int amount, int[] dp) {
+        if (amount == 0)
+            return 0;
+        if (amount < 0)
+            return -1;
+        if (dp[amount - 1] != 0)
+            return dp[amount - 1];
+        int res = Integer.MAX_VALUE;
+        for (int i = 0; i < coins.length; i++) {
+            if (coins[i] <= amount) {
+                int temp = getMin(coins, amount - coins[i], dp);
+                if (temp >= 0 && temp < res)
+                    res = temp + 1;
+            }
+        }
+        return dp[amount - 1] = res == Integer.MAX_VALUE ? -1 : res;
+    }
+}

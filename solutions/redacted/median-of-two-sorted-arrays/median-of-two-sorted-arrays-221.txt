@@ -1,0 +1,60 @@
+class Solution {
+
+    public double method1(int[] nums1, int[] nums2) {
+        // initialize both min, max heaps
+        PriorityQueue<Integer> min_heap = new PriorityQueue<Integer>((a, b) -> {
+            return a - b;
+        });
+        PriorityQueue<Integer> max_heap = new PriorityQueue<Integer>((a, b) -> {
+            return b - a;
+        });
+        // anything below the current median, goes into the max heap, anything above goes into the min heap
+        // if one heap\'s size goes two above the other\'s at any time, we want to rebalance by taking the top of the larger heap and inserting into the smaller one
+        // after rebalancing (if needed, we should re-calculate the median)
+        // keep this going until both arrays are fully traversed
+        int pointer1 = 0;
+        int pointer2 = 0;
+        double var1 = Double.MAX_VALUE;
+        while (pointer1 < nums1.length || pointer2 < nums2.length) {
+            // for simplicity, exhaust nums1 before touching nums2
+            if (pointer1 < nums1.length) {
+                int curr = nums1[pointer1];
+                if (curr < var1) {
+                    max_heap.add(curr);
+                    if (max_heap.size() - min_heap.size() > 1) {
+                        // rebalance
+                        min_heap.add(max_heap.poll());
+                    }
+                } else {
+                    min_heap.add(curr);
+                    if (min_heap.size() - max_heap.size() > 1) {
+                        // rebalance
+                        max_heap.add(min_heap.poll());
+                    }
+                }
+                // recalculate the median, if equal size heaps, take average of tops, else take the top of the larger heap
+                var1 = (min_heap.size() == max_heap.size()) ? ((min_heap.peek() + max_heap.peek()) / 2.0) : ((min_heap.size() > max_heap.size()) ? min_heap.peek() : max_heap.peek());
+                pointer1++;
+            } else {
+                int curr = nums2[pointer2];
+                if (curr < var1) {
+                    max_heap.add(curr);
+                    if (max_heap.size() - min_heap.size() > 1) {
+                        // rebalance
+                        min_heap.add(max_heap.poll());
+                    }
+                } else {
+                    min_heap.add(curr);
+                    if (min_heap.size() - max_heap.size() > 1) {
+                        // rebalance
+                        max_heap.add(min_heap.poll());
+                    }
+                }
+                // recalculate the median, if equal size heaps, take average of tops, else take the top of the larger heap
+                var1 = (min_heap.size() == max_heap.size()) ? ((min_heap.peek() + max_heap.peek()) / 2.0) : ((min_heap.size() > max_heap.size()) ? min_heap.peek() : max_heap.peek());
+                pointer2++;
+            }
+        }
+        return var1;
+    }
+}

@@ -1,0 +1,84 @@
+public class SolutionTest {
+
+    Solution solution;
+
+    @Before
+    public void setUp() {
+        solution = new Solution();
+    }
+
+    /*
+    Input: l1 = [2,4,3], l2 = [5,6,4]
+    Output: [7,0,8]
+    Explanation: 342 + 465 = 807.
+    */
+    @Test
+    public void addTwoNumbers_sameNumberOfDigits() {
+        ListNode l1 = createList(2, 4, 3);
+        ListNode l2 = createList(5, 6, 4);
+        ListNode result = solution.addTwoNumbers(l1, l2);
+        checkResult(result, 7, 0, 8);
+    }
+
+    @Test
+    public void addTwoNumbers_onlyZeros() {
+        ListNode l1 = createList(0);
+        ListNode l2 = createList(0);
+        ListNode result = solution.addTwoNumbers(l1, l2);
+        checkResult(result, 0);
+    }
+
+    /*
+    Input: l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
+    Output: [8,9,9,9,0,0,0,1]
+     */
+    @Test
+    public void addTwoNumbers_differentNumberOfDigits() {
+        ListNode l1 = createList(9, 9, 9, 9, 9, 9, 9);
+        ListNode l2 = createList(9, 9, 9, 9);
+        ListNode result = solution.addTwoNumbers(l1, l2);
+        checkResult(result, 8, 9, 9, 9, 0, 0, 0, 1);
+    }
+
+    @Test
+    public void addTwoNumbers_whenOneListIsNull() {
+        ListNode l2 = createList(0, 1);
+        ListNode result = solution.addTwoNumbers(null, l2);
+        checkResult(result, 0, 1);
+    }
+
+    // undefined in requirements
+    @Test
+    public void addTwoNumbers_whenBothListsAreNull() {
+        ListNode result = solution.addTwoNumbers(null, null);
+        assertNull(result);
+    }
+
+    @Test
+    public void addTwoNumbers_extraCarry() {
+        ListNode l1 = createList(9, 9);
+        ListNode l2 = createList(1);
+        ListNode result = solution.addTwoNumbers(l1, l2);
+        checkResult(result, 0, 0, 1);
+    }
+
+    private void checkResult(ListNode result, int... entries) {
+        assertNotNull(result);
+        ListNode current = result;
+        for (int entry : entries) {
+            assertNotNull(current);
+            assertEquals(entry, current.val);
+            current = current.next;
+        }
+    }
+
+    private ListNode createList(int... entries) {
+        ListNode result = new ListNode(0);
+        ListNode current = result;
+        for (int entry : entries) {
+            current.next = new ListNode(entry);
+            current = current.next;
+        }
+        return result.next;
+    }
+}

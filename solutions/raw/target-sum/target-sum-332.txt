@@ -1,0 +1,33 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int n = nums.length;
+        int range = 0;
+        for (int i = 0; i < n; i++) {
+            range += nums[i];
+        }
+        int[][] memo = new int[n + 1][2 * range + 1];
+        for (int[] row : memo) {
+            // as maximum sum can be 1000 -> given
+            Arrays.fill(row, 1001);
+        }
+        // 0 for sum
+        return dp(nums, n, target, 0, memo, range);
+    }
+
+    public int dp(int[] nums, int n, int target, int sum, int[][] memo, int range) {
+        if (n == 0) {
+            if (sum == target)
+                return 1;
+            return 0;
+        }
+        // so that -ve sum can be indexed to 0 and above
+        int x = sum + range;
+        if (memo[n][x] != 1001)
+            return memo[n][x];
+        int plus = dp(nums, n - 1, target, sum + nums[n - 1], memo, range);
+        int minus = dp(nums, n - 1, target, sum - nums[n - 1], memo, range);
+        memo[n][x] = plus + minus;
+        return memo[n][x];
+    }
+}

@@ -1,0 +1,59 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    ArrayList<Integer> ans;
+
+    public TreeNode getRightMost(TreeNode lnode, TreeNode curr) {
+        TreeNode temp = lnode;
+        while (temp.right != null && temp.right != curr) {
+            //checking for rightmost
+            temp = temp.right;
+        }
+        return temp;
+    }
+
+    public void morrisTraversal(TreeNode root) {
+        TreeNode curr = root;
+        while (curr != null) {
+            TreeNode lnode = curr.left;
+            if (lnode == null) {
+                ans.add(curr.val);
+                curr = curr.right;
+            } else {
+                //finding right most
+                TreeNode rmnode = getRightMost(lnode, curr);
+                if (rmnode.right == null) {
+                    // thread making and moving left
+                    rmnode.right = curr;
+                    curr = curr.left;
+                } else {
+                    // rmnode is pointing to curr
+                    ans.add(curr.val);
+                    // thread deletion
+                    rmnode.right = null;
+                    curr = curr.right;
+                }
+            }
+        }
+    }
+
+    public List<Integer> inorderTraversal(TreeNode root) {
+        ans = new ArrayList<>();
+        morrisTraversal(root);
+        return ans;
+    }
+}

@@ -1,0 +1,39 @@
+class Solution {
+
+    //declare a static hashmap to access it later
+    static HashMap<Pair, Integer> map;
+
+    public static int method1(int[] arr, int param1) {
+        //initialize the hashmap
+        map = new HashMap<>();
+        int n = arr.length;
+        //call the helper function,  passing the current index as n - 1
+        return helper(n, param1, arr, n - 1);
+    }
+
+    private static int helper(int n, int param1, int[] arr, int index) {
+        //if current index is 0
+        if (index == 0) {
+            //if target is 0 and value at the current index in array is also 0 then there will be 2 ways as -0 and +0 mean the same and will be equal to target 0
+            if (arr[index] == 0 && param1 == 0) {
+                return 2;
+            }
+            //if target equals -ve of element at arr[0] or +ve of element at arr[0], then there will only be one way, i.e. either +ve arr[0] or -ve arr[0]
+            if (-1 * arr[0] == param1 || arr[0] == param1)
+                return 1;
+            else
+                //no other way
+                return 0;
+        }
+        //if the value exists in map then getting it will return it
+        if (map.get(new Pair(index, param1)) != null)
+            return map.get(new Pair(index, param1));
+        //number of ways when -ve arr[index] is considered
+        int sub = helper(n, param1 - (-1 * arr[index]), arr, index - 1);
+        //number of ways when +ve arr[index] is considered
+        int add = helper(n, param1 - arr[index], arr, index - 1);
+        //put the total number of ways we got from add and sub in map corresponding to the index and target pair
+        map.put(new Pair(index, param1), add + sub);
+        return add + sub;
+    }
+}

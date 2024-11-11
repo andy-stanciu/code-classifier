@@ -1,0 +1,25 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int[][] dp = new int[param1.length][amount + 1];
+        for (int[] arr : dp) Arrays.fill(arr, -1);
+        int ans = helper(param1, param1.length - 1, amount, dp);
+        return ans == (int) 1e9 ? -1 : ans;
+    }
+
+    private int helper(int[] param1, int index, int amount, int[][] dp) {
+        if (index == 0) {
+            if (amount % param1[index] == 0)
+                return amount / param1[index];
+            else
+                return (int) 1e9;
+        }
+        if (dp[index][amount] != -1)
+            return dp[index][amount];
+        int take = Integer.MAX_VALUE;
+        if (param1[index] <= amount)
+            take = 1 + helper(param1, index, amount - param1[index], dp);
+        int notTake = helper(param1, index - 1, amount, dp);
+        return dp[index][amount] = Math.min(take, notTake);
+    }
+}

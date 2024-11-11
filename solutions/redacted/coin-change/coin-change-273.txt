@@ -1,0 +1,31 @@
+// Approach - 1 Memorization
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int[] i : dp) Arrays.fill(i, -1);
+        int ans = solve(n - 1, amount, param1, dp);
+        if (ans >= (int) Math.pow(10, 9)) {
+            return -1;
+        }
+        return ans;
+    }
+
+    int solve(int index, int amount, int[] param1, int[][] dp) {
+        if (index == 0) {
+            if (amount % param1[index] == 0)
+                return amount / param1[index];
+            else
+                return (int) Math.pow(10, 9);
+        }
+        if (dp[index][amount] != -1)
+            return dp[index][amount];
+        //not pick
+        int notPick = 0 + solve(index - 1, amount, param1, dp);
+        int pick = Integer.MAX_VALUE;
+        if (param1[index] <= amount)
+            pick = 1 + solve(index, amount - param1[index], param1, dp);
+        return dp[index][amount] = Math.min(pick, notPick);
+    }
+}

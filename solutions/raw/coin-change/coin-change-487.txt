@@ -1,0 +1,29 @@
+class Solution {
+
+    int max = 0;
+
+    Integer[][] dp;
+
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        dp = new Integer[n + 1][amount + 1];
+        int ans = dfs(0, coins, amount);
+        return ans == 100000 ? -1 : ans;
+    }
+
+    public int dfs(int i, int[] coins, int amount) {
+        if (i == coins.length) {
+            if (amount == 0)
+                return 0;
+            else
+                return 100000;
+        }
+        if (dp[i][amount] != null)
+            return dp[i][amount];
+        int count = Integer.MAX_VALUE;
+        for (int c = 0; c <= (amount / coins[i]); c++) {
+            count = Math.min(count, c + dfs(i + 1, coins, amount - (c * coins[i])));
+        }
+        return dp[i][amount] = count;
+    }
+}

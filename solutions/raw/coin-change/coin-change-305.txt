@@ -1,0 +1,37 @@
+class Solution {
+
+    public int coinChange(int[] coins, int value, int index, int[][] dp) {
+        if (index < 0) {
+            dp[0][value] = 0;
+            return Integer.MAX_VALUE;
+        }
+        if (value < 0) {
+            dp[index][0] = 0;
+            return Integer.MAX_VALUE;
+        }
+        if (value == 0) {
+            dp[index][value] = 0;
+            return 0;
+        }
+        if (dp[index][value] != -2) {
+            return dp[index][value];
+        }
+        int firstWay = coinChange(coins, value - coins[index], index, dp);
+        int secondWay = coinChange(coins, value, index - 1, dp);
+        if (firstWay < secondWay) {
+            dp[index][value] = 1 + firstWay;
+            return dp[index][value];
+        }
+        dp[index][value] = secondWay;
+        return dp[index][value];
+    }
+
+    public int coinChange(int[] coins, int value) {
+        int[][] dp = new int[coins.length + 1][value + 1];
+        for (int[] arr : dp) {
+            Arrays.fill(arr, -2);
+        }
+        int result = coinChange(coins, value, coins.length - 1, dp);
+        return result == Integer.MAX_VALUE ? -1 : result;
+    }
+}

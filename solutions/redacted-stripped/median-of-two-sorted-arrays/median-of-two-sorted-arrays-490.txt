@@ -1,0 +1,31 @@
+class Solution {
+
+    PriorityQueue<Integer> left = new PriorityQueue<>(Collections.reverseOrder());
+
+    PriorityQueue<Integer> right = new PriorityQueue<>();
+
+    public double method1(int[] nums1, int[] nums2) {
+        for (int i = 0; i < nums1.length; i++) add(nums1[i]);
+        for (int i = 0; i < nums2.length; i++) add(nums2[i]);
+        return cal();
+    }
+
+    public void add(int n) {
+        left.add(n);
+        if (!right.isEmpty() && left.peek() > right.peek())
+            right.add(left.remove());
+        if (left.size() - right.size() == 2)
+            right.add(left.remove());
+        else if (right.size() - left.size() == 2)
+            left.add(right.remove());
+    }
+
+    public double cal() {
+        if (left.size() > right.size())
+            return (double) left.peek();
+        else if (left.size() < right.size())
+            return (double) right.peek();
+        else
+            return ((double) left.peek() + (double) right.peek()) / 2.0;
+    }
+}

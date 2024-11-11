@@ -1,0 +1,60 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        Arrays.sort(param1);
+        int n = param1.length;
+        if (amount == 0)
+            return 0;
+        // int[][]dp=new int[n][amount+1];
+        // for(int i=0;i<n;i++){
+        //     for(int j=0;j<=amount;j++){
+        //         dp[i][j]=-1;
+        //     }
+        // }
+        int[] prev = new int[amount + 1];
+        int[] cur = new int[amount + 1];
+        // int ans=findRecur(n-1,coins,amount,dp);
+        // return ans==(int)1e9?-1:ans;
+        //Tabulation
+        // for(int i=0;i<=amount;i++){
+        //     if(i%coins[0]==0) dp[0][i]=i/coins[0];
+        //     else dp[0][i]=(int)1e9;
+        // }
+        for (int i = 0; i <= amount; i++) {
+            if (i % param1[0] == 0)
+                prev[i] = i / param1[0];
+            else
+                prev[i] = (int) 1e9;
+        }
+        for (int idx = 1; idx < n; idx++) {
+            for (int sum = 0; sum <= amount; sum++) {
+                int notPick = prev[sum];
+                int pick = Integer.MAX_VALUE;
+                if (sum >= param1[idx])
+                    pick = 1 + cur[sum - param1[idx]];
+                cur[sum] = Math.min(notPick, pick);
+            }
+            prev = cur;
+        }
+        return prev[amount] == (int) 1e9 ? -1 : prev[amount];
+    }
+
+    //Memoization
+    public int findRecur(int idx, int[] param1, int amount, int[][] dp) {
+        if (idx == 0) {
+            if (amount % param1[idx] == 0)
+                return amount / param1[idx];
+            else if (amount == param1[idx])
+                return 1;
+            else
+                return (int) 1e9;
+        }
+        if (dp[idx][amount] != -1)
+            return dp[idx][amount];
+        int notPick = findRecur(idx - 1, param1, amount, dp);
+        int pick = Integer.MAX_VALUE;
+        if (amount >= param1[idx])
+            pick = 1 + findRecur(idx, param1, amount - param1[idx], dp);
+        return dp[idx][amount] = Math.min(notPick, pick);
+    }
+}

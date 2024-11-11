@@ -1,0 +1,59 @@
+class Solution {
+
+    public int coinChange(int[] arr, int k) {
+        int[][] dp = new int[arr.length][k + 1];
+        for (int i = 0; i <= k; i++) {
+            if (i % arr[0] == 0) {
+                dp[0][i] = i / arr[0];
+            } else {
+                dp[0][i] = 1000000;
+            }
+        }
+        for (int i = 1; i < arr.length; i++) {
+            for (int j = 0; j <= k; j++) {
+                int nott = dp[i - 1][j];
+                int take = 10000002;
+                if (arr[i] <= j) {
+                    take = 1 + dp[i][j - arr[i]];
+                }
+                dp[i][j] = Math.min(take, nott);
+            }
+        }
+        int a = dp[arr.length - 1][k];
+        if (a <= 100000)
+            return a;
+        return -1;
+    }
+}
+// class Solution {
+//     public int coinChange(int[] arr, int k) {
+//         int dp [][] = new int[arr.length][k+1];
+//         for(int[] i : dp)
+//         {
+//             Arrays.fill( i, -1);
+//         }
+//         int a =  ans(arr.length-1, arr , k , dp);
+//         if(a<=100000)return a;
+//         return -1;
+//     }
+//     public int ans( int i , int arr[] , int k, int dp[][])
+//     {
+//         if(i == 0 )
+//         {
+//             if(k% arr[i] == 0){
+//                 return k / arr[i];
+//             }
+//             else{
+//                 return 1000000;
+//             }
+//         }
+//         if(dp[i][k] != -1) return dp[i][k];
+//         int nott = ans(i-1 , arr, k, dp);
+//         int take = 10000002;
+//         if(arr[i]<= k)
+//         {
+//             take = 1+ ans(i, arr, k -arr[i], dp);
+//         }
+//         return dp[i][k] =  Math.min(take , nott);
+//     }
+// }

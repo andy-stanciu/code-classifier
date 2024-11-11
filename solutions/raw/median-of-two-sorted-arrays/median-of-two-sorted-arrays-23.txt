@@ -1,0 +1,79 @@
+class Solution {
+
+    public static void main(String[] args) {
+        int[] arrayA = { 1, 2, 3, 4, 5 };
+        int[] arrayB = { 6, 7, 8, 9, 10, 11, 12 };
+        int[] concatedArrays = concatArrays(arrayA, arrayB);
+        double medianNumber = findMedianSortedArrays(arrayA, arrayB);
+        int valueA = concatedArrays[(concatedArrays.length / 2) - 1];
+        int valueB = concatedArrays[concatedArrays.length / 2];
+        if (isSizeEven(concatedArrays.length)) {
+            System.out.println(" ");
+            System.out.println("merged array = " + Arrays.toString(concatedArrays) + " and median is " + "(" + valueA + " + " + valueB + ")" + " / 2 = " + medianNumber);
+        } else {
+            System.out.println(" ");
+            System.out.println("merged array: " + Arrays.toString(concatedArrays) + " and median is " + medianNumber);
+        }
+    }
+
+    static double findMedianSortedArrays(int[] firstArray, int[] secondArray) {
+        int firstArrayLength = firstArray.length;
+        int secondArrayLength = secondArray.length;
+        int totalArrayLength = firstArrayLength + secondArrayLength;
+        isInBound(firstArrayLength, secondArrayLength, totalArrayLength, firstArray, secondArray);
+        int[] array = concatArrays(firstArray, secondArray);
+        sortArray(array);
+        int size = array.length;
+        double median;
+        if (size % 2 == 0) {
+            median = (double) (array[size / 2 - 1] + array[size / 2]) / 2;
+        } else {
+            median = (double) array[size / 2];
+        }
+        return median;
+    }
+
+    private static int[] concatArrays(int[] firstArray, int[] secondArray) {
+        int[] array = new int[firstArray.length + secondArray.length];
+        int index = 0;
+        for (int value : firstArray) {
+            array[index++] = value;
+        }
+        for (int value : secondArray) {
+            array[index++] = value;
+        }
+        return array;
+    }
+
+    private static void sortArray(int[] array) {
+        for (int i = 0; i < array.length - 1; i++) {
+            for (int j = 0; j < array.length - i - 1; j++) {
+                if (array[j] > array[j + 1]) {
+                    int temp = array[j];
+                    array[j] = array[j + 1];
+                    array[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    private static void isInBound(int firstArrayLength, int secondArrayLength, int totalArrayLength, int[] firstArray, int[] secondArray) {
+        if ((firstArrayLength < 0 && firstArrayLength >= 1000) || (secondArrayLength < 0 && secondArrayLength >= 1000) || (totalArrayLength < 1 && totalArrayLength >= 2000)) {
+            for (int num : firstArray) {
+                if (num <= -1000000 && num >= 1000000) {
+                    throw new IllegalArgumentException("Array elements out of constraints boundaries.");
+                }
+            }
+            for (int num : secondArray) {
+                if (num <= -1000000 && num >= 1000000) {
+                    throw new IllegalArgumentException("Array elements out of constraints boundaries.");
+                }
+            }
+            throw new IllegalArgumentException("Array out of constraints boundaries.");
+        }
+    }
+
+    private static boolean isSizeEven(int size) {
+        return size % 2 == 0;
+    }
+}

@@ -1,0 +1,32 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int var1 = 0;
+        for (int i = 0; i < nums.length; i++) var1 += nums[i];
+        int offset = var1;
+        int[][] dp = new int[nums.length][2 * var1 + 1];
+        for (int i = 0; i < dp.length; ++i) {
+            Arrays.fill(dp[i], -1);
+        }
+        return f(nums, nums.length - 1, param1, 0, dp, offset);
+    }
+
+    public static int f(int[] nums, int ind, int param1, int var1, int[][] dp, int offset) {
+        if (ind == 0) {
+            int take = var1 + nums[ind];
+            int notTake = var1 - nums[ind];
+            int count = 0;
+            if (take == param1)
+                count++;
+            if (notTake == param1)
+                count++;
+            return count;
+        }
+        if (dp[ind][var1 + offset] != -1) {
+            return dp[ind][var1 + offset];
+        }
+        int take = f(nums, ind - 1, param1, var1 + nums[ind], dp, offset);
+        int notTake = f(nums, ind - 1, param1, var1 - nums[ind], dp, offset);
+        return dp[ind][var1 + offset] = take + notTake;
+    }
+}

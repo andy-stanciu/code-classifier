@@ -1,0 +1,25 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int[][] memo = new int[coins.length][amount + 1];
+        for (int[] row : memo) {
+            Arrays.fill(row, -1);
+        }
+        int sol = recursion(coins, amount, coins.length - 1, memo);
+        return sol == 100000 ? -1 : sol;
+    }
+
+    public int recursion(int[] coins, int amount, int i, int[][] memo) {
+        if (amount == 0)
+            return 0;
+        if (i == -1)
+            return 100000;
+        if (memo[i][amount] != -1)
+            return memo[i][amount];
+        if (coins[i] <= amount) {
+            return memo[i][amount] = Math.min(1 + recursion(coins, amount - coins[i], i, memo), recursion(coins, amount, i - 1, memo));
+        } else {
+            return memo[i][amount] = recursion(coins, amount, i - 1, memo);
+        }
+    }
+}

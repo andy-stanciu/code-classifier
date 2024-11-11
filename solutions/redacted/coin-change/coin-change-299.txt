@@ -1,0 +1,51 @@
+class Solution {
+
+    int[][] dp;
+
+    public int method1(int[] param1, int amount) {
+        dp = new int[param1.length + 1][amount + 1];
+        for (int i = 0; i <= param1.length; i++) {
+            //Initilization
+            for (int j = 0; j <= amount; j++) {
+                if (i == 0) {
+                    dp[i][j] = Integer.MAX_VALUE;
+                }
+                if (j == 0) {
+                    dp[i][j] = 0;
+                } else {
+                    dp[i][j] = -2;
+                }
+            }
+        }
+        return recFun(param1, amount, param1.length, amount);
+    }
+
+    int recFun(int[] param1, int amount, int param2, int amt) {
+        if (amt == 0) {
+            //If no amount left to make
+            return 0;
+        }
+        if (param2 <= 0 || amt < 0) {
+            //If we dont have any more coin to choose from of amt become negative
+            return -1;
+        }
+        if (dp[param2][amt] != -2) {
+            return dp[param2][amt];
+        }
+        if (param1[param2 - 1] <= amt) {
+            //when we can select
+            int include = recFun(param1, amount, param2, amt - param1[param2 - 1]);
+            int exclude = recFun(param1, amount, param2 - 1, amt);
+            if (include != -1 && exclude != -1)
+                //include +1 becoz one coin is added
+                return dp[param2][amt] = Math.min(include + 1, exclude);
+            else if (include != -1)
+                return dp[param2][amt] = include + 1;
+            else
+                return dp[param2][amt] = exclude;
+        } else {
+            //when we cant select
+            return dp[param2][amt] = recFun(param1, amount, param2 - 1, amt);
+        }
+    }
+}

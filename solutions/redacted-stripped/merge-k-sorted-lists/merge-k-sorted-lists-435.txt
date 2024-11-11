@@ -1,0 +1,48 @@
+class Solution {
+
+    private ListNode method1(ListNode node1, ListNode node2) {
+        if (node1 == node2)
+            return node1;
+        ListNode var1 = new ListNode();
+        ListNode curr = var1;
+        while (node1 != null && node2 != null) {
+            ListNode new_node = new ListNode();
+            if (node1.val < node2.val) {
+                new_node.val = node1.val;
+                node1 = node1.next;
+            } else {
+                new_node.val = node2.val;
+                node2 = node2.next;
+            }
+            curr.next = new_node;
+            curr = curr.next;
+        }
+        while (node1 != null) {
+            curr.next = new ListNode(node1.val);
+            curr = curr.next;
+            node1 = node1.next;
+        }
+        while (node2 != null) {
+            curr.next = new ListNode(node2.val);
+            curr = curr.next;
+            node2 = node2.next;
+        }
+        return var1.next;
+    }
+
+    private ListNode method2(ListNode[] param1, int start, int end) {
+        if (end == start) {
+            return param1[start];
+        }
+        int mid = (start + end) / 2;
+        ListNode left = method2(param1, start, mid);
+        ListNode right = method2(param1, mid + 1, end);
+        return method1(left, right);
+    }
+
+    public ListNode method2(ListNode[] param1) {
+        if (param1.length == 0)
+            return null;
+        return method2(param1, 0, param1.length - 1);
+    }
+}

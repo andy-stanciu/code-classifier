@@ -1,0 +1,49 @@
+class Solution {
+
+    public int method1(int[] param1, int T) {
+        int n = param1.length;
+        int[][] dp = new int[param1.length][T + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, 0);
+        }
+        for (int ind = 0; ind <= T; ind++) {
+            if (ind % param1[0] == 0)
+                dp[0][ind] = ind / param1[0];
+            else
+                dp[0][ind] = (int) 1e9;
+        }
+        for (int ind = 1; ind < n; ind++) {
+            for (int target = 0; target <= T; target++) {
+                int notTake = 0 + dp[ind - 1][target];
+                int take = (int) 1e9;
+                if (param1[ind] <= target) {
+                    take = 1 + dp[ind][target - param1[ind]];
+                }
+                dp[ind][target] = Math.min(take, notTake);
+            }
+        }
+        int ans = dp[n - 1][T];
+        if (ans >= (int) 1e9) {
+            return -1;
+        }
+        return ans;
+    }
+
+    public int fmc(int ind, int T, int[] param1, int[][] dp) {
+        if (ind == 0) {
+            if (T % param1[0] == 0) {
+                return T / param1[0];
+            }
+            return (int) 1e9;
+        }
+        if (dp[ind][T] != -1)
+            return dp[ind][T];
+        int take = (int) 1e9;
+        if (param1[ind] <= T) {
+            take = 1 + fmc(ind, T - param1[ind], param1, dp);
+        }
+        int notTake = 0 + fmc(ind - 1, T, param1, dp);
+        dp[ind][T] = Math.min(take, notTake);
+        return dp[ind][T];
+    }
+}

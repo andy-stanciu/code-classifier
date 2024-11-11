@@ -1,0 +1,59 @@
+class Solution {
+
+    // Main function to merge k sorted linked lists
+    public ListNode mergeKLists(ListNode[] lists) {
+        // If the input is null or empty, return null
+        if (lists == null || lists.length == 0) {
+            return null;
+        }
+        // Call the mergeSort function to merge all lists
+        return mergeSort(lists, 0, lists.length - 1);
+    }
+
+    // Recursive function to divide and conquer the merging process
+    public ListNode mergeSort(ListNode[] lists, int left, int right) {
+        // Base case: when left equals right, there\'s only one list to return
+        if (left >= right) {
+            return lists[left];
+        }
+        // Find the middle point to divide the lists into two halves
+        int mid = left + (right - left) / 2;
+        // Recursively sort and merge the left half
+        ListNode l1 = mergeSort(lists, left, mid);
+        // Recursively sort and merge the right half
+        ListNode l2 = mergeSort(lists, mid + 1, right);
+        // Merge the two sorted halves and return the merged list
+        return merge(l1, l2);
+    }
+
+    // Function to merge two sorted linked lists
+    public ListNode merge(ListNode l1, ListNode l2) {
+        // Create a dummy node to serve as the starting point of the merged list
+        ListNode dummy = new ListNode(-1);
+        ListNode temp = dummy;
+        // While neither of the lists is empty, keep comparing their nodes
+        while (l1 != null && l2 != null) {
+            if (l1.val <= l2.val) {
+                // If the value of the current node in l1 is less than or equal to that in l2,
+                // append it to the merged list
+                temp.next = l1;
+                l1 = l1.next;
+            } else {
+                // Otherwise, append the current node in l2 to the merged list
+                temp.next = l2;
+                l2 = l2.next;
+            }
+            // Move the pointer forward in the merged list
+            temp = temp.next;
+        }
+        // If there are remaining nodes in l1, append them
+        if (l1 != null) {
+            temp.next = l1;
+        } else {
+            // If there are remaining nodes in l2, append them
+            temp.next = l2;
+        }
+        // The merged list is after the dummy node
+        return dummy.next;
+    }
+}

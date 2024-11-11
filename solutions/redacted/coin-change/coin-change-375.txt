@@ -1,0 +1,41 @@
+class Solution {
+
+    int ct = Integer.MAX_VALUE;
+
+    public int method1(int[] param1, int amount) {
+        int[] cache = new int[amount + 1];
+        Arrays.fill(cache, -1);
+        int ans = min(param1, amount, cache);
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+
+    public int min(int[] param1, int amount, int[] cache) {
+        if (cache[amount] >= 0)
+            return cache[amount];
+        if (amount == 0)
+            return 0;
+        int minCt = Integer.MAX_VALUE;
+        for (int c : param1) {
+            if (amount - c >= 0) {
+                int var1 = min(param1, amount - c, cache);
+                if (var1 != Integer.MAX_VALUE)
+                    minCt = Math.min(minCt, var1 + 1);
+            }
+        }
+        cache[amount] = minCt;
+        return minCt;
+    }
+}
+//1. Bruce force DFS, amount^n
+//2. DNP DFS, amount * n
+// 1,2,5
+// 11
+// [0,1,1,2,2 1 2 ]
+//  0 1 2 3 4 5 6 7 8 9 10 11
+//             f(3)
+//         f(2)              f(1)
+//     f(1)  f(0)             f(0)
+// f(0)
+//         f(11)
+//    f(10)
+// n!

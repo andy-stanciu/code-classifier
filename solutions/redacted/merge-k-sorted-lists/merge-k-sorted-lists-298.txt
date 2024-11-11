@@ -1,0 +1,47 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+// approach: I need to compare k elements
+// I can use a brute force comparing each with k-1, o(k^2)
+// I can use a min heap such that top element is smallest, it should also keep a track of which linked list iut beling to, so that we can put another element from it
+// o(mlogk)
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        PriorityQueue<ListNode> minHeap = new PriorityQueue<ListNode>((ListNode a, ListNode b) -> {
+            return a.val - b.val;
+        });
+        for (int i = 0; i < param1.length; i++) {
+            if (param1[i] != null) {
+                minHeap.offer(param1[i]);
+            }
+        }
+        ListNode head = null;
+        ListNode tail = null;
+        while (minHeap.isEmpty() == false) {
+            // take min
+            ListNode curMin = minHeap.poll();
+            ListNode nextToOffer = curMin.next;
+            if (nextToOffer != null) {
+                minHeap.offer(nextToOffer);
+            }
+            curMin.next = null;
+            // insert into final list node
+            if (head == null) {
+                head = curMin;
+                tail = head;
+            } else {
+                tail.next = curMin;
+                tail = curMin;
+            }
+        }
+        return head;
+    }
+}

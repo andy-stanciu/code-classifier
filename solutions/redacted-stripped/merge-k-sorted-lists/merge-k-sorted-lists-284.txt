@@ -1,0 +1,43 @@
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        if (param1.length == 0)
+            return null;
+        int dataSize = param1.length;
+        int arrayIterator = 0;
+        ListNode result = new ListNode(0);
+        ListNode resultIterator = result;
+        ListNode currNodeIterator = null;
+        boolean needIterate = true;
+        while (resultIterator != null) {
+            if (needIterate) {
+                if (currNodeIterator == null && arrayIterator <= dataSize - 1) {
+                    currNodeIterator = param1[arrayIterator];
+                    arrayIterator += 1;
+                } else if (arrayIterator > dataSize - 1 && currNodeIterator == null) {
+                    break;
+                } else {
+                    currNodeIterator = currNodeIterator.next;
+                }
+                if (currNodeIterator == null) {
+                    continue;
+                }
+                needIterate = false;
+            }
+            if (resultIterator.next == null || currNodeIterator.val <= resultIterator.next.val) {
+                ListNode firstLink = resultIterator.next;
+                ListNode currNodeNext = currNodeIterator.next;
+                resultIterator.next = currNodeIterator;
+                currNodeIterator.next = firstLink;
+                currNodeIterator = currNodeNext;
+                if (currNodeIterator == null) {
+                    needIterate = true;
+                }
+                resultIterator = result;
+            } else {
+                resultIterator = resultIterator.next;
+            }
+        }
+        return result.next;
+    }
+}

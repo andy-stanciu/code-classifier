@@ -1,0 +1,59 @@
+class ListNode {
+
+    int val;
+
+    ListNode next;
+
+    ListNode(int x) {
+        val = x;
+    }
+
+    public static ListNode deserialize(String data) {
+        if (data == null || data.isEmpty())
+            return null;
+        data = data.replaceAll("[\\\\[\\\\]]", "");
+        String[] values = data.split(",");
+        ListNode dummyHead = new ListNode(0);
+        ListNode current = dummyHead;
+        for (String value : values) {
+            current.next = new ListNode(Integer.parseInt(value.trim()));
+            current = current.next;
+        }
+        return dummyHead.next;
+    }
+
+    public String serialize() {
+        StringBuilder sb = new StringBuilder();
+        ListNode current = this;
+        while (current != null) {
+            sb.append(current.val).append(",");
+            current = current.next;
+        }
+        return sb.length() > 0 ? sb.substring(0, sb.length() - 1) : "";
+    }
+}
+
+public class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        return method2(l1, l2, 0);
+    }
+
+    private ListNode method2(ListNode l1, ListNode l2, int carry) {
+        if (l1 == null && l2 == null && carry == 0) {
+            return null;
+        }
+        int sum = carry + (l1 != null ? l1.val : 0) + (l2 != null ? l2.val : 0);
+        ListNode result = new ListNode(sum % 10);
+        result.next = method2(l1 != null ? l1.next : null, l2 != null ? l2.next : null, sum / 10);
+        return result;
+    }
+
+    public static void main(String[] args) {
+        ListNode l1 = ListNode.deserialize("2,4,3");
+        ListNode l2 = ListNode.deserialize("5,6,4");
+        Solution solution = new Solution();
+        ListNode result = solution.method1(l1, l2);
+        System.out.println(result.serialize());
+    }
+}

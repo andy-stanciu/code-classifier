@@ -1,0 +1,24 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for (int v : nums) {
+            sum += v;
+        }
+        if (Math.abs(target) > sum)
+            return 0;
+        int n = nums.length;
+        int[][] dp = new int[n][2 * sum + 1];
+        dp[0][sum + nums[0]]++;
+        dp[0][sum - nums[0]]++;
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j <= 2 * sum; j++) {
+                if (dp[i - 1][j] != 0) {
+                    dp[i][j + nums[i]] += dp[i - 1][j];
+                    dp[i][j - nums[i]] += dp[i - 1][j];
+                }
+            }
+        }
+        return dp[n - 1][target + sum];
+    }
+}

@@ -1,0 +1,36 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        // using a custom comparator with proprity queue.
+        PriorityQueue<ListNode> pq = new PriorityQueue<>((a, b) -> a.val - b.val);
+        // populate pq with smallest elements of all the lists
+        for (ListNode list : param1) if (list != null)
+            pq.add(list);
+        ListNode head = null;
+        ListNode curr = head;
+        while (!pq.isEmpty()) {
+            // poll -> safer remove() method
+            ListNode currMin = pq.poll();
+            if (head == null) {
+                head = new ListNode(currMin.val);
+                curr = head;
+            } else {
+                curr.next = new ListNode(currMin.val);
+                curr = curr.next;
+            }
+            if (currMin.next != null)
+                pq.add(currMin.next);
+        }
+        return head;
+    }
+}

@@ -1,0 +1,28 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        // Create an array to store minimum number of coins required to make up each
+        // amount from 0 to \'amount\'
+        int[] dp = new int[amount + 1];
+        // Fill the array with maximum possible value initially to indicate that amount
+        // is not possible
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        // Minimum number of coins required to make amount 0 is 0
+        dp[0] = 0;
+        // Iterate through each amount from 1 to \'amount\'
+        for (int i = 1; i <= amount; i++) {
+            // Iterate through each coin in the \'coins\' array
+            for (int c : coins) {
+                // If current amount can be made using the current coin \'c\'
+                if (i - c >= 0 && dp[i - c] != Integer.MAX_VALUE) {
+                    // Update the minimum number of coins required for the current amount
+                    dp[i] = Math.min(dp[i], dp[i - c] + 1);
+                }
+            }
+        }
+        // If it\'s possible to make the desired amount, return the minimum number of
+        // coins required
+        // Otherwise, return -1 indicating it\'s not possible to make the amount
+        return dp[amount] != Integer.MAX_VALUE ? dp[amount] : -1;
+    }
+}

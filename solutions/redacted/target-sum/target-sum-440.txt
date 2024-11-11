@@ -1,0 +1,39 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int var1 = 0;
+        for (int num : nums) {
+            var1 += num;
+        }
+        if (var1 - param1 < 0 || (var1 - param1) % 2 != 0) {
+            return 0;
+        }
+        int a = (var1 - param1) / 2;
+        int[][] dp = new int[nums.length][a + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        return solve(nums, a, nums.length - 1, dp);
+    }
+
+    private int solve(int[] nums, int var1, int i, int[][] dp) {
+        if (i == 0) {
+            if (nums[0] == 0 && var1 == 0) {
+                return 2;
+            }
+            if (var1 == 0 || var1 == nums[0]) {
+                return 1;
+            }
+            return 0;
+        }
+        if (dp[i][var1] != -1) {
+            return dp[i][var1];
+        }
+        int notTake = solve(nums, var1, i - 1, dp);
+        int take = 0;
+        if (nums[i] <= var1) {
+            take = solve(nums, var1 - nums[i], i - 1, dp);
+        }
+        return dp[i][var1] = notTake + take;
+    }
+}

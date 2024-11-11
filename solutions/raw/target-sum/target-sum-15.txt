@@ -1,0 +1,46 @@
+public class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        HashMap<Pair, Integer> map = new HashMap<>();
+        int index = nums.length - 1, currSum = 0;
+        return fn(index, currSum, target, nums, map);
+    }
+
+    public static int fn(int i, int currSum, int target, int[] nums, HashMap<Pair, Integer> map) {
+        Pair key = new Pair(i, currSum);
+        if (map.containsKey(key))
+            return map.get(key);
+        // Base Case
+        if (i == -1) {
+            if (currSum == target)
+                return 1;
+            else
+                return 0;
+        }
+        int add = fn(i - 1, currSum + nums[i], target, nums, map);
+        int sub = fn(i - 1, currSum - nums[i], target, nums, map);
+        map.put(key, add + sub);
+        return add + sub;
+    }
+}
+
+// ONLY RECURSION
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        return travel(0, 0, nums, target);
+    }
+
+    public static int travel(int i, int currentSum, int[] nums, int target) {
+        if (i == nums.length) {
+            if (currentSum == target) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        int waysWithAddition = travel(i + 1, currentSum + nums[i], nums, target);
+        int waysWithSubtraction = travel(i + 1, currentSum - nums[i], nums, target);
+        return waysWithAddition + waysWithSubtraction;
+    }
+}

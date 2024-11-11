@@ -1,0 +1,22 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        HashMap<String, Integer> map = new HashMap<>();
+        return rec(nums, target, 0, 0, map);
+    }
+
+    public int rec(int[] nums, int target, int level, int currSum, HashMap<String, Integer> map) {
+        if (level == nums.length) {
+            if (currSum == target)
+                return 1;
+            else
+                return 0;
+        }
+        if (map.containsKey(level + "@" + currSum))
+            return map.get(level + "@" + currSum);
+        int add = rec(nums, target, level + 1, currSum + nums[level], map);
+        int diff = rec(nums, target, level + 1, currSum - nums[level], map);
+        map.put(level + "@" + currSum, add + diff);
+        return add + diff;
+    }
+}

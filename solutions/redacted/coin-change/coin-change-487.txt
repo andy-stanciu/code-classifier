@@ -1,0 +1,29 @@
+class Solution {
+
+    int max = 0;
+
+    Integer[][] dp;
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        dp = new Integer[n + 1][amount + 1];
+        int ans = dfs(0, param1, amount);
+        return ans == 100000 ? -1 : ans;
+    }
+
+    public int dfs(int i, int[] param1, int amount) {
+        if (i == param1.length) {
+            if (amount == 0)
+                return 0;
+            else
+                return 100000;
+        }
+        if (dp[i][amount] != null)
+            return dp[i][amount];
+        int count = Integer.MAX_VALUE;
+        for (int c = 0; c <= (amount / param1[i]); c++) {
+            count = Math.min(count, c + dfs(i + 1, param1, amount - (c * param1[i])));
+        }
+        return dp[i][amount] = count;
+    }
+}

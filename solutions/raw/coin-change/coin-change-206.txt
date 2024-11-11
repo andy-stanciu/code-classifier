@@ -1,0 +1,32 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        Integer[][] dp = new Integer[coins.length][amount + 1];
+        int result = coinss(coins.length - 1, coins, amount, dp);
+        return result == Integer.MAX_VALUE ? -1 : result;
+    }
+
+    public int coinss(int ind, int[] coins, int amount, Integer[][] dp) {
+        if (amount == 0)
+            return 0;
+        if (ind < 0)
+            return Integer.MAX_VALUE;
+        if (ind == 0) {
+            if (amount % coins[0] == 0)
+                return amount / coins[0];
+            else
+                return Integer.MAX_VALUE;
+        }
+        if (dp[ind][amount] != null)
+            return dp[ind][amount];
+        int notpick = coinss(ind - 1, coins, amount, dp);
+        int pick = Integer.MAX_VALUE;
+        if (coins[ind] <= amount) {
+            int res = coinss(ind, coins, amount - coins[ind], dp);
+            if (res != Integer.MAX_VALUE) {
+                pick = 1 + res;
+            }
+        }
+        return dp[ind][amount] = Math.min(pick, notpick);
+    }
+}

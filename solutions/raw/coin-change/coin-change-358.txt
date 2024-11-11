@@ -1,0 +1,29 @@
+class Solution {
+
+    int[][] dp;
+
+    public int coinChange(int[] coins, int amount) {
+        dp = new int[coins.length + 1][amount + 1];
+        for (int[] d : dp) {
+            Arrays.fill(d, -1);
+        }
+        int noOfCoins = solve(coins, amount, coins.length);
+        if (noOfCoins == Integer.MAX_VALUE - 1)
+            return -1;
+        return noOfCoins;
+    }
+
+    private int solve(int[] coins, int amount, int n) {
+        if (n == 0)
+            return Integer.MAX_VALUE - 1;
+        if (amount == 0)
+            return 0;
+        if (dp[n][amount] != -1)
+            return dp[n][amount];
+        if (coins[n - 1] <= amount) {
+            return dp[n][amount] = Math.min(1 + solve(coins, amount - coins[n - 1], n), solve(coins, amount, n - 1));
+        } else {
+            return dp[n][amount] = solve(coins, amount, n - 1);
+        }
+    }
+}

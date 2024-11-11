@@ -1,0 +1,53 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null || lists.length == 0) {
+            return null;
+        }
+        return mergeLists(lists, 0, lists.length - 1);
+    }
+
+    // Divide and conquer function to merge the lists from index left to right
+    public ListNode mergeLists(ListNode[] lists, int low, int high) {
+        // Base case: If there is only 1 lists return it
+        if (low == high) {
+            return lists[low];
+        }
+        int mid = low + (high - low) / 2;
+        // Recursively merge the two halves
+        // Merge left half
+        ListNode leftList = mergeLists(lists, low, mid);
+        // Merge right half
+        ListNode rightList = mergeLists(lists, mid + 1, high);
+        return mergeTwoLists(leftList, rightList);
+    }
+
+    // Helper function to merge two sorted linked lists
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        // Dummy node to simplify the merge process
+        ListNode preHead = new ListNode(-1);
+        ListNode head = preHead;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                head.next = l1;
+                l1 = l1.next;
+            } else {
+                head.next = l2;
+                l2 = l2.next;
+            }
+            head = head.next;
+        }
+        head.next = l1 == null ? l2 : l1;
+        return preHead.next;
+    }
+}

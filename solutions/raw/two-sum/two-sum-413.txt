@@ -1,0 +1,86 @@
+class Solution {
+
+    // Approach 1 : TC : O(n^2) SC : O(1)
+    // run two loops for checking for (sum of each element(ith) and its next index((i+1)th i.e jth index))
+    // If sum == target we will return ith index and jth index
+    public int[] twoSum(int[] nums, int target) {
+        int[] ans = new int[2];
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                if (nums[i] + nums[j] == target) {
+                    ans[0] = i;
+                    ans[1] = j;
+                    return ans;
+                }
+            }
+        }
+        return ans;
+        // Approach 2 : TC : O(nLogn) SC : O(n)
+        // we use sorting + 2 pointer in this approach
+        // Note that:  If we normally sort the array directly we will loose the index hence resulting in wrong answer
+        // thats why we will have to make List of custom class called "Pair"
+        List<Pair> al = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            al.add(new Pair(nums[i], i));
+        }
+        // You can use this sorting 1 :
+        Collections.sort(al, new Comparator<Pair>() {
+
+            public int Compare(Pair n1, Pair n2) {
+                return n1.element - n2.element;
+            }
+        });
+        // You can use this sorting 2 By Java 8 Lambda Expressions :
+        Collections.sort(al, (n1, n2) -> {
+            return n1.element - n2.element;
+        });
+        // You can use this sorting 3 By Java 8 Lambda Expressions :
+        Collections.sort(al, (n1, n2) -> n1.element - n2.element);
+        // Take two pointers and check their sum
+        int i = 0, j = nums.length - 1;
+        int[] ans = new int[2];
+        while (i < j) {
+            int sum = al.get(i).element + al.get(j).element;
+            // if sum is equal to target return their indexes
+            if (sum == target) {
+                ans[0] = al.get(i).index;
+                ans[1] = al.get(j).index;
+                break;
+            }
+            // otherwise increase i
+            if (al.get(i).element + al.get(j).element < target)
+                i++;
+            // otherwise decrease j
+            if (al.get(i).element + al.get(j).element > target)
+                j--;
+        }
+        return ans;
+        // Approach 3 : TC : O(n) SC : O(n)
+        // we use this approach :
+        // EX : arr = [0,1,2,7,11] , target = 9
+        // We will search for 9-arr[i] not (arr[i] + arr[j] that was in first approach)
+        // Map will store element and index
+        Map<Integer, Integer> map = new HashMap<>();
+        int[] ans = new int[2];
+        for (int i = 0; i < nums.length; i++) {
+            if (map.containsKey(target - nums[i])) {
+                ans[0] = map.get(target - nums[i]);
+                ans[1] = i;
+                return ans;
+            } else {
+                map.put(nums[i], i);
+            }
+        }
+        return ans;
+    }
+}
+
+class Pair {
+
+    int element, index;
+
+    public Pair(int element, int index) {
+        this.element = element;
+        this.index = index;
+    }
+}

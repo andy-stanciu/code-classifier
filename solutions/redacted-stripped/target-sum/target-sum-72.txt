@@ -1,0 +1,36 @@
+class Solution {
+
+    int countSubsets(int[] nums, int param1, int indx, int[][] dp) {
+        if (indx == 0) {
+            if (param1 == 0 && nums[0] == 0)
+                return 2;
+            if (param1 == 0 || nums[0] == param1)
+                return 1;
+            else
+                return 0;
+        }
+        if (dp[indx][param1] != 0) {
+            return dp[indx][param1];
+        }
+        int notPick = countSubsets(nums, param1, indx - 1, dp);
+        int pick = 0;
+        if (param1 >= nums[indx]) {
+            pick = countSubsets(nums, param1 - nums[indx], indx - 1, dp);
+        }
+        return dp[indx][param1] = notPick + pick;
+    }
+
+    public int method1(int[] nums, int param1) {
+        int var1 = 0;
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            var1 += nums[i];
+        }
+        int difference = var1 - param1;
+        if (difference % 2 == 1 || difference < 0)
+            return 0;
+        difference /= 2;
+        int[][] dp = new int[n][difference + 1];
+        return countSubsets(nums, difference, n - 1, dp);
+    }
+}

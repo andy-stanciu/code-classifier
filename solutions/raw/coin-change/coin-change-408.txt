@@ -1,0 +1,36 @@
+class Solution {
+
+    int[] coins, dp;
+
+    int n;
+
+    int find(int amount) {
+        if (amount == 0) {
+            return 0;
+        }
+        int x = Integer.MAX_VALUE;
+        for (int i = 0; i < n; i++) {
+            if ((amount - coins[i] >= 0)) {
+                if (dp[amount - coins[i]] == -1) {
+                    x = Math.min(find(amount - coins[i]), x);
+                } else {
+                    x = Math.min(dp[amount - coins[i]], x);
+                }
+            }
+        }
+        if (x == Integer.MAX_VALUE)
+            return dp[amount] = x;
+        return dp[amount] = x + 1;
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        this.n = coins.length;
+        this.dp = new int[amount + 1];
+        for (int i = 0; i < amount + 1; i++) dp[i] = -1;
+        this.coins = coins;
+        int x = find(amount);
+        if (x == Integer.MAX_VALUE || x < 0)
+            return -1;
+        return x;
+    }
+}

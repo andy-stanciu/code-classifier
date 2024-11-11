@@ -1,0 +1,32 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int[][] dp = new int[coins.length][amount + 1];
+        for (int i = 0; i < coins.length; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        int ans = fn(coins, amount, dp, coins.length - 1);
+        if (ans == Integer.MAX_VALUE - 1000 && amount != 0) {
+            return -1;
+        }
+        return ans;
+    }
+
+    public int fn(int[] c, int a, int[][] dp, int i) {
+        if (i == 0) {
+            if (a % c[0] == 0) {
+                return a / c[0];
+            }
+            return Integer.MAX_VALUE - 1000;
+        }
+        if (dp[i][a] != -1) {
+            return dp[i][a];
+        }
+        int notTake = fn(c, a, dp, i - 1);
+        int take = Integer.MAX_VALUE;
+        if (a >= c[i]) {
+            take = fn(c, a - c[i], dp, i) + 1;
+        }
+        return dp[i][a] = Math.min(take, notTake);
+    }
+}

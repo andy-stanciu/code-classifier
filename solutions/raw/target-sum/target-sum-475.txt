@@ -1,0 +1,37 @@
+class Solution {
+
+    int arrlen;
+
+    int target;
+
+    int[] nums;
+
+    HashMap<String, Integer> memo;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        this.memo = new HashMap<>();
+        this.arrlen = nums.length;
+        this.target = target;
+        this.nums = nums;
+        return targetsumhelper(0, 0);
+    }
+
+    public int targetsumhelper(int idx, int currsum) {
+        if (idx >= this.arrlen) {
+            if (currsum == this.target) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        if (this.memo.containsKey(Integer.toString(idx) + "_" + Integer.toString(currsum))) {
+            return this.memo.get(Integer.toString(idx) + "_" + Integer.toString(currsum));
+        }
+        int pluscurrsum = currsum + this.nums[idx];
+        int minuscurrsum = currsum - this.nums[idx];
+        int x = targetsumhelper(idx + 1, pluscurrsum);
+        int y = targetsumhelper(idx + 1, minuscurrsum);
+        this.memo.put(Integer.toString(idx) + "_" + Integer.toString(currsum), x + y);
+        return x + y;
+    }
+}

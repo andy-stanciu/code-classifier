@@ -1,0 +1,41 @@
+class Solution {
+
+    class Pair {
+
+        ListNode node;
+
+        int listNum;
+
+        Pair(ListNode n, int num) {
+            node = n;
+            listNum = num;
+        }
+    }
+
+    public ListNode method1(ListNode[] param1) {
+        PriorityQueue<Pair> pq = new PriorityQueue<>((x, y) -> x.node.val - y.node.val);
+        ListNode dummy = new ListNode(0);
+        ListNode ptr = dummy;
+        for (int i = 0; i < param1.length; i++) {
+            if (param1[i] != null) {
+                ListNode temp = param1[i];
+                param1[i] = temp.next;
+                temp.next = null;
+                pq.add(new Pair(temp, i));
+            }
+        }
+        while (!pq.isEmpty()) {
+            Pair temp = pq.remove();
+            int listIdx = temp.listNum;
+            ptr.next = temp.node;
+            ptr = ptr.next;
+            if (param1[listIdx] != null) {
+                ListNode t = param1[listIdx];
+                param1[listIdx] = t.next;
+                t.next = null;
+                pq.add(new Pair(t, listIdx));
+            }
+        }
+        return dummy.next;
+    }
+}

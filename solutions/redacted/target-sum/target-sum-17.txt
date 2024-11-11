@@ -1,0 +1,35 @@
+class Solution {
+
+    Map<String, Integer> map = new HashMap<>();
+
+    public int method1(int[] nums, int S) {
+        return helper(nums, S, 0, 0);
+    }
+
+    private int helper(int[] nums, int param1, int index, int param2) {
+        //Base condition when sum == targetSum. we return 1
+        //as we need to find the number of ways we can reach targetSum
+        if (index == nums.length && param2 == param1) {
+            return 1;
+        }
+        //Base condition when sum != targetSum . we return 0 from here
+        //as we do not want this case in final answer
+        if (index == nums.length && param2 != param1) {
+            return 0;
+        }
+        //memoization using map.
+        //used immutabality property of String for unique key in map.
+        String key = param2 + "()" + index;
+        if (map.containsKey(key)) {
+            return map.get(key);
+        }
+        int count = 0;
+        //first case we take negative value of current index
+        count += helper(nums, param1, index + 1, param2 - nums[index]);
+        //second case we take positive value of current index
+        count += helper(nums, param1, index + 1, param2 + nums[index]);
+        //add to map for future use.
+        map.put(key, count);
+        return count;
+    }
+}

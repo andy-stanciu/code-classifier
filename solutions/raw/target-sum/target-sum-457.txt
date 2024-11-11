@@ -1,0 +1,24 @@
+class Solution {
+
+    Map<String, Integer> memo = new HashMap<>();
+
+    public int findTargetSumWays(int[] nums, int target) {
+        return dfs(nums, 0, target, 0);
+    }
+
+    public int dfs(int[] nums, int i, int target, int sum) {
+        if (i == nums.length) {
+            if (target == sum)
+                return 1;
+            else
+                return 0;
+        }
+        String key = String.valueOf(i) + "," + String.valueOf(sum);
+        if (memo.containsKey(key))
+            return memo.get(key);
+        int add = dfs(nums, i + 1, target, sum + nums[i]);
+        int minus = dfs(nums, i + 1, target, sum - nums[i]);
+        memo.put(key, add + minus);
+        return memo.get(key);
+    }
+}

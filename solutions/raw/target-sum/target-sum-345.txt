@@ -1,0 +1,25 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0, pos = target, neg = 0;
+        for (int num : nums) sum += num;
+        while (pos + neg < sum) {
+            pos++;
+            neg++;
+        }
+        // combination at val = i ( 0 - pos ) return val[pos]
+        if (pos + neg != sum)
+            return 0;
+        if (pos < 0)
+            pos = neg;
+        target = Math.abs(target);
+        int[] val = new int[pos + 1];
+        val[0] = 1;
+        for (int num : nums) {
+            for (int i = pos; i >= num; i--) {
+                val[i] += val[i - num];
+            }
+        }
+        return val[pos];
+    }
+}

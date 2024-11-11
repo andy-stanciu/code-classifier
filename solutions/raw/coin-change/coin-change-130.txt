@@ -1,0 +1,29 @@
+class Solution {
+
+    public int solvetab(int[] coins, int amount) {
+        // Create a dp array to store the minimum number of coins needed for each amount
+        int[] dp = new int[amount + 1];
+        // Fill the dp array with a large value to signify impossible states
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        // Base case: 0 coins are needed to make amount 0
+        dp[0] = 0;
+        // Iterate over each amount from 1 to the target amount
+        for (int i = 1; i <= amount; i++) {
+            // Try using every coin
+            for (int coin : coins) {
+                // If it\'s possible to use the current coin (i - coin >= 0)
+                if (i - coin >= 0 && dp[i - coin] != Integer.MAX_VALUE) {
+                    // Update dp[i] to the minimum number of coins
+                    dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+                }
+            }
+        }
+        // If dp[amount] is still Integer.MAX_VALUE, it means we cannot form the amount
+        return dp[amount] == Integer.MAX_VALUE ? -1 : dp[amount];
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        // Call the tabulation function to solve the problem
+        return solvetab(coins, amount);
+    }
+}

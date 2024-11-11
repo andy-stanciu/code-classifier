@@ -1,0 +1,25 @@
+class Solution {
+
+    int ans = Integer.MAX_VALUE;
+
+    public int method1(int[] param1, int amount) {
+        int[][] dp = new int[param1.length + 1][amount + 1];
+        int res = solve(0, param1, amount, dp);
+        return res == Integer.MAX_VALUE - 1 ? -1 : res;
+    }
+
+    public int solve(int idx, int[] param1, int amount, int[][] dp) {
+        if (idx >= param1.length || amount <= 0) {
+            return (amount == 0) ? 0 : Integer.MAX_VALUE - 1;
+        }
+        if (dp[idx][amount] != 0)
+            return dp[idx][amount];
+        int exc = solve(idx + 1, param1, amount, dp);
+        int inc = Integer.MAX_VALUE - 1;
+        if (amount >= param1[idx]) {
+            inc = 1 + solve(idx, param1, amount - param1[idx], dp);
+        }
+        ;
+        return dp[idx][amount] = Math.min(inc, exc);
+    }
+}

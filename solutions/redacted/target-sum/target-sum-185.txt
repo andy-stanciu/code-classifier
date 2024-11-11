@@ -1,0 +1,39 @@
+class Solution {
+
+    int[] dp;
+
+    public int method1(int[] nums, int param1) {
+        // Calculate the total sum of the array elements
+        int total = 0;
+        for (int n : nums) total += n;
+        // Make the target positive to simplify calculations
+        param1 = Math.abs(param1);
+        // If the sum of target and total is odd, return 0 as it\'s not possible to achieve the target sum
+        if ((param1 + total) % 2 == 1)
+            return 0;
+        // Calculate the new target sum
+        int s1 = (param1 + total) / 2;
+        // Initialize dp array to store the count of ways to reach each target value
+        dp = new int[s1 + 1];
+        // There\'s 1 way to achieve a target sum of 0, by not selecting any element
+        dp[0] = 1;
+        // Call recursive function to update dp array
+        find(nums, 0, s1);
+        // Return the count of ways to reach the target sum
+        return dp[s1];
+    }
+
+    // Recursive function to update dp array
+    public void find(int[] nums, int index, int param1) {
+        // Base case: if index reaches the end of the array, return
+        if (index == nums.length)
+            return;
+        // Iterate through possible target values from target down to nums[index]
+        for (int n = param1; n >= nums[index]; n--) {
+            // Update dp array by adding count of ways to reach n - nums[index] to count of ways to reach n
+            dp[n] = dp[n] + dp[n - nums[index]];
+        }
+        // Call the function recursively for the next index
+        find(nums, index + 1, param1);
+    }
+}

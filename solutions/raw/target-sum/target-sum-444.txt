@@ -1,0 +1,38 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int S) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        int diff = S;
+        // diff+sum it has to be even as we are dividing into two subsets. odd (diff+sum) can\'t be divided into two subset sum.
+        if (diff > sum || (diff + sum) % 2 != 0) {
+            return 0;
+        }
+        int s1Sum = (diff + sum) / 2;
+        int[][] memo = new int[nums.length + 1][s1Sum + 1];
+        for (int[] mm : memo) {
+            Arrays.fill(mm, -1);
+        }
+        return countSubsetSum(nums, s1Sum, nums.length, memo);
+    }
+
+    public int countSubsetSum(int[] nums, int sum, int n, int[][] memo) {
+        if (sum == 0 && n == 0) {
+            return 1;
+        }
+        if (n == 0) {
+            return 0;
+        }
+        if (memo[n][sum] != -1) {
+            return memo[n][sum];
+        }
+        if (nums[n - 1] <= sum) {
+            memo[n][sum] = countSubsetSum(nums, sum - nums[n - 1], n - 1, memo) + countSubsetSum(nums, sum, n - 1, memo);
+        } else {
+            memo[n][sum] = countSubsetSum(nums, sum, n - 1, memo);
+        }
+        return memo[n][sum];
+    }
+}

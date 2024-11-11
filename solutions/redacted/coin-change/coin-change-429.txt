@@ -1,0 +1,59 @@
+class Solution {
+
+    int[][] dp;
+
+    boolean[][] done;
+
+    int n;
+
+    int[] var1;
+
+    int amount;
+
+    int min = Integer.MAX_VALUE;
+
+    public int method1(int[] var1, int amount) {
+        this.var1 = var1;
+        this.amount = amount;
+        n = var1.length;
+        //for caching
+        dp = new int[n + 1][amount + 1];
+        //for mainting visited elements
+        done = new boolean[n + 1][amount + 1];
+        for (int[] x : dp) Arrays.fill(x, -1);
+        for (int i = 0; i <= n; i++) {
+            //initializing done array with false
+            for (int j = 0; j <= amount; j++) {
+                done[i][j] = false;
+            }
+        }
+        //this is dp function invoked by passing states
+        int ans = rec(0, amount);
+        return ans >= 100000 ? -1 : ans;
+    }
+
+    public int rec(int i, int x) {
+        //1 pruning
+        //NA
+        //2 base case
+        if (x == 0)
+            return 0;
+        if (i == n)
+            return 100000;
+        //3 cache check
+        if (done[i][x])
+            return dp[i][x];
+        //4 recursive case
+        int t = 100000;
+        if (var1[i] <= x) {
+            t = rec(i, x - var1[i]);
+        }
+        int nt = rec(i + 1, x);
+        int ans = Math.min(t + 1, nt);
+        //5 save and return
+        //caching actual ans
+        dp[i][x] = ans;
+        done[i][x] = true;
+        return ans;
+    }
+}

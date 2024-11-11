@@ -1,0 +1,42 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int var1 = 0;
+        for (int i : nums) {
+            var1 += i;
+        }
+        int s1;
+        if (param1 < 0) {
+            /*
+            since all elements of nums are positive (given), so to make the target negative, the other subset\'s sum should be positive hence calculating s2:
+            s1 + s2 = sum
+            s1 - s2 = target
+            ------------------
+            2s1 = sum + target (adding both equations)
+            ------------------
+            
+            2s2 = sum - target (subtracting both equations) 
+        */
+            s1 = var1 - param1;
+        } else {
+            s1 = var1 + param1;
+        }
+        if (s1 % 2 != 0) {
+            return 0;
+        }
+        s1 = s1 / 2;
+        int n = nums.length;
+        int[][] dp = new int[n + 1][s1 + 1];
+        dp[0][0] = 1;
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 0; j < s1 + 1; j++) {
+                if (nums[i - 1] <= j) {
+                    dp[i][j] = dp[i - 1][j] + dp[i - 1][j - nums[i - 1]];
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        return dp[n][s1];
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        return method2(param1, amount, map);
+    }
+
+    public int method2(int[] param1, int amount, Map<Integer, Integer> map) {
+        if (amount == 0)
+            return 0;
+        if (amount < 0)
+            return -1;
+        if (map.containsKey(amount)) {
+            return map.get(amount);
+        }
+        int res = Integer.MAX_VALUE;
+        for (int i = 0; i < param1.length; i++) {
+            int num = method2(param1, amount - param1[i], map);
+            if (num != -1) {
+                res = Math.min(res, 1 + num);
+            }
+        }
+        res = res == Integer.MAX_VALUE ? -1 : res;
+        map.put(amount, res);
+        return res;
+    }
+
+    public int method1(int[] param1, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, amount + 1);
+        dp[0] = 0;
+        for (int i = 1; i <= amount; i++) {
+            for (int j = 0; j < param1.length; j++) {
+                if (param1[j] <= i) {
+                    dp[i] = Math.min(dp[i], 1 + dp[i - param1[j]]);
+                }
+            }
+        }
+        return dp[amount] > amount ? -1 : dp[amount];
+    }
+}

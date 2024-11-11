@@ -1,0 +1,101 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        Stack<Integer> s = new Stack<>();
+        Stack<Integer> numbers = new Stack<>();
+        int count = 0;
+        int card;
+        int loop = 0;
+        int zeros = 0;
+        int[] var1 = new int[nums.length];
+        int[] cumcount = new int[nums.length];
+        HashMap<String, Integer> cache = new HashMap<String, Integer>();
+        int cumul = 0;
+        String key;
+        Arrays.sort(nums);
+        int length = nums.length;
+        for (int i = 0; i < length / 2; i++) {
+            int temp = nums[i];
+            nums[i] = nums[length - 1 - i];
+            nums[length - 1 - i] = temp;
+        }
+        for (int i = nums.length - 1; i >= 0; i--) {
+            cumul += nums[i];
+            var1[i] = cumul;
+        }
+        for (int num : nums) {
+            if (num == 0) {
+                zeros++;
+            }
+            if (s.empty()) {
+                s.push(num);
+            } else if (s.peek() - var1[s.size()] > param1) {
+                s.push(s.peek() - num);
+            } else if (s.peek() + var1[s.size()] < param1) {
+                return 0;
+            } else {
+                s.push(s.peek() + num);
+            }
+        }
+        if (s.peek() == param1) {
+            count++;
+            for (int i = 0; i < cumcount.length; i++) {
+                cumcount[i] = cumcount[i] + 1;
+            }
+        }
+        while (true) {
+            key = s.size() + "," + s.peek();
+            cache.put(key, cumcount[s.size() - 1]);
+            card = s.pop();
+            cumcount[s.size()] = 0;
+            while (!s.empty()) {
+                if (card > s.peek()) {
+                    s.push(s.peek() - (card - s.peek()));
+                    break;
+                } else if (card == s.peek()) {
+                    numbers.push(0);
+                } else {
+                    numbers.push(s.peek() - card);
+                }
+                key = s.size() + "," + s.peek();
+                cache.put(key, cumcount[s.size() - 1]);
+                card = s.pop();
+                cumcount[s.size()] = 0;
+            }
+            if (s.empty()) {
+                if (card > 0) {
+                    s.push(-1 * card);
+                } else {
+                    break;
+                }
+            }
+            while (!numbers.empty()) {
+                card = numbers.pop();
+                if (s.peek() - var1[s.size()] > param1) {
+                    s.push(s.peek() - card);
+                } else if (s.peek() + var1[s.size()] < param1) {
+                    numbers.push(card);
+                    break;
+                } else {
+                    s.push(s.peek() + card);
+                }
+                key = s.size() + "," + s.peek();
+                if (cache.containsKey(key) && (!numbers.empty())) {
+                    count += cache.get(key);
+                    for (int i = 0; i < s.size(); i++) {
+                        cumcount[i] = cumcount[i] + cache.get(key);
+                    }
+                    break;
+                }
+            }
+            if (s.peek() == param1 && numbers.empty()) {
+                count++;
+                for (int i = 0; i < cumcount.length; i++) {
+                    cumcount[i] = cumcount[i] + 1;
+                }
+            }
+        }
+        count = count * (int) Math.pow(2, zeros);
+        return count;
+    }
+}

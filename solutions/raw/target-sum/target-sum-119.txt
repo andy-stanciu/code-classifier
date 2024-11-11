@@ -1,0 +1,28 @@
+class Solution {
+
+    private int findSumSet(int[] nums, int target) {
+        int[] dp = new int[target + 1];
+        dp[0] = 1;
+        for (int num : nums) {
+            for (int i = target; i >= num; i--) {
+                dp[i] += dp[i - num];
+            }
+        }
+        return dp[target];
+    }
+
+    public int findTargetSumWays(int[] nums, int target) {
+        // 2 * sum(pos) = target + sum(num);
+        int posSum = 0;
+        for (int num : nums) posSum += num;
+        if (posSum < target)
+            return 0;
+        posSum += target;
+        if (posSum % 2 != 0)
+            return 0;
+        if (posSum < 0)
+            return 0;
+        posSum /= 2;
+        return findSumSet(nums, posSum);
+    }
+}

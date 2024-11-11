@@ -1,0 +1,37 @@
+class Solution {
+
+    Integer[] dp;
+
+    public int coinChange(int[] coins, int amount) {
+        if (amount == 0) {
+            return 0;
+        }
+        dp = new Integer[amount + 1];
+        return calculate(coins, amount);
+    }
+
+    public int calculate(int[] coins, int amount) {
+        if (amount < 0) {
+            return -1;
+        }
+        if (amount == 0) {
+            return 0;
+        }
+        if (dp[amount] != null) {
+            return dp[amount];
+        }
+        int leastCoin = Integer.MAX_VALUE;
+        for (int coin : coins) {
+            int subProblem = calculate(coins, amount - coin);
+            if (subProblem != -1) {
+                leastCoin = Math.min(subProblem + 1, leastCoin);
+            }
+        }
+        if (leastCoin == Integer.MAX_VALUE) {
+            dp[amount] = -1;
+        } else {
+            dp[amount] = leastCoin;
+        }
+        return dp[amount];
+    }
+}

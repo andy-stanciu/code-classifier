@@ -1,0 +1,24 @@
+class Solution {
+
+    public static int findTargetSumWays(int[] nums, int target) {
+        int sum = Arrays.stream(nums).sum();
+        if (target > sum || target < -sum)
+            return 0;
+        int[] prevDP = new int[2 * sum + 1];
+        int[] currDP = new int[2 * sum + 1];
+        prevDP[2 * sum] = 1;
+        currDP[2 * sum] = 1;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = 0; j <= 2 * sum; j++) {
+                currDP[j] = prevDP[j];
+                if (j + 2 * nums[i] < currDP.length) {
+                    currDP[j] += prevDP[j + 2 * nums[i]];
+                }
+            }
+            int[] temp = prevDP;
+            prevDP = currDP;
+            currDP = temp;
+        }
+        return prevDP[target + sum];
+    }
+}

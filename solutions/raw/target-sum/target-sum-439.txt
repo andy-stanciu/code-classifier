@@ -1,0 +1,25 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int S) {
+        // initialize memo cache
+        HashMap<String, Integer> memo = new HashMap();
+        return dfs(nums, S, 0, memo);
+    }
+
+    private int dfs(int[] nums, int S, int cur, HashMap<String, Integer> memo) {
+        // check if we already calculated from this point forward in memo
+        if (memo.containsKey(String.valueOf(S) + "-" + String.valueOf(cur))) {
+            return memo.get(String.valueOf(S) + "-" + String.valueOf(cur));
+        }
+        // check if cur reached end of nums
+        if (cur == nums.length) {
+            // return 1 if this is a valid sum (S reduced to 0), 0 otherwise
+            return (S == 0) ? 1 : 0;
+        }
+        // calculate result of taking either - or + of current num
+        int result = (dfs(nums, S + nums[cur], cur + 1, memo) + dfs(nums, S - nums[cur], cur + 1, memo));
+        // store in memo and return
+        memo.put(String.valueOf(S) + "-" + String.valueOf(cur), result);
+        return result;
+    }
+}

@@ -1,0 +1,51 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<Integer> inorderTraversal(TreeNode root) {
+        //Morris inorder traversal
+        //case1: if left subtree is null, add root and move to right
+        //case2: if left substree is not null, move to left and then rightmost node
+        //case3: from rightmost node, create a connection to root
+        //case4: if connection exists means left subtree is accessed so add root and move to right
+        List<Integer> inorder = new ArrayList<>();
+        TreeNode curr = root;
+        while (curr != null) {
+            //case1
+            if (curr.left == null) {
+                inorder.add(curr.val);
+                curr = curr.right;
+            } else {
+                TreeNode prev = curr.left;
+                while (prev.right != null && prev.right != curr) {
+                    prev = prev.right;
+                }
+                //prev.right is not null and connected to root
+                if (prev.right != null) {
+                    //break the connection
+                    prev.right = null;
+                    inorder.add(curr.val);
+                    curr = curr.right;
+                } else {
+                    //prev.right is null
+                    prev.right = curr;
+                    curr = curr.left;
+                }
+            }
+        }
+        return inorder;
+    }
+}

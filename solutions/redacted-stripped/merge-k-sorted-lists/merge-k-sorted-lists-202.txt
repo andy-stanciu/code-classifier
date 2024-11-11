@@ -1,0 +1,82 @@
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        if (param1.length == 0) {
+            return null;
+        } else if (param1.length == 1) {
+            return param1[0];
+        }
+        int nonNullIndex = getNextNonNullList(param1, -1);
+        if (nonNullIndex == -1) {
+            return null;
+        }
+        ListNode head = param1[nonNullIndex];
+        while (nonNullIndex < param1.length - 1) {
+            int newNonNullIndex = getNextNonNullList(param1, nonNullIndex);
+            if (newNonNullIndex == -1) {
+                break;
+            } else {
+                ListNode lastIndex = getLastNode(param1[nonNullIndex]);
+                lastIndex.next = param1[getNextNonNullList(param1, nonNullIndex)];
+                nonNullIndex = newNonNullIndex;
+            }
+        }
+        return method2(head);
+    }
+
+    public int getNextNonNullList(ListNode[] param1, int currentIndex) {
+        for (int i = currentIndex + 1; i < param1.length; i++) {
+            if (param1[i] != null) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public ListNode getLastNode(ListNode head) {
+        while (head.next != null) {
+            head = head.next;
+        }
+        return head;
+    }
+
+    public ListNode method2(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode mid = getMid(head);
+        ListNode left = head;
+        ListNode right = mid.next;
+        mid.next = null;
+        left = method2(left);
+        right = method2(right);
+        return method3(left, right);
+    }
+
+    public ListNode method3(ListNode left, ListNode right) {
+        ListNode newList = new ListNode();
+        ListNode current = newList;
+        while (left != null && right != null) {
+            if (left.val < right.val) {
+                current.next = left;
+                left = left.next;
+            } else {
+                current.next = right;
+                right = right.next;
+            }
+            current = current.next;
+        }
+        current.next = (left != null) ? left : right;
+        return newList.next;
+    }
+
+    public ListNode getMid(ListNode head) {
+        ListNode slowPtr = head;
+        ListNode fastPtr = head;
+        while (fastPtr.next != null && fastPtr.next.next != null) {
+            slowPtr = slowPtr.next;
+            fastPtr = fastPtr.next.next;
+        }
+        return slowPtr;
+    }
+}

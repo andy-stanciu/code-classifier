@@ -1,0 +1,62 @@
+class Solution {
+
+    static void method1(TreeNode root, List<Integer> arr) {
+        if (root == null)
+            return;
+        if (root.left != null)
+            method1(root.left, arr);
+        arr.add(root.val);
+        if (root.right != null)
+            method1(root.right, arr);
+    }
+
+    static void method2(TreeNode root, List<Integer> arr) {
+        Stack<TreeNode> st = new Stack<>();
+        if (root == null)
+            return;
+        st.add(root);
+        while (st.size() > 0) {
+            TreeNode temp = st.peek();
+            if (temp.left != null) {
+                st.push(temp.left);
+                temp.left = null;
+            } else {
+                st.pop();
+                arr.add(temp.val);
+                if (temp.right != null)
+                    st.push(temp.right);
+            }
+        }
+    }
+
+    static void method3(TreeNode root, List<Integer> arr) {
+        if (root == null)
+            return;
+        TreeNode curr = root;
+        while (curr != null) {
+            if (curr.left != null) {
+                TreeNode pred = curr.left;
+                while (pred.right != null && pred.right != curr) {
+                    pred = pred.right;
+                }
+                if (pred.right == null) {
+                    pred.right = curr;
+                    curr = curr.left;
+                } else {
+                    pred.right = null;
+                    arr.add(curr.val);
+                    curr = curr.right;
+                }
+            } else {
+                arr.add(curr.val);
+                curr = curr.right;
+            }
+        }
+    }
+
+    public List<Integer> method4(TreeNode root) {
+        List<Integer> arr = new ArrayList<>();
+        method3(root, arr);
+        return arr;
+    }
+}

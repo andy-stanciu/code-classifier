@@ -1,0 +1,106 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        //throwExceptionIfNull(l1);
+        //throwExceptionIfNull(l2);
+        //validate(l1);
+        //validate(l2);
+        int tail;
+        int sumVal = l1.val + l2.val;
+        if (sumVal > 9) {
+            sumVal -= 10;
+            tail = 1;
+        } else {
+            tail = 0;
+        }
+        ListNode sum = new ListNode(sumVal);
+        ListNode head = sum;
+        ListNode currentL1 = l1.next;
+        ListNode currentL2 = l2.next;
+        while (Objects.nonNull(currentL1) && Objects.nonNull(currentL2)) {
+            sumVal = currentL1.val + currentL2.val + tail;
+            if (sumVal > 9) {
+                sumVal -= 10;
+                tail = 1;
+            } else {
+                tail = 0;
+            }
+            sum.next = new ListNode(sumVal);
+            sum = sum.next;
+            currentL1 = currentL1.next;
+            currentL2 = currentL2.next;
+        }
+        if (Objects.isNull(currentL1) && Objects.isNull(currentL2)) {
+            if (tail == 1) {
+                sum.next = new ListNode(tail);
+            }
+            return head;
+        }
+        ListNode currentBigger;
+        if (Objects.isNull(currentL1)) {
+            currentBigger = currentL2;
+        } else {
+            currentBigger = currentL1;
+        }
+        while (Objects.nonNull(currentBigger)) {
+            sumVal = currentBigger.val + +tail;
+            if (sumVal > 9) {
+                sumVal -= 10;
+                tail = 1;
+            } else {
+                tail = 0;
+            }
+            sum.next = new ListNode(sumVal);
+            sum = sum.next;
+            currentBigger = currentBigger.next;
+        }
+        if (tail == 1) {
+            sum.next = new ListNode(tail);
+        }
+        return head;
+    }
+
+    private void throwExceptionIfNull(ListNode l) {
+        if (Objects.isNull(l)) {
+            throw new RuntimeException("One of the arguments is null");
+        }
+    }
+
+    private void validate(ListNode l) {
+        int length = 1;
+        ListNode current = l;
+        checkValueBoundaries(current);
+        while (hasNext(current)) {
+            current = current.next;
+            if (current.val == 0 && !hasNext(current)) {
+                throw new RuntimeException("Leading digit is zero! Linked list must represent a number that does not have leading zeros");
+            }
+            checkValueBoundaries(current);
+            ++length;
+            if (length > 100) {
+                throw new RuntimeException("The number of nodes in each linked list must be in the range [1, 100]");
+            }
+        }
+    }
+
+    private void checkValueBoundaries(ListNode l) {
+        if (l.val >= 0 && l.val <= 9) {
+            return;
+        }
+        throw new RuntimeException("The node integer value must be in the range [0, 9]");
+    }
+
+    private boolean hasNext(ListNode l) {
+        return Objects.nonNull(l.next);
+    }
+}

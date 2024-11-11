@@ -1,0 +1,29 @@
+class Solution {
+
+    public int coinChangeHelper(int[] coins, int amount, int[] arr) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (arr[amount] != -1) {
+            return arr[amount];
+        }
+        int ans = Integer.MAX_VALUE / 2;
+        for (int i = 0; i < coins.length; i++) {
+            if (amount >= coins[i]) {
+                int count = 1 + coinChangeHelper(coins, amount - coins[i], arr);
+                ans = Math.min(count, ans);
+            }
+        }
+        arr[amount] = ans;
+        return ans;
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        int[] arr = new int[amount + 1];
+        Arrays.fill(arr, -1);
+        int ans = coinChangeHelper(coins, amount, arr);
+        if (ans == Integer.MAX_VALUE / 2)
+            ans = -1;
+        return ans;
+    }
+}

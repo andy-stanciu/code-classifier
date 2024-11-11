@@ -1,0 +1,53 @@
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        return method2(param1, 0, param1.length - 1);
+    }
+
+    private ListNode method2(ListNode[] param1, int lo, int hi) {
+        // nothing to do, simply return null
+        if (param1 == null || param1.length == 0)
+            return null;
+        // base case (list size 2 or size 1)
+        if (hi - lo == 1) {
+            // size 2 perform merge
+            return method3(param1[lo], param1[hi]);
+        }
+        if (hi == lo) {
+            // size 1 simply return the node
+            return param1[hi];
+        }
+        int mid = (lo + hi) / 2;
+        // recursive call
+        ListNode left = method2(param1, lo, mid);
+        ListNode right = method2(param1, mid + 1, hi);
+        // return left and right merge
+        return method3(left, right);
+    }
+
+    private ListNode method3(ListNode n1, ListNode n2) {
+        // merge sort(merge two linkedList into one)
+        if (n1 == null)
+            return n2;
+        if (n2 == null)
+            return n1;
+        ListNode temp1 = n1;
+        ListNode temp2 = n2;
+        ListNode curr = new ListNode(0);
+        while (temp1 != null && temp2 != null) {
+            if (temp1.val <= temp2.val) {
+                curr.next = temp1;
+                temp1 = temp1.next;
+            } else {
+                curr.next = temp2;
+                temp2 = temp2.next;
+            }
+            curr = curr.next;
+        }
+        if (temp1 != null)
+            curr.next = temp1;
+        if (temp2 != null)
+            curr.next = temp2;
+        return n1.val <= n2.val ? n1 : n2;
+    }
+}

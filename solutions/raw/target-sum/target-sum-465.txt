@@ -1,0 +1,26 @@
+class Solution {
+
+    int res = 0, sum = 0;
+
+    int[][] dp;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        sum = Arrays.stream(nums).sum();
+        dp = new int[nums.length][2 * sum + 1];
+        for (int i = 0; i < nums.length; i++) {
+            Arrays.fill(dp[i], Integer.MIN_VALUE);
+        }
+        return sum(nums, target, 0, 0);
+    }
+
+    private int sum(int[] nums, int target, int index, int total) {
+        if (index == nums.length) {
+            return total == target ? 1 : 0;
+        }
+        if (dp[index][total + sum] != Integer.MIN_VALUE) {
+            return dp[index][total + sum];
+        }
+        dp[index][total + sum] = sum(nums, target, index + 1, total + nums[index]) + sum(nums, target, index + 1, total - nums[index]);
+        return dp[index][total + sum];
+    }
+}

@@ -1,0 +1,35 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        //IMPORTANT: ALL NUMBERS IN NUMS ARE NON NON-NEGATIVE
+        //two subsets s1 + s2 = sum
+        //s1 - s2 = target
+        //2 * s1 = (sum + target)
+        //s1 = (sum + target) / 2
+        //find the number of subsets with targetSum == (sum + target) / 2
+        //base case: nums can not be divided into targetSum
+        int n = nums.length;
+        int var1 = 0;
+        for (int num : nums) {
+            var1 += num;
+        }
+        if ((var1 + param1) % 2 != 0)
+            return 0;
+        //DID NOT CONSIDER THIS
+        if (Math.abs(param1) > var1)
+            return 0;
+        int var2 = (var1 + param1) / 2;
+        //1D Array solution
+        //dp[i] number of subsets with sum == i
+        int[] dp = new int[var2 + 1];
+        dp[0] = 1;
+        for (int i = 0; i < n; i++) {
+            for (int j = var2; j >= 0; j--) {
+                if (nums[i] <= j) {
+                    dp[j] += dp[j - nums[i]];
+                }
+            }
+        }
+        return dp[var2];
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        int[][] dp = new int[n + 1][amount + 1];
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= amount; j++) {
+                if (i == 0) {
+                    dp[0][j] = Integer.MAX_VALUE - 1;
+                }
+                if (j == 0) {
+                    dp[i][0] = 0;
+                }
+                if (i == 1) {
+                    if (j % param1[0] == 0) {
+                        dp[i][j] = j / param1[0];
+                    } else {
+                        dp[i][j] = Integer.MAX_VALUE - 1;
+                    }
+                } else {
+                    dp[i][j] = -1;
+                }
+            }
+        }
+        int ans = f(param1, amount, n, dp);
+        return (ans == Integer.MAX_VALUE - 1) ? -1 : ans;
+    }
+
+    public int f(int[] wt, int w, int n, int[][] dp) {
+        if (dp[n][w] != -1) {
+            return dp[n][w];
+        }
+        if (wt[n - 1] <= w) {
+            return dp[n][w] = Math.min(1 + f(wt, w - wt[n - 1], n, dp), f(wt, w, n - 1, dp));
+        } else if (wt[n - 1] > w) {
+            return dp[n][w] = f(wt, w, n - 1, dp);
+        }
+        return dp[n][w];
+    }
+}

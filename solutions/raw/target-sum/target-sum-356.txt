@@ -1,0 +1,33 @@
+class Solution {
+
+    public int findTargetSumWays(int[] A, int target) {
+        int sum = 0;
+        int n = A.length;
+        for (int i = 0; i < n; i++) sum += A[i];
+        if (n == 1 && sum == Math.abs(target))
+            return 1;
+        else if (n == 1 && sum != target)
+            return 0;
+        if ((sum + target) < 0 || (sum + target) % 2 != 0)
+            return 0;
+        int aim = (target + sum) / 2;
+        int[][] dp = new int[n + 1][aim + 1];
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= aim; j++) {
+                if (i == 0 && j > 0)
+                    dp[i][j] = 0;
+                if (j == 0)
+                    dp[i][j] = 1;
+            }
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= aim; j++) {
+                if (A[i - 1] <= j)
+                    dp[i][j] = dp[i - 1][j - A[i - 1]] + dp[i - 1][j];
+                else
+                    dp[i][j] = dp[i - 1][j];
+            }
+        }
+        return dp[n][aim];
+    }
+}

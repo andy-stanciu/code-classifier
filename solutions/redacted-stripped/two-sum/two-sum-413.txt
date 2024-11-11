@@ -1,0 +1,67 @@
+class Solution {
+
+    public int[] method1(int[] nums, int target) {
+        int[] ans = new int[2];
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                if (nums[i] + nums[j] == target) {
+                    ans[0] = i;
+                    ans[1] = j;
+                    return ans;
+                }
+            }
+        }
+        return ans;
+        List<Pair> al = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            al.add(new Pair(nums[i], i));
+        }
+        Collections.sort(al, new Comparator<Pair>() {
+
+            public int Compare(Pair n1, Pair n2) {
+                return n1.element - n2.element;
+            }
+        });
+        Collections.sort(al, (n1, n2) -> {
+            return n1.element - n2.element;
+        });
+        Collections.sort(al, (n1, n2) -> n1.element - n2.element);
+        int i = 0, j = nums.length - 1;
+        int[] ans = new int[2];
+        while (i < j) {
+            int var1 = al.get(i).element + al.get(j).element;
+            if (var1 == target) {
+                ans[0] = al.get(i).index;
+                ans[1] = al.get(j).index;
+                break;
+            }
+            if (al.get(i).element + al.get(j).element < target)
+                i++;
+            if (al.get(i).element + al.get(j).element > target)
+                j--;
+        }
+        return ans;
+        Map<Integer, Integer> map = new HashMap<>();
+        int[] ans = new int[2];
+        for (int i = 0; i < nums.length; i++) {
+            if (map.containsKey(target - nums[i])) {
+                ans[0] = map.get(target - nums[i]);
+                ans[1] = i;
+                return ans;
+            } else {
+                map.put(nums[i], i);
+            }
+        }
+        return ans;
+    }
+}
+
+class Pair {
+
+    int element, index;
+
+    public Pair(int element, int index) {
+        this.element = element;
+        this.index = index;
+    }
+}

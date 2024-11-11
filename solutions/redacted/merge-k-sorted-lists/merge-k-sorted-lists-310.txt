@@ -1,0 +1,44 @@
+class Solution {
+
+    private ListNode method1(ListNode n1, ListNode n2) {
+        ListNode dummy = new ListNode(Integer.MIN_VALUE);
+        ListNode p = dummy;
+        while (n1 != null && n2 != null) {
+            if (n1.val < n2.val) {
+                ListNode prev = n1;
+                p.next = n1;
+                n1 = n1.next;
+                prev.next = null;
+                p = p.next;
+            } else {
+                ListNode prev = n2;
+                p.next = n2;
+                n2 = n2.next;
+                prev.next = null;
+                p = p.next;
+            }
+        }
+        if (n1 != null)
+            p.next = n1;
+        else
+            p.next = n2;
+        return dummy.next;
+    }
+
+    private ListNode method2(ListNode[] param1, int l, int r) {
+        if (l < r) {
+            int m = (r + l) / 2;
+            ListNode n1 = method2(param1, l, m);
+            ListNode n2 = method2(param1, m + 1, r);
+            return method1(n1, n2);
+        }
+        if (l == param1.length)
+            return null;
+        else
+            return param1[l];
+    }
+
+    public ListNode method3(ListNode[] param1) {
+        return method2(param1, 0, param1.length);
+    }
+}

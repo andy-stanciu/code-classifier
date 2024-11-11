@@ -1,0 +1,59 @@
+class Solution {
+
+    public int solveRec(int[] nums, int param1, int index, int param2) {
+        if (index >= nums.length) {
+            return 0;
+        }
+        if (index == nums.length - 1) {
+            int ans = 0;
+            if (param2 + nums[index] == param1) {
+                ans++;
+            }
+            if (param2 - nums[index] == param1) {
+                ans++;
+            }
+            return ans;
+        }
+        int include = 0, exclude = 0;
+        include = solveRec(nums, param1, index + 1, param2 + nums[index]);
+        exclude = solveRec(nums, param1, index + 1, param2 - nums[index]);
+        return include + exclude;
+    }
+
+    public int solveMem(int[] nums, int param1, int index, int param2, int[][] dp, int param3) {
+        if (index >= nums.length) {
+            return 0;
+        }
+        if (index == nums.length - 1) {
+            int ans = 0;
+            if (param2 + nums[index] == param1) {
+                dp[index][param2 + nums[index] + param3] = ans++;
+            }
+            if (param2 - nums[index] == param1) {
+                dp[index][param2 - nums[index] + param3] = ans++;
+            }
+            return ans;
+        }
+        if (dp[index][param2 + param3] != -1) {
+            return dp[index][param2 + param3];
+        }
+        int include = 0, exclude = 0;
+        include = solveMem(nums, param1, index + 1, param2 + nums[index], dp, param3);
+        exclude = solveMem(nums, param1, index + 1, param2 - nums[index], dp, param3);
+        return dp[index][param2 + param3] = include + exclude;
+    }
+
+    public int method1(int[] nums, int param1) {
+        int param3 = 0;
+        int var1 = 0;
+        for (int i = 0; i < nums.length; i++) {
+            param3 += nums[i];
+            var1 -= nums[i];
+        }
+        int[][] dp = new int[nums.length][param3 + Math.abs(var1) + 1];
+        for (int i = 0; i < dp.length; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        return solveMem(nums, param1, 0, 0, dp, param3);
+    }
+}

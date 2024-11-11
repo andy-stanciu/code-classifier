@@ -1,0 +1,27 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for (int i : nums) sum += i;
+        if (target > sum || target < -sum)
+            return 0;
+        int[][] dp = new int[nums.length + 1][2 * sum + 1];
+        for (int i = 0; i <= nums.length; i++) {
+            for (int j = 0; j <= 2 * sum; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        return target(nums, 0, 0, target, dp, sum);
+    }
+
+    public static int target(int[] nums, int pos, int currsum, int target, int[][] dp, int sum) {
+        if (pos == nums.length) {
+            return currsum == target ? 1 : 0;
+        }
+        int shiftsum = currsum + sum;
+        if (dp[pos][shiftsum] != -1)
+            return dp[pos][shiftsum];
+        dp[pos][shiftsum] = target(nums, pos + 1, currsum + nums[pos], target, dp, sum) + target(nums, pos + 1, currsum - nums[pos], target, dp, sum);
+        return dp[pos][shiftsum];
+    }
+}

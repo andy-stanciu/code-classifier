@@ -1,0 +1,46 @@
+class Solution {
+
+    public int add;
+
+    public int sub;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int n = nums.length;
+        int sum = 0;
+        for (int i = 0; i < n; i++) {
+            sum += nums[i];
+        }
+        if (sum < target || (sum + target) % 2 != 0 || (sum - target) % 2 != 0) {
+            return 0;
+        }
+        add = (sum + target) / 2;
+        sub = (sum - target) / 2;
+        HashMap<Integer, HashMap<Integer, Integer>> memo = new HashMap<>();
+        return backtrack(nums, memo, target, 0, 0, 0);
+    }
+
+    public int backtrack(int[] nums, HashMap<Integer, HashMap<Integer, Integer>> memo, int target, int index, int pos, int neg) {
+        if (index == nums.length) {
+            return (pos - neg == target ? 1 : 0);
+        }
+        if (memo.containsKey(index) && memo.get(index).containsKey(pos - neg)) {
+            return memo.get(index).get(pos - neg);
+        }
+        int result = 0;
+        int curr = nums[index];
+        if (pos + curr <= add) {
+            result += backtrack(nums, memo, target, index + 1, pos + curr, neg);
+        }
+        if (neg + curr <= sub) {
+            result += backtrack(nums, memo, target, index + 1, pos, neg + curr);
+        }
+        memo.putIfAbsent(index, new HashMap<Integer, Integer>());
+        memo.get(index).put(pos - neg, result);
+        return result;
+    }
+}
+// sum
+//   add + sub = sum
+// + add - sub = target
+// add = (sum + target)/2;
+// sub = (sum - target)/2;

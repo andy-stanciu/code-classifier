@@ -1,0 +1,31 @@
+class Solution {
+
+    int[][] dp;
+
+    int solve(int[] param1, int amount, int i) {
+        if (amount == 0)
+            return 0;
+        if (i >= param1.length)
+            return Integer.MAX_VALUE;
+        if (dp[amount][i] != -1)
+            return dp[amount][i];
+        int take, skip;
+        take = skip = Integer.MAX_VALUE;
+        if (param1[i] <= amount) {
+            int res = solve(param1, amount - param1[i], i);
+            if (res != Integer.MAX_VALUE)
+                take = 1 + res;
+        }
+        skip = solve(param1, amount, i + 1);
+        return dp[amount][i] = Math.min(skip, take);
+    }
+
+    public int method1(int[] param1, int amount) {
+        if (amount == 0)
+            return 0;
+        dp = new int[amount + 1][param1.length];
+        for (int[] a : dp) Arrays.fill(a, -1);
+        int ans = solve(param1, amount, 0);
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+}

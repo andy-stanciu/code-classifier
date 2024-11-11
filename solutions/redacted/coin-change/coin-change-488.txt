@@ -1,0 +1,26 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int len = param1.length;
+        int[] prev = new int[amount + 1];
+        for (int i = 0; i <= amount; i++) {
+            if (i % param1[0] == 0)
+                prev[i] = i / param1[0];
+            else
+                prev[i] = (int) (1e9);
+        }
+        for (int index = 1; index < len; index++) {
+            int[] curr = new int[amount + 1];
+            for (int target = 0; target <= amount; target++) {
+                int notPick = 0 + prev[target];
+                int pick = (int) (1e9);
+                if (param1[index] <= target)
+                    pick = 1 + curr[target - param1[index]];
+                curr[target] = Math.min(pick, notPick);
+            }
+            prev = curr;
+        }
+        int ans = prev[amount];
+        return ans >= (int) (1e9) ? -1 : ans;
+    }
+}

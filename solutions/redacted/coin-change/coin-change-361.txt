@@ -1,0 +1,24 @@
+//TC and SC  - O(len(coins) * amount)
+class Solution {
+
+    int max_amt;
+
+    public int method1(int[] param1, int amount) {
+        int[][] memo = new int[param1.length + 1][amount + 1];
+        max_amt = amount + 1;
+        int res = method2(param1, amount, param1.length - 1, memo);
+        return res >= max_amt ? -1 : res;
+    }
+
+    private int method2(int[] param1, int amt, int pos, int[][] memo) {
+        if (pos == -1 || amt <= 0) {
+            return amt == 0 ? 0 : max_amt;
+        }
+        if (memo[pos][amt] != 0)
+            return memo[pos][amt];
+        int va = 1 + method2(param1, amt - param1[pos], pos, memo);
+        int vna = method2(param1, amt, pos - 1, memo);
+        memo[pos][amt] = Math.min(va, vna);
+        return memo[pos][amt];
+    }
+}

@@ -1,0 +1,70 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        ArrayList<Integer> list = new ArrayList<>();
+        // Merge all arrays into a single list.
+        int k = param1.length;
+        for (ListNode node : param1) {
+            while (node != null) {
+                list.add(node.val);
+                node = node.next;
+            }
+        }
+        int n = list.size();
+        // Build a min-heap.
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            maxheap(list, n, i);
+        }
+        // Perform heap sort.
+        for (int i = n - 1; i > 0; i--) {
+            // Swap the root (minimum element) with the last element in the heap.
+            int temp = list.get(0);
+            list.set(0, list.get(i));
+            list.set(i, temp);
+            // Heapify the reduced heap.
+            // Note: size of heap is reduced to i
+            maxheap(list, i, 0);
+        }
+        if (list.isEmpty())
+            return null;
+        ListNode head = new ListNode(list.get(0));
+        ListNode curr = head;
+        for (int i = 1; i < n; i++) {
+            curr.next = new ListNode(list.get(i));
+            curr = curr.next;
+        }
+        //
+        return head;
+    }
+
+    public void maxheap(ArrayList<Integer> list, int heapsize, int i) {
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
+        int largest = i;
+        // Find the smallest among the root, left child, and right child.
+        if (left < heapsize && list.get(left) > list.get(largest)) {
+            largest = left;
+        }
+        if (right < heapsize && list.get(right) > list.get(largest)) {
+            largest = right;
+        }
+        // Swap and continue heapifying if root is not the smallest.
+        if (largest != i) {
+            int temp = list.get(i);
+            list.set(i, list.get(largest));
+            list.set(largest, temp);
+            // Recursively heapify the affected sub-tree.
+            maxheap(list, heapsize, largest);
+        }
+    }
+}

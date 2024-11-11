@@ -1,0 +1,30 @@
+class Solution {
+
+    public int coinChange(int[] coins, int a) {
+        int n = coins.length;
+        long[][] dp = new long[n][a + 1];
+        for (long[] row : dp) Arrays.fill(row, -1);
+        long val = solve(coins, a, 0, dp);
+        if (val >= Integer.MAX_VALUE) {
+            return -1;
+        }
+        return (int) val;
+    }
+
+    public static long solve(int[] c, int a, int idx, long[][] dp) {
+        int n = c.length;
+        if (idx == n - 1) {
+            if (a % c[n - 1] == 0)
+                return a / c[n - 1];
+            else
+                return Integer.MAX_VALUE;
+        }
+        if (dp[idx][a] != -1)
+            return dp[idx][a];
+        long taken = (long) Integer.MAX_VALUE;
+        if (a - c[idx] >= 0) {
+            taken = solve(c, a - c[idx], idx, dp) + 1;
+        }
+        return dp[idx][a] = Math.min(solve(c, a, idx + 1, dp), taken);
+    }
+}

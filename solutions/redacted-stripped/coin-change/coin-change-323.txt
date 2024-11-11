@@ -1,0 +1,40 @@
+class Solution {
+
+    public int func(int ind, int amount, int[] param1) {
+        if (ind == 0) {
+            if (amount % param1[ind] == 0)
+                return amount / param1[ind];
+            return (int) Math.pow(10, 9);
+        }
+        int notPick = 0 + func(ind - 1, amount, param1);
+        int pick = (int) Math.pow(10, 9);
+        if (param1[ind] <= amount) {
+            pick = 1 + func(ind, amount - param1[ind], param1);
+        }
+        return Math.min(notPick, pick);
+    }
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int i = 0; i <= amount; i++) {
+            if (i % param1[0] == 0)
+                dp[0][i] = i / param1[0];
+            else
+                dp[0][i] = (int) Math.pow(10, 9);
+        }
+        for (int ind = 1; ind < n; ind++) {
+            for (int target = 0; target <= amount; target++) {
+                int notTake = 0 + dp[ind - 1][target];
+                int take = (int) Math.pow(10, 9);
+                if (param1[ind] <= target)
+                    take = 1 + dp[ind][target - param1[ind]];
+                dp[ind][target] = Math.min(notTake, take);
+            }
+        }
+        int ans = dp[n - 1][amount];
+        if (ans >= (int) Math.pow(10, 9))
+            return -1;
+        return ans;
+    }
+}

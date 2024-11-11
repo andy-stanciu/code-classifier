@@ -1,0 +1,29 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int[] counter = new int[amount + 1];
+        Arrays.fill(counter, Integer.MAX_VALUE);
+        counter[0] = 0;
+        return change(coins, counter, amount);
+    }
+
+    int change(int[] coins, int[] counter, int amount) {
+        if (amount < 0)
+            return -1;
+        if (counter[amount] != Integer.MAX_VALUE)
+            return counter[amount];
+        int result = 0;
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i < coins.length; i++) {
+            result = change(coins, counter, amount - coins[i]);
+            if (result >= 0 && result < min) {
+                min = result + 1;
+            }
+        }
+        if (min != Integer.MAX_VALUE)
+            counter[amount] = min;
+        else
+            counter[amount] = -1;
+        return counter[amount];
+    }
+}

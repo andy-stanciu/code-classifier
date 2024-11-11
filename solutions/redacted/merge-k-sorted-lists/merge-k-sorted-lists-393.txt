@@ -1,0 +1,78 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        // if(lists.length==0){
+        //     return null;
+        // }
+        // ListNode head=new ListNode(0);
+        //  ListNode temp=head;
+        //  List<Integer> list=new ArrayList<>();
+        //  for(ListNode l1:lists){
+        //     while(l1!=null){
+        //         list.add(l1.val);
+        //         l1=l1.next;
+        //     }
+        //  }
+        //  Collections.sort(list);
+        //  for(int val:list){
+        //     temp.next=new ListNode(val);
+        //     temp=temp.next;
+        //  }
+        //  return head.next;
+        //ABOVE CODE TAKES MORE TIME TO RUN
+        if (param1 == null || param1.length == 0) {
+            return null;
+        }
+        return method2(param1, 0, param1.length - 1);
+    }
+
+    private ListNode method2(ListNode[] param1, int start, int end) {
+        if (start == end) {
+            return param1[start];
+        }
+        if (start + 1 == end) {
+            //if only two LL is
+            return method3(param1[start], param1[end]);
+            //there, then it wll return after merge;
+        }
+        //1. For more than two lists, the function calculates the mid-point
+        //and recursively merges the left and right halves.
+        //2. mid is calculated to split the array into two halves.
+        //3.It recursively calls mergeKListsHelper for the left
+        //half (start to mid) and the right half (mid + 1 to end).
+        //4. Finally, it merges the two halves using the merge function.
+        int mid = start + (end - start) / 2;
+        ListNode left = method2(param1, start, mid);
+        ListNode right = method2(param1, mid + 1, end);
+        return method3(left, right);
+    }
+
+    private ListNode method3(ListNode l1, ListNode l2) {
+        ListNode head = new ListNode(0);
+        ListNode curr = head;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                curr.next = l1;
+                l1 = l1.next;
+            } else {
+                curr.next = l2;
+                l2 = l2.next;
+            }
+            curr = curr.next;
+        }
+        //link left nodes because
+        curr.next = (l1 != null) ? l1 : l2;
+        //it\'s a sorted so no need to sort left nodes
+        return head.next;
+    }
+}

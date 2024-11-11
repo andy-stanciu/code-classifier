@@ -1,0 +1,120 @@
+class Solution {
+
+    private int knapsackMemoizationUtil2(int[] nums, int index, int target, int[][] dp) {
+        if (index == nums.length) {
+            if (target == 0) {
+                return 1;
+            }
+            return 0;
+        }
+        if (dp[index][target] != -1) {
+            return dp[index][target];
+        }
+        if (nums[index] > target) {
+            dp[index][target] = knapsackMemoizationUtil2(nums, index + 1, target, dp);
+        } else {
+            dp[index][target] = knapsackMemoizationUtil2(nums, index + 1, target - nums[index], dp) + knapsackMemoizationUtil2(nums, index + 1, target, dp);
+        }
+        return dp[index][target];
+    }
+
+    private int memoization2(int[] nums, int diff) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        if ((sum + diff) % 2 != 0) {
+            return 0;
+        }
+        int target = (sum + diff) / 2;
+        if (target < 0) {
+            return 0;
+        }
+        int[][] dp = new int[nums.length + 1][target + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        return knapsackMemoizationUtil2(nums, 0, target, dp);
+    }
+
+    private int backtrack(int[] nums, int index, int currValue, int target) {
+        if (index == nums.length) {
+            return currValue == target ? 1 : 0;
+        }
+        int ans = backtrack(nums, index + 1, currValue + nums[index], target);
+        ans += backtrack(nums, index + 1, currValue - nums[index], target);
+        return ans;
+    }
+
+    private int knapsackTabulation(int[] nums, int target) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        if ((sum + target) % 2 != 0) {
+            return 0;
+        }
+        int s1 = (sum + target) / 2;
+        if (s1 < 0) {
+            return 0;
+        }
+        int n = nums.length;
+        int s2 = (sum - target) / 2;
+        if (s2 < 0) {
+            return 0;
+        }
+        int[][] dp = new int[nums.length + 1][s2 + 1];
+        dp[0][0] = 1;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= s2; j++) {
+                if (nums[i - 1] > j) {
+                    dp[i][j] = dp[i - 1][j];
+                } else {
+                    dp[i][j] = dp[i - 1][j] + dp[i - 1][j - nums[i - 1]];
+                }
+            }
+        }
+        return dp[n][s2];
+    }
+
+    private int knapsackMemoizationUtil(int[] nums, int n, int target, int[][] dp) {
+        if (n == 0) {
+            return target == 0 ? 1 : 0;
+        }
+        if (dp[n][target] != -1) {
+            return dp[n][target];
+        }
+        if (nums[n - 1] > target) {
+            dp[n][target] = knapsackMemoizationUtil(nums, n - 1, target, dp);
+        } else {
+            dp[n][target] = knapsackMemoizationUtil(nums, n - 1, target - nums[n - 1], dp) + knapsackMemoizationUtil(nums, n - 1, target, dp);
+        }
+        return dp[n][target];
+    }
+
+    private int memoization(int[] nums, int diff) {
+        int sum = 0;
+        for (int i : nums) {
+            sum += i;
+        }
+        if ((sum + diff) % 2 != 0) {
+            return 0;
+        }
+        int target = (sum + diff) / 2;
+        if (target < 0) {
+            return 0;
+        }
+        int[][] dp = new int[nums.length + 1][target + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        return knapsackMemoizationUtil(nums, nums.length, target, dp);
+    }
+
+    public int findTargetSumWays(int[] nums, int target) {
+        // return backtrack(nums, 0, 0, target);
+        // return memoization(nums, target);
+        return memoization2(nums, target);
+        // return knapsackTabulation(nums, target);
+    }
+}

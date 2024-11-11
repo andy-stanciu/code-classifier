@@ -1,0 +1,58 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ListNode head = null;
+        ListNode temp = null;
+        int carry = 0;
+        while (l1 != null || l2 != null || carry != 0) {
+            int sum = 0;
+            // Store the value from first LL
+            if (l1 != null) {
+                sum = sum + l1.val;
+                l1 = l1.next;
+            }
+            // Store the value from second LL
+            if (l2 != null) {
+                sum = sum + l2.val;
+                l2 = l2.next;
+            }
+            // Add the previous calculated carry in the sum
+            sum = sum + carry;
+            int num = 0;
+            // Here, If the sum of both the nodes is a single digit, then no worries
+            // But, if double digit, store the carry for the next iteration
+            if (sum > 9) {
+                num = sum % 10;
+                carry = sum / 10;
+            } else {
+                // If this here, not made zero, then for the next iterations
+                carry = 0;
+                // it will pick the previous non zero \'carry\' -> Infinite loop
+                // Single Digit no. (Put directly)
+                num = sum;
+            }
+            // Create a fresh node.
+            ListNode newNode = new ListNode(num);
+            if (head == null) {
+                head = newNode;
+                temp = head;
+            } else {
+                // Append the node in the output list
+                temp.next = newNode;
+                // Increment the list
+                temp = temp.next;
+            }
+        }
+        return head;
+    }
+}

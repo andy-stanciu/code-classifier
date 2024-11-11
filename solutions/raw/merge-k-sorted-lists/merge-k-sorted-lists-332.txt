@@ -1,0 +1,47 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+// 1. \uBAA8\uB4E0 \uB9AC\uC2A4\uD2B8\uC758 \uD5E4\uB4DC \uB178\uB4DC\uB97C PriorityQueue\uC5D0 \uB123\uB294\uB2E4.
+// 2. PriorityQueue\uC5D0\uC11C \uAC00\uC7A5 \uC791\uC740 \uAC12\uC744 \uAC00\uC9C4 \uB178\uB4DC\uB97C \uAEBC\uB0B8\uB2E4.
+// 3. \uAEBC\uB0B8 \uB178\uB4DC\uB97C \uACB0\uACFC \uB9AC\uC2A4\uD2B8\uC5D0 \uCD94\uAC00\uD55C\uB2E4.
+// 4. \uAEBC\uB0B8 \uB178\uB4DC\uC758 \uB2E4\uC74C \uB178\uB4DC\uAC00 \uC788\uB2E4\uBA74 PriorityQueue\uC5D0 \uB123\uB294\uB2E4.
+// 5. PritorityQueue\uAC00 \uBE44\uC5B4\uC788\uC9C0 \uC54A\uB2E4\uBA74, 2\uB2E8\uACC4\uB85C \uB3CC\uC544\uAC04\uB2E4.
+class Solution {
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        // \uC785\uB825 \uB9AC\uC2A4\uD2B8 \uBC30\uC5F4\uC774 null\uC774\uAC70\uB098 \uBE48 \uACBD\uC6B0 null \uBC18\uD658
+        if (lists == null || lists.length == 0)
+            return null;
+        // PriorityQueue \uC0DD\uC131
+        PriorityQueue<ListNode> pq = new PriorityQueue<>((a, b) -> a.val - b.val);
+        // \uAC01 \uB9AC\uC2A4\uD2B8\uC758 \uCCAB \uBC88\uC9F8 \uB178\uB4DC\uB97C PriorityQueue\uC5D0 \uCD94\uAC00
+        for (ListNode list : lists) {
+            if (list != null)
+                pq.offer(list);
+        }
+        // \uACB0\uACFC \uB9AC\uC2A4\uD2B8\uC758 \uC2DC\uC791\uC810\uC744 \uB098\uD0C0\uB0B4\uB294 \uB178\uB4DC \uC0DD\uC131
+        ListNode dummy = new ListNode(0);
+        // \uACB0\uACFC \uB9AC\uC2A4\uD2B8\uB97C \uAD6C\uD604\uD558\uB294\uB370 \uC0AC\uC6A9\uD560 \uD3EC\uC778\uD130
+        ListNode tail = dummy;
+        // PriorityQueue\uAC00 \uBE44\uC5B4\uC788\uC9C0 \uC54A\uC740 \uB3D9\uC548 \uBC18\uBCF5
+        while (!pq.isEmpty()) {
+            // \uAC00\uC7A5 \uC791\uC740 \uAC12\uC744 \uAC00\uC9C4 \uB178\uB4DC\uB97C \uAEBC\uB0C4
+            ListNode node = pq.poll();
+            // \uAEBC\uB0B8 \uB178\uB4DC\uB97C \uACB0\uACFC \uB9AC\uC2A4\uD2B8\uC5D0 \uCD94\uAC00
+            tail.next = node;
+            tail = tail.next;
+            // \uD604\uB300 \uB178\uB4DC\uC758 \uB2E4\uC74C \uB178\uB4DC\uAC00 \uC788\uB2E4\uBA74 PriorityQueue\uC5D0 \uCD94\uAC00
+            if (node.next != null)
+                pq.offer(node.next);
+        }
+        // dummy\uB178\uB4DC\uC758 \uB2E4\uC74C \uB178\uB4DC\uB97C \uBC18\uD658
+        return dummy.next;
+    }
+}

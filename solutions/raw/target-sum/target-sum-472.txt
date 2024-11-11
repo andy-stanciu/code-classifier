@@ -1,0 +1,32 @@
+class Solution {
+
+    int res;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        res = 0;
+        HashMap<String, Integer> hm = new HashMap<>();
+        return dfs(nums, 0, target, hm, 0);
+        //return res;
+    }
+
+    int dfs(int[] nums, int pos, int tgt, HashMap<String, Integer> hm, int sum) {
+        if (hm.containsKey(pos + ":" + sum)) {
+            System.out.println("returning from cache: " + (pos + ":" + sum) + " as: " + hm.get(pos + ":" + sum));
+            return hm.get(pos + ":" + sum);
+        }
+        if (pos == nums.length) {
+            if (sum == tgt) {
+                hm.put(pos + ":" + sum, 1);
+                res++;
+                return 1;
+            }
+            hm.put(pos + ":" + sum, 0);
+            return 0;
+        }
+        int possible = 0;
+        possible += dfs(nums, pos + 1, tgt, hm, sum + nums[pos]);
+        possible += dfs(nums, pos + 1, tgt, hm, sum - nums[pos]);
+        hm.put(pos + ":" + sum, possible);
+        return possible;
+    }
+}

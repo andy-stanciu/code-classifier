@@ -1,0 +1,50 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        Arrays.sort(coins);
+        int[] qb = new int[amount + 1];
+        Arrays.fill(qb, -1);
+        int x = coin(coins, amount, qb);
+        if (x == Integer.MAX_VALUE) {
+            return -1;
+        }
+        return x;
+    }
+
+    // qb[0]=0;
+    //      for(int i=1;i<qb.length;i++){
+    //          int k=Integer.MAX_VALUE;
+    //          for(int j=0;j<coins.length;j++){
+    //              if(coins[j]==i){
+    //                  qb[i]=1;
+    //              }
+    //              else if(i-coins[j]>0&&qb[i-coins[j]]!=-1){
+    //                  k=Math.min(qb[i-coins[j]]+1,k);
+    //              }
+    //          }
+    //          qb[i]=(k==Integer.MAX_VALUE)?-1 :k  ;
+    //      }
+    //        return qb[amount];
+    //     }
+    // }
+    public int coin(int[] coins, int amount, int[] qb) {
+        if (amount < 0) {
+            return Integer.MAX_VALUE;
+        }
+        if (amount == 0) {
+            return 0;
+        }
+        if (qb[amount] != -1) {
+            return qb[amount];
+        }
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i < coins.length; i++) {
+            int k = coin(coins, amount - coins[i], qb);
+            if (k != Integer.MAX_VALUE) {
+                min = Math.min(min, k + 1);
+            }
+        }
+        qb[amount] = min;
+        return qb[amount];
+    }
+}

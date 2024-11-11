@@ -1,0 +1,32 @@
+class Solution {
+
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        if (nums1.length > nums2.length) {
+            return findMedianSortedArrays(nums2, nums1);
+        }
+        int len1 = nums1.length;
+        int len2 = nums2.length;
+        int low = 0;
+        int high = len1;
+        while (low <= high) {
+            int nums1Partition = (low + high) / 2;
+            int nums2Partition = (len1 + len2 + 1) / 2 - nums1Partition;
+            int maxLeftNums1 = (nums1Partition == 0) ? Integer.MIN_VALUE : nums1[nums1Partition - 1];
+            int minRightNums1 = (nums1Partition == len1) ? Integer.MAX_VALUE : nums1[nums1Partition];
+            int maxLeftNums2 = (nums2Partition == 0) ? Integer.MIN_VALUE : nums2[nums2Partition - 1];
+            int minRightNums2 = (nums2Partition == len2) ? Integer.MAX_VALUE : nums2[nums2Partition];
+            if (maxLeftNums2 > minRightNums1) {
+                low = nums1Partition + 1;
+            } else if (maxLeftNums1 > minRightNums2) {
+                high = nums1Partition - 1;
+            } else if (maxLeftNums1 <= minRightNums2 && maxLeftNums2 <= minRightNums1) {
+                if ((len1 + len2) % 2 == 0) {
+                    return ((double) Math.max(maxLeftNums1, maxLeftNums2) + Math.min(minRightNums1, minRightNums2)) / 2;
+                } else {
+                    return (double) Math.max(maxLeftNums1, maxLeftNums2);
+                }
+            }
+        }
+        return 0.0;
+    }
+}

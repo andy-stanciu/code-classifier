@@ -1,0 +1,48 @@
+class Solution {
+
+    public double method1(int[] nums1, int[] nums2) {
+        PriorityQueue<Integer> min_heap = new PriorityQueue<Integer>((a, b) -> {
+            return a - b;
+        });
+        PriorityQueue<Integer> max_heap = new PriorityQueue<Integer>((a, b) -> {
+            return b - a;
+        });
+        int pointer1 = 0;
+        int pointer2 = 0;
+        double var1 = Double.MAX_VALUE;
+        while (pointer1 < nums1.length || pointer2 < nums2.length) {
+            if (pointer1 < nums1.length) {
+                int curr = nums1[pointer1];
+                if (curr < var1) {
+                    max_heap.add(curr);
+                    if (max_heap.size() - min_heap.size() > 1) {
+                        min_heap.add(max_heap.poll());
+                    }
+                } else {
+                    min_heap.add(curr);
+                    if (min_heap.size() - max_heap.size() > 1) {
+                        max_heap.add(min_heap.poll());
+                    }
+                }
+                var1 = (min_heap.size() == max_heap.size()) ? ((min_heap.peek() + max_heap.peek()) / 2.0) : ((min_heap.size() > max_heap.size()) ? min_heap.peek() : max_heap.peek());
+                pointer1++;
+            } else {
+                int curr = nums2[pointer2];
+                if (curr < var1) {
+                    max_heap.add(curr);
+                    if (max_heap.size() - min_heap.size() > 1) {
+                        min_heap.add(max_heap.poll());
+                    }
+                } else {
+                    min_heap.add(curr);
+                    if (min_heap.size() - max_heap.size() > 1) {
+                        max_heap.add(min_heap.poll());
+                    }
+                }
+                var1 = (min_heap.size() == max_heap.size()) ? ((min_heap.peek() + max_heap.peek()) / 2.0) : ((min_heap.size() > max_heap.size()) ? min_heap.peek() : max_heap.peek());
+                pointer2++;
+            }
+        }
+        return var1;
+    }
+}

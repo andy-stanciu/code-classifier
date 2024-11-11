@@ -1,0 +1,39 @@
+class Solution {
+
+    static final int tSize = (int) 1e4 + 1;
+
+    static final int[] t = new int[tSize];
+
+    public int coinChange(int[] coins, int amount) {
+        if (amount == 0) {
+            return 0;
+        }
+        var l = amount + 1;
+        Arrays.fill(t, 1, l, l);
+        for (var coin : coins) {
+            if (coin < tSize) {
+                t[coin] = 1;
+            }
+        }
+        for (var i = 1; i < l; ++i) {
+            if (t[i] == l) {
+                continue;
+            }
+            for (long offset : coins) {
+                offset += i;
+                if (offset > tSize) {
+                    continue;
+                }
+                var j = (int) offset;
+                var count = t[i] + 1;
+                if (j < l && t[j] > count) {
+                    t[j] = count;
+                }
+            }
+        }
+        if (t[amount] == l) {
+            return -1;
+        }
+        return t[amount];
+    }
+}

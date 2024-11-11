@@ -1,0 +1,37 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int n = nums.length;
+        int tsum = 0;
+        for (int i = 0; i < n; i++) {
+            tsum += nums[i];
+        }
+        int m = 2 * tsum;
+        int[][] dp = new int[n][m + 1];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j <= m; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        return func(n - 1, target, 0, nums, dp, tsum);
+    }
+
+    public int func(int idx, int target, int sum, int[] arr, int[][] dp, int tsum) {
+        if (idx == -1) {
+            if (target == sum) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        if (dp[idx][sum + tsum] != -1) {
+            return dp[idx][sum + tsum];
+        }
+        if (idx < 0) {
+            return 0;
+        }
+        int plus = func(idx - 1, target, sum + arr[idx], arr, dp, tsum);
+        int minus = func(idx - 1, target, sum - arr[idx], arr, dp, tsum);
+        return dp[idx][sum + tsum] = plus + minus;
+    }
+}

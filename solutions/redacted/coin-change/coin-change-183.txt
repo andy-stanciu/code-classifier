@@ -1,0 +1,38 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int len = param1.length;
+        int[][] dp = new int[len][amount + 1];
+        for (int t = 0; t <= amount; t++) {
+            if (t % param1[0] == 0)
+                dp[0][t] = t / param1[0];
+            else
+                dp[0][t] = 1000000000;
+        }
+        for (int i = 1; i < len; i++) {
+            for (int j = 1; j <= amount; j++) {
+                int notpick = dp[i - 1][j];
+                int pick = 1000000000;
+                if (j >= param1[i])
+                    pick = 1 + dp[i][j - param1[i]];
+                dp[i][j] = Math.min(pick, notpick);
+            }
+        }
+        int res = dp[len - 1][amount];
+        res = res >= 1000000000 ? -1 : res;
+        return res;
+    }
+    // int f(int idx, int coins[], int target, int dp[][])
+    // {
+    //     if(target == 0) return 0;
+    //     if(idx==0 && (target% coins[idx] == 0)) return target/coins[idx];
+    //     if(idx == 0) return 1000000000;
+    //     if(dp[idx][target] != -1)
+    //         return dp[idx][target];
+    //     int notpick= f(idx-1, coins, target, dp);
+    //     int pick=1000000000;
+    //     if( target >= coins[idx])
+    //         pick = 1+ f(idx, coins, target-coins[idx], dp);
+    //     return dp[idx][target] = Math.min(pick, notpick);
+    // }
+}

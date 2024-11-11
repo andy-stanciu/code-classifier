@@ -1,0 +1,28 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        Arrays.sort(coins);
+        int[][] dp = new int[coins.length + 1][amount + 1];
+        // draw the matrix -> and follow the code, and you\'ll understand
+        // Initialize the first row with a high value, except dp[0][0]
+        for (int j = 1; j <= amount; j++) {
+            dp[0][j] = Integer.MAX_VALUE - 1;
+        }
+        // Initialize the first column with 0, as 0 coins are needed to make amount 0
+        for (int i = 0; i <= coins.length; i++) {
+            dp[i][0] = 0;
+        }
+        // Fill the dp array
+        for (int i = 1; i <= coins.length; i++) {
+            for (int j = 1; j <= amount; j++) {
+                if (coins[i - 1] <= j) {
+                    dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - coins[i - 1]] + 1);
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        // If dp[coins.length][amount] is still a high value, return -1 (not possible to form the amount)
+        return dp[coins.length][amount] > amount ? -1 : dp[coins.length][amount];
+    }
+}

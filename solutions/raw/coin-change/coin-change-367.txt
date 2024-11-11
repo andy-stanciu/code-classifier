@@ -1,0 +1,45 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        /* SPACE OPTIMIZED SOLUTION */
+        int[] prev = new int[amount + 1];
+        for (int amt = 0; amt <= amount; amt++) {
+            if (amt % coins[0] == 0) {
+                prev[amt] = amt / coins[0];
+            } else {
+                prev[amt] = (int) 1e8;
+            }
+        }
+        for (int i = 1; i <= coins.length - 1; i++) {
+            int[] curr = new int[amount + 1];
+            for (int amt = 0; amt <= amount; amt++) {
+                int notTake = prev[amt];
+                int take = (int) 1e8;
+                if (coins[i] <= amt) {
+                    take = 1 + curr[amt - coins[i]];
+                }
+                curr[amt] = Math.min(notTake, take);
+            }
+            prev = curr;
+        }
+        return prev[amount] >= (int) 1e8 ? -1 : prev[amount];
+    }
+
+    /* Memoization Solution , call the function accordingly  */
+    int f(int idx, int[] coins, int amount, int[][] dp) {
+        if (idx == 0) {
+            if (amount % coins[0] == 0)
+                return amount / coins[0];
+            return (int) 1e8;
+        }
+        if (dp[idx][amount] != -1) {
+            return dp[idx][amount];
+        }
+        int notTake = f(idx - 1, coins, amount, dp);
+        int take = Integer.MAX_VALUE;
+        if (coins[idx] <= amount) {
+            take = 1 + f(idx, coins, amount - coins[idx], dp);
+        }
+        return dp[idx][amount] = Math.min(notTake, take);
+    }
+}

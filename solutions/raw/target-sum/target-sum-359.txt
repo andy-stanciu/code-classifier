@@ -1,0 +1,29 @@
+class Solution {
+
+    Map<Integer, Map<Integer, Integer>> cache;
+
+    int[] nums;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        cache = new HashMap<>();
+        this.nums = nums;
+        return dp(target, 0);
+    }
+
+    private int dp(int target, int numsIndex) {
+        if (numsIndex == nums.length) {
+            return target == 0 ? 1 : 0;
+        } else {
+            Map<Integer, Integer> targetCache = cache.getOrDefault(target, new HashMap<>());
+            if (targetCache.containsKey(numsIndex)) {
+                return targetCache.get(numsIndex);
+            }
+            int res = dp(target + nums[numsIndex], numsIndex + 1);
+            res += dp(target - nums[numsIndex], numsIndex + 1);
+            targetCache = cache.getOrDefault(target, new HashMap<>());
+            targetCache.put(numsIndex, res);
+            cache.put(target, targetCache);
+            return res;
+        }
+    }
+}

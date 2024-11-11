@@ -1,0 +1,42 @@
+class Solution {
+
+    int count = 0;
+
+    public int method1(int[] nums, int param1) {
+        return dp(nums, 0, param1);
+    }
+
+    Map<String, Integer> memo = new HashMap();
+
+    private int dp(int[] nums, int i, int param1) {
+        if (i == nums.length) {
+            if (param1 == 0) {
+                return 1;
+            }
+            return 0;
+        }
+        String key = i + "," + param1;
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+        int count = dp(nums, i + 1, param1 - nums[i]) + dp(nums, i + 1, param1 + nums[i]);
+        memo.put(key, count);
+        return count;
+    }
+
+    private void backtrack(int[] nums, int i, int param1) {
+        if (i == nums.length) {
+            if (param1 == 0) {
+                count++;
+                return;
+            }
+            return;
+        }
+        param1 -= nums[i];
+        backtrack(nums, i + 1, param1);
+        param1 += nums[i];
+        param1 += nums[i];
+        backtrack(nums, i + 1, param1);
+        param1 -= nums[i];
+    }
+}

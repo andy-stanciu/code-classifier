@@ -1,0 +1,35 @@
+class Solution {
+
+    public int targetSumDP(int[] nums, int n, int target, int[][] dp) {
+        for (int i = 0; i < n + 1; i++) {
+            for (int j = 0; j < target + 1; j++) {
+                if (i == 0)
+                    dp[i][j] = 0;
+                if (j == 0)
+                    dp[i][j] = 1;
+            }
+        }
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 0; j < target + 1; j++) {
+                if (nums[i - 1] <= j) {
+                    dp[i][j] = dp[i - 1][j] + dp[i - 1][j - nums[i - 1]];
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        return dp[n][target];
+    }
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        int targetSum = sum + target;
+        if (targetSum % 2 != 0 || sum < target || targetSum < 0)
+            return 0;
+        int[][] dp = new int[nums.length + 1][sum + 1];
+        return targetSumDP(nums, nums.length, targetSum / 2, dp);
+    }
+}

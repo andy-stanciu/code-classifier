@@ -1,0 +1,65 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode listMerger(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        } else if (l2 == null) {
+            return l1;
+        }
+        ListNode Node = new ListNode(0);
+        ListNode temp = Node;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                temp.val = l1.val;
+                l1 = l1.next;
+            } else {
+                temp.val = l2.val;
+                l2 = l2.next;
+            }
+            if (l1 != null && l2 != null) {
+                ListNode A = new ListNode(0);
+                temp.next = A;
+                temp = temp.next;
+            }
+        }
+        while (l1 != null) {
+            ListNode A = new ListNode(0);
+            temp.next = A;
+            temp = temp.next;
+            temp.val = l1.val;
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            ListNode A = new ListNode(0);
+            temp.next = A;
+            temp = temp.next;
+            temp.val = l2.val;
+            l2 = l2.next;
+        }
+        return Node;
+    }
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0) {
+            return null;
+        }
+        if (lists.length == 1) {
+            return lists[0];
+        }
+        ListNode current = listMerger(lists[0], lists[1]);
+        for (int i = 2; i < lists.length; i++) {
+            current = listMerger(current, lists[i]);
+        }
+        return current;
+    }
+}

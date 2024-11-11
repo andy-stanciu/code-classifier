@@ -1,0 +1,48 @@
+class Solution {
+
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        // We will always take less length of array to reduce time complexity
+        if (nums1.length > nums2.length) {
+            return findMedianSortedArrays(nums2, nums1);
+        }
+        int n = nums1.length;
+        int m = nums2.length;
+        // Take start and end from first array only
+        int start = 0;
+        int end = n;
+        //run a while loop till <=
+        while (start <= end) {
+            // this will give us the mid element of the first array like how many elements
+            //we are going to take from first array
+            int mid1 = start + (end - start) / 2;
+            //this will take the remainig number of elements from second array (i.e (totallength +1)/2 - mid1)
+            int mid2 = (n + m + 1) / 2 - mid1;
+            //this will give us the left right element from first array
+            int left1 = (mid1 == 0) ? Integer.MIN_VALUE : nums1[mid1 - 1];
+            int right1 = (mid1 == n) ? Integer.MAX_VALUE : nums1[mid1];
+            //this will give us the left right element from second array
+            int left2 = (mid2 == 0) ? Integer.MIN_VALUE : nums2[mid2 - 1];
+            int right2 = (mid2 == m) ? Integer.MAX_VALUE : nums2[mid2];
+            //Example we have array nums1 = [7,12,14,15] nums2 = [1,2,3,4,9,11]
+            //here at mid1 = 1 and mid2 = 4
+            // first array be like          7 | 12, 14, 15
+            //.                          left1 right1
+            //second array be like 1, 2, 3, 4 | 9, 11
+            //                           left2 right2
+            // here we know array is sorted
+            if (right1 >= left2 && right2 >= left1) {
+                if ((n + m) % 2 == 0) {
+                    return (double) (Math.max(left1, left2) + Math.min(right1, right2)) / 2.0;
+                } else {
+                    return (double) Math.max(left1, left2);
+                }
+            } else // if left1 is greater means we need to shift leftwards in arrray
+            if (right2 < left1) {
+                end = mid1 - 1;
+            } else {
+                start = mid1 + 1;
+            }
+        }
+        return 0.0;
+    }
+}

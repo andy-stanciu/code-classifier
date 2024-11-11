@@ -1,0 +1,50 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        Set<TreeNode> peeked = new HashSet<>();
+        TreeNode curr = root;
+        while (curr != null || !stack.isEmpty()) {
+            //visiting the left subtree of node N
+            while (curr != null) {
+                stack.push(curr);
+                curr = curr.left;
+            }
+            //at this point we\'ve finished visiting the left subtree
+            //of node N, and we\'re sure N must be on the stack top
+            //i.e., stack.peek() must return node N
+            curr = stack.peek();
+            //check if we\'ve already visited the right subtree
+            //of node N
+            if (!peeked.add(curr)) {
+                //right subtree of node N has already been visited,
+                //meaning we\'ve "fully visited" curr and can pop it
+                //from stack and add its value to the result list
+                res.add(stack.pop().val);
+                //avoid revisiting the right subtree
+                curr = null;
+            } else {
+                //right subtree of N hasn\'t been visited yet
+                //so we start visiting it
+                curr = curr.right;
+            }
+        }
+        return res;
+    }
+}

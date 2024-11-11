@@ -1,0 +1,42 @@
+public class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        return partition(param1, 0, param1.length - 1);
+    }
+
+    public ListNode partition(ListNode[] param1, int start, int end) {
+        if (start == end) {
+            return param1[start];
+        }
+        if (start < end) {
+            int mid = start + (end - start) / 2;
+            ListNode left = partition(param1, start, mid);
+            ListNode right = partition(param1, mid + 1, end);
+            return method2(left, right);
+        } else {
+            return null;
+        }
+    }
+
+    public ListNode method2(ListNode left, ListNode right) {
+        ListNode head = new ListNode(0);
+        ListNode current = head;
+        while (left != null && right != null) {
+            if (left.val <= right.val) {
+                current.next = left;
+                left = left.next;
+            } else {
+                current.next = right;
+                right = right.next;
+            }
+            current = current.next;
+        }
+        if (left != null) {
+            current.next = left;
+        }
+        if (right != null) {
+            current.next = right;
+        }
+        return head.next;
+    }
+}

@@ -1,0 +1,28 @@
+class Solution {
+
+    Integer n = null;
+
+    public int method1(int[] nums, int param1) {
+        n = nums.length;
+        Map<Map.Entry<Integer, Integer>, Integer> dp = new HashMap<>();
+        return findWays(nums, param1, 0, 0, 0, dp);
+    }
+
+    private int findWays(int[] nums, int param1, int param2, int index, int count, Map<Map.Entry<Integer, Integer>, Integer> dp) {
+        if (n == index && param2 == param1) {
+            count++;
+            dp.put(Map.entry(index, param2), count);
+            return count;
+        }
+        if (n == index) {
+            dp.put(Map.entry(index, param2), 0);
+            return 0;
+        }
+        Map.Entry<Integer, Integer> entry = Map.entry(index, param2);
+        if (dp.containsKey(entry))
+            return (int) dp.get(entry);
+        int tot = findWays(nums, param1, param2 + nums[index], index + 1, count, dp) + findWays(nums, param1, param2 - nums[index], index + 1, count, dp);
+        dp.put(Map.entry(index, param2), tot);
+        return tot;
+    }
+}

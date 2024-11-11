@@ -1,0 +1,28 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        return coinChange(coins, amount, new HashMap<Integer, Integer>());
+    }
+
+    public int coinChange(int[] coins, int amount, HashMap<Integer, Integer> memo) {
+        int minCoin = -1;
+        if (amount == 0)
+            return 0;
+        if (amount < 0)
+            return -1;
+        if (memo.containsKey(amount))
+            return memo.get(amount);
+        for (int i = 0; i < coins.length; i++) {
+            int balance = amount - coins[i];
+            int subCoins = coinChange(coins, balance, memo);
+            if (subCoins != -1) {
+                int numCoins = subCoins + 1;
+                if (numCoins < minCoin || minCoin == -1) {
+                    minCoin = numCoins;
+                }
+            }
+        }
+        memo.put(amount, minCoin);
+        return minCoin;
+    }
+}

@@ -1,0 +1,30 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        /*
+         * This question simply wants us to find the number of ways
+         * we can divide the nums array into two subsets whose sum difference is
+         * equal to target or,
+         * s1 = (diff-total)/2
+         * s2 = (diff+total)/2
+         */
+        int sum = 0;
+        for (int val : nums) sum += val;
+        if ((sum - target) % 2 != 0)
+            return 0;
+        if (sum + target >= 0)
+            return perfectSum(nums, nums.length, (sum + target) / 2);
+        return perfectSum(nums, nums.length, (sum - target) / 2);
+    }
+
+    public int perfectSum(int[] arr, int n, int sum) {
+        int w = sum, MOD = 1_000_000_007;
+        int[] dp = new int[w + 1];
+        dp[0] = 1;
+        for (int i = 1; i <= n; i++) for (int j = w; j >= 0; j--) {
+            if (j >= arr[i - 1])
+                dp[j] = (dp[j] % MOD + dp[j - arr[i - 1]] % MOD) % MOD;
+        }
+        return dp[w];
+    }
+}

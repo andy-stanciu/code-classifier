@@ -1,0 +1,34 @@
+class Solution {
+
+    public int method1(int[] nums, int k) {
+        int var1 = 0;
+        for (int i : nums) {
+            var1 += i;
+        }
+        int n = nums.length;
+        int[][] dp = new int[n][var1 + 1];
+        for (int i = 0; i < n; i++) {
+            dp[i][0] = 1;
+        }
+        if (nums[0] <= var1) {
+            dp[0][nums[0]]++;
+        }
+        for (int index = 1; index < n; index++) {
+            for (int var2 = 0; var2 <= var1; var2++) {
+                int take = 0;
+                if (nums[index] <= var2) {
+                    take = dp[index - 1][var2 - nums[index]];
+                }
+                int not = dp[index - 1][var2];
+                dp[index][var2] = take + not;
+            }
+        }
+        int result = 0;
+        for (int i = 0; i <= var1; i++) {
+            if (i - (var1 - i) == k) {
+                result = dp[n - 1][i];
+            }
+        }
+        return result;
+    }
+}

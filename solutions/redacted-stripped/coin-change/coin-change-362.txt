@@ -1,0 +1,24 @@
+class Solution {
+
+    int[][] cache = new int[13][10001];
+
+    public int method1(int[] param1, int amount) {
+        int res = method2(param1, amount, param1.length - 1);
+        return res >= 100001 ? -1 : res;
+    }
+
+    private int method2(int[] param1, int amt, int pos) {
+        if (pos == -1 || amt <= 0) {
+            return amt == 0 ? 0 : 100001;
+        }
+        if (cache[pos][amt] != 0)
+            return cache[pos][amt];
+        int va = 100001, vna = 100001;
+        if (amt >= param1[pos]) {
+            va = 1 + method2(param1, amt - param1[pos], pos);
+        }
+        vna = method2(param1, amt, pos - 1);
+        cache[pos][amt] = Math.min(va, vna);
+        return cache[pos][amt];
+    }
+}

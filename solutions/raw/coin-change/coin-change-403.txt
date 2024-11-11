@@ -1,0 +1,19 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        Map<Integer, Integer> memo = new HashMap<>();
+        memo.put(0, 0);
+        for (int currentAmount = 1; currentAmount <= amount; currentAmount++) {
+            for (int coin : coins) {
+                int previousAmount = currentAmount - coin;
+                Integer previousNumberOfCoins = memo.get(previousAmount);
+                if (previousNumberOfCoins == null)
+                    continue;
+                int currentNumberOfCoins = memo.getOrDefault(currentAmount, Integer.MAX_VALUE);
+                currentNumberOfCoins = Integer.min(currentNumberOfCoins, previousNumberOfCoins + 1);
+                memo.put(currentAmount, currentNumberOfCoins);
+            }
+        }
+        return memo.getOrDefault(amount, -1);
+    }
+}

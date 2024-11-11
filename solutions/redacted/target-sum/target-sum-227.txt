@@ -1,0 +1,23 @@
+public class Solution {
+
+    public int method1(int[] nums, int param1) {
+        Map<Integer, Integer> counts = new HashMap<>();
+        // Method to find the number of ways to reach the target sum using elements from the given array
+        counts.put(nums[0], 1);
+        counts.put(-nums[0], counts.getOrDefault(-nums[0], 0) + 1);
+        for (int i = 1; i < nums.length; i++) {
+            // Create a new map to avoid concurrent modification
+            Map<Integer, Integer> newCounts = new HashMap<>();
+            for (int key : counts.keySet()) {
+                int var1 = key + nums[i];
+                int var2 = key - nums[i];
+                // Update the newCounts map instead of counts directly
+                newCounts.put(var1, newCounts.getOrDefault(var1, 0) + counts.get(key));
+                newCounts.put(var2, newCounts.getOrDefault(var2, 0) + counts.get(key));
+            }
+            // Replace the old counts map with the new one
+            counts = newCounts;
+        }
+        return counts.getOrDefault(param1, 0);
+    }
+}

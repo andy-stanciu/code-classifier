@@ -1,0 +1,70 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+// Java code
+public class Solution {
+
+    // Method to merge k sorted lists
+    public ListNode method1(ListNode[] param1) {
+        // Call partition method to recursively merge lists
+        return partition(param1, 0, param1.length - 1);
+    }
+
+    // Method to partition and merge lists
+    public ListNode partition(ListNode[] param1, int start, int end) {
+        // If start and end indices are equal, return the list at that index
+        if (start == end) {
+            return param1[start];
+        }
+        // If start index is less than end index
+        if (start < end) {
+            // Calculate mid index
+            int mid = start + (end - start) / 2;
+            // Recursively partition and merge left and right halves
+            ListNode left = partition(param1, start, mid);
+            ListNode right = partition(param1, mid + 1, end);
+            // Merge the left and right halves
+            return method2(left, right);
+        } else {
+            // Return null if start index is greater than end index
+            return null;
+        }
+    }
+
+    // Method to merge two sorted lists
+    public ListNode method2(ListNode left, ListNode right) {
+        // Create a dummy node as the head of the merged list
+        ListNode head = new ListNode(0);
+        // Pointer to the current node in the merged list
+        ListNode current = head;
+        // While both left and right lists have nodes
+        while (left != null && right != null) {
+            // Choose the smaller node from left and right lists
+            if (left.val <= right.val) {
+                current.next = left;
+                left = left.next;
+            } else {
+                current.next = right;
+                right = right.next;
+            }
+            // Move the current pointer to the next node
+            current = current.next;
+        }
+        // Attach remaining nodes from left or right list
+        if (left != null) {
+            current.next = left;
+        }
+        if (right != null) {
+            current.next = right;
+        }
+        // Return the merged list
+        return head.next;
+    }
+}

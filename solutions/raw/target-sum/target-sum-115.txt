@@ -1,0 +1,50 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        // return count(nums, target, 0, 0);
+        int total = 0;
+        for (int num : nums) {
+            total += num;
+        }
+        int[][] dp = new int[nums.length][total + 1];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        return targetSumWay(nums, target, 0, 0, dp);
+        // return dp[target];
+    }
+
+    /**
+     *    Recursive 2^n solution
+     */
+    public int count(int[] nums, int target, int sum, int index) {
+        if (index > nums.length) {
+            return 0;
+        }
+        if (index == nums.length && sum == target) {
+            return 1;
+        } else if (index == nums.length) {
+            return 0;
+        }
+        return count(nums, target, sum + nums[index], index + 1) + count(nums, target, sum - nums[index], index + 1);
+    }
+
+    /**
+     *    DP solution
+     */
+    public int targetSumWay(int[] nums, int target, int sum, int index, int[][] dp) {
+        if (index > nums.length) {
+            return 0;
+        }
+        if (index == nums.length) {
+            return 0;
+        }
+        if (dp[index][sum] != -1) {
+            return dp[index][sum];
+        }
+        if (index == nums.length && sum == target) {
+            return 1;
+        }
+        dp[index][sum] = count(nums, target, sum + nums[index], index + 1) + count(nums, target, sum - nums[index], index + 1);
+        System.out.println(" dp is : index : " + index + " ,dp[index] : " + dp[index]);
+        return dp[index][sum];
+    }
+}

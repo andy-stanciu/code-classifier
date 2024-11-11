@@ -1,0 +1,47 @@
+class Solution {
+
+    public static int find(int idx, int param1, int[] nums, int[][] mem) {
+        if (idx == 0) {
+            if (param1 == 0 && nums[0] == 0) {
+                return 2;
+            }
+            if (param1 == 0) {
+                return 1;
+            }
+            return param1 == nums[0] ? 1 : 0;
+        }
+        if (mem[idx][param1] != -1) {
+            return mem[idx][param1];
+        }
+        int nottake = find(idx - 1, param1, nums, mem);
+        int take = 0;
+        if (nums[idx] <= param1) {
+            take = find(idx - 1, param1 - nums[idx], nums, mem);
+        }
+        return mem[idx][param1] = (take + nottake);
+    }
+
+    public static int findWays(int[] nums, int tar) {
+        int[][] mem = new int[nums.length][tar + 1];
+        for (int i = 0; i < mem.length; i++) {
+            for (int j = 0; j < mem[i].length; j++) {
+                mem[i][j] = -1;
+            }
+        }
+        return find(nums.length - 1, tar, nums, mem);
+    }
+
+    public int method1(int[] nums, int param1) {
+        int total = 0;
+        for (int num : nums) {
+            total += num;
+        }
+        if ((total - param1) < 0) {
+            return 0;
+        }
+        if ((total - param1) % 2 != 0) {
+            return 0;
+        }
+        return findWays(nums, ((total - param1) / 2));
+    }
+}

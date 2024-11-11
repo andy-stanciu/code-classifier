@@ -1,0 +1,34 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        // it is a greedy problem with decision making
+        // therefore, we can use DP to solve it
+        // use an array to store the fewest number of coins
+        // that can reach every amounts between 0 to target amount
+        // as we needto memorize the outcome of amount smaller than target
+        int[] dp = new int[amount + 1];
+        // in the beginning, we have no coin, or assume holding a coin values 0
+        // so to reach any amount greater than 0 needs infinite number of coin
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        // to reach amount of 0, we need no coin
+        dp[0] = 0;
+        // iterate through all coins
+        // calculate the possible total amounts given this coin
+        // and the number of coins used
+        // we only keep the fewest number in the dp array
+        for (int c : param1) {
+            // for every coin we can add any number of it
+            // therefore, we should iterate through the dp array (whose index means a amount) from the begining
+            // so that it is possible to repeatedly add this coin
+            for (int i = 1; i <= amount; i++) {
+                // if i >= c, this amount have the capacity to add this coin
+                // and there exist possible combination that can reach amount of i - c
+                if (i >= c && dp[i - c] != Integer.MAX_VALUE)
+                    dp[i] = Math.min(dp[i], dp[i - c] + 1);
+                // else we can only skip this coin, so keep the outcome before
+            }
+        }
+        // if dp[amount] == Integer.MAX_VALUE, there is no combination of coin can reach target amount
+        return dp[amount] = dp[amount] == Integer.MAX_VALUE ? -1 : dp[amount];
+    }
+}

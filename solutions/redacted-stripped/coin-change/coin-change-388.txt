@@ -1,0 +1,32 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        int ans = helper(param1, amount, dp, n - 1);
+        if (ans >= Math.pow(10, 9))
+            return -1;
+        else
+            return ans;
+    }
+
+    public static int helper(int[] param1, int amount, int[][] dp, int ind) {
+        if (ind == 0) {
+            if (amount % param1[ind] == 0)
+                return amount / param1[ind];
+            else
+                return (int) Math.pow(10, 9);
+        }
+        if (dp[ind][amount] != -1)
+            return dp[ind][amount];
+        int notTake = helper(param1, amount, dp, ind - 1);
+        int take = Integer.MAX_VALUE;
+        if (amount >= param1[ind]) {
+            take = 1 + helper(param1, amount - param1[ind], dp, ind);
+        }
+        return dp[ind][amount] = Math.min(take, notTake);
+    }
+}

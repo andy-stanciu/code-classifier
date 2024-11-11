@@ -1,0 +1,38 @@
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        if (param1 == null || param1.length == 0)
+            return null;
+        if (param1.length == 1)
+            return param1[0];
+        return method2(param1, 0, param1.length - 1);
+    }
+
+    public static ListNode method2(ListNode[] param1, int start, int end) {
+        if (start == end)
+            return param1[start];
+        if (start + 1 == end)
+            return method3(param1[start], param1[end]);
+        var middlePointer = start + (end - start) / 2;
+        var leftPart = method2(param1, start, middlePointer);
+        var rightPart = method2(param1, middlePointer + 1, end);
+        return method3(rightPart, leftPart);
+    }
+
+    private static ListNode method3(ListNode node1, ListNode node2) {
+        ListNode init = new ListNode();
+        ListNode head = init;
+        while (node1 != null && node2 != null) {
+            if (node1.val > node2.val) {
+                init.next = new ListNode(node2.val);
+                node2 = node2.next;
+            } else {
+                init.next = new ListNode(node1.val);
+                node1 = node1.next;
+            }
+            init = init.next;
+        }
+        init.next = node1 == null ? node2 : node1;
+        return head.next;
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        //if the length of nums1 is greater than nums2, then call the algorithm...
+        if (nums1.length > nums2.length) {
+            return findMedianSortedArrays(nums2, nums1);
+        }
+        // Pointers for binary search...
+        int beg = 0;
+        int end = nums1.length;
+        // Binary search starts from here
+        while (beg <= end) {
+            // Partitions of both the array
+            int part1 = (beg + end) / 2;
+            int part2 = (nums1.length + nums2.length + 1) / 2 - part1;
+            // If there are no elements left on the left side after partition
+            int maxL1 = part1 == 0 ? Integer.MIN_VALUE : nums1[part1 - 1];
+            // If there are no elements left on the right side after partition
+            int minR1 = part1 == nums1.length ? Integer.MAX_VALUE : nums1[part1];
+            // Similarly for nums2
+            int maxL2 = part2 == 0 ? Integer.MIN_VALUE : nums2[part2 - 1];
+            int minR2 = part2 == nums2.length ? Integer.MAX_VALUE : nums2[part2];
+            //when the following case is satisfied,
+            //we find the median based on array size is even or odd...
+            if (maxL1 <= minR2 && maxL2 <= minR1) {
+                // if array size is even, we add the max value from left side
+                //with min value from right side...
+                if ((nums1.length + nums2.length) % 2 == 0) {
+                    return (Math.max(maxL1, maxL2) + Math.min(minR1, minR2)) / 2.0;
+                } else // if array size is odd we return the max of the two array\'s left hand-side value..
+                {
+                    return Math.max(maxL1, maxL2);
+                }
+            } else // If we are too far on the right, we need to go to left side...
+            if (maxL1 > minR2) {
+                end = part1 - 1;
+            } else // If we are too far on the left, we need to go to right side...
+            {
+                beg = part1 + 1;
+            }
+        }
+        return 1;
+    }
+}

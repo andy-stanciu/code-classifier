@@ -1,0 +1,67 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        // this linked maintain the adding the value
+        ListNode fres = new ListNode();
+        // final return string
+        ListNode fres1 = null;
+        if (l1 == null)
+            return l2;
+        if (l2 == null)
+            return l1;
+        if (l1 == null || l2 == null)
+            return fres;
+        int previous = 0;
+        boolean flag = true;
+        while (l1 != null && l2 != null) {
+            int current = (l1.val + l2.val + previous) % 10;
+            previous = (l1.val + l2.val + previous) / 10;
+            ListNode tempNode = new ListNode(current);
+            if (flag) {
+                fres = tempNode;
+                fres1 = fres;
+                flag = false;
+            } else {
+                fres.next = tempNode;
+                fres = tempNode;
+            }
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        // case when l1 linked list size is greater than l2
+        while (l1 != null) {
+            int current = (l1.val + previous) % 10;
+            previous = (l1.val + previous) / 10;
+            ListNode tempNode = new ListNode(current);
+            fres.next = tempNode;
+            fres = tempNode;
+            l1 = l1.next;
+        }
+        // case when l1 linked list size is less than l2
+        while (l2 != null) {
+            int current = (l2.val + previous) % 10;
+            previous = (l2.val + previous) / 10;
+            ListNode tempNode = new ListNode(current);
+            fres.next = tempNode;
+            fres = tempNode;
+            l2 = l2.next;
+        }
+        // last case when previous value is not equal to 0 i.e 1
+        if (previous != 0) {
+            ListNode tempNode = new ListNode(previous);
+            fres.next = tempNode;
+        }
+        // return the final output
+        return fres1;
+    }
+}

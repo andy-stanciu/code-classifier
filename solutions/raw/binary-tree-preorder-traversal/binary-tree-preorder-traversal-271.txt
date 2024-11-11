@@ -1,0 +1,73 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> preT = new ArrayList<>();
+        // preorderTraversal(root, preT);
+        // preorderTraversalIterative(root, preT);
+        preorderTraversalMories(root, preT);
+        return preT;
+    }
+
+    public void preorderTraversal(TreeNode root, List<Integer> preT) {
+        if (root == null)
+            return;
+        preT.add(root.val);
+        preorderTraversal(root.left, preT);
+        preorderTraversal(root.right, preT);
+    }
+
+    public void preorderTraversalIterative(TreeNode root, List<Integer> preT) {
+        if (root == null)
+            return;
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            root = stack.pop();
+            preT.add(root.val);
+            if (root.right != null)
+                stack.push(root.right);
+            if (root.left != null)
+                stack.push(root.left);
+        }
+    }
+
+    public void preorderTraversalMories(TreeNode root, List<Integer> preT) {
+        if (root == null)
+            return;
+        TreeNode temp = null;
+        while (null != root) {
+            if (root.left == null) {
+                preT.add(root.val);
+                root = root.right;
+            } else {
+                temp = root.left;
+                while (temp.right != null && temp.right != root) {
+                    temp = temp.right;
+                }
+                if (temp.right == null) {
+                    preT.add(root.val);
+                    temp.right = root;
+                    root = root.left;
+                } else {
+                    temp.right = null;
+                    root = root.right;
+                }
+            }
+        }
+    }
+}

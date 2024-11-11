@@ -1,0 +1,47 @@
+class Solution {
+
+    public int method1(int amount, int[] param1, int index, int[][] dp) {
+        if (index == 0) {
+            if (amount % param1[0] == 0)
+                return amount / param1[0];
+            else
+                return 1000000;
+        }
+        if (dp[index][amount] != -1)
+            return dp[index][amount];
+        int notTaken = 0 + method1(amount, param1, index - 1, dp);
+        int taken = Integer.MAX_VALUE;
+        if (param1[index] <= amount)
+            taken = 1 + method1(amount - param1[index], param1, index, dp);
+        return dp[index][amount] = Math.min(taken, notTaken);
+    }
+
+    public int method2(int[] param1, int amount) {
+        int n = param1.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int target = 0; target <= amount; target++) {
+            if (target % param1[0] == 0)
+                dp[0][target] = target / param1[0];
+            else
+                dp[0][target] = 1000000;
+        }
+        for (int index = 1; index <= n - 1; index++) {
+            for (int j = 0; j <= amount; j++) {
+                int notTaken = 0 + dp[index - 1][j];
+                int taken = Integer.MAX_VALUE;
+                if (param1[index] <= j)
+                    taken = 1 + dp[index][j - param1[index]];
+                dp[index][j] = Math.min(taken, notTaken);
+            }
+        }
+        return dp[n - 1][amount];
+    }
+
+    public int method3(int[] param1, int amount) {
+        int n = param1.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int i = 0; i < n; i++) Arrays.fill(dp[i], -1);
+        int var1 = method2(param1, amount);
+        return var1 >= 1000000 ? -1 : var1;
+    }
+}

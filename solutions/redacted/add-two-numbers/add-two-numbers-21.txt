@@ -1,0 +1,47 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        // Dummy node to simplify edge cases
+        ListNode dummyHead = new ListNode(0);
+        // Pointer to construct the result linked list
+        ListNode current = dummyHead;
+        // To keep track of the carry value when summing digits
+        int carry = 0;
+        // Traverse both linked lists until we reach the end of both
+        while (l1 != null || l2 != null) {
+            // Get value from l1 if exists, else 0
+            int x = (l1 != null) ? l1.val : 0;
+            // Get value from l2 if exists, else 0
+            int y = (l2 != null) ? l2.val : 0;
+            // Sum of two digits and carry
+            int sum = x + y + carry;
+            // Update carry for the next step ( / bcz lekin for 7+5=12 we will get 12/10= 1)
+            carry = sum / 10;
+            // Create a new node with the result digit (% bcz taking the last digit only)
+            current.next = new ListNode(sum % 10);
+            // Move the pointer to the next node
+            current = current.next;
+            // Move to the next nodes in l1 and l2 if they exist
+            if (l1 != null)
+                l1 = l1.next;
+            if (l2 != null)
+                l2 = l2.next;
+        }
+        // If there\'s a carry left after the final addition, add a new node with carry value
+        if (carry > 0) {
+            current.next = new ListNode(carry);
+        }
+        // Return the next of dummyHead which is the actual result head
+        return dummyHead.next;
+    }
+}

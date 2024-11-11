@@ -1,0 +1,35 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+        }
+        if ((sum - target) % 2 != 0 || (sum - target) < 0)
+            return 0;
+        target = (sum - target) / 2;
+        int[][] dp = new int[nums.length][target + 1];
+        for (int i = 0; i < nums.length; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        return recursion(nums.length - 1, target, nums, dp);
+    }
+
+    public int recursion(int index, int target, int[] nums, int[][] dp) {
+        if (index == 0) {
+            if (target == 0 && nums[index] == 0)
+                return 2;
+            if (target == 0 || nums[index] == target)
+                return 1;
+            return 0;
+        }
+        if (dp[index][target] != -1)
+            return dp[index][target];
+        int take = 0;
+        if (nums[index] <= target) {
+            take = recursion(index - 1, target - nums[index], nums, dp);
+        }
+        int notTake = recursion(index - 1, target, nums, dp);
+        return dp[index][target] = take + notTake;
+    }
+}

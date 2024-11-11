@@ -1,0 +1,23 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        if (amount == 0)
+            return 0;
+        int[] tables = new int[amount + 1];
+        tables[0] = 0;
+        for (int i = 1; i <= amount; i++) {
+            tables[i] = Integer.MAX_VALUE;
+        }
+        for (int i = 1; i <= amount; i++) {
+            for (int j = 0; j < coins.length; j++) {
+                if (coins[j] <= i) {
+                    int sub_res = tables[i - coins[j]];
+                    if (sub_res != Integer.MAX_VALUE && sub_res + 1 < tables[i]) {
+                        tables[i] = sub_res + 1;
+                    }
+                }
+            }
+        }
+        return tables[amount] == Integer.MAX_VALUE ? -1 : tables[amount];
+    }
+}

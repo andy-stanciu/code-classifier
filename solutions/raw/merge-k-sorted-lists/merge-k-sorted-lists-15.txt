@@ -1,0 +1,31 @@
+class Solution {
+
+    public ListNode conquer(ListNode a, ListNode b) {
+        if (a == null)
+            return b;
+        if (b == null)
+            return a;
+        if (a.val < b.val) {
+            a.next = conquer(a.next, b);
+            return a;
+        }
+        b.next = conquer(a, b.next);
+        return b;
+    }
+
+    public ListNode divide(ListNode[] lists, int st, int end) {
+        if (st >= end) {
+            return lists[st];
+        }
+        int mid = st + (end - st) / 2;
+        ListNode a = divide(lists, st, mid);
+        ListNode b = divide(lists, mid + 1, end);
+        return conquer(a, b);
+    }
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0)
+            return null;
+        return divide(lists, 0, lists.length - 1);
+    }
+}

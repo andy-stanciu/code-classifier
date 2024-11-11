@@ -1,0 +1,29 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int var1 = 0;
+        int n = nums.length;
+        int d = param1;
+        for (int i = 0; i < n; i++) var1 += nums[i];
+        if (var1 - d < 0 || (var1 - d) % 2 != 0)
+            return 0;
+        int var2 = (var1 - d) / 2;
+        int[][] dp = new int[n][var2 + 1];
+        if (nums[0] == 0)
+            dp[0][0] = 2;
+        else
+            dp[0][0] = 1;
+        if (nums[0] != 0 && nums[0] <= var2)
+            dp[0][nums[0]] = 1;
+        for (int i = 1; i < n; i++) {
+            for (int s = 0; s <= var2; s++) {
+                int not_take = dp[i - 1][s];
+                int take = 0;
+                if (nums[i] <= s)
+                    take = dp[i - 1][s - nums[i]];
+                dp[i][s] = not_take + take;
+            }
+        }
+        return dp[n - 1][var2];
+    }
+}

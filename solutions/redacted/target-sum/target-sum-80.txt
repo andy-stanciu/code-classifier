@@ -1,0 +1,38 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int n = nums.length;
+        int var1 = 0;
+        for (int it : nums) {
+            var1 += it;
+        }
+        var1 += param1;
+        if (var1 % 2 != 0 || var1 < 0)
+            return 0;
+        else
+            var1 /= 2;
+        int[][] dp = new int[n][var1 + 1];
+        for (int[] it : dp) {
+            Arrays.fill(it, -1);
+        }
+        return fun(n - 1, var1, nums, dp);
+    }
+
+    static int fun(int idx, int var1, int[] nums, int[][] dp) {
+        if (idx == 0) {
+            if (var1 == 0 && nums[0] == 0)
+                return 2;
+            if (var1 == 0 || nums[0] == var1)
+                return 1;
+            else
+                return 0;
+        }
+        if (dp[idx][var1] != -1)
+            return dp[idx][var1];
+        int nt = fun(idx - 1, var1, nums, dp);
+        int t = 0;
+        if (nums[idx] <= var1)
+            t = fun(idx - 1, var1 - nums[idx], nums, dp);
+        return dp[idx][var1] = nt + t;
+    }
+}

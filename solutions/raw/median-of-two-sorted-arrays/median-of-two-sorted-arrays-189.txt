@@ -1,0 +1,39 @@
+class Solution {
+
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        // Merge the two array
+        var merged = merge(nums1, nums2);
+        var size = merged.length;
+        // Once the two array are merged, we get the median
+        if (size % 2 == 0) {
+            return (merged[size / 2] + merged[(size / 2) - 1]) / 2D;
+        } else {
+            return (double) merged[size / 2];
+        }
+    }
+
+    // Recursively merge the two array  O(m+n)(from mergeSort algorithm)
+    int[] merge(int[] nums1, int[] nums2) {
+        if (nums1.length == nums2.length && nums1.length == 1) {
+            return nums1[0] < nums2[0] ? new int[] { nums1[0], nums2[0] } : new int[] { nums2[0], nums1[0] };
+        } else if (nums1.length == 0) {
+            return nums2;
+        } else if (nums2.length == 0) {
+            return nums1;
+        }
+        if (nums1[0] < nums2[0]) {
+            return addAll(nums1[0], merge(Arrays.copyOfRange(nums1, 1, nums1.length), nums2));
+        }
+        return addAll(nums2[0], merge(Arrays.copyOfRange(nums2, 1, nums2.length), nums1));
+    }
+
+    // Simple utility to add an element on the begenning of an array
+    int[] addAll(int nums1, int[] nums2) {
+        var res = new int[1 + nums2.length];
+        res[0] = nums1;
+        for (var i = 0; i < nums2.length; i++) {
+            res[i + 1] = nums2[i];
+        }
+        return res;
+    }
+}

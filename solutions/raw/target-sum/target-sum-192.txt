@@ -1,0 +1,30 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+        }
+        int length = Math.abs(target + target) + 1 + sum + sum;
+        int buffer = Math.abs(target) + sum;
+        int[][] dp = new int[nums.length][length];
+        for (int[] arr : dp) {
+            Arrays.fill(arr, -1);
+        }
+        return targetSum(nums.length - 1, nums, target, dp, buffer);
+    }
+
+    int targetSum(int index, int[] nums, int target, int[][] dp, int buffer) {
+        if (index < 0) {
+            if (target == 0) {
+                return 1;
+            }
+            return 0;
+        }
+        if (dp[index][target + buffer] != -1)
+            return dp[index][target + buffer];
+        int negetive = targetSum(index - 1, nums, target - nums[index], dp, buffer);
+        int positive = targetSum(index - 1, nums, target + nums[index], dp, buffer);
+        return dp[index][target + buffer] = negetive + positive;
+    }
+}

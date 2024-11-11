@@ -1,0 +1,36 @@
+class Solution {
+
+    int countSubsets(int[] nums, int target, int indx, int[][] dp) {
+        if (indx == 0) {
+            if (target == 0 && nums[0] == 0)
+                return 2;
+            if (target == 0 || nums[0] == target)
+                return 1;
+            else
+                return 0;
+        }
+        if (dp[indx][target] != 0) {
+            return dp[indx][target];
+        }
+        int notPick = countSubsets(nums, target, indx - 1, dp);
+        int pick = 0;
+        if (target >= nums[indx]) {
+            pick = countSubsets(nums, target - nums[indx], indx - 1, dp);
+        }
+        return dp[indx][target] = notPick + pick;
+    }
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int tSum = 0;
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            tSum += nums[i];
+        }
+        int difference = tSum - target;
+        if (difference % 2 == 1 || difference < 0)
+            return 0;
+        difference /= 2;
+        int[][] dp = new int[n][difference + 1];
+        return countSubsets(nums, difference, n - 1, dp);
+    }
+}

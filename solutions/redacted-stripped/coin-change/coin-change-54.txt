@@ -1,0 +1,27 @@
+class Solution {
+
+    public static int solve(int[][] dp, int[] arr, int len, int amount) {
+        if (amount == 0)
+            return 0;
+        if (len == 0)
+            return 100000;
+        if (dp[len][amount] != -1)
+            return dp[len][amount];
+        int take = 100000;
+        if (arr[len - 1] <= amount)
+            take = solve(dp, arr, len, amount - arr[len - 1]);
+        int not_take = solve(dp, arr, len - 1, amount);
+        dp[len][amount] = Math.min(take + 1, not_take);
+        return dp[len][amount];
+    }
+
+    public int method1(int[] param1, int amount) {
+        int len = param1.length;
+        int[][] dp = new int[len + 1][amount + 1];
+        for (int[] x : dp) Arrays.fill(x, -1);
+        int ans = solve(dp, param1, len, amount);
+        if (ans >= 100000)
+            return -1;
+        return ans;
+    }
+}

@@ -1,0 +1,25 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        // here the idea is to find min combination of coins for a given amount. so this is a Dynamic programming problem, we find min number of coins for all amounts less than target amount then we find the min combination
+        // for example for amount=3, we calculate min_coins[0], [1], [2]. if we have [1,2,5] coins, min_coins[0]=0, [1]=1, [2]=1 and for [3] either when c=1, a-c = 2 so min_coin[2]=1 therefore min_coin[3] = 1+1=2 or when c=2, a-c=1 so min_coin[1]=1 therefore min_coin[3]=1+1
+        // so we keep building the DP array as we check combination for higher amounts
+        // code structure and variables: one int[] for DP, one loop for amount, one loop for substituting coins. when we say array, we need a loop thats given, we have another array to traverse in the problem
+        int[] var1 = new int[amount + 1];
+        // arbitarily we pick a num > amount
+        Arrays.fill(var1, amount + 1);
+        var1[0] = 0;
+        for (int a = 1; a <= amount; a++) {
+            for (int c : param1) {
+                if (a - c >= 0) {
+                    // if coin value is more than amount value then we will exceed amount \'a\'. if amount=1 and coin val is 5, we cant fit-in so invalid case
+                    // difference remaining balance to make the given amount
+                    var1[a] = Math.min(var1[a], 1 + var1[a - c]);
+                }
+            }
+            //min_coins[a] is minimum coins required to make that amount \'a\'. at each amount, we are calculating min coins required to make that amount \'a\'. to make amount=1, we need one coin of value 1, so min_coin[1]=1
+        }
+        // if we cant make the target amount then we return -1
+        return var1[amount] != amount + 1 ? var1[amount] : -1;
+    }
+}

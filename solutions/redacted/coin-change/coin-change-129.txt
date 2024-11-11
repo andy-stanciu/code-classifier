@@ -1,0 +1,34 @@
+class Solution {
+
+    public int f(int ind, int[] param1, int amount, int[][] dp) {
+        if (ind == 0) {
+            if (amount % param1[0] == 0) {
+                return amount / param1[0];
+            }
+            return (int) 1e9;
+        }
+        if (dp[ind][amount] != -1)
+            return dp[ind][amount];
+        int notTake = 0 + f(ind - 1, param1, amount, dp);
+        int take = Integer.MAX_VALUE;
+        if (param1[ind] <= amount) {
+            take = 1 + f(ind, param1, amount - param1[ind], dp);
+        }
+        return dp[ind][amount] = Math.min(take, notTake);
+    }
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j <= amount; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        // Arrays.fill(dp, -1);
+        int ans = f(n - 1, param1, amount, dp);
+        if (ans >= (int) 1e9)
+            return -1;
+        return ans;
+    }
+}

@@ -1,0 +1,44 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        BigInteger total = findReverseCombineLinkedList(l1).add(findReverseCombineLinkedList(l2));
+        char[] array = new StringBuilder().append(total).reverse().toString().toCharArray();
+        ListNode head = new ListNode();
+        head.val = Character.getNumericValue(array[0]);
+        ListNode temp = head;
+        for (int i = 1; i < array.length; i++) {
+            ListNode nextNode = new ListNode();
+            nextNode.val = Character.getNumericValue(array[i]);
+            temp.next = nextNode;
+            if (i == array.length - 1) {
+                temp = null;
+                break;
+            }
+            temp = nextNode;
+        }
+        return head;
+    }
+
+    public BigInteger findReverseCombineLinkedList(ListNode node) {
+        Stack<BigInteger> stack = new Stack<>();
+        while (node != null) {
+            stack.push(BigInteger.valueOf(node.val));
+            node = node.next;
+        }
+        StringBuilder strNum = new StringBuilder();
+        while (!stack.isEmpty()) {
+            strNum.append(stack.pop());
+        }
+        return new BigInteger(strNum.toString());
+    }
+}

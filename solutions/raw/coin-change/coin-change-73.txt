@@ -1,0 +1,30 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        // For handling prev row
+        int[] dp = new int[amount + 1];
+        // For handling cur row
+        int[] temp = new int[amount + 1];
+        for (int target = 0; target <= amount; ++target) {
+            // Filling the base cases ( Bottom - Up)
+            if (target % coins[0] == 0)
+                dp[target] = target / coins[0];
+            else
+                dp[target] = (int) 1e9;
+        }
+        for (int index = 1; index < n; ++index) {
+            for (int target = 1; target <= amount; ++target) {
+                int pick = (int) 1e9, not_pick = (int) 1e9;
+                if (coins[index] <= target)
+                    pick = 1 + temp[target - coins[index]];
+                not_pick = dp[target];
+                temp[target] = Math.min(pick, not_pick);
+            }
+            for (int j = 1; j <= amount; ++j) dp[j] = temp[j];
+        }
+        if (dp[amount] == (int) 1e9)
+            return -1;
+        return dp[amount];
+    }
+}

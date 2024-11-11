@@ -1,0 +1,28 @@
+class Solution {
+
+    public int helper(int[] nums, int target, int i, Map<Pair<Integer, Integer>, Integer> dp) {
+        if (i == nums.length) {
+            if (// If target is reached at last then return 1
+            target == 0)
+                return 1;
+            // Otherwise return 0
+            return 0;
+        }
+        // Forming key
+        Pair<Integer, Integer> key = new Pair(target, i);
+        if (dp.containsKey(key))
+            // If sub-problem is already solved then take it from memory
+            return dp.get(key);
+        // We have two options i.e. either put a + or a - before every number
+        int res = helper(nums, target - nums[i], i + 1, dp) + helper(nums, target + nums[i], i + 1, dp);
+        // Store the response in memory
+        dp.put(key, res);
+        return res;
+    }
+
+    public int findTargetSumWays(int[] nums, int target) {
+        // Taking pair instead of a 2D matrix as target can also be a -ve number
+        Map<Pair<Integer, Integer>, Integer> dp = new HashMap<>();
+        return helper(nums, target, 0, dp);
+    }
+}

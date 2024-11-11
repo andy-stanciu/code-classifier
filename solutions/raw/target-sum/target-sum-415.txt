@@ -1,0 +1,30 @@
+class Solution {
+
+    // O(n*sum) time || O(sum) space - where n is the length of the nums array
+    // sum is the amount of nums array
+    int n;
+
+    int ans;
+
+    HashMap<String, Integer> memo = new HashMap<>();
+
+    public int findTargetSumWays(int[] nums, int target) {
+        n = nums.length;
+        return dp(nums, target, 0, 0);
+    }
+
+    public int dp(int[] nums, int target, int idx, int currSum) {
+        if (idx == n) {
+            if (currSum == target)
+                return 1;
+            return 0;
+        }
+        String key = idx + "," + currSum;
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+        int result = dp(nums, target, idx + 1, currSum - nums[idx]) + dp(nums, target, idx + 1, currSum + nums[idx]);
+        memo.put(key, result);
+        return result;
+    }
+}

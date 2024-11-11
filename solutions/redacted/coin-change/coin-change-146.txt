@@ -1,0 +1,45 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        Integer[] var1;
+        var1 = Arrays.stream(param1).boxed().toArray(Integer[]::new);
+        Arrays.sort(var1, Collections.reverseOrder());
+        int[][] dp = new int[param1.length + 1][amount + 1];
+        for (int i = 0; i <= param1.length; i++) Arrays.fill(dp[i], -1);
+        int result = operations(0, 0, var1, amount, dp);
+        return result != Integer.MAX_VALUE ? result : -1;
+    }
+
+    public static int operations(int index, int param2, Integer[] param1, int amount, int[][] dp) {
+        // if(sumCoins>amount)
+        // return Integer.MAX_VALUE;
+        // //base condition
+        // if(sumCoins==amount)
+        // return totalCoins;
+        //  if(dp[index][sumCoins]!=-1)
+        //  return dp[index][sumCoins];
+        // int result =Integer.MAX_VALUE;
+        // for(int i=index;i<coins.length;i++)
+        // {
+        //     result=Math.min(result,operations(i,sumCoins+coins[i],totalCoins+1,coins,amount,dp));
+        //     result=Math.min(result,operations(i+1,sumCoins,totalCoins,coins,amount,dp));
+        // }
+        // return dp[index][sumCoins]=result;
+        if (param2 == amount)
+            return 0;
+        if (index >= param1.length)
+            return Integer.MAX_VALUE;
+        if (dp[index][param2] != -1)
+            return dp[index][param2];
+        int take = Integer.MAX_VALUE;
+        if (param2 + param1[index] <= amount) {
+            int res = operations(index, param2 + param1[index], param1, amount, dp);
+            if (res != Integer.MAX_VALUE)
+                take = 1 + res;
+        }
+        // **
+        int nottake = Integer.MAX_VALUE;
+        nottake = operations(index + 1, param2, param1, amount, dp);
+        return dp[index][param2] = Math.min(take, nottake);
+    }
+}

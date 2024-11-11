@@ -1,0 +1,24 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        Integer[][] memo = new Integer[nums.length][2001];
+        return targetsum(nums.length - 1, 0, target, nums, memo);
+    }
+
+    public int targetsum(int ind, int sum, int tar, int[] nums, Integer[][] memo) {
+        if (ind < 0) {
+            return (sum == tar) ? 1 : 0;
+        }
+        //we are adding 1000 because here sum is changes frequently
+        //when the sum goes to the negeative the memo 2d array cant consider negative indices
+        //so add 1000 so that we can shift the indices to sum+1000
+        int currsum = sum + 1000;
+        if (memo[ind][currsum] != null) {
+            return memo[ind][currsum];
+        }
+        int considerNeg = targetsum(ind - 1, sum - nums[ind], tar, nums, memo);
+        int considerPos = targetsum(ind - 1, sum + nums[ind], tar, nums, memo);
+        memo[ind][currsum] = considerNeg + considerPos;
+        return memo[ind][currsum];
+    }
+}

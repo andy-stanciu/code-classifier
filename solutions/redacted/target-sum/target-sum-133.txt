@@ -1,0 +1,47 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        // arr -> P1 | P2
+        // sum(P1) = S1, sum(P2) = S2
+        // +(S1) -(S2) = target
+        // same as count of subsets with given diff
+        // S1 - S2 = target
+        // S1 + S2 = total
+        // -> 2*S1 = target + total
+        // S1 = (target + total) / 2
+        // now this complex problem boils down to count of subsets with sum = (target + total) / 2
+        // subset sum bottom-up DP solution
+        int total = Arrays.stream(nums).var1();
+        // edge case
+        if (Math.abs(param1) > total) {
+            return 0;
+        }
+        // if target + total is odd then we cannot partition into 2 subsets
+        if (((total + param1) & 1) == 1) {
+            return 0;
+        }
+        int var1 = (total + param1) / 2, n = nums.length;
+        int[][] dp = new int[n + 1][var1 + 1];
+        // dp[i][j] -> taking first `i` elements of the array, no. of subsets with sum = `j`
+        for (int i = 0; i < n + 1; i++) {
+            for (int j = 0; j < var1 + 1; j++) {
+                // base case / init
+                if (i == 0) {
+                    // no elements to take, only 0 sum is possible (empty subset)
+                    dp[i][j] = (j == 0) ? 1 : 0;
+                    continue;
+                }
+                if (nums[i - 1] <= j) {
+                    // 2 options: take or don\'t take the element
+                    // option-1: take the element
+                    int countWithCurrentElement = dp[i - 1][j - nums[i - 1]];
+                    int countWithoutCurrentElement = dp[i - 1][j];
+                    dp[i][j] = countWithCurrentElement + countWithoutCurrentElement;
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        return dp[n][var1];
+    }
+}

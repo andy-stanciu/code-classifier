@@ -1,0 +1,51 @@
+class Solution {
+
+    public int method1(int[] arr, int d) {
+        int range = 0;
+        //  calculate the total sum (range)
+        for (int i : arr) {
+            range += i;
+        }
+        // Check if it\'s possible to partition
+        if (range < Math.abs(d) || (range + d) % 2 != 0) {
+            return 0;
+        }
+        // Target sum
+        int var1 = (range + d) / 2;
+        // Memoization table
+        int[][] dp = new int[arr.length + 1][var1 + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        // Call the helper and multiply by the number of ways to arrange zeros
+        return helper(arr, arr.length, var1, dp);
+    }
+
+    public int helper(int[] arr, int n, int var1, int[][] dp) {
+        // Base case
+        if (n == 0) {
+            if (var1 == 0 && arr[0] == 0) {
+                // by taking and not taking because arr[0] is 0
+                return 1;
+            }
+            if (var1 == 0) {
+                //by not taking
+                return 1;
+            }
+            return 0;
+        }
+        // Check if the result is already computed
+        if (dp[n][var1] != -1) {
+            return dp[n][var1];
+        }
+        // Exclude the current element
+        int notTake = helper(arr, n - 1, var1, dp);
+        // Include the current element if possible
+        int take = 0;
+        if (arr[n - 1] <= var1) {
+            take = helper(arr, n - 1, var1 - arr[n - 1], dp);
+        }
+        // Store the result in the dp table and return it
+        return dp[n][var1] = (take + notTake);
+    }
+}

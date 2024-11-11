@@ -1,0 +1,29 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int maxSum = 0;
+        for (int i : nums) {
+            maxSum += i;
+        }
+        int[][] dp = new int[nums.length][2001];
+        for (int[] a : dp) {
+            Arrays.fill(a, -1);
+        }
+        return possibilities(nums, target, 0, 0, dp);
+    }
+
+    public int possibilities(int[] nums, int target, int index, int sum, int[][] dp) {
+        if (sum == target && index == nums.length) {
+            return 1;
+        }
+        if (index >= nums.length) {
+            return 0;
+        }
+        if (dp[index][sum + 1000] != -1) {
+            return dp[index][sum + 1000];
+        }
+        int ans1 = possibilities(nums, target, index + 1, sum + nums[index], dp);
+        int ans2 = possibilities(nums, target, index + 1, sum - nums[index], dp);
+        return dp[index][sum + 1000] = (ans1 + ans2);
+    }
+}

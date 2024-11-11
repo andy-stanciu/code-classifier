@@ -1,0 +1,28 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int t = 0; t <= amount; t++) {
+            if (t % param1[0] == 0)
+                dp[0][t] = t / param1[0];
+            else
+                dp[0][t] = (int) 1e9;
+        }
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j <= amount; j++) {
+                int ntake = 0 + dp[i - 1][j];
+                int take = (int) 1e9;
+                if (param1[i] <= j) {
+                    take = 1 + dp[i][j - param1[i]];
+                }
+                dp[i][j] = Math.min(take, ntake);
+            }
+        }
+        int ans = dp[n - 1][amount];
+        if (ans >= (int) 1e9) {
+            return -1;
+        }
+        return ans;
+    }
+}

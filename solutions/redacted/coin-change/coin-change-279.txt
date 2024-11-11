@@ -1,0 +1,52 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int[][] dp = new int[param1.length][amount + 1];
+        // for(int[] x : dp) Arrays.fill(x,-1);
+        //BASE CASES
+        for (int i = 0; i < param1.length; i++) dp[i][0] = 0;
+        for (int i = 1; i <= amount; i++) {
+            if (i % param1[0] == 0) {
+                dp[0][i] = (i / param1[0]);
+            } else {
+                dp[0][i] = Integer.MAX_VALUE;
+            }
+        }
+        //tabulation
+        for (int i = 1; i < param1.length; i++) {
+            for (int j = 1; j <= amount; j++) {
+                dp[i][j] = Integer.MAX_VALUE;
+                //take
+                if (param1[i] <= j) {
+                    if (dp[i][j - param1[i]] != Integer.MAX_VALUE) {
+                        dp[i][j] = dp[i][j - param1[i]] + 1;
+                    } else {
+                        dp[i][j] = Integer.MAX_VALUE;
+                    }
+                }
+                //not take
+                dp[i][j] = Math.min(dp[i][j], dp[i - 1][j]);
+            }
+        }
+        // int ans = solve(coins,coins.length - 1,amount,dp);
+        return (dp[param1.length - 1][amount] == Integer.MAX_VALUE) ? -1 : dp[param1.length - 1][amount];
+    }
+
+    //memoization
+    private int solve(int[] param1, int i, int amount, int[][] dp) {
+        if (amount == 0)
+            return 0;
+        if (i == 0)
+            return (amount % param1[i] == 0) ? amount / param1[i] : Integer.MAX_VALUE;
+        if (dp[i][amount] != -1)
+            return dp[i][amount];
+        int t = Integer.MAX_VALUE;
+        if (param1[i] <= amount) {
+            t = solve(param1, i, amount - param1[i], dp);
+            if (t != Integer.MAX_VALUE)
+                t += 1;
+        }
+        int nt = solve(param1, i - 1, amount, dp);
+        return dp[i][amount] = Math.min(nt, t);
+    }
+}

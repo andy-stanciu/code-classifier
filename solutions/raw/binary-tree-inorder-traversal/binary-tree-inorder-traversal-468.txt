@@ -1,0 +1,33 @@
+class Solution {
+
+    public List<Integer> inorderTraversal(TreeNode root) {
+        TreeNode currNode = root;
+        List<Integer> inorder = new ArrayList<>();
+        while (currNode != null) {
+            // can\'t go left, therefore currNode is root of the subtree itself, therefore consider it
+            if (currNode.left == null) {
+                inorder.add(currNode.val);
+                currNode = currNode.right;
+            } else {
+                // go to rightmost node of the left subtree
+                TreeNode rightMost = currNode.left;
+                while (rightMost.right != null && rightMost.right != currNode) {
+                    rightMost = rightMost.right;
+                }
+                // if the left subtree is not yet visited
+                if (rightMost.right == null) {
+                    // create thread to return to inorder successor
+                    rightMost.right = currNode;
+                    currNode = currNode.left;
+                } else // the rightMost node of leftSubtree is already pointing to currNode, that means
+                // leftSubTree is already visited, therefore move right now
+                {
+                    rightMost.right = null;
+                    inorder.add(currNode.val);
+                    currNode = currNode.right;
+                }
+            }
+        }
+        return inorder;
+    }
+}

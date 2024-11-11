@@ -1,0 +1,45 @@
+class Solution {
+
+    static class Pair implements Comparable<Pair> {
+
+        ListNode node;
+
+        int li;
+
+        Pair(ListNode node, int li) {
+            this.node = node;
+            this.li = li;
+        }
+
+        public int compareTo(Pair o) {
+            return this.node.val - o.node.val;
+        }
+    }
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null)
+            return null;
+        ListNode head = null;
+        ListNode curr = null;
+        PriorityQueue<Pair> pq = new PriorityQueue<>();
+        //insert all first from list arr;
+        for (int i = 0; i < lists.length; i++) {
+            if (lists[i] != null)
+                pq.add(new Pair(lists[i], i));
+        }
+        while (pq.size() > 0) {
+            Pair rm = pq.remove();
+            ListNode temp = new ListNode(rm.node.val);
+            if (head == null) {
+                head = temp;
+                curr = temp;
+            } else {
+                curr.next = temp;
+                curr = temp;
+            }
+            if (rm.node.next != null)
+                pq.add(new Pair(rm.node.next, rm.li));
+        }
+        return head;
+    }
+}

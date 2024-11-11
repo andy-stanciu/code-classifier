@@ -1,0 +1,42 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        // amounts array where the idex represents the face value of amount and value
+        // represent minimum coins needed to make it
+        int[] amountsList = new int[amount + 1];
+        // Initialize the dp table, keeping at some max value which we surely will reduce to the optimal minimum
+        // for every sub-problem
+        Arrays.fill(amountsList, amount + 1);
+        // I know one base case. If I have to make AMT:0 i need COINS:0
+        amountsList[0] = 0;
+        // I will try to solve the smaller sub-problems
+        // Asking at every point, that to make AMT:X how many coins will be needed? Up untill i know for AMT:amount
+        for (int amountToMake = 1; amountToMake <= amount; amountToMake++) {
+            // Let\'s try all the coins, what is the number i can hit if I use 1st coin? 2nd coin? 3rd coin?
+            for (int var1 : param1) {
+                // Current coin can contribute only so much, there will be some leftover amount for which
+                // we need to know how many coins will be needed. I will let my old pre-compuations return me that.
+                int lefOverAmount = amountToMake - var1;
+                // If the leftOver number is a non-negative guy only then I can consider further computation.
+                // If it is a 0 then obviously the result is going be to 1 + 0 = 1
+                // If it is not a 0 then figure out what\'s the minimum effort to build that amound
+                // If say it is a 2, then I need to check in my amountsList array that hey for making 2 how much did you
+                // say is the least number of coins that we need. lets call it "C"
+                // Now we either take that C, add 1 to it and that\'s by answer. +1 because this currentCoinValue is to be included.
+                // or we do not take C, maybe there was some other coin in the row before that was able to bring
+                // lefOverAmount to a 0, and hence we needed only 1 i.e. currentCoinValue
+                if (lefOverAmount >= 0) {
+                    amountsList[amountToMake] = Math.min(amountsList[amountToMake], 1 + amountsList[lefOverAmount]);
+                }
+            }
+        }
+        /*
+         * dp[amount] has our answer. If we do not have an answer then dp[amount]
+         * will be amount + 1 and hence dp[amount] > amount will be true. We then
+         * return -1.
+         * 
+         * Otherwise, dp[amount] holds the answer
+         */
+        return amountsList[amount] > amount ? -1 : amountsList[amount];
+    }
+}

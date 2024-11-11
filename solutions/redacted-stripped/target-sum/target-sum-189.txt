@@ -1,0 +1,42 @@
+class Solution {
+
+    int validCombinations = 0;
+
+    int[] var1;
+
+    public int method1(int[] nums, int param1) {
+        HashMap<Integer, Integer> var2 = new HashMap<Integer, Integer>();
+        var2.put(0, 1);
+        var1 = new int[nums.length];
+        int var3 = 0;
+        for (int i = nums.length - 1; i >= 0; i--) {
+            var3 += nums[i];
+            var1[i] = var3;
+        }
+        findAllValidCombinations(nums, param1, 0, var2);
+        return validCombinations;
+    }
+
+    void findAllValidCombinations(int[] nums, int param1, int index, HashMap<Integer, Integer> var2) {
+        Iterator<Map.Entry<Integer, Integer>> iter = var2.entrySet().iterator();
+        HashMap<Integer, Integer> newMap = new HashMap<Integer, Integer>();
+        while (iter.hasNext()) {
+            Map.Entry<Integer, Integer> pair = (Map.Entry) iter.next();
+            if (((pair.getKey() + var1[index]) >= param1) && ((pair.getKey() - var1[index]) <= param1)) {
+                int key1 = pair.getKey() + nums[index];
+                int key2 = pair.getKey() - nums[index];
+                newMap.put(key1, newMap.getOrDefault(key1, 0) + pair.getValue());
+                newMap.put(key2, newMap.getOrDefault(key2, 0) + pair.getValue());
+            }
+        }
+        if (index == nums.length - 1) {
+            for (int key : newMap.keySet()) {
+                if (key == param1) {
+                    validCombinations += newMap.get(key);
+                }
+            }
+        } else {
+            findAllValidCombinations(nums, param1, index + 1, newMap);
+        }
+    }
+}

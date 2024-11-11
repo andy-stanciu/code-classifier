@@ -1,0 +1,26 @@
+//TC and SC  - O(len(coins) * amount)
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        // +1 due to index shifting
+        int[][] cc = new int[coins.length + 1][amount + 1];
+        //Base case prep-up
+        for (int i = 0; i < coins.length + 1; i++) {
+            for (int amt = 0; amt < amount + 1; amt++) {
+                if (i == 0 || amt == 0)
+                    cc[i][amt] = (amt == 0 ? 0 : amount + 1);
+            }
+        }
+        for (int i = 1; i < coins.length + 1; i++) {
+            for (int amt = 1; amt < amount + 1; amt++) {
+                if (amt >= coins[i - 1]) {
+                    cc[i][amt] = Math.min(1 + cc[i][amt - coins[i - 1]], cc[i - 1][amt]);
+                } else {
+                    cc[i][amt] = cc[i - 1][amt];
+                }
+            }
+        }
+        int ans = cc[coins.length][amount];
+        return ans >= amount + 1 ? -1 : ans;
+    }
+}

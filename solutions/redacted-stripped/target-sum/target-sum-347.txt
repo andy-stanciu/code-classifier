@@ -1,0 +1,36 @@
+class Solution {
+
+    public int method1(int[] nums, int n, int param1) {
+        int[][] t = new int[n + 1][param1 + 1];
+        for (int i = 0; i < n + 1; i++) {
+            for (int j = 0; j < param1 + 1; j++) {
+                if (i == 0) {
+                    t[i][j] = 0;
+                }
+                if (j == 0) {
+                    t[i][j] = 1;
+                }
+            }
+        }
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 0; j < param1 + 1; j++) {
+                if (nums[i - 1] <= j) {
+                    t[i][j] = t[i - 1][j - nums[i - 1]] + t[i - 1][j];
+                } else {
+                    t[i][j] = t[i - 1][j];
+                }
+            }
+        }
+        return t[n][param1];
+    }
+
+    public int method2(int[] nums, int param2) {
+        int n = nums.length;
+        int param1 = Arrays.stream(nums).reduce((a, b) -> a + b).orElse(-1);
+        if (Math.abs(param2) > param1 || (param1 + param2) % 2 != 0) {
+            return 0;
+        }
+        int s = (param1 + param2) / 2;
+        return method1(nums, n, s);
+    }
+}

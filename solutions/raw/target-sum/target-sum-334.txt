@@ -1,0 +1,42 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        //Sum of array.
+        int range = findSum(nums);
+        if (range < Math.abs(target) || (range + target) % 2 != 0)
+            return 0;
+        // 0 - 1 Knapsack Problem
+        int newTarget = (range + target) / 2;
+        if (newTarget < 0 && newTarget > range)
+            return 0;
+        int n = nums.length;
+        int[][] dp = new int[n + 1][newTarget + 1];
+        for (int i = 0; i <= newTarget; i++) {
+            dp[0][i] = 0;
+        }
+        for (int i = 0; i <= n; i++) {
+            dp[i][0] = 1;
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= newTarget; j++) {
+                int pick = 0, notPick = 0;
+                notPick = dp[i - 1][j];
+                if (nums[i - 1] <= j) {
+                    pick = dp[i - 1][j - nums[i - 1]];
+                    dp[i][j] = pick + notPick;
+                } else {
+                    dp[i][j] = notPick;
+                }
+            }
+        }
+        return dp[n][newTarget];
+    }
+
+    int findSum(int[] nums) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        return sum;
+    }
+}

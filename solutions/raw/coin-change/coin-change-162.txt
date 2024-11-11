@@ -1,0 +1,64 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int l = coins.length;
+        Arrays.sort(coins);
+        int[] a = new int[amount + 100000];
+        if (amount == 0)
+            return 0;
+        System.out.println(a.length);
+        int c = 0;
+        int min = Integer.MAX_VALUE;
+        int u = 0;
+        for (int i : coins) {
+            if (i > amount)
+                continue;
+            if (a[i] != 1)
+                u++;
+            if (i < 1000014)
+                a[i] = 1;
+            if (i < min)
+                min = i;
+            // if(i>l) l=i;
+        }
+        System.out.println(u);
+        if (c == l)
+            return -1;
+        int rl = amount + min;
+        int co = 0;
+        for (int i = min; i < amount + 1; i++) {
+            if (a[i] == 1) {
+                co++;
+                continue;
+            }
+            int n = 0;
+            int sum = 0;
+            for (int j : coins) {
+                // System.out.println(n+" "+a[j]);
+                n = i - j;
+                if (n < 0)
+                    continue;
+                if (a[n] == 0 || a[j] == 0)
+                    continue;
+                else // else if(a[n]==1&&a[j]==1){
+                //      sum=2;
+                //      break;
+                // }
+                {
+                    n = a[n] + a[j];
+                }
+                // System.out.println(n);
+                if (sum == 0) {
+                    sum = n;
+                    // break;
+                } else {
+                    if (sum > n)
+                        sum = n;
+                }
+            }
+            a[i] = sum;
+            // System.out.println(Arrays.toString(a));
+        }
+        return a[amount] == 0 ? -1 : a[amount];
+    }
+}

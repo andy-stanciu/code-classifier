@@ -1,0 +1,45 @@
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        if (param1 == null || param1.length == 0) {
+            return null;
+        }
+        return method2(param1, 0, param1.length - 1);
+    }
+
+    public ListNode method2(ListNode[] ll, int start, int end) {
+        if (start == end)
+            return ll[start];
+        int mid = start + (end - start) / 2;
+        ListNode left = method2(ll, start, mid);
+        ListNode right = method2(ll, mid + 1, end);
+        return method3(left, right);
+    }
+
+    public ListNode method3(ListNode left, ListNode right) {
+        ListNode helper = new ListNode(-1);
+        ListNode temp = helper;
+        while (left != null && right != null) {
+            if (left.val <= right.val) {
+                temp.next = left;
+                left = left.next;
+                temp = temp.next;
+            } else {
+                temp.next = right;
+                right = right.next;
+                temp = temp.next;
+            }
+        }
+        while (left != null) {
+            temp.next = left;
+            left = left.next;
+            temp = temp.next;
+        }
+        while (right != null) {
+            temp.next = right;
+            right = right.next;
+            temp = temp.next;
+        }
+        return helper.next;
+    }
+}

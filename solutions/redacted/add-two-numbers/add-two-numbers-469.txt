@@ -1,0 +1,88 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    // This method adds two linked lists representing numbers and returns the sum as a linked list.
+    public static ListNode method1(ListNode l1, ListNode l2) {
+        // Start pointer for the result linked list
+        ListNode start = l1;
+        // Pointer to keep track of the last processed node
+        ListNode prev = l1;
+        // Variable to store the carry value
+        int borrow = 0;
+        // Traverse both lists and sum their values along with any carry.
+        while (l2 != null) {
+            // Calculate the sum of the corresponding nodes
+            int res = l2.val + l1.val + borrow;
+            // Reset carry
+            borrow = 0;
+            // If the sum is greater than 9, calculate the new value and carry.
+            if (res > 9) {
+                // Update the current node\'s value with the remainder
+                l1.val = res % 10;
+                // Update the carry with the quotient
+                borrow = res / 10;
+            } else {
+                // If no carry, just update the node\'s value
+                l1.val = res;
+            }
+            // Update the previous node pointer
+            prev = l1;
+            // Move to the next node in l1
+            l1 = l1.next;
+            // Move to the next node in l2
+            l2 = l2.next;
+        }
+        // If l1 has remaining nodes, continue adding the carry to these nodes.
+        while (l1 != null) {
+            // Sum the node\'s value with carry
+            int sum = l1.val + borrow;
+            // Update the node\'s value with the remainder
+            l1.val = sum % 10;
+            // Update carry
+            borrow = sum / 10;
+            // Update the previous node pointer
+            prev = l1;
+            // Move to the next node in l1
+            l1 = l1.next;
+        }
+        // If there\'s still a carry left after processing all nodes, create a new node for it.
+        if (borrow != 0) {
+            prev.next = new ListNode(borrow);
+        }
+        // Return the head of the resulting linked list
+        return start;
+    }
+
+    // This method determines which linked list is longer and calls the add method accordingly.
+    public ListNode method2(ListNode l1, ListNode l2) {
+        // Variables to store the lengths of the linked lists
+        int length1 = 0, length2 = 0;
+        // Calculate the length of the first linked list (l1)
+        ListNode temp1 = l1;
+        while (temp1 != null) {
+            length1++;
+            temp1 = temp1.next;
+        }
+        // Calculate the length of the second linked list (l2)
+        ListNode temp2 = l2;
+        while (temp2 != null) {
+            length2++;
+            temp2 = temp2.next;
+        }
+        // If the second list is longer, switch the lists for addition to ensure l1 is always the longer or equal length list.
+        if (length1 < length2) {
+            return method1(l2, l1);
+        }
+        // Otherwise, add the lists as they are
+        return method1(l1, l2);
+    }
+}

@@ -1,0 +1,35 @@
+class Solution {
+
+    public ListNode mergeKLists(ListNode[] arr) {
+        // Base condition
+        if (arr.length == 0) {
+            return null;
+        }
+        // Min heap according to values ...... not nodes!!!
+        PriorityQueue<ListNode> pq = new PriorityQueue<>((n1, n2) -> n1.val - n2.val);
+        //move first nodes to pq
+        for (ListNode firstNode : arr) {
+            if (firstNode != null) {
+                // [1,1,2]
+                pq.add(firstNode);
+            }
+        }
+        // Make dummy node for returing the head and prev node for connection
+        ListNode dummy = new ListNode(0);
+        ListNode prev = dummy;
+        // Loop till pq becomes empty
+        while (!pq.isEmpty()) {
+            // 1 run. [1,1,2] // 2 run. [4,3,6] // 3 run. [5,4]
+            ListNode node = pq.remove();
+            prev.next = node;
+            prev = node;
+            if (node.next != null) {
+                pq.add(node.next);
+                // 1.next = pq.add(4) | 1.next = pq.add(3) | 2.next = pq.add(6)
+                // 4.next = pq.add(5) | 3.next = pq.add(4) | 5.next = null | 4.next = null |  6.next = null
+            }
+        }
+        // return actual head
+        return dummy.next;
+    }
+}

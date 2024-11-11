@@ -1,0 +1,25 @@
+class Solution {
+
+    public int method1(int[] param1, int Amount) {
+        int n = param1.length;
+        int[][] dp = new int[n][Amount + 1];
+        for (int amount = 0; amount <= Amount; amount++) {
+            if (amount % param1[0] == 0)
+                dp[0][amount] = amount / param1[0];
+            else
+                dp[0][amount] = (int) Math.pow(10, 9);
+        }
+        for (int i = 1; i < n; i++) {
+            for (int amount = 0; amount <= Amount; amount++) {
+                int take = Integer.MAX_VALUE;
+                if (param1[i] <= amount)
+                    take = 1 + dp[i][amount - param1[i]];
+                int not_take = dp[i - 1][amount];
+                dp[i][amount] = Math.min(take, not_take);
+            }
+        }
+        if (dp[n - 1][Amount] >= Math.pow(10, 9))
+            return -1;
+        return dp[n - 1][Amount];
+    }
+}

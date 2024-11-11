@@ -1,0 +1,57 @@
+class Solution {
+
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> inorder = new ArrayList<Integer>();
+        TreeNode cur = root;
+        //we will use morris traversal having time complexity as o(n) and space as o(1)
+        // we will use iteration now its clear that inorder has left root right seq
+        //the main issue is after going to left how to come again to root. how to keep
+        //track of it, if we use recursion then recursion space will be used, so we use
+        //concept of treaded tree(just a term), in layman language it means before
+        //going to left we will ensure that we make a path to return to root, the
+        //question is how. so the ans is : from root we go to left child(if exists)
+        //and then to extreme right till the end of tree. Because root\'s left child
+        //is also a subtree and it will be traversed in inorder too so it means last
+        //node accessed will be right and after this only we need to go back to our
+        //root , so after we go to root\'s left subtree extreme right child we make
+        //a path to root,by simply changing its right pointer to root,so that when
+        //we get there we can easily go to root and then from root we can go to right
+        //child of root.
+        while (cur != null) {
+            if (cur.left == null) {
+                //it means we don\'t have left child
+                //after left inorder has curr(root),so add it
+                inorder.add(cur.val);
+                //go to right (as in inorder we do Left Root Right)
+                cur = cur.right;
+            } else {
+                //it means we do have left child, so we need to first make a path
+                //then only we can come back to root after finishing this subtree\'s
+                //inorder traversal
+                //mark the left child
+                TreeNode prev = cur.left;
+                //go to right till we get extreme right node
+                while (prev.right != null && prev.right != cur) {
+                    prev = prev.right;
+                }
+                //reaching here means that either prev.right == null or prev.right == cur
+                // it means we just came this deep to make a path,so make it and then
+                //move cur from root to left child as now we are safe to go into depth
+                //as we have route to again come back to root
+                if (prev.right == null) {
+                    prev.right = cur;
+                    cur = cur.left;
+                } else //it means we have already finished this tree (then only
+                //it is possible that path is already made) ,, so we just need
+                //to add root node to our ans and move to right of our root,also
+                //don\'t forget to destroy that path as it is no longer needed
+                {
+                    prev.right = null;
+                    inorder.add(cur.val);
+                    cur = cur.right;
+                }
+            }
+        }
+        return inorder;
+    }
+}

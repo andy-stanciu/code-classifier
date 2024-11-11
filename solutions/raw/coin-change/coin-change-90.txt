@@ -1,0 +1,33 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        // get a max value
+        int maxValue = Integer.MAX_VALUE - 1;
+        int n = coins.length;
+        // initialize DP array
+        int[][] t = new int[n + 1][amount + 1];
+        // INITIALIZATION
+        //[First row] - If there are no coins and we need sum of 0, 1, 2, ... amount, we\'ll need infinite coins i.e Max value of integer.
+        for (int i = 0; i < amount + 1; i++) t[0][i] = maxValue;
+        //[First column] - If we need sum of 0 with any coin, we\'ll need 0 instance of it.
+        for (int i = 1; i < n + 1; i++) t[i][0] = 0;
+        for (int j = 1; j < amount + 1; j++) {
+            // [Second row] - If we\'ve only 1 coin and we need any sum, we gotta evaluate if it makes to that sum or not, else we\'ll again need Int max to suffice.
+            if (j % coins[0] == 0)
+                t[1][j] = j / coins[0];
+            else
+                t[1][j] = maxValue;
+        }
+        // For rest of the matrix evaluation - take 1+ (coin) if we\'re including or exlcude it as like other top down DP.
+        for (int i = 2; i < n + 1; i++) {
+            for (int j = 1; j < amount + 1; j++) {
+                if (coins[i - 1] <= j) {
+                    t[i][j] = Math.min(1 + t[i][j - coins[i - 1]], t[i - 1][j]);
+                } else {
+                    t[i][j] = t[i - 1][j];
+                }
+            }
+        }
+        return t[n][amount] != maxValue ? t[n][amount] : -1;
+    }
+}

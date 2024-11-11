@@ -1,0 +1,21 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int t) {
+        Map<Integer, Map<Integer, Integer>> dp = new HashMap<>(1000000);
+        return solve(nums, t, 0, 0, dp);
+    }
+
+    public int solve(int[] nums, int t, int idx, int sum, Map<Integer, Map<Integer, Integer>> dp) {
+        int n = nums.length;
+        if (idx == nums.length)
+            return sum == t ? 1 : 0;
+        if (dp.get(idx) != null && dp.get(idx).get(sum) != null)
+            return dp.get(idx).get(sum);
+        int res = solve(nums, t, idx + 1, sum - nums[idx], dp) + solve(nums, t, idx + 1, sum + nums[idx], dp);
+        if (dp.get(idx) == null) {
+            dp.put(idx, new HashMap<>());
+        }
+        dp.get(idx).put(sum, res);
+        return res;
+    }
+}

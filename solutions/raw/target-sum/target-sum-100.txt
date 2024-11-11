@@ -1,0 +1,39 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        //s1+s2=totalSum  s1-s2=target
+        //s1=totalSum+target/2
+        int sum = Arrays.stream(nums).sum();
+        // Check if (sum + d) is even, otherwise return 0
+        if ((sum + target) % 2 != 0 || sum < target || sum + target < 0) {
+            return 0;
+        }
+        int targetSum = (sum + target) / 2;
+        // Initialize memoization table
+        int n = nums.length;
+        Integer[][] dp = new Integer[n + 1][targetSum + 1];
+        return countSubsets(nums, n, targetSum, dp);
+    }
+
+    private int countSubsets(int[] arr, int n, int sum, Integer[][] dp) {
+        // Base cases
+        if (sum == 0 && n == 0) {
+            // There\'s one way to get sum 0 (empty subset)
+            return 1;
+        }
+        if (n == 0 && sum > 0) {
+            // No way to get a positive sum with zero elements
+            return 0;
+        }
+        // Check memoization table
+        if (dp[n][sum] != null) {
+            return dp[n][sum];
+        }
+        // Recursive cases
+        if (arr[n - 1] <= sum) {
+            return dp[n][sum] = countSubsets(arr, n - 1, sum - arr[n - 1], dp) + countSubsets(arr, n - 1, sum, dp);
+        } else {
+            return dp[n][sum] = countSubsets(arr, n - 1, sum, dp);
+        }
+    }
+}

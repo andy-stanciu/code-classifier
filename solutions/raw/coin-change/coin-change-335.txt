@@ -1,0 +1,22 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        Arrays.sort(coins);
+        int[] amToCoins = new int[amount + 1];
+        amToCoins[0] = 0;
+        for (int am = 1; am <= amount; am++) {
+            amToCoins[am] = Integer.MAX_VALUE;
+            for (int i = coins.length - 1; i >= 0; i--) {
+                if (am - coins[i] < 0)
+                    continue;
+                int restCoins = amToCoins[am - coins[i]];
+                if (restCoins != -1)
+                    amToCoins[am] = Math.min(restCoins + 1, amToCoins[am]);
+            }
+            if (amToCoins[am] == Integer.MAX_VALUE) {
+                amToCoins[am] = -1;
+            }
+        }
+        return amToCoins[amount];
+    }
+}

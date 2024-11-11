@@ -1,0 +1,28 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        // The maximum value we need is the total amount.
+        int[] dp = new int[amount + 1];
+        // If the amount is 0, we don\'t need any coins.
+        dp[0] = 0;
+        for (int i = 1; i <= amount; i++) {
+            int min = Integer.MAX_VALUE;
+            for (int x : param1) {
+                if (i - x >= 0)
+                    // The minimum coins required for (i-x) amount
+                    min = Math.min(min, dp[i - x]);
+            }
+            if (min != Integer.MAX_VALUE)
+                // One more coin for this value.
+                dp[i] = 1 + min;
+            else
+                // If we don\'t find any possible way
+                dp[i] = min;
+        }
+        if (dp[amount] != Integer.MAX_VALUE)
+            return dp[amount];
+        // If we don\'t find any possible way
+        return -1;
+    }
+}

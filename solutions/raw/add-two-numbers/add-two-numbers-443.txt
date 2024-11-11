@@ -1,0 +1,78 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode x = new ListNode(0);
+        ListNode ans = x;
+        BigInteger num1 = new BigInteger("0");
+        BigInteger num2 = new BigInteger("0");
+        BigInteger len1 = new BigInteger("0");
+        BigInteger count1 = new BigInteger("0");
+        BigInteger len2 = new BigInteger("0");
+        BigInteger count2 = new BigInteger("0");
+        while (l1 != null) {
+            int val = l1.val;
+            num1 = num1.multiply(BigInteger.valueOf(10));
+            num1 = num1.add(BigInteger.valueOf(val));
+            l1 = l1.next;
+            len1 = len1.add(BigInteger.valueOf(1));
+        }
+        BigInteger n1 = new BigInteger("0");
+        while (num1.compareTo(BigInteger.ZERO) > 0) {
+            BigInteger d = num1.mod(BigInteger.valueOf(10));
+            num1 = num1.divide(BigInteger.valueOf(10));
+            n1 = n1.multiply(BigInteger.valueOf(10));
+            n1 = n1.add(d);
+            count1 = count1.add(BigInteger.valueOf(1));
+        }
+        if (len1.compareTo(count1) > 0) {
+            BigInteger diff = len1.subtract(count1);
+            BigInteger base = new BigInteger("10");
+            int exponent = diff.intValue();
+            n1 = n1.multiply(base.pow(exponent));
+        }
+        while (l2 != null) {
+            int val1 = l2.val;
+            num2 = num2.multiply(BigInteger.valueOf(10));
+            num2 = num2.add(BigInteger.valueOf(val1));
+            l2 = l2.next;
+            len2 = len2.add(BigInteger.valueOf(1));
+        }
+        BigInteger n2 = new BigInteger("0");
+        while (num2.compareTo(BigInteger.ZERO) > 0) {
+            BigInteger d = num2.mod(BigInteger.valueOf(10));
+            num2 = num2.divide(BigInteger.valueOf(10));
+            n2 = n2.multiply(BigInteger.valueOf(10));
+            n2 = n2.add(d);
+            count2 = count2.add(BigInteger.valueOf(1));
+        }
+        if (len2.compareTo(count2) > 0) {
+            BigInteger diff1 = len2.subtract(count2);
+            BigInteger base1 = new BigInteger("10");
+            int exponent1 = diff1.intValue();
+            n2 = n2.multiply(base1.pow(exponent1));
+        }
+        BigInteger add = n1.add(n2);
+        if (add.equals(BigInteger.ZERO))
+            return x;
+        else {
+            while (add.compareTo(BigInteger.ZERO) > 0) {
+                BigInteger d = add.mod(BigInteger.valueOf(10));
+                add = add.divide(BigInteger.valueOf(10));
+                ListNode temp = new ListNode(d.intValue());
+                x.next = temp;
+                x = temp;
+            }
+        }
+        return ans.next;
+    }
+}

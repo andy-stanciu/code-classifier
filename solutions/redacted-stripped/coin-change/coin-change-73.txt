@@ -1,0 +1,27 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        int[] dp = new int[amount + 1];
+        int[] temp = new int[amount + 1];
+        for (int target = 0; target <= amount; ++target) {
+            if (target % param1[0] == 0)
+                dp[target] = target / param1[0];
+            else
+                dp[target] = (int) 1e9;
+        }
+        for (int index = 1; index < n; ++index) {
+            for (int target = 1; target <= amount; ++target) {
+                int pick = (int) 1e9, not_pick = (int) 1e9;
+                if (param1[index] <= target)
+                    pick = 1 + temp[target - param1[index]];
+                not_pick = dp[target];
+                temp[target] = Math.min(pick, not_pick);
+            }
+            for (int j = 1; j <= amount; ++j) dp[j] = temp[j];
+        }
+        if (dp[amount] == (int) 1e9)
+            return -1;
+        return dp[amount];
+    }
+}

@@ -1,0 +1,35 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        //IMPORTANT: ALL NUMBERS IN NUMS ARE NON NON-NEGATIVE
+        //two subsets s1 + s2 = sum
+        //s1 - s2 = target
+        //2 * s1 = (sum + target)
+        //s1 = (sum + target) / 2
+        //find the number of subsets with targetSum == (sum + target) / 2
+        //base case: nums can not be divided into targetSum
+        int n = nums.length;
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        if ((sum + target) % 2 != 0)
+            return 0;
+        //DID NOT CONSIDER THIS
+        if (Math.abs(target) > sum)
+            return 0;
+        int targetSum = (sum + target) / 2;
+        //1D Array solution
+        //dp[i] number of subsets with sum == i
+        int[] dp = new int[targetSum + 1];
+        dp[0] = 1;
+        for (int i = 0; i < n; i++) {
+            for (int j = targetSum; j >= 0; j--) {
+                if (nums[i] <= j) {
+                    dp[j] += dp[j - nums[i]];
+                }
+            }
+        }
+        return dp[targetSum];
+    }
+}

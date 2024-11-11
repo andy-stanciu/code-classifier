@@ -1,0 +1,25 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int tar = 0; tar <= amount; tar++) {
+            if (tar % param1[0] == 0)
+                dp[0][tar] = tar / param1[0];
+            else
+                dp[0][tar] = 100000;
+        }
+        for (int idx = 1; idx < n; idx++) {
+            for (int tar = 0; tar <= amount; tar++) {
+                int nottake = 0 + dp[idx - 1][tar];
+                int take = 100000;
+                if (param1[idx] <= tar)
+                    take = 1 + dp[idx][tar - param1[idx]];
+                dp[idx][tar] = Math.min(take, nottake);
+            }
+        }
+        if (dp[n - 1][amount] >= 100000)
+            return -1;
+        return dp[n - 1][amount];
+    }
+}

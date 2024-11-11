@@ -1,0 +1,45 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        Integer[] coinsWrapper;
+        coinsWrapper = Arrays.stream(coins).boxed().toArray(Integer[]::new);
+        Arrays.sort(coinsWrapper, Collections.reverseOrder());
+        int[][] dp = new int[coins.length + 1][amount + 1];
+        for (int i = 0; i <= coins.length; i++) Arrays.fill(dp[i], -1);
+        int result = operations(0, 0, coinsWrapper, amount, dp);
+        return result != Integer.MAX_VALUE ? result : -1;
+    }
+
+    public static int operations(int index, int sumCoins, Integer[] coins, int amount, int[][] dp) {
+        // if(sumCoins>amount)
+        // return Integer.MAX_VALUE;
+        // //base condition
+        // if(sumCoins==amount)
+        // return totalCoins;
+        //  if(dp[index][sumCoins]!=-1)
+        //  return dp[index][sumCoins];
+        // int result =Integer.MAX_VALUE;
+        // for(int i=index;i<coins.length;i++)
+        // {
+        //     result=Math.min(result,operations(i,sumCoins+coins[i],totalCoins+1,coins,amount,dp));
+        //     result=Math.min(result,operations(i+1,sumCoins,totalCoins,coins,amount,dp));
+        // }
+        // return dp[index][sumCoins]=result;
+        if (sumCoins == amount)
+            return 0;
+        if (index >= coins.length)
+            return Integer.MAX_VALUE;
+        if (dp[index][sumCoins] != -1)
+            return dp[index][sumCoins];
+        int take = Integer.MAX_VALUE;
+        if (sumCoins + coins[index] <= amount) {
+            int res = operations(index, sumCoins + coins[index], coins, amount, dp);
+            if (res != Integer.MAX_VALUE)
+                take = 1 + res;
+        }
+        // **
+        int nottake = Integer.MAX_VALUE;
+        nottake = operations(index + 1, sumCoins, coins, amount, dp);
+        return dp[index][sumCoins] = Math.min(take, nottake);
+    }
+}

@@ -1,0 +1,51 @@
+class Solution {
+
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> ans = new ArrayList<>();
+        //taking dummy node and assigning it\'s left subtree to the original tree
+        TreeNode dummy = new TreeNode(-1);
+        dummy.left = root;
+        TreeNode curr = dummy;
+        while (curr != null) {
+            if (curr.left == null) {
+                // If there is no left subtree then we are moving to right subtree
+                curr = curr.right;
+            } else {
+                TreeNode pred = curr.left;
+                //finding predeccsor of curr node
+                while (pred.right != null && pred.right != curr) {
+                    pred = pred.right;
+                }
+                // if predeccsor\'s right was not pointing to curr then assigning it\'s right to curr and moving left
+                if (pred.right == null) {
+                    pred.right = curr;
+                    curr = curr.left;
+                } else {
+                    TreeNode prev = curr;
+                    TreeNode middle = prev.left;
+                    // reversing the nodes between prev.left to pred (both incl)
+                    while (middle != curr) {
+                        TreeNode last = middle.right;
+                        middle.right = prev;
+                        prev = middle;
+                        middle = last;
+                    }
+                    // restoring the nodes between prev.left to pred (both incl) and adding them one by one to result list
+                    middle = pred;
+                    prev = curr;
+                    while (middle != curr) {
+                        ans.add(middle.val);
+                        TreeNode last = middle.right;
+                        middle.right = prev;
+                        prev = middle;
+                        middle = last;
+                    }
+                    pred.right = null;
+                    curr = curr.right;
+                }
+            }
+        }
+        dummy.left = null;
+        return ans;
+    }
+}

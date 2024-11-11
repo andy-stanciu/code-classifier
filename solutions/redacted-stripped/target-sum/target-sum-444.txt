@@ -1,0 +1,37 @@
+class Solution {
+
+    public int method1(int[] nums, int S) {
+        int var1 = 0;
+        for (int num : nums) {
+            var1 += num;
+        }
+        int diff = S;
+        if (diff > var1 || (diff + var1) % 2 != 0) {
+            return 0;
+        }
+        int var2 = (diff + var1) / 2;
+        int[][] memo = new int[nums.length + 1][var2 + 1];
+        for (int[] mm : memo) {
+            Arrays.fill(mm, -1);
+        }
+        return method2(nums, var2, nums.length, memo);
+    }
+
+    public int method2(int[] nums, int var1, int n, int[][] memo) {
+        if (var1 == 0 && n == 0) {
+            return 1;
+        }
+        if (n == 0) {
+            return 0;
+        }
+        if (memo[n][var1] != -1) {
+            return memo[n][var1];
+        }
+        if (nums[n - 1] <= var1) {
+            memo[n][var1] = method2(nums, var1 - nums[n - 1], n - 1, memo) + method2(nums, var1, n - 1, memo);
+        } else {
+            memo[n][var1] = method2(nums, var1, n - 1, memo);
+        }
+        return memo[n][var1];
+    }
+}

@@ -1,0 +1,27 @@
+class Solution {
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        // Define a comparator for the priority queue
+        PriorityQueue<ListNode> minHeap = new PriorityQueue<>((a, b) -> a.val - b.val);
+        // Add the first node of each list to the heap
+        for (ListNode node : lists) {
+            if (node != null) {
+                minHeap.offer(node);
+            }
+        }
+        ListNode dummy = new ListNode(0);
+        ListNode previous = dummy;
+        while (!minHeap.isEmpty()) {
+            // Extract the node with the smallest value
+            ListNode current = minHeap.poll();
+            // Link the extracted node to the merged list
+            previous.next = current;
+            previous = previous.next;
+            // If the extracted node has a next node, add it to the heap
+            if (current.next != null) {
+                minHeap.offer(current.next);
+            }
+        }
+        return dummy.next;
+    }
+}

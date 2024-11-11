@@ -1,0 +1,103 @@
+class Solution {
+
+    int[] dp = new int[1005];
+
+    public int method1(int[] param1, int amount) {
+        if (amount == 0)
+            return 0;
+        if (dp[amount] != -1)
+            return dp[amount];
+        int cc = Integer.MAX_VALUE;
+        int var1 = 0;
+        for (int i = 0; i < param1.length; i++) {
+            if (amount - param1[i] >= 0)
+                cc = Math.min(cc, method1(param1, amount - param1[i]) + 1);
+        }
+        return dp[amount] = cc;
+    }
+}
+
+public class Solution {
+
+    public int method1(int[] param1, int amount) {
+        return method2(param1, amount);
+    }
+
+    private int method2(int[] param1, int amount) {
+        if (amount < 0)
+            return -1;
+        if (amount == 0)
+            return 0;
+        int var2 = Integer.MAX_VALUE;
+        for (int i = 0; i < param1.length; i++) {
+            int var3 = method2(param1, amount - param1[i]);
+            if (var3 >= 0 && var3 < var2) {
+                var2 = var3 + 1;
+            }
+        }
+        return (var2 == Integer.MAX_VALUE) ? -1 : var2;
+    }
+
+    public int method1(int[] param1, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, amount + 1);
+        dp[0] = 0;
+        for (int var1 : param1) {
+            for (int i = var1; i <= amount; i++) {
+                dp[i] = Math.min(dp[i], dp[i - var1] + 1);
+            }
+        }
+        return dp[amount] > amount ? -1 : dp[amount];
+    }
+}
+
+class Solution {
+
+    int[] cache;
+
+    public int method1(int[] param1, int amount) {
+        cache = new int[amount + 1];
+        Arrays.fill(cache, -1);
+        int res = solve(param1, amount);
+        return res == Integer.MAX_VALUE ? -1 : res;
+    }
+
+    private int solve(int[] param1, int amount) {
+        if (amount == 0)
+            return 0;
+        if (cache[amount] != -1)
+            return cache[amount];
+        int minVal = Integer.MAX_VALUE;
+        for (int var1 : param1) {
+            if (var1 <= amount) {
+                int temp = solve(param1, amount - var1);
+                if (temp != Integer.MAX_VALUE)
+                    minVal = Math.min(minVal, temp + 1);
+            }
+        }
+        cache[amount] = minVal;
+        return minVal;
+    }
+}
+
+public class Solution {
+
+    public int method1(int[] param1, int amount) {
+        if (amount <= 0)
+            return 0;
+        int[] dp = new int[amount + 1];
+        for (int i = 1; i < dp.length; i++) {
+            dp[i] = Integer.MAX_VALUE;
+        }
+        for (int am = 1; am < dp.length; am++) {
+            for (int i = 0; i < param1.length; i++) {
+                if (param1[i] <= am) {
+                    int sub = dp[am - param1[i]];
+                    if (sub != Integer.MAX_VALUE)
+                        dp[am] = Math.min(sub + 1, dp[am]);
+                }
+            }
+        }
+        return dp[dp.length - 1] == Integer.MAX_VALUE ? -1 : dp[dp.length - 1];
+    }
+}

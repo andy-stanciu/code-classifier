@@ -1,0 +1,33 @@
+class Solution {
+
+    private int function(int amount, int[] param1, int[] dp) {
+        if (amount == 0) {
+            return 1;
+        }
+        if (dp[amount] != -1) {
+            return dp[amount];
+        }
+        int temp = Integer.MAX_VALUE;
+        for (int i = param1.length - 1; i >= 0; i--) {
+            if (amount >= param1[i]) {
+                int res = function(amount - param1[i], param1, dp);
+                if (res != 0) {
+                    temp = Math.min(temp, res);
+                }
+            }
+        }
+        dp[amount] = temp == Integer.MAX_VALUE ? 0 : 1 + temp;
+        return dp[amount];
+    }
+
+    public int method1(int[] param1, int amount) {
+        if (amount == 0) {
+            return 0;
+        }
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, -1);
+        Arrays.sort(param1);
+        int ans = function(amount, param1, dp);
+        return ans <= 0 ? -1 : ans - 1;
+    }
+}

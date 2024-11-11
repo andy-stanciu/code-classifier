@@ -1,0 +1,32 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        // Time complexity : O(S\u2217n). where S is the amount, n is denomination count.
+        //Space complexity : O(S), where S is the amount to change
+        if (amount < 1) {
+            return 0;
+        }
+        int[] memo = new int[amount + 1];
+        int ans = dfs(coins, amount, memo);
+        return ans != Integer.MAX_VALUE ? ans : -1;
+    }
+
+    private int dfs(int[] coins, int amount, int[] memo) {
+        if (amount < 0)
+            return Integer.MAX_VALUE;
+        if (amount == 0)
+            return 0;
+        if (memo[amount] != 0) {
+            return memo[amount];
+        }
+        int minCoins = Integer.MAX_VALUE;
+        for (int i = 0; i < coins.length; i++) {
+            int ans = dfs(coins, amount - coins[i], memo);
+            if (ans != Integer.MAX_VALUE) {
+                minCoins = Math.min(minCoins, ans + 1);
+            }
+        }
+        memo[amount] = minCoins;
+        return memo[amount];
+    }
+}

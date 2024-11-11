@@ -1,0 +1,49 @@
+class Solution {
+
+    public int countofsubsetsum(int[] arr, int n, int tar, int sumarr) {
+        if (tar < 0) {
+            tar = tar * -1;
+        }
+        int[][] t = new int[n + 1][tar + 1];
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= tar; j++) {
+                if (i == 0) {
+                    t[i][j] = 0;
+                } else if (j == 0) {
+                    t[i][j] = 1;
+                }
+            }
+        }
+        t[0][0] = 1;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= tar; j++) {
+                if (arr[i - 1] <= j) {
+                    t[i][j] = t[i - 1][j] + t[i - 1][j - arr[i - 1]];
+                } else {
+                    t[i][j] = t[i - 1][j];
+                }
+            }
+        }
+        return t[n][tar];
+    }
+
+    public int findTargetSumWays(int[] nums, int target) {
+        //same as count partitions with given difference
+        //how many ways can it be divided to givr target
+        //(1+1+1+1) - (1) = +1+1+1+1 -1  = 3
+        int n = nums.length;
+        int sumarr = 0;
+        int sum = 0;
+        for (int i = 0; i < n; i++) {
+            sumarr += nums[i];
+        }
+        if ((sumarr + target) % 2 != 0)
+            return 0;
+        if (target > sumarr)
+            return 0;
+        if (target < 0 && target * -1 > sumarr)
+            return 0;
+        sum = (sumarr + target) / 2;
+        return countofsubsetsum(nums, n, sum, sumarr);
+    }
+}

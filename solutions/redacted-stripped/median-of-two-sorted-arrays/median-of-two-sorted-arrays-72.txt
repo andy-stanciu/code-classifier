@@ -1,0 +1,35 @@
+class Solution {
+
+    private double findKthElement(int k, int[] nums1, int[] nums2, int start1, int end1, int start2, int end2) {
+        if (start1 >= end1)
+            return nums2[start2 + k];
+        if (start2 >= end2)
+            return nums1[start1 + k];
+        int mid1 = (end1 - start1) / 2;
+        int mid2 = (end2 - start2) / 2;
+        if (mid1 + mid2 < k) {
+            if (nums1[start1 + mid1] > nums2[start2 + mid2])
+                return findKthElement(k - mid2 - 1, nums1, nums2, start1, end1, start2 + mid2 + 1, end2);
+            else
+                return findKthElement(k - mid1 - 1, nums1, nums2, start1 + mid1 + 1, end1, start2, end2);
+        } else {
+            if (nums1[start1 + mid1] > nums2[start2 + mid2])
+                return findKthElement(k, nums1, nums2, start1, start1 + mid1, start2, end2);
+            else
+                return findKthElement(k, nums1, nums2, start1, end1, start2, start2 + mid2);
+        }
+    }
+
+    public double method1(int[] nums1, int[] nums2) {
+        int size1 = nums1.length;
+        int size2 = nums2.length;
+        int totalSize = size1 + size2;
+        if (totalSize % 2 == 1)
+            return findKthElement(totalSize / 2, nums1, nums2, 0, size1, 0, size2);
+        else {
+            double num1 = findKthElement(totalSize / 2, nums1, nums2, 0, size1, 0, size2);
+            double num2 = findKthElement(totalSize / 2 - 1, nums1, nums2, 0, size1, 0, size2);
+            return (num1 + num2) / 2.0;
+        }
+    }
+}

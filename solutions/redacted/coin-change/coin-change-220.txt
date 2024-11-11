@@ -1,0 +1,71 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        // Recursion
+        //int answer = recursion(n - 1, amount, coins);
+        // Memoization
+        /*int[][] memo = new int[n][amount + 1];
+        for(int[] subArray : memo) {
+            Arrays.fill(subArray, -1);
+        }
+        int answer = memoization(memo, n - 1, amount, coins);*/
+        // DP
+        int answer = dynamic(n, param1, amount);
+        return answer >= Math.pow(10, 9) ? -1 : answer;
+    }
+
+    private int dynamic(int n, int[] param1, int amount) {
+        int[][] dp = new int[n][amount + 1];
+        for (int currAmount = 0; currAmount <= amount; currAmount++) {
+            if (currAmount % param1[0] == 0)
+                dp[0][currAmount] = currAmount / param1[0];
+            else
+                dp[0][currAmount] = (int) Math.pow(10, 9);
+        }
+        for (int index = 1; index < n; index++) {
+            for (int currAmount = 0; currAmount <= amount; currAmount++) {
+                int notPick = dp[index - 1][currAmount];
+                int pick = Integer.MAX_VALUE;
+                if (param1[index] <= currAmount) {
+                    pick = 1 + dp[index][currAmount - param1[index]];
+                }
+                dp[index][currAmount] = Math.min(pick, notPick);
+            }
+        }
+        return dp[n - 1][amount];
+    }
+
+    private int memoization(int[][] memo, int index, int amount, int[] param1) {
+        // Base condition
+        if (index == 0) {
+            if (amount % param1[index] == 0)
+                return amount / param1[index];
+            return (int) Math.pow(10, 9);
+        }
+        if (memo[index][amount] != -1)
+            return memo[index][amount];
+        int notPick = recursion(index - 1, amount, param1);
+        int pick = Integer.MAX_VALUE;
+        if (param1[index] <= amount) {
+            pick = 1 + recursion(index, amount - param1[index], param1);
+        }
+        memo[index][amount] = Math.min(pick, notPick);
+        return memo[index][amount];
+    }
+
+    private int recursion(int index, int amount, int[] param1) {
+        // Base condition
+        if (index == 0) {
+            if (amount % param1[index] == 0)
+                return amount / param1[index];
+            return (int) Math.pow(10, 9);
+        }
+        int notPick = recursion(index - 1, amount, param1);
+        int pick = Integer.MAX_VALUE;
+        if (param1[index] <= amount) {
+            pick = 1 + recursion(index, amount - param1[index], param1);
+        }
+        return Math.min(pick, notPick);
+    }
+}

@@ -1,0 +1,49 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        // \u5C0F\u6839\u5806
+        PriorityQueue<ListNode> heap = new PriorityQueue<>((a, b) -> a.val - b.val);
+        // \u904D\u5386\u6240\u6709\u94FE\u8868\u7684\u5934\u7ED3\u70B9\uFF0C\u5E76\u5C06\u975E\u7A7A\u7684\u5934\u7ED3\u70B9\u52A0\u5165\u5C0F\u6839\u5806
+        for (ListNode h : lists) {
+            if (h != null) {
+                heap.add(h);
+            }
+        }
+        // \u5982\u679C\u5806\u4E3A\u7A7A\uFF0C\u8BF4\u660E\u6240\u6709\u94FE\u8868\u90FD\u662F\u7A7A\u7684\uFF0C\u76F4\u63A5\u8FD4\u56DEnull
+        if (heap.isEmpty()) {
+            return null;
+        }
+        // \u5148\u5F39\u51FA\u4E00\u4E2A\u8282\u70B9\uFF0C\u4F5C\u4E3A\u603B\u5934\u90E8
+        ListNode h = heap.poll();
+        ListNode pre = h;
+        if (pre.next != null) {
+            // \u82E5\u8FD8\u6709\u8282\u70B9\uFF0C\u5C06\u5176\u52A0\u5165\u5C0F\u6839\u5806
+            heap.add(pre.next);
+        }
+        // \u7EE7\u7EED\u5904\u7406\u5806\u4E2D\u7684\u8282\u70B9
+        while (!heap.isEmpty()) {
+            // \u6BCF\u6B21\u5F39\u51FA\u4E00\u4E2A\u8282\u70B9
+            ListNode cur = heap.poll();
+            // \u5C06\u5176\u94FE\u63A5\u5230\u603B\u94FE\u8868\u4E0A
+            pre.next = cur;
+            // pre\u5F80\u4E0B\u8DF3
+            pre = cur;
+            if (cur.next != null) {
+                // \u82E5\u8FD8\u6709\u8282\u70B9\uFF0C\u5C06\u5176\u52A0\u5165\u5C0F\u6839\u5806
+                heap.add(cur.next);
+            }
+        }
+        // \u8FD4\u56DE\u5408\u5E76\u540E\u7684\u94FE\u8868\u5934\u8282\u70B9
+        return h;
+    }
+}

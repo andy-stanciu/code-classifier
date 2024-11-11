@@ -1,0 +1,30 @@
+class Solution {
+
+    public int min_ = Integer.MAX_VALUE;
+
+    public int method1(int[] param1, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, -1);
+        int ans = rec(param1, amount, dp);
+        return ans != Integer.MAX_VALUE ? ans : -1;
+    }
+
+    public int rec(int[] param1, int currentAmount, int[] dp) {
+        if (currentAmount == 0) {
+            return 0;
+        }
+        if (currentAmount < 0)
+            return Integer.MAX_VALUE;
+        if (dp[currentAmount] != -1)
+            return dp[currentAmount];
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i < param1.length; ++i) {
+            int currWays = rec(param1, currentAmount - param1[i], dp);
+            if (currWays != Integer.MAX_VALUE) {
+                min = Math.min(currWays + 1, min);
+            }
+        }
+        dp[currentAmount] = min;
+        return min;
+    }
+}

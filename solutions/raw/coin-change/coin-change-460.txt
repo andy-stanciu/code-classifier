@@ -1,0 +1,34 @@
+class Solution {
+
+    int f(int i, int k, int[][] dp, int[] ar) {
+        if (i == 0) {
+            if (k % ar[i] == 0) {
+                return k / ar[i];
+            }
+            return (int) Math.pow(10, 9);
+        }
+        if (dp[i][k] != -1) {
+            return dp[i][k];
+        }
+        int ntk = f(i - 1, k, dp, ar);
+        int tk = (int) 1e9;
+        if (ar[i] <= k) {
+            tk = 1 + f(i, k - ar[i], dp, ar);
+        }
+        dp[i][k] = Math.min(ntk, tk);
+        return dp[i][k];
+    }
+
+    public int coinChange(int[] coins, int k) {
+        int n = coins.length;
+        int[][] dp = new int[n][k + 1];
+        for (int[] ar : dp) {
+            Arrays.fill(ar, -1);
+        }
+        int as = f(n - 1, k, dp, coins);
+        if (as == 1e9) {
+            return -1;
+        }
+        return as;
+    }
+}

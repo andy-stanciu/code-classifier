@@ -1,0 +1,38 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        if (null == nums)
+            return 0;
+        int n = nums.length;
+        int var1 = 0;
+        for (int i = 0; i < n; i++) {
+            var1 += nums[i];
+        }
+        if (var1 < Math.abs(param1) || (param1 + var1) % 2 != 0)
+            return 0;
+        return method2(nums, (var1 + param1) / 2);
+    }
+
+    private int method2(int[] nums, int var1) {
+        int n = nums.length;
+        int[][] dp = new int[n + 1][var1 + 1];
+        for (int i = 0; i < n + 1; i++) {
+            for (int j = 0; j < var1 + 1; j++) {
+                if (i == 0)
+                    dp[i][j] = 0;
+                if (j == 0)
+                    dp[i][j] = 1;
+            }
+        }
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 0; j < var1 + 1; j++) {
+                if (nums[i - 1] <= j) {
+                    dp[i][j] = dp[i - 1][j] + dp[i - 1][j - nums[i - 1]];
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        return dp[n][var1];
+    }
+}

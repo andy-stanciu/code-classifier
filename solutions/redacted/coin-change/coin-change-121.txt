@@ -1,0 +1,37 @@
+class Solution {
+
+    public int method1(int[] param1, int A) {
+        int result = solve(0, A, param1, new Integer[param1.length][A + 1]);
+        if (result == Integer.MAX_VALUE) {
+            return -1;
+        }
+        return result;
+    }
+
+    private int solve(int idx, int A, int[] param1, Integer[][] dp) {
+        if (A == 0) {
+            // No coins needed
+            return 0;
+        }
+        if (idx == param1.length || A < 0) {
+            // Invalid case
+            return Integer.MAX_VALUE;
+        }
+        if (dp[idx][A] != null) {
+            // Return cached result
+            return dp[idx][A];
+        }
+        // Option 1: Include the coin
+        int sp1 = solve(idx, A - param1[idx], param1, dp);
+        if (sp1 != Integer.MAX_VALUE) {
+            // Count this coin
+            sp1++;
+        }
+        // Option 2: Exclude the coin
+        int sp2 = solve(idx + 1, A, param1, dp);
+        //System.out.println(sp1+" "+sp2);
+        // Store and return the minimum of including or excluding the coin
+        dp[idx][A] = Math.min(sp1, sp2);
+        return Math.min(sp1, sp2);
+    }
+}

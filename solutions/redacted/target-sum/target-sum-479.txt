@@ -1,0 +1,37 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        //calculate s1
+        int var1 = 0, n = nums.length;
+        for (int i = 0; i < nums.length; i++) var1 += nums[i];
+        if ((var1 + param1) < 0 || (var1 + param1) % 2 != 0)
+            return 0;
+        int s1 = (var1 + param1) / 2;
+        //number of ways to find s1 in nums[]
+        int[][] dp = new int[n][s1 + 1];
+        for (int i = 0; i < dp.length; i++) {
+            for (int j = 0; j < dp[0].length; j++) dp[i][j] = -1;
+        }
+        return method2(n - 1, nums, s1, dp);
+    }
+
+    //number of ways to find the target sum
+    private int method2(int idx, int[] nums, int param1, int[][] dp) {
+        if (idx < 0 && param1 == 0)
+            return 1;
+        if (idx < 0)
+            return 0;
+        //System.out.print(target);
+        if (dp[idx][param1] != -1)
+            return dp[idx][param1];
+        int ele = nums[idx];
+        if (ele > param1)
+            dp[idx][param1] = method2(idx - 1, nums, param1, dp);
+        else {
+            int op1 = method2(idx - 1, nums, param1 - ele, dp);
+            int op2 = method2(idx - 1, nums, param1, dp);
+            dp[idx][param1] = op1 + op2;
+        }
+        return dp[idx][param1];
+    }
+}

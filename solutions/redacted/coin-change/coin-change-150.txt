@@ -1,0 +1,41 @@
+class Solution {
+
+    // bottom up dp
+    public int method1(int[] param1, int amount) {
+        int maxValue = amount * 2 + 1;
+        int[] dp = new int[amount + 1];
+        for (int i = 1; i <= amount; ++i) {
+            int count = maxValue;
+            for (int var1 : param1) {
+                if (i - var1 < 0)
+                    continue;
+                count = Math.min(count, 1 + dp[i - var1]);
+            }
+            dp[i] = count;
+        }
+        return dp[amount] >= maxValue ? -1 : dp[amount];
+    }
+
+    // top down dp
+    private int maxValue = 0;
+
+    public int method1(int[] param1, int amount) {
+        maxValue = amount * 2 + 1;
+        int ret = dp(param1, amount, new Integer[amount + 1]);
+        return ret >= maxValue ? -1 : ret;
+    }
+
+    private int dp(int[] param1, int remaining, Integer[] memo) {
+        if (remaining == 0)
+            return 0;
+        if (remaining < 0)
+            return maxValue;
+        if (memo[remaining] != null)
+            return memo[remaining];
+        int count = maxValue;
+        for (int var1 : param1) {
+            count = Math.min(count, 1 + dp(param1, remaining - var1, memo));
+        }
+        return memo[remaining] = count;
+    }
+}

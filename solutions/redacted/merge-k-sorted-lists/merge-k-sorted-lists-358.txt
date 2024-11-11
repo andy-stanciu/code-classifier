@@ -1,0 +1,54 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        // check for null and empty lists
+        if (param1 == null || param1.length == 0) {
+            return null;
+        }
+        // Idea here is to take 2 nodes from the array and store the merged array at ith index
+        int step = 1;
+        while (step < param1.length) {
+            // In case of step list size =4 it will store value like below
+            //lists[0] = merge2Lists(lists[0], lists[2])
+            for (int i = 0; i < param1.length - step; i += step * 2) {
+                //It stores values like below
+                //lists[0] = merge2Lists(lists[0], lists[1])
+                //lists[2] = merge2Lists(lists[2], lists[3])
+                param1[i] = method2(param1[i], param1[i + step]);
+            }
+            step *= 2;
+        }
+        return param1[0];
+    }
+
+    private ListNode method2(ListNode head1, ListNode head2) {
+        ListNode dummy = new ListNode(-1);
+        ListNode prev = dummy;
+        while (head1 != null && head2 != null) {
+            if (head1.val <= head2.val) {
+                prev.next = head1;
+                head1 = head1.next;
+            } else {
+                prev.next = head2;
+                head2 = head2.next;
+            }
+            prev = prev.next;
+        }
+        if (head1 == null) {
+            prev.next = head2;
+        } else {
+            prev.next = head1;
+        }
+        return dummy.next;
+    }
+}

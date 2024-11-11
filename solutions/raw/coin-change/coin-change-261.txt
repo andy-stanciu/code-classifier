@@ -1,0 +1,25 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int tar = 0; tar <= amount; tar++) {
+            if (tar % coins[0] == 0)
+                dp[0][tar] = tar / coins[0];
+            else
+                dp[0][tar] = 100000;
+        }
+        for (int idx = 1; idx < n; idx++) {
+            for (int tar = 0; tar <= amount; tar++) {
+                int nottake = 0 + dp[idx - 1][tar];
+                int take = 100000;
+                if (coins[idx] <= tar)
+                    take = 1 + dp[idx][tar - coins[idx]];
+                dp[idx][tar] = Math.min(take, nottake);
+            }
+        }
+        if (dp[n - 1][amount] >= 100000)
+            return -1;
+        return dp[n - 1][amount];
+    }
+}

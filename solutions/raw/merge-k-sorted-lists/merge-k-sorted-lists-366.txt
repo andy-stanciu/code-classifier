@@ -1,0 +1,63 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0) {
+            return null;
+        }
+        if (lists.length == 1 && lists[0] == null) {
+            return null;
+        }
+        int n = lists.length;
+        if (n == 1) {
+            return lists[0];
+        } else if (n == 2) {
+            return merge(lists[0], lists[1]);
+        } else {
+            n--;
+            ListNode mergeNode = lists[n];
+            n--;
+            while (n > -1) {
+                mergeNode = merge(mergeNode, lists[n]);
+                n--;
+            }
+            return mergeNode;
+        }
+    }
+
+    static ListNode merge(ListNode headLeft, ListNode headRight) {
+        ListNode dummyHead = new ListNode(0);
+        ListNode current = dummyHead;
+        while (headLeft != null && headRight != null) {
+            if (headLeft.val < headRight.val) {
+                current.next = headLeft;
+                headLeft = headLeft.next;
+            } else {
+                current.next = headRight;
+                headRight = headRight.next;
+            }
+            current = current.next;
+        }
+        while (headLeft != null) {
+            current.next = headLeft;
+            headLeft = headLeft.next;
+            current = current.next;
+        }
+        while (headRight != null) {
+            current.next = headRight;
+            headRight = headRight.next;
+            current = current.next;
+        }
+        current = null;
+        return dummyHead.next;
+    }
+}

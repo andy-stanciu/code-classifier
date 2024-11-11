@@ -1,0 +1,45 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int n = nums.length;
+        return countPartitions(n, target, nums);
+    }
+
+    public static int countPartitions(int n, int d, int[] arr) {
+        int sum = 0;
+        for (int i = 0; i < arr.length; i++) {
+            sum += arr[i];
+        }
+        if (sum - d < 0 || ((sum - d) % 2) != 0) {
+            return 0;
+        }
+        return findWays(arr, (sum - d) / 2);
+    }
+
+    public static int findWays(int[] num, int k) {
+        int n = num.length;
+        int[] prev = new int[k + 1];
+        if (// 2 cases -pick and not pick
+        num[0] == 0)
+            // 2 cases -pick and not pick
+            prev[0] = 2;
+        else
+            // 1 case - not pick
+            prev[0] = 1;
+        if (num[0] != 0 && num[0] <= k)
+            prev[num[0]] = 1;
+        for (int ind = 1; ind < n; ind++) {
+            int[] cur = new int[k + 1];
+            for (int target = 0; target <= k; target++) {
+                int notTaken = prev[target];
+                int taken = 0;
+                if (num[ind] <= target) {
+                    taken = prev[target - num[ind]];
+                }
+                cur[target] = (notTaken + taken);
+            }
+            prev = cur;
+        }
+        return prev[k];
+    }
+}

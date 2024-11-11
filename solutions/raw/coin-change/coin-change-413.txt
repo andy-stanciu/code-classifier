@@ -1,0 +1,29 @@
+class Solution {
+
+    public long minDenominations(int[] coins, int amount, long[] dp) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (amount < 0) {
+            return Integer.MAX_VALUE;
+        }
+        if (dp[amount] != Long.MAX_VALUE) {
+            return dp[amount];
+        }
+        for (int i = 0; i < coins.length; i++) {
+            dp[amount] = Math.min(dp[amount], 1 + minDenominations(coins, amount - coins[i], dp));
+        }
+        return dp[amount];
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        long[] dp = new long[amount + 1];
+        Arrays.fill(dp, Long.MAX_VALUE);
+        long ans = minDenominations(coins, amount, dp);
+        System.out.println(ans);
+        if (ans >= Integer.MAX_VALUE) {
+            ans = -1;
+        }
+        return (int) ans;
+    }
+}

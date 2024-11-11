@@ -1,0 +1,57 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ListNode rtH = new ListNode();
+        ListNode rt = rtH;
+        int carry = 0;
+        boolean f1 = true;
+        boolean f2 = true;
+        // these flags tell, if I have more items in a list, if false, dont go next, stick to null which is read as 0
+        while (f1 || f2) {
+            int a = 0;
+            int b = 0;
+            if (l1 != null) {
+                a = l1.val;
+            }
+            if (l2 != null) {
+                b = l2.val;
+            }
+            int sum = a + b + carry;
+            carry = sum > 9 ? 1 : 0;
+            int digit = sum - carry * 10;
+            // digit is what we need to store in list, only the digit at one\'s place
+            rt.val = digit;
+            if (f1) {
+                if (l1.next == null) {
+                    f1 = false;
+                }
+                l1 = l1.next;
+            }
+            if (f2) {
+                if (l2.next == null) {
+                    f2 = false;
+                }
+                l2 = l2.next;
+            }
+            if (l1 != null || l2 != null) {
+                rt.next = new ListNode();
+                rt = rt.next;
+                // create next node only if either of list has items
+            }
+        }
+        if (carry == 1) {
+            rt.next = new ListNode(carry, null);
+        }
+        return rtH;
+    }
+}

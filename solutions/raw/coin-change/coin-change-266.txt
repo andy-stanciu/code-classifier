@@ -1,0 +1,47 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        // so now here we have two option here so now here
+        Integer[][] dp = new Integer[coins.length][amount + 1];
+        int ans = helper(coins, amount, dp, 0);
+        if (ans == (int) Math.pow(10, 9)) {
+            return -1;
+        }
+        return ans;
+    }
+
+    static int helper(int[] coin, int target, Integer[][] dp, int i) {
+        // so now here we have two case here
+        if (target == 0) {
+            return 0;
+        }
+        if (target < 0 || i >= coin.length) {
+            return (int) Math.pow(10, 9);
+        }
+        if (dp[i][target] != null) {
+            return dp[i][target];
+        }
+        // so now here we have two options here
+        int take = helper(coin, target - coin[i], dp, i) + 1;
+        int not = helper(coin, target, dp, i + 1);
+        // so now here we have to return the min of both here
+        return dp[i][target] = Math.min(take, not);
+    }
+}
+
+// tabulation apporach here
+class olution {
+
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, amount + 1);
+        dp[0] = 0;
+        for (int coin : coins) {
+            for (int i = coin; i <= amount; i++) {
+                dp[coin] = 1;
+                dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+            }
+        }
+        return dp[amount] == amount + 1 ? -1 : dp[amount];
+    }
+}

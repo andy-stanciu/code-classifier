@@ -1,0 +1,53 @@
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        if (param1.length == 0)
+            return null;
+        return method2(param1, 0, param1.length);
+    }
+
+    private static ListNode method2(ListNode[] param1, int beg, int end) {
+        if (end - beg == 1)
+            return param1[beg];
+        if (end - beg == 2)
+            return method3(param1[beg], param1[end - 1]);
+        else {
+            int mid = (int) (beg + end) / 2;
+            return method3(method2(param1, beg, mid), method2(param1, mid, end));
+        }
+    }
+
+    private static ListNode method3(ListNode l1, ListNode l2) {
+        if (l1 == null && l2 != null)
+            return l2;
+        if (l1 != null && l2 == null)
+            return l1;
+        if (l1 == null && l2 == null)
+            return null;
+        else {
+            ListNode var1 = (l1.val < l2.val) ? l1 : l2;
+            ListNode cursor = var1;
+            if (var1 == l1)
+                l1 = l1.next;
+            else
+                l2 = l2.next;
+            while (l1 != null || l2 != null) {
+                if (l1 == null) {
+                    cursor.next = l2;
+                    break;
+                }
+                if (l2 == null) {
+                    cursor.next = l1;
+                    break;
+                }
+                cursor.next = (l1.val < l2.val) ? l1 : l2;
+                if (cursor.next == l1)
+                    l1 = l1.next;
+                else
+                    l2 = l2.next;
+                cursor = cursor.next;
+            }
+            return var1;
+        }
+    }
+}

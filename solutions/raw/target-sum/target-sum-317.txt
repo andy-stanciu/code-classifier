@@ -1,0 +1,36 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        // Taking the absolute value of the target
+        target = Math.abs(target);
+        int arrSum = 0;
+        for (int i : nums) {
+            // Calculating the sum of all elements in the array
+            arrSum += i;
+        }
+        // Checking if the sum of target and array sum is odd, if so, return 0
+        if (((target + arrSum) & 1) == 1) {
+            return 0;
+        }
+        // Calculating the target sum
+        int sum = (target + arrSum) / 2;
+        // Creating a 2D array to store subproblem solutions
+        int[][] t = new int[nums.length + 1][sum + 1];
+        // Initializing the first column of the table to 1
+        for (int i = 0; i < t.length; i++) {
+            t[i][0] = 1;
+        }
+        // Filling the table using dynamic programming
+        for (int i = 1; i < t.length; i++) {
+            for (int j = 0; j < t[0].length; j++) {
+                if (nums[i - 1] <= j) {
+                    t[i][j] = t[i - 1][j] + t[i - 1][j - nums[i - 1]];
+                } else {
+                    t[i][j] = t[i - 1][j];
+                }
+            }
+        }
+        // Returning the result from the last cell of the table
+        return t[t.length - 1][t[0].length - 1];
+    }
+}

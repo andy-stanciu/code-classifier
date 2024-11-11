@@ -1,0 +1,33 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        return helper(coins, amount, new Integer[amount + 1]);
+    }
+
+    int helper(int[] coins, int amount, Integer[] dp) {
+        // When traversed till end of the recursive tree or given input amount is 0
+        if (amount == 0) {
+            dp[amount] = 0;
+            return 0;
+        }
+        // If traversed till end of the recursive tree and couldn\'t find an answer then return -1
+        if (amount < 0)
+            return -1;
+        // If previously processed the same amount then return that amount
+        if (dp[amount] != null)
+            return dp[amount];
+        // Recursively explore for each combination of coin and find the min number of coins for the current amount
+        // Recursive relation - f(i) = 1 + max(f(i-j)) [Iteratively check for each j]
+        // i => amount, j => different coins
+        int result = Integer.MAX_VALUE;
+        for (int coin : coins) {
+            int count = helper(coins, amount - coin, dp);
+            // If no result found for the current amount then we simply update the result for that position with -1
+            if (count >= 0)
+                result = Math.min(result, 1 + count);
+        }
+        // If couldn\'t find a result for the current amount then update it as -1
+        dp[amount] = result == Integer.MAX_VALUE ? -1 : result;
+        return dp[amount];
+    }
+}

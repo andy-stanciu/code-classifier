@@ -1,0 +1,53 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    //main function
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null || lists.length == 0) {
+            return null;
+        }
+        return mergeSort(lists, 0, lists.length - 1);
+    }
+
+    //Recursive funcion for merger sort to get final two lists , which can be later passed to mergerTwolists function to sort two linked Lists
+    private ListNode mergeSort(ListNode[] lists, int start, int end) {
+        if (start == end) {
+            // Base case: Return the single list
+            return lists[start];
+        }
+        //keeps on dividing the lists to halves
+        int mid = start + (end - start) / 2;
+        ListNode leftList = mergeSort(lists, start, mid);
+        ListNode rightList = mergeSort(lists, mid + 1, end);
+        return mergeTwoLists(leftList, rightList);
+    }
+
+    //recursive function to make 2 linkedlists sorted.
+    private ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        // Base cases
+        if (l1 == null) {
+            return l2;
+        }
+        if (l2 == null) {
+            return l1;
+        }
+        // Recursive merge
+        //comparing valyes for sorting
+        if (l1.val < l2.val) {
+            l1.next = mergeTwoLists(l1.next, l2);
+            return l1;
+        } else {
+            l2.next = mergeTwoLists(l2.next, l1);
+            return l2;
+        }
+    }
+}

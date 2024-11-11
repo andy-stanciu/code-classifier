@@ -1,0 +1,29 @@
+class Solution {
+
+    public int coinChange(int[] coins, int A) {
+        Arrays.sort(coins);
+        int a = solve(0, A, coins, 0, new Integer[coins.length + 1000][A + 1000][A + 10]);
+        if (a == Integer.MAX_VALUE) {
+            return -1;
+        }
+        return a;
+    }
+
+    private int solve(int idx, int A, int[] coins, int count, Integer[][][] dp) {
+        if (A == 0) {
+            //			System.out.println(str);
+            return count;
+        }
+        if (idx == coins.length || A < 0 || count >= A + 10) {
+            return Integer.MAX_VALUE;
+        }
+        if (dp[idx][A][count] != null) {
+            return dp[idx][A][count];
+        }
+        int sp1 = solve(idx, A - coins[idx], coins, count + 1, dp);
+        int sp2 = solve(idx + 1, A, coins, count, dp);
+        //System.out.println(sp1+" "+sp2);
+        dp[idx][A][count] = Math.min(sp1, sp2);
+        return Math.min(sp1, sp2);
+    }
+}

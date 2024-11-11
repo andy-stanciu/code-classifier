@@ -1,0 +1,63 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        if (param1.length == 0) {
+            return null;
+        }
+        if (param1.length == 1 && param1[0] == null) {
+            return null;
+        }
+        int n = param1.length;
+        if (n == 1) {
+            return param1[0];
+        } else if (n == 2) {
+            return method2(param1[0], param1[1]);
+        } else {
+            n--;
+            ListNode var1 = param1[n];
+            n--;
+            while (n > -1) {
+                var1 = method2(var1, param1[n]);
+                n--;
+            }
+            return var1;
+        }
+    }
+
+    static ListNode method2(ListNode headLeft, ListNode headRight) {
+        ListNode dummyHead = new ListNode(0);
+        ListNode current = dummyHead;
+        while (headLeft != null && headRight != null) {
+            if (headLeft.val < headRight.val) {
+                current.next = headLeft;
+                headLeft = headLeft.next;
+            } else {
+                current.next = headRight;
+                headRight = headRight.next;
+            }
+            current = current.next;
+        }
+        while (headLeft != null) {
+            current.next = headLeft;
+            headLeft = headLeft.next;
+            current = current.next;
+        }
+        while (headRight != null) {
+            current.next = headRight;
+            headRight = headRight.next;
+            current = current.next;
+        }
+        current = null;
+        return dummyHead.next;
+    }
+}

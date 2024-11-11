@@ -1,0 +1,69 @@
+class Solution {
+
+    public ListNode method1(ListNode head1, ListNode head2) {
+        ListNode nodeMain = new ListNode();
+        ListNode current = nodeMain;
+        boolean isCarry = false;
+        while (head1 != null && head2 != null) {
+            int currentValue = 0;
+            ListNode node = new ListNode();
+            current.next = node;
+            current = node;
+            if (isCarry) {
+                currentValue = (head1.val + head2.val + 1) % 10;
+            } else {
+                currentValue = (head1.val + head2.val) % 10;
+            }
+            node.val = currentValue;
+            if (isCarry && head1.val + head2.val + 1 >= 10) {
+                isCarry = true;
+            } else if (head1.val + head2.val >= 10) {
+                isCarry = true;
+            } else {
+                isCarry = false;
+            }
+            head1 = head1.next;
+            head2 = head2.next;
+        }
+        while (head1 != null) {
+            int currentVal = 0;
+            if (isCarry) {
+                currentVal = (head1.val + 1) % 10;
+            } else {
+                currentVal = head1.val;
+            }
+            ListNode node = new ListNode(currentVal);
+            current.next = node;
+            current = node;
+            if (isCarry && head1.val + 1 == 10) {
+                isCarry = true;
+            } else {
+                isCarry = false;
+            }
+            head1 = head1.next;
+        }
+        while (head2 != null) {
+            int currentVal = 0;
+            if (isCarry) {
+                currentVal = (head2.val + 1) % 10;
+            } else {
+                currentVal = head2.val;
+            }
+            ListNode node = new ListNode(currentVal);
+            current.next = node;
+            current = node;
+            if (isCarry && head2.val + 1 == 10) {
+                isCarry = true;
+            } else {
+                isCarry = false;
+            }
+            head2 = head2.next;
+        }
+        if (isCarry) {
+            ListNode node = new ListNode(1);
+            current.next = node;
+            current = node;
+        }
+        return nodeMain.next;
+    }
+}

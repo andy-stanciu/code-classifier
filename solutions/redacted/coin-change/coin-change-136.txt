@@ -1,0 +1,40 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        // Create a memoization array to store the results of subproblems
+        int[] memo = new int[amount + 1];
+        // Initialize the memo array with -2, meaning "uncomputed"
+        Arrays.fill(memo, -2);
+        return method2(param1, amount, memo);
+    }
+
+    private int method2(int[] param1, int amount, int[] memo) {
+        // Base case: 0 coins needed for 0 amount
+        if (amount == 0)
+            return 0;
+        // If the amount is negative, return -1 (invalid)
+        if (amount < 0)
+            return -1;
+        // Check if we have already computed the result for this amount
+        if (memo[amount] != -2)
+            return memo[amount];
+        int var1 = Integer.MAX_VALUE;
+        for (int var2 : param1) {
+            int result = method2(param1, amount - var2, memo);
+            if (result >= 0) {
+                // If the result is valid (not -1)
+                var1 = Math.min(var1, result + 1);
+            }
+        }
+        // Save the computed result in the memo array
+        memo[amount] = (var1 == Integer.MAX_VALUE) ? -1 : var1;
+        return memo[amount];
+    }
+}
+/*
+ * 11
+ * 5(2 times) 2 (10 times) 1(11 times)
+ * /. |. \\
+ * 5(o times) 2(0times). 1 (1 time) 5(o times) 2(0times). 1 (1 time) 5(o times)
+ * 2(0times). 1 (0 time)
+ */

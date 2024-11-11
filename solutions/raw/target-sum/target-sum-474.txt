@@ -1,0 +1,53 @@
+class Solution {
+
+    // Cache map
+    private int[][] map;
+
+    private int subSumWays(int[] nums, int target, int start) {
+        // +/- symmetry
+        int ptarget = Math.abs(target);
+        int n = nums[start];
+        // Reached end of array
+        if (start == (nums.length - 1)) {
+            // Only add if meet target
+            if (n == ptarget) {
+                map[n][start] = 1;
+                // Edge case where array ends in 0 - can be added *or* subtracted
+                if (n == 0) {
+                    map[n][start] = 2;
+                    return 2;
+                }
+                return 1;
+            }
+            return 0;
+        } else {
+            // Use cache if available
+            if (map[ptarget][start] > 0) {
+                return map[ptarget][start];
+            } else {
+                // These lines can be concatenated (was like this for debugging purposes), any way . .
+                // Add current
+                int subSuma = subSumWays(nums, ptarget - n, start + 1);
+                // Subtract current
+                int subSumb = subSumWays(nums, ptarget + n, start + 1);
+                int subSum = subSuma + subSumb;
+                // Store in cache
+                map[ptarget][start] = subSum;
+                return subSum;
+            }
+        }
+    }
+
+    public int findTargetSumWays(int[] nums, int target) {
+        // Initialize cache
+        map = new int[2002][nums.length];
+        for (int t = 0; t < 2002; t++) {
+            for (int n = 0; n < nums.length; n++) {
+                map[t][n] = 0;
+            }
+        }
+        // Again these 2 lines can be combined (was there for debugging)
+        int ret = subSumWays(nums, target, 0);
+        return ret;
+    }
+}

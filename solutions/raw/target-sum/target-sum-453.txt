@@ -1,0 +1,27 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        dp = new HashMap<String, Integer>();
+        return recur(nums, 0, target);
+    }
+
+    static HashMap<String, Integer> dp;
+
+    public int recur(int[] nums, int idx, int target) {
+        if (idx == nums.length && target == 0) {
+            return 1;
+        }
+        if (idx == nums.length && target != 0) {
+            return 0;
+        }
+        if (dp.get(idx + "$" + target) != null) {
+            return dp.get(idx + "$" + target);
+        }
+        // e.g. if we take the element 1 as +1 , we need our smaller problem to return us the number of ways to form (target-1) value
+        int sp1 = recur(nums, idx + 1, target - nums[idx]);
+        // and the second option is if we take 1 as -1, we need our smaller problem to return us the number of ways to form (target+1) value
+        int sp2 = recur(nums, idx + 1, target + nums[idx]);
+        dp.put(idx + "$" + target, sp1 + sp2);
+        return sp1 + sp2;
+    }
+}

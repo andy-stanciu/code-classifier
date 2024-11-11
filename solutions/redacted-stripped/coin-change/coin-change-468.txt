@@ -1,0 +1,51 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, -2);
+        return helperDp(param1, amount, dp);
+    }
+
+    public int helper(int[] param1, int amount) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (amount < 0) {
+            return -1;
+        }
+        int ans = Integer.MAX_VALUE;
+        for (int i = 0; i < param1.length; i++) {
+            int subproblem = helper(param1, amount - param1[i]);
+            if (subproblem != -1) {
+                ans = Math.min(ans, 1 + subproblem);
+            }
+        }
+        return (ans == Integer.MAX_VALUE) ? -1 : ans;
+    }
+
+    public int helperDp(int[] param1, int amount, int[] dp) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (amount < 0) {
+            return -1;
+        }
+        if (dp[amount] != -2) {
+            return dp[amount];
+        }
+        int ans = Integer.MAX_VALUE;
+        for (int i = 0; i < param1.length; i++) {
+            int subproblem = helperDp(param1, amount - param1[i], dp);
+            ;
+            if (subproblem != -1) {
+                ans = Math.min(ans, 1 + subproblem);
+            }
+        }
+        if (ans == Integer.MAX_VALUE) {
+            dp[amount] = -1;
+        } else {
+            dp[amount] = ans;
+        }
+        return dp[amount];
+    }
+}

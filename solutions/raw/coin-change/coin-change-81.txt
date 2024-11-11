@@ -1,0 +1,31 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        final int INF = amount + 1;
+        int[] dp = new int[amount + 1];
+        // just setting up initial values which should be some huge value
+        for (int i = 0; i <= amount; i++) {
+            dp[i] = INF;
+        }
+        // our precious base value
+        dp[0] = 0;
+        // our precious trivial cases
+        for (int coin : coins) {
+            if (coin > amount) {
+                continue;
+            }
+            dp[coin] = 1;
+        }
+        for (int amt = 1; amt <= amount; amt++) {
+            for (int coin : coins) {
+                // our coin can\'t be greater than the amount we want
+                if (coin >= amt) {
+                    continue;
+                }
+                // this is the "dp[11] = 1 + dp[6]" stuff in eg 1
+                dp[amt] = Math.min(dp[amt], 1 + dp[amt - coin]);
+            }
+        }
+        return dp[amount] >= INF ? -1 : dp[amount];
+    }
+}

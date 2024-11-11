@@ -1,0 +1,81 @@
+class Solution {
+
+    static int mod = (int) (Math.pow(10, 9) + 7);
+
+    static int findWaysUtil(int ind, int param1, int[] arr, int[][] dp) {
+        if (ind == 0) {
+            if (param1 == 0 && arr[0] == 0)
+                return 2;
+            if (param1 == arr[0] || param1 == 0)
+                return 1;
+            return 0;
+        }
+        if (dp[ind][param1] != -1)
+            return dp[ind][param1];
+        int notTaken = findWaysUtil(ind - 1, param1, arr, dp);
+        int taken = 0;
+        if (arr[ind] <= param1)
+            taken = findWaysUtil(ind - 1, param1 - arr[ind], arr, dp);
+        return dp[ind][param1] = (notTaken + taken) % mod;
+    }
+
+    static int findWays(int[] num, int k) {
+        int mod = (int) (Math.pow(10, 9) + 7);
+        int n = num.length;
+        int[][] dp = new int[n][k + 1];
+        for (int[] row : dp) Arrays.fill(row, -1);
+        return findWaysUtil(n - 1, k, num, dp);
+        //         int n = num.length;
+        //         int dp[][] = new int[n][k+1];
+        //         if(num[0]==0) dp[0][0] = 2;
+        //         else dp[0][0] = 1;
+        //         if(num[0]!=0 && num[0]<=k) dp[0][num[0]]=1;
+        //         for(int ind = 1; ind<n; ind++){
+        //             for(int target = 0; target<=k;target++){
+        //                 int take = dp[ind-1][target];
+        //                 int notTake = 0;
+        //                 if(num[ind]<=target){
+        //                     notTake = dp[ind-1][target-num[ind]];
+        //                 }
+        //                 dp[ind][target] = (take+notTake)%mod;
+        //             }
+        //         }
+        //         return dp[n-1][k];
+        //         int n = num.length;
+        //         int[] prev = new int[k+1];
+        //         Arrays.fill(prev,0);
+        //         if(num[0]==0 ) prev[0] =2;
+        //         else prev[0] = 1;
+        //         if(num[0]!=0 && num[0]<=k) prev[num[0]] = 1;
+        //        for(int ind = 1; ind<n; ind++){
+        //            int[] curr = new int[k+1];
+        //             Arrays.fill(curr,0);
+        //             for(int target = 0; target<=k;target++){
+        //                 int take = prev[target];
+        //                 int notTake = 0;
+        //                 if(num[ind]<=target){
+        //                     notTake = prev[target-num[ind]];
+        //                 }
+        //                curr[target] = (take+notTake)%mod;
+        //             }
+        //            prev = curr;
+        //         }
+        //         return prev[k];
+    }
+
+    public static int countPartitions(int d, int[] arr) {
+        // Write your code here.
+        int total = 0;
+        for (int i : arr) {
+            total += i;
+        }
+        if (total - d < 0 || (total - d) % 2 != 0)
+            return 0;
+        return findWays(arr, (total - d) / 2);
+    }
+
+    public int method1(int[] nums, int param1) {
+        int n = nums.length;
+        return countPartitions(param1, nums);
+    }
+}

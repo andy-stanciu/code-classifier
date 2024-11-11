@@ -1,0 +1,68 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ListNode list2 = l2;
+        ListNode prevL2 = null;
+        int firstDigit = -1;
+        int sum;
+        while (l1 != null && l2 != null) {
+            if (firstDigit >= 0) {
+                sum = l1.val + l2.val + firstDigit;
+                firstDigit = -1;
+            } else {
+                sum = l1.val + l2.val;
+            }
+            if (sum > 9) {
+                int secDigit = sum % 10;
+                firstDigit = sum / 10;
+                l2.val = secDigit;
+            } else {
+                l2.val = sum;
+            }
+            prevL2 = l2;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        while (l1 != null) {
+            ListNode newNode = new ListNode();
+            if (firstDigit >= 0) {
+                sum = l1.val + firstDigit;
+                firstDigit = -1;
+            } else {
+                sum = l1.val;
+            }
+            if (sum > 9) {
+                int secDigit = sum % 10;
+                firstDigit = sum / 10;
+                newNode.val = secDigit;
+            } else {
+                newNode.val = sum;
+            }
+            prevL2.next = newNode;
+            prevL2 = prevL2.next;
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            if (firstDigit >= 0) {
+                sum = l2.val + firstDigit;
+                firstDigit = -1;
+            } else {
+                sum = l2.val;
+            }
+            if (sum > 9) {
+                int secDigit = sum % 10;
+                firstDigit = sum / 10;
+                l2.val = secDigit;
+            } else {
+                l2.val = sum;
+            }
+            prevL2 = l2;
+            l2 = l2.next;
+        }
+        if (firstDigit >= 0) {
+            ListNode newNode = new ListNode(firstDigit);
+            prevL2.next = newNode;
+        }
+        return list2;
+    }
+}

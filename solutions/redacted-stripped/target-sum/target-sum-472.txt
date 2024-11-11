@@ -1,0 +1,31 @@
+class Solution {
+
+    int res;
+
+    public int method1(int[] nums, int param1) {
+        res = 0;
+        HashMap<String, Integer> hm = new HashMap<>();
+        return dfs(nums, 0, param1, hm, 0);
+    }
+
+    int dfs(int[] nums, int pos, int tgt, HashMap<String, Integer> hm, int param2) {
+        if (hm.containsKey(pos + ":" + param2)) {
+            System.out.println("returning from cache: " + (pos + ":" + param2) + " as: " + hm.get(pos + ":" + param2));
+            return hm.get(pos + ":" + param2);
+        }
+        if (pos == nums.length) {
+            if (param2 == tgt) {
+                hm.put(pos + ":" + param2, 1);
+                res++;
+                return 1;
+            }
+            hm.put(pos + ":" + param2, 0);
+            return 0;
+        }
+        int possible = 0;
+        possible += dfs(nums, pos + 1, tgt, hm, param2 + nums[pos]);
+        possible += dfs(nums, pos + 1, tgt, hm, param2 - nums[pos]);
+        hm.put(pos + ":" + param2, possible);
+        return possible;
+    }
+}

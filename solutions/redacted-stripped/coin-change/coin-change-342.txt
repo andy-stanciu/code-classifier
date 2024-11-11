@@ -1,0 +1,26 @@
+class Solution {
+
+    public int method1(int[] a, int amount) {
+        int len = a.length;
+        int[][] dp = new int[len][amount + 1];
+        for (int t = 0; t <= amount; t++) {
+            if (t % a[0] == 0)
+                dp[0][t] = t / a[0];
+            else
+                dp[0][t] = (int) Math.pow(10, 9);
+        }
+        for (int i = 1; i < len; i++) {
+            for (int t = 0; t <= amount; t++) {
+                int not = 0 + dp[i - 1][t];
+                int take = (int) Math.pow(10, 9);
+                if (a[i] <= t)
+                    take = 1 + dp[i][t - a[i]];
+                dp[i][t] = Math.min(not, take);
+            }
+        }
+        int ans = dp[len - 1][amount];
+        if (ans >= (int) Math.pow(10, 9))
+            return -1;
+        return ans;
+    }
+}

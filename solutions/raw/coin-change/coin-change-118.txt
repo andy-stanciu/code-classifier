@@ -1,0 +1,25 @@
+class Solution {
+
+    private long coinChange(int[] nums, int index, int amount, HashMap<Pair<Integer, Integer>, Long> memo) {
+        if (index >= nums.length || amount < 0)
+            return Integer.MAX_VALUE;
+        if (amount == 0)
+            return 0;
+        var key = new Pair(index, amount);
+        if (memo.containsKey(key))
+            return memo.get(key);
+        long minCombinations = Math.min(coinChange(nums, index + 1, amount, memo), 1 + coinChange(nums, index, amount - nums[index], memo));
+        memo.put(key, minCombinations);
+        return minCombinations;
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        /**
+         *            skip existing coin and move to next
+         *            choose existing coin and stay at same coin
+         */
+        HashMap<Pair<Integer, Integer>, Long> memo = new HashMap();
+        long minCombinations = coinChange(coins, 0, amount, memo);
+        return minCombinations >= (long) Integer.MAX_VALUE ? -1 : (int) minCombinations;
+    }
+}

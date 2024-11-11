@@ -1,0 +1,60 @@
+class Solution {
+
+    public int solveRec(int[] nums, int target, int index, int cursum) {
+        if (index >= nums.length) {
+            return 0;
+        }
+        if (index == nums.length - 1) {
+            int ans = 0;
+            if (cursum + nums[index] == target) {
+                ans++;
+            }
+            if (cursum - nums[index] == target) {
+                ans++;
+            }
+            return ans;
+        }
+        int include = 0, exclude = 0;
+        include = solveRec(nums, target, index + 1, cursum + nums[index]);
+        exclude = solveRec(nums, target, index + 1, cursum - nums[index]);
+        return include + exclude;
+    }
+
+    public int solveMem(int[] nums, int target, int index, int cursum, int[][] dp, int maxsum) {
+        if (index >= nums.length) {
+            return 0;
+        }
+        if (index == nums.length - 1) {
+            int ans = 0;
+            if (cursum + nums[index] == target) {
+                dp[index][cursum + nums[index] + maxsum] = ans++;
+            }
+            if (cursum - nums[index] == target) {
+                dp[index][cursum - nums[index] + maxsum] = ans++;
+            }
+            return ans;
+        }
+        if (dp[index][cursum + maxsum] != -1) {
+            return dp[index][cursum + maxsum];
+        }
+        int include = 0, exclude = 0;
+        include = solveMem(nums, target, index + 1, cursum + nums[index], dp, maxsum);
+        exclude = solveMem(nums, target, index + 1, cursum - nums[index], dp, maxsum);
+        return dp[index][cursum + maxsum] = include + exclude;
+    }
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int maxsum = 0;
+        int minsum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            maxsum += nums[i];
+            minsum -= nums[i];
+        }
+        int[][] dp = new int[nums.length][maxsum + Math.abs(minsum) + 1];
+        for (int i = 0; i < dp.length; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        //return solveRec(nums,target,0,0);
+        return solveMem(nums, target, 0, 0, dp, maxsum);
+    }
+}

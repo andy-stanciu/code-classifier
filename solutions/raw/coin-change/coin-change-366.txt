@@ -1,0 +1,33 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int[][] dp = new int[coins.length + 1][amount + 1];
+        for (int[] i : dp) {
+            Arrays.fill(i, -1);
+        }
+        //  Arrays.fill(dp,-1);
+        int k = solve(amount, coins, dp, coins.length - 1);
+        if (k >= 1000000) {
+            return -1;
+        }
+        return k;
+    }
+
+    static int solve(int n, int[] coins, int[][] dp, int i) {
+        if (n == 0) {
+            return 0;
+        }
+        if (i < 0 || n < 0) {
+            return 1000000;
+        }
+        if (dp[i][n] != -1) {
+            return dp[i][n];
+        }
+        int take = 1000000;
+        if (coins[i] <= n) {
+            take = 1 + solve(n - coins[i], coins, dp, i);
+        }
+        int nottake = solve(n, coins, dp, i - 1);
+        return dp[i][n] = Math.min(take, nottake);
+    }
+}

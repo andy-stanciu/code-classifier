@@ -1,0 +1,73 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        // Initialize the dp array with a larger value
+        int max = amount + 1;
+        int[] dp = new int[max];
+        Arrays.fill(dp, max);
+        // Base case: 0 coins are needed to make up amount 0
+        dp[0] = 0;
+        // Build up the dp table
+        for (int i = 1; i <= amount; i++) {
+            for (int var1 : param1) {
+                if (var1 <= i) {
+                    dp[i] = Math.min(dp[i], dp[i - var1] + 1);
+                }
+            }
+        }
+        // If dp[amount] is still max, then it\'s not possible to make up that amount
+        return dp[amount] > amount ? -1 : dp[amount];
+    }
+}
+/**
+ * Detailed Explanation with Example
+ *
+ * Let\'s walk through an example to understand how the last line works:
+ *
+ * Example:
+ * Coins: [1, 2, 5]
+ * Amount: 11
+ *
+ * Steps:
+ * Initialization:
+ * - max is set to amount + 1 which is 12.
+ * - dp array is initialized to [12, 12, 12, ..., 12] (size 12) and dp[0] is set to 0.
+ *
+ * Building the DP Table:
+ * - For each amount from 1 to 11, update the dp array using the given coins.
+ *
+ * Updates for each amount:
+ * - dp[1]: Minimum of dp[1] and dp[1-1]+1 (using coin 1). dp[1] = 1
+ * - dp[2]: Minimum of dp[2], dp[2-1]+1 (using coin 1), and dp[2-2]+1 (using coin 2). dp[2] = 1
+ * - dp[3]: Minimum of dp[3], dp[3-1]+1 (using coin 1), and dp[3-2]+1 (using coin 2). dp[3] = 2
+ * - Continue this process up to dp[11].
+ *
+ * The final dp array will be:
+ * [0, 1, 1, 2, 2, 1, 2, 2, 3, 3, 2, 3]
+ *
+ * Check the Last Value:
+ * - dp[11] is 3, which means the minimum number of coins needed to make up 11 is 3 (one 5 coin and three 2 coins).
+ *
+ * When it\'s not possible:
+ * Suppose the coins are [2] and the amount is 3:
+ *
+ * Initialization:
+ * - max is set to 4.
+ * - dp array is [4, 4, 4, 4] and dp[0] is set to 0.
+ *
+ * Building the DP Table:
+ * - dp[1]: No valid coin can make 1, so dp[1] remains 4.
+ * - dp[2]: Using coin 2, dp[2] = 1.
+ * - dp[3]: No valid coin can make 3, so dp[3] remains 4.
+ *
+ * The final dp array will be:
+ * [0, 4, 1, 4]
+ *
+ * Check the Last Value:
+ * - dp[3] is 4, which is greater than the amount 3.
+ * - So the method returns -1 because it is not possible to make up the amount 3 with the given coins.
+ *
+ * Summary:
+ * - If dp[amount] is greater than amount, it means it was not possible to form the amount using the given coins, so return -1.
+ * - Otherwise, return dp[amount], which is the minimum number of coins needed.
+ */

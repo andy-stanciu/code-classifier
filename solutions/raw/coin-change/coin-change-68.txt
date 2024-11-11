@@ -1,0 +1,32 @@
+class Solution {
+
+    Integer[][] memo;
+
+    public int coinChange(int[] coins, int amount) {
+        memo = new Integer[coins.length][amount + 1];
+        int count = coinChange(coins, amount, 0);
+        if (count >= (int) Math.pow(10, 9)) {
+            return -1;
+        }
+        return count;
+    }
+
+    public int coinChange(int[] coins, int amount, int si) {
+        if (si == coins.length - 1) {
+            if (amount % coins[si] == 0) {
+                return amount / coins[si];
+            } else {
+                return (int) Math.pow(10, 9);
+            }
+        }
+        if (memo[si][amount] != null) {
+            return memo[si][amount];
+        }
+        int notPick = coinChange(coins, amount, si + 1);
+        int pick = Integer.MAX_VALUE;
+        if (coins[si] <= amount) {
+            pick = 1 + coinChange(coins, amount - coins[si], si);
+        }
+        return memo[si][amount] = Math.min(pick, notPick);
+    }
+}

@@ -1,0 +1,24 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int[][] dp = new int[param1.length + 1][amount + 1];
+        Arrays.fill(dp[0], Integer.MAX_VALUE);
+        dp[0][0] = 0;
+        for (int i = 1; i < param1.length + 1; i++) {
+            for (int j = 0; j < amount + 1; j++) {
+                if (j < param1[i - 1]) {
+                    dp[i][j] = dp[i - 1][j];
+                } else {
+                    int var1 = dp[i - 1][j];
+                    int var2 = dp[i][j - param1[i - 1]];
+                    if (var2 != Integer.MAX_VALUE) {
+                        dp[i][j] = Math.min(var1, var2 + 1);
+                    } else {
+                        dp[i][j] = var1;
+                    }
+                }
+            }
+        }
+        return dp[param1.length][amount] == Integer.MAX_VALUE ? -1 : dp[param1.length][amount];
+    }
+}

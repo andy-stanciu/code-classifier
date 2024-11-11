@@ -1,0 +1,58 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    private ListNode mergeLists(ListNode node1, ListNode node2) {
+        if (node1 == node2)
+            return node1;
+        ListNode merged = new ListNode();
+        ListNode curr = merged;
+        while (node1 != null && node2 != null) {
+            ListNode new_node = new ListNode();
+            if (node1.val < node2.val) {
+                new_node.val = node1.val;
+                node1 = node1.next;
+            } else {
+                new_node.val = node2.val;
+                node2 = node2.next;
+            }
+            curr.next = new_node;
+            curr = curr.next;
+        }
+        while (node1 != null) {
+            curr.next = new ListNode(node1.val);
+            curr = curr.next;
+            node1 = node1.next;
+        }
+        while (node2 != null) {
+            curr.next = new ListNode(node2.val);
+            curr = curr.next;
+            node2 = node2.next;
+        }
+        return merged.next;
+    }
+
+    private ListNode mergeKLists(ListNode[] lists, int start, int end) {
+        if (end == start) {
+            return lists[start];
+        }
+        int mid = (start + end) / 2;
+        ListNode left = mergeKLists(lists, start, mid);
+        ListNode right = mergeKLists(lists, mid + 1, end);
+        return mergeLists(left, right);
+    }
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0)
+            return null;
+        return mergeKLists(lists, 0, lists.length - 1);
+    }
+}

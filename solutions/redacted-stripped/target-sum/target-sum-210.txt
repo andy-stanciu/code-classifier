@@ -1,0 +1,27 @@
+class Solution {
+
+    private int helper(int[] nums, int i, int param1, int param2, int[][] dp, int offset) {
+        if (i == nums.length) {
+            return param1 == param2 ? 1 : 0;
+        }
+        if (dp[i][param1 + offset] != -1) {
+            return dp[i][param1 + offset];
+        }
+        int add = helper(nums, i + 1, param1 + nums[i], param2, dp, offset);
+        int sub = helper(nums, i + 1, param1 - nums[i], param2, dp, offset);
+        return dp[i][param1 + offset] = add + sub;
+    }
+
+    public int method1(int[] nums, int param2) {
+        int n = nums.length;
+        int param1 = 0;
+        for (int num : nums) {
+            param1 += num;
+        }
+        int[][] dp = new int[n][2 * param1 + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        return helper(nums, 0, 0, param2, dp, param1);
+    }
+}

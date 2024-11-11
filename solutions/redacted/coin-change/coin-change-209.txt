@@ -1,0 +1,42 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        if (amount == 0)
+            // No coins needed to make 0 amount
+            return 0;
+        if (amount < 0)
+            // Cannot make negative amount
+            return -1;
+        // Memoization map to store minimum coins needed for amounts
+        Map<Integer, Integer> memo = new HashMap<>();
+        return method2(param1, amount, memo);
+    }
+
+    private int method2(int[] param1, int amount, Map<Integer, Integer> memo) {
+        // Check if the result is already calculated and stored in memo
+        if (memo.containsKey(amount)) {
+            return memo.get(amount);
+        }
+        // Base cases
+        if (amount == 0) {
+            // No coins needed to make 0 amount
+            return 0;
+        } else if (amount < 0) {
+            // Cannot make negative amount
+            return -1;
+        }
+        int var1 = Integer.MAX_VALUE;
+        for (int var2 : param1) {
+            int remainingAmount = amount - var2;
+            // Recursive call to find minimum coins for remaining amount
+            int result = method2(param1, remainingAmount, memo);
+            // Update minimum if a valid solution is found
+            if (result != -1) {
+                var1 = Math.min(var1, result + 1);
+            }
+        }
+        // Store the result in memo for future use
+        memo.put(amount, var1 == Integer.MAX_VALUE ? -1 : var1);
+        return memo.get(amount);
+    }
+}

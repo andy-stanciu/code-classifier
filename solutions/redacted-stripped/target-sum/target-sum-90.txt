@@ -1,0 +1,32 @@
+class Solution {
+
+    int[][][] cache;
+
+    int[] nums;
+
+    public int method1(int[] nums, int param1) {
+        int var1 = Math.abs(param1);
+        for (int num : nums) var1 += num;
+        int[][][] cache = new int[2][var1 + 1][nums.length + 1];
+        this.cache = cache;
+        this.nums = nums;
+        for (int i = 0; i != cache[0].length; i++) {
+            Arrays.fill(cache[0][i], -1);
+            Arrays.fill(cache[1][i], -1);
+        }
+        return getWays(param1, 0);
+    }
+
+    private int getWays(int param2, int pos) {
+        if (pos == nums.length)
+            if (param2 == 0)
+                return 1;
+            else
+                return 0;
+        int dim = (param2 >= 0) ? 1 : 0;
+        int sign = dim == 1 ? 1 : -1;
+        if (cache[dim][sign * param2][pos] == -1)
+            cache[dim][sign * param2][pos] = getWays(param2 + nums[pos], pos + 1) + getWays(param2 - nums[pos], pos + 1);
+        return cache[dim][sign * param2][pos];
+    }
+}

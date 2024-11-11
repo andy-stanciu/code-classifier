@@ -1,0 +1,20 @@
+class Solution {
+
+    public int findTargetSumWays(int[] arr, int target) {
+        Map<Integer, Integer>[] cache = new Map[arr.length];
+        return recurse(arr, 0, 0, target, cache);
+    }
+
+    private int recurse(int[] arr, int i, int sumsofar, int target, Map<Integer, Integer>[] cache) {
+        int n = arr.length;
+        if (i == n)
+            return sumsofar == target ? 1 : 0;
+        if (cache[i] != null && cache[i].containsKey(sumsofar))
+            return cache[i].get(sumsofar);
+        int result = recurse(arr, i + 1, sumsofar + arr[i], target, cache) + recurse(arr, i + 1, sumsofar - arr[i], target, cache);
+        if (cache[i] == null)
+            cache[i] = new HashMap<>();
+        cache[i].put(sumsofar, result);
+        return result;
+    }
+}

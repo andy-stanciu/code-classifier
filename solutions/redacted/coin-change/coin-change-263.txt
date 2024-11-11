@@ -1,0 +1,32 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        int[] prev = new int[amount + 1];
+        for (int i = 0; i <= amount; i++) {
+            if (i % param1[0] == 0) {
+                prev[i] = i / param1[0];
+            } else {
+                prev[i] = (int) Math.pow(10, 9);
+            }
+        }
+        for (int ind = 1; ind < n; ind++) {
+            int[] curr = new int[amount + 1];
+            for (int target = 0; target <= amount; target++) {
+                int notTake = prev[target];
+                int take = (int) Math.pow(10, 9);
+                // If the current element is less than or equal to the target, calculate \'take\'
+                if (param1[ind] <= target)
+                    take = 1 + curr[target - param1[ind]];
+                // Store the minimum result in the dp array
+                curr[target] = Math.min(notTake, take);
+            }
+            prev = curr;
+        }
+        int ans = prev[amount];
+        if (ans >= (int) Math.pow(10, 9)) {
+            return -1;
+        }
+        return ans;
+    }
+}

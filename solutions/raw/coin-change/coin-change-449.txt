@@ -1,0 +1,24 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int[][] t = new int[coins.length][amount + 1];
+        for (int[] rows : t) Arrays.fill(rows, -1);
+        int ans = change(amount, coins, coins.length - 1, t);
+        return ans == (int) Math.pow(10, 9) ? -1 : ans;
+    }
+
+    public int change(int amount, int[] coins, int i, int[][] t) {
+        if (i == 0) {
+            if (amount % coins[0] == 0)
+                return amount / coins[0];
+            return (int) Math.pow(10, 9);
+        }
+        if (t[i][amount] != -1)
+            return t[i][amount];
+        int taken = (int) Math.pow(10, 9);
+        if (coins[i] <= amount)
+            taken = 1 + change(amount - coins[i], coins, i, t);
+        int not_taken = change(amount, coins, i - 1, t);
+        return t[i][amount] = Math.min(taken, not_taken);
+    }
+}

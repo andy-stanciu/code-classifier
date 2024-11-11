@@ -1,0 +1,37 @@
+class Solution {
+
+    static class Pair {
+
+        ListNode node;
+
+        int val;
+
+        Pair(ListNode node, int val) {
+            this.node = node;
+            this.val = val;
+        }
+    }
+
+    public ListNode method1(ListNode[] param1) {
+        PriorityQueue<Pair> queue = new PriorityQueue<>((a, b) -> {
+            return a.val - b.val;
+        });
+        for (int i = 0; i < param1.length; i++) {
+            if (param1[i] != null) {
+                queue.add(new Pair(param1[i], param1[i].val));
+            }
+        }
+        ListNode head = new ListNode(-1), tail = head;
+        while (!queue.isEmpty()) {
+            Pair pair = queue.remove();
+            tail.next = pair.node;
+            tail = tail.next;
+            if (pair.node.next != null) {
+                pair.node = pair.node.next;
+                pair.val = pair.node.val;
+                queue.add(pair);
+            }
+        }
+        return head.next;
+    }
+}

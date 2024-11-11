@@ -1,0 +1,107 @@
+class Solution {
+
+    public int helperRecursion(int ind, int amount, int[] coins) {
+        //TC = >>>> O(2^N)(exponential)
+        //SC = >>>>O(N)
+        //Base Case
+        if (ind == 0) {
+            if (amount % coins[ind] == 0)
+                return amount / coins[ind];
+            else
+                return (int) Math.pow(10, 9);
+        }
+        //Possibilities
+        int notTake = 0 + helperRecursion(ind - 1, amount, coins);
+        int take = Integer.MAX_VALUE;
+        if (coins[ind] <= amount) {
+            take = 1 + helperRecursion(ind, amount - coins[ind], coins);
+        }
+        return Math.min(notTake, take);
+    }
+
+    public int helperMemoisation(int ind, int amount, int[] coins, int[][] dp) {
+        //TC  = O(N*T)
+        //SC = O(N*T)+ O(N)  //recursive Tech stack;
+        //Base Case
+        if (ind == 0) {
+            if (amount % coins[ind] == 0)
+                return amount / coins[ind];
+            else
+                return (int) Math.pow(10, 9);
+        }
+        if (dp[ind][amount] != -1)
+            return dp[ind][amount];
+        //Possibilities
+        int notTake = 0 + helperMemoisation(ind - 1, amount, coins, dp);
+        int take = Integer.MAX_VALUE;
+        if (coins[ind] <= amount) {
+            take = 1 + helperMemoisation(ind, amount - coins[ind], coins, dp);
+        }
+        return dp[ind][amount] = Math.min(notTake, take);
+    }
+
+    public int helperTabulation(int n, int amount, int[] coins) {
+        //TC = O(N*T)
+        // SC = O(N*T)
+        int[][] dp = new int[n][amount + 1];
+        for (int amt = 0; amt <= amount; amt++) {
+            if (amt % coins[0] == 0) {
+                dp[0][amt] = amt / coins[0];
+            } else {
+                dp[0][amt] = (int) Math.pow(10, 9);
+            }
+        }
+        for (int ind = 1; ind < n; ind++) {
+            for (int amt = 0; amt <= amount; amt++) {
+                int notTake = 0 + dp[ind - 1][amt];
+                int take = Integer.MAX_VALUE;
+                if (coins[ind] <= amt) {
+                    take = 1 + dp[ind][amt - coins[ind]];
+                }
+                dp[ind][amt] = Math.min(take, notTake);
+            }
+        }
+        return dp[n - 1][amount];
+    }
+
+    public int helperSpaceOptimised(int n, int amount, int[] coins) {
+        int[] prev = new int[amount + 1];
+        for (int i = 0; i <= amount; i++) {
+            if (i % coins[0] == 0) {
+                prev[i] = i / coins[0];
+            } else
+                prev[i] = (int) Math.pow(10, 9);
+        }
+        for (int i = 1; i < n; i++) {
+            int[] curr = new int[amount + 1];
+            for (int j = 0; j <= amount; j++) {
+                int notTake = 0 + prev[j];
+                int take = (int) Math.pow(10, 9);
+                if (coins[i] <= j) {
+                    //take = 1 + prev[j-coins[i]];
+                    take = 1 + curr[j - coins[i]];
+                }
+                curr[j] = Math.min(take, notTake);
+            }
+            prev = curr;
+        }
+        return prev[amount];
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        // int ans = helperRecursion(n-1,amount,coins);
+        // int ans = helperMemoisation(n-1,amount,coins,dp);
+        // int ans = helperTabulation(n,amount,coins);
+        int ans = helperSpaceOptimised(n, amount, coins);
+        if (//handling question condition
+        ans >= (int) Math.pow(10, 9)) {
+            return -1;
+        }
+        return ans;
+    }
+}

@@ -1,0 +1,60 @@
+class Solution {
+
+    public int[] twoSum(int[] nums, int target) {
+        //temp array of the same nums
+        int[] tempNums = new int[nums.length];
+        //copy values over to temp array
+        for (int i = 0; i < nums.length; i++) tempNums[i] = nums[i];
+        //sort the temp array
+        Arrays.sort(tempNums);
+        //two trackers on the max right and max left
+        int l = 0;
+        int r = nums.length - 1;
+        //initialize sum to the sum of biggest and smallest value
+        int sum = tempNums[l] + tempNums[r];
+        //run the loop as long as we haven\'t reached the goal
+        while (sum != target) {
+            //if current sum is less than target, we need a bigger number
+            if (sum < target) {
+                //increment left tracker to get a bigger number
+                l++;
+                //update the current sum
+                sum = tempNums[l] + tempNums[r];
+            } else //if current sum is greater than target, we need a smaller number
+            {
+                //decrement right tracker to get a smaller number
+                r--;
+                //update the current sum
+                sum = tempNums[l] + tempNums[r];
+            }
+        }
+        //store the two values in variables A and B
+        int A = tempNums[l];
+        int B = tempNums[r];
+        //get indeces of the two values from the original array
+        int[] result = getIndexes(nums, tempNums[l], tempNums[r]);
+        //return result
+        return result;
+    }
+
+    public static int[] getIndexes(int[] arr, int val1, int val2) {
+        //array of soze of 2 to store the result
+        int[] result = new int[2];
+        //find first index
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == val1) {
+                result[0] = i;
+                // break is necessary in case of duplicate numbers, we want to break at the first instance of the value we are looking for
+                break;
+            }
+        }
+        //find second index
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == val2)
+                result[1] = i;
+            //no break needed here because for the second index we want the last instance of the value
+        }
+        //return result
+        return result;
+    }
+}

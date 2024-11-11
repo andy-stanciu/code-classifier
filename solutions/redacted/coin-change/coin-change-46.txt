@@ -1,0 +1,37 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        //if amount is 0 so that means we need to take 0 number of coins to get that amount.
+        if (amount == 0)
+            return 0;
+        int ans = method2(param1, amount, param1.length - 1);
+        if (ans == Integer.MAX_VALUE)
+            return -1;
+        else
+            return ans;
+    }
+
+    public int method2(int[] param1, int sum, int i) {
+        /* if our index (i) is 0 that means we don\'t have any element to make that sum
+            but if we still want to make that sum it will need infinte number of coins
+            so return max val. or if sum gets to 0 means if we exceed our target then
+            also its not possible so return max value.
+        */
+        if (i < 0 || sum < 0)
+            return Integer.MAX_VALUE;
+        //sum 0 we found our target sum.
+        if (sum == 0)
+            return 0;
+        /*If we include our element then sum will decrease, and if we add our element we can
+           include it again so dont change the index i*/
+        int countOne = method2(param1, sum - param1[i], i);
+        /*If max value is returned and if we add current coin count 1 to it then maxVal + 1
+            becomes Integer.MAX_VALUE + 1 == Integer.MIN_VALUE.
+        */
+        if (countOne != Integer.MAX_VALUE)
+            countOne += 1;
+        //If we dont include current coin.
+        int countTwo = method2(param1, sum, i - 1);
+        return Math.min(countOne, countTwo);
+    }
+}

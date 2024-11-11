@@ -1,0 +1,28 @@
+class Solution {
+
+    public int helper(int[][] dp, int[] param1, int amount, int i) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (i >= param1.length || amount < 0) {
+            return Integer.MAX_VALUE;
+        }
+        if (dp[i][amount] != -1)
+            return dp[i][amount];
+        int x = helper(dp, param1, amount - param1[i], i);
+        if (x != Integer.MAX_VALUE)
+            x += 1;
+        int y = helper(dp, param1, amount, i + 1);
+        dp[i][amount] = Math.min(x, y);
+        return dp[i][amount];
+    }
+
+    public int method1(int[] param1, int amount) {
+        int[][] dp = new int[param1.length][amount + 1];
+        for (int[] ele : dp) {
+            Arrays.fill(ele, -1);
+        }
+        int ans = helper(dp, param1, amount, 0);
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+}

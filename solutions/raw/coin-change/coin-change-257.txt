@@ -1,0 +1,33 @@
+class Solution {
+
+    public int tab(int[] coins, int target) {
+        int[] prev = new int[target + 1];
+        for (int i = 0; i <= target; i++) {
+            if (i % coins[0] == 0)
+                prev[i] = i / coins[0];
+            else
+                prev[i] = Integer.MAX_VALUE;
+        }
+        for (int i = 1; i < coins.length; i++) {
+            int[] cur = new int[target + 1];
+            for (int j = 0; j <= target; j++) {
+                int notPick = prev[j];
+                int pickCur = Integer.MAX_VALUE;
+                if (coins[i] <= j) {
+                    int picked = cur[j - coins[i]];
+                    if (picked != pickCur) {
+                        pickCur = 1 + picked;
+                    }
+                }
+                cur[j] = Math.min(pickCur, notPick);
+            }
+            prev = cur;
+        }
+        return prev[target];
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        int ans = tab(coins, amount);
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+}

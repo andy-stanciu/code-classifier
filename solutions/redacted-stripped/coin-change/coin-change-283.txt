@@ -1,0 +1,36 @@
+class Solution {
+
+    private int MAX_INT;
+
+    public int method1(int[] param1, int amount) {
+        MAX_INT = amount + 1;
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, -1);
+        dp[0] = 0;
+        for (int c : param1) {
+            if (c > amount)
+                continue;
+            dp[c] = 1;
+        }
+        int ans = method2(param1, dp, amount);
+        if (ans >= MAX_INT)
+            return -1;
+        return ans;
+    }
+
+    private int method2(int[] param1, int[] dp, int amt) {
+        if (amt < 0)
+            return MAX_INT;
+        if (dp[amt] != -1)
+            return dp[amt];
+        int mini = MAX_INT;
+        for (int c : param1) {
+            mini = Math.min(method2(param1, dp, amt - c), mini);
+        }
+        if (mini >= MAX_INT)
+            dp[amt] = MAX_INT;
+        else
+            dp[amt] = mini + 1;
+        return dp[amt];
+    }
+}

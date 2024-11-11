@@ -1,0 +1,41 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        // created minHeap if you do this b.val -a.val it will become maxHeap
+        PriorityQueue<ListNode> minHeap = new PriorityQueue<>((a, b) -> a.val - b.val);
+        for (ListNode node : param1) {
+            if (node != null) {
+                // add first first node of each list to minHeap
+                minHeap.offer(node);
+            }
+        }
+        // created a dummy to return fullist in the end
+        ListNode dummy = new ListNode(0);
+        // this point to dummy but help in adding node and moving forward
+        ListNode tail = dummy;
+        while (!minHeap.isEmpty()) {
+            // get the smallest value (property of min heap smallest at the top)
+            ListNode smallest = minHeap.poll();
+            // point the tail next to smallest
+            tail.next = smallest;
+            // move tail forward
+            tail = tail.next;
+            if (smallest.next != null) {
+                // get the next number in the that list
+                minHeap.offer(smallest.next);
+            }
+        }
+        // to return the head of smallest
+        return dummy.next;
+    }
+}

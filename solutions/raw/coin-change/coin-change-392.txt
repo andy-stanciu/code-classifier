@@ -1,0 +1,34 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        // Initialize a 2D array to store the minimum number of coins needed for each subproblem
+        int[][] dp = new int[coins.length + 1][amount + 1];
+        // Fill the first row with Integer.MAX_VALUE except for dp[0][0] which is 0
+        Arrays.fill(dp[0], Integer.MAX_VALUE);
+        dp[0][0] = 0;
+        // Iterate through the coins and amount to fill in the dp table
+        for (int i = 1; i < coins.length + 1; i++) {
+            for (int j = 0; j < amount + 1; j++) {
+                // If the current coin denomination is greater than the target amount,
+                // take the value from the row above (dp[i-1][j])
+                if (j < coins[i - 1]) {
+                    dp[i][j] = dp[i - 1][j];
+                } else {
+                    // Consider both taking and not taking the current coin
+                    int withoutCoinI = dp[i - 1][j];
+                    int withCoinI = dp[i][j - coins[i - 1]];
+                    // Check for Integer.MAX_VALUE to avoid overflow
+                    if (withCoinI != Integer.MAX_VALUE) {
+                        // Update the cell with the minimum of taking or not taking the current coin
+                        dp[i][j] = Math.min(withoutCoinI, withCoinI + 1);
+                    } else {
+                        dp[i][j] = withoutCoinI;
+                    }
+                }
+            }
+        }
+        // The final result is stored in dp[coins.length][amount]
+        // If it is still Integer.MAX_VALUE, return -1 (impossible to make up the amount)
+        return dp[coins.length][amount] == Integer.MAX_VALUE ? -1 : dp[coins.length][amount];
+    }
+}

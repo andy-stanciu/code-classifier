@@ -1,0 +1,34 @@
+class Solution {
+
+    public int f(int ind, int t, int[] arr, int[][] dp) {
+        if (ind == 0) {
+            if (t % arr[0] == 0)
+                return t / arr[0];
+            else
+                return (int) 1e9;
+        }
+        if (dp[ind][t] != -1)
+            return dp[ind][t];
+        // Not Picking the coin
+        int np = 0 + f(ind - 1, t, arr, dp);
+        int p = (int) 1e9;
+        //Pick the coin and stay at same index.
+        if (t >= arr[ind])
+            p = 1 + f(ind, t - arr[ind], arr, dp);
+        return dp[ind][t] = Math.min(p, np);
+    }
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        if (amount == 0)
+            return 0;
+        int[][] dp = new int[n][amount + 1];
+        for (int[] r : dp) Arrays.fill(r, -1);
+        int x = f(n - 1, amount, param1, dp);
+        //if the amount cannot be made from given coins we check it
+        if (x == 1e9)
+            return -1;
+        else
+            return x;
+    }
+}

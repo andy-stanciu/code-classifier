@@ -1,0 +1,32 @@
+class Solution {
+
+    static int fun(int i, int target, int[] arr, int[][] dp) {
+        if (i == 0) {
+            if (target % arr[i] == 0)
+                return target / arr[i];
+            else
+                return (int) Math.pow(10, 9);
+        }
+        if (dp[i][target] != -1)
+            return dp[i][target];
+        int nottake = 0;
+        nottake += fun(i - 1, target, arr, dp);
+        int take = (int) Math.pow(10, 9);
+        if (arr[i] <= target) {
+            take = 1 + fun(i, target - arr[i], arr, dp);
+        }
+        return dp[i][target] = Math.min(nottake, take);
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        int ans = fun(n - 1, amount, coins, dp);
+        if (ans == (int) Math.pow(10, 9))
+            return -1;
+        return ans;
+    }
+}

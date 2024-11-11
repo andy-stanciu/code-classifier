@@ -1,0 +1,47 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        //Create a min heap to store the head of all linked list
+        PriorityQueue<ListNode> minHeap = new PriorityQueue<ListNode>((n1, n2) -> {
+            //Create a comparator to sort the ListNodes to sort on basis of their val
+            if (n1.val < n2.val)
+                return -11;
+            else if (n1.val > n2.val)
+                return 1;
+            else
+                return 0;
+        });
+        //Add head of all the lists into our min heap
+        for (ListNode list : param1) {
+            if (list != null)
+                minHeap.add(list);
+        }
+        //Create head to store the new merged linked list
+        ListNode head = null, curr = null;
+        while (!minHeap.isEmpty()) {
+            //As we have created a min heap, poll will always return the node with least val.
+            if (head == null) {
+                head = minHeap.poll();
+                curr = head;
+            } else {
+                curr.next = minHeap.poll();
+                //Move the pointer to the newly added node as it will be node where we need to add next node
+                curr = curr.next;
+            }
+            //If we have more nodes to visit on a particular list then add them in heap
+            if (curr.next != null)
+                minHeap.add(curr.next);
+        }
+        return head;
+    }
+}

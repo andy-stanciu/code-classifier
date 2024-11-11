@@ -1,0 +1,27 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int ans = findMinCoins(coins, amount, 0);
+        return ans == Integer.MAX_VALUE - 1 ? -1 : ans;
+    }
+
+    int findMinCoins(int[] coins, int amount, int ind) {
+        //base case
+        if (ind >= coins.length || amount <= 0) {
+            return (amount == 0 ? 0 : Integer.MAX_VALUE - 1);
+        }
+        int res = -1;
+        //condition
+        // not take
+        if (coins[ind] > amount) {
+            int notTake = 0 + findMinCoins(coins, amount, ind + 1);
+            res = notTake;
+        } else // take
+        {
+            int take = 1 + findMinCoins(coins, amount - coins[ind], ind);
+            int notTake = 0 + findMinCoins(coins, amount, ind + 1);
+            res = Math.min(take, notTake);
+        }
+        return res;
+    }
+}

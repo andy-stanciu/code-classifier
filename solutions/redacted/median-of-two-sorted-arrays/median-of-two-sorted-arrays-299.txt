@@ -1,0 +1,48 @@
+class Solution {
+
+    public double method1(int[] nums1, int[] nums2) {
+        // In the solutions, there is O(m+n) solution which is prepared by merging two arrays into a new array using 2 pointer technique. It is not bad and better than brute force to merge first and sort which will have O((m+n)log(m+n)) complexity.
+        /**
+         *            Trying to attempt O(min(log M, log N)) solution. Do binary search on the smallest array to find partitions partitionX in nums1 (assuming nums1 is smallest array) and partitionY in nums2, such that all elements to the left of both arrays will be less than all the elements to the right of both the partitions.
+         *            nums1                           num2
+         *            .....PartitionX....          ....PartitionY....
+         *           maxX | minX                      maxY | minY
+         *
+         *           Identify 4 points maxX (which is the largest element in the left side of the partition in the first array) and minX (which is the smallest element in the right partition of first array). Similarly identify maxY (largest in left of partition in largest array) and minY(smallest in right of second array).
+         *           Once we identify these points correct using binary search, the median will be calculated based on these points.
+         */
+        int m = nums1.length, n = nums2.length;
+        if (m > n) {
+            // making nums1 smaller to apply binary search on
+            return method1(nums2, nums1);
+        }
+        int start = 0, end = m;
+        // This handles both even and odd lengths
+        int halfLength = (m + n + 1) / 2;
+        while (start <= end) {
+            // in the smaller array
+            int partitionX = start + (end - start) / 2;
+            // This is subtracted from half length of the total array as the left side should be within that range
+            int partitionY = halfLength - partitionX;
+            int maxX = partitionX == 0 ? Integer.MIN_VALUE : nums1[partitionX - 1];
+            int maxY = partitionY == 0 ? Integer.MIN_VALUE : nums2[partitionY - 1];
+            int minX = partitionX == m ? Integer.MAX_VALUE : nums1[partitionX];
+            int minY = partitionY == n ? Integer.MAX_VALUE : nums2[partitionY];
+            if (maxX <= minY && maxY <= minX) {
+                // We found the correct partition
+                int leftMax = Math.max(maxX, maxY);
+                int rightMin = Math.min(minX, minY);
+                if ((m + n) % 2 == 0) {
+                    return (leftMax + rightMin) / 2.0;
+                } else {
+                    return leftMax;
+                }
+            } else if (maxX > minY) {
+                end = partitionX - 1;
+            } else {
+                start = partitionX + 1;
+            }
+        }
+        throw new IllegalArgumentException("Arrays are not sorted");
+    }
+}

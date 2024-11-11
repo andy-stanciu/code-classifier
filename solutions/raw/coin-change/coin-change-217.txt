@@ -1,0 +1,34 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        int[][] dp = new int[n + 1][amount + 1];
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= amount; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        int ans = coinchange(amount, n, coins, dp);
+        if (ans == Integer.MAX_VALUE - 1) {
+            return -1;
+        }
+        return ans;
+    }
+
+    public int coinchange(int amount, int n, int[] coins, int[][] dp) {
+        if (dp[n][amount] != -1) {
+            return dp[n][amount];
+        }
+        if (amount == 0) {
+            return dp[n][amount] = 0;
+        }
+        if (n == 0) {
+            return dp[n][amount] = Integer.MAX_VALUE - 1;
+        }
+        if (coins[n - 1] <= amount) {
+            return dp[n][amount] = Math.min(1 + coinchange(amount - coins[n - 1], n, coins, dp), coinchange(amount, n - 1, coins, dp));
+        } else {
+            return dp[n][amount] = coinchange(amount, n - 1, coins, dp);
+        }
+    }
+}

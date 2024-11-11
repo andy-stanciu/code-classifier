@@ -1,0 +1,36 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        if (amount == 0)
+            return 0;
+        Map<Integer, Integer> dp = new HashMap<>();
+        int result = dfs(coins, amount, dp);
+        return result == Integer.MAX_VALUE ? -1 : result;
+    }
+
+    private int dfs(int[] coins, int remaining, Map<Integer, Integer> dp) {
+        if (remaining < 0)
+            return Integer.MAX_VALUE;
+        if (remaining == 0)
+            return 0;
+        if (dp.containsKey(remaining))
+            return dp.get(remaining);
+        int minCoins = Integer.MAX_VALUE;
+        for (int coin : coins) {
+            int res = dfs(coins, remaining - coin, dp);
+            if (res != Integer.MAX_VALUE) {
+                minCoins = Math.min(minCoins, 1 + res);
+            }
+        }
+        dp.put(remaining, minCoins);
+        return minCoins;
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        int[] coins = { 1, 2, 5 };
+        int amount = 11;
+        // Output: 3
+        System.out.println(solution.coinChange(coins, amount));
+    }
+}

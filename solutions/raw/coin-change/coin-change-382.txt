@@ -1,0 +1,30 @@
+class Solution {
+
+    private int helper(int[] coins, int i, int amt, int[][] dp) {
+        if (amt == 0) {
+            return 0;
+        }
+        if (i == coins.length || amt < 0) {
+            return Integer.MAX_VALUE;
+        }
+        if (dp[i][amt] != -1) {
+            return dp[i][amt];
+        }
+        int way1 = helper(coins, i, amt - coins[i], dp);
+        if (way1 != Integer.MAX_VALUE) {
+            way1 += 1;
+        }
+        int way2 = helper(coins, i + 1, amt, dp);
+        return dp[i][amt] = Math.min(way1, way2);
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        int[][] dp = new int[n + 1][amount + 1];
+        for (int[] d : dp) {
+            Arrays.fill(d, -1);
+        }
+        int res = helper(coins, 0, amount, dp);
+        return res == Integer.MAX_VALUE ? -1 : res;
+    }
+}

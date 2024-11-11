@@ -1,0 +1,33 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        // if(amount==coins[0]){
+        //     return 1;
+        // }
+        int n = coins.length;
+        // if(n==1 && amount%coins[0]!=0){
+        //     return -1;
+        // }
+        int[][] dp = new int[n][amount + 1];
+        for (int T = 1; T <= amount; T++) {
+            if (T % coins[0] == 0) {
+                dp[0][T] = T / coins[0];
+            } else {
+                dp[0][T] = Integer.MAX_VALUE / 10;
+            }
+        }
+        for (int i = 1; i < n; i++) {
+            for (int tar = 1; tar <= amount; tar++) {
+                int notTake = 0 + dp[i - 1][tar];
+                int take = Integer.MAX_VALUE / 10;
+                if (tar >= coins[i])
+                    take = 1 + dp[i][tar - coins[i]];
+                dp[i][tar] = Math.min(take, notTake);
+            }
+        }
+        int ans = dp[n - 1][amount];
+        if (ans >= (int) 1e7)
+            return -1;
+        return ans;
+    }
+}

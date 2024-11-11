@@ -1,0 +1,28 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        // int dp[][]=new int[coins.length][Integer.MAX_VALUE];
+        Map<String, Integer> res = new HashMap<>();
+        int ans = method1(param1, amount, 0, 0, res);
+        return ans == Integer.MAX_VALUE - 1 ? -1 : ans;
+    }
+
+    public int method1(int[] param1, int amount, int index, int sum, Map<String, Integer> res) {
+        if (amount == sum) {
+            return 0;
+        }
+        if (index >= param1.length || sum > amount) {
+            if (amount == sum) {
+                return 0;
+            }
+            return Integer.MAX_VALUE - 1;
+        }
+        if (res.containsKey(String.valueOf(index) + String.valueOf(sum))) {
+            return res.get(String.valueOf(index) + String.valueOf(sum));
+        }
+        int include = 1 + method1(param1, amount, index, sum + param1[index], res);
+        int exclude = method1(param1, amount, index + 1, sum, res);
+        res.put(String.valueOf(index) + String.valueOf(sum), Math.min(include, exclude));
+        return Math.min(include, exclude);
+    }
+}

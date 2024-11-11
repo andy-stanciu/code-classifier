@@ -1,0 +1,46 @@
+class Solution {
+
+    int top = Integer.MAX_VALUE;
+
+    public int insert(int param1, int[] dp, int position) {
+        int n = dp.length;
+        if (position - param1 < 0) {
+            return top;
+        }
+        if (dp[position - param1] == 0) {
+            return top;
+        } else {
+            return dp[position - param1] + 1;
+        }
+    }
+
+    public int method1(int[] param2, int amount) {
+        if (amount == 0) {
+            return 0;
+        }
+        Arrays.sort(param2);
+        if (amount < param2[0])
+            return -1;
+        int n = param2.length;
+        int len = amount + 1;
+        int[] dp = new int[len];
+        for (int i = 0; i < n && param2[i] < len; ++i) {
+            dp[param2[i]] = 1;
+        }
+        for (int i = param2[0] + 1; i <= amount; ++i) {
+            if (dp[i] != 0)
+                continue;
+            dp[i] = top;
+            for (int j = 0; j < n; ++j) {
+                dp[i] = Math.min(insert(param2[j], dp, i), dp[i]);
+            }
+            if (dp[i] == top) {
+                dp[i] = 0;
+            }
+        }
+        if (dp[amount] == 0) {
+            return -1;
+        }
+        return dp[amount];
+    }
+}

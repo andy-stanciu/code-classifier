@@ -1,0 +1,22 @@
+class Solution {
+
+    int SUM_OFFSET = 1000;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int[][] dp = new int[nums.length][2002];
+        for (int[] arr : dp) Arrays.fill(arr, -1);
+        return solve(nums, 0, target, 0, dp);
+    }
+
+    int solve(int[] nums, int pos, int tgt, int sum, int[][] dp) {
+        if (pos >= nums.length) {
+            return tgt == sum ? 1 : 0;
+        }
+        if (dp[pos][sum + SUM_OFFSET] != -1)
+            return dp[pos][sum + SUM_OFFSET];
+        int ret = 0;
+        ret += solve(nums, pos + 1, tgt, sum - nums[pos], dp);
+        ret += solve(nums, pos + 1, tgt, sum + nums[pos], dp);
+        return dp[pos][sum + SUM_OFFSET] = ret;
+    }
+}

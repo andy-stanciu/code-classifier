@@ -1,0 +1,41 @@
+class Solution {
+
+    public double method1(int[] nums1, int[] nums2) {
+        int l1 = nums1.length;
+        int l2 = nums2.length;
+        if (l1 > l2) {
+            return (method1(nums2, nums1));
+        }
+        int start_x = 0;
+        int end_x = l1;
+        int half = (l1 + l2 + 1) / 2;
+        int xleft = 0;
+        int xright = 0;
+        int yleft = 0;
+        int yright = 0;
+        while (start_x <= end_x) {
+            int partx = (start_x + end_x) / 2;
+            int party = half - partx;
+            xleft = (partx - 1 > -1) ? nums1[partx - 1] : -1000000;
+            xright = (partx < l1) ? nums1[partx] : 1000000;
+            yleft = (party - 1 > -1) ? nums2[party - 1] : -1000000;
+            yright = (party < l2) ? nums2[party] : 1000000;
+            if (xleft <= yright && yleft <= xright) {
+                break;
+            } else if (xleft > yright) {
+                end_x = partx - 1;
+            } else {
+                start_x = partx + 1;
+            }
+        }
+        double var1 = 0;
+        int maxleft = xleft > yleft ? xleft : yleft;
+        if ((l1 + l2) % 2 == 0) {
+            int minright = xright < yright ? xright : yright;
+            var1 = (maxleft + minright) / 2.0;
+        } else {
+            var1 = maxleft;
+        }
+        return var1;
+    }
+}

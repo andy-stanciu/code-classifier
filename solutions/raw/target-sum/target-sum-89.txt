@@ -1,0 +1,27 @@
+class Solution {
+
+    int total = 0;
+
+    private int solve(int index, int sum, int target, int[] arr, int[][] dp) {
+        if (index == arr.length) {
+            if (sum == target)
+                return 1;
+            else
+                return 0;
+        }
+        if (dp[index][sum + total] != -1)
+            return dp[index][sum + total];
+        int positive = solve(index + 1, sum + arr[index], target, arr, dp);
+        int negative = solve(index + 1, sum - arr[index], target, arr, dp);
+        return dp[index][sum + total] = positive + negative;
+    }
+
+    public int findTargetSumWays(int[] nums, int target) {
+        total = Arrays.stream(nums).sum();
+        int[][] dp = new int[nums.length][2 * total + 1];
+        for (int[] arr : dp) {
+            Arrays.fill(arr, -1);
+        }
+        return solve(0, 0, target, nums, dp);
+    }
+}

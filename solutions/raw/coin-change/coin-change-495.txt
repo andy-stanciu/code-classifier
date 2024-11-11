@@ -1,0 +1,33 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        int r = coinChanges(coins, amount, dp);
+        if (r == Integer.MAX_VALUE) {
+            return -1;
+        }
+        return r;
+    }
+
+    public int coinChanges(int[] coins, int amount, int[] dp) {
+        if (dp[amount] != 0) {
+            return dp[amount];
+        }
+        if (amount == 0) {
+            return 0;
+        }
+        int r = Integer.MAX_VALUE;
+        for (int c : coins) {
+            if (c <= amount) {
+                int sr = coinChanges(coins, amount - c, dp);
+                if (sr != Integer.MAX_VALUE) {
+                    if (sr + 1 < r) {
+                        r = sr + 1;
+                    }
+                }
+            }
+        }
+        dp[amount] = r;
+        return r;
+    }
+}

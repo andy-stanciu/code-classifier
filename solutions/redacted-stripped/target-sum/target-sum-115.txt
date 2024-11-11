@@ -1,0 +1,42 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int total = 0;
+        for (int num : nums) {
+            total += num;
+        }
+        int[][] dp = new int[nums.length][total + 1];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        return method2(nums, param1, 0, 0, dp);
+    }
+
+    public int count(int[] nums, int param1, int param2, int index) {
+        if (index > nums.length) {
+            return 0;
+        }
+        if (index == nums.length && param2 == param1) {
+            return 1;
+        } else if (index == nums.length) {
+            return 0;
+        }
+        return count(nums, param1, param2 + nums[index], index + 1) + count(nums, param1, param2 - nums[index], index + 1);
+    }
+
+    public int method2(int[] nums, int param1, int param2, int index, int[][] dp) {
+        if (index > nums.length) {
+            return 0;
+        }
+        if (index == nums.length) {
+            return 0;
+        }
+        if (dp[index][param2] != -1) {
+            return dp[index][param2];
+        }
+        if (index == nums.length && param2 == param1) {
+            return 1;
+        }
+        dp[index][param2] = count(nums, param1, param2 + nums[index], index + 1) + count(nums, param1, param2 - nums[index], index + 1);
+        System.out.println(" dp is : index : " + index + " ,dp[index] : " + dp[index]);
+        return dp[index][param2];
+    }
+}

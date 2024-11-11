@@ -1,0 +1,44 @@
+class Solution {
+
+    private static int recurse(int index, int currAmount, int[] param1, int[][] matrix) {
+        if (index >= 0 && currAmount >= 0 && matrix[currAmount][index] != -1) {
+            return matrix[currAmount][index];
+        }
+        if (currAmount == 0) {
+            return 0;
+        }
+        if (index == -1) {
+            return Integer.MAX_VALUE;
+        }
+        if (currAmount < 0) {
+            return Integer.MAX_VALUE;
+        }
+        int first = recurse(index - 1, currAmount, param1, matrix);
+        int second = recurse(index, currAmount - param1[index], param1, matrix);
+        if (second != Integer.MAX_VALUE) {
+            second = second + 1;
+        }
+        matrix[currAmount][index] = Math.min(first, second);
+        return matrix[currAmount][index];
+    }
+
+    public static int method1(int[] param1, int amount) {
+        if (amount == 0) {
+            return 0;
+        }
+        int[][] matrix = new int[amount + 1][param1.length + 1];
+        for (int i = 0; i <= amount; i++) {
+            for (int j = 0; j <= param1.length; j++) {
+                matrix[i][j] = -1;
+            }
+        }
+        recurse(param1.length - 1, amount, param1, matrix);
+        return matrix[amount][param1.length - 1] == Integer.MAX_VALUE ? -1 : matrix[amount][param1.length - 1];
+    }
+
+    public static void main(String[] args) {
+        int[] param1 = { 1, 2, 5 };
+        int amount = 11;
+        System.out.println(method1(param1, amount));
+    }
+}

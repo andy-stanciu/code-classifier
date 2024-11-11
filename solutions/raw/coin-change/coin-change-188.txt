@@ -1,0 +1,32 @@
+class Solution {
+
+    public int solveUsingMemo(int[] coins, int amount, int[] dp) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (amount < 0) {
+            return Integer.MAX_VALUE;
+        }
+        if (dp[amount] != 0) {
+            return dp[amount];
+        }
+        int min = Integer.MAX_VALUE;
+        for (int x : coins) {
+            int ans = solveUsingMemo(coins, amount - x, dp);
+            if (ans != Integer.MAX_VALUE) {
+                min = Math.min(min, ans + 1);
+            }
+        }
+        dp[amount] = min;
+        return min;
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        int ans = solveUsingMemo(coins, amount, dp);
+        if (ans == Integer.MAX_VALUE) {
+            return -1;
+        }
+        return ans;
+    }
+}

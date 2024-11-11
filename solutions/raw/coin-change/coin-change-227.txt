@@ -1,0 +1,31 @@
+class Solution {
+
+    int[][] dp;
+
+    public int coinChange(int[] coins, int amount) {
+        dp = new int[coins.length][amount + 1];
+        for (int[] i : dp) {
+            Arrays.fill(i, -1);
+        }
+        int ans = sumSubSet(0, amount, coins);
+        return ans >= (int) Math.pow(10, 9) ? -1 : ans;
+    }
+
+    public int sumSubSet(int i, int target, int[] arr) {
+        if (target == 0) {
+            return 0;
+        }
+        if (i == arr.length || target < 0) {
+            return (int) Math.pow(10, 9);
+        }
+        if (dp[i][target] != -1) {
+            return dp[i][target];
+        }
+        int exclude = sumSubSet(i + 1, target, arr);
+        int include = (int) Math.pow(10, 9);
+        if (target >= arr[i]) {
+            include = sumSubSet(i, target - arr[i], arr) + 1;
+        }
+        return dp[i][target] = Math.min(include, exclude);
+    }
+}

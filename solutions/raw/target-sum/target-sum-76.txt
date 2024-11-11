@@ -1,0 +1,56 @@
+// class Solution {
+//     int ans =0;
+//     public int findTargetSumWays(int[] nums, int target) {
+//         int sum =0;
+//         for(int i =0;i<nums.length;i++){
+//            sum = sum + nums[i];
+//         }
+//         int[][] dp = new int[nums.length][2*sum+2];
+//         for(int[] arr : dp){
+//             Arrays.fill(arr,-1);
+//         }
+//         helper(nums,target,0,0);
+//         return ans;
+//     }
+//     public void helper(int[] nums, int target, int index, int sum){
+//         if(index==nums.length ){
+//              if(sum == target){
+//             ans = ans +1;
+//         }
+//             return ;
+//         }
+//             helper(nums,target, index+1,sum + nums[index]);
+//             helper(nums,target,index+1,sum-nums[index]);
+//     }
+// }
+class Solution {
+
+    int ans = 0;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        if (target > sum || target < -sum)
+            return 0;
+        int[][] dp = new int[nums.length][2 * sum + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        return helper(nums, target, 0, 0, dp, sum);
+    }
+
+    public int helper(int[] nums, int target, int index, int currentSum, int[][] dp, int totalSum) {
+        if (index == nums.length) {
+            return currentSum == target ? 1 : 0;
+        }
+        if (dp[index][currentSum + totalSum] != -1) {
+            return dp[index][currentSum + totalSum];
+        }
+        int add = helper(nums, target, index + 1, currentSum + nums[index], dp, totalSum);
+        int subtract = helper(nums, target, index + 1, currentSum - nums[index], dp, totalSum);
+        dp[index][currentSum + totalSum] = add + subtract;
+        return dp[index][currentSum + totalSum];
+    }
+}

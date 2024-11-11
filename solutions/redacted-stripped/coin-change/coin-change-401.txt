@@ -1,0 +1,92 @@
+class Solution {
+
+    public int helperRecursion(int ind, int amount, int[] param1) {
+        if (ind == 0) {
+            if (amount % param1[ind] == 0)
+                return amount / param1[ind];
+            else
+                return (int) Math.pow(10, 9);
+        }
+        int notTake = 0 + helperRecursion(ind - 1, amount, param1);
+        int take = Integer.MAX_VALUE;
+        if (param1[ind] <= amount) {
+            take = 1 + helperRecursion(ind, amount - param1[ind], param1);
+        }
+        return Math.min(notTake, take);
+    }
+
+    public int helperMemoisation(int ind, int amount, int[] param1, int[][] dp) {
+        if (ind == 0) {
+            if (amount % param1[ind] == 0)
+                return amount / param1[ind];
+            else
+                return (int) Math.pow(10, 9);
+        }
+        if (dp[ind][amount] != -1)
+            return dp[ind][amount];
+        int notTake = 0 + helperMemoisation(ind - 1, amount, param1, dp);
+        int take = Integer.MAX_VALUE;
+        if (param1[ind] <= amount) {
+            take = 1 + helperMemoisation(ind, amount - param1[ind], param1, dp);
+        }
+        return dp[ind][amount] = Math.min(notTake, take);
+    }
+
+    public int helperTabulation(int n, int amount, int[] param1) {
+        int[][] dp = new int[n][amount + 1];
+        for (int amt = 0; amt <= amount; amt++) {
+            if (amt % param1[0] == 0) {
+                dp[0][amt] = amt / param1[0];
+            } else {
+                dp[0][amt] = (int) Math.pow(10, 9);
+            }
+        }
+        for (int ind = 1; ind < n; ind++) {
+            for (int amt = 0; amt <= amount; amt++) {
+                int notTake = 0 + dp[ind - 1][amt];
+                int take = Integer.MAX_VALUE;
+                if (param1[ind] <= amt) {
+                    take = 1 + dp[ind][amt - param1[ind]];
+                }
+                dp[ind][amt] = Math.min(take, notTake);
+            }
+        }
+        return dp[n - 1][amount];
+    }
+
+    public int helperSpaceOptimised(int n, int amount, int[] param1) {
+        int[] prev = new int[amount + 1];
+        for (int i = 0; i <= amount; i++) {
+            if (i % param1[0] == 0) {
+                prev[i] = i / param1[0];
+            } else
+                prev[i] = (int) Math.pow(10, 9);
+        }
+        for (int i = 1; i < n; i++) {
+            int[] curr = new int[amount + 1];
+            for (int j = 0; j <= amount; j++) {
+                int notTake = 0 + prev[j];
+                int take = (int) Math.pow(10, 9);
+                if (param1[i] <= j) {
+                    take = 1 + curr[j - param1[i]];
+                }
+                curr[j] = Math.min(take, notTake);
+            }
+            prev = curr;
+        }
+        return prev[amount];
+    }
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        int ans = helperSpaceOptimised(n, amount, param1);
+        if (ans >= (int) Math.pow(10, 9)) {
+            return -1;
+        }
+        return ans;
+    }
+}

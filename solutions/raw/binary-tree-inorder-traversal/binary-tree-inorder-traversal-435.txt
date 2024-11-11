@@ -1,0 +1,56 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    /* Morris Inorder Traversal using Threaded Binary Tree
+    cases
+    1. if left - null, then add the curr and move to right
+    2. if left - present, find the right most node in the left subtree
+        a. if the itr pointer next points to null - set it to curr
+        b. if next points to curr, remove then pointer and print curr, and move right
+    */
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> ans = new ArrayList<>();
+        TreeNode curr = root;
+        while (curr != null) {
+            if (curr.left == null) {
+                ans.add(curr.val);
+                curr = curr.right;
+            } else {
+                // rightmost in left subtree
+                TreeNode rightMost = curr.left;
+                while (rightMost.right != null && rightMost.right != curr) {
+                    rightMost = rightMost.right;
+                }
+                // thread is not assigned
+                if (rightMost.right == null) {
+                    rightMost.right = curr;
+                    // now iterate the left subtree
+                    curr = curr.left;
+                }
+                if (rightMost.right == curr) {
+                    // remove the thread pointer
+                    rightMost.right = null;
+                    // add the root
+                    ans.add(curr.val);
+                    // move to the right subtree
+                    curr = curr.right;
+                }
+            }
+        }
+        return ans;
+    }
+}

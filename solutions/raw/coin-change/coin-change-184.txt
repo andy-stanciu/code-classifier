@@ -1,0 +1,31 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int len = coins.length;
+        int[][] dp = new int[len][amount + 1];
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j <= amount; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        int res = f(len - 1, coins, amount, dp);
+        res = res >= 1000000000 ? -1 : res;
+        return res;
+    }
+
+    int f(int idx, int[] coins, int target, int[][] dp) {
+        if (target == 0)
+            return 0;
+        if (idx == 0 && (target % coins[idx] == 0))
+            return target / coins[idx];
+        if (idx == 0)
+            return 1000000000;
+        if (dp[idx][target] != -1)
+            return dp[idx][target];
+        int notpick = f(idx - 1, coins, target, dp);
+        int pick = 1000000000;
+        if (target >= coins[idx])
+            pick = 1 + f(idx, coins, target - coins[idx], dp);
+        return dp[idx][target] = Math.min(pick, notpick);
+    }
+}

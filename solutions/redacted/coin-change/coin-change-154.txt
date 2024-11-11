@@ -1,0 +1,28 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int[] it : dp) {
+            Arrays.fill(it, -1);
+        }
+        int ans = fun(n - 1, param1, amount, dp);
+        return (ans >= (int) Math.pow(10, 9)) ? -1 : ans;
+    }
+
+    static int fun(int idx, int[] param1, int amount, int[][] dp) {
+        if (idx == 0) {
+            if (amount % param1[idx] == 0)
+                return amount / param1[idx];
+            else
+                return (int) Math.pow(10, 9);
+        }
+        if (dp[idx][amount] != -1)
+            return dp[idx][amount];
+        int nt = fun(idx - 1, param1, amount, dp);
+        int t = (int) Math.pow(10, 9);
+        if (amount >= param1[idx])
+            t = 1 + fun(idx, param1, amount - param1[idx], dp);
+        return dp[idx][amount] = Math.min(nt, t);
+    }
+}

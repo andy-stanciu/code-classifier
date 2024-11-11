@@ -1,0 +1,38 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int n = nums.length;
+        int sum = 0;
+        for (int it : nums) {
+            sum += it;
+        }
+        sum += target;
+        if (sum % 2 != 0 || sum < 0)
+            return 0;
+        else
+            sum /= 2;
+        int[][] dp = new int[n][sum + 1];
+        for (int[] it : dp) {
+            Arrays.fill(it, -1);
+        }
+        return fun(n - 1, sum, nums, dp);
+    }
+
+    static int fun(int idx, int sum, int[] nums, int[][] dp) {
+        if (idx == 0) {
+            if (sum == 0 && nums[0] == 0)
+                return 2;
+            if (sum == 0 || nums[0] == sum)
+                return 1;
+            else
+                return 0;
+        }
+        if (dp[idx][sum] != -1)
+            return dp[idx][sum];
+        int nt = fun(idx - 1, sum, nums, dp);
+        int t = 0;
+        if (nums[idx] <= sum)
+            t = fun(idx - 1, sum - nums[idx], nums, dp);
+        return dp[idx][sum] = nt + t;
+    }
+}

@@ -1,0 +1,33 @@
+class Solution {
+
+    public int tab(int[] param1, int target) {
+        int[] prev = new int[target + 1];
+        for (int i = 0; i <= target; i++) {
+            if (i % param1[0] == 0)
+                prev[i] = i / param1[0];
+            else
+                prev[i] = Integer.MAX_VALUE;
+        }
+        for (int i = 1; i < param1.length; i++) {
+            int[] cur = new int[target + 1];
+            for (int j = 0; j <= target; j++) {
+                int notPick = prev[j];
+                int pickCur = Integer.MAX_VALUE;
+                if (param1[i] <= j) {
+                    int picked = cur[j - param1[i]];
+                    if (picked != pickCur) {
+                        pickCur = 1 + picked;
+                    }
+                }
+                cur[j] = Math.min(pickCur, notPick);
+            }
+            prev = cur;
+        }
+        return prev[target];
+    }
+
+    public int method1(int[] param1, int amount) {
+        int ans = tab(param1, amount);
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+}

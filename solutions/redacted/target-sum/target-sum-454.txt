@@ -1,0 +1,28 @@
+class Solution {
+
+    public int helper(int[] nums, int param1, int i, Map<Pair<Integer, Integer>, Integer> dp) {
+        if (i == nums.length) {
+            if (// If target is reached at last then return 1
+            param1 == 0)
+                return 1;
+            // Otherwise return 0
+            return 0;
+        }
+        // Forming key
+        Pair<Integer, Integer> key = new Pair(param1, i);
+        if (dp.containsKey(key))
+            // If sub-problem is already solved then take it from memory
+            return dp.get(key);
+        // We have two options i.e. either put a + or a - before every number
+        int res = helper(nums, param1 - nums[i], i + 1, dp) + helper(nums, param1 + nums[i], i + 1, dp);
+        // Store the response in memory
+        dp.put(key, res);
+        return res;
+    }
+
+    public int method1(int[] nums, int param1) {
+        // Taking pair instead of a 2D matrix as target can also be a -ve number
+        Map<Pair<Integer, Integer>, Integer> dp = new HashMap<>();
+        return helper(nums, param1, 0, dp);
+    }
+}

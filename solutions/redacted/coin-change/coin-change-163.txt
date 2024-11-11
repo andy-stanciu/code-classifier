@@ -1,0 +1,37 @@
+class Solution {
+
+    int[][] dp;
+
+    int counter;
+
+    int total;
+
+    public int method1(int[] param1, int amount) {
+        dp = new int[param1.length + 1][amount + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        int result = method2(param1, amount, 0, 0);
+        // System.out.println(counter + " out of " + total);
+        return result > Math.pow(10, 4) ? -1 : result;
+    }
+
+    private int method2(int[] param1, int amount, int index, int current) {
+        if (index >= param1.length || current > amount) {
+            return current == amount ? 0 : 10000 + 1;
+        }
+        total++;
+        if (dp[index][current] != -1) {
+            counter++;
+            return dp[index][current];
+        }
+        int notTake = method2(param1, amount, index + 1, current);
+        if ((long) param1[index] + current <= amount) {
+            int take = 1 + method2(param1, amount, index, current + param1[index]);
+            dp[index][current] = Math.min(take, notTake);
+        } else {
+            dp[index][current] = notTake;
+        }
+        return dp[index][current];
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int[][] dp = new int[param1.length + 1][amount + 1];
+        for (int i = 0; i < param1.length + 1; i++) {
+            for (int j = 0; j < amount + 1; j++) {
+                if (i == 0) {
+                    dp[i][j] = Integer.MAX_VALUE - 1;
+                }
+                if (j == 0) {
+                    dp[i][j] = 0;
+                }
+            }
+        }
+        for (int i = 1; i < param1.length + 1; i++) {
+            for (int j = 1; j < amount + 1; j++) {
+                if (param1[i - 1] > j) {
+                    dp[i][j] = dp[i - 1][j];
+                } else {
+                    dp[i][j] = Math.min(dp[i - 1][j], 1 + dp[i][j - param1[i - 1]]);
+                }
+            }
+        }
+        int result = dp[param1.length][amount];
+        return result == Integer.MAX_VALUE - 1 ? -1 : result;
+    }
+
+    private int method2(int[] param1, int amount, int n) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (n == 0) {
+            return Integer.MAX_VALUE - 1;
+        }
+        if (param1[n - 1] > amount) {
+            return (method2(param1, amount, n - 1));
+        } else {
+            return (Math.min(method2(param1, amount, n - 1), 1 + method2(param1, amount - param1[n - 1], n)));
+        }
+    }
+}

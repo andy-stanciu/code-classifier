@@ -1,0 +1,32 @@
+class Solution {
+
+    int[][] dp = new int[10004][14];
+
+    public int solve(int[] param1, int amount, int ind) {
+        if (amount == 0)
+            return 0;
+        if (amount < 0 || ind == 0)
+            return -1;
+        if (dp[amount][ind] != -1)
+            return dp[amount][ind];
+        int desc = solve(param1, amount, ind - 1);
+        int inc = solve(param1, amount - param1[ind - 1], ind);
+        if (inc >= 0)
+            inc++;
+        if (inc < 0 && desc < 0)
+            dp[amount][ind] = -1;
+        else if (inc >= 0 && desc >= 0)
+            dp[amount][ind] = Math.min(inc, desc);
+        else
+            dp[amount][ind] = Math.max(inc, desc);
+        return dp[amount][ind];
+    }
+
+    public int method1(int[] param1, int amount) {
+        for (int i = 0; i < 10004; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        int ans = solve(param1, amount, param1.length);
+        return ans;
+    }
+}

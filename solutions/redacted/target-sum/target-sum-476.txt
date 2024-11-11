@@ -1,0 +1,54 @@
+class Solution {
+
+    int answer;
+
+    int arrlen;
+
+    int var1;
+
+    int[] nums;
+
+    int[] rightprefixarr;
+
+    public int method1(int[] nums, int var1) {
+        this.arrlen = nums.length;
+        this.answer = 0;
+        this.var1 = var1;
+        this.nums = nums;
+        // used for pruning
+        int[] rightprefixarr = new int[this.arrlen + 1];
+        rightprefixarr[this.arrlen] = 0;
+        int var2 = 0;
+        for (int i = this.arrlen - 1; i >= 0; i--) {
+            var2 += nums[i];
+            rightprefixarr[i] = var2;
+        }
+        this.rightprefixarr = rightprefixarr;
+        method2(0, 0);
+        return this.answer;
+    }
+
+    public void method2(int idx, int param1) {
+        if (idx >= this.arrlen) {
+            if (param1 == this.var1) {
+                this.answer += 1;
+                return;
+            } else {
+                return;
+            }
+        }
+        // if current sum is less than target and adding remaining elements also leads to lesser value than target, exit (pruning)
+        if (param1 < this.var1 && param1 + this.rightprefixarr[idx] < this.var1) {
+            return;
+        }
+        // if current sum is larger than target and subtracting remaining elements also leads to larger value than target, exit (pruning)
+        if (param1 > this.var1 && param1 - this.rightprefixarr[idx] > this.var1) {
+            return;
+        }
+        int var3 = param1 + this.nums[idx];
+        int var4 = param1 - this.nums[idx];
+        method2(idx + 1, var3);
+        method2(idx + 1, var4);
+        return;
+    }
+}

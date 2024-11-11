@@ -1,0 +1,49 @@
+class Solution {
+
+    static class Key {
+
+        Integer index;
+
+        Integer total;
+
+        Key(Integer index, Integer total) {
+            this.index = index;
+            this.total = total;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Key)) {
+                return false;
+            }
+            Key other = (Key) o;
+            return Objects.equals(this.index, other.index) && Objects.equals(this.total, other.total);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(index, total);
+        }
+    }
+
+    Map<Key, Integer> map = new HashMap<>();
+
+    public int method1(int[] nums, int param1) {
+        return dp(0, nums, 0, param1);
+    }
+
+    private int dp(int i, int[] nums, int param2, int param1) {
+        if (i == nums.length) {
+            return param2 == param1 ? 1 : 0;
+        }
+        Key key = new Key(i, param2);
+        if (!map.containsKey(key)) {
+            Integer val = dp(i + 1, nums, param2 + nums[i], param1) + dp(i + 1, nums, param2 - nums[i], param1);
+            map.put(key, val);
+        }
+        return map.get(key);
+    }
+}

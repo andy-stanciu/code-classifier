@@ -1,0 +1,34 @@
+class Solution {
+
+    public static int minCoin(int n, int[] arr, int[] dp) {
+        if (n == 0)
+            return 0;
+        int ans = Integer.MAX_VALUE;
+        for (int i = 0; i < arr.length; i++) {
+            if (n - arr[i] >= 0) {
+                int subAns = 0;
+                if (dp[n - arr[i]] != -1) {
+                    subAns = dp[n - arr[i]];
+                } else {
+                    subAns = minCoin(n - arr[i], arr, dp);
+                }
+                if (subAns != Integer.MAX_VALUE && subAns + 1 < ans) {
+                    ans = subAns + 1;
+                }
+            }
+        }
+        return dp[n] = ans;
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, -1);
+        dp[0] = 0;
+        int ans = minCoin(amount, coins, dp);
+        if (ans == Integer.MAX_VALUE) {
+            return -1;
+        } else {
+            return ans;
+        }
+    }
+}

@@ -1,0 +1,84 @@
+// Definition of the ListNode class to represent a singly linked list
+class ListNode {
+
+    int val;
+
+    ListNode next;
+
+    // Constructor to initialize the node with a value
+    ListNode(int x) {
+        val = x;
+    }
+
+    // Static method to deserialize a comma-separated string of integers into a linked list
+    public static ListNode deserialize(String data) {
+        // If the input data is null or empty, return a null pointer
+        if (data == null || data.isEmpty())
+            return null;
+        // Remove square brackets and split the data by commas to get an array of values
+        data = data.replaceAll("[\\\\[\\\\]]", "");
+        String[] values = data.split(",");
+        // Create a dummy head node to facilitate building the linked list
+        ListNode dummyHead = new ListNode(0);
+        ListNode current = dummyHead;
+        // Iterate through the values and create new nodes, connecting them to the list
+        for (String value : values) {
+            current.next = new ListNode(Integer.parseInt(value.trim()));
+            current = current.next;
+        }
+        // Return the linked list starting from the node after the dummy head
+        return dummyHead.next;
+    }
+
+    // Method to serialize a linked list into a comma-separated string of integers
+    public String serialize() {
+        // Use a StringBuilder for efficient string concatenation
+        StringBuilder sb = new StringBuilder();
+        // Start from the current node
+        ListNode current = this;
+        // Iterate through the linked list and append node values to the StringBuilder
+        while (current != null) {
+            sb.append(current.val).append(",");
+            current = current.next;
+        }
+        // Remove the trailing comma and return the serialized string
+        return sb.length() > 0 ? sb.substring(0, sb.length() - 1) : "";
+    }
+}
+
+// Definition of the Solution class to solve the problem
+public class Solution {
+
+    // Method to add two numbers represented by linked lists
+    public ListNode method1(ListNode l1, ListNode l2) {
+        // Call the helper method with an initial carry of 0
+        return method2(l1, l2, 0);
+    }
+
+    // Helper method to recursively add two linked lists digit by digit, considering the carry
+    private ListNode method2(ListNode l1, ListNode l2, int carry) {
+        // Base case: if both lists are empty and there\'s no carry, return null
+        if (l1 == null && l2 == null && carry == 0) {
+            return null;
+        }
+        // Calculate the sum of the current digits and the carry, and store the remainder as the new digit
+        int sum = carry + (l1 != null ? l1.val : 0) + (l2 != null ? l2.val : 0);
+        ListNode result = new ListNode(sum % 10);
+        // Recursively call the helper method with the next digits of the lists and the carry
+        result.next = method2(l1 != null ? l1.next : null, l2 != null ? l2.next : null, sum / 10);
+        return result;
+    }
+
+    // Main method for testing
+    public static void main(String[] args) {
+        // Deserialize the input linked lists
+        ListNode l1 = ListNode.deserialize("2,4,3");
+        ListNode l2 = ListNode.deserialize("5,6,4");
+        // Create an instance of Solution
+        Solution solution = new Solution();
+        // Call the method to add the two linked lists
+        ListNode result = solution.method1(l1, l2);
+        // Print the serialized result
+        System.out.println(result.serialize());
+    }
+}

@@ -1,0 +1,31 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, -1);
+        dp[0] = 0;
+        int ans = method2(param1, amount, dp);
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+
+    static int method2(int[] param1, int amount, int[] dp) {
+        if (amount == 0) {
+            return 0;
+        }
+        int ans = Integer.MAX_VALUE;
+        for (int i = 0; i < param1.length; i++) {
+            if (amount - param1[i] >= 0) {
+                int subans = 0;
+                if (dp[amount - param1[i]] != -1) {
+                    subans = dp[amount - param1[i]];
+                } else {
+                    subans = method2(param1, amount - param1[i], dp);
+                }
+                if (subans != Integer.MAX_VALUE && subans + 1 < ans) {
+                    ans = Math.min(ans, subans + 1);
+                }
+            }
+        }
+        return dp[amount] = ans;
+    }
+}

@@ -1,0 +1,31 @@
+class Solution {
+
+    int ans = 0;
+
+    public int method1(int[] nums, int param1) {
+        int var1 = 0;
+        for (int num : nums) {
+            var1 += num;
+        }
+        if (param1 > var1 || param1 < -var1)
+            return 0;
+        int[][] dp = new int[nums.length][2 * var1 + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        return helper(nums, param1, 0, 0, dp, var1);
+    }
+
+    public int helper(int[] nums, int param1, int index, int param2, int[][] dp, int param3) {
+        if (index == nums.length) {
+            return param2 == param1 ? 1 : 0;
+        }
+        if (dp[index][param2 + param3] != -1) {
+            return dp[index][param2 + param3];
+        }
+        int add = helper(nums, param1, index + 1, param2 + nums[index], dp, param3);
+        int subtract = helper(nums, param1, index + 1, param2 - nums[index], dp, param3);
+        dp[index][param2 + param3] = add + subtract;
+        return dp[index][param2 + param3];
+    }
+}

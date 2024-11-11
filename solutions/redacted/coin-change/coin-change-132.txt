@@ -1,0 +1,29 @@
+class Solution {
+
+    static int dfs(int index, int[] param1, int amount, int[][] dp) {
+        if (index == 0) {
+            if (amount % param1[0] == 0)
+                return amount / param1[0];
+            else
+                return 100000009;
+        }
+        if (dp[index][amount] != -1)
+            return dp[index][amount];
+        int not_pick = 0 + dfs(index - 1, param1, amount, dp);
+        int pick = Integer.MAX_VALUE;
+        if (amount >= param1[index]) {
+            pick = 1 + dfs(index, param1, amount - param1[index], dp);
+        }
+        return dp[index][amount] = Math.min(pick, not_pick);
+    }
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int[] temp : dp) {
+            Arrays.fill(temp, -1);
+        }
+        int result = dfs(n - 1, param1, amount, dp);
+        return result == 100000009 ? -1 : result;
+    }
+}

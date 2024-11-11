@@ -1,0 +1,67 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode list1, ListNode list2) {
+        if (list1 == null) {
+            return list2;
+        }
+        if (list2 == null) {
+            return list1;
+        }
+        ListNode head = null;
+        ListNode tail = null;
+        while (list1 != null && list2 != null) {
+            if (list1.val < list2.val) {
+                if (tail == null) {
+                    head = list1;
+                } else {
+                    tail.next = list1;
+                }
+                tail = list1;
+                list1 = list1.next;
+            } else {
+                if (tail == null) {
+                    head = list2;
+                } else {
+                    tail.next = list2;
+                }
+                tail = list2;
+                list2 = list2.next;
+            }
+        }
+        if (list1 != null) {
+            tail.next = list1;
+        }
+        if (list2 != null) {
+            tail.next = list2;
+        }
+        return head;
+    }
+
+    public ListNode method2(ListNode[] param1) {
+        int n = param1.length;
+        if (n == 0) {
+            return null;
+        }
+        while (n > 1) {
+            int l = 0;
+            int r = n - 1;
+            while (l < r) {
+                param1[l] = method1(param1[l], param1[r]);
+                l++;
+                r--;
+            }
+            n = (n % 2 == 1) ? l + 1 : l;
+        }
+        return param1[0];
+    }
+}

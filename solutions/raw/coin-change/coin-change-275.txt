@@ -1,0 +1,34 @@
+// Approach - 3 Tabulation
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        int[] prev = new int[amount + 1];
+        for (int i = 0; i <= amount; i++) {
+            // like knapsack base case
+            if (i % coins[0] == 0)
+                prev[i] = i / coins[0];
+            else {
+                // NOTE
+                prev[i] = (int) Math.pow(10, 9);
+            }
+        }
+        for (int i = 1; i < n; i++) {
+            int[] cur = new int[amount + 1];
+            for (int j = 0; j <= amount; j++) {
+                int pick = Integer.MAX_VALUE;
+                //NOTE
+                if (coins[i] <= j)
+                    pick = 1 + cur[j - coins[i]];
+                int notPick = 0 + prev[j];
+                cur[j] = Math.min(pick, notPick);
+            }
+            prev = cur;
+        }
+        int ans = prev[amount];
+        if (ans >= (int) Math.pow(10, 9)) {
+            return -1;
+        }
+        return ans;
+    }
+}

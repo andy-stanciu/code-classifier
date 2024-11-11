@@ -1,0 +1,43 @@
+class Solution {
+
+    static int mod = (int) Math.pow(10, 9);
+
+    public int method1(int[] arr, int param1) {
+        int n = arr.length;
+        int var1 = 0;
+        for (int i = 0; i < n; i++) {
+            var1 += arr[i];
+        }
+        //Checking for edge cases
+        if (var1 - param1 < 0 || (var1 - param1) % 2 == 1)
+            return 0;
+        return findWays(arr, (var1 - param1) / 2);
+    }
+
+    static int findWays(int[] nums, int tar) {
+        int n = nums.length;
+        int[] prev = new int[tar + 1];
+        if (// 2 cases -pick and not pick
+        nums[0] == 0)
+            // 2 cases -pick and not pick
+            prev[0] = 2;
+        else
+            // 1 case - not pick
+            prev[0] = 1;
+        // 1 case -pick
+        if (nums[0] != 0 && nums[0] <= tar)
+            prev[nums[0]] = 1;
+        for (int ind = 1; ind < n; ind++) {
+            int[] cur = new int[tar + 1];
+            for (int param1 = 0; param1 <= tar; param1++) {
+                int notTaken = prev[param1];
+                int taken = 0;
+                if (nums[ind] <= param1)
+                    taken = prev[param1 - nums[ind]];
+                cur[param1] = (notTaken + taken) % mod;
+            }
+            prev = cur;
+        }
+        return prev[tar];
+    }
+}

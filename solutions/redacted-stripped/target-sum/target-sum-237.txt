@@ -1,0 +1,37 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int n = nums.length;
+        int var1 = 0;
+        for (int i = 0; i < n; i++) {
+            var1 += nums[i];
+        }
+        int m = 2 * var1;
+        int[][] dp = new int[n][m + 1];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j <= m; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        return func(n - 1, param1, 0, nums, dp, var1);
+    }
+
+    public int func(int idx, int param1, int param2, int[] arr, int[][] dp, int var1) {
+        if (idx == -1) {
+            if (param1 == param2) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        if (dp[idx][param2 + var1] != -1) {
+            return dp[idx][param2 + var1];
+        }
+        if (idx < 0) {
+            return 0;
+        }
+        int plus = func(idx - 1, param1, param2 + arr[idx], arr, dp, var1);
+        int minus = func(idx - 1, param1, param2 - arr[idx], arr, dp, var1);
+        return dp[idx][param2 + var1] = plus + minus;
+    }
+}

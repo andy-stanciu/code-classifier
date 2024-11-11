@@ -1,0 +1,68 @@
+// 7 ms, faster than 90.04% of Java online submissions
+class Solution {
+
+    public int method1(int[] arr, int param1) {
+        //this is exactly equal to count the number of subset with given difference
+        //target is basically the difference between subsets
+        /*
+        for example :
+        if arr[]:{1,1,2,3}
+        and difference we want is 1
+        the such 3 cases are possible 
+        -->{1,1,2} , {3}
+        -->{1,2} , {1,3}
+        -->{1,2} , {1,3}
+        the output is 3
+        Lets say sum of fisrt subset is S1 and second is S2
+        then :
+        s1-s2=diff
+        s1+s2=sum of arr
+        adding above equations:
+        2s1=diff+sum
+        s1=(diff + sum )/2;
+        this is the sum of subset which will give the difference equal to target
+        we need to count the number of subsets which have sum equal to s1
+        the problem Target sum reduces to --> count of subset with a given sum 
+        */
+        // target is difference , it can be negative or positive
+        //     4-3=1
+        //     3-4=-1
+        //     its all about the absolute difference , so lets take absolute value of target
+        //lets first find the sum of array
+        int var1 = 0;
+        for (int i = 0; i < arr.length; i++) var1 += arr[i];
+        //making target absolute
+        param1 = Math.abs(param1);
+        if (//means such subset does not exist , or say cannot assign signs such a way that we gets sum as target
+        (param1 + var1) % 2 != 0)
+            return 0;
+        int s1 = (param1 + var1) / 2;
+        //we need to count the subsets with sum = s1;
+        //and that will be our answer
+        if (var1 - s1 > s1)
+            return count_subsets(arr, arr.length, s1);
+        else if (var1 >= s1)
+            return count_subsets(arr, arr.length, var1 - s1);
+        else
+            return count_subsets(arr, arr.length, s1);
+    }
+
+    int count_subsets(int[] arr, int n, int var1) {
+        int[][] dp = new int[n + 1][var1 + 1];
+        //for sum=0 intialise with 1
+        //for n=0 initialise with 0
+        for (int i = 0; i <= n; i++) dp[i][0] = 1;
+        for (int i = 1; i <= var1; i++) dp[0][i] = 0;
+        //        n-->i
+        //        sum-->j
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= var1; j++) {
+                if (arr[i - 1] > j)
+                    dp[i][j] = dp[i - 1][j];
+                else
+                    dp[i][j] = dp[i - 1][j] + dp[i - 1][j - arr[i - 1]];
+            }
+        }
+        return dp[n][var1];
+    }
+}

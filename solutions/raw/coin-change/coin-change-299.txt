@@ -1,0 +1,51 @@
+class Solution {
+
+    int[][] dp;
+
+    public int coinChange(int[] coins, int amount) {
+        dp = new int[coins.length + 1][amount + 1];
+        for (int i = 0; i <= coins.length; i++) {
+            //Initilization
+            for (int j = 0; j <= amount; j++) {
+                if (i == 0) {
+                    dp[i][j] = Integer.MAX_VALUE;
+                }
+                if (j == 0) {
+                    dp[i][j] = 0;
+                } else {
+                    dp[i][j] = -2;
+                }
+            }
+        }
+        return recFun(coins, amount, coins.length, amount);
+    }
+
+    int recFun(int[] coins, int amount, int coinPst, int amt) {
+        if (amt == 0) {
+            //If no amount left to make
+            return 0;
+        }
+        if (coinPst <= 0 || amt < 0) {
+            //If we dont have any more coin to choose from of amt become negative
+            return -1;
+        }
+        if (dp[coinPst][amt] != -2) {
+            return dp[coinPst][amt];
+        }
+        if (coins[coinPst - 1] <= amt) {
+            //when we can select
+            int include = recFun(coins, amount, coinPst, amt - coins[coinPst - 1]);
+            int exclude = recFun(coins, amount, coinPst - 1, amt);
+            if (include != -1 && exclude != -1)
+                //include +1 becoz one coin is added
+                return dp[coinPst][amt] = Math.min(include + 1, exclude);
+            else if (include != -1)
+                return dp[coinPst][amt] = include + 1;
+            else
+                return dp[coinPst][amt] = exclude;
+        } else {
+            //when we cant select
+            return dp[coinPst][amt] = recFun(coins, amount, coinPst - 1, amt);
+        }
+    }
+}

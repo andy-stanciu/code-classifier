@@ -1,0 +1,34 @@
+class Solution {
+
+    int total;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        //Step 1
+        total = Arrays.stream(nums).sum();
+        int[][] dp = new int[nums.length][2 * total + 1];
+        for (int[] rows : dp) {
+            Arrays.fill(rows, 2 * total + 1);
+        }
+        return DFS(dp, nums, target, 0, 0);
+    }
+
+    public int DFS(int[][] dp, int[] nums, int target, int index, int sum) {
+        //Step 2
+        if (index == nums.length) {
+            if (sum == target) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        //Step 3
+        if (dp[index][sum + total] != 2 * total + 1) {
+            return dp[index][sum + total];
+        }
+        //Step 4
+        int add = DFS(dp, nums, target, index + 1, sum + nums[index]);
+        int sub = DFS(dp, nums, target, index + 1, sum - nums[index]);
+        //Step 5
+        return dp[index][sum + total] = add + sub;
+    }
+}

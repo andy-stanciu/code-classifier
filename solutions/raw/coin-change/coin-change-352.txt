@@ -1,0 +1,42 @@
+class Solution {
+
+    // public int util(int i,int coins[],int amount,int dp[][]){
+    //     if(amount == 0) return 0;
+    //     if(i == 0){
+    //         if(amount%coins[i] == 0 )return amount/coins[i] ;
+    //         return (int) Math.pow(10,9);
+    //     }
+    //     if(dp[i][amount] !=-1) return dp[i][amount];
+    //     int take = Integer.MAX_VALUE;
+    //     if(coins[i] <= amount) take = 1+util(i,coins,amount-coins[i],dp);
+    //     int not_take = util(i-1,coins,amount,dp);
+    //     return dp[i][amount] = Math.min(take,not_take);
+    // }
+    public int coinChange(int[] coins, int Amount) {
+        int n = coins.length;
+        int[][] dp = new int[n][Amount + 1];
+        // for(int row[]:dp) Arrays.fill(row,-1);
+        // int ans = util(n-1,coins,amount,dp);
+        // for(int amount =0;amount<=Amount;amount++){
+        //     dp[0][amount] = 0;
+        // }
+        for (int amount = 0; amount <= Amount; amount++) {
+            if (amount % coins[0] == 0)
+                dp[0][amount] = amount / coins[0];
+            else
+                dp[0][amount] = (int) Math.pow(10, 9);
+        }
+        for (int i = 1; i < n; i++) {
+            for (int amount = 0; amount <= Amount; amount++) {
+                int take = Integer.MAX_VALUE;
+                if (coins[i] <= amount)
+                    take = 1 + dp[i][amount - coins[i]];
+                int not_take = dp[i - 1][amount];
+                dp[i][amount] = Math.min(take, not_take);
+            }
+        }
+        if (dp[n - 1][Amount] >= Math.pow(10, 9))
+            return -1;
+        return dp[n - 1][Amount];
+    }
+}

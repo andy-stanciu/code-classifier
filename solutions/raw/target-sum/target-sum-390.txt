@@ -1,0 +1,56 @@
+class Solution {
+
+    int count = 0;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        // backtrack(nums, 0, target);
+        // return count;
+        return dp(nums, 0, target);
+    }
+
+    Map<String, Integer> memo = new HashMap();
+
+    private int dp(int[] nums, int i, int target) {
+        if (i == nums.length) {
+            if (target == 0) {
+                return 1;
+            }
+            return 0;
+        }
+        // \u628A\u5B83\u4FE9\u8F6C\u6210\u5B57\u7B26\u4E32\u624D\u80FD\u4F5C\u4E3A\u54C8\u5E0C\u8868\u7684\u952E
+        String key = i + "," + target;
+        // \u907F\u514D\u91CD\u590D\u8BA1\u7B97
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+        // \u8FD8\u662F\u7A77\u4E3E
+        int count = dp(nums, i + 1, target - nums[i]) + dp(nums, i + 1, target + nums[i]);
+        // \u8BB0\u5165\u5907\u5FD8\u5F55
+        memo.put(key, count);
+        return count;
+    }
+
+    private void backtrack(int[] nums, int i, int target) {
+        // base case
+        if (i == nums.length) {
+            // \u8BF4\u660E\u6070\u597D\u51D1\u51FA target
+            if (target == 0) {
+                count++;
+                return;
+            }
+            return;
+        }
+        // \u7ED9 nums[i] \u9009\u62E9 + \u53F7
+        target -= nums[i];
+        // \u7A77\u4E3E nums[i + 1]
+        backtrack(nums, i + 1, target);
+        // \u64A4\u9500\u9009\u62E9
+        target += nums[i];
+        // \u7ED9 nums[i] \u9009\u62E9 - \u53F7
+        target += nums[i];
+        // \u7A77\u4E3E nums[i + 1]
+        backtrack(nums, i + 1, target);
+        // \u64A4\u9500\u9009\u62E9
+        target -= nums[i];
+    }
+}

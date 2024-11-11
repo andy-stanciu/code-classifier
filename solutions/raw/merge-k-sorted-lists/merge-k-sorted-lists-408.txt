@@ -1,0 +1,52 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+//THe reason this method works is that , the priority queue sorts all elements
+//added to it in ascending order based in the value of the first node
+//On every iteration of the while loop, it removes the smallest node
+//and puts it in the new dummy list
+//Then it returns the remaining elements of the list back into the queue
+//The guarantees that everytime an element is pulled from the queue, it will be
+//the smallest possible element
+class Solution {
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        //create a priority queue that stores elements in ascending order
+        PriorityQueue<ListNode> items = new PriorityQueue<>((a, b) -> a.val - b.val);
+        //add all the linkedlists to a priority queue
+        for (int i = 0; i < lists.length; i++) {
+            if (lists[i] != null) {
+                items.add(lists[i]);
+            }
+        }
+        //create your dummy linkedlist
+        ListNode head = new ListNode(0);
+        ListNode current = head;
+        //until the priority queue is empty, rearrange the elements of the
+        //individual linkkedlists into the new dummy list
+        while (!items.isEmpty()) {
+            //remove the first node of the first list of the queue
+            //This node is guaranteed to be the smallest
+            ListNode curr = items.poll();
+            ListNode temp = curr.next;
+            //add the removed node after current and update current pointer value
+            current.next = curr;
+            current = current.next;
+            //if there are still more elememts in the linkedlist you just worked on,
+            //add the extra element back into the queue
+            if (temp != null) {
+                items.add(temp);
+            }
+        }
+        //return the next of head of the new list
+        //We do not return the head because a dummy element , 0 is the head
+        return head.next;
+    }
+}

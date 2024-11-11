@@ -1,0 +1,32 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int[][] dp = new int[param1.length + 1][amount + 1];
+        for (int i = 0; i < param1.length + 1; i++) {
+            for (int j = 0; j < amount + 1; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        int ans = method2(param1, amount, 0, dp);
+        return ans == Integer.MAX_VALUE - 1 ? -1 : ans;
+    }
+
+    int method2(int[] param1, int amount, int ind, int[][] dp) {
+        if (ind >= param1.length || amount <= 0) {
+            return (amount == 0 ? 0 : Integer.MAX_VALUE - 1);
+        }
+        if (dp[ind][amount] != -1) {
+            return dp[ind][amount];
+        }
+        int res = -1;
+        if (param1[ind] > amount) {
+            int notTake = 0 + method2(param1, amount, ind + 1, dp);
+            res = notTake;
+        } else {
+            int take = 1 + method2(param1, amount - param1[ind], ind, dp);
+            int notTake = 0 + method2(param1, amount, ind + 1, dp);
+            res = Math.min(take, notTake);
+        }
+        return dp[ind][amount] = res;
+    }
+}

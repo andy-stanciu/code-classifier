@@ -1,0 +1,21 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        if (amount == 0)
+            return 0;
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, -1);
+        int ans = rec(coins.length, coins, 0, amount, 0, dp);
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+
+    public static int rec(int n, int[] coins, int i, int remainingAmount, int noc, int[] dp) {
+        if (remainingAmount == 0)
+            return dp[remainingAmount] = noc;
+        if (i == n || remainingAmount < 0)
+            return Integer.MAX_VALUE;
+        if (dp[remainingAmount] != -1)
+            return dp[remainingAmount];
+        return dp[remainingAmount] = Math.min(rec(n, coins, i + 1, remainingAmount, noc, dp), rec(n, coins, i, remainingAmount - coins[i], noc + 1, dp));
+    }
+}

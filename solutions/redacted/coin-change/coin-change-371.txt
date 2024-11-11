@@ -1,0 +1,60 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        //  int ans= solve(coins,amount);
+        // Integer dp[] = new Integer[amount+1];
+        int ans = solveTab(param1, amount);
+        return ans == (int) 1e9 ? -1 : ans;
+    }
+
+    static int solve(int[] param1, int amount) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (amount < 0) {
+            return (int) 1e9;
+        }
+        int min = (int) 1e9;
+        for (int i = 0; i < param1.length; i++) {
+            int ans = solve(param1, amount - param1[i]);
+            if (ans != (int) 1e9) {
+                min = Math.min(min, 1 + ans);
+            }
+        }
+        return min;
+    }
+
+    static int solveMem(int[] param1, int amount, Integer[] dp) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (amount < 0) {
+            return (int) 1e9;
+        }
+        if (dp[amount] != null) {
+            return dp[amount];
+        }
+        int min = (int) 1e9;
+        for (int i = 0; i < param1.length; i++) {
+            int ans = solveMem(param1, amount - param1[i], dp);
+            if (ans != (int) 1e9) {
+                min = Math.min(min, 1 + ans);
+            }
+        }
+        return dp[amount] = min;
+    }
+
+    static int solveTab(int[] param1, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, (int) 1e9);
+        dp[0] = 0;
+        for (int i = 1; i <= amount; i++) {
+            for (int j = 0; j < param1.length; j++) {
+                if (i - param1[j] >= 0 && dp[i - param1[j]] != (int) 1e9) {
+                    dp[i] = Math.min(dp[i], 1 + dp[i - param1[j]]);
+                }
+            }
+        }
+        return dp[amount];
+    }
+}

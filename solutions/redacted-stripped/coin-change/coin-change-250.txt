@@ -1,0 +1,55 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        Arrays.sort(param1);
+        int ans = tabulation(param1, amount);
+        return ans == Integer.MAX_VALUE - 1 ? -1 : ans;
+    }
+
+    private int tabulation(int[] param1, int amount) {
+        if (amount == 0)
+            return 0;
+        if (param1.length == 0)
+            return Integer.MAX_VALUE - 1;
+        int[][] dp = new int[amount + 1][param1.length + 1];
+        for (int i = 0; i <= amount; i++) {
+            for (int j = 0; j <= param1.length; j++) {
+                if (i == 0) {
+                    dp[i][j] = 0;
+                } else if (j == 0) {
+                    dp[i][j] = Integer.MAX_VALUE - 1;
+                } else {
+                    dp[i][j] = Integer.MAX_VALUE - 1;
+                    int dontPick = dp[i][j - 1];
+                    dp[i][j] = Math.min(dp[i][j], dontPick);
+                    if (i - param1[j - 1] >= 0) {
+                        int pick = 1 + dp[i - param1[j - 1]][j];
+                        dp[i][j] = Math.min(dp[i][j], pick);
+                    }
+                }
+            }
+        }
+        return dp[amount][param1.length];
+    }
+
+    Map<String, Integer> map = new HashMap<>();
+
+    private int recursive(int[] param1, int amount, int index) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (index < 0 || amount < 0) {
+            return Integer.MAX_VALUE - 1;
+        }
+        String key = amount + "-" + index;
+        if (map.containsKey(key))
+            return map.get(key);
+        int ans = Integer.MAX_VALUE - 1;
+        if (amount - param1[index] >= 0) {
+            ans = Math.min(ans, 1 + recursive(param1, amount - param1[index], index));
+        }
+        ans = Math.min(ans, 0 + recursive(param1, amount, index - 1));
+        map.put(key, ans);
+        return ans;
+    }
+}

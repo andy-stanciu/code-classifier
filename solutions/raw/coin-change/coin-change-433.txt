@@ -1,0 +1,24 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int ans = (int) dfs(coins, amount, new HashMap<>());
+        return ans != Integer.MAX_VALUE ? ans : -1;
+    }
+
+    long dfs(int[] coins, int amount, HashMap<Integer, Long> dp) {
+        if (amount == 0)
+            return 0;
+        if (amount < 0)
+            return Integer.MAX_VALUE;
+        if (dp.containsKey(amount))
+            return dp.get(amount);
+        long coin = 0;
+        long min = Integer.MAX_VALUE;
+        for (int i = 0; i < coins.length; i++) {
+            coin = 1 + dfs(coins, amount - coins[i], dp);
+            min = Math.min(min, coin);
+        }
+        dp.put(amount, min);
+        return min;
+    }
+}

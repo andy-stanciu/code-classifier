@@ -1,0 +1,61 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode list1, ListNode list2) {
+        if (list1 == null) {
+            return list2;
+        } else if (list2 == null) {
+            return list1;
+        }
+        ListNode dummy = new ListNode(-1);
+        ListNode ans = dummy;
+        ListNode ptr1 = list1;
+        ListNode ptr2 = list2;
+        while (ptr1 != null && ptr2 != null) {
+            if (ptr1.val < ptr2.val) {
+                dummy.next = ptr1;
+                ptr1 = ptr1.next;
+            } else {
+                dummy.next = ptr2;
+                ptr2 = ptr2.next;
+            }
+            dummy = dummy.next;
+        }
+        if (ptr1 == null) {
+            dummy.next = ptr2;
+        } else if (ptr2 == null) {
+            dummy.next = ptr1;
+        }
+        return ans.next;
+    }
+
+    public ListNode method2(ListNode[] param1) {
+        //Edge case 1
+        if (param1.length == 0) {
+            return null;
+        }
+        //Edge case 2
+        if (param1.length == 1) {
+            return param1[0];
+        } else if (param1.length == 2) {
+            return method1(param1[0], param1[1]);
+        }
+        //Get the merge to 2 lists first
+        ListNode ans = method1(param1[0], param1[1]);
+        //Collate the answer with other lists
+        for (int i = 2; i < param1.length; i++) {
+            ListNode temp = param1[i];
+            ans = method1(ans, temp);
+        }
+        return ans;
+    }
+}

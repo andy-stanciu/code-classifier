@@ -1,0 +1,36 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int n = nums.length;
+        int sum = Arrays.stream(nums).sum();
+        if (sum - target < 0) {
+            return 0;
+        }
+        if ((sum - target) % 2 == 1) {
+            return 0;
+        }
+        int difSum = (sum - target) / 2;
+        int[] prev = new int[difSum + 1];
+        if (nums[0] == 0) {
+            prev[0] = 2;
+        } else {
+            prev[0] = 1;
+        }
+        if (nums[0] != 0 && nums[0] <= difSum) {
+            prev[nums[0]] = 1;
+        }
+        for (int i = 1; i < n; i++) {
+            int[] curr = new int[difSum + 1];
+            for (int j = 0; j <= difSum; j++) {
+                int notTake = prev[j];
+                int take = 0;
+                if (nums[i] <= j) {
+                    take = prev[j - nums[i]];
+                }
+                curr[j] = take + notTake;
+            }
+            prev = curr;
+        }
+        return prev[difSum];
+    }
+}

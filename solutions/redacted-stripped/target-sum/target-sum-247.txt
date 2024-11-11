@@ -1,0 +1,27 @@
+class Solution {
+
+    HashMap<Integer, Integer> hm;
+
+    int var1;
+
+    public int method1(int[] nums, int param1) {
+        hm = new HashMap<>();
+        hm.put(-1, 0);
+        for (int i = 0; i < nums.length; i++) hm.put(i, hm.get(i - 1) + nums[i]);
+        var1 = hm.get(nums.length - 1);
+        int[][] dp = new int[nums.length][2 * var1 + 2];
+        for (int[] i : dp) Arrays.fill(i, -1);
+        return recur(nums.length - 1, nums, param1, dp);
+    }
+
+    public int recur(int ind, int[] nums, int param1, int[][] dp) {
+        if (ind == -1) {
+            return param1 == 0 ? 1 : 0;
+        }
+        if (param1 > hm.get(ind) || Math.abs(param1) > var1)
+            return 0;
+        if (dp[ind][var1 + param1] != -1)
+            return dp[ind][var1 + param1];
+        return dp[ind][var1 + param1] = recur(ind - 1, nums, param1 + nums[ind], dp) + recur(ind - 1, nums, param1 - nums[ind], dp);
+    }
+}

@@ -1,0 +1,50 @@
+class Solution {
+
+    private ListNode method1(ListNode list1, ListNode list2) {
+        if (list1 == null)
+            return list2;
+        if (list2 == null)
+            return list1;
+        ListNode head = null;
+        if (list1.val >= list2.val) {
+            head = list2;
+            list2 = list2.next;
+        } else {
+            head = list1;
+            list1 = list1.next;
+        }
+        ListNode temp = new ListNode(-1);
+        temp = head;
+        while (list1 != null && list2 != null) {
+            if (list1.val >= list2.val) {
+                temp.next = list2;
+                list2 = list2.next;
+            } else {
+                temp.next = list1;
+                list1 = list1.next;
+            }
+            temp = temp.next;
+        }
+        if (list1 == null)
+            temp.next = list2;
+        else
+            temp.next = list1;
+        return head;
+    }
+
+    public ListNode method2(ListNode[] param1) {
+        if (param1.length == 0)
+            return null;
+        if (param1.length == 1)
+            return param1[0];
+        int n = param1.length;
+        ListNode[] list = new ListNode[n / 2 + n % 2];
+        if (n % 2 == 0)
+            for (int i = 0; i < n / 2; i++) list[i] = method1(param1[i], param1[n - 1 - i]);
+        else {
+            for (int i = 0; i < n / 2; i++) list[i] = method1(param1[i], param1[n - 1 - i]);
+            list[n / 2] = param1[n / 2];
+        }
+        return method2(list);
+    }
+}

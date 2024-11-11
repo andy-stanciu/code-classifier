@@ -1,0 +1,35 @@
+class Solution {
+
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        if (nums1.length > nums2.length) {
+            return findMedianSortedArrays(nums2, nums1);
+        }
+        int x = nums1.length;
+        int y = nums2.length;
+        int imin = 0, imax = x, halfLen = (x + y + 1) / 2;
+        double maxOfLeft, minOfRight;
+        while (imin <= imax) {
+            int i = (imin + imax) / 2;
+            int j = halfLen - i;
+            int nums1Left = (i == 0) ? Integer.MIN_VALUE : nums1[i - 1];
+            int nums1Right = (i == x) ? Integer.MAX_VALUE : nums1[i];
+            int nums2Left = (j == 0) ? Integer.MIN_VALUE : nums2[j - 1];
+            int nums2Right = (j == y) ? Integer.MAX_VALUE : nums2[j];
+            if (nums1Left <= nums2Right && nums2Left <= nums1Right) {
+                if ((x + y) % 2 == 0) {
+                    maxOfLeft = Math.max(nums1Left, nums2Left);
+                    minOfRight = Math.min(nums1Right, nums2Right);
+                    return (maxOfLeft + minOfRight) / 2.0;
+                } else {
+                    maxOfLeft = Math.max(nums1Left, nums2Left);
+                    return maxOfLeft;
+                }
+            } else if (nums1Left > nums2Right) {
+                imax = i - 1;
+            } else {
+                imin = i + 1;
+            }
+        }
+        throw new IllegalArgumentException("Input arrays are not sorted or valid");
+    }
+}

@@ -1,0 +1,33 @@
+class Solution {
+
+    public double method1(int[] nums1, int[] nums2) {
+        if (nums1.length > nums2.length) {
+            return method1(nums2, nums1);
+        }
+        int left = 0;
+        int right = nums1.length;
+        int half = (nums1.length + nums2.length + 1) / 2;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            int part2Right = half - mid;
+            int nums1LeftMax = (mid > 0) ? nums1[mid - 1] : Integer.MIN_VALUE;
+            int nums1RightMin = (mid < nums1.length) ? nums1[mid] : Integer.MAX_VALUE;
+            int nums2LeftMax = (part2Right > 0) ? nums2[part2Right - 1] : Integer.MIN_VALUE;
+            int nums2RightMin = (part2Right < nums2.length) ? nums2[part2Right] : Integer.MAX_VALUE;
+            if (nums1LeftMax <= nums2RightMin && nums2LeftMax <= nums1RightMin) {
+                if ((nums1.length + nums2.length) % 2 == 0) {
+                    int leftSubArrayMax = Math.max(nums1LeftMax, nums2LeftMax);
+                    int rightSubArrayMin = Math.min(nums1RightMin, nums2RightMin);
+                    return (leftSubArrayMax + rightSubArrayMin) / 2.0;
+                } else {
+                    return Math.max(nums1LeftMax, nums2LeftMax);
+                }
+            } else if (nums1LeftMax > nums2RightMin) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        throw new IllegalArgumentException("Input arrays are not sorted or invalid.");
+    }
+}

@@ -1,0 +1,43 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+public class Solution {
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        // Edge case: if the list array is null or empty, return null.
+        if (lists == null || lists.length == 0)
+            return null;
+        // PriorityQueue to act as a min-heap, comparing nodes by their values.
+        PriorityQueue<ListNode> minHeap = new PriorityQueue<>((a, b) -> a.val - b.val);
+        // Add the head of each list to the priority queue.
+        for (ListNode list : lists) {
+            if (list != null) {
+                minHeap.offer(list);
+            }
+        }
+        // Dummy node to serve as the starting point of the merged list.
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        // While there are elements in the min-heap
+        while (!minHeap.isEmpty()) {
+            // Extract the smallest element from the heap
+            ListNode minNode = minHeap.poll();
+            // Append the extracted node to the merged list
+            current.next = minNode;
+            current = current.next;
+            // If the extracted node has a next node, add it to the heap
+            if (minNode.next != null) {
+                minHeap.offer(minNode.next);
+            }
+        }
+        // Return the merged list, which starts after the dummy node.
+        return dummy.next;
+    }
+}

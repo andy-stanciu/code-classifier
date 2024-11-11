@@ -1,0 +1,30 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        int W = amount;
+        int[][] dp = new int[n + 1][W + 1];
+        for (int i = 0; i < n + 1; i++) {
+            // Base case: 0 coins are needed to make up 0 amount
+            dp[i][0] = 0;
+        }
+        for (int j = 1; j < W + 1; j++) {
+            // Initialize with a large value to represent infinity or unreachable
+            dp[0][j] = amount + 1;
+        }
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 1; j < W + 1; j++) {
+                if (coins[i - 1] <= j) {
+                    dp[i][j] = Math.min(1 + dp[i][j - coins[i - 1]], dp[i - 1][j]);
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        if (dp[n][W] > amount) {
+            // If the amount cannot be made up by any combination of coins
+            return -1;
+        }
+        return dp[n][W];
+    }
+}

@@ -1,0 +1,36 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int n = nums.length;
+        int var1 = 0;
+        for (int i = 0; i < n; i++) {
+            var1 += nums[i];
+        }
+        int newt = (var1 - param1) / 2;
+        if (var1 < Math.abs(param1) || (var1 - param1) % 2 != 0)
+            return 0;
+        int[][] dp = new int[n][newt + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        return solve(n - 1, newt, nums, dp);
+    }
+
+    static int solve(int ind, int param1, int[] nums, int[][] dp) {
+        if (ind == 0) {
+            if (param1 == 0 && nums[0] == 0)
+                return 2;
+            if (param1 == 0 || param1 == nums[0])
+                return 1;
+            return 0;
+        }
+        if (dp[ind][param1] != -1)
+            return dp[ind][param1];
+        int nottake = solve(ind - 1, param1, nums, dp);
+        int take = 0;
+        if (param1 >= nums[ind]) {
+            take = solve(ind - 1, param1 - nums[ind], nums, dp);
+        }
+        return dp[ind][param1] = take + nottake;
+    }
+}

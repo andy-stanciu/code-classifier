@@ -1,0 +1,39 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ListNode firstNode = new ListNode(-1);
+        ListNode prevNode = new ListNode(-1);
+        int prevRemainder = 0;
+        while (l1 != null || l2 != null) {
+            int val1 = l1 != null ? l1.val : 0;
+            int val2 = l2 != null ? l2.val : 0;
+            int sum = val1 + val2 + prevRemainder;
+            prevRemainder = 0;
+            if (sum > 9) {
+                prevRemainder = sum / 10;
+                sum = sum % 10;
+            }
+            if (firstNode.val == -1) {
+                firstNode.val = sum;
+                firstNode.next = null;
+            } else if (prevNode.val == -1) {
+                prevNode.val = sum;
+                prevNode.next = null;
+                firstNode.next = prevNode;
+            } else {
+                prevNode.next = new ListNode(sum);
+                prevNode = prevNode.next;
+            }
+            l1 = l1 != null ? l1.next : null;
+            l2 = l2 != null ? l2.next : null;
+        }
+        if (prevRemainder != 0) {
+            if (firstNode.next == null) {
+                firstNode.next = new ListNode(prevRemainder);
+            } else {
+                prevNode.next = new ListNode(prevRemainder);
+            }
+        }
+        return firstNode;
+    }
+}

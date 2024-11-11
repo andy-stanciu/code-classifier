@@ -1,0 +1,31 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int[] i : dp) {
+            Arrays.fill(i, -1);
+        }
+        int res = method2(n - 1, amount, param1, dp);
+        if (res >= (int) Math.pow(10, 9))
+            return -1;
+        return res;
+    }
+
+    static int method2(int ind, int target, int[] arr, int[][] dp) {
+        if (ind == 0) {
+            if (target % arr[0] == 0)
+                return target / arr[ind];
+            else
+                return (int) Math.pow(10, 9);
+        }
+        if (dp[ind][target] != -1)
+            return dp[ind][target];
+        int nTake = 0 + method2(ind - 1, target, arr, dp);
+        int take = (int) Math.pow(10, 9);
+        if (arr[ind] <= target) {
+            take = 1 + method2(ind, target - arr[ind], arr, dp);
+        }
+        return dp[ind][target] = Math.min(take, nTake);
+    }
+}

@@ -1,0 +1,23 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        if (n == 1 && amount % coins[0] != 0)
+            return -1;
+        return help(coins, n, amount);
+    }
+
+    public int help(int[] coins, int n, int amount) {
+        if (amount == 0)
+            return 0;
+        // to avoid overflow in pick + 1
+        if (n == 0)
+            return Integer.MAX_VALUE - 1;
+        int pick = Integer.MAX_VALUE - 1;
+        if (coins[n - 1] <= amount) {
+            pick = 1 + help(coins, n, amount - coins[n - 1]);
+        }
+        int nonpick = help(coins, n - 1, amount);
+        return Math.min(pick, nonpick);
+    }
+}

@@ -1,0 +1,49 @@
+class Solution {
+
+    static class Key {
+
+        Integer index;
+
+        Integer total;
+
+        Key(Integer index, Integer total) {
+            this.index = index;
+            this.total = total;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Key)) {
+                return false;
+            }
+            Key other = (Key) o;
+            return Objects.equals(this.index, other.index) && Objects.equals(this.total, other.total);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(index, total);
+        }
+    }
+
+    Map<Key, Integer> map = new HashMap<>();
+
+    public int findTargetSumWays(int[] nums, int target) {
+        return dp(0, nums, 0, target);
+    }
+
+    private int dp(int i, int[] nums, int sum, int target) {
+        if (i == nums.length) {
+            return sum == target ? 1 : 0;
+        }
+        Key key = new Key(i, sum);
+        if (!map.containsKey(key)) {
+            Integer val = dp(i + 1, nums, sum + nums[i], target) + dp(i + 1, nums, sum - nums[i], target);
+            map.put(key, val);
+        }
+        return map.get(key);
+    }
+}

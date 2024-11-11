@@ -1,0 +1,29 @@
+class Solution {
+
+    // Recursive Code
+    // Time Complexity : O(2^n)
+    // Space Compelxity : O(n)... Recursive Stack Space
+    private static int fun(int index, int[] nums, int sum) {
+        // Base Case
+        if (index < 0) {
+            return (sum == 0) ? 1 : 0;
+        }
+        // notPick
+        int notPick = fun(index - 1, nums, sum);
+        // pick
+        int pick = 0;
+        if (nums[index] <= sum)
+            pick = fun(index - 1, nums, sum - nums[index]);
+        return notPick + pick;
+    }
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int len = nums.length, totalSum = Arrays.stream(nums).sum();
+        // Base Case
+        if ((totalSum + target) % 2 != 0)
+            return 0;
+        // Code
+        int sum = (totalSum + target) / 2;
+        return fun(len - 1, nums, sum);
+    }
+}

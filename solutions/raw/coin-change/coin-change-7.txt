@@ -1,0 +1,44 @@
+class Solution {
+
+    public int coinChange(int[] a, int amount) {
+        // Call the minCoinChange method with the given coins array and amount
+        // If the result is Integer.MAX_VALUE - 1, it means it\'s impossible to make that amount
+        // So, return -1 in that case, otherwise return the result
+        if (minCoinChange(a, amount, a.length) == Integer.MAX_VALUE - 1) {
+            return -1;
+        }
+        return minCoinChange(a, amount, a.length);
+    }
+
+    public int minCoinChange(int[] a, int capacity, int items) {
+        // Create a 2D array to store the minimum coins needed for each subproblem
+        int[][] t = new int[items + 1][capacity + 1];
+        for (int n = 0; n < items + 1; n++) {
+            for (int target = 0; target < capacity + 1; target++) {
+                // If we have 0 coins, we need an infinite amount of coins to make any amount > 0
+                if (n == 0 && target >= 0) {
+                    t[n][target] = Integer.MAX_VALUE - 1;
+                }
+                // If the amount is 0, we need 0 coins
+                if (n > 0 && target == 0) {
+                    t[n][target] = 0;
+                }
+            }
+        }
+        for (int n = 1; n < items + 1; n++) {
+            for (int target = 1; target < capacity + 1; target++) {
+                // If the coin value is less than or equal to the current amount
+                if (a[n - 1] <= target) {
+                    // Take the minimum of not using the current coin or using it
+                    // Adding 1 as a count, each time we consider of taking the current coin
+                    t[n][target] = Math.min(1 + t[n][target - a[n - 1]], t[n - 1][target]);
+                } else {
+                    // If the coin value is greater than the current amount, we can\'t use it
+                    t[n][target] = t[n - 1][target];
+                }
+            }
+        }
+        // Return the result from the DP table
+        return t[items][capacity];
+    }
+}

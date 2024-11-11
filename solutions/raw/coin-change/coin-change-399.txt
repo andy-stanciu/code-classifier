@@ -1,0 +1,37 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int[][] mem = new int[coins.length][amount + 1];
+        if (amount == 0)
+            return 0;
+        for (int i = 0; i < mem.length; i++) {
+            for (int j = 0; j <= amount; j++) {
+                if (j == 0) {
+                    mem[i][j] = 0;
+                    continue;
+                }
+                if (i == 0) {
+                    int div = j / coins[i];
+                    if (j % coins[i] == 0)
+                        mem[i][j] = div;
+                    else
+                        mem[i][j] = Integer.MAX_VALUE;
+                } else {
+                    if (coins[i] > j) {
+                        mem[i][j] = mem[i - 1][j];
+                        continue;
+                    }
+                    int exclude = mem[i - 1][j];
+                    int include = mem[i][j - coins[i]];
+                    if (include != Integer.MAX_VALUE)
+                        include++;
+                    mem[i][j] = Math.min(include, exclude);
+                }
+            }
+        }
+        if (mem[coins.length - 1][amount] == Integer.MAX_VALUE)
+            return -1;
+        else
+            return mem[coins.length - 1][amount];
+    }
+}

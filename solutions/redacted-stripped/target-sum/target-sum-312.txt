@@ -1,0 +1,27 @@
+class Solution {
+
+    int recur(int[][] dp, int i, int param1, int cur, int[] nums, int param2) {
+        if (i == nums.length) {
+            if (cur == param1)
+                return 1;
+            else
+                return 0;
+        }
+        if (dp[i][param2 + cur] != -1)
+            return dp[i][cur + param2];
+        int sub = recur(dp, i + 1, param1, cur - nums[i], nums, param2);
+        int add = recur(dp, i + 1, param1, cur + nums[i], nums, param2);
+        dp[i][cur + param2] = add + sub;
+        return dp[i][cur + param2];
+    }
+
+    public int method1(int[] nums, int param1) {
+        int n = nums.length;
+        int param2 = 0;
+        for (int i : nums) param2 += i;
+        int[][] dp = new int[n][2 * param2 + 1];
+        for (int i = 0; i < dp.length; i++) Arrays.fill(dp[i], -1);
+        recur(dp, 0, param1, 0, nums, param2);
+        return dp[0][param2];
+    }
+}

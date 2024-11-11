@@ -1,0 +1,35 @@
+class Solution {
+
+    public double method1(int[] nums1, int[] nums2) {
+        if (nums1.length > nums2.length) {
+            int[] temp = nums1;
+            nums1 = nums2;
+            nums2 = temp;
+        }
+        int m = nums1.length;
+        int n = nums2.length;
+        int leftTotal = m + (n - m + 1) / 2;
+        int left = 0;
+        int right = m;
+        while (left < right) {
+            int i = left + (right - left + 1) / 2;
+            int j = leftTotal - i;
+            if (nums1[i - 1] > nums2[j]) {
+                right = i - 1;
+            } else {
+                left = i;
+            }
+        }
+        int nums1Divide = left;
+        int nums2Divide = leftTotal - nums1Divide;
+        int nums1LeftMax = nums1Divide == 0 ? Integer.MIN_VALUE : nums1[nums1Divide - 1];
+        int nums1RightMin = nums1Divide == m ? Integer.MAX_VALUE : nums1[nums1Divide];
+        int nums2LeftMax = nums2Divide == 0 ? Integer.MIN_VALUE : nums2[nums2Divide - 1];
+        int nums2RightMin = nums2Divide == n ? Integer.MAX_VALUE : nums2[nums2Divide];
+        if ((m + n) % 2 == 1) {
+            return Math.max(nums1LeftMax, nums2LeftMax);
+        } else {
+            return (double) (Math.max(nums1LeftMax, nums2LeftMax) + Math.min(nums1RightMin, nums2RightMin)) / 2;
+        }
+    }
+}

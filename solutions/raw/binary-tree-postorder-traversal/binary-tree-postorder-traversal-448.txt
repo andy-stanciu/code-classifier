@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
+ * }
+ */
+class Solution {
+
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<>();
+        // postOrder(root,res);
+        // Iterative Approach
+        Stack<TreeNode> stk = new Stack<>();
+        Stack<Boolean> visited = new Stack<>();
+        // initialise stk and visited for root
+        stk.push(root);
+        visited.push(false);
+        while (!stk.isEmpty()) {
+            // pop the last node
+            TreeNode curr = stk.pop();
+            Boolean isVisited = visited.pop();
+            // check if curr is not null, as we do add null nodes (leafs) and if it is null
+            // in next iteration they will be popped
+            if (curr != null) {
+                // if this is second time visiting a node, then we finished its all children and
+                // can be added to result
+                if (isVisited)
+                    res.add(curr.val);
+                else {
+                    // else push first curr with visited true -> right -> left both with false, as
+                    // when in next iteration we pop, we get left first since we pushed left at last
+                    stk.push(curr);
+                    visited.push(true);
+                    stk.push(curr.right);
+                    visited.push(false);
+                    stk.push(curr.left);
+                    visited.push(false);
+                }
+            }
+        }
+        return res;
+    }
+
+    // Recursive Approach
+    void postOrder(TreeNode curr, List<Integer> list) {
+        if (curr == null)
+            return;
+        postOrder(curr.left, list);
+        postOrder(curr.right, list);
+        list.add(curr.val);
+    }
+}

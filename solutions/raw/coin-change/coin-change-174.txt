@@ -1,0 +1,18 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int[][] dp = new int[coins.length + 1][amount + 1];
+        for (int i = 0; i < dp.length; i++) dp[i][0] = 0;
+        for (int i = 1; i < dp[0].length; i++) dp[dp.length - 1][i] = 100000;
+        for (int i = dp.length - 2; i >= 0; i--) {
+            for (int j = 1; j < dp[0].length; j++) {
+                if (j >= coins[i]) {
+                    dp[i][j] = Math.min(1 + dp[i][j - coins[i]], dp[i + 1][j]);
+                } else {
+                    dp[i][j] = dp[i + 1][j];
+                }
+            }
+        }
+        return dp[0][amount] == 100000 ? -1 : dp[0][amount];
+    }
+}

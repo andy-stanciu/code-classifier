@@ -1,0 +1,29 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int[] total = new int[amount + 1];
+        total[0] = 0;
+        for (int i = 1; i < total.length; i += 1) {
+            // we need Integer.MAX_VALUE - 1 because
+            // Integer.MAX_VALUE + 1 equal to Integer.MIN_VALUE
+            total[i] = Integer.MAX_VALUE - 1;
+        }
+        for (int j = 0; j < coins.length; j += 1) {
+            for (int i = 1; i <= amount; i += 1) {
+                if (i >= coins[j]) {
+                    // if we add coins[j], we increment this
+                    // total[i] by 1 and plus how many coins we have use
+                    // in total[i - coins[j]]
+                    if (total[i - coins[j]] + 1 < total[i]) {
+                        total[i] = 1 + total[i - coins[j]];
+                    }
+                }
+            }
+        }
+        if (total[amount] == Integer.MAX_VALUE - 1) {
+            return -1;
+        } else {
+            return total[amount];
+        }
+    }
+}

@@ -1,0 +1,20 @@
+class Solution {
+
+    public static int counter(int[] arr, int target, int index, int sum, HashMap<String, Integer> hm) {
+        if (index < 0) {
+            return sum == target ? 1 : 0;
+        }
+        String key = index + "," + sum;
+        if (hm.containsKey(key))
+            return hm.get(key);
+        int plus = counter(arr, target, index - 1, sum + arr[index], hm);
+        int minus = counter(arr, target, index - 1, sum - arr[index], hm);
+        hm.put(key, plus + minus);
+        return plus + minus;
+    }
+
+    public int findTargetSumWays(int[] arr, int target) {
+        HashMap<String, Integer> hm = new HashMap<>();
+        return counter(arr, target, arr.length - 1, 0, hm);
+    }
+}

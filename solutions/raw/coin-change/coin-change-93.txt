@@ -1,0 +1,59 @@
+class Solution {
+
+    /**
+     * Minimum number of coins required to form amount when we are considering
+     *     coins from coins[n-1] -> coins[index]
+     */
+    public int coinChanges(int amount, int[] coins, int index, int[][] dp) {
+        /**
+         * Base case : When only 1 coin is available
+         */
+        if (index == 0) {
+            if (amount % coins[0] == 0)
+                return amount / coins[0];
+            else
+                return 1000000;
+        }
+        if (dp[index][amount] != -1)
+            return dp[index][amount];
+        int notTaken = 0 + coinChanges(amount, coins, index - 1, dp);
+        int taken = Integer.MAX_VALUE;
+        if (coins[index] <= amount)
+            taken = 1 + coinChanges(amount - coins[index], coins, index, dp);
+        return dp[index][amount] = Math.min(taken, notTaken);
+    }
+
+    public int coinChangeTabulation(int[] coins, int amount) {
+        int n = coins.length;
+        int[][] dp = new int[n][amount + 1];
+        /**
+         * Base Condition
+         */
+        for (int target = 0; target <= amount; target++) {
+            if (target % coins[0] == 0)
+                dp[0][target] = target / coins[0];
+            else
+                dp[0][target] = 1000000;
+        }
+        for (int index = 1; index <= n - 1; index++) {
+            for (int j = 0; j <= amount; j++) {
+                int notTaken = 0 + dp[index - 1][j];
+                int taken = Integer.MAX_VALUE;
+                if (coins[index] <= j)
+                    taken = 1 + dp[index][j - coins[index]];
+                dp[index][j] = Math.min(taken, notTaken);
+            }
+        }
+        return dp[n - 1][amount];
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int i = 0; i < n; i++) Arrays.fill(dp[i], -1);
+        // int minCoins =  coinChanges(amount, coins, n-1,dp);
+        // return minCoins >= 1000000 ? -1 : minCoins ;
+        int minCoins = coinChangeTabulation(coins, amount);
+        return minCoins >= 1000000 ? -1 : minCoins;
+    }
+}

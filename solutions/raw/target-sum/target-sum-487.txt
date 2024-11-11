@@ -1,0 +1,31 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        // coin change but we can add or subtract the value
+        // we have to use all the coins
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        if (Math.abs(target) > sum) {
+            return 0;
+        }
+        int[] dp = new int[2 * sum + 1];
+        dp[sum] = 1;
+        for (int num : nums) {
+            int[] tp = new int[2 * sum + 1];
+            for (int i = 0; i < dp.length; i++) {
+                if (dp[i] != 0) {
+                    if (i - num >= 0) {
+                        tp[i - num] = tp[i - num] + dp[i];
+                    }
+                    if (i + num < dp.length) {
+                        tp[i + num] = tp[i + num] + dp[i];
+                    }
+                }
+            }
+            dp = tp;
+        }
+        return dp[sum + target];
+    }
+}

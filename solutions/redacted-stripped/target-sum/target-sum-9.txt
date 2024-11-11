@@ -1,0 +1,26 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int var1 = 0;
+        for (int i : nums) {
+            var1 += i;
+        }
+        if (Math.abs(param1) > var1)
+            return 0;
+        int[][] dp = new int[nums.length][2 * var1 + 1];
+        for (int i = 0; i < nums.length; i++) {
+            Arrays.fill(dp[i], 0);
+        }
+        dp[0][var1 + nums[0]] += 1;
+        dp[0][var1 - nums[0]] += 1;
+        for (int i = 1; i < nums.length; i++) {
+            for (int j = -var1; j <= var1; j++) {
+                if (dp[i - 1][j + var1] != 0) {
+                    dp[i][j + var1 + nums[i]] += dp[i - 1][j + var1];
+                    dp[i][j + var1 - nums[i]] += dp[i - 1][j + var1];
+                }
+            }
+        }
+        return dp[nums.length - 1][param1 + var1];
+    }
+}

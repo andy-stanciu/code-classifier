@@ -1,0 +1,37 @@
+class Solution {
+
+    public int method1(int[] param1, int amount, int[][] dp, int idx) {
+        // base case
+        if (idx == 0) {
+            if (amount % param1[0] == 0) {
+                return amount / param1[0];
+            }
+            return (int) 1e9;
+        }
+        if (dp[idx][amount] != -1) {
+            return dp[idx][amount];
+        }
+        int pickVal = (int) 1e9;
+        // Fix here
+        int notPick = method1(param1, amount, dp, idx - 1);
+        if (param1[idx] <= amount) {
+            pickVal = 1 + method1(param1, amount - param1[idx], dp, idx);
+        }
+        dp[idx][amount] = Math.min(pickVal, notPick);
+        return dp[idx][amount];
+    }
+
+    public int method2(int[] param1, int amount) {
+        // We will make a 2-D DP
+        int[][] dp = new int[param1.length][amount + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        int n = param1.length;
+        int ans = method1(param1, amount, dp, n - 1);
+        if (ans == (int) 1e9) {
+            return -1;
+        }
+        return ans;
+    }
+}

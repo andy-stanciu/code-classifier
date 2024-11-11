@@ -1,0 +1,54 @@
+class Solution {
+
+    int answer;
+
+    int arrlen;
+
+    int target;
+
+    int[] nums;
+
+    int[] rightprefixarr;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        this.arrlen = nums.length;
+        this.answer = 0;
+        this.target = target;
+        this.nums = nums;
+        // used for pruning
+        int[] rightprefixarr = new int[this.arrlen + 1];
+        rightprefixarr[this.arrlen] = 0;
+        int rsum = 0;
+        for (int i = this.arrlen - 1; i >= 0; i--) {
+            rsum += nums[i];
+            rightprefixarr[i] = rsum;
+        }
+        this.rightprefixarr = rightprefixarr;
+        targetsumhelper(0, 0);
+        return this.answer;
+    }
+
+    public void targetsumhelper(int idx, int currsum) {
+        if (idx >= this.arrlen) {
+            if (currsum == this.target) {
+                this.answer += 1;
+                return;
+            } else {
+                return;
+            }
+        }
+        // if current sum is less than target and adding remaining elements also leads to lesser value than target, exit (pruning)
+        if (currsum < this.target && currsum + this.rightprefixarr[idx] < this.target) {
+            return;
+        }
+        // if current sum is larger than target and subtracting remaining elements also leads to larger value than target, exit (pruning)
+        if (currsum > this.target && currsum - this.rightprefixarr[idx] > this.target) {
+            return;
+        }
+        int pluscurrsum = currsum + this.nums[idx];
+        int minuscurrsum = currsum - this.nums[idx];
+        targetsumhelper(idx + 1, pluscurrsum);
+        targetsumhelper(idx + 1, minuscurrsum);
+        return;
+    }
+}

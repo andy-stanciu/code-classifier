@@ -1,0 +1,24 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int var1 = 0;
+        for (int i = 0; i < nums.length; i++) var1 += nums[i];
+        Integer[][] dp = new Integer[nums.length][var1 * 2 + 1];
+        return solve(nums, dp, param1, 0, 0, var1);
+    }
+
+    private static int solve(int[] nums, Integer[][] dp, int param1, int index, int param2, int var1) {
+        if (index == nums.length) {
+            if (param1 == param2)
+                return 1;
+            return 0;
+        }
+        if (dp[index][param2 + var1] != null)
+            return dp[index][param2 + var1];
+        int positive = 0, negative = 0;
+        positive += solve(nums, dp, param1, index + 1, param2 + nums[index], var1);
+        negative += solve(nums, dp, param1, index + 1, param2 - nums[index], var1);
+        dp[index][param2 + var1] = negative + positive;
+        return dp[index][param2 + var1];
+    }
+}

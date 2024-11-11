@@ -1,0 +1,37 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        //calculate s1
+        int sum = 0, n = nums.length;
+        for (int i = 0; i < nums.length; i++) sum += nums[i];
+        if ((sum + target) < 0 || (sum + target) % 2 != 0)
+            return 0;
+        int s1 = (sum + target) / 2;
+        //number of ways to find s1 in nums[]
+        int[][] dp = new int[n][s1 + 1];
+        for (int i = 0; i < dp.length; i++) {
+            for (int j = 0; j < dp[0].length; j++) dp[i][j] = -1;
+        }
+        return targetSum(n - 1, nums, s1, dp);
+    }
+
+    //number of ways to find the target sum
+    private int targetSum(int idx, int[] nums, int target, int[][] dp) {
+        if (idx < 0 && target == 0)
+            return 1;
+        if (idx < 0)
+            return 0;
+        //System.out.print(target);
+        if (dp[idx][target] != -1)
+            return dp[idx][target];
+        int ele = nums[idx];
+        if (ele > target)
+            dp[idx][target] = targetSum(idx - 1, nums, target, dp);
+        else {
+            int op1 = targetSum(idx - 1, nums, target - ele, dp);
+            int op2 = targetSum(idx - 1, nums, target, dp);
+            dp[idx][target] = op1 + op2;
+        }
+        return dp[idx][target];
+    }
+}

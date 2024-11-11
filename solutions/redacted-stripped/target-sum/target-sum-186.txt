@@ -1,0 +1,28 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int n = nums.length;
+        int var1 = 0;
+        for (int i : nums) {
+            var1 += i;
+        }
+        if (var1 < param1 || ((var1 - param1) & 1) == 1) {
+            return 0;
+        }
+        int marker = (var1 - param1) / 2;
+        int[][] dp = new int[n + 1][marker + 1];
+        for (int i = 0; i < n + 1; i++) {
+            dp[i][0] = 1;
+        }
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 0; j < marker + 1; j++) {
+                if (nums[i - 1] <= j) {
+                    dp[i][j] = dp[i - 1][j - nums[i - 1]] + dp[i - 1][j];
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        return dp[n][marker];
+    }
+}

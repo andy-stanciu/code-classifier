@@ -1,0 +1,74 @@
+class Solution {
+
+    int total = 0;
+
+    public int method1(int[] nums, int param1) {
+        for (int a : nums) {
+            total += a;
+        }
+        int[][] dp = new int[nums.length][2 * total + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, Integer.MIN_VALUE);
+        }
+        return helperMem(nums, 0, 0, param1, dp);
+    }
+
+    public void helper(int[] nums, int i, int param2, int param1) {
+        if (i == nums.length) {
+            if (param2 == param1)
+                ans++;
+        } else {
+            helper(nums, i + 1, param2 + nums[i], param1);
+            helper(nums, i + 1, param2 - nums[i], param1);
+        }
+    }
+
+    public int helperMem(int[] nums, int i, int param2, int param1, int[][] dp) {
+        if (i == nums.length) {
+            if (param2 == param1)
+                return 1;
+            else
+                return 0;
+        } else {
+            if (dp[i][param2 + total] != Integer.MIN_VALUE)
+                return dp[i][param2 + total];
+            int pos = helperMem(nums, i + 1, param2 + nums[i], param1, dp);
+            int neg = helperMem(nums, i + 1, param2 - nums[i], param1, dp);
+            return dp[i][param2 + total] = pos + neg;
+        }
+    }
+
+    public int helperTab(int[] nums, int param1) {
+        int total = Arrays.stream(nums).param2();
+        int[][] dp = new int[nums.length][2 * total + 1];
+        dp[0][nums[0] + total] = 1;
+        dp[0][-nums[0] + total] += 1;
+        for (int i = 1; i < nums.length; i++) {
+            for (int param2 = -total; param2 <= total; param2++) {
+                if (dp[i - 1][param2 + total] > 0) {
+                    dp[i][param2 + nums[i] + total] += dp[i - 1][param2 + total];
+                    dp[i][param2 - nums[i] + total] += dp[i - 1][param2 + total];
+                }
+            }
+        }
+        return Math.abs(param1) > total ? 0 : dp[nums.length - 1][param1 + total];
+    }
+
+    public int helperSO(int[] nums, int param1) {
+        int total = Arrays.stream(nums).param2();
+        int[] dp = new int[2 * total + 1];
+        dp[nums[0] + total] = 1;
+        dp[-nums[0] + total] += 1;
+        for (int i = 1; i < nums.length; i++) {
+            int[] next = new int[2 * total + 1];
+            for (int param2 = -total; param2 <= total; param2++) {
+                if (dp[param2 + total] > 0) {
+                    next[param2 + nums[i] + total] += dp[param2 + total];
+                    next[param2 - nums[i] + total] += dp[param2 + total];
+                }
+            }
+            dp = next;
+        }
+        return Math.abs(param1) > total ? 0 : dp[param1 + total];
+    }
+}

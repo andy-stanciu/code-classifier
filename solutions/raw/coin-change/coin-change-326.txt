@@ -1,0 +1,39 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        // This is a dynamic programming solution based on tabulation
+        // (bottom-up using iterations and an array to keep sub-problem solutions).
+        // Here we instantiate this array with one extra item so
+        // its index can match the possible ammount values.
+        int[] results = new int[amount + 1];
+        // The unknown solutions will be initialized with the maximum possible integer
+        // value, which will help when evaluating and comparing interim solutions,
+        // since we need to keep the one with the smallest number of coins
+        Arrays.fill(results, Integer.MAX_VALUE);
+        // The idea is to store the solution for each possible amount going from
+        // the most basic known case, which is 0, all the way to the provided amount value.
+        results[0] = 0;
+        // Since solution for $0 amount is known, we will start from $1,
+        // and go all the way to the provided amount value.
+        // The solutions to amounts smaller than the provided amount value will be
+        // used to calculate the result for the next possible amount values.
+        for (int i = 1; i <= amount; i++) {
+            // We then try each coin
+            for (int j = 0; j < coins.length; j++) {
+                // If the coin value is higher then the amount, then it can\'t be used
+                if (coins[j] > i)
+                    continue;
+                // Check if we know the solution for an amount equals to the
+                // current amount less the current coin
+                int previousResult = results[i - coins[j]];
+                if (previousResult == Integer.MAX_VALUE)
+                    continue;
+                // If we do, then that plus 1 coin is the solution for this amount,
+                // but only if smaller than a previous known solution
+                // for this amount (if existent)
+                results[i] = Math.min(results[i], previousResult + 1);
+            }
+        }
+        return results[amount] == Integer.MAX_VALUE ? -1 : results[amount];
+    }
+}

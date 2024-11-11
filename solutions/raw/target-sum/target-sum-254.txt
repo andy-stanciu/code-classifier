@@ -1,0 +1,55 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        int n = nums.length;
+        for (int num : nums) sum += num;
+        int[][] dp = new int[n][sum + 1];
+        for (int[] d : dp) Arrays.fill(d, -1);
+        if (nums[n - 1] == 0)
+            dp[n - 1][nums[n - 1]] = 2;
+        else
+            dp[n - 1][nums[n - 1]] = 1;
+        return find(nums, target, 0, dp, sum);
+    }
+
+    private int find(int[] nums, int target, int index, int[][] dp, int sum) {
+        if (Math.abs(target) > sum)
+            return 0;
+        int cache = dp[index][Math.abs(target)];
+        if (cache != -1)
+            return cache;
+        if (index == nums.length - 1) {
+            if (target == nums[index] && target == -nums[index]) {
+                dp[index][Math.abs(target)] = 2;
+                return 2;
+            }
+            if (target == nums[index] || target == -nums[index]) {
+                dp[index][Math.abs(target)] = 1;
+                return 1;
+            } else {
+                dp[index][Math.abs(target)] = 0;
+                return 0;
+            }
+        }
+        int x = 0;
+        int y = 0;
+        if (Math.abs(target - nums[index]) <= sum) {
+            if (dp[index + 1][Math.abs(target - nums[index])] != -1)
+                x = dp[index + 1][Math.abs(target - nums[index])];
+            else {
+                x = find(nums, target - nums[index], index + 1, dp, sum);
+                dp[index + 1][Math.abs(target - nums[index])] = x;
+            }
+        }
+        if (target + nums[index] <= sum) {
+            if (dp[index + 1][Math.abs(target + nums[index])] != -1)
+                y = dp[index + 1][Math.abs(target + nums[index])];
+            else {
+                y = find(nums, target + nums[index], index + 1, dp, sum);
+                dp[index + 1][Math.abs(target + nums[index])] = y;
+            }
+        }
+        return x + y;
+    }
+}

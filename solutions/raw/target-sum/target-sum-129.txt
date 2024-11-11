@@ -1,0 +1,32 @@
+class Solution {
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for (int i = 0; i < nums.length; i++) sum += nums[i];
+        int offset = sum;
+        int[][] dp = new int[nums.length][2 * sum + 1];
+        for (int i = 0; i < dp.length; ++i) {
+            Arrays.fill(dp[i], -1);
+        }
+        return f(nums, nums.length - 1, target, 0, dp, offset);
+    }
+
+    public static int f(int[] nums, int ind, int target, int sum, int[][] dp, int offset) {
+        if (ind == 0) {
+            int take = sum + nums[ind];
+            int notTake = sum - nums[ind];
+            int count = 0;
+            if (take == target)
+                count++;
+            if (notTake == target)
+                count++;
+            return count;
+        }
+        if (dp[ind][sum + offset] != -1) {
+            return dp[ind][sum + offset];
+        }
+        int take = f(nums, ind - 1, target, sum + nums[ind], dp, offset);
+        int notTake = f(nums, ind - 1, target, sum - nums[ind], dp, offset);
+        return dp[ind][sum + offset] = take + notTake;
+    }
+}

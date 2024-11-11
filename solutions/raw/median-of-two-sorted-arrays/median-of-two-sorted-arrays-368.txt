@@ -1,0 +1,44 @@
+class Solution {
+
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int m = nums1.length;
+        int n = nums2.length;
+        // Create a max-heap for the smaller half and a min-heap for the larger half
+        // Max-heap (largest element at the top)
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a, b) -> b - a);
+        // Min-heap (smallest element at the top)
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        // Add elements to the heaps, maintaining balance and heap properties
+        for (int i = 0; i < m; i++) {
+            addElement(nums1[i], maxHeap, minHeap);
+        }
+        for (int i = 0; i < n; i++) {
+            addElement(nums2[i], maxHeap, minHeap);
+        }
+        // Calculate the median based on the heap sizes
+        if (maxHeap.size() == minHeap.size()) {
+            // If heaps are equal in size, median is the average of their tops
+            return (maxHeap.peek() + minHeap.peek()) / 2.0;
+        } else {
+            // If one heap is larger, its top is the median
+            return maxHeap.size() > minHeap.size() ? maxHeap.peek() : minHeap.peek();
+        }
+    }
+
+    private void addElement(int num, PriorityQueue<Integer> maxHeap, PriorityQueue<Integer> minHeap) {
+        // Add the element to the appropriate heap to maintain the max-heap <= min-heap property
+        if (maxHeap.isEmpty() || num <= maxHeap.peek()) {
+            maxHeap.offer(num);
+        } else {
+            minHeap.offer(num);
+        }
+        // Balance the heaps if the size difference exceeds 1
+        if (maxHeap.size() > minHeap.size() + 1) {
+            // maxHeap is too big, move its top (largest) to minHeap
+            minHeap.offer(maxHeap.poll());
+        } else if (minHeap.size() > maxHeap.size()) {
+            // minHeap is too big, move its top (smallest) to maxHeap
+            maxHeap.offer(minHeap.poll());
+        }
+    }
+}

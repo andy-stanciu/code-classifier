@@ -1,0 +1,33 @@
+class Solution {
+
+    public int method1(int[] a, int amount) {
+        if (method2(a, amount, a.length) == Integer.MAX_VALUE - 1) {
+            return -1;
+        }
+        return method2(a, amount, a.length);
+    }
+
+    public int method2(int[] a, int capacity, int items) {
+        int[][] t = new int[items + 1][capacity + 1];
+        for (int n = 0; n < items + 1; n++) {
+            for (int target = 0; target < capacity + 1; target++) {
+                if (n == 0 && target >= 0) {
+                    t[n][target] = Integer.MAX_VALUE - 1;
+                }
+                if (n > 0 && target == 0) {
+                    t[n][target] = 0;
+                }
+            }
+        }
+        for (int n = 1; n < items + 1; n++) {
+            for (int target = 1; target < capacity + 1; target++) {
+                if (a[n - 1] <= target) {
+                    t[n][target] = Math.min(1 + t[n][target - a[n - 1]], t[n - 1][target]);
+                } else {
+                    t[n][target] = t[n - 1][target];
+                }
+            }
+        }
+        return t[items][capacity];
+    }
+}

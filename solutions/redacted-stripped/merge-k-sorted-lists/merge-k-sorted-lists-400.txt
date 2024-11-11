@@ -1,0 +1,49 @@
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        return method2(param1, 0, param1.length - 1);
+    }
+
+    private ListNode method2(ListNode[] param1, int i, int j) {
+        if (i < 0 || j >= param1.length || i > j) {
+            return null;
+        }
+        if (i == j) {
+            return param1[i];
+        }
+        if (i + 1 == j) {
+            return method2(param1[i], param1[j]);
+        }
+        int m = (i + j) / 2;
+        ListNode firstHalf = method2(param1, i, m);
+        ListNode secondHalf = method2(param1, m + 1, j);
+        return method2(firstHalf, secondHalf);
+    }
+
+    ListNode method2(ListNode a, ListNode b) {
+        ListNode dummy = new ListNode(-1);
+        ListNode h = dummy;
+        while (a != null && b != null) {
+            if (a.val < b.val) {
+                h.next = a;
+                a = a.next;
+            } else {
+                h.next = b;
+                b = b.next;
+            }
+            h = h.next;
+        }
+        while (a != null) {
+            h.next = a;
+            a = a.next;
+            h = h.next;
+        }
+        while (b != null) {
+            h.next = b;
+            b = b.next;
+            h = h.next;
+        }
+        h.next = null;
+        return dummy.next;
+    }
+}

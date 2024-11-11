@@ -1,0 +1,32 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int var1 = 0;
+        int countOfZeros = 0;
+        for (int i = 0; i < nums.length; i++) {
+            var1 += nums[i];
+            if (nums[i] == 0)
+                countOfZeros++;
+        }
+        if ((var1 < Math.abs(param1)) || (var1 + param1) % 2 != 0)
+            return 0;
+        int weight = (var1 + param1) / 2;
+        int[][] sol = new int[nums.length + 1][weight + 1];
+        for (int j = 0; j <= nums.length; j++) {
+            sol[j][0] = 1;
+        }
+        for (int k = 1; k <= weight; k++) {
+            sol[0][k] = 0;
+        }
+        for (int j = 1; j <= nums.length; j++) {
+            for (int k = 1; k <= weight; k++) {
+                if (nums[j - 1] > k || nums[j - 1] == 0) {
+                    sol[j][k] = sol[j - 1][k];
+                } else {
+                    sol[j][k] = sol[j - 1][k] + sol[j - 1][k - nums[j - 1]];
+                }
+            }
+        }
+        return (int) Math.pow(2, countOfZeros) * sol[nums.length][weight];
+    }
+}

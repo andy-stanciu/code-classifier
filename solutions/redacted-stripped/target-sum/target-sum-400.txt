@@ -1,0 +1,21 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        HashMap<Integer, Integer> var1 = new HashMap<>();
+        var1.put(nums[0], 1);
+        var1.merge(-nums[0], 1, (old, v) -> v + 1);
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] == 0) {
+                var1.replaceAll((k, v) -> 2 * v);
+            } else {
+                HashMap<Integer, Integer> var2 = new HashMap<>();
+                for (Map.Entry<Integer, Integer> entry : var1.entrySet()) {
+                    var2.merge(entry.getKey() + nums[i], entry.getValue(), Integer::sum);
+                    var2.merge(entry.getKey() - nums[i], entry.getValue(), Integer::sum);
+                }
+                var1 = var2;
+            }
+        }
+        return var1.getOrDefault(param1, 0);
+    }
+}

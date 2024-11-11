@@ -1,0 +1,64 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        Arrays.sort(coins);
+        // int ans = recursive(coins, amount, coins.length - 1);
+        // return ans == Integer.MAX_VALUE - 1 ? -1 : ans;
+        int ans = tabulation(coins, amount);
+        return ans == Integer.MAX_VALUE - 1 ? -1 : ans;
+    }
+
+    private int tabulation(int[] coins, int amount) {
+        if (amount == 0)
+            return 0;
+        if (coins.length == 0)
+            return Integer.MAX_VALUE - 1;
+        int[][] dp = new int[amount + 1][coins.length + 1];
+        for (int i = 0; i <= amount; i++) {
+            for (int j = 0; j <= coins.length; j++) {
+                if (i == 0) {
+                    dp[i][j] = 0;
+                } else if (j == 0) {
+                    dp[i][j] = Integer.MAX_VALUE - 1;
+                } else {
+                    dp[i][j] = Integer.MAX_VALUE - 1;
+                    // dont pick
+                    int dontPick = dp[i][j - 1];
+                    dp[i][j] = Math.min(dp[i][j], dontPick);
+                    // pick
+                    if (i - coins[j - 1] >= 0) {
+                        int pick = 1 + dp[i - coins[j - 1]][j];
+                        dp[i][j] = Math.min(dp[i][j], pick);
+                    }
+                }
+            }
+        }
+        return dp[amount][coins.length];
+    }
+
+    Map<String, Integer> map = new HashMap<>();
+
+    private int recursive(int[] coins, int amount, int index) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (index < 0 || amount < 0) {
+            return Integer.MAX_VALUE - 1;
+        }
+        String key = amount + "-" + index;
+        if (map.containsKey(key))
+            return map.get(key);
+        int ans = Integer.MAX_VALUE - 1;
+        // pick
+        if (amount - coins[index] >= 0) {
+            ans = Math.min(ans, 1 + recursive(coins, amount - coins[index], index));
+        }
+        // dont pick
+        ans = Math.min(ans, 0 + recursive(coins, amount, index - 1));
+        map.put(key, ans);
+        return ans;
+    }
+    // dp[amount][index] = min(dp[amount - coins[index]][index] + 1, dp[amount][index - 1]);
+    // dp[0][index] = 0;
+    // dp[x][negative] = Integer.MAX_VALUE - 1;
+}

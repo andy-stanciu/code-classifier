@@ -1,0 +1,49 @@
+class Solution {
+
+    public static int findTargetSumWays(int[] nums, int difference) {
+        int n = nums.length;
+        int range = Arrays.stream(nums).sum();
+        if (((range - difference) % 2 == 1) || (difference > range) || (range + difference) < 0)
+            return 0;
+        // Edge case 1
+        // difference should not be greater than range.
+        // Edge case 2
+        // total sum can be odd and even both, but if difference is even then range must be even
+        // and if difference is odd then range must be odd. OR
+        // (range - difference) must be even.
+        // for equal partitioning subset sum problem sum of subsets are equal,
+        // so S1 + S2 = range (even) so range must be even unlike here in problem.
+        // Edge case 3
+        // to tackle test cases where (range + difference) < 0
+        // i.e. nums = [100,50], difference = -200, output should be 0.
+        // bcoz if by adding one of the symbols \'+\' and \'-\' before each integer in nums
+        // we never achieve any possible solution where (range + difference) < 0
+        // more example: nums = [50], difference = -60
+        // S1 + S2 = range
+        // S1 - S2 = difference
+        int sum = (range + difference) / 2;
+        int[][] t = new int[n + 1][sum + 1];
+        // "t" is initialized to all "0" for this case.
+        for (int[] row : t) Arrays.fill(row, 0);
+        return findTargetSumWaysHelper(n, nums, sum, t);
+    }
+
+    public static int findTargetSumWaysHelper(int n, int[] wt, int sum, int[][] t) {
+        t[0][0] = 1;
+        /* We are initialising first column to 1, assuming there is only 1 way to make subset sum equal to 0,  i.e. null subset, BUT this fails if we have 0\'s as elements of array. If we have a single 0 present in the array, then the subsets will be \'{}, {0}\' whose sum will be 0. Hence, there can be more than 1 way to make sum==0.
+FIX: Don\'t initialise the first col to be 1. Everything will be initialized to 0 except the first cell in the table i.e. dp[0][0]=1. AND j will start from 0 instead of 1.
+*/
+        // initialization is different here to tackle test cases
+        // where nums contains more than one zeros.
+        // i.e. nums = [0,0,0,0,0,0,0,0,1], difference = 1
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 0; j < sum + 1; j++) {
+                if (wt[i - 1] <= j) {
+                    t[i][j] = t[i - 1][j - wt[i - 1]] + t[i - 1][j];
+                } else
+                    t[i][j] = t[i - 1][j];
+            }
+        }
+        return t[n][sum];
+    }
+}

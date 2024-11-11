@@ -1,0 +1,26 @@
+class Solution {
+
+    private int minCoin(int[] coins, int amount, int[] DP) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (DP[amount] != -1) {
+            return DP[amount];
+        }
+        int n = coins.length;
+        int minimum = 100000000;
+        for (int i = 0; i < n; i++) {
+            if (amount >= coins[i]) {
+                minimum = Math.min(minimum, 1 + minCoin(coins, amount - coins[i], DP));
+            }
+        }
+        return DP[amount] = minimum;
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        final int[] DP = new int[12 + amount];
+        Arrays.fill(DP, -1);
+        int answer = minCoin(coins, amount, DP);
+        return answer == 100000000 ? -1 : answer;
+    }
+}

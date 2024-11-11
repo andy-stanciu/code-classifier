@@ -1,0 +1,32 @@
+class Solution {
+
+    public int method1(int[] param1, int V) {
+        int M = param1.length;
+        int[][] t = new int[M + 1][V + 1];
+        for (int i = 0; i <= M; i++) {
+            t[i][0] = 0;
+        }
+        //         why we used Integer.Max_value -1 because if we\'ll add +1 to it then it will be integer.maxvalue
+        //         other wise it would have been negative value~
+        for (int i = 0; i <= V; i++) {
+            // there is no such possible values
+            t[0][i] = Integer.MAX_VALUE - 1;
+        }
+        for (int i = 1; i <= V; i++) {
+            if (i % param1[0] == 0)
+                t[1][i] = i / param1[0];
+            else
+                t[1][i] = Integer.MAX_VALUE - 1;
+        }
+        for (int i = 2; i <= M; i++) {
+            for (int j = 1; j <= V; j++) {
+                if (param1[i - 1] <= j) {
+                    t[i][j] = Math.min(1 + t[i][j - param1[i - 1]], t[i - 1][j]);
+                } else
+                    t[i][j] = t[i - 1][j];
+            }
+        }
+        // return t[M][V];
+        return (t[M][V] == Integer.MAX_VALUE - 1 ? -1 : t[M][V]);
+    }
+}

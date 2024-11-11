@@ -1,0 +1,30 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        int var1 = 0;
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            var1 += nums[i];
+        }
+        if (var1 < param1 || (var1 - param1) % 2 != 0) {
+            return 0;
+        }
+        //refer problem DP - 21 => DP 18 DP17 from striver
+        int var2 = (var1 - param1) / 2;
+        int[][] dp = new int[n + 1][var2 + 1];
+        dp[0][0] = 1;
+        // If idx is 0 and newTarget is not 0, there are no ways to achieve a non-zero sum
+        // for(int j=1;j<=newTarget;j++){
+        // dp[0][j] = 0;
+        // }
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= var2; j++) {
+                dp[i][j] = dp[i - 1][j];
+                if (j - nums[i - 1] >= 0) {
+                    dp[i][j] += dp[i - 1][j - nums[i - 1]];
+                }
+            }
+        }
+        return dp[n][var2];
+    }
+}

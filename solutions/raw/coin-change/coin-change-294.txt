@@ -1,0 +1,36 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        int[] memo = new int[amount + 1];
+        if (amount < 1) {
+            return 0;
+        }
+        int ans = helper(coins, amount, memo);
+        if (ans != Integer.MAX_VALUE) {
+            return ans;
+        } else {
+            return -1;
+        }
+    }
+
+    private int helper(int[] coins, int amount, int[] memo) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (amount < 0) {
+            return Integer.MAX_VALUE;
+        }
+        if (memo[amount] != 0) {
+            return memo[amount];
+        }
+        int minCoins = Integer.MAX_VALUE;
+        for (int i = 0; i < coins.length; i++) {
+            int ans = helper(coins, amount - coins[i], memo);
+            if (ans != Integer.MAX_VALUE) {
+                minCoins = Math.min(ans + 1, minCoins);
+            }
+        }
+        memo[amount] = minCoins;
+        return memo[amount];
+    }
+}

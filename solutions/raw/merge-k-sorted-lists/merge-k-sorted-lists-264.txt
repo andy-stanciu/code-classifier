@@ -1,0 +1,35 @@
+public class Solution {
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null || lists.length == 0) {
+            return null;
+        }
+        // Define a priority queue with a comparator to order the nodes by their values
+        PriorityQueue<ListNode> minHeap = new PriorityQueue<>(new Comparator<ListNode>() {
+
+            public int compare(ListNode l1, ListNode l2) {
+                return Integer.compare(l1.val, l2.val);
+            }
+        });
+        // Add the head nodes of all lists to the priority queue
+        for (ListNode node : lists) {
+            if (node != null) {
+                minHeap.offer(node);
+            }
+        }
+        // Dummy node to serve as the start of the merged list
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        // Process the nodes in the priority queue
+        while (!minHeap.isEmpty()) {
+            ListNode node = minHeap.poll();
+            current.next = node;
+            current = current.next;
+            // If there is a next node in the list, add it to the priority queue
+            if (node.next != null) {
+                minHeap.offer(node.next);
+            }
+        }
+        return dummy.next;
+    }
+}

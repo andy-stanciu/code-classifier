@@ -1,0 +1,45 @@
+class Solution {
+
+    public List<Integer> method1(TreeNode root) {
+        List<Integer> ans = new ArrayList<>();
+        TreeNode dummy = new TreeNode(-1);
+        dummy.left = root;
+        TreeNode curr = dummy;
+        while (curr != null) {
+            if (curr.left == null) {
+                curr = curr.right;
+            } else {
+                TreeNode pred = curr.left;
+                while (pred.right != null && pred.right != curr) {
+                    pred = pred.right;
+                }
+                if (pred.right == null) {
+                    pred.right = curr;
+                    curr = curr.left;
+                } else {
+                    TreeNode prev = curr;
+                    TreeNode middle = prev.left;
+                    while (middle != curr) {
+                        TreeNode last = middle.right;
+                        middle.right = prev;
+                        prev = middle;
+                        middle = last;
+                    }
+                    middle = pred;
+                    prev = curr;
+                    while (middle != curr) {
+                        ans.add(middle.val);
+                        TreeNode last = middle.right;
+                        middle.right = prev;
+                        prev = middle;
+                        middle = last;
+                    }
+                    pred.right = null;
+                    curr = curr.right;
+                }
+            }
+        }
+        dummy.left = null;
+        return ans;
+    }
+}

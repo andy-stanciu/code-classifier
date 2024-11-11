@@ -1,0 +1,32 @@
+class Solution {
+
+    Integer[][] memo;
+
+    public int method1(int[] nums, int diff) {
+        int total = 0;
+        for (int val : nums) total += val;
+        if ((total + diff) % 2 == 1)
+            return 0;
+        diff = Math.abs(diff);
+        int var1 = (total + diff) / 2;
+        memo = new Integer[nums.length + 1][var1 + 1];
+        return helper(nums.length, var1, nums);
+    }
+
+    private int helper(int n, int t, int[] nums) {
+        if (n == 0) {
+            if (t == 0)
+                return 1;
+            return 0;
+        }
+        //if(t==0) return 1; we are not doing this because we want to count the subsets containing \'0\'s
+        if (memo[n][t] != null)
+            return memo[n][t];
+        if (t - nums[n - 1] >= 0) {
+            memo[n][t] = helper(n - 1, t - nums[n - 1], nums) + helper(n - 1, t, nums);
+        } else {
+            memo[n][t] = helper(n - 1, t, nums);
+        }
+        return memo[n][t];
+    }
+}

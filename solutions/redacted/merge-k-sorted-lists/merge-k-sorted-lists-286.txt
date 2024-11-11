@@ -1,0 +1,39 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        if (param1 == null || param1.length == 0) {
+            return null;
+        }
+        // Min-heap to maintain the current smallest element from each list
+        PriorityQueue<ListNode> heap = new PriorityQueue<>((a, b) -> a.val - b.val);
+        // Initialize the heap with the head of each list
+        for (ListNode node : param1) {
+            if (node != null) {
+                heap.offer(node);
+            }
+        }
+        // Dummy head to help with result list construction
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        while (!heap.isEmpty()) {
+            // Extract the smallest node from the heap
+            ListNode smallest = heap.poll();
+            current.next = smallest;
+            current = current.next;
+            if (smallest.next != null) {
+                heap.offer(smallest.next);
+            }
+        }
+        return dummy.next;
+    }
+}

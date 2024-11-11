@@ -1,0 +1,29 @@
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        // Create an array to store the minimum number of coins needed for each amount
+        int[] dp = new int[amount + 1];
+        // Initialize all elements of dp array with amount+1, indicating an unreachable state
+        Arrays.fill(dp, amount + 1);
+        // Base case: 0 coins needed to make 0 amount
+        dp[0] = 0;
+        // Iterate through each coin denomination
+        for (int coin : coins) {
+            // For each coin, iterate through all possible amounts from coin to amount
+            for (int i = coin; i <= amount; i++) {
+                // Update dp[i] as the minimum of its current value and dp[i - coin] + 1
+                // dp[i - coin] + 1 represents the number of coins needed to make up the remaining amount (i - coin)
+                // Adding 1 represents adding one coin of denomination coin
+                dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+            }
+        }
+        // Check if the amount can be made up using the given coins
+        if (dp[amount] > amount) {
+            // If dp[amount] is greater than amount, it means that it couldn\'t be made up
+            return -1;
+        } else {
+            // Otherwise, return dp[amount], which holds the minimum number of coins needed
+            return dp[amount];
+        }
+    }
+}

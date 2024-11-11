@@ -1,0 +1,44 @@
+class Solution {
+
+    public int method1(int[] nums, int param1) {
+        // assuming seperate the array in to 2 subsets
+        // prefix of numbers of one subset are \'+\', assuming the sum is s1;
+        // the other subset are \'-\', assuming the sum is s2
+        // so the target should be equals (s1 - s2)
+        // therefore, the only thing we should do is to find a subset whose sum is s1 or s2
+        // to simplyfy the problem, we can use the absolute of the target
+        // to explain, assuming target < 0, target = s1 - s2, then absolute of target is - target = s2 - s1
+        // we still just need to find a subset whose sum is s1 or s2
+        param1 = Math.abs(param1);
+        // calculate the sum of numbers
+        int var1 = 0;
+        for (int num : nums) var1 += num;
+        // if target is greater than the sum of all num, it is impossible to have a expression evaluates to target
+        if (param1 > var1)
+            return 0;
+        // as we will use dynamic programming to find the s1 or s2, it would save some time and space if we choose the smaller one
+        // base on the equation we know: s1 + s2 = sum and s1 - s2 = Math.abs(target)
+        // we will know that target sum = (sum - target) / 2
+        // if target sum is not integer, it is impossible to have a expression evaluates to target
+        // calculate the sum we need
+        if ((var1 - param1) % 2 != 0)
+            return 0;
+        int var2 = (var1 - param1) / 2;
+        // iterate through all the numbers
+        // and calculate the sum of all subset by far
+        // use an array to store the count of subset that sum equles to target sum
+        int[] dp = new int[var2 + 1];
+        // sum of 0 should be able to reach anyway
+        dp[0] = 1;
+        for (int num : nums) {
+            // iterate from the back to avoid repeatedly adding this element
+            for (int i = var2; i >= 0; i--) {
+                // we can skip or add this number
+                // if we choose to skip, the count of subset sum before should be kept
+                // if we choose to add, then the count of subset sum that equals to (i - num) should be added
+                dp[i] += i - num >= 0 ? dp[i - num] : 0;
+            }
+        }
+        return dp[var2];
+    }
+}

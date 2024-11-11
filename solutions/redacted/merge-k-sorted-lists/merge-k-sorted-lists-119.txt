@@ -1,0 +1,58 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        ListNode result = new ListNode();
+        ListNode resultIter = result;
+        // have to collect only non-empty lists here
+        ListNode[] viable = new ListNode[param1.length];
+        // this index also serves a counter...
+        int viableIdx = -1;
+        for (ListNode node : param1) {
+            if (node != null) {
+                viable[++viableIdx] = node;
+            }
+        }
+        // it is a counter here.
+        int var1 = viableIdx + 1;
+        while (var1 > 0) {
+            int winner = 0;
+            int value = viable[winner].val;
+            for (int index = 1; index < var1; ++index) {
+                int interim = viable[index].val;
+                if (interim < value) {
+                    winner = index;
+                    value = interim;
+                }
+            }
+            // we\'re done
+            if (viable[winner] == null)
+                break;
+            resultIter = push(resultIter, value);
+            ListNode nextIterator = viable[winner].next;
+            if (nextIterator != null) {
+                viable[winner] = nextIterator;
+            } else {
+                // it is a procedure allowing to pop out a single item in a non-ordered array, without shifting much.
+                viable[winner] = viable[var1 - 1];
+                --var1;
+            }
+        }
+        return result.next;
+    }
+
+    private ListNode push(ListNode targetList, int what) {
+        ListNode newNode = new ListNode(what);
+        targetList.next = newNode;
+        return newNode;
+    }
+}

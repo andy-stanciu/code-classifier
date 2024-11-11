@@ -1,0 +1,32 @@
+class Solution {
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        ListNode dummy = new ListNode(0);
+        ListNode previous = dummy;
+        while (true) {
+            ListNode current = null;
+            Integer selectedI = null;
+            for (int i = 0; i < lists.length; i++) {
+                ListNode list = lists[i];
+                // if this list is empty
+                if (list == null)
+                    continue;
+                // is the current val a good match?
+                if (current == null || current.val > list.val) {
+                    current = list;
+                    selectedI = i;
+                }
+            }
+            // no selection == end of all lists
+            if (selectedI == null) {
+                break;
+            }
+            // update previous
+            previous.next = current;
+            // move forward
+            previous = previous.next;
+            lists[selectedI] = lists[selectedI].next;
+        }
+        return dummy.next;
+    }
+}

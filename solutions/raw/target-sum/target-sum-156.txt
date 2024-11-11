@@ -1,0 +1,27 @@
+class Solution {
+
+    Integer[][] dp = null;
+
+    int gT = 0;
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int totalSum = 0;
+        for (int i : nums) {
+            totalSum += i;
+        }
+        dp = new Integer[nums.length][totalSum * 2 + 1];
+        gT = target;
+        // if target == 0, index = 5, if target == -5 index = 0, if 5, 10
+        return recu(0, 0, nums);
+    }
+
+    public Integer recu(int i, int total, int[] nums) {
+        if (i == nums.length)
+            return gT == total ? 1 : 0;
+        int sI = dp[0].length / 2 + total;
+        if (dp[i][sI] != null)
+            return dp[i][sI];
+        dp[i][sI] = recu(i + 1, total - nums[i], nums) + recu(i + 1, total + nums[i], nums);
+        return dp[i][sI];
+    }
+}

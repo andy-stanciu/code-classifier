@@ -1,0 +1,29 @@
+class Solution {
+
+    public int method1(int[] nums, int d) {
+        //s1 -> with all positive elements
+        //s2 -> with all negative elements
+        //s1-s2 = target (subset difference with given difference)
+        int var1 = 0;
+        for (int x : nums) var1 += x;
+        int n = nums.length;
+        int s1 = (var1 + d) / 2;
+        if ((var1 + d) % 2 != 0 || s1 < 0)
+            return 0;
+        return method2(nums, s1, n);
+    }
+
+    public int method2(int[] a, int var1, int n) {
+        int[][] dp = new int[n + 1][var1 + 1];
+        dp[0][0] = 1;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= var1; j++) {
+                if (a[i - 1] <= j)
+                    dp[i][j] = dp[i - 1][j - a[i - 1]] + dp[i - 1][j];
+                else if (a[i - 1] > j)
+                    dp[i][j] = dp[i - 1][j];
+            }
+        }
+        return dp[n][var1];
+    }
+}

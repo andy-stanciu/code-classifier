@@ -1,0 +1,52 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        if (param1.length == 0) {
+            return null;
+        }
+        int bestIndex = -1;
+        // let\'s iterate once to find the new head and save it so we can return it
+        for (int i = 0; i < param1.length; i++) {
+            if (null != param1[i]) {
+                if (bestIndex < 0 || param1[i].val < param1[bestIndex].val) {
+                    bestIndex = i;
+                }
+            }
+        }
+        if (bestIndex < 0) {
+            return null;
+        }
+        ListNode head = param1[bestIndex];
+        param1[bestIndex] = param1[bestIndex].next;
+        ListNode current = head;
+        current.next = null;
+        do {
+            bestIndex = -1;
+            for (int i = 0; i < param1.length; i++) {
+                if (null != param1[i]) {
+                    if (bestIndex < 0 || param1[i].val < param1[bestIndex].val) {
+                        bestIndex = i;
+                    }
+                }
+            }
+            if (bestIndex >= 0) {
+                ListNode nodeToMove = param1[bestIndex];
+                param1[bestIndex] = param1[bestIndex].next;
+                current.next = nodeToMove;
+                current = current.next;
+                current.next = null;
+            }
+        } while (bestIndex >= 0);
+        return head;
+    }
+}

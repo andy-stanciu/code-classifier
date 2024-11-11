@@ -1,0 +1,55 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        /**
+         *            Approach:
+         *
+         *            for each of the beginning nodes in k lists
+         *            add them to min heap
+         *
+         *            pop least element from minHeap
+         *            and add it to end of array
+         *
+         *            time complexity: O(n * k), n is the max length of a particular list, k is the number of lists
+         *            space complexity: O(k), k is the number of lists
+         *
+         *            start coding ?
+         */
+        PriorityQueue<ListNode> minHeap = new PriorityQueue<ListNode>((a, b) -> {
+            return Integer.compare(a.val, b.val);
+        });
+        ListNode mergedListHead = null;
+        ListNode mergedListTail = null;
+        for (ListNode node : lists) {
+            if (node != null) {
+                minHeap.add(node);
+            }
+        }
+        while (!minHeap.isEmpty()) {
+            ListNode temp = minHeap.poll();
+            if (temp.next != null) {
+                minHeap.add(temp.next);
+            }
+            if (mergedListHead == null) {
+                temp.next = null;
+                mergedListHead = temp;
+                mergedListTail = temp;
+            } else {
+                temp.next = null;
+                mergedListTail.next = temp;
+                mergedListTail = mergedListTail.next;
+            }
+        }
+        return mergedListHead;
+    }
+}

@@ -1,0 +1,88 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode[] param1) {
+        if (param1.length == 0)
+            return null;
+        PriorityQueue<ListNode> heap = new PriorityQueue<>((n1, n2) -> Integer.compare(n1.val, n2.val));
+        ListNode head = new ListNode();
+        ListNode tail = head;
+        //insert first
+        for (int i = 0; i < param1.length; i++) {
+            if (param1[i] != null)
+                heap.add(param1[i]);
+        }
+        while (!heap.isEmpty()) {
+            ListNode node = heap.poll();
+            tail.next = node;
+            tail = tail.next;
+            if (node.next != null) {
+                heap.add(node.next);
+            }
+        }
+        return head.next;
+    }
+
+    // Merge Two Lists at a Time
+    //This approach repeatedly merges two lists until only one list remains.
+    public ListNode method2(ListNode[] param1) {
+        if (param1 == null || param1.length == 0)
+            return null;
+        int interval = 1;
+        while (interval < param1.length) {
+            for (int i = 0; i + interval < param1.length; i += interval * 2) {
+                param1[i] = method3(param1[i], param1[i + interval]);
+            }
+            interval *= 2;
+        }
+        return param1[0];
+    }
+
+    private ListNode method3(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                current.next = l1;
+                l1 = l1.next;
+            } else {
+                current.next = l2;
+                l2 = l2.next;
+            }
+            current = current.next;
+        }
+        if (l1 != null)
+            current.next = l1;
+        if (l2 != null)
+            current.next = l2;
+        return dummy.next;
+    }
+
+    /*
+    Merge with Divide and Conquer
+    This approach divides the list of lists into two halves, merges each half, and then merges the two resulting lists. This is done recursively.
+    */
+    public ListNode method4(ListNode[] param1) {
+        if (param1 == null || param1.length == 0)
+            return null;
+        return method4(param1, 0, param1.length - 1);
+    }
+
+    private ListNode method4(ListNode[] param1, int left, int right) {
+        if (left == right)
+            return param1[left];
+        int mid = left + (right - left) / 2;
+        ListNode l1 = method4(param1, left, mid);
+        ListNode l2 = method4(param1, mid + 1, right);
+        return method3(l1, l2);
+    }
+}

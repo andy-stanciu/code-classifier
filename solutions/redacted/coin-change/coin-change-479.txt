@@ -1,0 +1,24 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        long[][] memo = new long[param1.length][amount + 1];
+        for (long[] row : memo) Arrays.fill(row, -1);
+        long count = method2(param1.length - 1, amount, param1, memo);
+        return count == Integer.MAX_VALUE ? -1 : (int) count;
+    }
+
+    private long method2(int n, int target, int[] param1, long[][] memo) {
+        if (target == 0)
+            return 0;
+        if (n == 0)
+            return target % param1[n] == 0 ? target / param1[n] : Integer.MAX_VALUE;
+        if (memo[n][target] != -1)
+            return memo[n][target];
+        if (param1[n] <= target) {
+            memo[n][target] = Math.min(1L + method2(n, target - param1[n], param1, memo), method2(n - 1, target, param1, memo));
+        } else {
+            memo[n][target] = method2(n - 1, target, param1, memo);
+        }
+        return memo[n][target];
+    }
+}

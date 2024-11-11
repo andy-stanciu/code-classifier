@@ -1,0 +1,31 @@
+class Solution {
+
+    private int method1(int[] arr, int ind, int T, int[][] dp) {
+        if (ind == 0) {
+            if (T % arr[0] == 0)
+                return T / arr[0];
+            else
+                return (int) Math.pow(10, 9);
+        }
+        if (dp[ind][T] != -1)
+            return dp[ind][T];
+        int notTaken = 0 + method1(arr, ind - 1, T, dp);
+        int taken = (int) Math.pow(10, 9);
+        if (arr[ind] <= T)
+            taken = 1 + method1(arr, ind, T - arr[ind], dp);
+        return dp[ind][T] = Math.min(notTaken, taken);
+    }
+
+    public int method1(int[] param1, int amount) {
+        int n = param1.length;
+        int[][] dp = new int[n][amount + 1];
+        for (int[] rows : dp) {
+            Arrays.fill(rows, -1);
+        }
+        int res = method1(param1, n - 1, amount, dp);
+        if (res == ((int) Math.pow(10, 9))) {
+            return -1;
+        }
+        return res;
+    }
+}

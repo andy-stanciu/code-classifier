@@ -1,0 +1,33 @@
+class Solution {
+
+    int f(int ind, int[] param1, int amount, int[][] dp) {
+        if (ind == 0) {
+            if (amount % param1[0] == 0) {
+                return amount / param1[0];
+            } else {
+                return 100000;
+            }
+        }
+        if (dp[ind][amount] != -1) {
+            return dp[ind][amount];
+        }
+        int notTake = f(ind - 1, param1, amount - 0, dp);
+        int take = Integer.MAX_VALUE;
+        if (amount >= param1[ind]) {
+            take = 1 + f(ind, param1, amount - param1[ind], dp);
+        }
+        return dp[ind][amount] = Math.min(notTake, take);
+    }
+
+    public int method1(int[] param1, int amount) {
+        int[][] dp = new int[param1.length + 1][amount + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        int ans = f(param1.length - 1, param1, amount, dp);
+        if (ans >= 100000) {
+            return -1;
+        }
+        return ans;
+    }
+}

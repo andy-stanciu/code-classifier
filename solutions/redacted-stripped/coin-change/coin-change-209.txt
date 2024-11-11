@@ -1,0 +1,32 @@
+class Solution {
+
+    public int method1(int[] param1, int amount) {
+        if (amount == 0)
+            return 0;
+        if (amount < 0)
+            return -1;
+        Map<Integer, Integer> memo = new HashMap<>();
+        return method2(param1, amount, memo);
+    }
+
+    private int method2(int[] param1, int amount, Map<Integer, Integer> memo) {
+        if (memo.containsKey(amount)) {
+            return memo.get(amount);
+        }
+        if (amount == 0) {
+            return 0;
+        } else if (amount < 0) {
+            return -1;
+        }
+        int var1 = Integer.MAX_VALUE;
+        for (int var2 : param1) {
+            int remainingAmount = amount - var2;
+            int result = method2(param1, remainingAmount, memo);
+            if (result != -1) {
+                var1 = Math.min(var1, result + 1);
+            }
+        }
+        memo.put(amount, var1 == Integer.MAX_VALUE ? -1 : var1);
+        return memo.get(amount);
+    }
+}
