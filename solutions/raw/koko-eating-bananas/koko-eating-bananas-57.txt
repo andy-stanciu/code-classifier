@@ -1,0 +1,33 @@
+class Solution {
+
+    public boolean findHour(int[] piles, int h, int k) {
+        int v = k - 1;
+        for (int p : piles) {
+            h -= (int) ((p + v) / (double) k);
+            if (h < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int minEatingSpeed(int[] piles, int h) {
+        int n = piles.length;
+        long sum = 0;
+        for (int p : piles) {
+            sum += p;
+        }
+        int left = (int) (sum / h);
+        int right = (int) (sum / (h - n + 1));
+        int middle = 0;
+        while (left <= right) {
+            middle = left + right >>> 1;
+            if (findHour(piles, h, middle)) {
+                right = middle - 1;
+            } else {
+                left = middle + 1;
+            }
+        }
+        return left;
+    }
+}

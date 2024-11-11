@@ -1,0 +1,30 @@
+class Solution {
+
+    public int method1(int[] piles, int h) {
+        int N = piles.length;
+        int maxHourPerPile = h / N;
+        double[] speeds = new double[N];
+        for (int i = 0; i < N; i++) {
+            speeds[i] = Math.ceil((double) piles[i] / maxHourPerPile);
+        }
+        Arrays.sort(speeds);
+        int low = 0;
+        int high = N - 1;
+        int result = 0;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            double speed = speeds[mid];
+            int time = 0;
+            for (int pile : piles) {
+                time += (int) Math.ceil((double) pile / speed);
+            }
+            if (time > h) {
+                low = mid + 1;
+            } else {
+                result = (int) speed;
+                high = mid - 1;
+            }
+        }
+        return result;
+    }
+}

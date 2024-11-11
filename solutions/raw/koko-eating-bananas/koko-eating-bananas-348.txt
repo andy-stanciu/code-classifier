@@ -1,0 +1,41 @@
+// TC: O(n * log(max(piles[]))), where max(piles[]) is the max element in the array,
+//     as we are using binary search and n is the size of array
+// SC: O(1)
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        // Initialize max to track the largest number of bananas in any pile.
+        int max = 0;
+        for (int num : piles) {
+            max = Math.max(num, max);
+        }
+        int low = 1;
+        int high = max;
+        int minK = Integer.MAX_VALUE;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int currTotalHours = calTotalHrs(piles, mid);
+            // If the current total hours is less than or equal to the given hours,
+            // then the current mid might be a potential solution, or there might be a lower
+            // possible value.
+            if (currTotalHours <= h) {
+                minK = mid;
+                high = mid - 1;
+            } else {
+                // If the current hours is greater than H, then Koko needs to eat faster.
+                low = mid + 1;
+            }
+        }
+        return minK;
+    }
+
+    // Helper function to calculate how many hours it will take to eat all piles at
+    // a certain eating speed (val).
+    private int calTotalHrs(int[] piles, int val) {
+        int hours = 0;
+        for (int pile : piles) {
+            hours += Math.ceil((double) pile / (double) val);
+        }
+        return hours;
+    }
+}

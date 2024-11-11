@@ -1,0 +1,49 @@
+class Solution {
+
+    public int method1(int[] piles, int h) {
+        int left = 1;
+        int right = 0;
+        for (int pile : piles) {
+            right = Math.max(right, pile);
+        }
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (canFinish(piles, mid, h)) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+
+    private boolean canFinish(int[] piles, int k, int h) {
+        int hoursSpent = 0;
+        for (int pile : piles) {
+            hoursSpent += (pile + k - 1) / k;
+            if (hoursSpent > h) {
+                return false;
+            }
+        }
+        return hoursSpent <= h;
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        int[] piles1 = { 3, 6, 7, 11 };
+        int h1 = 8;
+        System.out.println("Test Case 1: " + solution.method1(piles1, h1));
+        int[] piles2 = { 30, 11, 23, 4, 20 };
+        int h2 = 5;
+        System.out.println("Test Case 2: " + solution.method1(piles2, h2));
+        int[] piles3 = { 30, 11, 23, 4, 20 };
+        int h3 = 6;
+        System.out.println("Test Case 3: " + solution.method1(piles3, h3));
+        int[] piles4 = { 1, 2, 3, 4, 5 };
+        int h4 = 5;
+        System.out.println("Additional Test Case: " + solution.method1(piles4, h4));
+    }
+}

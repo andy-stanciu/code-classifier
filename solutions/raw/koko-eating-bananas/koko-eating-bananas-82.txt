@@ -1,0 +1,66 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        // minimum speed
+        int left = 1;
+        // maximum speed (max pile size)
+        int right = 0;
+        // Finding the maximum pile size
+        for (int pile : piles) {
+            right = Math.max(right, pile);
+        }
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (canFinish(piles, mid, h)) {
+                // try a smaller speed
+                right = mid;
+            } else {
+                // need a larger speed
+                left = mid + 1;
+            }
+        }
+        // left is the minimum speed
+        return left;
+    }
+
+    // Helper method to check if Koko can finish eating at speed k within h hours
+    private boolean canFinish(int[] piles, int k, int h) {
+        int hoursSpent = 0;
+        for (int pile : piles) {
+            // equivalent to Math.ceil(pile / k)
+            hoursSpent += (pile + k - 1) / k;
+            if (hoursSpent > h) {
+                // early exit if exceeds h
+                return false;
+            }
+        }
+        return hoursSpent <= h;
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        // Test case 1
+        int[] piles1 = { 3, 6, 7, 11 };
+        int h1 = 8;
+        // Output: 4
+        System.out.println("Test Case 1: " + solution.minEatingSpeed(piles1, h1));
+        // Test case 2
+        int[] piles2 = { 30, 11, 23, 4, 20 };
+        int h2 = 5;
+        // Output: 30
+        System.out.println("Test Case 2: " + solution.minEatingSpeed(piles2, h2));
+        // Test case 3
+        int[] piles3 = { 30, 11, 23, 4, 20 };
+        int h3 = 6;
+        // Output: 23
+        System.out.println("Test Case 3: " + solution.minEatingSpeed(piles3, h3));
+        // Additional test case
+        int[] piles4 = { 1, 2, 3, 4, 5 };
+        int h4 = 5;
+        // Output: 5
+        System.out.println("Additional Test Case: " + solution.minEatingSpeed(piles4, h4));
+    }
+}

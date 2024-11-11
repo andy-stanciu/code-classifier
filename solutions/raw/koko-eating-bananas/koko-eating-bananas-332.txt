@@ -1,0 +1,39 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        Arrays.sort(piles);
+        int left = 1;
+        int right = piles[piles.length - 1];
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (isOnTime(mid, h, piles)) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        /**
+         * Binary search converges to a single k, considering four possible end states
+         * before convergence:
+         * - (T, T): Both adjacent speeds satisfy the condition. Left is the minimum
+         * valid speed.
+         * - (F, T): Left speed doesn\'t satisfy, right does.
+         * - (T, F) and (F, F) are impossible due to monotonic nature (a satisfying
+         * speed implies all higher speeds also satisfy, and a solution is guaranteed to
+         * exist).
+         *
+         * For (T, T) and (F, T), the left is guaranteed to be the optimal k.
+         */
+        return left;
+    }
+
+    public boolean isOnTime(int k, int h, int[] piles) {
+        int dining_time = 0;
+        for (int i = 0; i < piles.length; i++) {
+            dining_time += Math.ceil((double) piles[i] / k);
+            if (dining_time > h)
+                return false;
+        }
+        return true;
+    }
+}

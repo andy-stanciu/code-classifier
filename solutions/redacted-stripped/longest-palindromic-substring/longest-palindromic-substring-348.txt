@@ -1,0 +1,48 @@
+class Solution {
+
+    int[][] dp;
+
+    String res;
+
+    public String method1(String s) {
+        dp = new int[s.length()][s.length()];
+        for (int i = 0; i < dp.length; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        res = s.substring(0, 1);
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = i + res.length(); j < s.length(); j++) {
+                isPalindrome(i, j, s);
+            }
+        }
+        return res;
+    }
+
+    public boolean isPalindrome(int strt, int end, String s) {
+        if (strt >= end) {
+            return true;
+        }
+        if (dp[strt][end] != -1) {
+            if (dp[strt][end] == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        boolean flag = false;
+        if (s.charAt(strt) == s.charAt(end)) {
+            flag = isPalindrome(strt + 1, end - 1, s);
+            if (flag) {
+                if (res.length() < end - strt + 1) {
+                    res = s.substring(strt, end + 1);
+                }
+            }
+        }
+        if (flag) {
+            dp[strt][end] = 1;
+        } else {
+            dp[strt][end] = 0;
+        }
+        return flag;
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        //the current longest palindrome string (put insided an array always of length 1 so it can be reference passed to each recursive function and muatted)
+        String[] longestPalindromeString = { "" };
+        //recursively check iterations of the string to find longest palindrome
+        checkPalindromeSubstring(longestPalindromeString, s, s.length());
+        return longestPalindromeString[0];
+    }
+
+    //checks if string is a palindrome, if so terminates the current recursive loop and sets the currentLongestPalindrome to the current string
+    public void checkPalindromeSubstring(String[] longestPalindromeString, String stringToIterateThrough, int substringCheckingLength) {
+        //start at the start of the string and go through the string checking if each substring of this current size is a palindrome
+        int startOfSubstring = 0;
+        int endOfSubstring = substringCheckingLength;
+        while (endOfSubstring <= stringToIterateThrough.length()) {
+            String currentSubstringToCheck = stringToIterateThrough.substring(startOfSubstring, endOfSubstring);
+            if (isPalindrome(currentSubstringToCheck)) {
+                longestPalindromeString[0] = currentSubstringToCheck;
+                return;
+            }
+            startOfSubstring++;
+            endOfSubstring++;
+        }
+        //if we get through the whole substring size of the main string and there is no palindrome then recursively start again with the substring length decreasing
+        checkPalindromeSubstring(longestPalindromeString, stringToIterateThrough, substringCheckingLength - 1);
+    }
+
+    //returns the palindrome length (if string is not a palindrome returns -1)
+    public boolean isPalindrome(String palindrome) {
+        int pointer1 = 0;
+        int pointer2 = palindrome.length() - 1;
+        while (pointer2 >= pointer1) {
+            //if the two chars don\'t equal each other string is not a palindrome
+            if (palindrome.charAt(pointer1) != palindrome.charAt(pointer2)) {
+                return false;
+            }
+            pointer1++;
+            pointer2--;
+        }
+        //if you got through the whole string then its a palindrome so return the length
+        return true;
+    }
+}

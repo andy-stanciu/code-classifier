@@ -1,0 +1,52 @@
+class Solution {
+
+    // Method to find the maximum value in an array
+    private static int max(int[] piles) {
+        // Initialize the maximum value as the smallest integer value possible
+        int maxi = Integer.MIN_VALUE;
+        // Iterate through the array to find the maximum value
+        for (int i = 0; i < piles.length; i++) {
+            // Update the maximum value if the current element is greater
+            maxi = Math.max(maxi, piles[i]);
+        }
+        // Return the maximum value found
+        return maxi;
+    }
+
+    // Method to calculate the total hours needed to eat all piles with a given hourly eating speed
+    private static int solve(int[] piles, int hourly) {
+        // Initialize the total hours needed
+        int total = 0;
+        // Iterate through the piles and calculate the total hours needed to eat each pile
+        for (int i = 0; i < piles.length; i++) {
+            // Calculate the total hours needed to eat the current pile and add it to the total
+            total += Math.ceil((double) piles[i] / (double) hourly);
+        }
+        // Return the total hours needed
+        return total;
+    }
+
+    // Method to find the minimum eating speed required to eat all piles within h hours
+    public int method1(int[] piles, int h) {
+        // Initialize the search range for binary search
+        int low = 1;
+        int high = max(piles);
+        // Perform binary search to find the minimum eating speed
+        while (low <= high) {
+            // Calculate the middle value of the search range
+            int mid = (low + high) / 2;
+            // Calculate the total hours needed to eat all piles with the current eating speed
+            int tothours = solve(piles, mid);
+            // Adjust the search range based on the total hours needed
+            if (tothours <= h) {
+                // If total hours needed is less than or equal to h, update high to search for smaller speeds
+                high = mid - 1;
+            } else {
+                // If total hours needed is greater than h, update low to search for higher speeds
+                low = mid + 1;
+            }
+        }
+        // Return the minimum eating speed found
+        return low;
+    }
+}

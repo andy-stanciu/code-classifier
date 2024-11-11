@@ -1,0 +1,46 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        if (s.length() < 2)
+            return s;
+        String longestPal = "";
+        Map<String, String> dp = new HashMap();
+        // delete char from beginging
+        for (int i = 0; i < s.length() - 1; i++) {
+            String reqString = s.substring(i, s.length());
+            String current = longestPalindrome(reqString, dp);
+            if (current.length() > longestPal.length())
+                longestPal = current;
+        }
+        return longestPal;
+    }
+
+    // check all combinations by deleting chars from end
+    public String longestPalindrome(String s, Map<String, String> m) {
+        String longestPal = "";
+        if (s.length() < 2)
+            return s;
+        if (m.containsKey(s))
+            return m.get(s);
+        if (isPalindrome(s) && s.length() > longestPal.length()) {
+            longestPal = s;
+        }
+        if (longestPal.length() >= s.length() - 1) {
+            m.put(s, longestPal);
+            return longestPal;
+        }
+        String current = longestPalindrome(s.substring(0, s.length() - 1), m);
+        if (current.length() > longestPal.length())
+            longestPal = current;
+        m.put(s, longestPal);
+        return longestPal;
+    }
+
+    boolean isPalindrome(String s) {
+        for (int i = 0; i < s.length() / 2; i++) {
+            if (s.charAt(i) != s.charAt(s.length() - 1 - i))
+                return false;
+        }
+        return true;
+    }
+}

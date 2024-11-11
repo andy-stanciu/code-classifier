@@ -1,0 +1,48 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        int[][] dp = new int[s.length()][s.length()];
+        // String
+        // String to store the longest palindromic substring
+        String sb = "";
+        // length of the longest palindromic substring
+        int len = 0;
+        for (int col1 = 0; col1 < s.length(); col1++) {
+            int row = 0, col = col1;
+            while (col < s.length()) {
+                if (row == col) {
+                    // Single character case
+                    dp[row][col] = 1;
+                    len = Math.max(len, col - row + 1);
+                    if (len > sb.length()) {
+                        sb = s.substring(row, col + 1);
+                    }
+                } else if (col - row == 1) {
+                    // Two consecutive case
+                    if (s.charAt(col) == s.charAt(row)) {
+                        dp[row][col] = 1;
+                        len = Math.max(len, col - row + 1);
+                        if (len > sb.length()) {
+                            sb = s.substring(row, col + 1);
+                        }
+                    }
+                } else {
+                    // General case for string length greater than 2
+                    if (s.charAt(col) == s.charAt(row)) {
+                        if (dp[row + 1][col - 1] == 1) {
+                            dp[row][col] = 1;
+                            len = Math.max(len, col - row + 1);
+                            if (len > sb.length()) {
+                                sb = s.substring(row, col + 1);
+                            }
+                        }
+                    }
+                }
+                row++;
+                col++;
+            }
+        }
+        System.out.print(len);
+        return sb;
+    }
+}

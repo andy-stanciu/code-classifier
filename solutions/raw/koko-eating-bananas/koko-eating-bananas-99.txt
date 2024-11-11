@@ -1,0 +1,34 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        int left = 1;
+        int right = piles[0];
+        for (int i = 1; i < piles.length; i++) {
+            right = Math.max(right, piles[i]);
+        }
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (isPossibleWithSpeedK(piles, h, mid)) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+
+    public boolean isPossibleWithSpeedK(int[] piles, int h, int k) {
+        int hoursNeeded = 0;
+        for (int i = 0; i < piles.length; i++) {
+            if (piles[i] % k == 0) {
+                hoursNeeded += piles[i] / k;
+            } else {
+                hoursNeeded += (piles[i] / k) + 1;
+            }
+            if (hoursNeeded > h) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

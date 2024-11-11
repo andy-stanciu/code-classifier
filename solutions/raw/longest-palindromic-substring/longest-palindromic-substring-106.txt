@@ -1,0 +1,44 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        // Handle null input
+        if (s == null)
+            return null;
+        final char[] cs = s.toCharArray();
+        final int n = cs.length;
+        // If the string has 0 or 1 character, it\'s already a palindrome
+        if (n < 2)
+            return s;
+        // Initialize the start index of the longest palindrome
+        int begin = 0;
+        // Initialize the maximum palindrome length
+        int maxLen = 1;
+        // Iterator to traverse the string
+        int i = 0;
+        while (i < n) {
+            // Left pointer for expanding palindrome
+            int l = i - 1;
+            // Right pointer for expanding palindrome
+            int r = i;
+            // Expand to the right as long as the characters are the same
+            while (++r < n && cs[r] == cs[i]) ;
+            // Set i to the rightmost non-matching character
+            i = r;
+            // Expand the palindrome around the center (l, r)
+            while (l >= 0 && r < n && cs[l] == cs[r]) {
+                l--;
+                r++;
+            }
+            // Calculate the length of the found palindrome
+            final int len = r - ++l;
+            if (len > maxLen) {
+                // Update the maximum palindrome length
+                maxLen = len;
+                // Update the starting index of the longest palindrome
+                begin = l;
+            }
+        }
+        // Construct and return the longest palindromic substring
+        return new String(cs, begin, maxLen);
+    }
+}

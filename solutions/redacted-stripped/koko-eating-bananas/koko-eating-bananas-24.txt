@@ -1,0 +1,39 @@
+class Solution {
+
+    public static boolean method1(double speed, int totalTime, int[] param1) {
+        double timeTaken = 0;
+        for (int i = 0; i < param1.length; i++) {
+            double t = (double) param1[i] / speed;
+            t = Math.ceil(t);
+            timeTaken += t;
+            if (timeTaken > totalTime)
+                return false;
+        }
+        return true;
+    }
+
+    public static int method2(int[] param1, int totalTime) {
+        double maxSpeed = 0;
+        double minSpeed = Integer.MAX_VALUE;
+        for (int i = 0; i < param1.length; i++) {
+            if (maxSpeed < param1[i])
+                maxSpeed = param1[i];
+            if (minSpeed > param1[i])
+                minSpeed = param1[i];
+        }
+        if (maxSpeed == minSpeed) {
+            if (param1.length <= totalTime && totalTime / param1.length == 1)
+                return (int) maxSpeed;
+            return (int) (Math.ceil((maxSpeed * param1.length) / totalTime));
+        }
+        minSpeed = minSpeed / totalTime;
+        while (minSpeed < maxSpeed) {
+            double mid = minSpeed + (maxSpeed - minSpeed) / 2;
+            if (method1(mid, totalTime, param1))
+                maxSpeed = mid;
+            else
+                minSpeed = Math.ceil(mid);
+        }
+        return (int) minSpeed;
+    }
+}

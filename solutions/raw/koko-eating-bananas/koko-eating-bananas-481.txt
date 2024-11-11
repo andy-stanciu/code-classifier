@@ -1,0 +1,48 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        int maxPileSize = Arrays.stream(piles).max().getAsInt();
+        var left = 1;
+        var right = maxPileSize;
+        while (left < right) {
+            var mid = (left + right) >> 1;
+            var eatingSpeed = mid;
+            var canEat = canEatAllPilesWithinH(eatingSpeed, h, piles);
+            if (canEat) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return right;
+    }
+
+    public int minEatingSpeedNoBinarySearch(int[] piles, int h) {
+        int maxPileSize = Arrays.stream(piles).max().getAsInt();
+        //valid eating speeds
+        var results = new ArrayList<Integer>();
+        for (int i = 1; i <= maxPileSize; i++) {
+            var eatingSpeed = i;
+            var canEat = canEatAllPilesWithinH(i, h, piles);
+            if (canEat) {
+                results.add(eatingSpeed);
+                //comment this out if you want to see the duplicated work
+                return eatingSpeed;
+            }
+        }
+        System.out.println(results);
+        //        return results.getFirst(); uncommend if using java 21
+        return results.iterator().next();
+    }
+
+    private boolean canEatAllPilesWithinH(int eatingSpeed, int numHours, int[] piles) {
+        var hourSpent = 0;
+        for (var pile : piles) {
+            hourSpent += Math.ceil((double) pile / eatingSpeed);
+        }
+        if (hourSpent <= numHours) {
+            return true;
+        }
+        return false;
+    }
+}

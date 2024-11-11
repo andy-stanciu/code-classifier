@@ -1,0 +1,38 @@
+class Solution {
+
+    private boolean canEatInTime(int[] piles, int eatingSpeed, int hoursLeftToEat) {
+        for (int pile : piles) {
+            hoursLeftToEat -= Math.ceil((double) pile / (double) eatingSpeed);
+            if (hoursLeftToEat < 0)
+                return true;
+        }
+        return false;
+    }
+
+    private int minEatingSpeedBinarySearch(int[] piles, int minSpeed, int maxSpeed, int hoursToEat) {
+        /**
+         *            binary search i = 1 to max value in piles:
+         *                check if koko can eat all the bananas, with smallest such k
+         */
+        if (minSpeed >= maxSpeed)
+            return minSpeed;
+        int middleSpeed = minSpeed + (maxSpeed - minSpeed) / 2;
+        boolean areBananasLeft = canEatInTime(piles, middleSpeed, hoursToEat);
+        if (areBananasLeft) {
+            return minEatingSpeedBinarySearch(piles, middleSpeed + 1, maxSpeed, hoursToEat);
+        }
+        return minEatingSpeedBinarySearch(piles, minSpeed, middleSpeed, hoursToEat);
+    }
+
+    private int getMaxValue(int[] arr) {
+        int maxValue = 1;
+        for (int value : arr) {
+            maxValue = Math.max(maxValue, value);
+        }
+        return maxValue;
+    }
+
+    public int minEatingSpeed(int[] piles, int h) {
+        return minEatingSpeedBinarySearch(piles, 1, getMaxValue(piles), h);
+    }
+}

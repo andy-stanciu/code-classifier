@@ -1,0 +1,51 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        // Handle edge case: if the string is empty
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        // Transform the input string: insert \'#\' between each character
+        StringBuilder transformed = new StringBuilder("#");
+        for (char c : s.toCharArray()) {
+            transformed.append(c).append("#");
+        }
+        String T = transformed.toString();
+        int n = T.length();
+        // Array to store the radius of the palindrome centered at each position
+        int[] P = new int[n];
+        // center and right boundary of the current palindrome
+        int center = 0, right = 0;
+        for (int i = 0; i < n; i++) {
+            // Find the mirrored position of i
+            int mirror = 2 * center - i;
+            // Expand the palindrome around i
+            if (i < right) {
+                // Use the previously computed palindrome\'s radius if within the right boundary
+                P[i] = Math.min(right - i, P[mirror]);
+            }
+            // Expand the palindrome around i while valid
+            while (i + P[i] + 1 < n && i - P[i] - 1 >= 0 && T.charAt(i + P[i] + 1) == T.charAt(i - P[i] - 1)) {
+                P[i]++;
+            }
+            // Update the center and right boundary
+            if (i + P[i] > right) {
+                center = i;
+                right = i + P[i];
+            }
+        }
+        // Find the longest palindrome in the transformed string
+        int maxLen = 0;
+        int maxCenter = 0;
+        for (int i = 0; i < n; i++) {
+            if (P[i] > maxLen) {
+                maxLen = P[i];
+                maxCenter = i;
+            }
+        }
+        // Extract the longest palindrome from the original string
+        // Divide by 2 because of the transformation
+        int start = (maxCenter - maxLen) / 2;
+        return s.substring(start, start + maxLen);
+    }
+}

@@ -1,0 +1,47 @@
+class Solution {
+
+    int optimal = Integer.MAX_VALUE;
+
+    public int minEatingSpeed(int[] piles, int h) {
+        //This can be applicable to may real world.
+        //1. Selecting a politician .. he cannot be too matured or too dumb.. somewhere near where most could relate. So, given the sample of demography is provided, find out the IQ level of the successful politican.
+        // Find the maximum value in the array
+        int max = Arrays.stream(piles).max().orElse(0);
+        if (piles.length == h) {
+            //if you have less time to eat, so return max speed possible.
+            return max;
+        }
+        // reason for this is, even with speed 5 if koko can complete in 10 hrs, for 4 also it can complete in 10 hrs .. so we need to find the optimal. This is minor change w.r.t the binary search.
+        optimal = max;
+        return getOptimalSpeed(piles, 0, max, h);
+    }
+
+    private int getOptimalSpeed(int[] piles, int low, int high, int h) {
+        if (low + 1 == high) {
+            return optimal;
+        }
+        int mid = (low + high) / 2;
+        long timeTaken = getTimeTaken(piles, mid);
+        if (timeTaken <= h) {
+            //if incase equal, if we can decrease eating speed
+            optimal = Math.min(mid, optimal);
+            return getOptimalSpeed(piles, low, mid, h);
+        } else {
+            //slow
+            return getOptimalSpeed(piles, mid, high, h);
+        }
+    }
+
+    private long getTimeTaken(int[] piles, int speed) {
+        long timeTaken = 0;
+        for (int i : piles) {
+            if (i % speed == 0) {
+                timeTaken += i / speed;
+            } else {
+                timeTaken += i / speed + 1;
+            }
+        }
+        //System.out.println("Time taken for speed="+ speed +", timeTaken="+ timeTaken);
+        return timeTaken;
+    }
+}

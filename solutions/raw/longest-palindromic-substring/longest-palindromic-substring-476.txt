@@ -1,0 +1,27 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        List<Integer> longest = List.of(0, 1);
+        for (int i = 1; i < s.length(); i++) {
+            List<Integer> odd = getLongestFrom(s, i - 1, i + 1);
+            List<Integer> even = getLongestFrom(s, i - 1, i);
+            List<Integer> currentLongest = getLongestSize(odd, even);
+            longest = getLongestSize(longest, currentLongest);
+        }
+        return s.substring(longest.get(0), longest.get(1));
+    }
+
+    public List<Integer> getLongestFrom(String s, int left, int right) {
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
+        }
+        return List.of(left + 1, right);
+    }
+
+    public List<Integer> getLongestSize(List<Integer> first, List<Integer> second) {
+        int firstResult = first.get(1) - first.get(0);
+        int secondResult = second.get(1) - second.get(0);
+        return firstResult > secondResult ? first : second;
+    }
+}

@@ -1,0 +1,48 @@
+class Solution {
+
+    private boolean isPossible(int[] piles, int h, int k) {
+        long totalHours = 0;
+        for (int var1 : piles) {
+            /*
+                1. The cast to double ensures that the division is performed in floating-point arithmetic, allowing for fractional results.
+                2. The result of Math.ceil is cast to an int to ensure that totalHours remains an integer, as you can\'t have a fraction of an hour in this context.
+                3. totalHours is made long to handle really large inputs
+            */
+            totalHours += (int) Math.ceil((double) var1 / k);
+        }
+        return totalHours <= h;
+    }
+
+    private int findMaxValueInPiles(int[] piles) {
+        int maxValue = Integer.MIN_VALUE;
+        for (int value : piles) {
+            maxValue = Math.max(maxValue, value);
+        }
+        return maxValue;
+    }
+
+    public int method1(int[] piles, int h) {
+        if (piles == null || piles.length == 0) {
+            return 0;
+        }
+        //range of K: [1, maxValueInPilesArray]
+        int left = 1;
+        int right = findMaxValueInPiles(piles);
+        //that\'s mid basically
+        int candidateForK = -1;
+        int answer = 1;
+        while (left <= right) {
+            //find mid value between left and right
+            candidateForK = left + (right - left) / 2;
+            if (isPossible(piles, h, candidateForK)) {
+                answer = candidateForK;
+                //but try to reduce K further. Go left
+                right = candidateForK - 1;
+            } else {
+                //increase K
+                left = candidateForK + 1;
+            }
+        }
+        return answer;
+    }
+}

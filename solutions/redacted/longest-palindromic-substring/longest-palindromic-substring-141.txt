@@ -1,0 +1,34 @@
+public class Solution {
+
+    public String method1(String s) {
+        int size = s.length();
+        boolean[][] dp = new boolean[size][size];
+        int start = 0, maxLen = 1;
+        // Initialize for single characters
+        for (int i = 0; i < size; i++) {
+            dp[i][i] = true;
+        }
+        // Check for two-character substrings
+        for (int i = 0; i < size - 1; i++) {
+            if (s.charAt(i) == s.charAt(i + 1)) {
+                dp[i][i + 1] = true;
+                start = i;
+                maxLen = 2;
+            }
+        }
+        // Fill the rest of the table
+        for (int col = 2; col < size; col++) {
+            for (int row = 0; row < size - col; row++) {
+                int cl = row + col;
+                if (s.charAt(row) == s.charAt(cl) && dp[row + 1][cl - 1]) {
+                    dp[row][cl] = true;
+                    if (col + 1 > maxLen) {
+                        start = row;
+                        maxLen = col + 1;
+                    }
+                }
+            }
+        }
+        return s.substring(start, start + maxLen);
+    }
+}

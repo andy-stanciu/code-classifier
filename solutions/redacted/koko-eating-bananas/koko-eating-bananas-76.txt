@@ -1,0 +1,43 @@
+class Solution {
+
+    public int method1(int[] piles, int h) {
+        Arrays.sort(piles);
+        int n = piles.length;
+        if (h == n) {
+            return piles[n - 1];
+        }
+        int low = 1;
+        int high = piles[n - 1];
+        int k = high;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            int hours = calculateHours(piles, mid, h);
+            if (hours <= h) {
+                k = Math.min(k, mid);
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return k;
+    }
+
+    private int calculateHours(int[] piles, int kCandidate, int h) {
+        int hours = 0;
+        for (int i = piles.length - 1; i >= 0; i--) {
+            hours += calculateHour(piles[i], kCandidate);
+            if (hours > h) {
+                return hours;
+            }
+            if (hours == 1) {
+                return hours + i;
+            }
+        }
+        return hours;
+    }
+
+    private int calculateHour(int pile, int kCandidate) {
+        int hour = pile / kCandidate;
+        return (pile % kCandidate == 0) ? hour : hour + 1;
+    }
+}

@@ -1,0 +1,36 @@
+class Solution {
+
+    private int findMax(int[] piles) {
+        int maxPile = Integer.MIN_VALUE;
+        for (int pile : piles) {
+            maxPile = Math.max(maxPile, pile);
+        }
+        return maxPile;
+    }
+
+    int calculateHour(int[] piles, int mid, int h) {
+        int totalTimeReq = 0;
+        for (int pile : piles) {
+            // Use integer division for totalTimeReq
+            totalTimeReq += (pile + mid - 1) / mid;
+            if (totalTimeReq > h) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
+    private int minHour(int[] piles, int h, int low, int high) {
+        if (low > high) {
+            return low;
+        }
+        int mid = low + (high - low) / 2;
+        int hourRequired = calculateHour(piles, mid, h);
+        return hourRequired <= 0 ? minHour(piles, h, low, mid - 1) : minHour(piles, h, mid + 1, high);
+    }
+
+    public int minEatingSpeed(int[] piles, int h) {
+        int high = findMax(piles);
+        return minHour(piles, h, 1, high);
+    }
+}

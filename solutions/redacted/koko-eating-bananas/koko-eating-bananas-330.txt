@@ -1,0 +1,40 @@
+class Solution {
+
+    public int method1(int[] arr, int h) {
+        int maxEle = getMax(arr);
+        return bs(arr, h, maxEle);
+    }
+
+    // 1. We need to find the max
+    private static int getMax(int[] arr) {
+        int ans = 0;
+        for (int i = 0; i < arr.length; i++) {
+            ans = Math.max(ans, arr[i]);
+        }
+        return ans;
+    }
+
+    // 2. Find the Time Required
+    private static int getTotalTimeRequired(int[] arr, int mid) {
+        int totalHrs = 0;
+        for (int i = 0; i < arr.length; i++) {
+            totalHrs += Math.ceil((double) arr[i] / (double) mid);
+        }
+        return totalHrs;
+    }
+
+    // 3. Apply Binary Search.
+    private static int bs(int[] arr, int h, int maxEle) {
+        int low = 1;
+        int high = maxEle;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int totalHrs = getTotalTimeRequired(arr, mid);
+            if (totalHrs <= h) {
+                high = mid - 1;
+            } else
+                low = mid + 1;
+        }
+        return low;
+    }
+}

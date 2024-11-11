@@ -1,0 +1,53 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        char[] arr = s.toCharArray();
+        int n = arr.length;
+        int longest_length = 0;
+        int longest_start = 0;
+        int longest_end = 0;
+        {
+            int i = 0;
+            while (i < n - 1) {
+                int left = i;
+                int right = i;
+                // If surrounded by all the same letter, skip to the center of the same letters
+                // sequence.
+                // If it is an odd length substring of the same letter, test as a single center
+                // palindrome.
+                // If it is an even length substring of the same letter, test as a dual center
+                // palindrome.
+                int j = i;
+                while (j < n - 1 && arr[j] == arr[j + 1]) {
+                    j++;
+                }
+                int same_substring_length = j - i + 1;
+                if (same_substring_length % 2 == 0) {
+                    // Even, dual center palindrome
+                    int center = (i + j) / 2;
+                    left = center;
+                    right = center + 1;
+                } else {
+                    // Odd, single center palindrome
+                    int center = (i + j) / 2;
+                    left = center;
+                    right = center;
+                }
+                // Start the real algorithm now
+                while (left > 0 && right < n - 1 && arr[left - 1] == arr[right + 1]) {
+                    left--;
+                    right++;
+                }
+                int length = right - left + 1;
+                if (length > longest_length) {
+                    longest_length = length;
+                    longest_start = left;
+                    longest_end = right;
+                }
+                i = j;
+                i++;
+            }
+        }
+        return s.substring(longest_start, longest_end + 1);
+    }
+}

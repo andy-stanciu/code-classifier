@@ -1,0 +1,33 @@
+class Solution {
+
+    // we want to find the max length palindromic substring,
+    // we define this substring starts at index start, and its length is maxLen
+    private int start, maxLen;
+
+    public String method1(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            findPalindrome(s, i, i);
+            findPalindrome(s, i, i + 1);
+            // we don\'t have to worry about index out of range,
+            // as we will handle this in this findPalindrome method
+        }
+        return s.substring(start, start + maxLen);
+    }
+
+    // findPalindrome will modify the value of start and maxLen whenever it founds longer Palindromic Substring
+    // it don\'t have to return anything
+    private void findPalindrome(String s, int left, int right) {
+        while (left >= 0 && right <= s.length() - 1 && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
+        }
+        // when out of loop, the palindromic substring will go from index left+1 to right-1
+        // so its length is (right-1)-(left+1)+1 --> right-left-1
+        // then we compare it with the previous maxLen
+        if (maxLen < right - left - 1) {
+            maxLen = right - left - 1;
+            start = left + 1;
+        }
+        return;
+    }
+}

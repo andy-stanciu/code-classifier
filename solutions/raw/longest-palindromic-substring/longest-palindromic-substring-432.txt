@@ -1,0 +1,25 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        String result = "";
+        int len = s.length(), longestPalindromeStart = 0, longestPalindromeLength = 1;
+        boolean[][] state = new boolean[len][len];
+        // Base cases.
+        for (int i = 0; i < len; i++) {
+            // dist = 0.
+            state[i][i] = true;
+        }
+        for (int i = len - 1; i >= 0; i--) {
+            for (int dist = 1; dist < len - i; dist++) {
+                int j = dist + i;
+                state[i][j] = (dist == 1) ? s.charAt(i) == s.charAt(j) : (s.charAt(i) == s.charAt(j)) && state[i + 1][j - 1];
+                if (state[i][j] && j - i + 1 > longestPalindromeLength) {
+                    longestPalindromeLength = j - i + 1;
+                    longestPalindromeStart = i;
+                }
+            }
+        }
+        for (int i = longestPalindromeStart; i <= longestPalindromeStart + longestPalindromeLength - 1; ++i) result += s.charAt(i);
+        return result;
+    }
+}

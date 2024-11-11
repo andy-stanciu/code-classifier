@@ -1,0 +1,24 @@
+class Solution {
+
+    public String longestPalindrome(String str) {
+        // O(n^2) time | O(n) space
+        if (str == null || str.length() == 0)
+            return "";
+        int[] curLongest = { 0, 1 };
+        for (int i = 1; i < str.length(); i++) {
+            int[] odd = helper(str, i - 1, i + 1);
+            int[] even = helper(str, i - 1, i);
+            int[] longest = odd[1] - odd[0] > even[1] - even[0] ? odd : even;
+            curLongest = curLongest[1] - curLongest[0] > longest[1] - longest[0] ? curLongest : longest;
+        }
+        return str.substring(curLongest[0], curLongest[1]);
+    }
+
+    public int[] helper(String str, int left, int right) {
+        while (left >= 0 && right < str.length() && str.charAt(left) == str.charAt(right)) {
+            left--;
+            right++;
+        }
+        return new int[] { left + 1, right };
+    }
+}

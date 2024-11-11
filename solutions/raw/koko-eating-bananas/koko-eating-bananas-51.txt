@@ -1,0 +1,29 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        Arrays.sort(piles);
+        int l = 1;
+        int r = piles[piles.length - 1];
+        // not initialising it to 0 but to r(max) because this is the max which our
+        int res = r;
+        // answer can be and we have to find the minimum
+        // Applying the binary search
+        while (l <= r) {
+            int k = (l + r) / 2;
+            int hours = 0;
+            for (int i : piles) {
+                // We have to round up, so we will use Math.ceil
+                // Ex: Ceil(7.0 / 3.0) = Ceil(2.333) = 3.0 -> 3 in int
+                hours += Math.ceil((double) i / k);
+            }
+            if (hours <= h) {
+                // Meaning Koko ate faster, she could have gone slower
+                res = Math.min(res, k);
+                r = k - 1;
+            } else {
+                l = k + 1;
+            }
+        }
+        return res;
+    }
+}

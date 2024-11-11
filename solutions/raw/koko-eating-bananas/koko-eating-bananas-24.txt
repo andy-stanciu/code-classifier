@@ -1,0 +1,47 @@
+class Solution {
+
+    public static boolean canFinishEating(double speed, int totalTime, int[] bananas) {
+        double timeTaken = 0;
+        for (int i = 0; i < bananas.length; i++) {
+            // we calculate the time taken
+            double t = (double) bananas[i] / speed;
+            // if the time taken is something like 1.5 then
+            //koko will wait till 2 so we use math. ceil
+            t = Math.ceil(t);
+            timeTaken += t;
+            //we check if the given speed is enough.
+            if (timeTaken > totalTime)
+                return false;
+        }
+        return true;
+    }
+
+    public static int minEatingSpeed(int[] bananas, int totalTime) {
+        double maxSpeed = 0;
+        double minSpeed = Integer.MAX_VALUE;
+        for (int i = 0; i < bananas.length; i++) {
+            if (maxSpeed < bananas[i])
+                maxSpeed = bananas[i];
+            if (minSpeed > bananas[i])
+                minSpeed = bananas[i];
+        }
+        //minSpeed and maxSpeed are the smallest and the biggest values
+        //in the array. This will serve us our range for binary search
+        if (maxSpeed == minSpeed) {
+            // we come into a problem where all the items are equal
+            // where maxSpeed == minSpeed, so this will tackle that problem
+            if (bananas.length <= totalTime && totalTime / bananas.length == 1)
+                return (int) maxSpeed;
+            return (int) (Math.ceil((maxSpeed * bananas.length) / totalTime));
+        }
+        minSpeed = minSpeed / totalTime;
+        while (minSpeed < maxSpeed) {
+            double mid = minSpeed + (maxSpeed - minSpeed) / 2;
+            if (canFinishEating(mid, totalTime, bananas))
+                maxSpeed = mid;
+            else
+                minSpeed = Math.ceil(mid);
+        }
+        return (int) minSpeed;
+    }
+}

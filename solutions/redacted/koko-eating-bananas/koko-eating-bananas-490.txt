@@ -1,0 +1,31 @@
+class Solution {
+
+    public int method1(int[] piles, int h) {
+        int left = 1;
+        int right = Arrays.stream(piles).max().getAsInt();
+        while (left + 1 < right) {
+            int mid = left + (right - left) / 2;
+            if (canEatAll(piles, mid, h)) {
+                right = mid;
+            } else {
+                left = mid;
+            }
+        }
+        if (canEatAll(piles, left, h)) {
+            return left;
+        }
+        return right;
+    }
+
+    public boolean canEatAll(int[] piles, int speed, int h) {
+        int timeCost = 0;
+        for (int pile : piles) {
+            if (pile % speed != 0) {
+                timeCost += pile / speed + 1;
+            } else {
+                timeCost += pile / speed;
+            }
+        }
+        return timeCost <= h;
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        // Calculate the minimum and maximum possible values of k
+        int left = 1, right = (int) 1e9;
+        // Binary search to find the minimum value of k
+        while (left < right) {
+            int mid = (left + right) / 2;
+            // Check if it\'s possible to eat all bananas with mid as k
+            if (canEatAllBananas(piles, h, mid)) {
+                // If it\'s possible, then we can try to reduce k further
+                right = mid;
+            } else {
+                // If it\'s not possible, then we need to increase k
+                left = mid + 1;
+            }
+        }
+        // The value of left will be the minimum value of k that allows Koko to eat all bananas in h hours
+        return left;
+    }
+
+    private boolean canEatAllBananas(int[] piles, int h, int k) {
+        // Initialize hours to 0
+        int hours = 0;
+        // Iterate over each pile of bananas
+        for (int bananas : piles) {
+            // Calculate the number of hours required to eat this pile
+            int pileHours = bananas / k;
+            if (bananas % k != 0) {
+                // If there are some bananas left over, we need one more hour
+                pileHours++;
+            }
+            // Add the hours required to eat this pile to the total hours
+            hours += pileHours;
+            // If the total hours exceed h, then we can\'t eat all bananas in h hours
+            if (hours > h) {
+                return false;
+            }
+        }
+        // If we reach this point, it means we can eat all bananas in h hours
+        return true;
+    }
+}

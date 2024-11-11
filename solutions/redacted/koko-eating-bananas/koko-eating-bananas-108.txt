@@ -1,0 +1,40 @@
+class Solution {
+
+    public int method1(int[] piles, int h) {
+        // Start binary search for k between 1 and the maximum number of bananas in a pile
+        int left = 1, right = getMaxPile(piles);
+        // Binary search to find the minimum eating speed
+        while (left < right) {
+            // Middle speed to check
+            int mid = left + (right - left) / 2;
+            if (canFinish(piles, mid, h)) {
+                // Try smaller k
+                right = mid;
+            } else {
+                // Increase k
+                left = mid + 1;
+            }
+        }
+        // The minimum speed that allows Koko to finish within h hours
+        return left;
+    }
+
+    // Helper function to check if Koko can finish all bananas with speed k in h hours
+    private boolean canFinish(int[] piles, int k, int h) {
+        int hours = 0;
+        for (int pile : piles) {
+            // Equivalent to ceil(pile / k)
+            hours += (pile + k - 1) / k;
+        }
+        return hours <= h;
+    }
+
+    // Helper function to find the maximum pile size
+    private int getMaxPile(int[] piles) {
+        int max = 0;
+        for (int pile : piles) {
+            max = Math.max(max, pile);
+        }
+        return max;
+    }
+}

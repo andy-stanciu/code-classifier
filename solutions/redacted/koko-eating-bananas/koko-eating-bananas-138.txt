@@ -1,0 +1,34 @@
+class Solution {
+
+    public int method1(int[] piles, int h) {
+        if (piles.length == 0)
+            return 0;
+        int max = 0;
+        long sum = 0;
+        for (int p : piles) {
+            sum += p;
+        }
+        int low = (int) mathCeilDiv(sum, h);
+        int hi = (int) mathCeilDiv(sum, h - piles.length + 1);
+        int mid;
+        while (low < hi) {
+            mid = low + (hi - low) / 2;
+            int count = 0;
+            for (int pile : piles) {
+                // count += (pile + mid - 1) / mid;
+                count += mathCeilDiv(pile, mid);
+                if (count > h)
+                    break;
+            }
+            if (count > h)
+                low = mid + 1;
+            else
+                hi = mid;
+        }
+        return hi;
+    }
+
+    public long mathCeilDiv(long sum, long h) {
+        return (sum + h - 1) / h;
+    }
+}

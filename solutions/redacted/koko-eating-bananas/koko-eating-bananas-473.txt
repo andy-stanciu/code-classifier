@@ -1,0 +1,32 @@
+class Solution {
+
+    public int method1(int[] piles, int h) {
+        int max = 0;
+        for (int i : piles) max = Math.max(max, i);
+        int lo = 1, hi = max;
+        while (lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+            int mid_hours = helper(piles, mid);
+            int mid_hours1 = helper(piles, mid - 1);
+            if (mid_hours <= h && mid_hours1 > h)
+                return mid;
+            else if (mid_hours <= h)
+                hi = mid - 1;
+            else
+                lo = mid + 1;
+        }
+        return -1;
+    }
+
+    public int helper(int[] piles, int mid) {
+        if (mid == 0)
+            return Integer.MAX_VALUE;
+        int sum = 0;
+        for (int i : piles) {
+            sum += 1 + (i / mid);
+            if (i % mid == 0)
+                sum--;
+        }
+        return sum;
+    }
+}

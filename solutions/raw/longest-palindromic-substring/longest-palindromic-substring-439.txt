@@ -1,0 +1,66 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        s.replaceAll(" ", "");
+        int len = s.length();
+        int[] arr = new int[len];
+        int[] arr2 = new int[len];
+        char[] string = new char[len];
+        string = s.toCharArray();
+        int max1 = 0;
+        int max2 = 0;
+        for (int i = 0; i < len; i++) {
+            int maxLocal1 = 0;
+            int maxLocal2 = 0;
+            for (int j = 1; j <= i && i + j < len; j++) {
+                if (string[i - j] == string[i + j]) {
+                    maxLocal1++;
+                    arr[i]++;
+                } else {
+                    break;
+                }
+            }
+            for (int j = 1; j <= i && i + j - 1 < len; j++) {
+                if (string[i - j] == string[i + j - 1]) {
+                    maxLocal2++;
+                    arr2[i]++;
+                } else {
+                    break;
+                }
+            }
+            if (maxLocal2 > max2) {
+                max2 = maxLocal2;
+            }
+            if (maxLocal1 > max1) {
+                max1 = maxLocal1;
+            }
+        }
+        int max = 0;
+        StringBuilder str = new StringBuilder();
+        StringBuilder strReverse = new StringBuilder();
+        if (max2 * 2 > max1 * 2 + 1) {
+            max = max2;
+            for (int i = 0; i < len; i++) {
+                if (arr2[i] == max) {
+                    for (int j = i - 1; j >= i - max; j--) {
+                        str.append(string[j]);
+                    }
+                    strReverse = new StringBuilder(str);
+                    return strReverse.reverse().append(str).toString();
+                }
+            }
+        } else {
+            max = max1;
+            for (int i = 0; i < len; i++) {
+                if (arr[i] == max) {
+                    for (int j = i - 1; j >= i - max; j--) {
+                        str.append(string[j]);
+                    }
+                    strReverse = new StringBuilder(str);
+                    return strReverse.reverse().append(string[i]).append(str).toString();
+                }
+            }
+        }
+        return String.valueOf(string[0]);
+    }
+}

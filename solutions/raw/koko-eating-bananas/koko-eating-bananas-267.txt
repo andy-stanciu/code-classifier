@@ -1,0 +1,31 @@
+class Solution {
+
+    private boolean canEatAllBananas(int[] piles, int h, int k) {
+        int totalHours = 0;
+        for (int pile : piles) {
+            // Calculate ceiling of pile / k
+            totalHours += (pile + k - 1) / k;
+        }
+        return totalHours <= h;
+    }
+
+    public int minEatingSpeed(int[] piles, int h) {
+        int low = 1;
+        int high = 0;
+        for (int pile : piles) {
+            high = Math.max(high, pile);
+        }
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (canEatAllBananas(piles, h, mid)) {
+                // Try to find a smaller valid speed
+                high = mid;
+            } else {
+                // Speed is too slow, try a faster speed
+                low = mid + 1;
+            }
+        }
+        // The minimum valid eating speed
+        return low;
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    public int minEatingSpeed(int[] piles, int h) {
+        int n = piles.length;
+        int maxBananas = 0;
+        for (int i = 0; i < piles.length; i++) {
+            maxBananas = Math.max(maxBananas, piles[i]);
+        }
+        int low = 1;
+        int high = maxBananas;
+        int mid = 0;
+        while (low < high) {
+            mid = low + (high - low) / 2;
+            if (checkValid(piles, h, mid)) {
+                high = mid;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return low;
+    }
+
+    public boolean checkValid(int[] piles, int h, int speed) {
+        int rate = 0;
+        //mid = 8
+        for (int i = 0; i < piles.length; i++) {
+            //3,6,7,11
+            //0,0,0,1
+            int divi = piles[i] / speed;
+            //System.out.println("for speed " + speed + " piles as " + piles[i] + " divi is " + divi);
+            //3,6,7,3
+            int rem = piles[i] % speed;
+            //System.out.println("for speed " + speed + " piles as " + piles[i] + " rem is " + rem);
+            int val = divi + (rem != 0 ? 1 : 0);
+            rate += val;
+        }
+        System.out.println("Total rate is " + rate);
+        return rate <= h;
+    }
+}

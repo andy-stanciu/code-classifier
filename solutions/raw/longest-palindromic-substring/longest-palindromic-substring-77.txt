@@ -1,0 +1,43 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        // "Expand from Center" Approach
+        int n = s.length();
+        int start = 0, end = 0, maxLen = 1;
+        // Check substrings with odd length
+        for (int i = 0; i < n; i++) {
+            int curLen = expand(i, i, s);
+            if (curLen > maxLen) {
+                maxLen = curLen;
+                // curLen / 2 is the "radius" from the center i
+                start = i - curLen / 2;
+                end = i + curLen / 2;
+            }
+        }
+        // Check substrings with even length
+        for (int i = 0; i < n - 1; i++) {
+            int curLen = expand(i, i + 1, s);
+            if (curLen > maxLen) {
+                maxLen = curLen;
+                // curLen / 2 is the "radius" from the center i + 0.5
+                start = i - curLen / 2 + 1;
+                // end = start + curLen - 1
+                end = i + curLen / 2;
+            }
+        }
+        // s[start..end] is the longest palindromic substring
+        return s.substring(start, end + 1);
+    }
+
+    // Return the longest palindromic substring\'s length centered from s[i..j]
+    private int expand(int i, int j, String s) {
+        while (i >= 0 && j < s.length() && s.charAt(i) == s.charAt(j)) {
+            i--;
+            j++;
+        }
+        // At this moment, s[i] != s[j]
+        // so the longest palindromic substring is s[i + 1..j - 1]
+        // whose length is j - 1 - (i + 1) + 1 = j - i - 1
+        return j - i - 1;
+    }
+}

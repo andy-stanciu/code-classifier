@@ -1,0 +1,35 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        int size = s.length();
+        if (size <= 1)
+            return s;
+        int[] maxStats = new int[3];
+        for (int i = 0; i < size - 1; i++) {
+            expandToCheckPalindrome(i - 1, i + 1, s, size, maxStats);
+            if (s.charAt(i) == s.charAt(i + 1)) {
+                if (maxStats[0] < 2) {
+                    maxStats[0] = 2;
+                    maxStats[1] = i;
+                    maxStats[2] = i + 2;
+                }
+                expandToCheckPalindrome(i - 1, i + 2, s, size, maxStats);
+            }
+        }
+        return maxStats[0] == 0 ? Character.toString(s.charAt(0)) : s.substring(maxStats[1], maxStats[2]);
+    }
+
+    private void expandToCheckPalindrome(int startIndex, int endIndex, String word, int size, int[] maxStats) {
+        if (startIndex >= 0 && endIndex < size) {
+            if (word.charAt(startIndex) == word.charAt(endIndex)) {
+                int palLength = (endIndex - startIndex) + 1;
+                if (palLength > maxStats[0]) {
+                    maxStats[0] = palLength;
+                    maxStats[1] = startIndex;
+                    maxStats[2] = endIndex + 1;
+                }
+                expandToCheckPalindrome(startIndex - 1, endIndex + 1, word, size, maxStats);
+            }
+        }
+    }
+}

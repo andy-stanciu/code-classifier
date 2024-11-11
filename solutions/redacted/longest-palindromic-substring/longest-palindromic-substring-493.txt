@@ -1,0 +1,46 @@
+class Solution {
+
+    public String[] dp;
+
+    public String method1(String s) {
+        dp = new String[s.length()];
+        Arrays.fill(dp, "");
+        return helpfun(s, s.length() - 1);
+    }
+
+    public String helpfun(String s, int i) {
+        // base case
+        if (i < 0) {
+            return "";
+        }
+        // dp case
+        if (!dp[i].equals("")) {
+            return dp[i];
+        }
+        String ans = "";
+        for (int j = 0; j <= i; j++) {
+            if (pali(s, j, i)) {
+                String subStr = s.substring(j, i + 1);
+                if (subStr.length() > ans.length()) {
+                    ans = subStr;
+                }
+            }
+        }
+        dp[i] = helpfun(s, i - 1);
+        if (ans.length() > dp[i].length()) {
+            dp[i] = ans;
+        }
+        return dp[i];
+    }
+
+    public boolean pali(String s, int start, int end) {
+        while (start <= end) {
+            if (s.charAt(start) != s.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+}

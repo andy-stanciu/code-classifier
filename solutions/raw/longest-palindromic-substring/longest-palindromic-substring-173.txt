@@ -1,0 +1,43 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        String longestPal = "";
+        for (int i = 0; i < s.length(); i++) {
+            int offset = longestPal.length() / 2;
+            String rslt = expandOut(s, i - offset, i + offset);
+            String rslt2 = expandOut(s, i - offset, i + 1 + offset);
+            if (rslt.length() > longestPal.length()) {
+                longestPal = rslt;
+            }
+            if (rslt2.length() > longestPal.length()) {
+                longestPal = rslt2;
+            }
+        }
+        return longestPal;
+    }
+
+    public String expandOut(String s, int start, int end) {
+        int lPtr = start;
+        int rPtr = end;
+        String curLongest = "";
+        while (lPtr >= 0 && rPtr < s.length()) {
+            if (isPalindrone(s.substring(lPtr, rPtr + 1))) {
+                curLongest = s.substring(lPtr, rPtr + 1);
+                lPtr--;
+                rPtr++;
+            } else {
+                return curLongest;
+            }
+        }
+        return curLongest;
+    }
+
+    public boolean isPalindrone(String s) {
+        for (int i = 0; i < s.length() / 2; i++) {
+            if (s.charAt(i) != s.charAt(s.length() - i - 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

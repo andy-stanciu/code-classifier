@@ -1,0 +1,47 @@
+class Solution {
+
+    public String method1(String s) {
+        int n = s.length();
+        boolean[][] isPallindrome = new boolean[n][n];
+        String lps = "";
+        /**
+         * String of length 1 will always be a pallindrome
+         */
+        for (int i = 0; i < n; i++) {
+            isPallindrome[i][i] = true;
+            lps = s.substring(i, i + 1);
+        }
+        /**
+         * String of length 2 will be pallindrome only,
+         *        when both of these characters are same
+         */
+        for (int i = 0; i < n - 1; i++) {
+            if (s.charAt(i) == s.charAt(i + 1)) {
+                isPallindrome[i][i + 1] = true;
+                lps = s.substring(i, i + 1 + 1);
+            }
+        }
+        /**
+         * For length = 3 -> n, A substring(left, right) will be pallindrome
+         *        only when characters at left & right are same &
+         *         substring(left+1, right-1) is also a pallindrome
+         */
+        for (int subLen = 3; subLen <= n; subLen++) {
+            for (int left = 0; left <= n - subLen; left++) {
+                int right = left + subLen - 1;
+                /**
+                 * Both the boundary characters are same &
+                 *                inner substring is also a pallindrome then the entire substring is pallindrome
+                 *                Update the longestPallindromicSubstring (lps)
+                 */
+                if (s.charAt(left) == s.charAt(right)) {
+                    if (isPallindrome[left + 1][right - 1] == true) {
+                        isPallindrome[left][right] = true;
+                        lps = s.substring(left, right + 1);
+                    }
+                }
+            }
+        }
+        return lps;
+    }
+}

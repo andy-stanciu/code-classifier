@@ -1,0 +1,40 @@
+class Solution {
+
+    public String method1(String s) {
+        if (s.length() == 1)
+            return s;
+        char[] str = s.toCharArray();
+        HashMap<Character, List<Integer>> seenAt = new HashMap<>();
+        int maxPalLen = 1;
+        int maxPalBeg = 0;
+        int maxPalEnd = 0;
+        for (int i = 0; i < str.length; i++) {
+            if (!seenAt.containsKey(str[i]))
+                seenAt.put(str[i], new ArrayList<>());
+            List<Integer> seenCharAt = seenAt.get(str[i]);
+            seenCharAt.add(i);
+            for (int j = 0; j < seenCharAt.size(); j++) {
+                int pos = seenCharAt.get(j);
+                if (i - pos + 1 > maxPalLen) {
+                    int beg = pos;
+                    int end = i;
+                    boolean isPal = true;
+                    while (beg < end) {
+                        if (str[beg++] != str[end--]) {
+                            isPal = false;
+                            break;
+                        }
+                    }
+                    if (isPal) {
+                        maxPalLen = i - pos + 1;
+                        maxPalBeg = pos;
+                        maxPalEnd = i;
+                        break;
+                    }
+                } else
+                    break;
+            }
+        }
+        return s.substring(maxPalBeg, maxPalEnd + 1);
+    }
+}

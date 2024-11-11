@@ -1,0 +1,48 @@
+class Solution {
+
+    public String longestPalindrome(String s) {
+        // for every character in s or 2 neighboring same characters
+        // it can be the middle of a palindrom
+        // therefore, we can iterate through the string
+        // for every character, we check if the characters surrounding it is palindromic
+        // and then check if this character is the same as the character on its right
+        // if yes, we should also check if the characters surrounding them is palindromic
+        String res = "";
+        int n = s.length();
+        char[] sc = s.toCharArray();
+        for (int i = 0; i < n; i++) {
+            // character at i is the middle
+            int l = i - 1, r = i + 1;
+            while (l >= 0 && r < n) {
+                if (sc[l] != sc[r])
+                    break;
+                l--;
+                r++;
+            }
+            if (r - l - 1 > res.length()) {
+                res = s.substring(l + 1, r);
+            }
+            // if r is out of boundary of s, there will be no palindromic substring
+            // that is longer than the result now
+            if (r == n)
+                break;
+            // check if char at i same as at i + 1
+            if (i != n - 1 && sc[i] == sc[i + 1]) {
+                l = i - 1;
+                r = i + 2;
+                while (l >= 0 && r < n) {
+                    if (sc[l] != sc[r])
+                        break;
+                    l--;
+                    r++;
+                }
+                if (r - l - 1 > res.length()) {
+                    res = s.substring(l + 1, r);
+                }
+            }
+            if (r == n)
+                break;
+        }
+        return res;
+    }
+}

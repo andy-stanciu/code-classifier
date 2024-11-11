@@ -1,0 +1,52 @@
+class Solution {
+
+    public String method1(String s) {
+        if (s.length() <= 1) {
+            return s;
+        }
+        // solution through dp
+        int[][] dp = new int[s.length()][s.length()];
+        int ctr = 0;
+        String to_ret = "" + s.charAt(0);
+        int max_len = 1;
+        for (// represents col
+        int k = 0; // represents col
+        k < dp.length; // represents col
+        k++) {
+            int st_col = k;
+            for (// represents row
+            int l = 0; // represents row
+            l < dp.length - ctr; // represents row
+            l++) {
+                if (l == st_col) {
+                    dp[l][st_col] = 1;
+                } else // this reprents single character
+                if (// this is for 2 characters
+                Math.abs(st_col - l) == 1) {
+                    if (s.charAt(l) == s.charAt(st_col)) {
+                        dp[l][st_col] = 2;
+                        if (st_col - l + 1 > max_len) {
+                            to_ret = s.substring(l, st_col + 1);
+                            max_len = to_ret.length();
+                        }
+                    } else {
+                        dp[l][st_col] = 0;
+                    }
+                } else {
+                    if (s.charAt(l) == s.charAt(st_col) && dp[l + 1][st_col - 1] > 0) {
+                        dp[l][st_col] = dp[l + 1][st_col - 1] + 2;
+                        if (st_col - l + 1 > max_len) {
+                            to_ret = s.substring(l, st_col + 1);
+                            max_len = to_ret.length();
+                        }
+                    } else {
+                        dp[l][st_col] = 0;
+                    }
+                }
+                st_col++;
+            }
+            ctr++;
+        }
+        return to_ret;
+    }
+}

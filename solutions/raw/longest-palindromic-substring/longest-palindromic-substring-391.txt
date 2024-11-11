@@ -1,0 +1,42 @@
+public class Solution {
+
+    public String preprocess(String s) {
+        if (s.isEmpty())
+            return "^$";
+        StringBuilder result = new StringBuilder("^");
+        for (char c : s.toCharArray()) {
+            result.append("#").append(c);
+        }
+        result.append("#$");
+        return result.toString();
+    }
+
+    public String longestPalindrome(String s) {
+        String T = preprocess(s);
+        int[] P = new int[T.length()];
+        int C = 0, R = 0;
+        for (int i = 1; i < T.length() - 1; i++) {
+            int mirror = 2 * C - i;
+            if (R > i) {
+                P[i] = Math.min(R - i, P[mirror]);
+            }
+            while (T.charAt(i + P[i] + 1) == T.charAt(i - P[i] - 1)) {
+                P[i]++;
+            }
+            if (i + P[i] > R) {
+                C = i;
+                R = i + P[i];
+            }
+        }
+        int max_len = 0;
+        int center_index = 0;
+        for (int i = 1; i < P.length - 1; i++) {
+            if (P[i] > max_len) {
+                max_len = P[i];
+                center_index = i;
+            }
+        }
+        int start = (center_index - max_len) / 2;
+        return s.substring(start, start + max_len);
+    }
+}

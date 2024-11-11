@@ -1,0 +1,34 @@
+class Solution {
+
+    public int method1(int[] piles, int h) {
+        int max = 0;
+        for (int pile : piles) {
+            max = Math.max(max, pile);
+        }
+        if (piles.length == h)
+            return max;
+        int left = 1;
+        int right = 1000000000;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (canEatInTime(piles, mid, h))
+                right = mid - 1;
+            else
+                left = mid + 1;
+        }
+        return left;
+    }
+
+    boolean canEatInTime(int[] piles, int k, int h) {
+        int hours = 0;
+        for (int pile : piles) {
+            int div = pile / k;
+            hours += div;
+            if (hours > h)
+                return false;
+            if (pile % k != 0)
+                hours++;
+        }
+        return hours <= h;
+    }
+}

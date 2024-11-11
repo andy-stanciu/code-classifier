@@ -1,0 +1,39 @@
+class Solution {
+
+    public int method1(int[] piles, int h) {
+        int low = 1;
+        int high = getMax(piles);
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (canFinish(piles, h, mid)) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return low;
+    }
+
+    public int getMax(int[] piles) {
+        int max = 0;
+        for (int pile : piles) {
+            if (pile > max) {
+                max = pile;
+            }
+        }
+        return max;
+    }
+
+    public boolean canFinish(int[] piles, int h, int k) {
+        int hours = 0;
+        for (int pile : piles) {
+            // This is a more efficient way to calculate the ceiling of pile / k
+            hours += (pile + k - 1) / k;
+            if (hours > h) {
+                // Early termination if hours exceed h
+                return false;
+            }
+        }
+        return hours <= h;
+    }
+}
