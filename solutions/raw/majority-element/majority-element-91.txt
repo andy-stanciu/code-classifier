@@ -1,0 +1,32 @@
+class Solution {
+
+    public int majorityElement(int[] nums) {
+        return countMajorityHelper(nums, 0, nums.length - 1);
+    }
+
+    public static int countMajorityHelper(int[] nums, int si, int ei) {
+        if (si == ei) {
+            return nums[si];
+        }
+        int mid = si + (ei - si) / 2;
+        int leftMajority = countMajorityHelper(nums, si, mid);
+        int rightMajority = countMajorityHelper(nums, mid + 1, ei);
+        if (leftMajority == rightMajority) {
+            return leftMajority;
+        }
+        // if not then  count the occurnce of the elements
+        int leftCount = countOccurrances(nums, si, mid, leftMajority);
+        int rightCount = countOccurrances(nums, mid + 1, ei, rightMajority);
+        return leftCount > rightCount ? leftMajority : rightMajority;
+    }
+
+    public static int countOccurrances(int[] nums, int si, int ei, int target) {
+        int count = 0;
+        for (int i = si; i <= ei; i++) {
+            if (nums[i] == target) {
+                count++;
+            }
+        }
+        return count;
+    }
+}

@@ -1,0 +1,49 @@
+class Solution {
+
+    private int index = 0;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        Class1[] var1 = new Class1[param1];
+        for (int i = 0; i < param1; i++) {
+            var1[i] = new Class1(i);
+        }
+        for (int[] pre : prerequisites) {
+            var1[pre[0]].prerequisites.add(var1[pre[1]]);
+        }
+        int[] order = new int[param1];
+        for (Class1 var2 : var1) {
+            if (isCyclic(var2, order))
+                return new int[0];
+        }
+        return order;
+    }
+
+    public boolean isCyclic(Class1 var2, int[] order) {
+        if (var2.visited == true)
+            return true;
+        if (var2.tested == true)
+            return false;
+        var2.visited = true;
+        for (Class1 pre : var2.prerequisites) if (isCyclic(pre, order))
+            return true;
+        var2.tested = true;
+        var2.visited = false;
+        order[index++] = var2.value;
+        return false;
+    }
+
+    class Class1 {
+
+        boolean visited = false;
+
+        boolean tested = false;
+
+        int value;
+
+        List<Class1> prerequisites = new ArrayList<>();
+
+        Class1(int value) {
+            this.value = value;
+        }
+    }
+}

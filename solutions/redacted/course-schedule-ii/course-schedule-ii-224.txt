@@ -1,0 +1,48 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] order = new int[param1];
+        int[] visited = new int[param1];
+        List<Integer>[] adjList = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            adjList[i] = new ArrayList<Integer>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            adjList[prerequisites[i][1]].add(prerequisites[i][0]);
+        }
+        Integer at = param1 - 1;
+        for (int i = 0; i < param1; i++) {
+            //if cycle
+            at = dfs(i, at, visited, order, adjList);
+            if (at == -2) {
+                return new int[] {};
+            }
+        }
+        return order;
+    }
+
+    //0 default
+    //-1 in completed
+    // 1 in progress
+    public int dfs(int node, Integer at, int[] visited, int[] order, List<Integer>[] adjList) {
+        //cycle
+        if (visited[node] == 1)
+            return -2;
+        //skip this, already visited
+        if (visited[node] == -1)
+            return at;
+        //in progress
+        visited[node] = 1;
+        for (int k : adjList[node]) {
+            at = dfs(k, at, visited, order, adjList);
+            if (at == -2) {
+                return at;
+            }
+        }
+        order[at--] = node;
+        //completed
+        visited[node] = -1;
+        //no cycle
+        return at;
+    }
+}

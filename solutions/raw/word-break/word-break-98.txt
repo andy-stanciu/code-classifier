@@ -1,0 +1,34 @@
+class Solution {
+
+    Map<String, Boolean> memo;
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        this.memo = new HashMap<>();
+        //iterate thru worddict,
+        //add in tempstring if its valid aka if letters checks out
+        //if longer than s, return false
+        //if s == tempstring return true.
+        return recur("", s, wordDict);
+    }
+
+    public boolean recur(String tempString, String s, List<String> wordDict) {
+        if (tempString.length() == s.length())
+            return true;
+        if (tempString.length() > s.length())
+            return false;
+        if (memo.containsKey(tempString))
+            return memo.get(tempString);
+        for (String w : wordDict) {
+            String temp = tempString + w;
+            //if try is prefix of s
+            if (s.startsWith(temp)) {
+                if (recur(temp, s, wordDict)) {
+                    memo.put(tempString, true);
+                    return true;
+                }
+            }
+        }
+        memo.put(tempString, false);
+        return false;
+    }
+}

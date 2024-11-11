@@ -1,0 +1,31 @@
+class Solution {
+
+    Set<String> wordDict;
+
+    Map<String, Boolean> memo = new HashMap<>();
+
+    int max = Integer.MIN_VALUE;
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        this.wordDict = new HashSet<>(wordDict);
+        for (String string : wordDict) {
+            max = Math.max(max, string.length());
+        }
+        return dp(s.length() - 1, "", s);
+    }
+
+    public boolean dp(int i, String tmp, String s) {
+        if (i == -1) {
+            return wordDict.contains(tmp);
+        }
+        if (tmp.length() > max) {
+            return false;
+        }
+        if (memo.containsKey(tmp + ":" + i)) {
+            return memo.get(tmp + ":" + i);
+        }
+        boolean result = (wordDict.contains(tmp) && dp(i, "", s)) || dp(i - 1, s.charAt(i) + tmp, s);
+        memo.put(tmp + ":" + i, result);
+        return result;
+    }
+}

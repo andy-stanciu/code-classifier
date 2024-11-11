@@ -1,0 +1,49 @@
+class Solution {
+
+    boolean[] visiting;
+
+    boolean[] visited;
+
+    int[] res;
+
+    int index = 0;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        visiting = new boolean[param1];
+        visited = new boolean[param1];
+        res = new int[param1];
+        List<Integer>[] list = new ArrayList[param1];
+        for (int[] arr : prerequisites) {
+            if (list[arr[0]] == null)
+                list[arr[0]] = new ArrayList<Integer>();
+            list[arr[0]].add(arr[1]);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                if (!method1(list, i))
+                    return new int[] {};
+            }
+        }
+        return res;
+    }
+
+    public boolean method1(List<Integer>[] list, int param2) {
+        if (visited[param2])
+            return true;
+        if (visiting[param2])
+            return false;
+        List<Integer> l = list[param2];
+        visiting[param2] = true;
+        if (l != null)
+            for (int i = 0; i < l.size(); i++) {
+                if (!visited[l.get(i)]) {
+                    if (!method1(list, l.get(i)))
+                        return false;
+                }
+            }
+        visiting[param2] = false;
+        visited[param2] = true;
+        res[index++] = param2;
+        return true;
+    }
+}

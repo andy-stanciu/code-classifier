@@ -1,0 +1,100 @@
+/*
+explanation: course schedule using kahn sort, the algorithm works by first converting the given problem
+to graph and applying a simple topological sort to get the order of finishing, if any of such order is possible
+then we simply return the answer converted to int[]
+
+testcase:  [[1,0]] -> Works
+
+Time & Space Complexity: O(V+E) & O(V+E): Time and space complexity are both v+e due to graph algorithm used
+*/
+class G {
+
+    HashMap<Integer, List<Integer>> adjaceList;
+
+    int vertices;
+
+    int edges;
+
+    int[] visited;
+
+    int[] indegrees;
+
+    G(int v, int e) {
+        vertices = v;
+        edges = e;
+        adjaceList = new HashMap<>();
+        // to store and retrieve visited nodes!
+        visited = new int[vertices];
+        Arrays.fill(visited, 0);
+        // Indegrees calculate (ie incoming edge, for each node)
+        indegrees = new int[vertices];
+        Arrays.fill(indegrees, 0);
+    }
+
+    void _add(int a, int b) {
+        List<Integer> elements = adjaceList.getOrDefault(a, new ArrayList<>());
+        elements.add(b);
+        adjaceList.put(a, elements);
+        // Increase indegree to b
+        indegrees[b]++;
+    }
+
+    void feed(int a, int b) {
+        _add(a, b);
+        _add(b, a);
+    }
+
+    List<Integer> get(int a) {
+        // Mark it as visited!
+        visited[a] = 1;
+        return adjaceList.getOrDefault(a, new ArrayList<>());
+    }
+
+    Boolean isVisited(int a) {
+        return visited[a] != 0;
+    }
+
+    void clear() {
+        Arrays.fill(visited, 0);
+    }
+}
+
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // Build graph!
+        G graph = new G(numCourses, prerequisites.length);
+        for (int[] arr : prerequisites) {
+            graph._add(arr[1], arr[0]);
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        // Now do kahn sort!
+        for (int i = 0; i < graph.indegrees.length; i++) {
+            if (graph.indegrees[i] == 0)
+                queue.add(i);
+        }
+        List<Integer> ans = new ArrayList<>();
+        // Now start unwrapping
+        while (queue.size() > 0) {
+            int element = queue.poll();
+            // Add to our list
+            ans.add(element);
+            // Get neighbours
+            List<Integer> nn = graph.get(element);
+            for (Integer n : nn) {
+                graph.indegrees[n]--;
+                if (graph.indegrees[n] == 0 && !graph.isVisited(n)) {
+                    queue.add(n);
+                }
+            }
+        }
+        if (ans.size() != numCourses)
+            return new int[] {};
+        int[] answer = new int[ans.size()];
+        int ap = 0;
+        for (Integer ig : ans) {
+            answer[ap++] = ig;
+        }
+        return answer;
+    }
+}

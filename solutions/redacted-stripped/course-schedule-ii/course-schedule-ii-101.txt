@@ -1,0 +1,53 @@
+class Solution {
+
+    public boolean isCycle(List<List<Integer>> graph, boolean[] vis, int curr, Stack<Integer> s, boolean[] rec) {
+        vis[curr] = true;
+        rec[curr] = true;
+        List<Integer> al = graph.get(curr);
+        for (int i = 0; i < al.size(); i++) {
+            int n = al.get(i);
+            if (rec[n]) {
+                return true;
+            }
+            if (!vis[n]) {
+                boolean x = isCycle(graph, vis, n, s, rec);
+                if (x) {
+                    return true;
+                }
+            }
+        }
+        s.push(curr);
+        rec[curr] = false;
+        return false;
+    }
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        boolean[] vis = new boolean[param1];
+        boolean[] rec = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        Stack<Integer> s = new Stack<>();
+        for (int i = 0; i < param1; i++) {
+            if (!vis[i]) {
+                boolean x = isCycle(graph, vis, i, s, rec);
+                if (x) {
+                    return new int[0];
+                }
+            }
+        }
+        if (s.size() != param1) {
+            return new int[0];
+        }
+        int[] result = new int[param1];
+        int i = 0;
+        while (!s.isEmpty()) {
+            result[i++] = s.pop();
+        }
+        return result;
+    }
+}

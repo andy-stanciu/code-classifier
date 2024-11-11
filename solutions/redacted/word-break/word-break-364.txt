@@ -1,0 +1,25 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        int[] memo = new int[s.length()];
+        Arrays.fill(memo, -1);
+        HashSet<String> hset = new HashSet<>(param1);
+        return wb(s, 0, hset, memo);
+    }
+
+    private boolean wb(String s, int idx, HashSet<String> hset, int[] memo) {
+        if (idx == s.length())
+            return true;
+        if (memo[idx] != -1)
+            return memo[idx] == 1 ? true : false;
+        memo[idx] = 0;
+        for (int j = idx + 1; j <= s.length(); j++) {
+            String substr = s.substring(idx, j);
+            if (hset.contains(substr) && wb(s, j, hset, memo)) {
+                memo[idx] = 1;
+                break;
+            }
+        }
+        return memo[idx] == 1 ? true : false;
+    }
+}

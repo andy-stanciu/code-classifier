@@ -1,0 +1,53 @@
+class Solution {
+
+    boolean isCycle = false;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        HashMap<Integer, List<Integer>> graph = new HashMap();
+        for (int[] edge : prerequisites) {
+            List<Integer> list = graph.getOrDefault(edge[0], new LinkedList());
+            list.add(edge[1]);
+            graph.put(edge[0], list);
+        }
+        int[] heights = new int[param1];
+        Arrays.fill(heights, -1);
+        int[] result = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            isCycle = false;
+            dfs(graph, i, heights, new boolean[heights.length]);
+            if (isCycle) {
+                return new int[] {};
+            }
+        }
+        PriorityQueue<int[]> pq = new PriorityQueue<int[]>((a, b) -> Integer.compare(a[0], b[0]));
+        for (int i = 0; i < heights.length; i++) {
+            pq.add(new int[] { heights[i], i });
+        }
+        int index = 0;
+        while (!pq.isEmpty()) {
+            int[] current = pq.remove();
+            result[index] = current[1];
+            index++;
+        }
+        return result;
+    }
+
+    public int dfs(HashMap<Integer, List<Integer>> graph, int start, int[] heights, boolean[] visited) {
+        int height = 0;
+        if (heights[start] != -1) {
+            return heights[start];
+        }
+        if (visited[start]) {
+            isCycle = true;
+            return -1;
+        }
+        visited[start] = true;
+        List<Integer> list = graph.getOrDefault(start, new LinkedList());
+        for (int x : list) {
+            height = Math.max(height, 1 + dfs(graph, x, heights, visited));
+        }
+        visited[start] = false;
+        heights[start] = height;
+        return height;
+    }
+}

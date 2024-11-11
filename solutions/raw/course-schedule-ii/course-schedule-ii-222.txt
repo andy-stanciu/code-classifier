@@ -1,0 +1,62 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        if (numCourses == 1) {
+            int[] res = { 0 };
+            return res;
+        }
+        Map<Integer, List<Integer>> adjMap = new HashMap<>();
+        int[] inDegree = new int[numCourses];
+        // Find the in-degree for each vertex
+        // Create a map of vertex to a list of it\'s adjacent edges
+        for (int[] prerequisite : prerequisites) {
+            inDegree[prerequisite[0]]++;
+            if (adjMap.containsKey(prerequisite[1])) {
+                adjMap.get(prerequisite[1]).add(prerequisite[0]);
+            } else {
+                List<Integer> edges = new ArrayList<>();
+                edges.add(prerequisite[0]);
+                adjMap.put(prerequisite[1], edges);
+            }
+        }
+        // This queue will have the vertices whose in-degree is 0
+        Queue<Integer> queue = new LinkedList<>();
+        // Track the list of vertices visited
+        Set<Integer> visited = new HashSet<>();
+        // Add vertices whose in-degree is 0
+        addZeroDegreeToQueue(inDegree, queue, visited);
+        // For some use cases, there will bo no vertex whose in-degree is 0
+        if (queue.isEmpty()) {
+            return new int[0];
+        }
+        // store the result here
+        int[] topSort = new int[numCourses];
+        int count = 0;
+        while (!queue.isEmpty()) {
+            int curr = queue.poll();
+            topSort[count++] = curr;
+            // Reduce the in-degree of the connected vertices
+            if (adjMap.containsKey(curr)) {
+                for (int edge : adjMap.get(curr)) {
+                    inDegree[edge]--;
+                }
+            }
+            // After reducing the indegree by one in the above step, find any vertiex whose in-degree is 0
+            addZeroDegreeToQueue(inDegree, queue, visited);
+        }
+        // if count is not equal to result\'s size, that means the graph was cyclic and we cannot perform topological sort on a cyclic graph
+        if (count != topSort.length) {
+            return new int[0];
+        }
+        return topSort;
+    }
+
+    private static void addZeroDegreeToQueue(int[] inDegree, Queue<Integer> queue, Set<Integer> visited) {
+        for (int i = 0; i < inDegree.length; i++) {
+            if (inDegree[i] == 0 && !visited.contains(i)) {
+                queue.add(i);
+                visited.add(i);
+            }
+        }
+    }
+}

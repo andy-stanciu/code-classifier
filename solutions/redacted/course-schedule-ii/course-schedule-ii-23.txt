@@ -1,0 +1,44 @@
+public class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] result = new int[param1];
+        // to record the number of prerequisite of subject[index i]
+        int[] indegree = new int[param1];
+        List<Integer>[] map = new List[param1];
+        Queue<Integer> queue = new LinkedList<Integer>();
+        int var1 = param1;
+        for (int[] pair : prerequisites) {
+            // increase the number of prerequisite of subject[index i]
+            indegree[pair[0]]++;
+            // using map to record common prerequisite of subjects
+            if (map[pair[1]] == null)
+                map[pair[1]] = new ArrayList<>();
+            map[pair[1]].add(pair[0]);
+            // map[0, [1,2,3,4,5]] -> subject 0 is common prerequisite of subject[1,2,3,4,5]
+        }
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0) {
+                // if the subject does not have prerequisite, push to queue (study first)
+                queue.add(i);
+            }
+        }
+        while (!queue.isEmpty()) {
+            // study the subject without prerequisite first
+            int var2 = queue.poll();
+            // add to result array
+            result[param1 - var1] = var2;
+            // finish 1 subject, courseCount--
+            var1--;
+            if (map[var2] == null)
+                continue;
+            // after studying subject i, check if we can study a new subject with prerequisite subject i
+            for (int item : map[var2]) {
+                indegree[item]--;
+                if (indegree[item] == 0)
+                    queue.add(item);
+            }
+        }
+        // if we finish all subject, courseCount == 0
+        return var1 == 0 ? result : new int[0];
+    }
+}

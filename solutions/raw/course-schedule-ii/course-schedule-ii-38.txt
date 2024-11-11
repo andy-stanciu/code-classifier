@@ -1,0 +1,36 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] inDegree = new int[numCourses];
+        List<List<Integer>> adjacencyList = new ArrayList<>(numCourses);
+        for (int i = 0; i < numCourses; i++) {
+            adjacencyList.add(new ArrayList<>());
+        }
+        for (int[] arr : prerequisites) {
+            adjacencyList.get(arr[1]).add(arr[0]);
+            inDegree[arr[0]]++;
+        }
+        Queue<Integer> topo_Sort_Queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree[i] == 0) {
+                topo_Sort_Queue.add(i);
+            }
+        }
+        int[] topo = new int[numCourses];
+        int i = 0;
+        while (!topo_Sort_Queue.isEmpty()) {
+            int node = topo_Sort_Queue.poll();
+            topo[i++] = node;
+            for (int neighbor : adjacencyList.get(node)) {
+                inDegree[neighbor]--;
+                if (inDegree[neighbor] == 0) {
+                    topo_Sort_Queue.add(neighbor);
+                }
+            }
+        }
+        if (i == numCourses) {
+            return topo;
+        }
+        return new int[0];
+    }
+}

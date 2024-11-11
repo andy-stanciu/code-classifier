@@ -1,0 +1,38 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        int n = s.length();
+        List<List<List<String>>> dp = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) {
+            dp.add(new ArrayList<>());
+            for (int k = i; k >= 0; k--) {
+                if (isPalin(s, k, i)) {
+                    String str = s.substring(k, i + 1);
+                    if (k == 0) {
+                        List<String> newPartition = new ArrayList<>();
+                        newPartition.add(str);
+                        dp.get(i).add(newPartition);
+                    } else {
+                        for (List<String> prevPalin : dp.get(k - 1)) {
+                            List<String> newPartition = new ArrayList<>(prevPalin);
+                            newPartition.add(str);
+                            dp.get(i).add(newPartition);
+                        }
+                    }
+                }
+            }
+        }
+        return dp.get(n - 1);
+    }
+
+    private boolean isPalin(String s, int left, int right) {
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+}

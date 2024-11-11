@@ -1,0 +1,29 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        HashMap<Integer, Boolean> mem = new HashMap<>();
+        mem.put(0, method2(s, param1, 0, mem));
+        return mem.get(0);
+    }
+
+    public boolean method2(String s, List<String> param1, int start, HashMap<Integer, Boolean> mem) {
+        //for last position by default set true
+        if (s.length() == start) {
+            mem.put(start, true);
+            return true;
+        }
+        //check if the sub problem has already been solved
+        if (mem.containsKey(start)) {
+            return mem.get(start);
+        }
+        for (int i = start; i < s.length(); i++) {
+            // if the first sub string is present in wordDict and the left over string can be formed by wordDict elements
+            if (param1.contains(s.substring(start, i + 1)) && method2(s, param1, i + 1, mem)) {
+                mem.put(start, true);
+                return true;
+            }
+        }
+        mem.put(start, false);
+        return false;
+    }
+}

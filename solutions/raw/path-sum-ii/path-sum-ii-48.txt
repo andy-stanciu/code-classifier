@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public void solve(TreeNode root, int sum, int targetSum, List<Integer> path, List<List<Integer>> ans) {
+        //base case
+        if (root == null) {
+            return;
+        }
+        //leaf node pe pahuch gae
+        if (root.left == null && root.right == null) {
+            //leaf node add kardi
+            path.add(root.val);
+            sum += root.val;
+            //ab agar hamara sum === targetsum ke barabar h to ye path valid h to isko add kardo main list m
+            if (sum == targetSum) {
+                ans.add(new ArrayList<>(path));
+            }
+            //agar nhi h to hum backtrack karenge-exclude
+            path.remove(path.size() - 1);
+            sum -= root.val;
+            return;
+        }
+        //leaf node nhi h hum add karete chalenge
+        path.add(root.val);
+        sum += root.val;
+        //call for right and left subtree
+        solve(root.left, sum, targetSum, path, ans);
+        solve(root.right, sum, targetSum, path, ans);
+        //backtrack
+        path.remove(path.size() - 1);
+        sum -= root.val;
+    }
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> ans = new ArrayList<>();
+        int sum = 0;
+        List<Integer> path = new ArrayList<>();
+        solve(root, sum, targetSum, path, ans);
+        return ans;
+    }
+}

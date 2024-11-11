@@ -1,0 +1,47 @@
+class Solution {
+
+    private static boolean result;
+
+    private static boolean continueSearching;
+
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        result = false;
+        continueSearching = true;
+        if (root != null) {
+            // depth-first search
+            Stack<Node> searchStack = new Stack<>();
+            searchStack.add(new Node(0, root));
+            while (!searchStack.empty() && continueSearching) {
+                // continue searching all nodes
+                Node node = searchStack.pop();
+                if (node.treeNode.left == null && node.treeNode.right == null) {
+                    // child node
+                    boolean eval = (node.treeNode.val + node.previousSum) == targetSum;
+                    result = (eval) ? true : false;
+                    // no need to traverse others
+                    continueSearching = (eval) ? false : true;
+                } else {
+                    if (node.treeNode.left != null) {
+                        searchStack.push(new Node((node.treeNode.val + node.previousSum), node.treeNode.left));
+                    }
+                    if (node.treeNode.right != null) {
+                        searchStack.push(new Node((node.treeNode.val + node.previousSum), node.treeNode.right));
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public static class Node {
+
+        public final int previousSum;
+
+        public final TreeNode treeNode;
+
+        public Node(int previousSum, TreeNode treeNode) {
+            this.previousSum = previousSum;
+            this.treeNode = treeNode;
+        }
+    }
+}

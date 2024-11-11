@@ -1,0 +1,67 @@
+class Solution {
+
+    int idx = -1;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        boolean[] visited = new boolean[param1];
+        boolean[] var1 = new boolean[param1];
+        int[] order = new int[param1];
+        ArrayList<Integer>[] graph = new ArrayList[param1];
+        idx = param1 - 1;
+        // making graph using AdjacencyList
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        // adding values in graph according to given prerequisites
+        for (int[] edge : prerequisites) {
+            int src = edge[1];
+            int dst = edge[0];
+            graph[src].add(dst);
+        }
+        // cycle detection for non visited nodes if cycle exist then return empty array because course can\'t be complete
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i] && isCyclic(graph, visited, var1, i)) {
+                return new int[] {};
+            }
+        }
+        // applying topologicalSort for not visited courses
+        for (int i = 0; i < param1; i++) {
+            if (!var1[i]) {
+                topSort(graph, order, var1, i);
+            }
+        }
+        return order;
+    }
+
+    // topological sort using dfs
+    private void topSort(ArrayList<Integer>[] graph, int[] order, boolean[] var1, int node) {
+        if (var1[node]) {
+            return;
+        }
+        var1[node] = true;
+        for (int i = 0; i < graph[node].size(); i++) {
+            topSort(graph, order, var1, graph[node].get(i));
+        }
+        order[idx--] = node;
+    }
+
+    // this is for cycle detection
+    private boolean isCyclic(ArrayList<Integer>[] graph, boolean[] visited, boolean[] var1, int node) {
+        if (var1[node]) {
+            return true;
+        }
+        if (visited[node]) {
+            return false;
+        }
+        visited[node] = true;
+        var1[node] = true;
+        for (int i = 0; i < graph[node].size(); i++) {
+            if (isCyclic(graph, visited, var1, graph[node].get(i))) {
+                var1[node] = false;
+                return true;
+            }
+        }
+        var1[node] = false;
+        return false;
+    }
+}

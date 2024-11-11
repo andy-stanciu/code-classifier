@@ -1,0 +1,35 @@
+class Solution {
+
+    public List<List<String>> result;
+
+    public boolean[][] dp;
+
+    public List<List<String>> partition(String s) {
+        result = new ArrayList<>();
+        int n = s.length();
+        dp = new boolean[n][n];
+        for (int right = 0; right < n; right++) {
+            for (int left = 0; left <= right; left++) {
+                if (s.charAt(left) == s.charAt(right) && (right - left <= 2 || dp[left + 1][right - 1])) {
+                    dp[left][right] = true;
+                }
+            }
+        }
+        track(new ArrayList<>(), 0, s);
+        return result;
+    }
+
+    private void track(List<String> cur, int pointer, String s) {
+        if (pointer >= s.length()) {
+            result.add(new ArrayList<>(cur));
+            return;
+        }
+        for (int i = pointer; i < s.length(); i++) {
+            if (dp[pointer][i]) {
+                cur.add(s.substring(pointer, i + 1));
+                track(cur, i + 1, s);
+                cur.remove(cur.size() - 1);
+            }
+        }
+    }
+}

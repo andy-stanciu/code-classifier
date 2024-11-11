@@ -1,0 +1,52 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] inDegree = new int[numCourses];
+        List<List<Integer>> graph = new ArrayList<>();
+        // Initialize the adjacency list
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        // Build the graph
+        for (int[] pair : prerequisites) {
+            int a = pair[0];
+            int b = pair[1];
+            graph.get(b).add(a);
+            inDegree[a]++;
+        }
+        // Perform topological sort
+        return topologicalSort(numCourses, graph, inDegree);
+    }
+
+    public int[] topologicalSort(int numCourses, List<List<Integer>> graph, int[] inDegree) {
+        Queue<Integer> queue = new LinkedList<>();
+        int[] res = new int[numCourses];
+        int count = 0;
+        // Add all nodes with 0 in-degree to the queue
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree[i] == 0) {
+                queue.add(i);
+                res[count] = i;
+                count++;
+            }
+        }
+        // Process nodes in the queue
+        while (!queue.isEmpty()) {
+            int course = queue.poll();
+            for (int next : graph.get(course)) {
+                inDegree[next]--;
+                if (inDegree[next] == 0) {
+                    queue.add(next);
+                    res[count] = next;
+                    count++;
+                }
+            }
+        }
+        // If count equals numCourses, all courses can be finished
+        if (numCourses == count) {
+            return res;
+        } else {
+            return new int[] {};
+        }
+    }
+}

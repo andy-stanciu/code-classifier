@@ -1,0 +1,32 @@
+class Solution {
+
+    HashMap<String, Boolean> previousRes;
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        previousRes = new HashMap<String, Boolean>();
+        return canBeBroken(s, wordDict);
+    }
+
+    private boolean canBeBroken(String s, List<String> wordDict) {
+        if (s.length() == 0) {
+            return true;
+        }
+        if (wordDict.contains(s)) {
+            return true;
+        }
+        if (previousRes.containsKey(s)) {
+            return previousRes.get(s);
+        }
+        boolean canThisBeBroken = false;
+        for (int i = 1; i < s.length(); i++) {
+            String firstPart = s.substring(0, i);
+            String secondPart = s.substring(i);
+            if (wordDict.contains(firstPart) && canBeBroken(secondPart, wordDict)) {
+                canThisBeBroken = true;
+                break;
+            }
+        }
+        previousRes.put(s, canThisBeBroken);
+        return canThisBeBroken;
+    }
+}

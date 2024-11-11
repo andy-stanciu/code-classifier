@@ -1,0 +1,34 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; i++) adj.add(new ArrayList<>());
+        boolean[] vis = new boolean[param1];
+        boolean[] pathVis = new boolean[param1];
+        Stack<Integer> topological = new Stack<>();
+        for (int[] arr : prerequisites) adj.get(arr[1]).add(arr[0]);
+        for (int i = 0; i < param1; i++) {
+            if (!vis[i])
+                if (dfs(i, adj, topological, vis, pathVis) == false)
+                    return new int[0];
+        }
+        int[] res = new int[param1];
+        int i = 0;
+        while (!topological.isEmpty()) res[i++] = topological.pop();
+        return res;
+    }
+
+    public boolean dfs(int node, List<List<Integer>> adj, Stack<Integer> topological, boolean[] vis, boolean[] pathVis) {
+        vis[node] = true;
+        pathVis[node] = true;
+        for (int adjc : adj.get(node)) if (!vis[adjc]) {
+            if (dfs(adjc, adj, topological, vis, pathVis) == false)
+                return false;
+        } else if (pathVis[adjc]) {
+            return false;
+        }
+        pathVis[node] = false;
+        topological.push(node);
+        return true;
+    }
+}

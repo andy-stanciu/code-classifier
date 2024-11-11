@@ -1,0 +1,48 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        ArrayList<Integer> arr = new ArrayList<Integer>();
+        List<List<String>> res = new ArrayList<List<String>>();
+        f(0, s, s.length(), arr, res);
+        return res;
+    }
+
+    void f(int idx, String s, int n, ArrayList<Integer> arr, List<List<String>> res) {
+        if (idx == n) {
+            AddList(s, arr, res);
+        }
+        StringBuilder temp = new StringBuilder();
+        for (int i = idx; i < n; i++) {
+            temp.append(s.charAt(i));
+            if (isPalindrome(temp.toString())) {
+                arr.add(i);
+                f(i + 1, s, n, arr, res);
+                arr.remove(arr.size() - 1);
+            }
+        }
+    }
+
+    void AddList(String s, ArrayList<Integer> arr, List<List<String>> res) {
+        List<String> temp = new ArrayList<String>();
+        int len = arr.size();
+        int start = 0;
+        for (int i = 0; i < len; i++) {
+            temp.add(s.substring(start, arr.get(i) + 1));
+            start = arr.get(i) + 1;
+        }
+        res.add(temp);
+    }
+
+    boolean isPalindrome(String s) {
+        int len = s.length();
+        int start = 0;
+        int end = len - 1;
+        while (start <= end) {
+            if (s.charAt(start) != s.charAt(end))
+                return false;
+            start++;
+            end--;
+        }
+        return true;
+    }
+}

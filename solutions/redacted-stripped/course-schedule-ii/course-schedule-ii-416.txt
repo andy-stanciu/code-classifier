@@ -1,0 +1,42 @@
+class Solution {
+
+    Queue<Integer> queue = new LinkedList<Integer>();
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList();
+        for (int i = 0; i < param1; i++) adjList.add(new ArrayList<Integer>());
+        for (int i = 0; i < prerequisites.length; i++) adjList.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        int[] color = new int[param1];
+        for (int i = 0; i < param1; i++) if (hasCycle(adjList, color, i))
+            return new int[] {};
+        color = new int[param1];
+        for (int i = 0; i < param1; i++) topologicalSort(adjList, color, i);
+        int[] result = new int[param1];
+        int i = 0;
+        while (!queue.isEmpty()) result[i++] = queue.poll();
+        return result;
+    }
+
+    private void topologicalSort(List<List<Integer>> adjList, int[] color, int node) {
+        if (color[node] == 1)
+            return;
+        color[node] = 1;
+        for (int neighbor : adjList.get(node)) {
+            if (color[neighbor] != 1)
+                topologicalSort(adjList, color, neighbor);
+        }
+        queue.offer(node);
+    }
+
+    private boolean hasCycle(List<List<Integer>> adjList, int[] color, int node) {
+        if (color[node] == 1)
+            return true;
+        color[node] = 1;
+        for (int neighbor : adjList.get(node)) {
+            if (color[neighbor] != 2 & hasCycle(adjList, color, neighbor))
+                return true;
+        }
+        color[node] = 2;
+        return false;
+    }
+}

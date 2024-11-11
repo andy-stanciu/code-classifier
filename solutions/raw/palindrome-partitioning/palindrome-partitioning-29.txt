@@ -1,0 +1,41 @@
+public class Solution {
+
+    public List<List<String>> partition(String s) {
+        int length = s.length();
+        boolean[][] isPalindrome = new boolean[length][length];
+        fillPalindromeTable(s, isPalindrome);
+        List<List<String>> allPartitions = new ArrayList<>();
+        generatePartitions(s, 0, isPalindrome, new ArrayList<>(), allPartitions);
+        return allPartitions;
+    }
+
+    private static void fillPalindromeTable(String s, boolean[][] isPalindrome) {
+        int length = s.length();
+        for (int start = length - 1; start >= 0; start--) {
+            for (int end = start; end < length; end++) {
+                if (s.charAt(start) == s.charAt(end)) {
+                    if (end - start < 3) {
+                        isPalindrome[start][end] = true;
+                    } else {
+                        isPalindrome[start][end] = isPalindrome[start + 1][end - 1];
+                    }
+                }
+            }
+        }
+    }
+
+    private static void generatePartitions(String s, int start, boolean[][] isPalindrome, List<String> currentPartition, List<List<String>> allPartitions) {
+        if (start == s.length()) {
+            allPartitions.add(new ArrayList<>(currentPartition));
+            return;
+        }
+        for (int end = start; end < s.length(); end++) {
+            if (isPalindrome[start][end]) {
+                currentPartition.add(s.substring(start, end + 1));
+                generatePartitions(s, end + 1, isPalindrome, currentPartition, allPartitions);
+                // Backtrack
+                currentPartition.remove(currentPartition.size() - 1);
+            }
+        }
+    }
+}

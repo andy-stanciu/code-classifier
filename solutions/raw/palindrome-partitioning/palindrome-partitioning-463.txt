@@ -1,0 +1,50 @@
+class Solution {
+
+    boolean[][] isPalindrome;
+
+    List<List<String>> ans = new ArrayList<>();
+
+    String s;
+
+    int n;
+
+    public List<List<String>> partition(String s) {
+        this.s = s;
+        this.n = s.length();
+        fillPalindrome();
+        dfs(new ArrayList<>(), 0);
+        return ans;
+    }
+
+    public void fillPalindrome() {
+        char[] cA = s.toCharArray();
+        isPalindrome = new boolean[n][n];
+        //length = 1
+        for (int i = 0; i < n; i++) {
+            isPalindrome[i][i] = true;
+        }
+        //length = 2
+        for (int i = 0; i < n - 1; i++) {
+            isPalindrome[i][i + 1] = cA[i] == cA[i + 1];
+        }
+        //length > 2
+        for (int len = 2; len < n; len++) {
+            for (int i = 0; i < n - len; i++) {
+                isPalindrome[i][i + len] = cA[i] == cA[i + len] && isPalindrome[i + 1][i + len - 1];
+            }
+        }
+    }
+
+    public void dfs(List<String> res, int st) {
+        if (st >= n) {
+            ans.add(new ArrayList<>(res));
+        }
+        for (int i = st; i < n; i++) {
+            if (isPalindrome[st][i]) {
+                res.add(s.substring(st, i + 1));
+                dfs(res, i + 1);
+                res.remove(res.size() - 1);
+            }
+        }
+    }
+}

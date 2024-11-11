@@ -1,0 +1,45 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prereq) {
+        int n = prereq.length;
+        List<List<Integer>> graph = new ArrayList<>();
+        int[] visited = new int[numCourses];
+        int[] PathVis = new int[numCourses];
+        Stack<Integer> st = new Stack();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int i = 0; i < n; i++) {
+            graph.get(prereq[i][1]).add(prereq[i][0]);
+        }
+        for (int i = 0; i < numCourses; i++) {
+            if (visited[i] == 0) {
+                if (dfs(graph, visited, PathVis, st, i))
+                    return new int[] {};
+            }
+        }
+        int[] topo = new int[numCourses];
+        int i = 0;
+        while (!st.isEmpty()) {
+            topo[i++] = st.pop();
+        }
+        if (i < numCourses)
+            return new int[] {};
+        return topo;
+    }
+
+    public boolean dfs(List<List<Integer>> graph, int[] visited, int[] PathVis, Stack<Integer> st, int node) {
+        visited[node] = 1;
+        PathVis[node] = 1;
+        for (int i = 0; i < graph.get(node).size(); i++) {
+            if (visited[graph.get(node).get(i)] == 0) {
+                dfs(graph, visited, PathVis, st, graph.get(node).get(i));
+            } else if (PathVis[graph.get(node).get(i)] == 1) {
+                return true;
+            }
+        }
+        st.push(node);
+        PathVis[node] = 0;
+        return false;
+    }
+}

@@ -1,0 +1,36 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] indegree = new int[param1];
+        List<Integer>[] var1 = new List[param1];
+        for (int i = 0; i < param1; i++) {
+            var1[i] = new ArrayList<>();
+        }
+        for (int[] p : prerequisites) {
+            indegree[p[0]]++;
+            var1[p[1]].add(p[0]);
+        }
+        List<Integer> result = new ArrayList<>();
+        Deque<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size > 0) {
+                int cur = queue.poll();
+                result.add(cur);
+                for (int next : var1[cur]) {
+                    indegree[next]--;
+                    if (indegree[next] == 0) {
+                        queue.add(next);
+                    }
+                }
+                size--;
+            }
+        }
+        return result.size() == param1 ? result.stream().mapToInt(Integer::intValue).toArray() : new int[0];
+    }
+}

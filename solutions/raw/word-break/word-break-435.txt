@@ -1,0 +1,31 @@
+class Solution {
+
+    int[] dp;
+
+    boolean solve(String s, int i, List<String> wordDict) {
+        if (i == s.length()) {
+            return true;
+        }
+        if (dp[i] != -1) {
+            return dp[i] == 1;
+        }
+        for (int j = 0; j < wordDict.size(); j++) {
+            if (i + wordDict.get(j).length() <= s.length() && s.substring(i, i + wordDict.get(j).length()).equals(wordDict.get(j))) {
+                if (solve(s, i + wordDict.get(j).length(), wordDict)) {
+                    dp[i] = 1;
+                    return true;
+                }
+            }
+        }
+        dp[i] = 0;
+        return false;
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        dp = new int[s.length()];
+        for (int i = 0; i < dp.length; i++) {
+            dp[i] = -1;
+        }
+        return solve(s, 0, wordDict);
+    }
+}

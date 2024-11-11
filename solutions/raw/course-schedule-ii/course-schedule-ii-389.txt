@@ -1,0 +1,66 @@
+class Solution {
+
+    // the array to store the ordering of courses to finish
+    List<Integer> ordering = new ArrayList<>();
+
+    boolean[] visited;
+
+    boolean[] onPath;
+
+    boolean hasCycle = false;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // initialization
+        visited = new boolean[numCourses];
+        onPath = new boolean[numCourses];
+        // create graph
+        List<Integer>[] graph = buildGraph(numCourses, prerequisites);
+        // traverse
+        for (int s = 0; s < numCourses; s++) {
+            traverse(graph, s);
+        }
+        // trace backward to get the ordering when the graph doesn\'t have the graph; otherwise, return an empty array
+        if (hasCycle)
+            return new int[0];
+        Collections.reverse(ordering);
+        int[] result = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            result[i] = ordering.get(i);
+        }
+        return result;
+    }
+
+    public List<Integer>[] buildGraph(int numCourses, int[][] prerequisites) {
+        // create a 2D linked list
+        List<Integer>[] graph = new LinkedList[numCourses];
+        // add the vetrice to the linked list
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new LinkedList<>();
+        }
+        // add the edges to the linked list
+        for (int[] p : prerequisites) {
+            // from(b) is the pre-sequence while to(a) is the post-sequence
+            int from = p[1];
+            int to = p[0];
+            graph[from].add(to);
+        }
+        return graph;
+    }
+
+    public void traverse(List<Integer>[] graph, int s) {
+        if (onPath[s]) {
+            hasCycle = true;
+        }
+        if (hasCycle || visited[s])
+            return;
+        visited[s] = true;
+        onPath[s] = true;
+        for (int neighbor : graph[s]) {
+            traverse(graph, neighbor);
+        }
+        // set back to false when one path finished
+        onPath[s] = false;
+        // record the path (in reverse version)
+        ordering.add(s);
+    }
+}

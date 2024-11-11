@@ -1,0 +1,43 @@
+class Solution {
+
+    Map<Integer, List<Integer>> map = new HashMap<>();
+
+    int index = 0;
+
+    private boolean dfs(int n, int[] output, boolean[] visit, boolean[] cycle) {
+        if (cycle[n] == true) {
+            return false;
+        } else if (visit[n] == true) {
+            return true;
+        }
+        cycle[n] = true;
+        for (int x : map.get(n)) {
+            if (dfs(x, output, visit, cycle) == false) {
+                return false;
+            }
+        }
+        cycle[n] = false;
+        visit[n] = true;
+        output[index] = n;
+        index++;
+        return true;
+    }
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        boolean[] visit = new boolean[param1];
+        boolean[] cycle = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            map.put(i, new LinkedList<>());
+        }
+        for (int[] edge : prerequisites) {
+            map.get(edge[0]).add(edge[1]);
+        }
+        int[] output = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (dfs(i, output, visit, cycle) == false) {
+                return new int[0];
+            }
+        }
+        return output;
+    }
+}

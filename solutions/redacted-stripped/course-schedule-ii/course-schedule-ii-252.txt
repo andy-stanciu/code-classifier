@@ -1,0 +1,55 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] pre) {
+        v = param1;
+        e = pre.length;
+        graph = new ArrayList[v];
+        for (int i = 0; i < v; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < e; i++) {
+            addEdge(pre[i][0], pre[i][1]);
+        }
+        int[] indeg = new int[v];
+        for (int i = 0; i < e; i++) {
+            indeg[pre[i][0]]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < indeg.length; i++) {
+            if (indeg[i] == 0) {
+                q.add(i);
+            }
+        }
+        if (q.isEmpty()) {
+            return new int[] {};
+        }
+        int[] ans = new int[v];
+        int idx = 0;
+        while (!q.isEmpty()) {
+            int cur = q.remove();
+            ans[idx++] = cur;
+            for (int k = 0; k < graph[cur].size(); k++) {
+                int m = graph[cur].get(k);
+                indeg[m]--;
+                if (indeg[m] == 0) {
+                    q.add(m);
+                }
+            }
+        }
+        if (idx != v) {
+            return new int[] {};
+        } else {
+            return ans;
+        }
+    }
+
+    static ArrayList<Integer>[] graph;
+
+    static int v;
+
+    static int e;
+
+    static void addEdge(int a, int b) {
+        graph[b].add(a);
+    }
+}

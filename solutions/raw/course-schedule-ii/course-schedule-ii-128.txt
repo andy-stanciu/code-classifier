@@ -1,0 +1,51 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            graph.get(prerequisite[1]).add(prerequisite[0]);
+        }
+        //Arrays to check the visited graph and the recursion stack
+        boolean[] vis = new boolean[graph.size()];
+        boolean[] stack = new boolean[graph.size()];
+        List<Integer> result = new ArrayList<>();
+        //Lets perform DFS for each course
+        for (int i = 0; i < numCourses; i++) {
+            if (!vis[i]) {
+                if (dfsCall(graph, i, vis, stack, result)) {
+                    //If a cycle is detected return an empty array
+                    return new int[0];
+                }
+            }
+        }
+        Collections.reverse(result);
+        int[] order = new int[result.size()];
+        for (int i = 0; i < result.size(); i++) {
+            order[i] = result.get(i);
+        }
+        return order;
+    }
+
+    public boolean dfsCall(List<List<Integer>> graph, int curr, boolean[] vis, boolean[] stack, List<Integer> result) {
+        vis[curr] = true;
+        stack[curr] = true;
+        for (int neighbour : graph.get(curr)) {
+            if (stack[neighbour]) {
+                //cycle is detected as the node is already visited
+                return true;
+            }
+            if (!vis[neighbour]) {
+                if (dfsCall(graph, neighbour, vis, stack, result)) {
+                    return true;
+                }
+            }
+        }
+        //Remove the element for this level
+        stack[curr] = false;
+        result.add(curr);
+        return false;
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    public boolean dfs(int n, List<List<Integer>> adj, Set<Integer> isVisited, Set<Integer> order, Set<Integer> memo) {
+        if (!memo.contains(n)) {
+            isVisited.add(n);
+            memo.add(n);
+            List<Integer> arr = adj.get(n);
+            for (int i = 0; i < arr.size(); i++) {
+                if (!dfs(arr.get(i), adj, isVisited, order, memo))
+                    return false;
+            }
+            isVisited.remove(n);
+        } else {
+            if (isVisited.contains(n))
+                return false;
+        }
+        if (!order.contains(n))
+            order.add(n);
+        return true;
+    }
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] res = new int[param1];
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            adj.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        Set<Integer> order = new LinkedHashSet<>();
+        Set<Integer> memo = new HashSet<>();
+        for (int i = 0; i < param1; i++) {
+            Set<Integer> isVisited = new HashSet<>();
+            if (!dfs(i, adj, isVisited, order, memo))
+                return new int[0];
+        }
+        int index = 0;
+        for (int i : order) {
+            res[index++] = i;
+        }
+        return res;
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    HashMap<Integer, HashSet<String>> wordDict;
+
+    String s;
+
+    Boolean[] memo;
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        this.wordDict = new HashMap<>();
+        this.s = s;
+        this.memo = new Boolean[s.length()];
+        for (String word : wordDict) {
+            int length = word.length();
+            if (!this.wordDict.containsKey(length))
+                this.wordDict.put(length, new HashSet());
+            this.wordDict.get(length).add(word);
+        }
+        return canConstructWord(0);
+    }
+
+    private boolean canConstructWord(int position) {
+        if (position >= s.length())
+            return true;
+        if (memo[position] != null)
+            return memo[position];
+        for (int length : wordDict.keySet()) {
+            if (position + length >= s.length() + 1)
+                continue;
+            String wordToBeMatched = s.substring(position, position + length);
+            HashSet<String> words = wordDict.get(length);
+            if (words.contains(wordToBeMatched) && canConstructWord(position + length)) {
+                memo[position] = true;
+                return memo[position];
+            }
+        }
+        memo[position] = false;
+        return memo[position];
+    }
+}

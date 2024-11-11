@@ -1,0 +1,25 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int[] dp = new int[s.length()];
+        Arrays.fill(dp, -1);
+        return wordBreak(s, wordDict, 0, 0, dp);
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict, int start, int end, int[] dp) {
+        String str = s.substring(start, end);
+        if (end >= s.length())
+            return wordDict.contains(str);
+        if (dp[start] != -1)
+            return dp[start] == 1;
+        if (wordDict.contains(str)) {
+            boolean isWord = wordBreak(s, wordDict, end, end + 1, dp) || wordBreak(s, wordDict, start, end + 1, dp);
+            dp[start] = isWord ? 1 : 0;
+            return isWord;
+        } else {
+            boolean isWord = wordBreak(s, wordDict, start, end + 1, dp);
+            dp[start] = isWord ? 1 : 0;
+            return isWord;
+        }
+    }
+}

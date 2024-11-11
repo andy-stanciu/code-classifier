@@ -1,0 +1,42 @@
+class Solution {
+
+    public int minSubArrayLen(int target, int[] nums) {
+        int n = nums.length;
+        if (nums[0] == target)
+            return 1;
+        for (int i = 1; i < n; i++) {
+            if (nums[i] == target)
+                return 1;
+            nums[i] = nums[i - 1] + nums[i];
+        }
+        int ub = upperBound(nums, 0, n, target);
+        if (ub >= n) {
+            if (nums[ub - 1] == target)
+                return n;
+            return 0;
+        }
+        int i = 0;
+        int ans = Integer.MAX_VALUE;
+        for (; ub < n; ub++) {
+            for (; i < ub; i++) {
+                if (nums[ub] - nums[i] < target) {
+                    break;
+                }
+            }
+            ans = Math.min(ans, ub - i + 1);
+        }
+        return ans;
+    }
+
+    public int upperBound(int[] arr, int low, int high, int target) {
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (target <= arr[mid]) {
+                high = mid;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return low;
+    }
+}

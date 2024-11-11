@@ -1,0 +1,63 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public static List<List<Integer>> pathSum(TreeNode root, int targetedSum) {
+        if (root == null) {
+            return Collections.emptyList();
+        }
+        List<List<Integer>> result = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        Map<TreeNode, NodeDetail> nodeDetailMap = new HashMap<>();
+        List<Integer> list = new ArrayList<>();
+        list.add(root.val);
+        nodeDetailMap.put(root, new NodeDetail(root.val, list));
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.pop();
+            if (node.left == null && node.right == null && nodeDetailMap.get(node).sumAtNode == targetedSum) {
+                result.add(nodeDetailMap.get(node).pathList);
+            }
+            if (node.right != null) {
+                stack.push(node.right);
+                List<Integer> nodeList = new ArrayList<>(nodeDetailMap.get(node).pathList);
+                nodeList.add(node.right.val);
+                int sumAtNode = nodeDetailMap.get(node).sumAtNode + node.right.val;
+                nodeDetailMap.put(node.right, new NodeDetail(sumAtNode, nodeList));
+            }
+            if (node.left != null) {
+                stack.push(node.left);
+                List<Integer> nodeList = new ArrayList<>(nodeDetailMap.get(node).pathList);
+                nodeList.add(node.left.val);
+                int sumAtNode = nodeDetailMap.get(node).sumAtNode + node.left.val;
+                nodeDetailMap.put(node.left, new NodeDetail(sumAtNode, nodeList));
+            }
+        }
+        return result;
+    }
+
+    static class NodeDetail {
+
+        public int sumAtNode;
+
+        public List<Integer> pathList = new ArrayList<>();
+
+        public NodeDetail(int sumAtNode, List<Integer> pathList) {
+            this.sumAtNode = sumAtNode;
+            this.pathList = pathList;
+        }
+    }
+}

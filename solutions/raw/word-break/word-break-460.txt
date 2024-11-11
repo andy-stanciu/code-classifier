@@ -1,0 +1,41 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        // To improve the word search time complexity
+        Set<String> wordDictSet = new HashSet<>(wordDict);
+        // The search can be stopped when we reach the end of the string, which is the index with lengh of the string
+        // ie. for the text "abc", we need to cache the result of index 3 as well so we require an array of size 4
+        Boolean[] dp = new Boolean[s.length() + 1];
+        //Only if we can find a matching word for the beginning of the string, then only the search needs to continue, so only need to search for index 0
+        return recurringWordSearch(s, 0, wordDictSet, wordDict, dp);
+    }
+
+    private boolean recurringWordSearch(String s, int startIndex, Set<String> wordDictSet, List<String> wordDict, Boolean[] dp) {
+        int endIndex = 0;
+        // Check if cached value is avaiable for the startIndex
+        if (dp[startIndex] != null) {
+            return dp[startIndex];
+        }
+        // When the startIndex reaches length of the array, it means a complete match is found
+        if (startIndex == s.length()) {
+            dp[startIndex] = true;
+            return true;
+        }
+        // Check if any of the words match the start of the string
+        for (String word : wordDict) {
+            endIndex = startIndex + word.length();
+            if (endIndex <= s.length()) {
+                if (wordDictSet.contains(s.substring(startIndex, endIndex))) {
+                    //if a match is found check the same for the remaining part of the string
+                    if (recurringWordSearch(s, endIndex, wordDictSet, wordDict, dp)) {
+                        dp[startIndex] = true;
+                        return true;
+                    }
+                }
+            }
+        }
+        // If it reaches here it means for this startIndex there is no complete match
+        dp[startIndex] = false;
+        return false;
+    }
+}

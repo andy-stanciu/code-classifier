@@ -1,0 +1,36 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        boolean[] vis = new boolean[param1];
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; i++) adj.add(new ArrayList<>());
+        int[] indegree = new int[param1];
+        createAdj(prerequisites, indegree, adj);
+        Queue<Integer> queue = new LinkedList<>();
+        int[] res = new int[param1];
+        for (int i = 0; i < param1; i++) if (indegree[i] == 0)
+            queue.add(i);
+        int i = 0;
+        int cnt = 0;
+        while (!queue.isEmpty()) {
+            cnt++;
+            int node = queue.remove();
+            System.out.println(node);
+            res[i++] = node;
+            vis[node] = true;
+            for (int neigh : adj.get(node)) {
+                indegree[neigh]--;
+                if (indegree[neigh] == 0 && !vis[neigh])
+                    queue.add(neigh);
+            }
+        }
+        return cnt == param1 ? res : new int[0];
+    }
+
+    public void createAdj(int[][] pre, int[] indegree, List<List<Integer>> adj) {
+        for (int[] p : pre) {
+            indegree[p[0]]++;
+            adj.get(p[1]).add(p[0]);
+        }
+    }
+}

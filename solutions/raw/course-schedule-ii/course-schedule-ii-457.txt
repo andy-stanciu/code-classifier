@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prereq) {
+        int n = prereq.length;
+        int[] indegree = new int[numCourses];
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int[] pair : prereq) {
+            indegree[pair[0]]++;
+            graph.get(pair[1]).add(pair[0]);
+        }
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        int courseInd = 0;
+        int[] coursePath = new int[numCourses];
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                int course = queue.poll();
+                coursePath[courseInd++] = course;
+                List<Integer> depCourses = graph.get(course);
+                for (int depCourse : depCourses) {
+                    indegree[depCourse]--;
+                    if (indegree[depCourse] == 0) {
+                        queue.add(depCourse);
+                    }
+                }
+            }
+        }
+        return courseInd != numCourses ? new int[0] : coursePath;
+    }
+}

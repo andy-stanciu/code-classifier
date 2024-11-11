@@ -1,0 +1,50 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        ArrayList<Integer>[] graph = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<Integer>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph[prerequisites[i][1]].add(prerequisites[i][0]);
+        }
+        int[] indegree = new int[param1];
+        calcIndgree(graph, indegree);
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        int[] answer = new int[param1];
+        int index = 0;
+        while (!q.isEmpty()) {
+            int curr = q.remove();
+            answer[index++] = curr;
+            for (int i = 0; i < graph[curr].size(); i++) {
+                int e = graph[curr].get(i);
+                indegree[e]--;
+                if (indegree[e] == 0) {
+                    q.add(e);
+                }
+            }
+        }
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] > 0) {
+                // If cycle exists, return empty array
+                return new int[0];
+            }
+        }
+        return answer;
+    }
+
+    static void calcIndgree(ArrayList<Integer>[] graph, int[] indegree) {
+        for (int i = 0; i < indegree.length; i++) {
+            int vertex = i;
+            for (int j = 0; j < graph[vertex].size(); j++) {
+                int e = graph[vertex].get(j);
+                indegree[e]++;
+            }
+        }
+    }
+}

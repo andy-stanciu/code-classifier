@@ -1,0 +1,49 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        return usignLevelOrder(root, targetSum);
+    }
+
+    boolean usignLevelOrder(TreeNode root, int targetSum) {
+        if (root == null) {
+            return false;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        Queue<Integer> queueSum = new LinkedList<>();
+        queue.add(root);
+        queueSum.add(root.val);
+        while (!queue.isEmpty()) {
+            TreeNode currNode = queue.remove();
+            Integer currentSum = queueSum.remove();
+            if (currNode.left == null && currNode.right == null) {
+                if (currentSum == targetSum) {
+                    return true;
+                }
+            }
+            if (currNode.left != null) {
+                queue.add(currNode.left);
+                queueSum.add(currentSum + currNode.left.val);
+            }
+            if (currNode.right != null) {
+                queue.add(currNode.right);
+                queueSum.add(currentSum + currNode.right.val);
+            }
+        }
+        return false;
+    }
+}

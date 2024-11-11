@@ -1,0 +1,49 @@
+class Solution {
+
+    int ri = 0;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<List<Integer>>();
+        int rlen = prerequisites.length;
+        int[] result = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<Integer>());
+        }
+        for (int i = 0; i < rlen; i++) {
+            graph.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        HashSet<Integer> visited = new HashSet<Integer>();
+        HashSet<Integer> rec = new HashSet<Integer>();
+        boolean ans = true;
+        for (int i = 0; i < numCourses; i++) {
+            ans = ans & !check(graph, visited, rec, i, result);
+        }
+        if (ans == true) {
+            //System.out.println(" result.size() "+ result.length);
+            return result;
+        }
+        return new int[0];
+    }
+
+    public boolean check(List<List<Integer>> graph, HashSet<Integer> visited, HashSet<Integer> rec, int course, int[] result) {
+        if (!visited.contains(course)) {
+            visited.add(course);
+            rec.add(course);
+            //System.out.println(" course "+ course);
+            for (int adj : graph.get(course)) {
+                if (!visited.contains(adj) && check(graph, visited, rec, adj, result)) {
+                    //System.out.println(" adj "+ adj);
+                    return true;
+                } else if (rec.contains(adj)) {
+                    //System.out.println(" adj2 "+ adj);
+                    return true;
+                }
+            }
+            rec.remove(course);
+            result[ri++] = course;
+            //System.out.println(" result "+ result[ri-1] + " ri "+ ri);
+        }
+        //System.out.println(" course2 "+ course);
+        return false;
+    }
+}

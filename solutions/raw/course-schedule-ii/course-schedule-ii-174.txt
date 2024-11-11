@@ -1,0 +1,71 @@
+class Solution {
+
+    static class Edge {
+
+        int src, dest;
+
+        Edge(int src, int dest) {
+            this.src = src;
+            this.dest = dest;
+        }
+    }
+
+    public static boolean checkCycle(ArrayList<Edge>[] adj, int[] vis, int[] pathVis, int curr) {
+        vis[curr] = 1;
+        pathVis[curr] = 1;
+        for (Edge e : adj[curr]) {
+            if (pathVis[e.dest] == 1)
+                return true;
+            else if (vis[e.dest] != 1) {
+                if (checkCycle(adj, vis, pathVis, e.dest) == true)
+                    return true;
+            }
+        }
+        pathVis[curr] = 0;
+        return false;
+    }
+
+    public static void DFS(ArrayList<Edge>[] adj, int[] vis, Stack<Integer> st, int curr) {
+        vis[curr] = 1;
+        for (Edge e : adj[curr]) {
+            if (vis[e.dest] != 1) {
+                DFS(adj, vis, st, e.dest);
+            }
+        }
+        st.push(curr);
+    }
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        ArrayList<Edge>[] adj = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            adj[i] = new ArrayList<>();
+        }
+        //graph created
+        for (int i = 0; i < prerequisites.length; i++) {
+            int a = prerequisites[i][0];
+            int b = prerequisites[i][1];
+            adj[b].add(new Edge(b, a));
+        }
+        int[] vis = new int[numCourses];
+        int[] pathVis = new int[numCourses];
+        int[] ans = new int[numCourses];
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (vis[i] != 1) {
+                if (checkCycle(adj, vis, pathVis, i) == true)
+                    return new int[0];
+            }
+        }
+        //if there is no cycle print topological sort
+        vis = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (vis[i] != 1) {
+                DFS(adj, vis, st, i);
+            }
+        }
+        for (int i = 0; i < ans.length; i++) {
+            ans[i] = st.pop();
+        }
+        return ans;
+    }
+}

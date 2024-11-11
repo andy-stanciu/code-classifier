@@ -1,0 +1,38 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> res = new ArrayList<>();
+        partPal(0, s, new ArrayList<>(), res);
+        return res;
+    }
+
+    public void partPal(int idx, String s, List<String> partition, List<List<String>> res) {
+        // if standing at the end that means we have successfully partitioned as much as possible
+        if (idx == s.length()) {
+            res.add(new ArrayList<>(partition));
+            return;
+        }
+        // for partitioning from curr idx to n for possible pal paritions
+        for (int i = idx; i < s.length(); i++) {
+            if (isPal(s, idx, i)) {
+                // is valid hence add to partitions and make call for next indexes
+                partition.add(s.substring(idx, i + 1));
+                // curr partition is possible so now try for next idx
+                partPal(i + 1, s, partition, res);
+                /* remove so that when a|a|bb -> calls for 2nd idx hence a|a|b|b would be done (a,a,b,b as end of recursion) but when calling call 3rd idx it should be a|a|bb| (a,a,bb as end of recusion)
+                hence a,a is needed here but for 3rd idx\'s call only |b| from 2nd idx should be replaced with |bb| for 3rd idx hence removing is done */
+                partition.remove(partition.size() - 1);
+            }
+        }
+    }
+
+    public boolean isPal(String s, int start, int end) {
+        while (start <= end) {
+            if (s.charAt(start) != s.charAt(end))
+                return false;
+            start++;
+            end--;
+        }
+        return true;
+    }
+}

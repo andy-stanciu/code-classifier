@@ -1,0 +1,52 @@
+class Solution {
+
+    private static final int[] EMPTY = {};
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        Map<Integer, Set<Integer>> map = new HashMap<>();
+        // add prerequisites
+        for (int[] prerequisite : prerequisites) {
+            int course = prerequisite[0];
+            int requirement = prerequisite[1];
+            map.computeIfAbsent(course, k -> new HashSet<>()).add(requirement);
+        }
+        // topological sort
+        List<Integer> sorted = new ArrayList<>(numCourses);
+        Set<Integer> done = new HashSet();
+        Set<Integer> seen = new HashSet();
+        for (int course = 0; course < numCourses; course++) {
+            boolean resolved = visit(course, map, done, seen, sorted);
+            if (!resolved) {
+                return EMPTY;
+            }
+        }
+        int[] result = new int[numCourses];
+        for (int course = 0; course < numCourses; course++) {
+            result[course] = sorted.get(course);
+        }
+        return result;
+    }
+
+    private static boolean visit(int course, Map<Integer, Set<Integer>> map, Set<Integer> done, Set<Integer> seen, List<Integer> result) {
+        if (done.contains(course)) {
+            return true;
+        }
+        if (seen.contains(course)) {
+            return false;
+        }
+        Set<Integer> dependencies = map.get(course);
+        if (dependencies != null) {
+            seen.add(course);
+            for (int dependency : dependencies) {
+                boolean resolved = visit(dependency, map, done, seen, result);
+                if (!resolved) {
+                    return false;
+                }
+            }
+            seen.remove(course);
+        }
+        done.add(course);
+        result.add(course);
+        return true;
+    }
+}

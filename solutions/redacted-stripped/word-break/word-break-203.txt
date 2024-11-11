@@ -1,0 +1,56 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        HashMap<String, Integer> map = new HashMap<>();
+        for (int i = 0; i < param1.size(); i++) {
+            map.put(param1.get(i), 1);
+        }
+        int[][] dp = new int[s.length() + 1][s.length() + 1];
+        for (int[] x : dp) {
+            Arrays.fill(x, -1);
+        }
+        return memoization(s, map, 0, s.length() - 1, dp);
+    }
+
+    boolean memoization(String s, HashMap<String, Integer> map, int i, int j, int[][] dp) {
+        if (i > j) {
+            return true;
+        }
+        if (dp[i][j] != -1) {
+            return dp[i][j] == 0 ? false : true;
+        }
+        for (int k = i; k <= j; k++) {
+            if (map.containsKey(s.substring(i, k + 1))) {
+                if (dp[k + 1][j] != -1) {
+                    if (dp[k + 1][j] == 1) {
+                        return true;
+                    }
+                } else {
+                    if (memoization(s, map, k + 1, j, dp)) {
+                        dp[k + 1][j] = 1;
+                    } else {
+                        dp[k + 1][j] = 0;
+                    }
+                    if (dp[k + 1][j] == 1) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    boolean recursive(String s, HashMap<String, Integer> map, int i, int j) {
+        if (i > j) {
+            return true;
+        }
+        for (int k = i; k <= j; k++) {
+            if (map.containsKey(s.substring(i, k + 1))) {
+                if (recursive(s, map, k + 1, j)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}

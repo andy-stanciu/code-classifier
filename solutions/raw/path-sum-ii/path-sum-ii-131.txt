@@ -1,0 +1,67 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    class Pair {
+
+        TreeNode node;
+
+        int pathsum;
+
+        List<Integer> lst;
+
+        Pair(TreeNode _node, int _pathsum, List<Integer> _lst) {
+            this.node = _node;
+            this.pathsum = _pathsum;
+            this.lst = new ArrayList<>(_lst);
+        }
+    }
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> final_paths = new ArrayList<>();
+        if (root == null) {
+            return final_paths;
+        }
+        Queue<Pair> queue = new LinkedList<>();
+        List<Integer> initialList = new ArrayList<>();
+        initialList.add(root.val);
+        queue.add(new Pair(root, root.val, initialList));
+        return bfs(queue, final_paths, targetSum);
+    }
+
+    private List<List<Integer>> bfs(Queue<Pair> queue, List<List<Integer>> final_paths, int targetSum) {
+        while (!queue.isEmpty()) {
+            Pair p = queue.poll();
+            TreeNode node = p.node;
+            int pathsum = p.pathsum;
+            List<Integer> lst = p.lst;
+            if (pathsum == targetSum && node.left == null && node.right == null) {
+                final_paths.add(new ArrayList<>(lst));
+            }
+            if (node.left != null) {
+                List<Integer> newList = new ArrayList<>(lst);
+                newList.add(node.left.val);
+                queue.add(new Pair(node.left, pathsum + node.left.val, newList));
+            }
+            if (node.right != null) {
+                List<Integer> newList = new ArrayList<>(lst);
+                newList.add(node.right.val);
+                queue.add(new Pair(node.right, pathsum + node.right.val, newList));
+            }
+        }
+        return final_paths;
+    }
+}

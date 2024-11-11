@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        // Create a Adjacency List
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; i++) adj.add(new ArrayList<>());
+        for (int i = 0; i < prerequisites.length; i++) {
+            int u = prerequisites[i][0];
+            int v = prerequisites[i][1];
+            adj.get(u).add(v);
+        }
+        // Kahn\'s Algorithm
+        int[] indegree = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            for (int it : adj.get(i)) indegree[it]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0)
+                q.offer(i);
+        }
+        int[] topo = new int[param1];
+        int idx = topo.length - 1;
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            topo[idx--] = node;
+            for (int it : adj.get(node)) {
+                indegree[it]--;
+                if (indegree[it] == 0)
+                    q.offer(it);
+            }
+        }
+        // Edge Cases
+        int countZero = 0;
+        for (int i = 0; i < topo.length; i++) {
+            if (topo[i] == 0)
+                countZero++;
+        }
+        if (countZero > 1 && param1 > 1)
+            return new int[] {};
+        // Return
+        return topo;
+    }
+}

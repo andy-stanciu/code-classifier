@@ -1,0 +1,55 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        // HashMap to store the adjacency list of courses
+        HashMap<Integer, List<Integer>> var1 = new HashMap<>();
+        // HashMap to store the prerequisites of each course
+        HashMap<Integer, HashSet<Integer>> var2 = new HashMap<>();
+        // Construct adjacency list and prerequisites map
+        for (int[] pre : prerequisites) {
+            int var3 = pre[1];
+            int var4 = pre[0];
+            // Construct adjacency list
+            List<Integer> list = var1.getOrDefault(var3, new ArrayList<>());
+            list.add(var4);
+            var1.put(var3, list);
+            // Construct course prerequisites set
+            HashSet<Integer> prerequisiteSet = var2.getOrDefault(var4, new HashSet<>());
+            prerequisiteSet.add(var3);
+            var2.put(var4, prerequisiteSet);
+        }
+        // Array to store the result
+        int[] result = new int[param1];
+        // Position pointer in the result array
+        int pos = 0;
+        // Stack to perform DFS
+        Deque<Integer> stack = new ArrayDeque<>();
+        // Find courses without prerequisites and push them onto the stack
+        for (int i = 0; i < param1; i++) {
+            if (!var2.containsKey(i)) {
+                stack.push(i);
+            }
+        }
+        // Perform DFS
+        while (!stack.isEmpty()) {
+            // Take the course from the top of the stack
+            int current = stack.pop();
+            // Add it to the result
+            result[pos++] = current;
+            // Get the neighbours (courses that depend on the current course)
+            List<Integer> neighbours = var1.getOrDefault(current, new ArrayList<>());
+            for (int neighbour : neighbours) {
+                HashSet<Integer> prereqs = var2.get(neighbour);
+                // Remove the current course from the prerequisites of its neighbours
+                prereqs.remove(current);
+                if (prereqs.isEmpty()) {
+                    // If all prerequisites are fulfilled
+                    // Add the neighbour to the stack for processing
+                    stack.push(neighbour);
+                }
+            }
+        }
+        // If all courses can be taken, return the result; otherwise, return an empty array
+        return (pos == param1) ? result : new int[0];
+    }
+}

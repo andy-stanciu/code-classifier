@@ -1,0 +1,48 @@
+class Solution {
+
+    public static List<List<Integer>> method1(TreeNode root, int param1) {
+        if (root == null) {
+            return Collections.emptyList();
+        }
+        List<List<Integer>> result = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        Map<TreeNode, NodeDetail> nodeDetailMap = new HashMap<>();
+        List<Integer> list = new ArrayList<>();
+        list.add(root.val);
+        nodeDetailMap.put(root, new NodeDetail(root.val, list));
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.pop();
+            if (node.left == null && node.right == null && nodeDetailMap.get(node).var1 == param1) {
+                result.add(nodeDetailMap.get(node).var2);
+            }
+            if (node.right != null) {
+                stack.push(node.right);
+                List<Integer> nodeList = new ArrayList<>(nodeDetailMap.get(node).var2);
+                nodeList.add(node.right.val);
+                int var1 = nodeDetailMap.get(node).var1 + node.right.val;
+                nodeDetailMap.put(node.right, new NodeDetail(var1, nodeList));
+            }
+            if (node.left != null) {
+                stack.push(node.left);
+                List<Integer> nodeList = new ArrayList<>(nodeDetailMap.get(node).var2);
+                nodeList.add(node.left.val);
+                int var1 = nodeDetailMap.get(node).var1 + node.left.val;
+                nodeDetailMap.put(node.left, new NodeDetail(var1, nodeList));
+            }
+        }
+        return result;
+    }
+
+    static class NodeDetail {
+
+        public int var1;
+
+        public List<Integer> var2 = new ArrayList<>();
+
+        public NodeDetail(int var1, List<Integer> var2) {
+            this.var1 = var1;
+            this.var2 = var2;
+        }
+    }
+}

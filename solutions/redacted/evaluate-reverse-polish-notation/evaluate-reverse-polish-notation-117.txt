@@ -1,0 +1,72 @@
+class Solution {
+
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> stack = new Stack();
+        for (int i = 0; i < tokens.length; i++) {
+            String curr = tokens[i];
+            if (curr.matches("-?\\\\d+(\\\\.\\\\d+)?")) {
+                stack.add(Integer.parseInt(curr));
+            } else {
+                stack.add(Operation.fromSymbol(curr).execute(stack.pop(), stack.pop()));
+            }
+        }
+        return stack.pop();
+    }
+}
+
+enum Operation {
+
+    ADDITION("+") {
+
+        @Override
+        public int execute(int a, int b) {
+            return a + b;
+        }
+    }
+    , SUBTRACTION("-") {
+
+        @Override
+        public int execute(int a, int b) {
+            return b - a;
+        }
+    }
+    , MULTIPLICATION("*") {
+
+        @Override
+        public int execute(int a, int b) {
+            return a * b;
+        }
+    }
+    , DIVISION("/") {
+
+        @Override
+        public int execute(int a, int b) {
+            if (a == 0) {
+                throw new ArithmeticException("Division by zero is not allowed");
+            }
+            return b / a;
+        }
+    }
+    ;
+
+    // Operator symbol for each operation
+    private final String symbol;
+
+    // Constructor
+    Operation(String symbol) {
+        this.symbol = symbol;
+    }
+
+    // Abstract method to be implemented by each constant
+    public abstract int execute(int a, int b);
+
+    // Static method to get the enum from the symbol
+    public static Operation fromSymbol(String symbol) {
+        for (Operation op : Operation.values()) {
+            if (op.symbol.equals(symbol)) {
+                return op;
+            }
+        }
+        throw new IllegalArgumentException("Invalid operator: " + symbol);
+    }
+}

@@ -1,0 +1,32 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        HashMap<Integer, List<Integer>> dependents = new HashMap();
+        int[] dependencies = new int[numCourses];
+        for (int[] prerequisite : prerequisites) {
+            dependents.computeIfAbsent(prerequisite[1], s -> new ArrayList()).add(prerequisite[0]);
+            dependencies[prerequisite[0]]++;
+        }
+        Queue<Integer> queue = new LinkedList();
+        for (int index = 0; index < numCourses; index++) {
+            if (dependencies[index] == 0) {
+                queue.add(index);
+            }
+        }
+        int[] order = new int[numCourses];
+        int orderIndex = 0;
+        while (!queue.isEmpty()) {
+            int course = queue.poll();
+            order[orderIndex++] = course;
+            if (dependents.containsKey(course)) {
+                for (int nextCourse : dependents.get(course)) {
+                    dependencies[nextCourse]--;
+                    if (dependencies[nextCourse] == 0) {
+                        queue.add(nextCourse);
+                    }
+                }
+            }
+        }
+        return orderIndex == numCourses ? order : new int[0];
+    }
+}

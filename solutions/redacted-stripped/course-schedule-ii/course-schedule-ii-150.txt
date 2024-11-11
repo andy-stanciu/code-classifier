@@ -1,0 +1,72 @@
+class Solution {
+
+    public HashMap<Integer, HashSet<Integer>> map;
+
+    public HashSet<Integer> visited;
+
+    public int[] result;
+
+    public int ind;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        if (param1 == 1)
+            return new int[1];
+        map = new HashMap<>();
+        result = new int[param1];
+        visited = new HashSet<>();
+        ind = param1 - 1;
+        for (int i = 0; i < param1; i++) {
+            map.put(i, new HashSet<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            HashSet<Integer> curr = map.get(prerequisites[i][1]);
+            curr.add(prerequisites[i][0]);
+        }
+        boolean loop = false;
+        for (int i = 0; i < param1; i++) {
+            visited = new HashSet<>();
+            loop = findLoop(i);
+            if (loop) {
+                return new int[0];
+            }
+        }
+        visited = new HashSet<>();
+        for (int i = 0; i < param1; i++) {
+            if (visited.contains(i)) {
+                continue;
+            } else {
+                dfs(i);
+            }
+        }
+        return result;
+    }
+
+    public void dfs(int param2) {
+        visited.add(param2);
+        HashSet<Integer> neig = map.get(param2);
+        for (int nextnode : neig) {
+            if (visited.contains(nextnode)) {
+                continue;
+            } else {
+                dfs(nextnode);
+            }
+        }
+        result[ind--] = param2;
+    }
+
+    public boolean findLoop(int param2) {
+        boolean flag = false;
+        visited.add(param2);
+        HashSet<Integer> neig = map.get(param2);
+        for (Integer nextneig : neig) {
+            if (visited.contains(nextneig)) {
+                return true;
+            }
+            flag = findLoop(nextneig);
+            if (flag == true)
+                return true;
+        }
+        visited.remove(param2);
+        return flag;
+    }
+}

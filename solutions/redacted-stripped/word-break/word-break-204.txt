@@ -1,0 +1,76 @@
+class Solution {
+
+    Item item = new Item();
+
+    int[][] dp;
+
+    public boolean method1(String s, List<String> param1) {
+        dp = new int[s.length()][s.length()];
+        for (int[] i : dp) {
+            Arrays.fill(i, -1);
+        }
+        for (String var1 : param1) {
+            generateTrie(var1);
+        }
+        return canFormSentence(0, 0, s, item);
+    }
+
+    void generateTrie(String var1) {
+        Item curr = item;
+        int size = 0;
+        for (char c : var1.toCharArray()) {
+            if (!curr.map.containsKey(c)) {
+                curr.map.put(c, new Item());
+            }
+            curr = curr.map.get(c);
+            size += 1;
+        }
+        curr.isEnd = true;
+        curr.size = size;
+    }
+
+    boolean canFormSentence(int ind, int size, String var1, Item curr) {
+        if (ind >= var1.length())
+            return curr.isEnd && size == curr.size;
+        if (dp[size][ind] != -1)
+            return dp[size][ind] == 1;
+        char c = var1.charAt(ind);
+        if (!curr.map.containsKey(c))
+            return false;
+        Item newItem = curr.map.get(c);
+        boolean res = false;
+        if (newItem.isEnd && newItem.size == size + 1) {
+            res = canFormSentence(ind + 1, size + 1, var1, newItem) || canFormSentence(ind + 1, 0, var1, item);
+        } else {
+            res = canFormSentence(ind + 1, size + 1, var1, newItem);
+        }
+        dp[size][ind] = res ? 1 : 0;
+        return res;
+    }
+}
+
+class Item {
+
+    HashMap<Character, Item> map;
+
+    boolean isEnd;
+
+    int size;
+
+    Item() {
+        map = new HashMap<>();
+        isEnd = false;
+        size = 0;
+    }
+
+    Item(HashMap<Character, Item> map, boolean isEnd, int size) {
+        this.map = map;
+        this.isEnd = isEnd;
+        this.size = size;
+    }
+
+    @Override
+    public String toString() {
+        return isEnd + " " + size;
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    static Stack<Integer> st;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        int[] ans = new int[numCourses];
+        st = new Stack<>();
+        boolean[] visited = new boolean[numCourses];
+        boolean[] rst = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] i : prerequisites) {
+            adj.get(i[1]).add(i[0]);
+        }
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i] && detectCycle(adj, i, visited, rst)) {
+                return new int[] {};
+            }
+        }
+        int ind = 0;
+        while (!st.isEmpty()) {
+            ans[ind++] = st.pop();
+        }
+        return ans;
+    }
+
+    public boolean detectCycle(ArrayList<ArrayList<Integer>> adj, int i, boolean[] visited, boolean[] rst) {
+        visited[i] = true;
+        rst[i] = true;
+        for (int x : adj.get(i)) {
+            if (!visited[x] && detectCycle(adj, x, visited, rst)) {
+                return true;
+            } else if (rst[x]) {
+                return true;
+            }
+        }
+        rst[i] = false;
+        st.push(i);
+        return false;
+    }
+}

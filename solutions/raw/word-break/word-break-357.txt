@@ -1,0 +1,64 @@
+class TrieNode {
+
+    boolean isWord;
+
+    Map<Character, TrieNode> children;
+
+    TrieNode() {
+        this.children = new HashMap<>();
+    }
+}
+
+class Solution {
+
+    private String s;
+
+    private int[] memo;
+
+    private TrieNode root;
+
+    private boolean dp(int i, int n) {
+        if (i == n) {
+            return true;
+        }
+        if (memo[i] != -1) {
+            return memo[i] == 1;
+        }
+        TrieNode curr = root;
+        for (int j = i; j < n; j++) {
+            char c = s.charAt(j);
+            if (curr.children.containsKey(c)) {
+                curr = curr.children.get(c);
+                if (curr.isWord) {
+                    if (dp(j + 1, n)) {
+                        memo[i] = 1;
+                        return true;
+                    }
+                }
+            } else {
+                break;
+            }
+        }
+        memo[i] = 0;
+        return false;
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        var n = s.length();
+        this.memo = new int[n];
+        Arrays.fill(this.memo, -1);
+        this.root = new TrieNode();
+        this.s = s;
+        for (String word : wordDict) {
+            TrieNode curr = root;
+            for (char c : word.toCharArray()) {
+                if (!curr.children.containsKey(c)) {
+                    curr.children.put(c, new TrieNode());
+                }
+                curr = curr.children.get(c);
+            }
+            curr.isWord = true;
+        }
+        return dp(0, n);
+    }
+}

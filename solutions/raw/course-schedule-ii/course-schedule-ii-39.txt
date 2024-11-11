@@ -1,0 +1,49 @@
+/*Just a minor change from Course schedule 1 */
+class Solution {
+
+    HashMap<Integer, List<Integer>> adjList;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[][] courses = prerequisites;
+        adjList = new HashMap<>();
+        ArrayList<Integer> order = new ArrayList<>();
+        int[] states = new int[numCourses];
+        for (int[] course : courses) {
+            int a = course[0];
+            int b = course[1];
+            if (!adjList.containsKey(a)) {
+                adjList.put(a, new ArrayList<Integer>());
+            }
+            adjList.get(a).add(b);
+        }
+        for (int course = 0; course < numCourses; course++) {
+            if (!dfs(course, order, states)) {
+                //if any of the nodes returned false, we immediately return false.
+                return new int[0];
+            }
+        }
+        return order.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    private boolean dfs(int course, ArrayList order, int[] states) {
+        //we found a cycle.
+        if (states[course] == 1)
+            return false;
+        //this node/course is good to be taken.
+        if (states[course] == 2)
+            return true;
+        //mark it visiting first.
+        states[course] = 1;
+        if (adjList.containsKey(course)) {
+            //it is important, what if there was a node with no neighbors
+            for (int neighbor : adjList.get(course)) {
+                if (!dfs(neighbor, order, states)) {
+                    return false;
+                }
+            }
+        }
+        order.add(course);
+        states[course] = 2;
+        return true;
+    }
+}

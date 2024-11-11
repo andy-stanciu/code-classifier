@@ -1,0 +1,42 @@
+class Solution {
+
+    ArrayList<Integer> afg = new ArrayList<>();
+
+    public int[] findOrder(int V, int[][] pre) {
+        ArrayList<ArrayList<Integer>> arr = new ArrayList<>();
+        for (int i = 0; i < V; i++) arr.add(new ArrayList<Integer>());
+        for (int[] i : pre) {
+            arr.get(i[0]).add(i[1]);
+        }
+        int[] vis = new int[V];
+        int[] pathvis = new int[V];
+        for (int i = 0; i < V; i++) {
+            if (vis[i] == 0) {
+                if (dfs(vis, pathvis, arr, V, i)) {
+                    return new int[0];
+                }
+            }
+        }
+        int[] arr2 = new int[afg.size()];
+        int j = 0;
+        for (int i : afg) {
+            arr2[j++] = i;
+        }
+        return arr2;
+    }
+
+    public boolean dfs(int[] vis, int[] pathvis, ArrayList<ArrayList<Integer>> adj, int V, int i) {
+        vis[i] = 1;
+        pathvis[i] = 1;
+        for (int id : adj.get(i)) {
+            if (vis[id] == 0) {
+                if (dfs(vis, pathvis, adj, V, id))
+                    return true;
+            } else if (pathvis[id] == 1)
+                return true;
+        }
+        afg.add(i);
+        pathvis[i] = 0;
+        return false;
+    }
+}

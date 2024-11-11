@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        int[] vis = new int[param1];
+        int[] pathvis = new int[param1];
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] edge : prerequisites) {
+            int par = edge[1];
+            int child = edge[0];
+            graph.get(par).add(child);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (vis[i] == 0) {
+                if (dfs(i, graph, vis, pathvis, st))
+                    return new int[] {};
+            }
+        }
+        int[] sol = new int[st.size()];
+        for (int i = 0; i < sol.length; i++) {
+            sol[i] = st.pop();
+        }
+        return sol;
+    }
+
+    private boolean dfs(int node, List<List<Integer>> graph, int[] vis, int[] pathvis, Stack<Integer> st) {
+        vis[node] = 1;
+        pathvis[node] = 1;
+        for (int neigh : graph.get(node)) {
+            if (vis[neigh] == 0) {
+                if (dfs(neigh, graph, vis, pathvis, st))
+                    return true;
+            } else if (pathvis[neigh] == 1)
+                return true;
+        }
+        pathvis[node] = 0;
+        st.push(node);
+        return false;
+    }
+}

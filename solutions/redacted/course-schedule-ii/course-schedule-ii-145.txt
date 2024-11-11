@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        Map<Integer, HashSet<Integer>> g = new HashMap<>();
+        Map<Integer, Integer> ind = new HashMap<>();
+        for (int[] pre : prerequisites) {
+            int a = pre[0];
+            int b = pre[1];
+            if (!g.containsKey(b)) {
+                // b -> a
+                g.put(b, new HashSet<>());
+            }
+            g.get(b).add(a);
+            ind.put(a, ind.getOrDefault(a, 0) + 1);
+        }
+        List<Integer> visit = new ArrayList<>();
+        Deque<Integer> q = new ArrayDeque<>();
+        for (int i = 0; i < param1; ++i) {
+            if (ind.getOrDefault(i, 0) == 0) {
+                q.add(i);
+            }
+        }
+        while (!q.isEmpty()) {
+            int cur = q.pollFirst();
+            visit.add(cur);
+            for (int nei : g.getOrDefault(cur, new HashSet<>())) {
+                ind.put(nei, ind.get(nei) - 1);
+                if (ind.get(nei) == 0) {
+                    q.add(nei);
+                }
+            }
+        }
+        if (visit.size() != param1) {
+            return new int[0];
+        }
+        return visit.stream().mapToInt(Integer::intValue).toArray();
+    }
+}

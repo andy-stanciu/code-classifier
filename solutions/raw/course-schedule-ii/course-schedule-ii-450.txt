@@ -1,0 +1,40 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] edges) {
+        //we have to do topo sort
+        //first create a graph from the given prerequisites
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) graph.add(new ArrayList<>());
+        //represents the degree which means how many nodes the curr node is depending on
+        int[] degree = new int[numCourses];
+        for (int[] edge : edges) {
+            int bi = edge[1];
+            int ai = edge[0];
+            graph.get(bi).add(ai);
+            degree[ai]++;
+        }
+        //we will get the degree array which tells the degree of each nodes
+        //we can first do all the nodes which have a 0 degree
+        Queue<Integer> q = new ArrayDeque<>();
+        for (int i = 0; i < degree.length; i++) if (degree[i] == 0)
+            q.add(i);
+        ArrayList<Integer> res = new ArrayList<>();
+        while (q.size() > 0) {
+            int curr = q.remove();
+            //add it to res
+            res.add(curr);
+            //take all the nbr and reduce the degree of them by one
+            for (int nbr : graph.get(curr)) {
+                degree[nbr]--;
+                if (degree[nbr] == 0)
+                    q.add(nbr);
+            }
+        }
+        //there may be chances that the topo sort is not possible, for example a cycle graph
+        if (res.size() != numCourses)
+            return new int[0];
+        int[] ans = new int[numCourses];
+        for (int i = 0; i < res.size(); i++) ans[i] = res.get(i);
+        return ans;
+    }
+}

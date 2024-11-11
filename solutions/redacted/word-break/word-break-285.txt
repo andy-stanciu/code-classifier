@@ -1,0 +1,33 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        Set<String> dict = new HashSet<>(param1);
+        // the first vertex is zero position
+        Queue<Integer> queue = new LinkedList<>();
+        queue.offer(0);
+        // start position for (the remaining substring that will be used search)
+        Set<Integer> visited = new HashSet<>();
+        visited.add(0);
+        int len = s.length();
+        while (!queue.isEmpty()) {
+            int idx = queue.poll();
+            // find all words that starting from index idx
+            for (int i = idx + 1; i <= len; i++) {
+                // even if the following code may add i to queue, we already have a path to be searched that starts with i, so we don\'t need the duplicate i.
+                if (visited.contains(i))
+                    continue;
+                String str = s.substring(idx, i);
+                if (dict.contains(str)) {
+                    // the last level word.
+                    if (i == len)
+                        return true;
+                    // next level word starting index, this means we will search substring(i, len) for further levels.
+                    queue.offer(i);
+                    // avoid another substring edge ends with i that will cause the same further search.
+                    visited.add(i);
+                }
+            }
+        }
+        return false;
+    }
+}

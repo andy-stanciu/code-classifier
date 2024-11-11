@@ -1,0 +1,61 @@
+class Solution {
+
+    int n;
+
+    // record is palindrome or ont frome index [start,end]
+    boolean[][] is_palindrome;
+
+    // record the substrings
+    String[][] substrings;
+
+    // record the answer
+    List<List<String>> ans;
+
+    public List<List<String>> partition(String s) {
+        n = s.length();
+        // initailize the array,beacuse String\'s substrings(i,j) means that
+        // cut the string startint index i,and end of index n
+        is_palindrome = new boolean[n + 1][n + 1];
+        // record the substrings to cache
+        substrings = new String[n + 1][n + 1];
+        // loop all substrings and store in array cache
+        for (int i = 0; i < n; i++) for (int j = i + 1; j <= n; j++) {
+            substrings[i][j] = s.substring(i, j);
+            is_palindrome[i][j] = IsPalindrome(substrings[i][j]);
+        }
+        ans = new ArrayList<List<String>>();
+        FindSubstrings(0, new ArrayList<String>());
+        return ans;
+    }
+
+    void FindSubstrings(int ind, ArrayList<String> list) {
+        if (ind == n) {
+            ans.add(new ArrayList<String>(list));
+            return;
+        }
+        // optional list,we can choose ele from ind+1 to n
+        for (int i = ind + 1; i <= n; i++) {
+            // if [ind,i] is not palindrome ,next
+            if (!is_palindrome[ind][i])
+                continue;
+            // we choose [ind,i] as a substrings
+            list.add(substrings[ind][i]);
+            FindSubstrings(i, list);
+            // we dont choose [ind,i] as a substrings,so we remove it which we added before
+            list.remove(list.size() - 1);
+        }
+    }
+
+    // judge the string is palindrome or not
+    boolean IsPalindrome(String s) {
+        int lower = 0;
+        int higher = s.length() - 1;
+        while (lower < higher) {
+            if (s.charAt(lower) != s.charAt(higher))
+                return false;
+            lower++;
+            higher--;
+        }
+        return true;
+    }
+}

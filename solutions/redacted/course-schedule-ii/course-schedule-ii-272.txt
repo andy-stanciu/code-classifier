@@ -1,0 +1,50 @@
+class Solution {
+
+    public Map<Integer, List<Integer>> buildgraph(int[][] pre, int[] indegree) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int i = 0; i < pre.length; i++) {
+            int var1 = pre[i][0];
+            int p = pre[i][1];
+            graph.putIfAbsent(p, new ArrayList<>());
+            graph.get(p).add(var1);
+            indegree[var1]++;
+        }
+        return graph;
+    }
+
+    public int[] bfs(Map<Integer, List<Integer>> graph, int[] indegree, int n) {
+        Queue<Integer> q = new LinkedList<>();
+        List<Integer> res = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                q.offer(i);
+            }
+        }
+        while (!q.isEmpty()) {
+            int current = q.poll();
+            res.add(current);
+            if (graph.get(current) != null) {
+                for (int next : graph.get(current)) {
+                    indegree[next]--;
+                    if (indegree[next] == 0) {
+                        q.offer(next);
+                    }
+                }
+            }
+        }
+        if (res.size() == n) {
+            int[] ans = new int[n];
+            for (int i = 0; i < n; i++) {
+                ans[i] = res.get(i);
+            }
+            return ans;
+        }
+        return new int[0];
+    }
+
+    public int[] findOrder(int n, int[][] pre) {
+        int[] indegree = new int[n];
+        Map<Integer, List<Integer>> graph = buildgraph(pre, indegree);
+        return bfs(graph, indegree, n);
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    int k;
+
+    public boolean dfs(int ind, List<List<Integer>> list, int[] visited, int[] res) {
+        if (visited[ind] == 2)
+            return true;
+        List<Integer> cur = list.get(ind);
+        visited[ind] = 1;
+        for (int child : cur) {
+            if (visited[child] == 1)
+                return false;
+            if (visited[child] == 0)
+                if (!dfs(child, list, visited, res))
+                    return false;
+        }
+        visited[ind] = 2;
+        res[k--] = ind;
+        return true;
+    }
+
+    public int[] findOrder(int n, int[][] nums) {
+        int[] res = new int[n];
+        k = n - 1;
+        List<List<Integer>> list = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            list.add(new ArrayList<>());
+        }
+        for (int[] num : nums) {
+            list.get(num[1]).add(num[0]);
+        }
+        int[] visited = new int[n];
+        Arrays.fill(visited, 0);
+        for (int i = 0; i < n; i++) {
+            if (!dfs(i, list, visited, res))
+                return new int[0];
+        }
+        return res;
+    }
+}

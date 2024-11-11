@@ -1,0 +1,46 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        HashMap<Integer, Set<Integer>> nodeToIncomingNodesMapping = new HashMap();
+        HashMap<Integer, List<Integer>> adjacencyList = new HashMap();
+        for (int[] a : prerequisites) {
+            Set<Integer> tempSet = nodeToIncomingNodesMapping.getOrDefault(a[0], new HashSet<Integer>());
+            tempSet.add(a[1]);
+            nodeToIncomingNodesMapping.put(a[0], tempSet);
+            List<Integer> tempList = adjacencyList.getOrDefault(a[1], new ArrayList<Integer>());
+            tempList.add(a[0]);
+            adjacencyList.put(a[1], tempList);
+        }
+        Queue<Integer> queue = new LinkedList<Integer>();
+        for (int i = 0; i < param1; i++) {
+            if (!nodeToIncomingNodesMapping.containsKey(i)) {
+                queue.add(i);
+            }
+        }
+        List<Integer> answer = new ArrayList<Integer>();
+        while (!queue.isEmpty()) {
+            int topNode = queue.remove();
+            answer.add(topNode);
+            List<Integer> impactedNodes = adjacencyList.getOrDefault(topNode, new ArrayList());
+            for (int impactedNode : impactedNodes) {
+                Set<Integer> imcomingNodesSet = nodeToIncomingNodesMapping.get(impactedNode);
+                imcomingNodesSet.remove(topNode);
+                if (imcomingNodesSet.size() == 0) {
+                    queue.add(impactedNode);
+                    nodeToIncomingNodesMapping.remove(impactedNode);
+                }
+            }
+        }
+        if (nodeToIncomingNodesMapping.size() != 0)
+            return new int[] {};
+        return convertListToArray(answer);
+    }
+
+    int[] convertListToArray(List<Integer> list) {
+        int[] array = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            array[i] = list.get(i);
+        }
+        return array;
+    }
+}

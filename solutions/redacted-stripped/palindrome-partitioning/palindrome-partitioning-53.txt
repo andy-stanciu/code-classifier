@@ -1,0 +1,46 @@
+class Solution {
+
+    List[] memo = new List[17];
+
+    public List<List<String>> partition(String s) {
+        return go(0, s);
+    }
+
+    private List<List<String>> go(int index, String s) {
+        String str = "";
+        List<List<String>> list = new ArrayList<List<String>>();
+        if (memo[index] != null)
+            return memo[index];
+        for (int i = index; i < s.length(); i++) {
+            str = str + s.charAt(i);
+            if (isPalin(str)) {
+                List<List<String>> ll = go(i + 1, s);
+                boolean flag = true;
+                for (List lis : ll) {
+                    List<String> newlist = new ArrayList<String>();
+                    newlist.add(str);
+                    newlist.addAll(lis);
+                    list.add(newlist);
+                    flag = false;
+                }
+                if (flag) {
+                    List<String> newlist = new ArrayList<String>();
+                    newlist.add(str);
+                    list.add(newlist);
+                }
+            }
+        }
+        return memo[index] = list;
+    }
+
+    private boolean isPalin(String str) {
+        int i = 0, j = str.length() - 1;
+        while (i < j) {
+            if (str.charAt(i) != str.charAt(j))
+                return false;
+            i++;
+            j--;
+        }
+        return true;
+    }
+}

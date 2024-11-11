@@ -1,0 +1,34 @@
+class Solution {
+
+    private static final Map<String, BiFunction<Integer, Integer, Integer>> functionMap = new HashMap<>();
+
+    static {
+        functionMap.put("+", (a, b) -> a + b);
+        functionMap.put("-", (a, b) -> a - b);
+        functionMap.put("/", (a, b) -> a / b);
+        functionMap.put("*", (a, b) -> a * b);
+    }
+
+    private boolean isOperand(String strOper) {
+        return functionMap.containsKey(strOper);
+    }
+
+    public int evalRPN(String[] tokens) {
+        if (tokens.length == 1) {
+            return isOperand(tokens[0]) ? 0 : Integer.parseInt(tokens[0]);
+        }
+        int res = 0, a, b;
+        Stack<Integer> stack = new Stack<>();
+        for (String token : tokens) {
+            if (isOperand(token)) {
+                a = stack.pop();
+                b = stack.pop();
+                res = functionMap.get(token).apply(b, a);
+                stack.push(res);
+            } else {
+                stack.push(Integer.parseInt(token));
+            }
+        }
+        return res;
+    }
+}

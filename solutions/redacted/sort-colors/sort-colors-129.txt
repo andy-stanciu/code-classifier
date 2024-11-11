@@ -1,0 +1,56 @@
+class Solution {
+
+    public static void method1(int[] nums) {
+        // This solution use Timsort
+        // ex input = {1,3,2,0,8};
+        // Split num[] / 2
+        int[] left = Arrays.copyOfRange(nums, 0, nums.length / 2);
+        // {1,3}
+        int[] right = Arrays.copyOfRange(nums, nums.length / 2, nums.length);
+        // {2,0,8}
+        // sort left and right use insertion sort
+        method2(left);
+        // {1,3}
+        method2(right);
+        // {0,2,8}
+        // Merge left and right sorted
+        int[] mergeLeftRight = new int[nums.length];
+        int im = 0, jm = right.length - 1;
+        while (im < right.length) {
+            if (im < left.length)
+                mergeLeftRight[im] = left[im];
+            mergeLeftRight[jm] = right[im];
+            im++;
+            jm++;
+        }
+        // {1,3,0,2,8}
+        // use merge sort to
+        int iz = 0, jz = 0, kz = 0;
+        while (iz < left.length && jz < right.length) {
+            if (left[iz] <= right[jz]) {
+                nums[kz++] = left[iz++];
+            } else {
+                nums[kz++] = right[jz++];
+            }
+        }
+        while (iz < left.length) {
+            nums[kz++] = left[iz++];
+        }
+        while (jz < right.length) {
+            nums[kz++] = right[jz++];
+        }
+        // {0,1,2,3,8}
+    }
+
+    public static void method2(int[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            int key = arr[i];
+            int j = i - 1;
+            while (j >= 0 && arr[j] > key) {
+                arr[j + 1] = arr[j];
+                j = j - 1;
+            }
+            arr[j + 1] = key;
+        }
+    }
+}

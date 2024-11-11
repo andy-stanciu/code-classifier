@@ -1,0 +1,57 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<Integer> result = new ArrayList<>();
+        // indegree is an array representing the indegree of all nodes
+        int[] indegree = new int[param1];
+        // we construct an adjacency list of all courses: prereqs
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int[] prereq : prerequisites) {
+            int var1 = prereq[0];
+            int var2 = prereq[1];
+            map.computeIfAbsent(var1, val -> new ArrayList<Integer>()).add(var2);
+            indegree[var1]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        int zeroCount = 0;
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0) {
+                zeroCount++;
+            }
+        }
+        // if we don\'t have any courses with an indegree of 0 we cannot start our scheduling process
+        if (zeroCount == 0) {
+            return new int[0];
+        }
+        // we start our process off with any course that has an indegree of 0, meaning this course has no prereq
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        while (!queue.isEmpty()) {
+            int var1 = queue.remove();
+            result.add(var1);
+            // we take our current course and remove it from the list of prereqs of all other courses.
+            for (Integer key : map.keySet()) {
+                List<Integer> list = map.get(key);
+                if (list.contains(var1)) {
+                    list.remove(Integer.valueOf(var1));
+                    // for all courses that had the current course as a prereq we reduce their indegree by 1.
+                    indegree[key]--;
+                    // we enqueue the next key with an indegree of 0.
+                    if (indegree[key] == 0) {
+                        queue.add(key);
+                    }
+                }
+            }
+        }
+        // if we still have any courses with an indegree of 0 then we have not properly scheduled all courses
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] != 0) {
+                return new int[0];
+            }
+        }
+        return result.stream().mapToInt(Integer::intValue).toArray();
+    }
+}

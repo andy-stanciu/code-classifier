@@ -1,0 +1,47 @@
+class Solution {
+
+    List<List<String>> result = new ArrayList<>();
+
+    int len;
+
+    public List<List<String>> partition(String s) {
+        len = s.length();
+        partitionRecursive(s, 0, 0, new ArrayList<String>());
+        return result;
+    }
+
+    void partitionRecursive(String s, int start, int index, List<String> list) {
+        int left = index;
+        int right = index;
+        if (index >= len) {
+            left = len;
+            int size = list.size();
+            //backfill
+            for (int i = start; i < left; i++) list.add(s.substring(i, i + 1));
+            result.add(new ArrayList<String>(list));
+            list.subList(size, list.size()).clear();
+            return;
+        }
+        //skip this character
+        partitionRecursive(s, start, index + 1, list);
+        //check core (repeated characters)
+        while (right + 1 < len && s.charAt(left) == s.charAt(right + 1)) {
+            right++;
+            addWords(s, list, start, left, right);
+        }
+        while (left - 1 >= start && right + 1 < len && s.charAt(left - 1) == s.charAt(right + 1)) {
+            left--;
+            right++;
+            addWords(s, list, start, left, right);
+        }
+    }
+
+    void addWords(String s, List<String> list, int start, int left, int right) {
+        int size = list.size();
+        //backfill
+        for (int i = start; i < left; i++) list.add(s.substring(i, i + 1));
+        list.add(s.substring(left, right + 1));
+        partitionRecursive(s, right + 1, right + 1, list);
+        list.subList(size, list.size()).clear();
+    }
+}

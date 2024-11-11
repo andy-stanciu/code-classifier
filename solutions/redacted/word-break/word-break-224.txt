@@ -1,0 +1,32 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        Map<String, Boolean> memo = new HashMap<>();
+        return method2(s, 0, 1, param1, memo);
+    }
+
+    private boolean method2(String s, int startIndex, int endIndex, List<String> param1, Map<String, Boolean> memo) {
+        if (endIndex > s.length()) {
+            return false;
+        }
+        String sub = s.substring(startIndex, endIndex);
+        for (String var1 : param1) {
+            String key = String.format("%d,%d,%s", startIndex, endIndex, var1);
+            if (memo.containsKey(key)) {
+                return false;
+            }
+            if (sub.equals(var1)) {
+                if (endIndex == s.length()) {
+                    return true;
+                }
+                boolean ret = method2(s, endIndex, endIndex + 1, param1, memo);
+                if (ret) {
+                    return true;
+                } else {
+                    memo.put(key, false);
+                }
+            }
+        }
+        return method2(s, startIndex, endIndex + 1, param1, memo);
+    }
+}

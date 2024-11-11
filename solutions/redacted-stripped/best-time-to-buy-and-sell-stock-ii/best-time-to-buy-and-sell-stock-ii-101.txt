@@ -1,0 +1,97 @@
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        int[][] dp = new int[prices.length + 1][2];
+        for (int[] row : dp) Arrays.fill(row, -1);
+        return helperMem(prices, 0, 1, dp);
+    }
+
+    public int onePassMethod(int[] prices) {
+        int maxProfit = 0;
+        for (int i = 1; i < prices.length; i++) {
+            if (prices[i] > prices[i - 1]) {
+                maxProfit += prices[i] - prices[i - 1];
+            }
+        }
+        return maxProfit;
+    }
+
+    public int helper(int[] prices, int index, int param1) {
+        if (index == prices.length)
+            return 0;
+        int var1 = 0;
+        if (param1 == 1) {
+            int var3 = -prices[index] + helper(prices, index + 1, 0);
+            int skipKaro = helper(prices, index + 1, 1);
+            var1 = Math.max(var3, skipKaro);
+        } else {
+            int var2 = prices[index] + helper(prices, index + 1, 1);
+            int skipKaro = helper(prices, index + 1, 0);
+            var1 = Math.max(var2, skipKaro);
+        }
+        return var1;
+    }
+
+    public int helperMem(int[] prices, int index, int param1, int[][] dp) {
+        if (index == prices.length)
+            return 0;
+        if (dp[index][param1] != -1)
+            return dp[index][param1];
+        int var1 = 0;
+        if (param1 == 1) {
+            int var3 = -prices[index] + helperMem(prices, index + 1, 0, dp);
+            int skipKaro = helperMem(prices, index + 1, 1, dp);
+            var1 = Math.max(var3, skipKaro);
+        } else {
+            int var2 = prices[index] + helperMem(prices, index + 1, 1, dp);
+            int skipKaro = helperMem(prices, index + 1, 0, dp);
+            var1 = Math.max(var2, skipKaro);
+        }
+        return dp[index][param1] = var1;
+    }
+
+    public int helperTab(int[] prices) {
+        int[][] dp = new int[prices.length + 1][2];
+        for (int[] row : dp) Arrays.fill(row, 0);
+        for (int index = prices.length - 1; index >= 0; index--) {
+            for (int param1 = 0; param1 < 2; param1++) {
+                int var1 = 0;
+                if (param1 == 1) {
+                    int var3 = -prices[index] + dp[index + 1][0];
+                    int skipKaro = dp[index + 1][1];
+                    var1 = Math.max(var3, skipKaro);
+                } else {
+                    int var2 = prices[index] + dp[index + 1][1];
+                    int skipKaro = dp[index + 1][0];
+                    var1 = Math.max(var2, skipKaro);
+                }
+                dp[index][param1] = var1;
+            }
+        }
+        return dp[0][1];
+    }
+
+    public int helperSO(int[] prices) {
+        int[] curr = new int[2];
+        int[] next = new int[2];
+        Arrays.fill(curr, 0);
+        Arrays.fill(next, 0);
+        for (int index = prices.length - 1; index >= 0; index--) {
+            for (int param1 = 0; param1 < 2; param1++) {
+                int var1 = 0;
+                if (param1 == 1) {
+                    int var3 = -prices[index] + next[0];
+                    int skipKaro = next[1];
+                    var1 = Math.max(var3, skipKaro);
+                } else {
+                    int var2 = prices[index] + next[1];
+                    int skipKaro = next[0];
+                    var1 = Math.max(var2, skipKaro);
+                }
+                curr[param1] = var1;
+            }
+            next = curr.clone();
+        }
+        return next[1];
+    }
+}

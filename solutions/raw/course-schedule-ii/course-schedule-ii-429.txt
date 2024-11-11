@@ -1,0 +1,72 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] res = new int[numCourses];
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] pair : prerequisites) {
+            adj.get(pair[1]).add(pair[0]);
+        }
+        if (hasCycle(numCourses, prerequisites)) {
+            return new int[0];
+        }
+        Stack<Integer> stack = new Stack<Integer>();
+        boolean[] visited = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i]) {
+                dfs(i, adj, visited, stack);
+            }
+        }
+        int i = 0;
+        while (!stack.isEmpty()) {
+            res[i++] = stack.pop();
+        }
+        return res;
+    }
+
+    public void dfs(int src, ArrayList<ArrayList<Integer>> adj, boolean[] visited, Stack<Integer> stack) {
+        visited[src] = true;
+        for (Integer nei : adj.get(src)) {
+            if (!visited[nei]) {
+                dfs(nei, adj, visited, stack);
+            }
+        }
+        stack.push(src);
+    }
+
+    public boolean hasCycle(int numCourses, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] pair : prerequisites) {
+            adj.get(pair[1]).add(pair[0]);
+        }
+        boolean[] v = new boolean[numCourses];
+        boolean[] recs = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (!v[i]) {
+                if (dfscycle(i, adj, v, recs))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean dfscycle(int src, ArrayList<ArrayList<Integer>> adj, boolean[] v, boolean[] recs) {
+        v[src] = true;
+        recs[src] = true;
+        for (Integer nei : adj.get(src)) {
+            if (!v[nei]) {
+                if (dfscycle(nei, adj, v, recs))
+                    return true;
+            } else if (recs[nei]) {
+                return true;
+            }
+        }
+        recs[src] = false;
+        return false;
+    }
+}

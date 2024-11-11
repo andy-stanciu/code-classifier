@@ -1,0 +1,42 @@
+class Solution {
+
+    List<List<String>> ans = new ArrayList<>();
+
+    public List<List<String>> partition(String s) {
+        List<String> ls = new ArrayList<>();
+        partition(s, ls, 0);
+        return ans;
+    }
+
+    //recursive function
+    public void partition(String s, List<String> ls, int idx) {
+        //base case
+        if (idx >= s.length()) {
+            ans.add(new ArrayList<>(ls));
+            return;
+        }
+        //main part
+        //loop through the remaining part of the string to generate all valid palindrome substrings
+        for (int i = idx; i < s.length(); i++) {
+            String ss = s.substring(idx, i + 1);
+            //if substring is palindrome, add it to the list and call the function on the remaining substring that starts from i+1
+            if (method1(ss)) {
+                ls.add(ss);
+                partition(s, ls, i + 1);
+                ls.remove(ls.size() - 1);
+            }
+        }
+    }
+
+    //a function to check if the generated substring is a palindrome or not
+    public boolean method1(String s) {
+        int l = 0, r = s.length() - 1;
+        while (l < r) {
+            if (s.charAt(l) != s.charAt(r))
+                return false;
+            l++;
+            r--;
+        }
+        return true;
+    }
+}

@@ -1,0 +1,49 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        adj = createAdjacencyList(numCourses, prerequisites);
+        int[] indegrees = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            for (int it : adj.get(i)) {
+                indegrees[it]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<Integer>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegrees[i] == 0) {
+                q.add(i);
+            }
+        }
+        int[] topo = new int[numCourses];
+        int i = 0;
+        while (!q.isEmpty()) {
+            int node = q.peek();
+            q.remove();
+            topo[i++] = node;
+            for (int it : adj.get(node)) {
+                indegrees[it]--;
+                if (indegrees[it] == 0) {
+                    q.add(it);
+                }
+            }
+        }
+        if (i == numCourses) {
+            return topo;
+        }
+        int[] arr = {};
+        return arr;
+    }
+
+    public List<List<Integer>> createAdjacencyList(int numCourses, int[][] preq) {
+        List<List<Integer>> result = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            result.add(new ArrayList<Integer>());
+        }
+        int m = preq.length;
+        for (int i = 0; i < m; i++) {
+            result.get(preq[i][1]).add(preq[i][0]);
+        }
+        return result;
+    }
+}

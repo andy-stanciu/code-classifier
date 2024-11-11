@@ -1,0 +1,27 @@
+class Solution {
+
+    private int[] dp;
+
+    private boolean solve(String s, List<String> wordDict, int ind) {
+        if (ind == s.length())
+            return true;
+        if (dp[ind] != -1)
+            return dp[ind] == 1;
+        boolean res = false;
+        for (String word : wordDict) {
+            if (s.startsWith(word, ind)) {
+                res |= solve(s, wordDict, ind + word.length());
+                if (res)
+                    break;
+            }
+        }
+        dp[ind] = res ? 1 : 0;
+        return res;
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        dp = new int[s.length()];
+        Arrays.fill(dp, -1);
+        return solve(s, wordDict, 0);
+    }
+}

@@ -1,0 +1,51 @@
+public class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        Set<String> var1 = new HashSet<>(param1);
+        return tabulation(s, var1);
+    }
+
+    private boolean recursive(int i, String s, Set<String> var1) {
+        if (i > s.length() - 1) {
+            return true;
+        }
+        for (int j = i; j < s.length(); j++) {
+            if (var1.contains(s.substring(i, j + 1)) && recursive(j + 1, s, var1)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean memoized(int i, String s, Set<String> var1, Map<Integer, Boolean> memo) {
+        if (i > s.length() - 1) {
+            return true;
+        }
+        if (memo.containsKey(i)) {
+            return memo.get(i);
+        }
+        for (int j = i; j < s.length(); j++) {
+            if (var1.contains(s.substring(i, j + 1)) && recursive(j + 1, s, var1)) {
+                memo.put(i, true);
+                return true;
+            }
+        }
+        memo.put(i, false);
+        return false;
+    }
+
+    private boolean tabulation(String s, Set<String> var1) {
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                String var2 = s.substring(j, i);
+                dp[i] = dp[j] && var1.contains(var2);
+                if (dp[i]) {
+                    break;
+                }
+            }
+        }
+        return dp[s.length()];
+    }
+}

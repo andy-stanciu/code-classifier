@@ -1,0 +1,78 @@
+class Solution {
+
+    public class Edge {
+
+        int src;
+
+        int dest;
+
+        public Edge(int s, int d) {
+            this.src = s;
+            this.dest = d;
+        }
+    }
+
+    public void CreateGraph(ArrayList<Edge>[] graph, int numCources, int[][] prerequisites) {
+        //initialize the arrayLists
+        for (int i = 0; i < graph.length; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            for (int j = 0; j < prerequisites[0].length; j++) {
+                int dest = prerequisites[i][0];
+                int src = prerequisites[i][1];
+                graph[src].add(new Edge(src, dest));
+            }
+        }
+    }
+
+    public void calcindg(ArrayList<Edge>[] graph, int[] indg) {
+        for (int i = 0; i < graph.length; i++) {
+            for (int j = 0; j < graph[i].size(); j++) {
+                Edge e = graph[i].get(j);
+                indg[e.dest]++;
+            }
+        }
+    }
+
+    public int[] topSort(ArrayList<Edge>[] graph, int numCourses) {
+        //Find inDegree of each vertex
+        int[] indg = new int[numCourses];
+        calcindg(graph, indg);
+        Queue<Integer> q = new LinkedList<>();
+        //Adding cources with indegree 0 => No prerequisites
+        for (int i = 0; i < indg.length; i++) {
+            if (indg[i] == 0) {
+                q.add(i);
+            }
+        }
+        if (q.isEmpty()) {
+            int[] a = {};
+            return a;
+        }
+        //Answer Array
+        int[] answer = new int[numCourses];
+        int k = 0;
+        while (!q.isEmpty()) {
+            int current = q.remove();
+            answer[k++] = current;
+            //Neighbors
+            for (int i = 0; i < graph[current].size(); i++) {
+                Edge e = graph[current].get(i);
+                indg[e.dest]--;
+                if (indg[e.dest] == 0) {
+                    q.add(e.dest);
+                }
+            }
+        }
+        //If all the vertices are not covered then it means there is some cycle
+        return k == numCourses ? answer : new int[0];
+    }
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        //Make a graph from the given pre-requisites
+        ArrayList<Edge>[] graph = new ArrayList[numCourses];
+        CreateGraph(graph, numCourses, prerequisites);
+        return topSort(graph, numCourses);
+    }
+}

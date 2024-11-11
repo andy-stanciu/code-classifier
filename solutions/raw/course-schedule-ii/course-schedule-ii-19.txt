@@ -1,0 +1,46 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int n = numCourses;
+        //creating adj list;
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        //to calculate indegree
+        int[] indegree = new int[n];
+        for (int i = 0; i < n; i++) {
+            for (int it : adj.get(i)) {
+                indegree[it]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        //adding in q the nodes which have indegree = 0
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0)
+                q.add(i);
+        }
+        int[] ans = new int[n];
+        int index = 0;
+        int count = 0;
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            count++;
+            ans[index++] = node;
+            for (int it : adj.get(node)) {
+                indegree[it]--;
+                if (indegree[it] == 0) {
+                    q.add(it);
+                }
+            }
+        }
+        //if count it not equal to n, denotes few nodes are not covered. Because there was cycle, due to which some nodes could never make it to incoming edges 0 (indegree)
+        //thus if count != n, cycle present,thus  not possible to finish all courses.
+        if (count != n)
+            return new int[0];
+        return ans;
+    }
+}

@@ -1,0 +1,35 @@
+class Solution {
+
+    public void method1(int[] nums) {
+        // zeros , ones, twos maintains the count of 0s, 1s and 2s seen so far
+        int zeros = 0, ones = 0, twos = 0, n = nums.length;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == 0) {
+                nums[zeros++] = 0;
+                //no ones seen so far - only 0s and 2s are present - 00..22..
+                if (ones == 0 && twos != 0) {
+                    nums[i] = 2;
+                } else //no twos seen so far - only 0s and 1s are present - 00..111..
+                if (ones != 0 && twos == 0) {
+                    nums[i] = 1;
+                } else // 0s , 1s, 2s are present - 00..111..22..
+                if (ones != 0 && twos != 0) {
+                    nums[zeros + ones - 1] = 1;
+                    nums[i] = 2;
+                }
+            } else if (nums[i] == 1) {
+                ones++;
+                //no twos seen so far - only 0s and 1s are present - 00..111..
+                if (twos == 0) {
+                    nums[i] = 1;
+                } else // 0s , 1s, 2s are present - 00..111..22..
+                {
+                    nums[zeros + ones - 1] = 1;
+                    nums[i] = 2;
+                }
+            } else {
+                twos++;
+            }
+        }
+    }
+}

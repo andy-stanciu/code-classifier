@@ -1,0 +1,46 @@
+class Solution {
+
+    class Triple {
+
+        TreeNode node;
+
+        int var1;
+
+        LinkedList<Integer> var2;
+
+        public Triple(TreeNode node, int var1, LinkedList<Integer> var2) {
+            this.node = node;
+            this.var1 = var1;
+            this.var2 = var2;
+        }
+    }
+
+    public List<List<Integer>> method1(TreeNode root, int param1) {
+        ArrayList<List<Integer>> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
+        LinkedList<Triple> queue = new LinkedList<>();
+        queue.add(new Triple(root, root.val, new LinkedList<Integer>(Arrays.asList(root.val))));
+        while (!queue.isEmpty()) {
+            Triple triple = queue.poll();
+            boolean isLeaf = true;
+            if (triple.node.left != null) {
+                LinkedList<Integer> var3 = (LinkedList) triple.var2.clone();
+                var3.add(triple.node.left.val);
+                queue.add(new Triple(triple.node.left, triple.var1 + triple.node.left.val, var3));
+                isLeaf = false;
+            }
+            if (triple.node.right != null) {
+                LinkedList<Integer> var3 = (LinkedList) triple.var2.clone();
+                var3.add(triple.node.right.val);
+                queue.add(new Triple(triple.node.right, triple.var1 + triple.node.right.val, var3));
+                isLeaf = false;
+            }
+            if (isLeaf && triple.var1 == param1) {
+                res.add(triple.var2);
+            }
+        }
+        return res;
+    }
+}

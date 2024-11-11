@@ -1,0 +1,49 @@
+class Solution {
+
+    public static boolean DFS(int u, ArrayList<ArrayList<Integer>> adj, boolean[] visited, boolean[] recStack, Stack<Integer> stack) {
+        if (recStack[u]) {
+            // Cycle detected
+            return true;
+        }
+        if (visited[u]) {
+            return false;
+        }
+        visited[u] = true;
+        recStack[u] = true;
+        for (Integer m : adj.get(u)) {
+            if (DFS(m, adj, visited, recStack, stack)) {
+                return true;
+            }
+        }
+        recStack[u] = false;
+        stack.push(u);
+        return false;
+    }
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        // Build the graph
+        for (int i = 0; i < prerequisites.length; i++) {
+            adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        boolean[] visited = new boolean[numCourses];
+        boolean[] recStack = new boolean[numCourses];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i]) {
+                if (DFS(i, adj, visited, recStack, stack)) {
+                    // Cycle detected, return an empty array
+                    return new int[0];
+                }
+            }
+        }
+        int[] array = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            array[i] = stack.pop();
+        }
+        return array;
+    }
+}

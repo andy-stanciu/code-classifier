@@ -1,0 +1,32 @@
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        // DFS Approach
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> path = new ArrayList<>();
+        dfs(root, ans, path, 0, targetSum);
+        return ans;
+    }
+
+    private void dfs(TreeNode root, List<List<Integer>> ans, List<Integer> path, int curSum, int targetSum) {
+        if (root == null) {
+            return;
+        }
+        curSum += root.val;
+        path.add(root.val);
+        // Leaf node: check whether path sum meets the target
+        if (root.left == null && root.right == null) {
+            if (curSum == targetSum) {
+                // Save a deep copy into the result
+                ans.add(new ArrayList<Integer>(path));
+            }
+        } else {
+            // Non-leaf node: proceed with the child nodes
+            dfs(root.left, ans, path, curSum, targetSum);
+            dfs(root.right, ans, path, curSum, targetSum);
+        }
+        // Reset the status after visiting this branch
+        curSum -= root.val;
+        path.remove(path.size() - 1);
+    }
+}

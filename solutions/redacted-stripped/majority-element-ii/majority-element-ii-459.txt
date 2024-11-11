@@ -1,0 +1,102 @@
+class Solution {
+
+    public List<Integer> method1(int[] nums) {
+        return withVotingAlgo(nums);
+    }
+
+    public List<Integer> withVotingAlgo(int[] nums) {
+        int n = nums.length;
+        int cand1 = 0;
+        int cand2 = 0;
+        int count1 = 0;
+        int count2 = 0;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == cand1) {
+                count1++;
+            } else if (nums[i] == cand2) {
+                count2++;
+            } else if (count1 == 0) {
+                cand1 = nums[i];
+                count1++;
+            } else if (count2 == 0) {
+                cand2 = nums[i];
+                count2++;
+            } else {
+                count1--;
+                count2--;
+            }
+        }
+        int freq1 = 0;
+        int freq2 = 0;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == cand1) {
+                freq1++;
+            }
+            if (nums[i] == cand2) {
+                freq2++;
+            }
+        }
+        List<Integer> ans = new ArrayList<>();
+        if (freq1 > n / 3) {
+            ans.add(cand1);
+        }
+        if (freq2 > n / 3) {
+            if (cand1 != cand2)
+                ans.add(cand2);
+        }
+        return ans;
+    }
+
+    public List<Integer> withSorting(int[] nums) {
+        int n = nums.length;
+        Arrays.sort(nums);
+        List<Integer> ans = new ArrayList<>();
+        if (n == 1) {
+            ans.add(nums[0]);
+            return ans;
+        }
+        if (n == 2) {
+            if (nums[0] == nums[1]) {
+                ans.add(nums[0]);
+            } else {
+                ans.add(nums[0]);
+                ans.add(nums[1]);
+            }
+            return ans;
+        }
+        int count = 1;
+        Set<Integer> set = new HashSet<>();
+        for (int i = 1; i < n; i++) {
+            if (nums[i] == nums[i - 1]) {
+                count++;
+            } else {
+                count = 1;
+            }
+            if (count > n / 3) {
+                if (!set.contains(nums[i])) {
+                    set.add(nums[i]);
+                    ans.add(nums[i]);
+                }
+            }
+        }
+        return ans;
+    }
+
+    public List<Integer> withMap(int[] nums) {
+        int n = nums.length;
+        Map<Integer, Integer> map = new HashMap<>(n << 2);
+        for (int i : nums) {
+            Integer val = map.putIfAbsent(i, 1);
+            if (val != null) {
+                map.put(i, val + 1);
+            }
+        }
+        List<Integer> ans = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if (entry.getValue() > n / 3) {
+                ans.add(entry.getKey());
+            }
+        }
+        return ans;
+    }
+}

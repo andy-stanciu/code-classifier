@@ -1,0 +1,37 @@
+class Solution {
+
+    public static int[] findOrder(int param1, int[][] prerequisites) {
+        List<Integer>[] graph = new List[param1];
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] a : prerequisites) {
+            graph[a[0]].add(a[1]);
+        }
+        LinkedList<Integer> order = new LinkedList<>();
+        boolean[] visited = new boolean[param1];
+        boolean[] onCurrent = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (hasCycle(i, graph, order, param1, visited, onCurrent))
+                return new int[] {};
+        }
+        // Collections.reverse(order);
+        return order.stream().mapToInt(Number::intValue).toArray();
+    }
+
+    public static boolean hasCycle(int i, List<Integer>[] graph, LinkedList<Integer> path, int param1, boolean[] visited, boolean[] onCurrent) {
+        if (visited[i])
+            return false;
+        if (onCurrent[i])
+            return true;
+        onCurrent[i] = true;
+        for (int c : graph[i]) {
+            if (hasCycle(c, graph, path, param1, visited, onCurrent))
+                return true;
+        }
+        onCurrent[i] = false;
+        visited[i] = true;
+        path.add(i);
+        return false;
+    }
+}

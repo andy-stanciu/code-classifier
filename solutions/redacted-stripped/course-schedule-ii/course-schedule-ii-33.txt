@@ -1,0 +1,55 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        int[] indegree = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] prereq : prerequisites) {
+            int var1 = prereq[0];
+            int prerequisite = prereq[1];
+            graph.get(prerequisite).add(var1);
+            indegree[var1]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        int[] order = new int[param1];
+        int index = 0;
+        while (!queue.isEmpty()) {
+            int var1 = queue.poll();
+            order[index++] = var1;
+            for (int neighbor : graph.get(var1)) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0) {
+                    queue.offer(neighbor);
+                }
+            }
+        }
+        if (index == param1) {
+            return order;
+        } else {
+            return new int[0];
+        }
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        int var2 = 2;
+        int[][] prerequisites1 = { { 1, 0 } };
+        System.out.println("Output for Test Case 1: " + Arrays.toString(solution.findOrder(var2, prerequisites1)));
+        int var3 = 4;
+        int[][] prerequisites2 = { { 1, 0 }, { 2, 0 }, { 3, 1 }, { 3, 2 } };
+        System.out.println("Output for Test Case 2: " + Arrays.toString(solution.findOrder(var3, prerequisites2)));
+        int var4 = 1;
+        int[][] prerequisites3 = {};
+        System.out.println("Output for Test Case 3: " + Arrays.toString(solution.findOrder(var4, prerequisites3)));
+        int var5 = 2;
+        int[][] prerequisites4 = { { 1, 0 }, { 0, 1 } };
+        System.out.println("Output for Test Case 4: " + Arrays.toString(solution.findOrder(var5, prerequisites4)));
+    }
+}

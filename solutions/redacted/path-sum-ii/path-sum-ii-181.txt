@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> method1(TreeNode root, int param1) {
+        if (root == null)
+            return new ArrayList<>();
+        return method2(root, new ArrayList<>(), 0, param1);
+    }
+
+    private List<List<Integer>> method2(TreeNode node, List<Integer> param2, int param3, int param1) {
+        List<List<Integer>> var1 = new ArrayList<>();
+        if (node == null)
+            // Extra safeguard for null nodes
+            return var1;
+        // Add current node\'s value to path list
+        param2.add(node.val);
+        // Update current sum with node\'s value
+        param3 += node.val;
+        // Check if it is a leaf node and if current path sum equals target sum
+        if (node.left == null && node.right == null) {
+            if (param3 == param1) {
+                // Add a copy of the path list to result
+                var1.add(new ArrayList<>(param2));
+            }
+        } else {
+            // Recursively explore the children
+            if (node.left != null) {
+                var1.addAll(method2(node.left, param2, param3, param1));
+            }
+            if (node.right != null) {
+                var1.addAll(method2(node.right, param2, param3, param1));
+            }
+        }
+        // Remove the current node before going back up
+        param2.remove(param2.size() - 1);
+        return var1;
+    }
+}

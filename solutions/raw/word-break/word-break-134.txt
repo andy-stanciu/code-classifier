@@ -1,0 +1,34 @@
+class Solution {
+
+    HashMap<String, Boolean> combinations = new HashMap<>();
+
+    int min_length = Integer.MAX_VALUE, max_length = Integer.MIN_VALUE;
+
+    boolean dfs(String s) {
+        if (combinations.containsKey(s))
+            return combinations.get(s);
+        List<String> list = new ArrayList<>();
+        String word;
+        boolean is_good = false;
+        int i = Math.min(max_length, s.length());
+        for (; i >= min_length; i--) {
+            word = s.substring(0, i);
+            if (combinations.containsKey(word) && combinations.get(word))
+                if (dfs(s.substring(i)))
+                    break;
+        }
+        combinations.put(s, i >= min_length);
+        return i >= min_length;
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        for (String word : wordDict) {
+            combinations.put(word, true);
+            if (word.length() < min_length)
+                min_length = word.length();
+            if (word.length() > max_length)
+                max_length = word.length();
+        }
+        return dfs(s);
+    }
+}

@@ -1,0 +1,25 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Map<String, Boolean> memo = new HashMap<>();
+        return dfs(s, new HashSet<>(wordDict), memo);
+    }
+
+    private boolean dfs(String str, Set<String> wordDict, Map<String, Boolean> memo) {
+        if (memo.containsKey(str)) {
+            return memo.get(str);
+        }
+        if (wordDict.contains(str)) {
+            return true;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            String prefix = str.substring(0, i);
+            if (wordDict.contains(prefix) && dfs(str.substring(i), wordDict, memo)) {
+                memo.put(str, true);
+                return true;
+            }
+        }
+        memo.put(str, false);
+        return false;
+    }
+}

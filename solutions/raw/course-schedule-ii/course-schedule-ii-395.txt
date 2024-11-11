@@ -1,0 +1,56 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        /// We need two data structures
+        /// 1. Which will help you answer from this node, where can I go?
+        ///     0 --> 1, 2
+        ///     1 --> 3
+        ///     2 --> 3
+        ///     3 --> no where.
+        /// 2. The indgree count for each node.
+        ///     [0, 1, 1, 2]
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        int[] indegree = new int[numCourses];
+        /// Initialize both.
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<Integer>());
+            indegree[i] = 0;
+        }
+        /// Fill in the values as represented above.
+        for (int i = 0; i < prerequisites.length; i++) {
+            int req = prerequisites[i][1];
+            int cur = prerequisites[i][0];
+            adj.get(req).add(cur);
+            indegree[cur] += 1;
+        }
+        Queue<Integer> q = new LinkedList<Integer>();
+        /// The nodes with indegree zero should be added to the queue.
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                //System.out.println("Zero " + i);
+                q.add(i);
+            }
+        }
+        int[] ans = new int[numCourses];
+        int count = 0;
+        while (!q.isEmpty()) {
+            /// Remove zero indegree nodes and reduce the indegrees of the nodes which can be reached from that node. (where can I go from here? )
+            int zeroIndegree = q.poll();
+            ans[count] = zeroIndegree;
+            count++;
+            System.out.println("Pooped" + zeroIndegree);
+            ArrayList<Integer> removal = adj.get(zeroIndegree);
+            for (int i = 0; i < removal.size(); i++) {
+                int to = removal.get(i);
+                indegree[to] = indegree[to] - 1;
+                if (indegree[to] == 0) {
+                    // System.out.println("Adding to queue");
+                    q.add(to);
+                }
+            }
+        }
+        if (count != numCourses)
+            return new int[0];
+        return ans;
+    }
+}

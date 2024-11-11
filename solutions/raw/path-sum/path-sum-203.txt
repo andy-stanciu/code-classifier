@@ -1,0 +1,48 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        if (//base case
+        root == null)
+            return false;
+        //storing nodes
+        Stack<TreeNode> path = new Stack<>();
+        //storing cumulative sum of values from root to the current node
+        Stack<Integer> pathSum = new Stack<>();
+        path.add(root);
+        pathSum.add(root.val);
+        while (!path.isEmpty()) {
+            TreeNode curr = path.pop();
+            int currVal = pathSum.pop();
+            if (//if the current node is a leaf and the path sum equals the target sum, return true
+            curr.left == null && curr.right == null && currVal == targetSum)
+                return true;
+            if (curr.left != null) {
+                //add left chid and its path sum
+                path.add(curr.left);
+                pathSum.add(currVal + curr.left.val);
+            }
+            if (curr.right != null) {
+                //add right chid and its path sum
+                path.add(curr.right);
+                pathSum.add(currVal + curr.right.val);
+            }
+        }
+        //if no path is found whose sum matches the targetSum, return false
+        return false;
+    }
+}

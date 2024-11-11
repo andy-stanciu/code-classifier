@@ -1,0 +1,68 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        if (param1 == 1) {
+            int[] res = new int[param1];
+            res[0] = 0;
+            return res;
+        }
+        Map<Integer, Set<Integer>> indegree = new HashMap<>();
+        Map<Integer, Set<Integer>> outdegree = new HashMap<>();
+        boolean[] hasDependency = new boolean[param1];
+        for (int[] dep : prerequisites) {
+            Set<Integer> prereq = outdegree.getOrDefault(dep[0], new HashSet<>());
+            prereq.add(dep[1]);
+            outdegree.put(dep[0], prereq);
+            hasDependency[dep[0]] = true;
+            Set<Integer> indeg = indegree.getOrDefault(dep[1], new HashSet<>());
+            indeg.add(dep[0]);
+            indegree.put(dep[1], indeg);
+        }
+        Set<Integer> noDependency = new HashSet<>();
+        for (int i = 0; i < param1; i++) {
+            if (hasDependency[i] == false) {
+                noDependency.add(i);
+            }
+        }
+        if (noDependency.size() == 0) {
+            return new int[0];
+        }
+        Set<Integer> covered = new HashSet<>();
+        List<Integer> order = new ArrayList<>();
+        while (noDependency.size() > 0) {
+            Set<Integer> toRemove = new HashSet<>();
+            Set<Integer> toAdd = new HashSet<>();
+            for (Integer var1 : noDependency) {
+                if (!covered.contains(var1)) {
+                    covered.add(var1);
+                    order.add(var1);
+                    Set<Integer> dependents = indegree.getOrDefault(var1, new HashSet<>());
+                    for (Integer dependepnt : dependents) {
+                        Set<Integer> dependesOn = outdegree.get(dependepnt);
+                        dependesOn.remove(var1);
+                        outdegree.put(dependepnt, dependesOn);
+                        if (dependesOn.size() == 0) {
+                            toAdd.add(dependepnt);
+                        }
+                    }
+                } else {
+                    toRemove.add(var1);
+                }
+            }
+            for (Integer a : toAdd) {
+                noDependency.add(a);
+            }
+            for (Integer r : toRemove) {
+                noDependency.remove(r);
+            }
+        }
+        if (covered.size() != param1) {
+            return new int[0];
+        }
+        int[] result = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            result[i] = order.get(i);
+        }
+        return result;
+    }
+}

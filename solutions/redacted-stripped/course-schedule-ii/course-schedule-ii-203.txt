@@ -1,0 +1,34 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] inDegree = new int[param1];
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int[] prereq : prerequisites) {
+            int var1 = prereq[0];
+            int var2 = prereq[1];
+            inDegree[var1]++;
+            graph.computeIfAbsent(var2, k -> new ArrayList<>()).add(var1);
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (inDegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        int[] order = new int[param1];
+        int index = 0;
+        while (!queue.isEmpty()) {
+            int var1 = queue.poll();
+            order[index++] = var1;
+            if (graph.containsKey(var1)) {
+                for (int var3 : graph.get(var1)) {
+                    inDegree[var3]--;
+                    if (inDegree[var3] == 0) {
+                        queue.offer(var3);
+                    }
+                }
+            }
+        }
+        return index == param1 ? order : new int[0];
+    }
+}

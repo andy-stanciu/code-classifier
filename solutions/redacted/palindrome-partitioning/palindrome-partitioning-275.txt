@@ -1,0 +1,46 @@
+class Solution {
+
+    List<List<String>> answer = new ArrayList<List<String>>();
+
+    List<String> currPartition = new ArrayList<String>();
+
+    boolean[][] DP;
+
+    public List<List<String>> partition(String s) {
+        DP = new boolean[s.length()][s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            DP[i][i] = true;
+        }
+        for (int l = 2; l <= s.length(); l++) {
+            for (int start = 0; start + l - 1 < s.length(); start++) {
+                int end = start + l - 1;
+                if (l == 2) {
+                    DP[start][end] = (s.charAt(start) == s.charAt(end));
+                } else {
+                    if (DP[start + 1][end - 1] && s.charAt(start) == s.charAt(end)) {
+                        DP[start][end] = true;
+                    } else {
+                        DP[start][end] = false;
+                    }
+                }
+            }
+        }
+        backtracking(s, 0);
+        return answer;
+    }
+
+    public void backtracking(String s, int currInd) {
+        if (currInd >= s.length()) {
+            List<String> copy = new ArrayList<>(currPartition);
+            answer.add(copy);
+        } else {
+            for (int end = currInd; end < s.length(); end++) {
+                if (DP[currInd][end]) {
+                    currPartition.add(s.substring(currInd, end + 1));
+                    backtracking(s, end + 1);
+                    currPartition.remove(currPartition.size() - 1);
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    //Time Complexity: O(n) - Memoization
+    //Space Complexity: O(n*m)
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<Integer> result = new ArrayList<>();
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.put(i, new ArrayList<>());
+        }
+        for (int[] prerequesite : prerequisites) {
+            graph.get(prerequesite[0]).add(prerequesite[1]);
+        }
+        //0 - non verified
+        //1 - verified
+        //-1 - seen
+        int[] courseStatus = new int[numCourses];
+        for (int course = 0; course < numCourses; course++) {
+            if (!canComplete(course, graph, result, courseStatus)) {
+                return new int[] {};
+            }
+        }
+        return result.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    private boolean canComplete(int course, Map<Integer, List<Integer>> graph, List<Integer> result, int[] courseStatus) {
+        if (courseStatus[course] == 1) {
+            return true;
+        }
+        if (courseStatus[course] == -1) {
+            return false;
+        }
+        courseStatus[course] = -1;
+        for (int prerequesite : graph.get(course)) {
+            if (!canComplete(prerequesite, graph, result, courseStatus)) {
+                return false;
+            }
+        }
+        result.add(course);
+        courseStatus[course] = 1;
+        return true;
+    }
+}

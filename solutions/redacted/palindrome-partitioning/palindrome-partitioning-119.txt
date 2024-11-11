@@ -1,0 +1,48 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        // Initialize the result list to store the final partitions
+        List<List<String>> result = new ArrayList<>();
+        // Start the depth-first search to find partitions
+        dfs(result, new ArrayList<String>(), s, 0);
+        // Return the list of palindromic partitions
+        return result;
+    }
+
+    // Helper function to perform depth-first search for partitions
+    public void dfs(List<List<String>> result, List<String> part, String s, int start) {
+        // If the start index reaches the end of the string, add the current partition to the result
+        if (start == s.length()) {
+            // Create a new list from the current partition and add it to the result
+            List<String> li = new ArrayList<>(part);
+            result.add(li);
+        } else {
+            // Iterate through the string to find palindromic substrings
+            for (int end = start; end < s.length(); end++) {
+                // If the substring from start to end is not a palindrome, skip to the next iteration
+                if (!method1(s.substring(start, end + 1)))
+                    continue;
+                // Add the palindromic substring to the current partition
+                part.add(s.substring(start, end + 1));
+                // Recursively continue to find the next partitions starting from end + 1
+                dfs(result, part, s, end + 1);
+                // Remove the last added substring to backtrack and explore other partitions
+                part.remove(part.size() - 1);
+            }
+        }
+    }
+
+    // Function to check if a given string is a palindrome
+    public boolean method1(String s) {
+        int left = 0;
+        int right = s.length() - 1;
+        // Check characters from both ends moving towards the center
+        while (left <= right) {
+            if (s.charAt(left) != s.charAt(right))
+                return false;
+            left++;
+            right--;
+        }
+        return true;
+    }
+}

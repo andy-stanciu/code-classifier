@@ -1,0 +1,59 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        //Here I need ordering extra compared to course schedule I.
+        //So instead of increasing count .I will just add that node in
+        //integer array and return the result
+        //Using BFS
+        List<List<Integer>> adjList = new ArrayList<>();
+        //I will first create Adjacency List to fetch neighbours or required courses
+        //numCourses in for loop because those many nodes are present
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        //Here i will add all the courses that are present in given 2-d array
+        int m = prerequisites.length;
+        for (int i = 0; i < m; i++) {
+            adjList.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        //to complete task 1 ,
+        //i need to complete task 0.which means we have topo sort kinda dependency
+        //So lets use toposort ,I will prefer BFS for it
+        int[] indegree = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            for (int node : adjList.get(i)) {
+                indegree[node]++;
+            }
+        }
+        //I will all vertices with indegree 0 in queue
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        //now actually perform bfs(toposort way)
+        int cnt = 0;
+        int[] res = new int[param1];
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            res[cnt] = node;
+            cnt++;
+            for (int i : adjList.get(node)) {
+                indegree[i]--;
+                if (indegree[i] == 0) {
+                    q.add(i);
+                }
+            }
+        }
+        if (cnt == param1) {
+            int[] result = new int[param1];
+            int j = 0;
+            for (int i = param1 - 1; i >= 0; i--) {
+                result[j++] = res[i];
+            }
+            return result;
+        }
+        return new int[0];
+    }
+}

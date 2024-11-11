@@ -1,0 +1,35 @@
+class Solution {
+
+    int timestamp = 0;
+
+    int orderIndex = 0;
+
+    private boolean dfs(int param1, Map<Integer, List<Integer>> graph, int[] arrival, int[] departure, int[] order) {
+        arrival[param1] = ++timestamp;
+        if (graph.get(param1) != null) {
+            for (int neighbor : graph.get(param1)) {
+                if (arrival[neighbor] == 0) {
+                    if (dfs(neighbor, graph, arrival, departure, order))
+                        return true;
+                } else if (departure[neighbor] == 0)
+                    return true;
+            }
+        }
+        if (departure[param1] == 0)
+            order[orderIndex--] = param1;
+        departure[param1] = ++timestamp;
+        return false;
+    }
+
+    public int[] findOrder(int param2, int[][] prerequisites) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int[] p : prerequisites) graph.computeIfAbsent(p[1], k -> new ArrayList<>()).add(p[0]);
+        int[] arrival = new int[param2];
+        int[] departure = new int[param2];
+        int[] order = new int[param2];
+        orderIndex = param2 - 1;
+        for (int param1 = 0; param1 < param2; param1++) if (dfs(param1, graph, arrival, departure, order))
+            return new int[] {};
+        return order;
+    }
+}

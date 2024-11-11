@@ -1,0 +1,38 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>>[] dp = new List[s.length() + 1];
+        dp[0] = new ArrayList<>() {
+
+            {
+                add(new ArrayList<>());
+            }
+        };
+        for (int i = 1; i <= s.length(); i++) {
+            dp[i] = new ArrayList<>();
+            for (int j = i - 1; j >= 0; j--) {
+                String substring = s.substring(j, i);
+                for (List<String> prev : dp[j]) {
+                    if (method1(substring)) {
+                        List<String> newList = new ArrayList<>(prev);
+                        newList.add(substring);
+                        dp[i].add(newList);
+                    }
+                }
+            }
+        }
+        return dp[s.length()];
+    }
+
+    private boolean method1(String s) {
+        int low = 0;
+        int high = s.length() - 1;
+        while (low <= high) {
+            if (s.charAt(low) != s.charAt(high))
+                return false;
+            low++;
+            high--;
+        }
+        return true;
+    }
+}

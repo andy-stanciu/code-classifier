@@ -1,0 +1,45 @@
+class Solution {
+
+    public void calcIndegree(int[][] prerequisites, int[] indegree) {
+        for (int i = 0; i < prerequisites.length; i++) {
+            int var1 = prerequisites[i][0];
+            indegree[var1]++;
+        }
+    }
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] indegree = new int[param1];
+        calcIndegree(prerequisites, indegree);
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0) {
+                q.offer(i);
+            }
+        }
+        // BFS to process courses
+        int[] ans = new int[param1];
+        int y = 0;
+        while (!q.isEmpty()) {
+            int curr = q.poll();
+            ans[y] = curr;
+            y++;
+            // Process each prerequisite pair to find courses dependent on the current course
+            for (int i = 0; i < prerequisites.length; i++) {
+                if (prerequisites[i][1] == curr) {
+                    int neigh = prerequisites[i][0];
+                    indegree[neigh]--;
+                    if (indegree[neigh] == 0) {
+                        q.offer(neigh);
+                    }
+                }
+            }
+        }
+        // Check if we were able to process all courses
+        if (y == param1) {
+            return ans;
+        } else {
+            // Return an empty array if there\'s a cycle
+            return new int[0];
+        }
+    }
+}

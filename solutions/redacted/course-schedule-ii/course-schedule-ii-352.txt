@@ -1,0 +1,42 @@
+class Solution {
+
+    public int[] findOrder(int n, int[][] p) {
+        List<List<Integer>> list = new LinkedList();
+        int[] indegree = new int[n];
+        int[] vis = new int[n];
+        int[] flow = new int[n];
+        int index = 0;
+        for (int i = 0; i < n; i++) {
+            list.add(new LinkedList<Integer>());
+            indegree[i] = 0;
+            vis[i] = 0;
+        }
+        for (int i = 0; i < p.length; i++) {
+            list.get(p[i][1]).add(p[i][0]);
+            indegree[p[i][0]]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0)
+                q.add(i);
+        }
+        while (!q.isEmpty()) {
+            int i = q.remove();
+            if (vis[i] != 0)
+                return new int[0];
+            flow[index] = i;
+            index++;
+            vis[i] = 1;
+            for (int j = 0; j < list.get(i).size(); j++) {
+                int k = list.get(i).get(j);
+                indegree[k]--;
+                if (indegree[k] == 0)
+                    q.add(k);
+            }
+        }
+        if (index == n)
+            return flow;
+        else
+            return new int[0];
+    }
+}

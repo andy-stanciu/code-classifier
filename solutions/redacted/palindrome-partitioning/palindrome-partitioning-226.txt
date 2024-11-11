@@ -1,0 +1,37 @@
+class Solution {
+
+    //This question is basically find all subset of string  which are palindrome, now once we understand that we know that we need to use backtrack to see all the possible subsets
+    public List<List<String>> partition(String s) {
+        List<List<String>> res = new ArrayList<>();
+        backTrack(s, 0, res, new ArrayList<String>());
+        return res;
+    }
+
+    void backTrack(String s, int start, List<List<String>> res, List<String> curr) {
+        if (start == s.length()) {
+            //this is the base case for this backtracking
+            res.add(new ArrayList<>(curr));
+            return;
+        }
+        for (int i = start + 1; i <= s.length(); i++) {
+            if (method1(s.substring(start, i))) {
+                //if the subtring is palindrome
+                //add the palindrome
+                curr.add(s.substring(start, i));
+                //go forward to check other palindrome
+                backTrack(s, i, res, curr);
+                // when return from the above backtrack , remove one last extra element because we are shifting one element next
+                curr.remove(curr.size() - 1);
+            }
+        }
+    }
+
+    boolean method1(String s) {
+        //simple way to check palindrome
+        String str = new StringBuilder(s).reverse().toString();
+        if (str.equals(s)) {
+            return true;
+        }
+        return false;
+    }
+}

@@ -1,0 +1,51 @@
+// TC: O(V + E) where V represents the number of vertices and E represents the number of edges.
+// SC: O(V + E)
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // Initialize adjacency list and indegree array
+        int[] indegree = new int[numCourses];
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int courses : indegree) {
+            adj.add(new ArrayList<>());
+        }
+        // Populate adjacency list and indegree array based on prerequisites
+        for (int[] preReq : prerequisites) {
+            adj.get(preReq[1]).add(preReq[0]);
+            indegree[preReq[0]]++;
+        }
+        // Use a queue to perform BFS
+        Queue<Integer> queue = new LinkedList<>();
+        // List to keep track of the order of courses
+        List<Integer> order = new ArrayList<>();
+        bfs(adj, order, queue, indegree, numCourses);
+        // If we can\'t complete all courses, return an empty array
+        if (order.size() != numCourses) {
+            return new int[0];
+        }
+        // Convert the List<Integer> to int[] for the result
+        int[] courseOrdering = new int[numCourses];
+        for (int i = 0; i < order.size(); i++) {
+            courseOrdering[i] = order.get(i);
+        }
+        return courseOrdering;
+    }
+
+    private void bfs(List<List<Integer>> adj, List<Integer> order, Queue<Integer> queue, int[] indegree, int numCourses) {
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        while (!queue.isEmpty()) {
+            int currentCourse = queue.poll();
+            order.add(currentCourse);
+            for (int course : adj.get(currentCourse)) {
+                indegree[course]--;
+                if (indegree[course] == 0) {
+                    queue.add(course);
+                }
+            }
+        }
+    }
+}

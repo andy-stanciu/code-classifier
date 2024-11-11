@@ -1,0 +1,44 @@
+class Solution {
+
+    private static boolean isNumeric(String token) {
+        try {
+            Integer.parseInt(token);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private static boolean isOperand(String operand) {
+        return operand.equals("+") || operand.equals("-") || operand.equals("*") || operand.equals("/");
+    }
+
+    private static int performOperation(int operator1, int operator2, String operand) {
+        switch(operand) {
+            case "+":
+                return operator1 + operator2;
+            case "-":
+                return operator1 - operator2;
+            case "*":
+                return operator1 * operator2;
+            case "/":
+                return operator1 / operator2;
+        }
+        return 0;
+    }
+
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> stack = new Stack<>();
+        for (String token : tokens) {
+            if (isNumeric(token)) {
+                stack.push(Integer.parseInt(token));
+            } else if (isOperand(token)) {
+                int operator2 = stack.pop();
+                int operator1 = stack.pop();
+                int value = performOperation(operator1, operator2, token);
+                stack.push(value);
+            }
+        }
+        return stack.pop();
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    public int minSubArrayLen(int target, int[] nums) {
+        int sum = 0;
+        int i = 0, j = 0;
+        // lets create the window
+        while (sum < target && j < nums.length) {
+            sum += nums[j];
+            j++;
+        }
+        if (sum < target)
+            return 0;
+        int left = i;
+        int right = --j;
+        // now sliding the window
+        int prev = -1;
+        while (j < nums.length) {
+            //    op
+            if (prev != -1) {
+                sum -= prev;
+                sum += nums[j];
+            }
+            // shrinking the window if possible
+            while (sum >= target) {
+                if ((sum - nums[i]) < target) {
+                    break;
+                }
+                sum -= nums[i];
+                // shrining is done here
+                i++;
+            }
+            // looking for smaller size subarray
+            if (sum >= target && (right - left) > (j - i)) {
+                left = i;
+                right = j;
+            }
+            prev = nums[i];
+            i++;
+            j++;
+        }
+        return right - left + 1;
+    }
+}

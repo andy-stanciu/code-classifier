@@ -1,0 +1,82 @@
+class Solution {
+
+    public List<List<Integer>> method1(TreeNode root, int param1) {
+        List<List<Integer>> results = new LinkedList<>();
+        if (root == null) {
+            return results;
+        }
+        Class1 np = new Class1();
+        np.add(root);
+        while (np.isNotEmpty()) {
+            TreeNode node = np.getLast();
+            if (isLeaf(node) && np.method2() == param1) {
+                results.add(np.getValues());
+            }
+            if (node.left == null) {
+                TreeNode nodePrev = null;
+                while (node.right == null || node.right == nodePrev) {
+                    np.removeLast();
+                    if (np.isEmpty()) {
+                        return results;
+                    }
+                    nodePrev = node;
+                    node = np.getLast();
+                }
+                np.add(node.right);
+            } else {
+                while (node.left != null) {
+                    np.add(node.left);
+                    node = node.left;
+                }
+            }
+        }
+        return results;
+    }
+
+    class Class1 {
+
+        private Deque<TreeNode> stack = new ArrayDeque<TreeNode>();
+
+        private int var1 = 0;
+
+        public void add(TreeNode node) {
+            stack.add(node);
+            var1 += node.val;
+        }
+
+        public void removeLast() {
+            TreeNode removedNode = stack.removeLast();
+            var1 -= removedNode.val;
+        }
+
+        public TreeNode getLast() {
+            return stack.peekLast();
+        }
+
+        public boolean isEmpty() {
+            return stack.isEmpty();
+        }
+
+        public boolean isNotEmpty() {
+            return !stack.isEmpty();
+        }
+
+        public int method2() {
+            return var1;
+        }
+
+        private List<Integer> getValues() {
+            Iterator<TreeNode> it = stack.iterator();
+            List<Integer> result = new LinkedList<>();
+            while (it.hasNext()) {
+                result.add(it.next().val);
+            }
+            System.out.println("Values: " + result);
+            return result;
+        }
+    }
+
+    private boolean isLeaf(TreeNode node) {
+        return node.left == null && node.right == null;
+    }
+}

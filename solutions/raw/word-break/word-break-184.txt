@@ -1,0 +1,39 @@
+class Solution {
+
+    public boolean findWord(String s, HashSet<String> hs, int i, Boolean[] dp) {
+        //Base condition
+        if (i == s.length())
+            return true;
+        if (dp[i] != null)
+            return dp[i];
+        for (int j = i + 1; j <= s.length(); j++) {
+            if (hs.contains(s.substring(i, j)) && findWord(s, hs, j, dp)) {
+                dp[i] = true;
+                return true;
+            }
+        }
+        dp[i] = false;
+        return false;
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        //For faster lookup use hashSet
+        HashSet<String> hs = new HashSet<>(wordDict);
+        //Using memoization
+        // Boolean[] dp = new Boolean[s.length()+1];
+        // return findWord(s, hs, 0, dp);
+        //Using bottom-up approach
+        boolean[] dp = new boolean[s.length() + 1];
+        //emtpy string can be segmented
+        dp[0] = true;
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                if (dp[j] && hs.contains(s.substring(j, i))) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[s.length()];
+    }
+}

@@ -1,0 +1,24 @@
+class Solution {
+
+    public int solve(int[] prices, boolean flag, int idx, int[][] dp) {
+        if (idx == prices.length) {
+            return 0;
+        }
+        int z = flag ? 1 : 0;
+        if (dp[z][idx] != -1) {
+            return dp[z][idx];
+        }
+        if (!flag) {
+            return dp[z][idx] = Math.max(solve(prices, flag, idx + 1, dp), solve(prices, true, idx + 1, dp) - prices[idx]);
+        }
+        return dp[z][idx] = Math.max(solve(prices, false, idx + 1, dp) + prices[idx], solve(prices, flag, idx + 1, dp));
+    }
+
+    public int maxProfit(int[] prices) {
+        int[][] dp = new int[2][prices.length];
+        for (int i = 0; i < dp.length; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        return solve(prices, false, 0, dp);
+    }
+}

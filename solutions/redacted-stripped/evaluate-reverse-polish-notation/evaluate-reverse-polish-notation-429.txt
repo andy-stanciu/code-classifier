@@ -1,0 +1,67 @@
+class Solution {
+
+    Stack<Integer> stack;
+
+    public enum Operand {
+
+        mult, add, sub, div, nil
+    }
+
+    public Operand operator(String s) {
+        switch(s) {
+            case "+":
+                return Operand.add;
+            case "-":
+                return Operand.sub;
+            case "*":
+                return Operand.mult;
+            case "/":
+                return Operand.div;
+            default:
+                return Operand.nil;
+        }
+    }
+
+    public int evalRPN(String[] tokens) {
+        stack = new Stack<>();
+        for (String s : tokens) {
+            Operand op = operator(s);
+            switch(op) {
+                case mult:
+                    {
+                        Integer b = stack.pop();
+                        Integer a = stack.pop();
+                        stack.push(a * b);
+                        break;
+                    }
+                case div:
+                    {
+                        Integer b = stack.pop();
+                        Integer a = stack.pop();
+                        stack.push(a / b);
+                        break;
+                    }
+                case sub:
+                    {
+                        Integer b = stack.pop();
+                        Integer a = stack.pop();
+                        stack.push(a - b);
+                        break;
+                    }
+                case add:
+                    {
+                        Integer b = stack.pop();
+                        Integer a = stack.pop();
+                        stack.push(a + b);
+                        break;
+                    }
+                default:
+                    {
+                        stack.push(Integer.parseInt(s));
+                        break;
+                    }
+            }
+        }
+        return stack.pop();
+    }
+}

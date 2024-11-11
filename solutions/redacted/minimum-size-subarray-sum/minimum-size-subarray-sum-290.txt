@@ -1,0 +1,194 @@
+class Solution {
+
+    public int method1(int target, int[] nums) {
+        int l = 0;
+        int var1 = 0;
+        int max = Integer.MAX_VALUE;
+        for (int r = 0; r < nums.length; r++) {
+            var1 = var1 + nums[r];
+            while (var1 >= target) {
+                max = Math.min(max, r - l + 1);
+                var1 = var1 - nums[l];
+                l++;
+            }
+        }
+        if (max == Integer.MAX_VALUE) {
+            return 0;
+        }
+        return max;
+        // ArrayList<Integer>ans=new ArrayList<>();
+        // ans.add(Integer.MAX_VALUE);
+        // choose(ans,0,nums,target,0);
+        // if(ans.get(0)==Integer.MAX_VALUE){
+        //     return 0;
+        // }
+        // return ans.get(0);
+        // ArrayList<Integer> arr=new ArrayList<>();
+        // for(int i:nums){
+        //     arr.add(i);
+        // }
+        // if(arr.contains(target)){
+        //     return 1;
+        // }
+        // int start=0;
+        // int ans=Integer.MAX_VALUE;
+        // int i=0;
+        // int sum=0;
+        // while(start<nums.length){
+        //     if(sum==target){//int[] nums={2,3,1,2,4,3};
+        //         ans=java.lang.Math.min(ans,i-start);
+        //         sum=sum-nums[start];
+        //         start++;
+        //         i++;
+        //         continue;
+        //     }
+        //     if(i>nums.length-1){
+        //         if(start<nums.length-1){
+        //             start++;
+        //             i=start;
+        //             sum=0;
+        //             continue;
+        //         }
+        //         else{
+        //             break;
+        //         }
+        //     }
+        //     else if(sum<target){
+        //         sum=sum+nums[i];
+        //         i++;
+        //     }
+        //     else{
+        //         sum=sum-nums[start];
+        //         start++;
+        //         i++;
+        //         continue;
+        //     }
+        // }
+        // if(ans==Integer.MAX_VALUE){
+        //     return 0;
+        // }
+        // return ans;
+        // int[] ans=new int[1];
+        // ans[0]=Integer.MAX_VALUE;
+        // smallest(nums,0,0,target,0,ans);
+        // if(ans[0]==Integer.MAX_VALUE){
+        //     return 0;
+        // }
+        // return ans[0];
+        //1 2 2 3 3 4
+        // int f=Integer.MAX_VALUE;
+        // int start=0;
+        // int ans=0;
+        // int i=0;
+        // int build=0;
+        // while(start<nums.length){
+        //     if(i>nums.length-1 && start>=nums.length-1){
+        //         break;
+        //     }
+        //     else if(i>nums.length-1 && start<nums.length-1){
+        //         start++;
+        //         i=start;
+        //         ans=0;
+        //         build=0;
+        //         continue;
+        //     }
+        //     else if(build==target){
+        //         f=java.lang.Math.min(f,ans);
+        //         start++;
+        //         i=start;
+        //         ans=0;
+        //         build=0;
+        //         continue;
+        //     }
+        //     else if(build<target){
+        //         build+=nums[i];
+        //         ans++;
+        //         i++;
+        //         continue;
+        //     }
+        //     else if(build>target){
+        //         start++;
+        //         i=start;
+        //         ans=0;
+        //         build=0;
+        //         continue;
+        //     }
+        // }
+        // if(f==Integer.MAX_VALUE){
+        //     return 0;
+        // }
+        // else{
+        //     return f;
+        // }
+        // Arrays.sort(nums);
+        // int i=nums.length-1;
+        // int sum=0;
+        // int count=0;
+        // while(i>=0 && sum<target){
+        //     sum=sum+nums[i];
+        //     i--;
+        //     count++;
+        // }
+        // if(sum<target){
+        //     return 0;
+        // }
+        // return count;
+    }
+
+    public static void choose(ArrayList<Integer> ans, int var1, int[] nums, int target, int st) {
+        if (target <= 0) {
+            ans.set(0, java.lang.Math.min(ans.get(0), var1));
+            return;
+        }
+        for (int i = st; i < nums.length; i++) {
+            choose(ans, var1 + 1, nums, target - nums[i], i + 1);
+            choose(ans, var1 + 0, nums, target, i + 1);
+        }
+    }
+
+    public static int check(int[] nums, int target) {
+        int ans = Integer.MAX_VALUE;
+        for (int i = 0; i < nums.length; i++) {
+            int var1 = nums[i];
+            int count = 1;
+            int flag = 0;
+            for (int j = i + 1; j < nums.length; j++) {
+                if (var1 < target) {
+                    var1 = var1 + nums[j];
+                    count++;
+                } else {
+                    flag = 1;
+                    break;
+                }
+            }
+            if (flag == 1 && count < ans) {
+                ans = count;
+            } else if (flag == 0 && var1 >= target && count < ans) {
+                ans = count;
+            }
+        }
+        if (ans == Integer.MAX_VALUE) {
+            return 0;
+        }
+        return ans;
+    }
+
+    public static void smallest(int[] nums, int ind, int var1, int target, int len, int[] ans) {
+        if (var1 >= target) {
+            if (len < ans[0]) {
+                ans[0] = len;
+            }
+            return;
+        }
+        if (ind > nums.length - 1) {
+            return;
+        }
+        for (int i = ind; i < nums.length; i++) {
+            var1 = var1 + nums[i];
+            len = len + 1;
+            smallest(nums, i + 1, var1, target, len, ans);
+            var1 = var1 - nums[i];
+            len = len - 1;
+        }
+    }
+}

@@ -1,0 +1,32 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<List<Integer>>();
+        for (int i = 0; i < numCourses; i++) adj.add(new ArrayList<Integer>());
+        int[] inOrder = new int[numCourses];
+        for (int[] pre : prerequisites) {
+            adj.get(pre[0]).add(pre[1]);
+            inOrder[pre[1]]++;
+        }
+        Queue<Integer> q = new LinkedList<Integer>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inOrder[i] == 0)
+                q.add(i);
+        }
+        List<Integer> topoOrder = new ArrayList<Integer>();
+        while (!q.isEmpty()) {
+            int curr = q.poll();
+            topoOrder.add(curr);
+            for (int i = 0; i < adj.get(curr).size(); i++) {
+                inOrder[adj.get(curr).get(i)]--;
+                if (inOrder[adj.get(curr).get(i)] == 0)
+                    q.add(adj.get(curr).get(i));
+            }
+        }
+        if (topoOrder.size() != numCourses)
+            return new ArrayList<Integer>().stream().mapToInt(Integer::intValue).toArray();
+        Collections.reverse(topoOrder);
+        int[] a = topoOrder.stream().mapToInt(Integer::intValue).toArray();
+        return a;
+    }
+}

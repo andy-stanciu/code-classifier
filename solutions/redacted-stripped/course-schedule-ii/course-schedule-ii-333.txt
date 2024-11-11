@@ -1,0 +1,61 @@
+class Solution {
+
+    List<Integer> list;
+
+    boolean[] visited;
+
+    boolean hasCycle;
+
+    boolean[] inPath;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        visited = new boolean[param1];
+        inPath = new boolean[param1];
+        hasCycle = false;
+        list = new ArrayList<>();
+        List<Integer>[] graph = buildGraph(param1, prerequisites);
+        for (int i = 0; i < param1; i++) {
+            if (visited[i] == false) {
+                dfs(graph, i);
+                if (hasCycle)
+                    return new int[] {};
+            }
+        }
+        Collections.reverse(list);
+        int[] res = new int[param1];
+        int index = 0;
+        for (int n : list) {
+            res[index] = n;
+            index++;
+        }
+        return res;
+    }
+
+    private void dfs(List<Integer>[] graph, int cur) {
+        if (inPath[cur]) {
+            hasCycle = true;
+        }
+        if (visited[cur] || hasCycle)
+            return;
+        visited[cur] = true;
+        inPath[cur] = true;
+        for (int n : graph[cur]) {
+            dfs(graph, n);
+        }
+        list.add(cur);
+        inPath[cur] = false;
+    }
+
+    private List<Integer>[] buildGraph(int n, int[][] edges) {
+        List<Integer>[] graph = new List[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] edge : edges) {
+            int from = edge[1];
+            int to = edge[0];
+            graph[from].add(to);
+        }
+        return graph;
+    }
+}

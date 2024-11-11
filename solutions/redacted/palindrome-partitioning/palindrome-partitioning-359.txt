@@ -1,0 +1,54 @@
+class Solution {
+
+    Map<String, Boolean> palins = new HashMap<>();
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> ans = new ArrayList<>();
+        helper(s, 0, ans, new ArrayList<>());
+        return ans;
+    }
+
+    private void helper(String s, int index, List<List<String>> ans, List<String> current) {
+        //System.out.println(" index "+index);
+        if (index == s.length()) {
+            ans.add(new ArrayList<>(current));
+            // System.out.println(" index Return ans"+index);
+            return;
+        }
+        for (int i = index; i < s.length(); i++) {
+            if (method1(s, index, i)) {
+                current.add(s.substring(index, i + 1));
+                helper(s, i + 1, ans, current);
+                current.remove(current.size() - 1);
+            }
+        }
+        // System.out.println(" index Return ans no ans"+index);
+    }
+
+    private String getString(int i, int j) {
+        return "" + i + "#" + j;
+    }
+
+    private boolean method1(String s, int i, int j) {
+        if (i == j) {
+            return true;
+        }
+        String coord = getString(i, j);
+        if (palins.containsKey(coord)) {
+            return palins.get(coord);
+        }
+        //System.out.println("Running is palin "+i+" "+j);
+        int start = i;
+        int end = j;
+        while (start < end) {
+            if (s.charAt(start) != s.charAt(end)) {
+                palins.put(coord, false);
+                return false;
+            }
+            start++;
+            end--;
+        }
+        palins.put(coord, true);
+        return true;
+    }
+}

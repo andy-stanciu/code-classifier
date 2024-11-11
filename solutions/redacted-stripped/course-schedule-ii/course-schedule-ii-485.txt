@@ -1,0 +1,49 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<Integer> result = new ArrayList<>();
+        int[] indegree = new int[param1];
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int[] prereq : prerequisites) {
+            int var1 = prereq[0];
+            int var2 = prereq[1];
+            map.computeIfAbsent(var1, val -> new ArrayList<Integer>()).add(var2);
+            indegree[var1]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        int zeroCount = 0;
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0) {
+                zeroCount++;
+            }
+        }
+        if (zeroCount == 0) {
+            return new int[0];
+        }
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        while (!queue.isEmpty()) {
+            int var1 = queue.remove();
+            result.add(var1);
+            for (Integer key : map.keySet()) {
+                List<Integer> list = map.get(key);
+                if (list.contains(var1)) {
+                    list.remove(Integer.valueOf(var1));
+                    indegree[key]--;
+                    if (indegree[key] == 0) {
+                        queue.add(key);
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] != 0) {
+                return new int[0];
+            }
+        }
+        return result.stream().mapToInt(Integer::intValue).toArray();
+    }
+}

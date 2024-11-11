@@ -1,0 +1,30 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        var var1 = new HashSet<String>(param1.size());
+        var1.addAll(param1);
+        int var2 = 100;
+        int var3 = 0;
+        for (var var4 : param1) {
+            var2 = Math.min(var2, var4.length());
+            var3 = Math.max(var3, var4.length());
+        }
+        boolean[] memo = new boolean[s.length()];
+        for (int start = s.length() - 1; start >= 0; --start) {
+            for (int len = var2; len <= var3; len++) {
+                if (start + len - 1 >= s.length()) {
+                    break;
+                }
+                boolean canSegmentSuffix = start + len == s.length() || memo[start + len];
+                if (canSegmentSuffix) {
+                    var substr = s.substring(start, start + len);
+                    if (var1.contains(substr)) {
+                        memo[start] = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return memo[0];
+    }
+}

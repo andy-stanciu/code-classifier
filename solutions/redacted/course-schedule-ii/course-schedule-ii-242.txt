@@ -1,0 +1,32 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        ArrayList<Integer>[] graph = new ArrayList[param1];
+        int[] indegree = new int[param1];
+        ArrayList<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < param1; i++) graph[i] = new ArrayList<>();
+        for (int[] arr : prerequisites) {
+            graph[arr[1]].add(arr[0]);
+            indegree[arr[0]]++;
+        }
+        LinkedList<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0)
+                queue.add(i);
+        }
+        while (!queue.isEmpty()) {
+            int front = queue.removeFirst();
+            ans.add(front);
+            for (int v : graph[front]) {
+                indegree[v]--;
+                if (indegree[v] == 0)
+                    queue.add(v);
+            }
+        }
+        if (ans.size() != param1)
+            return new int[0];
+        int[] result = new int[param1];
+        for (int i = 0; i < param1; i++) result[i] = ans.get(i);
+        return result;
+    }
+}

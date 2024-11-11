@@ -1,0 +1,45 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    private List<List<Integer>> result = new LinkedList<>();
+
+    private List<Integer> current = new LinkedList<>();
+
+    public List<List<Integer>> method1(TreeNode root, int param1) {
+        dfs(root, param1);
+        return result;
+    }
+
+    private void dfs(TreeNode root, int param1) {
+        if (root == null)
+            return;
+        param1 -= root.val;
+        current.add(root.val);
+        // If leaf node and target is met, create copy and add to result
+        if (root.left == null && root.right == null && param1 == 0) {
+            List<Integer> copy = new LinkedList<>(current);
+            result.add(copy);
+            current.remove(current.size() - 1);
+            return;
+        }
+        // Else, go left and right
+        dfs(root.left, param1);
+        dfs(root.right, param1);
+        // Remove current val from current list before exiting
+        current.remove(current.size() - 1);
+    }
+}

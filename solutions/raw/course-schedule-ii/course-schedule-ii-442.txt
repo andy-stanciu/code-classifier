@@ -1,0 +1,42 @@
+class Solution {
+
+    public int[] findOrder(int n, int[][] p) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        int m = p.length;
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < m; i++) {
+            adj.get(p[i][1]).add(p[i][0]);
+        }
+        int[] indeg = new int[n];
+        Arrays.fill(indeg, 0);
+        for (int i = 0; i < n; i++) {
+            for (int j : adj.get(i)) {
+                indeg[j]++;
+            }
+        }
+        int[] ans = new int[n];
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (indeg[i] == 0) {
+                q.add(i);
+            }
+        }
+        int idx = 0;
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            ans[idx++] = node;
+            for (int i : adj.get(node)) {
+                indeg[i]--;
+                if (indeg[i] == 0) {
+                    q.add(i);
+                }
+            }
+        }
+        if (idx == n)
+            return ans;
+        int[] arr = {};
+        return arr;
+    }
+}

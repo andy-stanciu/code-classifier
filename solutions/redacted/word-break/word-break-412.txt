@@ -1,0 +1,43 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        int[] dp = new int[s.length()];
+        Arrays.fill(dp, -1);
+        return f(s, param1, 0, dp);
+    }
+
+    public boolean f(String s, List<String> param1, int ci, int[] dp) {
+        if (ci >= s.length())
+            return true;
+        if (dp[ci] != -1) {
+            if (dp[ci] == 1)
+                return true;
+            else
+                return false;
+        }
+        String ans = "";
+        boolean fans = false;
+        for (int i = ci; i < s.length(); i++) {
+            ans += s.charAt(i);
+            if (checkPresent(ans, param1)) {
+                if (f(s, param1, i + 1, dp)) {
+                    fans = true;
+                }
+            }
+        }
+        if (fans) {
+            dp[ci] = 1;
+        } else {
+            dp[ci] = 0;
+        }
+        return fans;
+    }
+
+    public boolean checkPresent(String s1, List<String> param1) {
+        for (String i : param1) {
+            if (i.equals(s1))
+                return true;
+        }
+        return false;
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> set = new HashSet<>();
+        int min = 20, max = 0, len = s.length();
+        for (String str : wordDict) {
+            set.add(str);
+            int tempLen = str.length();
+            if (min > tempLen)
+                min = tempLen;
+            if (max < tempLen)
+                max = tempLen;
+        }
+        int[] memo = new int[len];
+        return checkWordBreak(s, set, memo, min, max, 0, new StringBuilder(), len);
+    }
+
+    public boolean checkWordBreak(String s, Set<String> set, int[] memo, int min, int max, int cur, StringBuilder word, int len) {
+        if (cur == len)
+            return true;
+        if (memo[cur] != 0)
+            return memo[cur] == 1 ? true : false;
+        int temp = cur;
+        int curLength = 0;
+        while (curLength < min && cur < len) {
+            word.append(s.charAt(cur++));
+            curLength++;
+        }
+        while (curLength <= max) {
+            if (set.contains(word.toString()) && checkWordBreak(s, set, memo, min, max, cur, new StringBuilder(), len)) {
+                memo[temp] = 1;
+                return true;
+            } else {
+                if (cur == len)
+                    break;
+                word.append(s.charAt(cur++));
+                curLength++;
+            }
+        }
+        memo[temp] = 2;
+        return false;
+    }
+}

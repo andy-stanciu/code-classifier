@@ -1,0 +1,47 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // Initialize an array to store the number of prerequisites for each course
+        int[] inDegree = new int[numCourses];
+        // Calculate the in-degree of each course
+        for (int[] arr : prerequisites) {
+            inDegree[arr[0]]++;
+        }
+        // Initialize a queue to store the courses that have no prerequisites
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree[i] == 0) {
+                q.offer(i);
+            }
+        }
+        // Initialize an array to store the final order of courses
+        int[] ans = new int[numCourses];
+        // Initialize a counter to keep track of the number of courses added to the ans array
+        int i = 0;
+        // Process the courses in the queue until there are no more courses left
+        while (!q.isEmpty()) {
+            // Remove a course from the queue
+            int n = q.poll();
+            // Add the course to the ans array
+            ans[i] = n;
+            i++;
+            // Update the in-degree of the courses that depend on the removed course
+            for (int[] arr : prerequisites) {
+                if (arr[1] == n) {
+                    // Decrease the in-degree of the dependent course
+                    if (--inDegree[arr[0]] == 0) {
+                        // If the in-degree becomes zero, add the course to the queue
+                        q.offer(arr[0]);
+                    }
+                }
+            }
+        }
+        // If not all courses are added to the ans array, it means there is a cycle
+        if (i != numCourses) {
+            // Return an empty array to indicate that there is no valid course order
+            return new int[0];
+        }
+        // Otherwise, return the valid course order
+        return ans;
+    }
+}

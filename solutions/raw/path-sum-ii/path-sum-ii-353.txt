@@ -1,0 +1,28 @@
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> currentPath = new ArrayList<>();
+        findPaths(root, targetSum, currentPath, result);
+        return result;
+    }
+
+    private void findPaths(TreeNode node, int targetSum, List<Integer> currentPath, List<List<Integer>> result) {
+        // Base case: If the current node is null, return
+        if (node == null) {
+            return;
+        }
+        // Add the current node to the current path
+        currentPath.add(node.val);
+        // Base case: If the current node is a leaf and its value matches the target sum,
+        // add the current path to the result list
+        if (node.left == null && node.right == null && node.val == targetSum) {
+            result.add(new ArrayList<>(currentPath));
+        }
+        // Recursively explore the left and right subtrees
+        findPaths(node.left, targetSum - node.val, currentPath, result);
+        findPaths(node.right, targetSum - node.val, currentPath, result);
+        // Remove the current node from the current path before backtracking
+        currentPath.remove(currentPath.size() - 1);
+    }
+}

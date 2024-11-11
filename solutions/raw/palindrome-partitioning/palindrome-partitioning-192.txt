@@ -1,0 +1,31 @@
+class Solution {
+
+    private boolean isPallindrome(String s) {
+        return new StringBuilder(s).reverse().toString().equals(s);
+    }
+
+    private List<List<String>> solve(String s, int idx) {
+        if (idx == s.length())
+            return new ArrayList<List<String>>();
+        List<List<String>> ans = new ArrayList<List<String>>();
+        for (int i = idx; i < s.length(); i++) {
+            if (isPallindrome(s.substring(idx, i + 1))) {
+                List<List<String>> sans = solve(s, i + 1);
+                for (List<String> lsans : sans) {
+                    lsans.add(0, s.substring(idx, i + 1));
+                    ans.add(lsans);
+                }
+                if (sans.size() == 0) {
+                    List<String> lsans = new ArrayList<String>();
+                    lsans.add(s.substring(idx, i + 1));
+                    ans.add(lsans);
+                }
+            }
+        }
+        return ans;
+    }
+
+    public List<List<String>> partition(String s) {
+        return solve(s, 0);
+    }
+}

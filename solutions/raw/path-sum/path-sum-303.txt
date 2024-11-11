@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    boolean hasSum;
+
+    Stack<TreeNode> stack;
+
+    Solution() {
+        stack = new Stack<>();
+        hasSum = false;
+    }
+
+    void traversal(TreeNode root, int currentSum, int targetSum) {
+        if (root == null)
+            return;
+        // Update the running sum by adding the current node\'s value
+        currentSum += root.val;
+        // Check if it\'s a leaf node
+        if (root.left == null && root.right == null) {
+            if (currentSum == targetSum) {
+                hasSum = true;
+                // Early termination if the path sum is found
+                return;
+            }
+        }
+        // Continue to traverse the tree if not found
+        if (!hasSum) {
+            // Only continue if path sum hasn\'t been found yet
+            traversal(root.left, currentSum, targetSum);
+            traversal(root.right, currentSum, targetSum);
+        }
+    }
+
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        // Ensure hasSum is reset before each new call
+        hasSum = false;
+        // Start traversal with initial sum of 0
+        traversal(root, 0, targetSum);
+        return hasSum;
+    }
+}

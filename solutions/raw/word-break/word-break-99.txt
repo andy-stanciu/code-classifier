@@ -1,0 +1,53 @@
+// public class TrieNode {
+//     TrieNode[] child;
+//     boolean wordEnd;
+//     public TrieNode() {
+//         wordEnd = false;
+//         child = new TrieNode[26];
+//     }
+//     // Method to insert a key into the Trie
+//     static void insertKey(TrieNode root, String key)
+//     {
+//         TrieNode curr = root;
+//         for (char c : key.toCharArray()) {
+//             if (curr.child[c - \'a\'] == null) {
+//                 TrieNode newNode = new TrieNode();
+//                 curr.child[c - \'a\'] = newNode;
+//             }
+//             curr = curr.child[c - \'a\'];
+//         }
+//         curr.wordEnd = true;
+//     }
+//     // Method to search a key in the Trie
+//     static boolean searchKey(TrieNode root, String key)
+//     {
+//         TrieNode curr = root;
+//         for (char c : key.toCharArray()) {
+//             if (curr.child[c - \'a\'] == null)
+//                 return false;
+//             curr = curr.child[c - \'a\'];
+//         }
+//         return curr.wordEnd;
+//     }
+// }
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        // add DP
+        return dfs(s, wordDict, 0, new Boolean[s.length()]);
+    }
+
+    public boolean dfs(String s, List<String> wordDict, int start, Boolean[] dp) {
+        if (start >= s.length())
+            return true;
+        if (dp[start] != null)
+            return dp[start];
+        for (int i = start + 1; i <= s.length(); i++) {
+            String subStr = s.substring(start, i);
+            if (wordDict.contains(subStr) && dfs(s, wordDict, i, dp) == true) {
+                return dp[start] = true;
+            }
+        }
+        return dp[start] = false;
+    }
+}

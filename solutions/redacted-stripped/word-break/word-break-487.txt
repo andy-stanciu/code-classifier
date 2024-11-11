@@ -1,0 +1,40 @@
+class Solution {
+
+    HashMap<Integer, HashSet<String>> var1;
+
+    String s;
+
+    Boolean[] memo;
+
+    public boolean method1(String s, List<String> var1) {
+        this.var1 = new HashMap<>();
+        this.s = s;
+        this.memo = new Boolean[s.length()];
+        for (String var2 : var1) {
+            int length = var2.length();
+            if (!this.var1.containsKey(length))
+                this.var1.put(length, new HashSet());
+            this.var1.get(length).add(var2);
+        }
+        return method2(0);
+    }
+
+    private boolean method2(int position) {
+        if (position >= s.length())
+            return true;
+        if (memo[position] != null)
+            return memo[position];
+        for (int length : var1.keySet()) {
+            if (position + length >= s.length() + 1)
+                continue;
+            String var3 = s.substring(position, position + length);
+            HashSet<String> var4 = var1.get(length);
+            if (var4.contains(var3) && method2(position + length)) {
+                memo[position] = true;
+                return memo[position];
+            }
+        }
+        memo[position] = false;
+        return memo[position];
+    }
+}

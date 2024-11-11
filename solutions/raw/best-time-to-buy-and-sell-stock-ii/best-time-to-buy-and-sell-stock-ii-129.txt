@@ -1,0 +1,20 @@
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        int n = prices.length;
+        int[] tp = new int[n];
+        Arrays.fill(tp, -1);
+        return helper(0, -1, n, prices, tp);
+    }
+
+    public int helper(int day, int holding, int n, int[] arr, int[] tp) {
+        if (day >= n)
+            return 0;
+        if (tp[day] != -1)
+            return tp[day];
+        int buy = day != n - 1 && holding == -1 ? helper(day + 1, arr[day], n, arr, tp) : 0;
+        int sell = day != 0 && holding != -1 ? arr[day] - holding + helper(day, -1, n, arr, tp) : 0;
+        int leave = helper(day + 1, holding, n, arr, tp);
+        return tp[day] = Math.max(leave, Math.max(buy, sell));
+    }
+}

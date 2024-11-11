@@ -1,0 +1,25 @@
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        int len = prices.length;
+        int[][] dp = new int[len + 1][2];
+        dp[len][0] = dp[len][1] = 0;
+        for (int idx = len - 1; idx >= 0; idx--) {
+            dp[idx][0] = Math.max((prices[idx] + dp[idx + 1][1]), dp[idx + 1][0]);
+            dp[idx][1] = Math.max((-prices[idx] + dp[idx + 1][0]), dp[idx + 1][1]);
+        }
+        return dp[0][1];
+    }
+
+    int f(int idx, int buy, int[] prices, int n, int[][] dp) {
+        if (idx == n)
+            return 0;
+        if (dp[idx][buy] != -1)
+            return dp[idx][buy];
+        if (buy == 1) {
+            return dp[idx][buy] = Math.max((-prices[idx] + f(idx + 1, 0, prices, n, dp)), f(idx + 1, 1, prices, n, dp));
+        } else {
+            return dp[idx][buy] = Math.max((prices[idx] + f(idx + 1, 1, prices, n, dp)), f(idx + 1, 0, prices, n, dp));
+        }
+    }
+}

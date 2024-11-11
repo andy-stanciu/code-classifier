@@ -1,0 +1,72 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // Create an adjacency list for the graph representation
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        // Fill the adjacency list
+        for (int[] prereq : prerequisites) {
+            int course = prereq[0];
+            int preCourse = prereq[1];
+            adj.get(preCourse).add(course);
+        }
+        // Perform topological sort and return the ordering of courses
+        return topoSort(numCourses, adj);
+    }
+
+    // Function to return list containing vertices in Topological order.
+    static int[] topoSort(int V, ArrayList<ArrayList<Integer>> adj) {
+        ArrayList<Integer> t = new ArrayList<>();
+        boolean[] visited = new boolean[V];
+        // To track the recursion stack
+        boolean[] recStack = new boolean[V];
+        // Perform DFS for each unvisited vertex
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                // Only call topo for unvisited vertices
+                if (topo(V, adj, i, visited, recStack, t)) {
+                    // If a cycle is detected, return an empty array
+                    return new int[0];
+                }
+            }
+        }
+        // Reverse the order to get the correct topological sort
+        Collections.reverse(t);
+        int k = 0;
+        int[] ans = new int[V];
+        for (int i : t) {
+            ans[k++] = i;
+        }
+        return ans;
+    }
+
+    public static boolean topo(int V, ArrayList<ArrayList<Integer>> adj, int i, boolean[] visited, boolean[] recStack, ArrayList<Integer> t) {
+        // If the node is already in the recursion stack, a cycle is detected
+        if (recStack[i]) {
+            // Cycle detected
+            return true;
+        }
+        if (visited[i]) {
+            // If already visited, return false
+            return false;
+        }
+        // Mark the current vertex as visited and in the recursion stack
+        visited[i] = true;
+        recStack[i] = true;
+        // Recursively visit all its neighbors
+        for (int neighbor : adj.get(i)) {
+            if (topo(V, adj, neighbor, visited, recStack, t)) {
+                // Cycle detected in the neighbors
+                return true;
+            }
+        }
+        // Remove the vertex from recursion stack after exploring
+        recStack[i] = false;
+        // Add the vertex to the list after all its neighbors are processed
+        t.add(i);
+        // No cycle detected
+        return false;
+    }
+}

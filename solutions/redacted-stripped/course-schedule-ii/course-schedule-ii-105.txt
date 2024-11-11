@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> var1 = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            var1.put(i, new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int var2 = prerequisites[i][0];
+            int prereq = prerequisites[i][1];
+            var1.get(var2).add(prereq);
+        }
+        List<Integer> resultList = new ArrayList<>();
+        Set<Integer> visited = new HashSet<>();
+        Set<Integer> cycle = new HashSet<>();
+        for (int i = 0; i < param1; i++) {
+            if (!dfs(i, var1, visited, resultList, cycle))
+                return new int[0];
+        }
+        int[] res = new int[resultList.size()];
+        for (int i = 0; i < resultList.size(); i++) {
+            res[i] = resultList.get(i);
+        }
+        return res;
+    }
+
+    public boolean dfs(int var2, Map<Integer, List<Integer>> cMap, Set<Integer> visited, List<Integer> resultList, Set<Integer> cycle) {
+        if (cycle.contains(var2))
+            return false;
+        if (visited.contains(var2))
+            return true;
+        List<Integer> prereqs = cMap.getOrDefault(var2, Collections.emptyList());
+        cycle.add(var2);
+        for (int prereq : prereqs) {
+            if (!dfs(prereq, cMap, visited, resultList, cycle))
+                return false;
+        }
+        cycle.remove(var2);
+        visited.add(var2);
+        resultList.add(var2);
+        return true;
+    }
+}

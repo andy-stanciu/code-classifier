@@ -1,0 +1,53 @@
+class Solution {
+
+    List<List<String>> ans = new ArrayList<>();
+
+    boolean method1(String s) {
+        int i = 0, j = s.length() - 1;
+        /*this one is the simple template to check 
+        whether the substring is palindromic or not */
+        while (i <= j) {
+            if (s.charAt(i) != s.charAt(j)) {
+                return false;
+            }
+            i++;
+            j--;
+        }
+        return true;
+    }
+
+    void util(String s, List<String> temp, int idx) {
+        /*base case => agar jo tame last 
+        index par avi gaya 6o then ...
+        just add the temp to the ans */
+        if (idx == s.length()) {
+            ans.add(new ArrayList<>(temp));
+        }
+        /* now aa index par to hu ubhi 6u then ...ahiya thi 
+        ketli alag-alag length ni substrings bani sake 6e and aene to 
+        tu push karti jaa ....and then backtracking. */
+        /*marathi laine chek s.length()[last] sudhi 
+        alag-alag substrings ne check karta jao. */
+        for (int i = idx; i < s.length(); i++) {
+            /*agar jo mari current substring j palindrome hoi 6e then 
+            we are going to go further ...atle ke addding it into the temp
+            and then go for checking the other substrings. */
+            if (method1(s.substring(idx, i + 1))) {
+                /*now as we have checked that it is palindromic or not...
+                => we are going to add into out temp */
+                temp.add(s.substring(idx, i + 1));
+                /* now this is the case when we go ahead into the index. */
+                util(s, temp, i + 1);
+                /*this is the backtracking approach...to remove the last input and 
+            go to your parent to gte the result form the ew beginging. */
+                temp.remove(temp.size() - 1);
+            }
+        }
+    }
+
+    public List<List<String>> partition(String s) {
+        List<String> temp = new ArrayList<>();
+        util(s, temp, 0);
+        return ans;
+    }
+}

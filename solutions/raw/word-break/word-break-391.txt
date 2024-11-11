@@ -1,0 +1,29 @@
+class Solution {
+
+    Set<String> cache;
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        cache = new HashSet<>();
+        cache.addAll(wordDict);
+        Boolean[][] dp = new Boolean[s.length()][s.length()];
+        return wordBreak(s, 0, 0, dp);
+    }
+
+    private boolean wordBreak(String s, int i, int j, Boolean[][] dp) {
+        if (i == s.length() && j == s.length()) {
+            return true;
+        }
+        if (i >= s.length() || j >= s.length())
+            return false;
+        if (dp[i][j] != null) {
+            return dp[i][j];
+        }
+        boolean not = wordBreak(s, i, j + 1, dp);
+        boolean has = false;
+        if (cache.contains(s.substring(i, j + 1))) {
+            has = wordBreak(s, j + 1, j + 1, dp);
+        }
+        dp[i][j] = not || has;
+        return dp[i][j];
+    }
+}

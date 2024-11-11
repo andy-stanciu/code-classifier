@@ -1,0 +1,32 @@
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        int[][] dp = new int[prices.length][2];
+        for (int[] curr : dp) {
+            Arrays.fill(curr, -1);
+        }
+        return find(prices, 0, 0, dp);
+    }
+
+    public int find(int[] prices, int idx, int decisioin, int[][] dp) {
+        if (idx == prices.length) {
+            return 0;
+        }
+        if (dp[idx][decisioin] != -1) {
+            return dp[idx][decisioin];
+        }
+        int var1 = 0;
+        int var2 = 0;
+        if (decisioin == 0) {
+            int var5 = -prices[idx] + find(prices, idx + 1, 1, dp);
+            int var6 = find(prices, idx + 1, 0, dp);
+            var1 = Math.max(var5, var6);
+        } else {
+            int var3 = prices[idx] + find(prices, idx + 1, 0, dp);
+            int var4 = find(prices, idx + 1, 1, dp);
+            var2 = Math.max(var3, var4);
+        }
+        dp[idx][decisioin] = Math.max(var2, var1);
+        return dp[idx][decisioin];
+    }
+}

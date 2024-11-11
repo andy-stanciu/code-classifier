@@ -1,0 +1,57 @@
+class Solution {
+
+    public boolean method1(String s) {
+        int si = 0, ei = s.length() - 1;
+        while (si < ei) {
+            if (s.charAt(si) != s.charAt(ei)) {
+                return false;
+            }
+            si++;
+            ei--;
+        }
+        return true;
+    }
+
+    public List<List<String>> partition(String s) {
+        HashMap<Integer, List<List<String>>> map = new HashMap<>();
+        List<List<String>> ans = solve(s, 0, s.length() - 1, map);
+        return ans;
+    }
+
+    public List<List<String>> solve(String s, int si, int ei, HashMap<Integer, List<List<String>>> map) {
+        if (si == ei) {
+            List<List<String>> ans = new ArrayList<>();
+            List<String> list = new ArrayList<>();
+            list.add("" + s.charAt(si));
+            ans.add(list);
+            return ans;
+        }
+        if (map.containsKey(si))
+            return map.get(si);
+        List<List<String>> ans = new ArrayList<>();
+        String curr = "";
+        for (int i = si; i <= ei; i++) {
+            curr += s.charAt(i);
+            boolean check = method1(curr);
+            if (check) {
+                List<List<String>> sAns = solve(s, i + 1, ei, map);
+                if (sAns.size() == 0) {
+                    List<String> ali = new ArrayList<>();
+                    ali.add(curr);
+                    ans.add(ali);
+                } else {
+                    for (List<String> list : sAns) {
+                        List<String> ali = new ArrayList<>();
+                        ali.add(curr);
+                        for (String str : list) {
+                            ali.add(str);
+                        }
+                        ans.add(ali);
+                    }
+                }
+            }
+        }
+        map.put(si, ans);
+        return ans;
+    }
+}

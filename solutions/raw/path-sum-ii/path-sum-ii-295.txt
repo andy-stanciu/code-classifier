@@ -1,0 +1,47 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    List<List<Integer>> rootToLeafPaths = new ArrayList<>();
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<Integer> paths = new ArrayList<>();
+        addNodeValuesAndBuildPaths(root, paths, 0, targetSum);
+        return rootToLeafPaths;
+    }
+
+    private void addNodeValuesAndBuildPaths(TreeNode node, List<Integer> paths, int sum, int targetSum) {
+        // Base Cases
+        if (node == null) {
+            return;
+        }
+        paths.add(node.val);
+        sum += node.val;
+        if (node.left == null && node.right == null) {
+            if (sum == targetSum) {
+                // Caution: Do not add paths directly to the rootToLeafPaths lists, rootToLeafPaths.add(paths).
+                // Only the reference to paths will be added so when the algorithm backtracks below, the values will be
+                // removed from the rootToLeafPaths lists.
+                rootToLeafPaths.add(paths.stream().toList());
+            }
+        }
+        // Recursion
+        addNodeValuesAndBuildPaths(node.left, paths, sum, targetSum);
+        addNodeValuesAndBuildPaths(node.right, paths, sum, targetSum);
+        // Backtracking
+        paths.remove(paths.size() - 1);
+    }
+}

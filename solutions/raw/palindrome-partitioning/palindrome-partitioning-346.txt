@@ -1,0 +1,36 @@
+class Solution {
+
+    private boolean isPalindrome(String s, HashMap<String, Boolean> map) {
+        if (map.containsKey(s))
+            return map.get(s);
+        StringBuilder rev = new StringBuilder();
+        for (int i = s.length() - 1; i >= 0; i--) {
+            rev.append(s.charAt(i));
+        }
+        boolean con = rev.toString().equals(s);
+        map.put(s, con);
+        return con;
+    }
+
+    private void generatePartitions(int startIndex, String s, List<String> list, List<List<String>> holder, HashMap<String, Boolean> map) {
+        if (startIndex == s.length()) {
+            holder.add(new ArrayList<>(list));
+        }
+        for (int i = 1; i <= s.length(); i++) {
+            if (startIndex + i > s.length())
+                break;
+            String substring = s.substring(startIndex, startIndex + i);
+            list.add(substring);
+            if (isPalindrome(substring, map))
+                generatePartitions(startIndex + i, s, list, holder, map);
+            list.remove(list.size() - 1);
+        }
+    }
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> holder = new ArrayList<>();
+        HashMap<String, Boolean> map = new HashMap<>();
+        generatePartitions(0, s, new ArrayList<>(), holder, map);
+        return holder;
+    }
+}

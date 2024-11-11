@@ -1,0 +1,37 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] indegree = new int[param1];
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<Integer>());
+        }
+        for (int[] arr : prerequisites) {
+            int var1 = arr[0];
+            int var2 = arr[1];
+            adj.get(var2).add(var1);
+            indegree[var1]++;
+        }
+        int[] topo = new int[param1];
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0)
+                q.add(i);
+        }
+        int count = 0;
+        while (!q.isEmpty()) {
+            Integer var1 = q.poll();
+            topo[count] = var1;
+            count++;
+            for (Integer adjacent : adj.get(var1)) {
+                indegree[adjacent]--;
+                if (indegree[adjacent] == 0)
+                    q.add(adjacent);
+            }
+        }
+        if (count == param1)
+            return topo;
+        else
+            return new int[0];
+    }
+}

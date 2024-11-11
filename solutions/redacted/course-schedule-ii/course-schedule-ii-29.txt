@@ -1,0 +1,36 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> var1 = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            var1.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            var1.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        int[] track = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (dfs(var1, i, list, track) == false) {
+                return new int[0];
+            }
+        }
+        int[] ans = list.stream().mapToInt(i -> i).toArray();
+        return ans;
+    }
+
+    public boolean dfs(List<List<Integer>> var1, int start, List<Integer> list, int[] track) {
+        if (track[start] == 2)
+            return true;
+        if (track[start] == 1)
+            return false;
+        track[start] = 1;
+        for (int j = 0; j < var1.get(start).size(); j++) {
+            if (dfs(var1, var1.get(start).get(j), list, track) == false)
+                return false;
+        }
+        track[start] = 2;
+        list.add(start);
+        return true;
+    }
+}

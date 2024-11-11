@@ -1,0 +1,86 @@
+class Solution {
+
+    List<List<Integer>> adjList = new ArrayList<>();
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        initGraph(numCourses, prerequisites);
+        boolean[] visited = new boolean[numCourses];
+        Set<Integer> path = new HashSet<>();
+        for (int i = 0; i < numCourses; i++) {
+            // i represent the course number
+            if (!visited[i]) {
+                if (dfs(i, visited, path)) {
+                    // dfs will return true if there is CYCLE
+                    // can not finish the course as there is cycle
+                    return new int[] {};
+                }
+            }
+        }
+        // since is no cycle now, we have to populate the topoloical orderring of the graph
+        int[] ans = new int[numCourses];
+        // Step 1 : Have the indegree of all nodes
+        int[] inDegree = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            for (int nbr : adjList.get(i)) {
+                inDegree[nbr]++;
+            }
+        }
+        // Step 2 : add all nodes into Q with indegree == 0
+        Queue<Integer> q = new PriorityQueue<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        // Step 3 : Now start taking elemetn from Q and start reducing the indegree of nbr. Id nbr indegree = 0 add them into the Q
+        // use to fill the the ans[] array
+        int idx = 0;
+        while (!q.isEmpty()) {
+            int a = q.poll();
+            ans[idx++] = a;
+            for (int nbr : adjList.get(a)) {
+                inDegree[nbr]--;
+                if (inDegree[nbr] == 0) {
+                    q.add(nbr);
+                }
+            }
+        }
+        // Return true if you can finish all courses. Otherwise, return false.
+        return ans;
+    }
+
+    // return true if CYCLE otherwise false
+    private boolean dfs(int src, boolean[] visited, Set<Integer> path) {
+        visited[src] = true;
+        path.add(src);
+        // explore all the neighbout of sorce and see if there is any cycle
+        for (int nbr : adjList.get(src)) {
+            // if nbr is already in the path that mean we got the cycle
+            if (path.contains(nbr)) {
+                // cycle found
+                return true;
+            }
+            if (!visited[nbr]) {
+                if (dfs(nbr, visited, path)) {
+                    return true;
+                }
+            }
+        }
+        path.remove(src);
+        // if we reach here that mean no cycle found othereise we have already returned without reaching here.
+        return false;
+    }
+
+    private void initGraph(int numCourses, int[][] prerequisites) {
+        for (int i = 0; i < numCourses; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] edge : prerequisites) {
+            // [0, 1], indicates that to take course 0 you have to first take course 1.
+            int u = edge[1];
+            int v = edge[0];
+            // only one add since its directional
+            adjList.get(u).add(v);
+        }
+    }
+}

@@ -1,0 +1,30 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        var words = new HashSet<String>(wordDict.size());
+        words.addAll(wordDict);
+        int minWordLen = 100;
+        int maxWordLen = 0;
+        for (var word : wordDict) {
+            minWordLen = Math.min(minWordLen, word.length());
+            maxWordLen = Math.max(maxWordLen, word.length());
+        }
+        boolean[] memo = new boolean[s.length()];
+        for (int start = s.length() - 1; start >= 0; --start) {
+            for (int len = minWordLen; len <= maxWordLen; len++) {
+                if (start + len - 1 >= s.length()) {
+                    break;
+                }
+                boolean canSegmentSuffix = start + len == s.length() || memo[start + len];
+                if (canSegmentSuffix) {
+                    var substr = s.substring(start, start + len);
+                    if (words.contains(substr)) {
+                        memo[start] = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return memo[0];
+    }
+}

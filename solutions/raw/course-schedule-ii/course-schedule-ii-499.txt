@@ -1,0 +1,49 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        //formation of ajacencyList from 2D matrix
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        //completion of adjacencylist here;
+        //store nodes in the indegree array here
+        int[] indegree = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            for (int it : adj.get(i)) {
+                indegree[it]++;
+            }
+        }
+        //store inside the queue those nodes which are having degree equal is zero;
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        //make a array  in which final nodes will be stored,
+        // while poping from and decrement each time indegree by 1 and
+        //if indegre of a node is equal to 0 add intside the topo array
+        int[] topo = new int[numCourses];
+        int idx = 0;
+        while (!q.isEmpty()) {
+            int node = q.remove();
+            topo[idx++] = node;
+            for (int it : adj.get(node)) {
+                indegree[it]--;
+                if (indegree[it] == 0) {
+                    q.add(it);
+                }
+            }
+        }
+        //if the index size of topo is equal to numcourse then return topo;
+        //otherwise return empty arr;
+        if (idx == numCourses)
+            return topo;
+        int[] arr = {};
+        return arr;
+    }
+}

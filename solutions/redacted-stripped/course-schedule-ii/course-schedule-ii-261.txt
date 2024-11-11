@@ -1,0 +1,56 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        if (prerequisites.length == 0) {
+            int[] arr = new int[param1];
+            for (int i = 0; i < param1; i++) {
+                arr[i] = i;
+            }
+            return arr;
+        }
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList());
+        }
+        for (int row = 0; row < prerequisites.length; row++) {
+            int first = prerequisites[row][0];
+            int second = prerequisites[row][1];
+            adjList.get(first).add(second);
+        }
+        int[] ans = new int[param1];
+        List<Integer> ansList = new ArrayList<>();
+        int[] visited = new int[param1];
+        int[] pathvisited = new int[param1];
+        for (int k = 0; k < param1; k++) {
+            if (visited[k] == 0) {
+                boolean result = dfs(adjList, visited, k, ansList, pathvisited);
+                if (result) {
+                    return new int[] {};
+                }
+            }
+        }
+        int j = 0;
+        for (Integer v : ansList) {
+            ans[j++] = v;
+        }
+        return ans;
+    }
+
+    public boolean dfs(List<List<Integer>> adjList, int[] visited, int ind, List<Integer> ansList, int[] pathvisited) {
+        visited[ind] = 1;
+        pathvisited[ind] = 1;
+        for (int k = 0; k < adjList.get(ind).size(); k++) {
+            int node = adjList.get(ind).get(k);
+            if (visited[node] == 0) {
+                if (dfs(adjList, visited, node, ansList, pathvisited)) {
+                    return true;
+                }
+            } else if (pathvisited[node] == 1) {
+                return true;
+            }
+        }
+        pathvisited[ind] = 0;
+        ansList.add(ind);
+        return false;
+    }
+}

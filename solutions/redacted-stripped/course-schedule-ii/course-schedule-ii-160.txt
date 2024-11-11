@@ -1,0 +1,99 @@
+class Solution {
+
+    class Edge {
+
+        int src, dest;
+
+        public Edge(int s, int d) {
+            this.src = s;
+            this.dest = d;
+        }
+    }
+
+    public boolean detectCycle(ArrayList<Edge>[] graph) {
+        boolean[] vis = new boolean[graph.length];
+        boolean[] stack = new boolean[graph.length];
+        for (int i = 0; i < graph.length; i++) {
+            if (!vis[i]) {
+                if (detectCycleUtil(graph, vis, stack, i)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean detectCycleUtil(ArrayList<Edge>[] graph, boolean[] vis, boolean[] stack, int curr) {
+        vis[curr] = true;
+        stack[curr] = true;
+        for (int i = 0; i < graph[curr].size(); i++) {
+            Edge e = graph[curr].get(i);
+            if (stack[e.dest]) {
+                return true;
+            }
+            if (!vis[e.dest] && detectCycleUtil(graph, vis, stack, e.dest)) {
+                return true;
+            }
+        }
+        stack[curr] = false;
+        return false;
+    }
+
+    public void countIndeg(ArrayList<Edge>[] graph, int[] indeg) {
+        for (int i = 0; i < graph.length; i++) {
+            int v = i;
+            for (int j = 0; j < graph[v].size(); j++) {
+                Edge e = graph[v].get(j);
+                indeg[e.dest]++;
+            }
+        }
+    }
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] ans = new int[param1];
+        if (prerequisites.length < 1) {
+            if (param1 > 1) {
+                for (int i = 0; i < param1; i++) {
+                    ans[i] = param1 - 1 - i;
+                }
+            } else {
+                ans[0] = 0;
+            }
+            return ans;
+        }
+        ArrayList<Edge>[] graph = new ArrayList[param1];
+        for (int i = 0; i < graph.length; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int j = prerequisites[i][0];
+            int k = prerequisites[i][1];
+            graph[k].add(new Edge(k, j));
+        }
+        int[] indeg = new int[graph.length];
+        Queue<Integer> q = new LinkedList<>();
+        if (detectCycle(graph)) {
+            return new int[0];
+        }
+        countIndeg(graph, indeg);
+        for (int i = 0; i < graph.length; i++) {
+            if (indeg[i] == 0) {
+                q.add(i);
+            }
+        }
+        int k = 0;
+        while (!q.isEmpty()) {
+            int curr = q.remove();
+            ans[k] = curr;
+            k++;
+            for (int i = 0; i < graph[curr].size(); i++) {
+                Edge e = graph[curr].get(i);
+                indeg[e.dest]--;
+                if (indeg[e.dest] == 0) {
+                    q.add(e.dest);
+                }
+            }
+        }
+        return ans;
+    }
+}

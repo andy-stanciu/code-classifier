@@ -1,0 +1,48 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<Integer>[] map = getMap(numCourses, prerequisites);
+        boolean[] visited = new boolean[numCourses];
+        boolean[] hasInpath = new boolean[numCourses];
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i] && dfs(i, map, visited, hasInpath, result)) {
+                return new int[0];
+            }
+        }
+        int[] data = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            data[i] = result.get(result.size() - i - 1);
+        }
+        return data;
+    }
+
+    private boolean dfs(int start, List<Integer>[] map, boolean[] visited, boolean[] hasInpath, List<Integer> result) {
+        hasInpath[start] = true;
+        visited[start] = true;
+        for (int child : map[start]) {
+            if (hasInpath[child]) {
+                return true;
+            }
+            if (!visited[child] && dfs(child, map, visited, hasInpath, result)) {
+                return true;
+            }
+        }
+        result.add(start);
+        hasInpath[start] = false;
+        return false;
+    }
+
+    private List<Integer>[] getMap(int numCourses, int[][] prerequisites) {
+        List<Integer>[] map = new List[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            map[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int start = prerequisites[i][0];
+            int end = prerequisites[i][1];
+            map[end].add(start);
+        }
+        return map;
+    }
+}

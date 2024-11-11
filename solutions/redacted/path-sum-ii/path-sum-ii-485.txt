@@ -1,0 +1,36 @@
+class Solution {
+
+    public List<List<Integer>> res;
+
+    public List<List<Integer>> method1(TreeNode root, int param1) {
+        res = new ArrayList();
+        if (root == null)
+            return res;
+        helper(root, param1, new ArrayList(), 0);
+        return res;
+    }
+
+    public void helper(TreeNode root, int param1, List<Integer> param2, int param3) {
+        if (root.left == null && root.right == null) {
+            param3 += root.val;
+            if (param3 == param1) {
+                List<Integer> bcase = new ArrayList();
+                // New list is required because after adding path list to the res list, only the address of path list will be stored there so any change in path list through the other paths, it gets change in the res list also. That\'s why whole new list is required so that any change in path list will not be reflected in res list.
+                for (int i = 0; i < param2.size(); i++) {
+                    bcase.add(param2.get(i));
+                }
+                bcase.add(root.val);
+                res.add(bcase);
+            }
+            return;
+        }
+        param2.add(root.val);
+        if (root.left != null)
+            helper(root.left, param1, param2, param3 + root.val);
+        if (root.right != null)
+            helper(root.right, param1, param2, param3 + root.val);
+        param2.remove(param2.size() - 1);
+        // Removal is compulsary because list gets stored in heap not stack so its value remains same at every path therefore after addition of current root value we need to remove it just before exiting from that node.
+        return;
+    }
+}

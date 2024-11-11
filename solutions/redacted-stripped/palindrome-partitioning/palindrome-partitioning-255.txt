@@ -1,0 +1,36 @@
+class Solution {
+
+    int n;
+
+    private boolean isPal(String s, int si, int ei) {
+        while (si <= ei) {
+            if (s.charAt(si) != s.charAt(ei))
+                return false;
+            si++;
+            ei--;
+        }
+        return true;
+    }
+
+    private void solve(String s, int indx, List<String> curr, List<List<String>> res) {
+        if (indx == n) {
+            res.add(new ArrayList<>(curr));
+            return;
+        }
+        for (int i = indx; i < n; i++) {
+            if (isPal(s, indx, i)) {
+                curr.add(s.substring(indx, i + 1));
+                solve(s, i + 1, curr, res);
+                curr.remove(curr.size() - 1);
+            }
+        }
+    }
+
+    public List<List<String>> partition(String s) {
+        n = s.length();
+        List<List<String>> ans = new ArrayList<>();
+        List<String> curr = new ArrayList<>();
+        solve(s, 0, curr, ans);
+        return ans;
+    }
+}

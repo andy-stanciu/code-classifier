@@ -1,0 +1,52 @@
+// Algo used Topological Sort
+//Same as Course Schedule 1 , just here we are returining topo as an array
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        // creating our adj list
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<>());
+        }
+        // converting the input prerequisites to adjList Step1
+        int m = prerequisites.length;
+        for (int i = 0; i < m; i++) {
+            adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        // indegree array
+        int[] indegree = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            // marking the incoming edges (incoming edges) of node node Step2
+            for (int it : adj.get(i)) {
+                indegree[it]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        // topo sort list
+        int[] topo = new int[param1];
+        int index = 0;
+        for (int i = 0; i < param1; i++) {
+            // // getting the nodes with 0 in-degree Step3
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        while (!q.isEmpty()) {
+            // doing our Topo sort BFS(Kahn\'s) Step4
+            int node = q.poll();
+            topo[index++] = node;
+            for (int it : adj.get(node)) {
+                // removing the edges for the node nodes added in queue
+                indegree[it]--;
+                if (indegree[it] == 0) {
+                    // if at any point the node who are becoming 0 after decreaising then add in queue
+                    q.add(it);
+                }
+            }
+        }
+        if (param1 == index)
+            return topo;
+        int[] res = {};
+        return res;
+    }
+}

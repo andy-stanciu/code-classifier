@@ -1,0 +1,40 @@
+class Solution {
+
+    public int evalRPN(String[] arr) {
+        if (arr.length == 1) {
+            return Integer.parseInt(arr[0]);
+        }
+        Set<String> operators = new HashSet<>();
+        operators.add("+");
+        operators.add("-");
+        operators.add("/");
+        operators.add("*");
+        Stack<Integer> stack = new Stack<>();
+        for (String token : arr) {
+            if (!operators.contains(token)) {
+                stack.push(Integer.parseInt(token));
+            } else {
+                int a = stack.pop();
+                int b = stack.pop();
+                int result = performOperation(b, a, token);
+                stack.push(result);
+            }
+        }
+        return stack.pop();
+    }
+
+    private int performOperation(int operand1, int operand2, String operator) {
+        switch(operator) {
+            case "+":
+                return operand1 + operand2;
+            case "-":
+                return operand1 - operand2;
+            case "*":
+                return operand1 * operand2;
+            case "/":
+                return operand1 / operand2;
+            default:
+                throw new IllegalArgumentException("Invalid operator: " + operator);
+        }
+    }
+}

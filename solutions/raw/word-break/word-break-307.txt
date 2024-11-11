@@ -1,0 +1,29 @@
+class Solution {
+
+    HashSet<Pair<Integer, String>> visited;
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        HashSet<String> dictionary = new HashSet<>();
+        for (String word : wordDict) dictionary.add(word);
+        visited = new HashSet<>();
+        return isExists(s, dictionary, s.length());
+    }
+
+    public boolean isExists(String s, Set<String> dictionary, int n) {
+        if (dictionary.contains(s))
+            return true;
+        for (int i = 1; i < s.length(); i++) {
+            String first = s.substring(0, i);
+            String second = s.substring(i, s.length());
+            if (visited.contains(new Pair<>(i, second)))
+                continue;
+            visited.add(new Pair<>(i, second));
+            if (dictionary.contains(first)) {
+                boolean exists = isExists(second, dictionary, n);
+                if (exists)
+                    return true;
+            }
+        }
+        return false;
+    }
+}

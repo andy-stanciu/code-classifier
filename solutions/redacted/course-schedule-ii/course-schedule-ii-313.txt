@@ -1,0 +1,42 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] visited = new int[param1];
+        int[] ordering = new int[param1];
+        List<Integer>[] adj = getAdjacencyList(param1, prerequisites);
+        int i = param1 - 1;
+        for (int j = 0; j < param1 && i >= 0; j++) {
+            i = dfs(visited, ordering, adj, j, i);
+            if (i == -5)
+                return new int[] {};
+        }
+        return ordering;
+    }
+
+    private int dfs(int[] visited, int[] ordering, List<Integer>[] adj, int v, int i) {
+        if (visited[v] == 1)
+            return i;
+        if (visited[v] == -5)
+            return -5;
+        visited[v] = -5;
+        for (Integer neighbour : adj[v]) {
+            i = dfs(visited, ordering, adj, neighbour, i);
+            if (i == -5)
+                return -5;
+        }
+        visited[v] = 1;
+        ordering[i] = v;
+        return i - 1;
+    }
+
+    private List<Integer>[] getAdjacencyList(int param1, int[][] prerequisites) {
+        List<Integer>[] adj = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            adj[i] = new ArrayList<>();
+        }
+        for (int[] req : prerequisites) {
+            adj[req[1]].add(req[0]);
+        }
+        return adj;
+    }
+}

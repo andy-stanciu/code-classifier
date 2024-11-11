@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        int[][] visited = new int[s.length()][s.length() + 1];
+        method2(s, 0, param1, "", visited);
+        for (int i = 0; i <= s.length(); i++) {
+            if (visited[s.length() - 1][i] == 2) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean method2(String s, int i, List<String> dic, String cs, int[][] v) {
+        if (i == s.length()) {
+            if (dic.contains(cs)) {
+                return true;
+            }
+            return false;
+        }
+        boolean vi = false;
+        if (v[i][cs.length()] == 0) {
+            if (dic.contains(cs + s.charAt(i))) {
+                vi = method2(s, i + 1, dic, "", v) || method2(s, i + 1, dic, cs + s.charAt(i), v);
+            }
+            vi = method2(s, i + 1, dic, cs + s.charAt(i), v);
+            if (vi) {
+                v[i][cs.length()] = 2;
+            } else {
+                v[i][cs.length()] = 1;
+            }
+        }
+        if (v[i][cs.length()] == 2) {
+            return true;
+        }
+        return false;
+    }
+}

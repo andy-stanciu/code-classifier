@@ -1,0 +1,52 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        if (param1 == 1) {
+            int[] res = { 0 };
+            return res;
+        }
+        Map<Integer, List<Integer>> adjMap = new HashMap<>();
+        int[] inDegree = new int[param1];
+        for (int[] prerequisite : prerequisites) {
+            inDegree[prerequisite[0]]++;
+            if (adjMap.containsKey(prerequisite[1])) {
+                adjMap.get(prerequisite[1]).add(prerequisite[0]);
+            } else {
+                List<Integer> edges = new ArrayList<>();
+                edges.add(prerequisite[0]);
+                adjMap.put(prerequisite[1], edges);
+            }
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        Set<Integer> visited = new HashSet<>();
+        addZeroDegreeToQueue(inDegree, queue, visited);
+        if (queue.isEmpty()) {
+            return new int[0];
+        }
+        int[] topSort = new int[param1];
+        int count = 0;
+        while (!queue.isEmpty()) {
+            int curr = queue.poll();
+            topSort[count++] = curr;
+            if (adjMap.containsKey(curr)) {
+                for (int edge : adjMap.get(curr)) {
+                    inDegree[edge]--;
+                }
+            }
+            addZeroDegreeToQueue(inDegree, queue, visited);
+        }
+        if (count != topSort.length) {
+            return new int[0];
+        }
+        return topSort;
+    }
+
+    private static void addZeroDegreeToQueue(int[] inDegree, Queue<Integer> queue, Set<Integer> visited) {
+        for (int i = 0; i < inDegree.length; i++) {
+            if (inDegree[i] == 0 && !visited.contains(i)) {
+                queue.add(i);
+                visited.add(i);
+            }
+        }
+    }
+}

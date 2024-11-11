@@ -1,0 +1,60 @@
+class Solution {
+
+    boolean[][] dp;
+
+    String[][] str_arr;
+
+    List<List<String>> rv;
+
+    int len;
+
+    ArrayList<String> helper;
+
+    public void fill_palindromic_arr(String str) {
+        len = str.length();
+        dp = new boolean[len][len];
+        str_arr = new String[len][len];
+        for (int i = 0; i < len; i++) {
+            dp[i][i] = true;
+        }
+        for (int i = 0; i < len - 1; i++) {
+            dp[i][i + 1] = str.charAt(i) == str.charAt(i + 1);
+        }
+        for (int g = 2; g < len; g++) {
+            for (int si = 0; si < len; si++) {
+                int ei = si + g;
+                if (ei < len && str.charAt(si) == str.charAt(ei)) {
+                    dp[si][ei] |= dp[si + 1][ei - 1];
+                }
+            }
+        }
+        for (int si = 0; si < len; si++) {
+            for (int ei = si; ei < len; ei++) {
+                if (dp[si][ei])
+                    str_arr[si][ei] = str.substring(si, ei + 1);
+            }
+        }
+    }
+
+    public List<List<String>> partition(String s) {
+        rv = new ArrayList<>();
+        fill_palindromic_arr(s);
+        helper = new ArrayList<String>(len);
+        fill(0);
+        return rv;
+    }
+
+    public void fill(int si) {
+        if (si >= len) {
+            rv.add(new ArrayList<String>(helper));
+            return;
+        }
+        for (int ei = si; ei < len; ei++) {
+            if (dp[si][ei]) {
+                helper.add(str_arr[si][ei]);
+                fill(ei + 1);
+                helper.remove(helper.size() - 1);
+            }
+        }
+    }
+}

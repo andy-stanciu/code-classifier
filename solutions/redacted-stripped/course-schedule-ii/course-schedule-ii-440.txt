@@ -1,0 +1,45 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int V = param1;
+        int[] arr = new int[V];
+        int[] ind = new int[V];
+        ArrayList<Integer>[] adj = new ArrayList[V];
+        for (int i = 0; i < V; i++) {
+            adj[i] = new ArrayList<Integer>();
+        }
+        for (int[] edge : prerequisites) {
+            adj[edge[1]].add(edge[0]);
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (ArrayList<Integer> i : adj) {
+            for (int val : i) {
+                ind[val] += 1;
+            }
+        }
+        int index = 0;
+        for (int i = 0; i < V; i++) {
+            if (ind[i] == 0) {
+                arr[index] = i;
+                q.add(i);
+                index++;
+            }
+        }
+        while (!q.isEmpty()) {
+            int u = q.poll();
+            for (int i : adj[u]) {
+                ind[i] -= 1;
+                if (ind[i] == 0) {
+                    q.add(i);
+                    arr[index] = i;
+                    index++;
+                }
+            }
+        }
+        for (int i : ind) {
+            if (i > 0)
+                return new int[] {};
+        }
+        return arr;
+    }
+}

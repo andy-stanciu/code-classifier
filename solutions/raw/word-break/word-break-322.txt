@@ -1,0 +1,78 @@
+class Solution {
+
+    TrieNode wordsTrieRoot = new TrieNode();
+
+    Set<Integer> checked = new HashSet<>();
+
+    String string;
+
+    boolean result = false;
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        string = s;
+        createWordsTrie(wordDict);
+        dfs(0);
+        return result;
+    }
+
+    private void dfs(int index) {
+        // Yupi! We matched all words and index is beyond the string
+        if (index == string.length()) {
+            result = true;
+            return;
+        }
+        // W already checked that case. There is no point to do it again
+        if (checked.contains(index)) {
+            return;
+        }
+        // We need to match words from this point and move the index forward
+        checked.add(index);
+        TrieNode currentWordsTrie = wordsTrieRoot;
+        while (index < string.length()) {
+            currentWordsTrie = currentWordsTrie.get(string.charAt(index++));
+            if (currentWordsTrie != null) {
+                // Every time we can "fork" we should check that case as well
+                if (currentWordsTrie.isLastWordCharacter) {
+                    dfs(index);
+                }
+            } else {
+                break;
+            }
+        }
+    }
+
+    private void createWordsTrie(List<String> words) {
+        for (String word : words) {
+            char[] chars = word.toCharArray();
+            TrieNode lastTrie = wordsTrieRoot;
+            for (char c : chars) {
+                lastTrie = lastTrie.addNext(c);
+            }
+            lastTrie.markAsLastCharacter();
+        }
+    }
+
+    class TrieNode {
+
+        boolean isLastWordCharacter = false;
+
+        Map<Character, TrieNode> next = new HashMap<>();
+
+        public TrieNode addNext(char c) {
+            TrieNode value = next.get(c);
+            if (value == null) {
+                value = new TrieNode();
+                next.put(c, value);
+            }
+            return value;
+        }
+
+        public void markAsLastCharacter() {
+            isLastWordCharacter = true;
+        }
+
+        public TrieNode get(char c) {
+            return next.get(c);
+        }
+    }
+}

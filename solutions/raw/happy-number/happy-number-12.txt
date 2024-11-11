@@ -1,0 +1,38 @@
+class Solution {
+
+    // This helper function calculates the sum of the squares of the digits of a given number `n`
+    private int getSquareSum(int n) {
+        // Initialize sum to store the sum of the squares of digits
+        int currSum = 0;
+        // Loop until all digits of `n` are processed
+        while (n != 0) {
+            // Get the last digit (remainder when dividing by 10)
+            int remainder = (n % 10);
+            // Square the last digit and add it to the current sum
+            currSum += remainder * remainder;
+            // Remove the last digit from the number (integer division by 10)
+            n /= 10;
+        }
+        // Return the sum of squares of the digits
+        return currSum;
+    }
+
+    // This method determines if a number `n` is a "happy number"
+    public boolean isHappy(int n) {
+        // Initialize two pointers:
+        // Slow pointer moves one step (i.e., one square sum at a time)
+        int slow = getSquareSum(n);
+        // Fast pointer moves two steps (i.e., two square sums at a time)
+        int fast = getSquareSum(getSquareSum(n));
+        // Fast and slow pointer approach (Floyd\'s cycle detection):
+        // We continue the loop until both pointers meet or fast reaches 1
+        while ((slow != fast) && (fast != 1)) {
+            // Move slow pointer by one step (one square sum)
+            slow = getSquareSum(slow);
+            // Move fast pointer by two steps (two square sums)
+            fast = getSquareSum(getSquareSum(fast));
+        }
+        // If fast pointer reaches 1, `n` is a happy number, so return true
+        return fast == 1;
+    }
+}

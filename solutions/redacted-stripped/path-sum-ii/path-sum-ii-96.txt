@@ -1,0 +1,55 @@
+class Solution {
+
+    Set<TreeNode> n = new HashSet<>();
+
+    List<Integer> list = new ArrayList<>();
+
+    List<List<Integer>> ans = new ArrayList<>();
+
+    int target = 0;
+
+    TreeNode head;
+
+    public List<List<Integer>> method1(TreeNode root, int param1) {
+        if (root == null)
+            return new ArrayList<>();
+        if (param1 == 0 && root.left == null && root.right == null)
+            return new ArrayList<>();
+        if (root.left == null && root.right == null) {
+            return new ArrayList<List<Integer>>() {
+
+                {
+                    add(new ArrayList<Integer>() {
+
+                        {
+                            add(root.val);
+                        }
+                    });
+                }
+            };
+        }
+        this.target = param1;
+        head = root;
+        method2(root, param1);
+        return ans;
+    }
+
+    private List<Integer> method2(TreeNode root, int target) {
+        if (root == null || n.contains(root))
+            return list;
+        list.add(root.val);
+        n.add(root);
+        method2(root.left, target - root.val);
+        if (root == head && list.isEmpty())
+            list.add(root.val);
+        method2(root.right, target - root.val);
+        if (target - root.val == 0 && root.left == null && root.right == null) {
+            ans.add(new ArrayList<>(list));
+            target = this.target;
+            list.remove(list.size() - 1);
+            return list;
+        } else
+            list.remove(list.size() - 1);
+        return list;
+    }
+}

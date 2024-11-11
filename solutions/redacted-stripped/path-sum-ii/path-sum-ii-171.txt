@@ -1,0 +1,55 @@
+class Triplet {
+
+    TreeNode node;
+
+    int var1;
+
+    String list;
+
+    Triplet(TreeNode node, int var1, String list) {
+        this.node = node;
+        this.var1 = var1;
+        this.list = list;
+    }
+
+    public TreeNode getNode() {
+        return node;
+    }
+
+    public int method1() {
+        return var1;
+    }
+
+    public String getList() {
+        return list;
+    }
+}
+
+class Solution {
+
+    public List<List<Integer>> method2(TreeNode root, int param1) {
+        List<List<Integer>> method2 = new ArrayList<>();
+        if (root != null) {
+            Triplet tripletRoot = new Triplet(root, root.val, String.valueOf(root.val));
+            Stack<Triplet> stack = new Stack<>();
+            stack.push(tripletRoot);
+            while (!stack.isEmpty()) {
+                Triplet tripletNode = stack.pop();
+                TreeNode currentNode = tripletNode.getNode();
+                if (currentNode.left == null && currentNode.right == null && tripletNode.method1() == param1) {
+                    String[] arr = tripletNode.getList().split(",");
+                    method2.add(Arrays.stream(arr).map(Integer::valueOf).collect(Collectors.toList()));
+                }
+                if (currentNode.right != null) {
+                    Triplet tripletNodeRight = new Triplet(currentNode.right, currentNode.right.val + tripletNode.method1(), new String(tripletNode.getList() + "," + currentNode.right.val));
+                    stack.push(tripletNodeRight);
+                }
+                if (currentNode.left != null) {
+                    Triplet tripletNodeLeft = new Triplet(currentNode.left, currentNode.left.val + tripletNode.method1(), tripletNode.getList() + "," + currentNode.left.val);
+                    stack.push(tripletNodeLeft);
+                }
+            }
+        }
+        return method2;
+    }
+}

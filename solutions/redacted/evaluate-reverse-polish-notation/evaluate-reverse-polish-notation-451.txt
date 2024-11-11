@@ -1,0 +1,38 @@
+class Solution {
+
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> st = new Stack<Integer>();
+        for (int i = 0; i < tokens.length; i++) {
+            if (isOperator(tokens[i])) {
+                // if operators then do this step
+                int operand2 = st.pop();
+                int operand1 = st.pop();
+                int result = performOperation(operand1, operand2, tokens[i]);
+                st.push(result);
+            } else {
+                st.push(Integer.parseInt(tokens[i]));
+            }
+        }
+        return st.pop();
+    }
+
+    public boolean isOperator(String token) {
+        return token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/");
+    }
+
+    private static int performOperation(int operand1, int operand2, String operator) {
+        switch(operator) {
+            case "+":
+                return operand1 + operand2;
+            case "-":
+                return operand1 - operand2;
+            case "*":
+                return operand1 * operand2;
+            case "/":
+                // Handle division with truncation toward zero
+                return operand1 / operand2;
+            default:
+                throw new IllegalArgumentException("Invalid operator: " + operator);
+        }
+    }
+}

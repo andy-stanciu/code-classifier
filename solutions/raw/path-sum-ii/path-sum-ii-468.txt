@@ -1,0 +1,42 @@
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        if (root == null)
+            return new ArrayList();
+        Queue<Helper> queue = new ArrayDeque();
+        List<List<Integer>> ans = new ArrayList();
+        queue.add(new Helper(root, targetSum, new ArrayList<Integer>()));
+        while (queue.size() > 0) {
+            Helper helper = queue.remove();
+            List<Integer> list = helper.list;
+            list.add(helper.node.val);
+            if (helper.node.left == null && helper.node.right == null && helper.sum - helper.node.val == 0) {
+                ans.add(list);
+            }
+            if (helper.node.left != null) {
+                Helper left = new Helper(helper.node.left, helper.sum - helper.node.val, new ArrayList(list));
+                queue.add(left);
+            }
+            if (helper.node.right != null) {
+                Helper right = new Helper(helper.node.right, helper.sum - helper.node.val, new ArrayList(list));
+                queue.add(right);
+            }
+        }
+        return ans;
+    }
+}
+
+class Helper {
+
+    TreeNode node;
+
+    int sum;
+
+    ArrayList<Integer> list;
+
+    public Helper(TreeNode node, int sum, ArrayList<Integer> list) {
+        this.node = node;
+        this.sum = sum;
+        this.list = list;
+    }
+}

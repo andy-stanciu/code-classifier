@@ -1,0 +1,63 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        //Example for input string s = "cabad"
+        //DP is 3D Array
+        //0 -> [[]]
+        //1 -> [[c]]
+        //2 -> [[c,a]]
+        //3 -> [[c,a,b]]
+        //4 -> [[c,a,b,a],[c,aba]]
+        //5 -> [[c,a,b,a,d],[c,aba,d]]
+        //Every index in dp array gives us palindrome partitioning result till that index
+        //here we consider 0th index as empty string and from index 1 we actually count the string
+        List<List<String>>[] dp = new List[s.length() + 1];
+        //for 0th index we have to initialize the empty ArrayList
+        dp[0] = new ArrayList<>() {
+
+            {
+                add(new ArrayList<>());
+            }
+        };
+        for (int i = 1; i <= s.length(); i++) {
+            //for every dp index we will be intializing the empty list
+            dp[i] = new ArrayList<>();
+            //this is reverse for loop which starts at i and will go till 0
+            //Example i = 3 charAt(3) == b [this is considering the indexes starting at 1]
+            //now we want to generate all the substring which ends at index 3, so we start from end
+            //Substrings will be b, ab, cab
+            for (int j = i - 1; j >= 0; j--) {
+                String substring = s.substring(j, i);
+                //as we go backwards, we can just simply add this substring into prev results
+                //so for i = 3 and j = 3, the substring would be the current character itself
+                //so we can add that character into all the subsets from prev result
+                for (List<String> prev : dp[j]) {
+                    //Before simply adding the current substring into prev results,
+                    //we have to check, whether it is palinfrome or not. if its palindrome
+                    //then only it makes sense to add it in prev results.
+                    if (isPalindrome(substring)) {
+                        List<String> newList = new ArrayList<>(prev);
+                        //new list will be created for adding substring
+                        newList.add(substring);
+                        //add results into current dp
+                        dp[i].add(newList);
+                    }
+                }
+            }
+        }
+        //dp[s.length] will contain all the palindrome paritions till the last index, means for whole string
+        return dp[s.length()];
+    }
+
+    private boolean isPalindrome(String s) {
+        int low = 0;
+        int high = s.length() - 1;
+        while (low <= high) {
+            if (s.charAt(low) != s.charAt(high))
+                return false;
+            low++;
+            high--;
+        }
+        return true;
+    }
+}

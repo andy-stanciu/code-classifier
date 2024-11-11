@@ -1,0 +1,33 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        int[] dp = new int[s.length() + 1];
+        Arrays.fill(dp, -1);
+        return helper(s, param1, 0, dp) == 1;
+    }
+
+    private int helper(String s, List<String> param1, int pos, int[] dp) {
+        if (pos == s.length()) {
+            return 1;
+        }
+        if (dp[pos] != -1) {
+            return dp[pos];
+        }
+        for (int i = 0; i < param1.size(); i++) {
+            if (isMatching(s, pos, param1.get(i))) {
+                dp[pos] = helper(s, param1, pos + param1.get(i).length(), dp);
+                if (dp[pos] == 1) {
+                    return 1;
+                }
+            }
+        }
+        return 0;
+    }
+
+    private boolean isMatching(String s, int pos, String param2) {
+        if (s.length() - pos < param2.length()) {
+            return false;
+        }
+        return s.substring(pos, pos + param2.length()).equals(param2);
+    }
+}

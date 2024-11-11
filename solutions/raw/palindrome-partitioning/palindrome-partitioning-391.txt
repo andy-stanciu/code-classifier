@@ -1,0 +1,40 @@
+class Solution {
+
+    private static void findSubstrings(int index, List<String> sub_list, List<List<String>> list, String[][] sub_strings, String s) {
+        if (index == s.length()) {
+            list.add(new ArrayList<>(sub_list));
+            return;
+        }
+        for (int i = index; i <= s.length() - 1; i++) {
+            if (sub_strings[index][i] != null) {
+                sub_list.add(sub_strings[index][i]);
+                findSubstrings(i + 1, sub_list, list, sub_strings, s);
+                sub_list.remove(sub_list.size() - 1);
+            }
+        }
+    }
+
+    private static boolean palindrome(String s) {
+        int i = 0, j = s.length() - 1;
+        while (i < j) {
+            if (s.charAt(i++) != s.charAt(j--))
+                return false;
+        }
+        return true;
+    }
+
+    public List<List<String>> partition(String s) {
+        int n = s.length();
+        List<List<String>> list = new ArrayList<>();
+        String[][] sub_strings = new String[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                if (palindrome(s.substring(i, j + 1))) {
+                    sub_strings[i][j] = s.substring(i, j + 1);
+                }
+            }
+        }
+        findSubstrings(0, new ArrayList<String>(), list, sub_strings, s);
+        return list;
+    }
+}

@@ -1,0 +1,63 @@
+class Edge {
+
+    // Destination course
+    int dest;
+
+    Edge(int dest) {
+        this.dest = dest;
+    }
+}
+
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] arr = new int[numCourses];
+        int[] indeg = new int[numCourses];
+        // Step 1: Initialize the adjacency list
+        ArrayList<Edge>[] graph = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        // Step 2: Create edges and build the graph
+        for (int[] prereq : prerequisites) {
+            // Course that depends on another course
+            int a = prereq[0];
+            // Course that must be taken first
+            int b = prereq[1];
+            // Create an edge from b to a
+            graph[b].add(new Edge(a));
+            // Increase in-degree for course a
+            indeg[a]++;
+        }
+        // Step 3: Initialize queue for courses with no prerequisites
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indeg[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        // Step 4: Process courses in topological order
+        int index = 0;
+        while (!queue.isEmpty()) {
+            int course = queue.poll();
+            // Add to order
+            arr[index++] = course;
+            // Decrease in-degree of neighboring courses
+            for (Edge edge : graph[course]) {
+                int neighbor = edge.dest;
+                indeg[neighbor]--;
+                if (indeg[neighbor] == 0) {
+                    queue.offer(neighbor);
+                }
+            }
+        }
+        // Step 5: Check if all courses are taken
+        if (index == numCourses) {
+            // All courses can be completed
+            return arr;
+        } else {
+            // Not all courses can be completed (possibly due to a cycle)
+            return new int[0];
+        }
+    }
+}

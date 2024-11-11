@@ -1,0 +1,72 @@
+class Solution {
+
+    Map<Integer, Class1> var1 = new HashMap<>();
+
+    List<Class1> var2 = new ArrayList<>();
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            var1.put(i, new Class1(i));
+            var2.add(var1.get(i));
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int var3 = prerequisites[i][1];
+            int dep = prerequisites[i][0];
+            if (!var1.containsKey(var3))
+                var1.put(var3, new Class1(var3));
+            if (!var1.containsKey(dep))
+                var1.put(dep, new Class1(dep));
+            Class1 var4 = var1.get(var3);
+            Class1 depNode = var1.get(dep);
+            var4.preReqs.add(depNode);
+        }
+        while (var2.size() > 0) {
+            Class1 node = var2.get(var2.size() - 1);
+            var2.remove(var2.size() - 1);
+            boolean isCyclic = dfs(node, result);
+            if (isCyclic)
+                return new int[0];
+        }
+        int[] res = new int[result.size()];
+        for (int i = 0, j = result.size() - 1; i < result.size(); i++, j--) {
+            res[i] = result.get(j);
+        }
+        return res;
+    }
+
+    public boolean dfs(Class1 node, List<Integer> result) {
+        if (node.visited)
+            return false;
+        if (node.visiting)
+            return true;
+        node.visiting = true;
+        for (Class1 prereq : node.preReqs) {
+            boolean isCyclic = dfs(prereq, result);
+            if (isCyclic)
+                return true;
+        }
+        node.visited = true;
+        node.visiting = false;
+        result.add(node.val);
+        return false;
+    }
+
+    class Class1 {
+
+        int val;
+
+        boolean visited;
+
+        boolean visiting;
+
+        List<Class1> preReqs;
+
+        Class1(int val) {
+            this.val = val;
+            this.preReqs = new ArrayList<>();
+            this.visited = false;
+            this.visiting = false;
+        }
+    }
+}

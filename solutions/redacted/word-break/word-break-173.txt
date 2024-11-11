@@ -1,0 +1,31 @@
+public class Solution {
+
+    private boolean method1(String s, Set<String> param1, int i, Map<Integer, Boolean> memo) {
+        if (i == s.length()) {
+            // If we reach the end of the string, it\'s breakable
+            return true;
+        }
+        if (memo.containsKey(i)) {
+            // Return memoized result
+            return memo.get(i);
+        }
+        for (int j = i; j < s.length(); j++) {
+            String prefix = s.substring(i, j + 1);
+            if (param1.contains(prefix) && method1(s, param1, j + 1, memo)) {
+                // Memoize the result
+                memo.put(i, true);
+                return true;
+            }
+        }
+        // Memoize the result
+        memo.put(i, false);
+        return false;
+    }
+
+    public boolean method2(String s, List<String> param2) {
+        Set<String> param1 = new HashSet<>(param2);
+        // Use memoization to avoid redundant computations
+        Map<Integer, Boolean> memo = new HashMap<>();
+        return method1(s, param1, 0, memo);
+    }
+}

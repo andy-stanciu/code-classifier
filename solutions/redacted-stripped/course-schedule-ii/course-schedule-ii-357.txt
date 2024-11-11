@@ -1,0 +1,41 @@
+class Solution {
+
+    int index = 0;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] ans = new int[param1];
+        index = param1 - 1;
+        ArrayList<Integer>[] g = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            g[i] = new ArrayList<>();
+        }
+        for (int[] e : prerequisites) {
+            g[e[1]].add(e[0]);
+        }
+        int[] color = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (color[i] == 0 && !acyclic(g, i, color, ans)) {
+                return new int[0];
+            }
+        }
+        return ans;
+    }
+
+    boolean acyclic(ArrayList<Integer>[] g, int i, int[] color, int[] ans) {
+        if (color[i] == 1) {
+            return false;
+        }
+        if (color[i] == 2) {
+            return true;
+        }
+        color[i] = 1;
+        for (int j : g[i]) {
+            if (!acyclic(g, j, color, ans)) {
+                return false;
+            }
+        }
+        color[i] = 2;
+        ans[index--] = i;
+        return true;
+    }
+}

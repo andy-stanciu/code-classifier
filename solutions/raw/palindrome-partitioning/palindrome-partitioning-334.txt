@@ -1,0 +1,39 @@
+class Solution {
+
+    boolean ispalindrome(String str) {
+        int i = 0, j = str.length() - 1;
+        while (str.charAt(i) == str.charAt(j)) {
+            if (i >= j) {
+                return true;
+            }
+            i++;
+            j--;
+        }
+        return false;
+    }
+
+    void partition(String s, int index, List<String> curr, List<List<String>> ans) {
+        if (index == s.length()) {
+            //save ans
+            ans.add(new ArrayList<String>(curr));
+            return;
+        }
+        for (int i = index; i < s.length(); i++) {
+            String subString = s.substring(index, i + 1);
+            //move from left to right
+            // if index to i is palidrome then add it to list and call funtion again with  i as index( i to end as string now.)
+            if (ispalindrome(subString)) {
+                curr.add(subString);
+                partition(s, i + 1, curr, ans);
+                curr.remove(curr.size() - 1);
+            }
+        }
+    }
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> ans = new ArrayList<>();
+        List<String> curr = new ArrayList<>();
+        partition(s, 0, curr, ans);
+        return ans;
+    }
+}

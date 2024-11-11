@@ -1,0 +1,66 @@
+class Solution {
+
+    public boolean dfs(int n, int[] vis, int[] pathvis, List<List<Integer>> adj) {
+        vis[n] = 1;
+        pathvis[n] = 1;
+        for (int i : adj.get(n)) {
+            if (vis[i] == 0) {
+                if (dfs(i, vis, pathvis, adj))
+                    return true;
+            } else if (pathvis[i] == 1)
+                return true;
+        }
+        pathvis[n] = 0;
+        return false;
+    }
+
+    // Function to detect cycle in a directed graph.
+    public boolean isCyclic(int V, List<List<Integer>> adj) {
+        int[] vis = new int[V];
+        int[] pathVis = new int[V];
+        for (int i = 0; i < V; i++) {
+            if (vis[i] == 0) {
+                if (dfs(i, vis, pathVis, adj))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] vis = new int[param1];
+        Stack<Integer> st = new Stack<>();
+        int i = 0;
+        List<List<Integer>> adj = new ArrayList<>();
+        for (i = 0; i < param1; i++) adj.add(new ArrayList<>());
+        adjList(prerequisites, adj);
+        if (isCyclic(param1, adj))
+            return new int[] {};
+        for (i = 0; i < param1; i++) {
+            if (vis[i] == 0)
+                dfs(i, adj, st, vis);
+        }
+        int[] ans = new int[st.size()];
+        i = 0;
+        while (!st.isEmpty()) {
+            ans[i] = st.pop();
+            i++;
+        }
+        return ans;
+    }
+
+    public void adjList(int[][] g, List<List<Integer>> adj) {
+        for (int i = 0; i < g.length; i++) {
+            adj.get(g[i][1]).add(g[i][0]);
+        }
+    }
+
+    public void dfs(int n, List<List<Integer>> adj, Stack<Integer> st, int[] vis) {
+        vis[n] = 1;
+        for (int i : adj.get(n)) {
+            if (vis[i] == 0)
+                dfs(i, adj, st, vis);
+        }
+        st.push(n);
+    }
+}

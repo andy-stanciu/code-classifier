@@ -1,0 +1,49 @@
+class Solution {
+
+    int n;
+
+    boolean[][] var1;
+
+    String[][] substrings;
+
+    List<List<String>> ans;
+
+    public List<List<String>> partition(String s) {
+        n = s.length();
+        var1 = new boolean[n + 1][n + 1];
+        substrings = new String[n + 1][n + 1];
+        for (int i = 0; i < n; i++) for (int j = i + 1; j <= n; j++) {
+            substrings[i][j] = s.substring(i, j);
+            var1[i][j] = method1(substrings[i][j]);
+        }
+        ans = new ArrayList<List<String>>();
+        FindSubstrings(0, new ArrayList<String>());
+        return ans;
+    }
+
+    void FindSubstrings(int ind, ArrayList<String> list) {
+        if (ind == n) {
+            ans.add(new ArrayList<String>(list));
+            return;
+        }
+        for (int i = ind + 1; i <= n; i++) {
+            if (!var1[ind][i])
+                continue;
+            list.add(substrings[ind][i]);
+            FindSubstrings(i, list);
+            list.remove(list.size() - 1);
+        }
+    }
+
+    boolean method1(String s) {
+        int lower = 0;
+        int higher = s.length() - 1;
+        while (lower < higher) {
+            if (s.charAt(lower) != s.charAt(higher))
+                return false;
+            lower++;
+            higher--;
+        }
+        return true;
+    }
+}

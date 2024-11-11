@@ -1,0 +1,50 @@
+class Solution {
+
+    private int[] res;
+
+    private int index;
+
+    private boolean flag;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        Map<Integer, ArrayList<Integer>> map = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            map.put(i, new ArrayList<Integer>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            ArrayList<Integer> list = map.get(prerequisites[i][0]);
+            list.add(prerequisites[i][1]);
+            map.put(prerequisites[i][0], list);
+        }
+        int[] dp = new int[param1];
+        int[] visited = new int[param1];
+        res = new int[param1];
+        index = 0;
+        flag = false;
+        for (int i = 0; i < param1; i++) {
+            process(i, map, dp, visited, res);
+            if (flag)
+                return new int[] {};
+        }
+        return res;
+    }
+
+    private void process(int key, Map<Integer, ArrayList<Integer>> map, int[] dp, int[] visited, int[] res) {
+        if (visited[key] == 1)
+            flag = true;
+        else if (dp[key] == 1)
+            return;
+        else {
+            ArrayList<Integer> list = map.get(key);
+            visited[key] = 1;
+            dp[key] = 1;
+            for (int i = 0; i < list.size(); i++) {
+                process(list.get(i), map, dp, visited, res);
+                if (flag)
+                    return;
+            }
+            res[index++] = key;
+            visited[key] = 0;
+        }
+    }
+}

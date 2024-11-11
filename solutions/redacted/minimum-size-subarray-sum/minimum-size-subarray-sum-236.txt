@@ -1,0 +1,43 @@
+class Solution {
+
+    public int method1(int target, int[] nums) {
+        int var1 = 0;
+        int i = 0, j = 0;
+        // lets create the window
+        while (var1 < target && j < nums.length) {
+            var1 += nums[j];
+            j++;
+        }
+        if (var1 < target)
+            return 0;
+        int left = i;
+        int right = --j;
+        // now sliding the window
+        int prev = -1;
+        while (j < nums.length) {
+            //    op
+            if (prev != -1) {
+                var1 -= prev;
+                var1 += nums[j];
+            }
+            // shrinking the window if possible
+            while (var1 >= target) {
+                if ((var1 - nums[i]) < target) {
+                    break;
+                }
+                var1 -= nums[i];
+                // shrining is done here
+                i++;
+            }
+            // looking for smaller size subarray
+            if (var1 >= target && (right - left) > (j - i)) {
+                left = i;
+                right = j;
+            }
+            prev = nums[i];
+            i++;
+            j++;
+        }
+        return right - left + 1;
+    }
+}

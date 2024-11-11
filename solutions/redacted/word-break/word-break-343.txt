@@ -1,0 +1,84 @@
+class TrieNode {
+
+    boolean var1;
+
+    Map<Character, TrieNode> children;
+
+    TrieNode() {
+        this.children = new HashMap<>();
+    }
+}
+
+class Trie {
+
+    TrieNode root;
+
+    Trie() {
+        this.root = new TrieNode();
+    }
+
+    Trie(List<String> param1) {
+        this.root = new TrieNode();
+        for (String var2 : param1) {
+            insert(var2);
+        }
+    }
+
+    void insert(String var2) {
+        TrieNode curr = root;
+        for (int i = 0; i < var2.length(); i++) {
+            char c = var2.charAt(i);
+            if (!curr.children.containsKey(c))
+                curr.children.put(c, new TrieNode());
+            curr = curr.children.get(c);
+        }
+        curr.var1 = true;
+    }
+
+    boolean find(String var2) {
+        TrieNode curr = root;
+        for (int i = 0; i < var2.length(); i++) {
+            char c = var2.charAt(i);
+            if (!curr.children.containsKey(c))
+                return false;
+        }
+        return curr.var1;
+    }
+
+    void walk(String var2, int i, boolean[] d) {
+        TrieNode curr = root;
+        for (int j = i; j < var2.length(); j++) {
+            char c = var2.charAt(j);
+            if (!curr.children.containsKey(c))
+                break;
+            curr = curr.children.get(c);
+            d[j] = curr.var1;
+        }
+        if (d[var2.length() - 1])
+            System.out.println("YES true");
+    }
+}
+
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        Trie trie = new Trie(param1);
+        int n = s.length();
+        boolean[] d = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            if (i == 0 || d[i - 1]) {
+                // trie.walk(s, i, d);
+                TrieNode curr = trie.root;
+                for (int j = i; j < n; j++) {
+                    char c = s.charAt(j);
+                    if (!curr.children.containsKey(c))
+                        break;
+                    curr = curr.children.get(c);
+                    if (curr.var1)
+                        d[j] = true;
+                }
+            }
+        }
+        return d[n - 1];
+    }
+}

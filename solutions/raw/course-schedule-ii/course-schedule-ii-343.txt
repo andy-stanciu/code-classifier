@@ -1,0 +1,48 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] grid) {
+        //topological sorting
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
+        int[] indegree = new int[numCourses];
+        Map<Integer, Boolean> visited = new HashMap<>();
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<Integer>());
+        }
+        for (int i = 0; i < grid.length; i++) {
+            adj.get(grid[i][1]).add(grid[i][0]);
+            indegree[grid[i][0]]++;
+        }
+        int[] ans = new int[numCourses];
+        int t = 0;
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0) {
+                queue.add(i);
+                visited.put(i, true);
+                ans[t] = i;
+                t++;
+            }
+        }
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            List<Integer> nodes = adj.get(node);
+            for (Integer val : nodes) {
+                if (!visited.containsKey(val)) {
+                    indegree[val]--;
+                    if (indegree[val] == 0) {
+                        queue.add(val);
+                        visited.put(val, true);
+                        ans[t] = val;
+                        t++;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] > 0) {
+                return new int[0];
+            }
+        }
+        return ans;
+    }
+}

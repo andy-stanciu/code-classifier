@@ -1,0 +1,31 @@
+class Solution {
+
+    private Set<String> misses = new HashSet<>();
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Map<Character, Set<String>> wordsByChar = new HashMap<>();
+        for (String word : wordDict) {
+            Set<String> words = wordsByChar.getOrDefault(word.charAt(0), new HashSet<>());
+            words.add(word);
+            wordsByChar.put(word.charAt(0), words);
+        }
+        return wordBreak(s, wordsByChar);
+    }
+
+    private boolean wordBreak(String s, Map<Character, Set<String>> words) {
+        if (misses.contains(s)) {
+            return false;
+        }
+        for (String word : words.getOrDefault(s.charAt(0), new HashSet<>())) {
+            if (s.equals(word)) {
+                return true;
+            } else if (s.startsWith(word)) {
+                if (wordBreak(s.substring(word.length()), words)) {
+                    return true;
+                }
+            }
+        }
+        misses.add(s);
+        return false;
+    }
+}

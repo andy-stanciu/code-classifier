@@ -1,0 +1,31 @@
+class Solution {
+
+    Set<String> var1;
+
+    Map<String, Boolean> memo = new HashMap<>();
+
+    int max = Integer.MIN_VALUE;
+
+    public boolean method1(String s, List<String> var1) {
+        this.var1 = new HashSet<>(var1);
+        for (String string : var1) {
+            max = Math.max(max, string.length());
+        }
+        return dp(s.length() - 1, "", s);
+    }
+
+    public boolean dp(int i, String tmp, String s) {
+        if (i == -1) {
+            return var1.contains(tmp);
+        }
+        if (tmp.length() > max) {
+            return false;
+        }
+        if (memo.containsKey(tmp + ":" + i)) {
+            return memo.get(tmp + ":" + i);
+        }
+        boolean result = (var1.contains(tmp) && dp(i, "", s)) || dp(i - 1, s.charAt(i) + tmp, s);
+        memo.put(tmp + ":" + i, result);
+        return result;
+    }
+}

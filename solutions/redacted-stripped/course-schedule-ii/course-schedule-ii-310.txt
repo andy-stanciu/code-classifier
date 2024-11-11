@@ -1,0 +1,70 @@
+class Solution {
+
+    List<List<Integer>> adjList = new ArrayList<>();
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        initGraph(param1, prerequisites);
+        boolean[] visited = new boolean[param1];
+        Set<Integer> path = new HashSet<>();
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                if (dfs(i, visited, path)) {
+                    return new int[] {};
+                }
+            }
+        }
+        int[] ans = new int[param1];
+        int[] inDegree = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            for (int nbr : adjList.get(i)) {
+                inDegree[nbr]++;
+            }
+        }
+        Queue<Integer> q = new PriorityQueue<>();
+        for (int i = 0; i < param1; i++) {
+            if (inDegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        int idx = 0;
+        while (!q.isEmpty()) {
+            int a = q.poll();
+            ans[idx++] = a;
+            for (int nbr : adjList.get(a)) {
+                inDegree[nbr]--;
+                if (inDegree[nbr] == 0) {
+                    q.add(nbr);
+                }
+            }
+        }
+        return ans;
+    }
+
+    private boolean dfs(int src, boolean[] visited, Set<Integer> path) {
+        visited[src] = true;
+        path.add(src);
+        for (int nbr : adjList.get(src)) {
+            if (path.contains(nbr)) {
+                return true;
+            }
+            if (!visited[nbr]) {
+                if (dfs(nbr, visited, path)) {
+                    return true;
+                }
+            }
+        }
+        path.remove(src);
+        return false;
+    }
+
+    private void initGraph(int param1, int[][] prerequisites) {
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] edge : prerequisites) {
+            int u = edge[1];
+            int v = edge[0];
+            adjList.get(u).add(v);
+        }
+    }
+}

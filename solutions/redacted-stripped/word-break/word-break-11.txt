@@ -1,0 +1,31 @@
+class Solution {
+
+    Set<String> dictionary;
+
+    Map<String, Boolean> memo;
+
+    public boolean method1(String s, String cur, int index) {
+        String key = cur + "_" + index;
+        if (memo.containsKey(key))
+            return memo.get(key);
+        if (index == s.length()) {
+            return dictionary.contains(cur);
+        }
+        char c = s.charAt(index);
+        if (dictionary.contains(cur)) {
+            if (method1(s, "" + c, index + 1)) {
+                memo.put(key, true);
+                return true;
+            }
+        }
+        memo.put(key, method1(s, cur + c, index + 1));
+        return memo.get(key);
+    }
+
+    public boolean method2(String s, List<String> param1) {
+        dictionary = new HashSet<>();
+        memo = new HashMap<>();
+        for (String var1 : param1) dictionary.add(var1);
+        return method1(s, "", 0);
+    }
+}

@@ -1,0 +1,35 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // create graph and calc indegree of all nodes
+        int[] indegree = new int[numCourses];
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) graph.add(new ArrayList<>());
+        for (int[] edge : prerequisites) {
+            graph.get(edge[1]).add(edge[0]);
+            indegree[edge[0]]++;
+        }
+        // create a queue and add all the graphs with indegree 0
+        LinkedList<Integer> q = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0)
+                q.offer(i);
+        }
+        // remove from queue and add to the res
+        int[] res = new int[numCourses];
+        int idx = 0;
+        while (!q.isEmpty()) {
+            int temp = q.poll();
+            res[idx++] = temp;
+            // decrease the indegree of neighbors
+            // means decreasing prereqs to finish that course
+            // when prereqs are 0 we can do the course ie. just offer to queue
+            for (int neighbor : graph.get(temp)) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0)
+                    q.offer(neighbor);
+            }
+        }
+        return idx == numCourses ? res : new int[0];
+    }
+}

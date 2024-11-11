@@ -1,0 +1,41 @@
+class Solution {
+
+    int timestamp = 0;
+
+    int orderIndex = 0;
+
+    private boolean dfs(int course, Map<Integer, List<Integer>> graph, int[] arrival, int[] departure, int[] order) {
+        arrival[course] = ++timestamp;
+        if (graph.get(course) != null) {
+            for (int neighbor : graph.get(course)) {
+                if (arrival[neighbor] == 0) {
+                    // not visited
+                    if (// has cycle
+                    dfs(neighbor, graph, arrival, departure, order))
+                        return true;
+                } else if (// back edge
+                departure[neighbor] == 0)
+                    return true;
+            }
+        }
+        if (// first time departing from the node
+        departure[course] == 0)
+            order[orderIndex--] = course;
+        departure[course] = ++timestamp;
+        return false;
+    }
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // 1. build the graph
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int[] p : prerequisites) graph.computeIfAbsent(p[1], k -> new ArrayList<>()).add(p[0]);
+        int[] arrival = new int[numCourses];
+        int[] departure = new int[numCourses];
+        int[] order = new int[numCourses];
+        orderIndex = numCourses - 1;
+        for (int course = 0; course < numCourses; course++) if (// hascycle
+        dfs(course, graph, arrival, departure, order))
+            return new int[] {};
+        return order;
+    }
+}

@@ -1,0 +1,37 @@
+class Solution {
+
+    public int evalRPN(String[] tokens) {
+        int len = tokens.length;
+        if (len == 1)
+            return Integer.parseInt(tokens[0]);
+        Set<String> set = new HashSet<>();
+        Stack<Integer> stack = new Stack<>();
+        set.add("+");
+        set.add("*");
+        set.add("/");
+        set.add("-");
+        int sum = 0;
+        for (int i = 0; i < len; i++) {
+            if (set.contains(tokens[i])) {
+                int b = stack.pop();
+                int a = stack.pop();
+                sum = operate(tokens[i], a, b);
+                stack.push(sum);
+            } else {
+                int n = Integer.parseInt(tokens[i]);
+                stack.push(n);
+            }
+        }
+        return sum;
+    }
+
+    private static int operate(String op, int a, int b) {
+        if (op.equals("+"))
+            return a + b;
+        else if (op.equals("-"))
+            return a - b;
+        else if (op.equals("*"))
+            return a * b;
+        return a / b;
+    }
+}

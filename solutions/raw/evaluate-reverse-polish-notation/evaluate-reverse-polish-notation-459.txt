@@ -1,0 +1,68 @@
+class Solution {
+
+    public int evalRPN(String[] tokens) {
+        /*
+        Reverse Polish Notation works like this.
+
+        The operation you want to perform appears after the operands.
+        For eg. you wanted to add 2 and 3, usually you do 2 + 3. 
+        But in this notation you do it like this: 2, 3, +.
+
+        of you wanted to multiply 7 to 2 + 3, usually you do (2 + 3) * 7
+        but in this notation you do it like this: 2, 3, +, 7, *.
+        */
+        /*
+
+        Solution Ideation.
+
+        Main idea. You keep on adding the operands, once you encounter an operator,
+        take out the last two appeared operands and perform the operation.
+        replace the last two operands with the answer you got and continue.
+        */
+        // declare a stack to access the last accessed elements
+        // remember stacks work flow is LIFO (Last - in - first - out).
+        Stack<String> stack = new Stack<>();
+        for (String s : tokens) {
+            // check if the token is an operator or not
+            if (isOperator(s)) {
+                // if yes, take out the 2nd operand
+                int operand2 = convert(stack.pop());
+                // then, the first one
+                int operand1 = convert(stack.pop());
+                // calc the answer
+                int ans = calculate(operand1, operand2, s);
+                // push the ans back into stack
+                stack.push(ans + "");
+            } else {
+                // if it is not an operator, just push to stack
+                stack.push(s);
+            }
+        }
+        // return the top of stack, as it will be the answer
+        return Integer.parseInt(stack.peek());
+    }
+
+    // return true if the token is an operator
+    public static boolean isOperator(String s) {
+        return s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/");
+    }
+
+    // returns the token in interger datatype
+    public static int convert(String s) {
+        return Integer.parseInt(s);
+    }
+
+    // calc the operation and returns the result
+    public static int calculate(int op1, int op2, String s) {
+        switch(s) {
+            case "+":
+                return op1 + op2;
+            case "-":
+                return op1 - op2;
+            case "*":
+                return op1 * op2;
+            default:
+                return op1 / op2;
+        }
+    }
+}

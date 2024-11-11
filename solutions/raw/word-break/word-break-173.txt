@@ -1,0 +1,31 @@
+public class Solution {
+
+    private boolean wordBreakHelper(String s, Set<String> wordSet, int i, Map<Integer, Boolean> memo) {
+        if (i == s.length()) {
+            // If we reach the end of the string, it\'s breakable
+            return true;
+        }
+        if (memo.containsKey(i)) {
+            // Return memoized result
+            return memo.get(i);
+        }
+        for (int j = i; j < s.length(); j++) {
+            String prefix = s.substring(i, j + 1);
+            if (wordSet.contains(prefix) && wordBreakHelper(s, wordSet, j + 1, memo)) {
+                // Memoize the result
+                memo.put(i, true);
+                return true;
+            }
+        }
+        // Memoize the result
+        memo.put(i, false);
+        return false;
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> wordSet = new HashSet<>(wordDict);
+        // Use memoization to avoid redundant computations
+        Map<Integer, Boolean> memo = new HashMap<>();
+        return wordBreakHelper(s, wordSet, 0, memo);
+    }
+}

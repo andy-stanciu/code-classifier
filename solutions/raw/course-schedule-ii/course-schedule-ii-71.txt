@@ -1,0 +1,51 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> children = new HashMap<>();
+        Set<Integer> visited = new HashSet<>();
+        Stack<Integer> res = new Stack<>();
+        for (int[] oneItem : prerequisites) {
+            List<Integer> childrenForOneItem = children.getOrDefault(oneItem[1], new ArrayList<>());
+            childrenForOneItem.add(oneItem[0]);
+            children.put(oneItem[1], childrenForOneItem);
+        }
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited.contains(i)) {
+                Set<Integer> parent = new HashSet<>();
+                boolean dfsRes = dfs(visited, children, i, res, parent);
+                if (!dfsRes) {
+                    return new int[0];
+                }
+            }
+        }
+        int[] retVal = new int[res.size()];
+        int k = 0;
+        while (!res.isEmpty()) {
+            retVal[k] = res.pop();
+            k++;
+        }
+        return retVal;
+    }
+
+    private boolean dfs(Set<Integer> visited, Map<Integer, List<Integer>> children, int course, Stack<Integer> res, Set<Integer> parent) {
+        if (parent.contains(course)) {
+            return false;
+        }
+        parent.add(course);
+        if (visited.contains(course)) {
+            parent.remove(course);
+            return true;
+        }
+        visited.add(course);
+        List<Integer> childrenCourses = children.getOrDefault(course, new ArrayList<>());
+        for (int oneChild : childrenCourses) {
+            boolean retVal = dfs(visited, children, oneChild, res, parent);
+            if (!retVal) {
+                return false;
+            }
+        }
+        res.push(course);
+        parent.remove(course);
+        return true;
+    }
+}

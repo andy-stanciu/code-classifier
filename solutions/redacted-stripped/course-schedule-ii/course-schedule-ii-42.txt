@@ -1,0 +1,63 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        int j = 0;
+        while (j < param1) {
+            adj.add(new ArrayList<>());
+            j++;
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        int[] s = {};
+        int[] arr = new int[param1];
+        if (isCyclic(adj))
+            return s;
+        boolean[] vis = new boolean[param1];
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < adj.size(); i++) {
+            if (!vis[i])
+                topsortutil(adj, i, vis, st);
+        }
+        int g = 0;
+        while (!st.isEmpty()) {
+            arr[g++] = st.pop();
+        }
+        return arr;
+    }
+
+    public void topsortutil(ArrayList<ArrayList<Integer>> adj, int curr, boolean[] visited, Stack<Integer> st) {
+        visited[curr] = true;
+        for (int i = 0; i < adj.get(curr).size(); i++) {
+            if (!visited[adj.get(curr).get(i)])
+                topsortutil(adj, adj.get(curr).get(i), visited, st);
+        }
+        st.push(curr);
+    }
+
+    public boolean isCyclic(ArrayList<ArrayList<Integer>> adj) {
+        boolean[] visited = new boolean[adj.size()];
+        boolean[] stack = new boolean[adj.size()];
+        for (int i = 0; i < adj.size(); i++) {
+            if (!visited[i]) {
+                if (iscycleutil(adj, i, stack, visited))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean iscycleutil(ArrayList<ArrayList<Integer>> adj, int curr, boolean[] stack, boolean[] visited) {
+        visited[curr] = true;
+        stack[curr] = true;
+        for (int i = 0; i < adj.get(curr).size(); i++) {
+            if (stack[adj.get(curr).get(i)])
+                return true;
+            if (!visited[adj.get(curr).get(i)] && iscycleutil(adj, adj.get(curr).get(i), stack, visited))
+                return true;
+        }
+        stack[curr] = false;
+        return false;
+    }
+}

@@ -1,0 +1,47 @@
+class Solution {
+
+    Set<String> var1 = new HashSet<>();
+
+    Boolean[] cache;
+
+    public boolean method1(String s, List<String> param1) {
+        int n = s.length();
+        for (String var2 : param1) {
+            var1.add(var2);
+        }
+        // recursive soln
+        // cache = new Boolean[n];
+        // return check(s, 0);
+        // tabular soln
+        boolean[] dp = new boolean[n + 1];
+        dp[n] = true;
+        for (int startIndex = n - 1; startIndex >= 0; startIndex--) {
+            for (int endIndex = startIndex + 1; endIndex <= n; endIndex++) {
+                String substr = s.substring(startIndex, endIndex);
+                if (var1.contains(substr) && dp[endIndex]) {
+                    dp[startIndex] = true;
+                }
+            }
+        }
+        return dp[0];
+    }
+
+    private boolean check(String s, int startIndex) {
+        if (startIndex == s.length()) {
+            return true;
+        }
+        if (cache[startIndex] != null) {
+            return cache[startIndex];
+        }
+        for (int endIndex = startIndex + 1; endIndex <= s.length(); endIndex++) {
+            String substr = s.substring(startIndex, endIndex);
+            // System.out.println(substr);
+            if (var1.contains(substr) && check(s, endIndex)) {
+                cache[startIndex] = true;
+                return true;
+            }
+        }
+        cache[startIndex] = false;
+        return false;
+    }
+}

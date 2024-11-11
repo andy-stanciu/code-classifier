@@ -1,0 +1,52 @@
+class Solution {
+
+    class Pair {
+
+        TreeNode node;
+
+        int var1;
+
+        List<Integer> lst;
+
+        Pair(TreeNode _node, int param1, List<Integer> _lst) {
+            this.node = _node;
+            this.var1 = param1;
+            this.lst = new ArrayList<>(_lst);
+        }
+    }
+
+    public List<List<Integer>> method1(TreeNode root, int param2) {
+        List<List<Integer>> var2 = new ArrayList<>();
+        if (root == null) {
+            return var2;
+        }
+        Queue<Pair> queue = new LinkedList<>();
+        List<Integer> initialList = new ArrayList<>();
+        initialList.add(root.val);
+        queue.add(new Pair(root, root.val, initialList));
+        return bfs(queue, var2, param2);
+    }
+
+    private List<List<Integer>> bfs(Queue<Pair> queue, List<List<Integer>> var2, int param2) {
+        while (!queue.isEmpty()) {
+            Pair p = queue.poll();
+            TreeNode node = p.node;
+            int var1 = p.var1;
+            List<Integer> lst = p.lst;
+            if (var1 == param2 && node.left == null && node.right == null) {
+                var2.add(new ArrayList<>(lst));
+            }
+            if (node.left != null) {
+                List<Integer> newList = new ArrayList<>(lst);
+                newList.add(node.left.val);
+                queue.add(new Pair(node.left, var1 + node.left.val, newList));
+            }
+            if (node.right != null) {
+                List<Integer> newList = new ArrayList<>(lst);
+                newList.add(node.right.val);
+                queue.add(new Pair(node.right, var1 + node.right.val, newList));
+            }
+        }
+        return var2;
+    }
+}

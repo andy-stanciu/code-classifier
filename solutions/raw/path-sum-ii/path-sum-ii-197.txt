@@ -1,0 +1,42 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> answerlist = new ArrayList<>();
+        List<Integer> locallist = new ArrayList<>();
+        return pathSumHelper(root, targetSum, answerlist, locallist);
+    }
+
+    public List<List<Integer>> pathSumHelper(TreeNode root, int targetSum, List<List<Integer>> answerlist, List<Integer> locallist) {
+        if (root == null) {
+            return answerlist;
+        }
+        locallist.add(root.val);
+        if (root.val == targetSum && root.left == null && root.right == null) {
+            // If it\'s a leaf node and its value equals targetSum, add the path to
+            // answerlist
+            // Create a new list object
+            answerlist.add(new ArrayList<>(locallist));
+        }
+        // Recursively traverse left and right subtrees
+        pathSumHelper(root.left, targetSum - root.val, answerlist, locallist);
+        pathSumHelper(root.right, targetSum - root.val, answerlist, locallist);
+        // Backtrack: Remove the last element to backtrack when moving up the tree
+        locallist.remove(locallist.size() - 1);
+        return answerlist;
+    }
+}

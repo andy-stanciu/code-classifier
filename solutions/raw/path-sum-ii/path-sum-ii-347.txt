@@ -1,0 +1,53 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        final List<List<Integer>> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
+        final List<Integer> currentPath = new ArrayList<>();
+        currentPath.add(root.val);
+        pathSumBT(root, targetSum, currentPath, 0, res);
+        return res;
+    }
+
+    private void pathSumBT(TreeNode root, int targetSum, List<Integer> currentPath, int currentSum, List<List<Integer>> res) {
+        // note not a leaf this represents null branch from a node
+        if (root == null) {
+            return;
+        }
+        final var t = currentSum + root.val;
+        // a leaf where we have a value and both children are null
+        if (root.left == null && root.right == null && t == targetSum) {
+            // a valid solution to copy into results.
+            res.add(new ArrayList<>(currentPath));
+            return;
+        }
+        // backtrace both branches where we look for all paths yielding target
+        if (root.left != null) {
+            currentPath.add(root.left.val);
+            pathSumBT(root.left, targetSum, currentPath, t, res);
+            currentPath.remove(currentPath.size() - 1);
+        }
+        if (root.right != null) {
+            currentPath.add(root.right.val);
+            pathSumBT(root.right, targetSum, currentPath, t, res);
+            currentPath.remove(currentPath.size() - 1);
+        }
+    }
+}

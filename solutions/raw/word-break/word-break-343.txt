@@ -1,0 +1,84 @@
+class TrieNode {
+
+    boolean isWordEnding;
+
+    Map<Character, TrieNode> children;
+
+    TrieNode() {
+        this.children = new HashMap<>();
+    }
+}
+
+class Trie {
+
+    TrieNode root;
+
+    Trie() {
+        this.root = new TrieNode();
+    }
+
+    Trie(List<String> wordDict) {
+        this.root = new TrieNode();
+        for (String word : wordDict) {
+            insert(word);
+        }
+    }
+
+    void insert(String word) {
+        TrieNode curr = root;
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            if (!curr.children.containsKey(c))
+                curr.children.put(c, new TrieNode());
+            curr = curr.children.get(c);
+        }
+        curr.isWordEnding = true;
+    }
+
+    boolean find(String word) {
+        TrieNode curr = root;
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            if (!curr.children.containsKey(c))
+                return false;
+        }
+        return curr.isWordEnding;
+    }
+
+    void walk(String word, int i, boolean[] d) {
+        TrieNode curr = root;
+        for (int j = i; j < word.length(); j++) {
+            char c = word.charAt(j);
+            if (!curr.children.containsKey(c))
+                break;
+            curr = curr.children.get(c);
+            d[j] = curr.isWordEnding;
+        }
+        if (d[word.length() - 1])
+            System.out.println("YES true");
+    }
+}
+
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Trie trie = new Trie(wordDict);
+        int n = s.length();
+        boolean[] d = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            if (i == 0 || d[i - 1]) {
+                // trie.walk(s, i, d);
+                TrieNode curr = trie.root;
+                for (int j = i; j < n; j++) {
+                    char c = s.charAt(j);
+                    if (!curr.children.containsKey(c))
+                        break;
+                    curr = curr.children.get(c);
+                    if (curr.isWordEnding)
+                        d[j] = true;
+                }
+            }
+        }
+        return d[n - 1];
+    }
+}

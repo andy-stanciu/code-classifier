@@ -1,0 +1,34 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        // the idea here is to, segment string s using dictionary words
+        // leetcode can be segmented into leet and code so return true
+        // but catsanddog cannot be segmented into dictionary words because sand, and and dog share a one or more characters so false
+        // the approach is bottom-up, we start from index=s.length() and go up. the base case is set to true
+        // one for base case
+        boolean[] dp = new boolean[s.length() + 1];
+        // instance var in Java will be false by default so setting base case to true
+        dp[s.length()] = true;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            // we need to decide if this i index is a true or false
+            // how could we decide? we check to see if s[i, i+word.length]=word. so we need to loop through dict words
+            for (String var1 : param1) {
+                if (i + var1.length() <= s.length() && s.substring(i, i + var1.length()).equals(var1)) {
+                    // first check to see if i+word.length will fit into string s if yes what\'s the substring
+                    // lets say for i=4 for leetcode, we should hit the string end with i+word.length
+                    dp[i] = dp[i + var1.length()];
+                    // we set true for this index i
+                    // the understanding here is, we dont want any overlaps or share the same letter for different words
+                    // for example, "catsandog", if we set index 6 for d as true (that means \'dog\' is segmented out of string already), even though it meets conditions for \'and\' and \'sand\', we dont set say index 7 for \'o\' to true
+                    // thats why we dont simply say dp[i]=true instead tie to dp[i+word.length()]
+                }
+                if (dp[i] == true) {
+                    // if we match one word and we assign that string segment to that word we break out of loop
+                    break;
+                }
+            }
+        }
+        // if we can track through the string s and if there is a word match the last true was exactly at i+word.length so the string can be segmented successfully (which will be lastIndex of word + 1)
+        return dp[0];
+    }
+}

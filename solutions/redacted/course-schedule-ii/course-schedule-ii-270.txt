@@ -1,0 +1,36 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList();
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<Integer>());
+        }
+        for (int[] prereq : prerequisites) {
+            adjList.get(prereq[0]).add(prereq[1]);
+        }
+        Set<Integer> visitingNodes = new HashSet();
+        Set<Integer> visitedNodes = new HashSet();
+        List<Integer> result = new ArrayList();
+        for (int i = 0; i < param1; i++) {
+            if (!dfs(adjList, visitedNodes, visitingNodes, result, i))
+                return new int[] {};
+        }
+        return result.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    private boolean dfs(List<List<Integer>> adjList, Set<Integer> visitedNode, Set<Integer> visitingNode, List<Integer> resultList, int node) {
+        if (visitingNode.contains(node))
+            return false;
+        if (visitedNode.contains(node))
+            return true;
+        visitingNode.add(node);
+        for (int currentNode : adjList.get(node)) {
+            if (!dfs(adjList, visitedNode, visitingNode, resultList, currentNode))
+                return false;
+        }
+        visitingNode.remove(node);
+        visitedNode.add(node);
+        resultList.add(node);
+        return true;
+    }
+}

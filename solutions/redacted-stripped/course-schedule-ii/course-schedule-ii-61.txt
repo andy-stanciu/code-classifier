@@ -1,0 +1,35 @@
+class Solution {
+
+    public boolean dfs(int node, ArrayList<ArrayList<Integer>> pre, int[] vis, int[] pathVis, ArrayList<Integer> res) {
+        vis[node] = 1;
+        pathVis[node] = 1;
+        for (Integer i : pre.get(node)) {
+            if (vis[i] == 0) {
+                if (dfs(i, pre, vis, pathVis, res) == true)
+                    return true;
+            } else if (pathVis[i] == 1)
+                return true;
+        }
+        res.add(0, node);
+        pathVis[node] = 0;
+        return false;
+    }
+
+    public int[] findOrder(int n, int[][] prerequisites) {
+        int[] vis = new int[n];
+        int[] pathVis = new int[n];
+        ArrayList<ArrayList<Integer>> pre = new ArrayList<>();
+        ArrayList<Integer> res = new ArrayList<>();
+        for (int i = 0; i < n; i++) pre.add(new ArrayList<>());
+        for (int i = 0; i < prerequisites.length; i++) {
+            pre.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        for (int i = 0; i < n; i++) {
+            if (vis[i] == 0) {
+                if (dfs(i, pre, vis, pathVis, res) == true)
+                    return new int[] {};
+            }
+        }
+        return res.stream().mapToInt(Integer::intValue).toArray();
+    }
+}

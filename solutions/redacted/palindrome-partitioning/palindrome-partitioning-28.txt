@@ -1,0 +1,39 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> var1 = new ArrayList<>();
+        int[][] dp = new int[s.length()][s.length()];
+        for (int i = 0; i < dp.length; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        method1(0, s.length(), s, dp, var1, null);
+        return var1;
+    }
+
+    void method1(int start, int end, String s, int[][] dp, List<List<String>> var1, List<String> subparts) {
+        if (start >= end)
+            var1.add(new ArrayList<>(subparts));
+        for (int i = start; i < end; i++) {
+            boolean var2 = method2(start, i, s, dp);
+            if (!var2)
+                continue;
+            subparts.add(s.substring(start, i + 1));
+            method1(i + 1, end, s, dp, var1, subparts);
+            subparts.remove(subparts.size() - 1);
+        }
+    }
+
+    boolean method2(int left, int right, String s, int[][] dp) {
+        if (dp[left][right] != -1)
+            return dp[left][right] == 1;
+        if (left >= right)
+            dp[left][right] = 1;
+        else if (s.charAt(left) == s.charAt(right)) {
+            boolean var2 = method2(left + 1, right - 1, s, dp);
+            dp[left][right] = var2 ? 1 : 0;
+        } else {
+            dp[left][right] = 0;
+        }
+        return dp[left][right] == 1;
+    }
+}

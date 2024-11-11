@@ -1,0 +1,46 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        boolean[][] dp = new boolean[s.length()][s.length()];
+        //i<j
+        for (int i = 0; i < s.length(); i++) {
+            dp[i][i] = true;
+        }
+        for (int i = 1; i < s.length(); i++) {
+            int k = 0;
+            int l = i;
+            while (true) {
+                if (l >= s.length())
+                    break;
+                if (s.charAt(k) == s.charAt(l)) {
+                    if (l - k == 1) {
+                        dp[k][l] = true;
+                    } else {
+                        dp[k][l] = dp[k + 1][l - 1];
+                    }
+                } else {
+                    dp[k][l] = false;
+                }
+                k++;
+                l++;
+            }
+        }
+        List<List<String>> ret = new ArrayList<>();
+        partition(s, dp, ret, new ArrayList<>(), 0);
+        return ret;
+    }
+
+    private void partition(String s, boolean[][] dp, List<List<String>> ret, List<String> list, int index) {
+        if (index == s.length()) {
+            ret.add(new ArrayList<>(list));
+            return;
+        }
+        for (int i = index; i < s.length(); i++) {
+            if (dp[index][i]) {
+                list.add(s.substring(index, i + 1));
+                partition(s, dp, ret, list, i + 1);
+                list.remove(list.size() - 1);
+            }
+        }
+    }
+}

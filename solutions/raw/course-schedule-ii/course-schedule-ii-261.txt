@@ -1,0 +1,66 @@
+class Solution {
+
+    /**
+     *    this q is similar to detcting cycle in a graph
+     *    if we have 0,1 we can say that courese 0 in dependent on course 1 and we can
+     *    represent as 0->1 we need to do course 1 then 0 we can use directed graph to represent this
+     *    we will use dfs and print the value at the end
+     */
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        if (prerequisites.length == 0) {
+            int[] arr = new int[numCourses];
+            for (int i = 0; i < numCourses; i++) {
+                arr[i] = i;
+            }
+            return arr;
+        }
+        List<List<Integer>> adjList = new ArrayList<>();
+        //base case
+        for (int i = 0; i < numCourses; i++) {
+            adjList.add(new ArrayList());
+        }
+        for (int row = 0; row < prerequisites.length; row++) {
+            int first = prerequisites[row][0];
+            int second = prerequisites[row][1];
+            //first course we need to take first
+            adjList.get(first).add(second);
+        }
+        int[] ans = new int[numCourses];
+        List<Integer> ansList = new ArrayList<>();
+        int[] visited = new int[numCourses];
+        int[] pathvisited = new int[numCourses];
+        for (int k = 0; k < numCourses; k++) {
+            if (visited[k] == 0) {
+                boolean result = dfs(adjList, visited, k, ansList, pathvisited);
+                if (result) {
+                    //System.out.println("empty array cycle detected in graph");
+                    return new int[] {};
+                }
+            }
+        }
+        int j = 0;
+        for (Integer v : ansList) {
+            ans[j++] = v;
+        }
+        return ans;
+    }
+
+    public boolean dfs(List<List<Integer>> adjList, int[] visited, int ind, List<Integer> ansList, int[] pathvisited) {
+        visited[ind] = 1;
+        pathvisited[ind] = 1;
+        //visting this course first
+        for (int k = 0; k < adjList.get(ind).size(); k++) {
+            int node = adjList.get(ind).get(k);
+            if (visited[node] == 0) {
+                if (dfs(adjList, visited, node, ansList, pathvisited)) {
+                    return true;
+                }
+            } else if (pathvisited[node] == 1) {
+                return true;
+            }
+        }
+        pathvisited[ind] = 0;
+        ansList.add(ind);
+        return false;
+    }
+}

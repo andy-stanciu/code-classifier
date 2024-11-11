@@ -1,0 +1,52 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        //---------map to store the graph-----------//
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        //---------indegree array to store the indegree-------//
+        int[] indegree = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            map.put(i, new ArrayList<>());
+        }
+        for (int[] var1 : prerequisites) {
+            int a = var1[1];
+            int b = var1[0];
+            map.get(a).add(b);
+            indegree[b]++;
+        }
+        return topo(map, indegree, param1);
+    }
+
+    public int[] topo(Map<Integer, List<Integer>> map, int[] indegree, int n) {
+        //typical topologocal sort
+        Queue<Integer> q = new LinkedList<>();
+        int[] result = new int[n];
+        int j = 0;
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                result[j] = i;
+                j++;
+                count++;
+                q.add(i);
+            }
+        }
+        while (!q.isEmpty()) {
+            int u = q.poll();
+            for (int v : map.get(u)) {
+                indegree[v]--;
+                if (indegree[v] == 0) {
+                    result[j] = v;
+                    count++;
+                    j++;
+                    q.add(v);
+                }
+            }
+        }
+        if (count == n)
+            return result;
+        else {
+            return new int[0];
+        }
+    }
+}

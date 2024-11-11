@@ -1,0 +1,37 @@
+class Solution {
+
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> solution = new ArrayList<List<Integer>>();
+        HashMap<Integer, List<Integer>> memo = new HashMap<>();
+        for (int j = 1; j < numRows + 1; j++) {
+            solution.add(pascalRow(j, memo));
+        }
+        return solution;
+    }
+
+    public List<Integer> pascalRow(int rowNumber, HashMap<Integer, List<Integer>> memo) {
+        List<Integer> rowValues = new ArrayList<>();
+        if (rowNumber == 1) {
+            rowValues.add(1);
+        } else if (rowNumber == 2) {
+            rowValues.add(1);
+            rowValues.add(1);
+        } else {
+            rowValues.add(1);
+            if (memo.containsKey(rowNumber - 1)) {
+                List<Integer> pastRow = memo.get(rowNumber - 1);
+                for (int i = 0; i < pastRow.size() - 1; i++) {
+                    rowValues.add(pastRow.get(i) + pastRow.get(i + 1));
+                }
+            } else {
+                List<Integer> pastRow = pascalRow(rowNumber - 1, memo);
+                for (int i = 0; i < pastRow.size() - 1; i++) {
+                    rowValues.add(pastRow.get(i) + pastRow.get(i + 1));
+                }
+            }
+            rowValues.add(1);
+        }
+        memo.put(rowNumber, rowValues);
+        return rowValues;
+    }
+}

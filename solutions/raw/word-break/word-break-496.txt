@@ -1,0 +1,43 @@
+// Author: Osama Ayman
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        // add words in dictionary to a set for constant look up
+        Set<String> dic = new HashSet<>();
+        for (String str : wordDict) {
+            dic.add(str);
+        }
+        return solve(0, s, dic, "");
+    }
+
+    // map to save result
+    Map<String, Boolean> memo = new HashMap<>();
+
+    private boolean solve(int idx, String s, Set<String> dic, String cur) {
+        String key = cur + idx;
+        if (memo.containsKey(key))
+            return memo.get(key);
+        if (idx == s.length())
+            return false;
+        // add char at cur idx to cur word
+        cur += s.charAt(idx);
+        // if cur word exists in dictionary
+        if (dic.contains(cur)) {
+            // if last idx, return true
+            if (idx + 1 == s.length())
+                return true;
+            // we have 2 options now: either to start a new word or to append to cur
+            // word.
+            boolean strtNewWord = solve(idx + 1, s, dic, "");
+            boolean addToCurWord = solve(idx + 1, s, dic, cur);
+            boolean res = strtNewWord | addToCurWord;
+            // save result
+            memo.put(key, res);
+            return res;
+        }
+        // else if cur word does not exist, keep adding to cur word
+        boolean res = solve(idx + 1, s, dic, cur);
+        memo.put(key, res);
+        return res;
+    }
+}

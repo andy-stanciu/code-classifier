@@ -1,0 +1,45 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        int[] visited = new int[param1];
+        // For detecting a cycle
+        int[] pathVisited = new int[param1];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < visited.length; i++) {
+            if (visited[i] == 0) {
+                if (topologicalSort(graph, stack, visited, pathVisited, i))
+                    return new int[0];
+            }
+        }
+        int[] answer = new int[stack.size()];
+        int idx = 0;
+        while (!stack.isEmpty()) {
+            answer[idx++] = stack.pop();
+        }
+        return answer;
+    }
+
+    public boolean topologicalSort(List<List<Integer>> graph, Stack<Integer> stack, int[] visited, int[] pathVisited, int node) {
+        visited[node] = 1;
+        pathVisited[node] = 1;
+        for (int i = 0; i < graph.get(node).size(); i++) {
+            int ele = graph.get(node).get(i);
+            if (visited[ele] == 0) {
+                if (topologicalSort(graph, stack, visited, pathVisited, ele))
+                    return true;
+            } else if (visited[ele] == 1 && pathVisited[ele] == 1) {
+                return true;
+            }
+        }
+        pathVisited[node] = 0;
+        stack.push(node);
+        return false;
+    }
+}

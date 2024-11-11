@@ -1,0 +1,29 @@
+class Solution {
+
+    public int recursionWithMemoization(int[] p, int ind, boolean canBuy, int k, int[][][] dp) {
+        if (ind >= p.length || k <= 0)
+            return 0;
+        if (dp[ind][canBuy ? 1 : 0][k] != -1)
+            return dp[ind][canBuy ? 1 : 0][k];
+        int maxProfit;
+        if (canBuy) {
+            maxProfit = Math.max(-p[ind] + recursionWithMemoization(p, ind + 1, false, k, dp), recursionWithMemoization(p, ind + 1, true, k, dp));
+        } else {
+            maxProfit = Math.max(p[ind] + recursionWithMemoization(p, ind + 1, false, k - 1, dp), recursionWithMemoization(p, ind + 1, true, k, dp));
+        }
+        dp[ind][canBuy ? 1 : 0][k] = maxProfit;
+        return maxProfit;
+    }
+
+    public int maxProfit(int[] prices) {
+        // change the value of k as per the question
+        int k = 2;
+        int[][][] dp = new int[prices.length + 1][3][k + 1];
+        for (int i = 0; i <= prices.length; i++) {
+            for (int j = 0; j < 3; j++) {
+                Arrays.fill(dp[i][j], -1);
+            }
+        }
+        return recursionWithMemoization(prices, 0, true, k, dp);
+    }
+}

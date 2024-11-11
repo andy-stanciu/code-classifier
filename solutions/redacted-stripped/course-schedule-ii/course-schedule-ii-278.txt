@@ -1,0 +1,42 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        ArrayList[] list = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            list[i] = new ArrayList<>();
+        }
+        for (int[] preQ : prerequisites) {
+            list[preQ[0]].add(preQ[1]);
+        }
+        int[] result = new int[param1];
+        ArrayList<Integer> res = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            if (!res.contains(i)) {
+                if (isCircle(res, list, i, new HashSet<>())) {
+                    return new int[0];
+                }
+            }
+        }
+        return res.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    public boolean isCircle(List<Integer> res, ArrayList[] list, int param2, HashSet<Integer> set) {
+        if (set.contains(param2)) {
+            return true;
+        }
+        if (list[param2].size() == 0) {
+            if (!res.contains(param2))
+                res.add(param2);
+            return false;
+        }
+        set.add(param2);
+        for (int i = 0; i < list[param2].size(); ++i) {
+            if (isCircle(res, list, (int) list[param2].get(i), set))
+                return true;
+        }
+        set.remove(param2);
+        list[param2] = new ArrayList<>();
+        res.add(param2);
+        return false;
+    }
+}

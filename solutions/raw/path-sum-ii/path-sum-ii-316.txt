@@ -1,0 +1,26 @@
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> lstMain = new ArrayList<>();
+        rootToLeaf(root, new ArrayList<>(), lstMain, targetSum);
+        return lstMain;
+    }
+
+    public static void rootToLeaf(TreeNode root, ArrayList<TreeNode> lst, List<List<Integer>> lstMain, int target) {
+        if (root == null)
+            return;
+        lst.add(root);
+        if (root.left == null && root.right == null) {
+            int sum = 0;
+            for (int i = 0; i < lst.size(); i++) sum += lst.get(i).val;
+            if (sum == target) {
+                List<Integer> lstSub = new ArrayList<>();
+                for (int i = 0; i < lst.size(); i++) lstSub.add(lst.get(i).val);
+                lstMain.add(lstSub);
+            }
+        }
+        rootToLeaf(root.left, lst, lstMain, target);
+        rootToLeaf(root.right, lst, lstMain, target);
+        lst.remove(lst.size() - 1);
+    }
+}

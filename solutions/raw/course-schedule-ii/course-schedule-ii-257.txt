@@ -1,0 +1,42 @@
+class Solution {
+
+    private Set[] sets;
+
+    private int[] res;
+
+    private Set<Integer> resSet;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        sets = new HashSet[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            sets[i] = new HashSet<Integer>();
+        }
+        for (int[] pre : prerequisites) {
+            sets[pre[0]].add(pre[1]);
+        }
+        res = new int[numCourses];
+        resSet = new HashSet<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (!generateOrder(i, new HashSet<>()))
+                return new int[0];
+        }
+        return res;
+    }
+
+    public boolean generateOrder(int i, Set<Integer> path) {
+        if (resSet.contains(i))
+            return true;
+        // cycle
+        if (!path.add(i))
+            return false;
+        Set<Integer> pre = sets[i];
+        for (int p : pre) {
+            if (!generateOrder(p, path))
+                return false;
+        }
+        res[resSet.size()] = i;
+        resSet.add(i);
+        path.remove(i);
+        return true;
+    }
+}

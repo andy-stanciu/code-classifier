@@ -1,0 +1,28 @@
+class Solution {
+
+    public boolean solve(int idx, int[] nums, int[] dp) {
+        // If we reach or exceed the last index, return true
+        if (idx >= nums.length - 1) {
+            return true;
+        }
+        // If the result for this index is already computed, return the stored result
+        if (dp[idx] != -1)
+            return (dp[idx] == 1);
+        // Try all possible jumps from the current index
+        boolean flag = false;
+        for (int i = 1; i <= nums[idx]; i++) {
+            flag = flag || solve(idx + i, nums, dp);
+        }
+        // Store the result in dp array: 1 for true, 0 for false
+        dp[idx] = flag ? 1 : 0;
+        return flag;
+    }
+
+    public boolean canJump(int[] nums) {
+        int[] dp = new int[nums.length];
+        // Initialize dp array with -1 (uncomputed state)
+        Arrays.fill(dp, -1);
+        // Start solving from the first index
+        return solve(0, nums, dp);
+    }
+}

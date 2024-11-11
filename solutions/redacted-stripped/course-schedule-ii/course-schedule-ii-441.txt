@@ -1,0 +1,40 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int n = param1;
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        int[] inDegree = new int[n];
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] edge : prerequisites) {
+            int ai = edge[0];
+            int bi = edge[1];
+            graph.get(bi).add(ai);
+            inDegree[ai]++;
+        }
+        ArrayList<Integer> topological = new ArrayList<>();
+        Queue<Integer> que = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (inDegree[i] == 0)
+                que.add(i);
+        }
+        while (que.size() > 0) {
+            int curr = que.remove();
+            topological.add(curr);
+            for (int nbr : graph.get(curr)) {
+                inDegree[nbr]--;
+                if (inDegree[nbr] == 0)
+                    que.add(nbr);
+            }
+        }
+        if (topological.size() < n) {
+            return new int[0];
+        }
+        int[] ans = new int[n];
+        for (int i : topological) {
+            ans[i] = topological.get(i);
+        }
+        return ans;
+    }
+}

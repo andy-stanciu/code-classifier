@@ -1,0 +1,55 @@
+class Solution {
+
+    public static boolean containsNearbyDuplicate(int[] nums, int k) {
+        int[] dupls = findDuplicateNums(nums);
+        if (dupls.length == 0)
+            return false;
+        return IntStream.range(0, dupls.length).anyMatch(d -> isContainsNearbyDuplicate(dupls[d], nums, k));
+    }
+
+    private static boolean isContainsNearbyDuplicate(int dup, int[] nums, int k) {
+        Map<Integer, Integer> dupsIndexes = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == dup) {
+                dupsIndexes.put(i, dup);
+                if (isLessThanCutLevel(dupsIndexes, k)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean isLessThanCutLevel(Map<Integer, Integer> dupsIndexes, int k) {
+        List<Integer> keys = new ArrayList<>(dupsIndexes.keySet());
+        for (int key : keys) {
+            int value = dupsIndexes.get(key);
+            if (isLessThanCutLevel(key, value, k, dupsIndexes)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isLessThanCutLevel(int index, int v, int cutLevel, Map<Integer, Integer> dupsIndexes) {
+        return dupsIndexes.keySet().stream().anyMatch(k -> {
+            if (k != index) {
+                int vl = dupsIndexes.get(k);
+                return vl == v && Math.abs(k - index) <= cutLevel;
+            }
+            return false;
+        });
+    }
+
+    public static int[] findDuplicateNums(int[] nums) {
+        int[] dupsArray = new int[nums.length];
+        System.arraycopy(nums, 0, dupsArray, 0, nums.length);
+        Arrays.sort(dupsArray);
+        return IntStream.range(0, dupsArray.length).filter(i -> {
+            if (i != dupsArray.length - 1) {
+                return dupsArray[i] == dupsArray[i + 1];
+            } else
+                return false;
+        }).map(i -> dupsArray[i]).toArray();
+    }
+}

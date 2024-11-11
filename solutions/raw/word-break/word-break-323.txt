@@ -1,0 +1,17 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        /*
+        words[i] = s[:i] can be broken into words in wordDict
+        words[i] = any { words[k] && words[k:i] in wordDict for a k < i }
+        words[0] = true (the empty word can be written with any wordDict)
+        */
+        boolean[] words = new boolean[s.length() + 1];
+        words[0] = true;
+        for (int i = 1; i <= s.length(); i++) {
+            final int idx = i;
+            words[i] = wordDict.stream().filter(word -> idx >= word.length()).anyMatch(word -> word.contentEquals(s.subSequence(idx - word.length(), idx)) && words[idx - word.length()]);
+        }
+        return words[s.length()];
+    }
+}

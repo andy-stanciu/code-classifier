@@ -1,0 +1,49 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> lastList = new ArrayList<>();
+        //returning in empty list case
+        if (root == null) {
+            return lastList;
+        }
+        List<Integer> innerlist = new ArrayList<>();
+        //usage of recursion
+        pathhelper(root, targetSum, lastList, innerlist);
+        return lastList;
+    }
+
+    private void pathhelper(TreeNode node, int targetSum, List<List<Integer>> lastList, List<Integer> innerlist) {
+        //reached end of list
+        if (node == null) {
+            return;
+        }
+        innerlist.add(node.val);
+        //calculation of sum of innerlist
+        int sum = innerlist.stream().reduce(0, Integer::sum);
+        //if sum matches and this is a leaf
+        if (sum == targetSum && node.right == null && node.left == null) {
+            lastList.add(innerlist);
+        }
+        //creating sublist that is identical to inner list for paths
+        List<Integer> sublist = new ArrayList<>();
+        sublist.addAll(innerlist);
+        //recursion on till leaves
+        pathhelper(node.left, targetSum, lastList, sublist);
+        pathhelper(node.right, targetSum, lastList, innerlist);
+    }
+}

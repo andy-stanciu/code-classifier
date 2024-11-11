@@ -1,0 +1,53 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> method1(TreeNode root, int param1) {
+        final List<List<Integer>> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
+        final List<Integer> var1 = new ArrayList<>();
+        var1.add(root.val);
+        method2(root, param1, var1, 0, res);
+        return res;
+    }
+
+    private void method2(TreeNode root, int param1, List<Integer> var1, int param2, List<List<Integer>> res) {
+        // note not a leaf this represents null branch from a node
+        if (root == null) {
+            return;
+        }
+        final var t = param2 + root.val;
+        // a leaf where we have a value and both children are null
+        if (root.left == null && root.right == null && t == param1) {
+            // a valid solution to copy into results.
+            res.add(new ArrayList<>(var1));
+            return;
+        }
+        // backtrace both branches where we look for all paths yielding target
+        if (root.left != null) {
+            var1.add(root.left.val);
+            method2(root.left, param1, var1, t, res);
+            var1.remove(var1.size() - 1);
+        }
+        if (root.right != null) {
+            var1.add(root.right.val);
+            method2(root.right, param1, var1, t, res);
+            var1.remove(var1.size() - 1);
+        }
+    }
+}

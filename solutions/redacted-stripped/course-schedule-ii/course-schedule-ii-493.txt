@@ -1,0 +1,36 @@
+class Solution {
+
+    public int[] findOrder(int n, int[][] pre) {
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<Integer>());
+        }
+        int[] indegree = new int[n];
+        int[] topo = new int[n];
+        for (int[] e : pre) {
+            int a = e[0];
+            int b = e[1];
+            graph.get(b).add(a);
+            indegree[a]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0)
+                q.add(i);
+        }
+        int idx = 0;
+        while (q.size() > 0) {
+            int temp = q.poll();
+            topo[idx] = temp;
+            idx++;
+            for (int nbr : graph.get(temp)) {
+                indegree[nbr]--;
+                if (indegree[nbr] == 0)
+                    q.add(nbr);
+            }
+        }
+        if (idx != n)
+            return new int[0];
+        return topo;
+    }
+}

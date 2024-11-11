@@ -1,0 +1,50 @@
+class Solution {
+
+    private static final int[] EMPTY = {};
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        Map<Integer, Set<Integer>> map = new HashMap<>();
+        for (int[] prerequisite : prerequisites) {
+            int var1 = prerequisite[0];
+            int requirement = prerequisite[1];
+            map.computeIfAbsent(var1, k -> new HashSet<>()).add(requirement);
+        }
+        List<Integer> sorted = new ArrayList<>(param1);
+        Set<Integer> done = new HashSet();
+        Set<Integer> seen = new HashSet();
+        for (int var1 = 0; var1 < param1; var1++) {
+            boolean resolved = visit(var1, map, done, seen, sorted);
+            if (!resolved) {
+                return EMPTY;
+            }
+        }
+        int[] result = new int[param1];
+        for (int var1 = 0; var1 < param1; var1++) {
+            result[var1] = sorted.get(var1);
+        }
+        return result;
+    }
+
+    private static boolean visit(int var1, Map<Integer, Set<Integer>> map, Set<Integer> done, Set<Integer> seen, List<Integer> result) {
+        if (done.contains(var1)) {
+            return true;
+        }
+        if (seen.contains(var1)) {
+            return false;
+        }
+        Set<Integer> dependencies = map.get(var1);
+        if (dependencies != null) {
+            seen.add(var1);
+            for (int dependency : dependencies) {
+                boolean resolved = visit(dependency, map, done, seen, result);
+                if (!resolved) {
+                    return false;
+                }
+            }
+            seen.remove(var1);
+        }
+        done.add(var1);
+        result.add(var1);
+        return true;
+    }
+}

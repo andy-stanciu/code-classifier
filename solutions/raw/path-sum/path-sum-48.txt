@@ -1,0 +1,45 @@
+class TreeElement {
+
+    public TreeNode node;
+
+    private int sum;
+
+    TreeElement(TreeNode node, int sum) {
+        this.node = node;
+        this.sum = sum;
+    }
+
+    public boolean isLeaf() {
+        return node != null && node.left == null && node.right == null;
+    }
+
+    public int getSum() {
+        return sum;
+    }
+}
+
+class Solution {
+
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        if (root == null)
+            return false;
+        Queue<TreeElement> queue = new LinkedList<TreeElement>();
+        queue.add(new TreeElement(root, 0));
+        while (queue.size() != 0) {
+            TreeElement currentElement = queue.poll();
+            if (currentElement.node == null)
+                continue;
+            int newSum = currentElement.getSum() + currentElement.node.val;
+            if (currentElement.isLeaf() && newSum == targetSum) {
+                return true;
+            }
+            if (currentElement.node.right != null) {
+                queue.add(new TreeElement(currentElement.node.right, newSum));
+            }
+            if (currentElement.node.left != null) {
+                queue.add(new TreeElement(currentElement.node.left, newSum));
+            }
+        }
+        return false;
+    }
+}

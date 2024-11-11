@@ -1,0 +1,45 @@
+class Solution {
+
+    private Map<Integer, List<Integer>> map = new HashMap<>();
+
+    private List<Integer> result = new ArrayList<>();
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        for (int i = 0; i < param1; i++) {
+            map.put(i, new ArrayList<>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            map.get(prerequisite[1]).add(prerequisite[0]);
+        }
+        int[] visited = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!dfs(i, visited)) {
+                return new int[0];
+            }
+        }
+        Collections.reverse(result);
+        int[] ans = new int[result.size()];
+        for (int i = 0; i < result.size(); i++) {
+            ans[i] = result.get(i);
+        }
+        return ans;
+    }
+
+    public boolean dfs(int param2, int[] visited) {
+        if (visited[param2] == 1) {
+            return false;
+        }
+        if (visited[param2] == 2) {
+            return true;
+        }
+        visited[param2] = 1;
+        for (int var1 : map.get(param2)) {
+            if (!dfs(var1, visited)) {
+                return false;
+            }
+        }
+        visited[param2] = 2;
+        result.add(param2);
+        return true;
+    }
+}

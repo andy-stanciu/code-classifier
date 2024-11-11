@@ -1,0 +1,60 @@
+class Solution {
+
+    public boolean wordBreak1(String s, List<String> wordDict) {
+        Set<String> words = new HashSet<>(wordDict);
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = i; j >= 0; j--) {
+                dp[i + 1] = dp[j] && words.contains(s.substring(j, i + 1));
+                if (dp[i + 1])
+                    break;
+            }
+        }
+        return dp[s.length()];
+    }
+
+    public static boolean wordBreak2(String s, List<String> wordDict) {
+        return wordBreakHelper(s, new HashSet<String>(wordDict), 0, new HashMap<>());
+    }
+
+    private static boolean wordBreakHelper(String s, Set<String> wordDict, int start, Map<Integer, Boolean> memo) {
+        if (start == s.length()) {
+            return true;
+        }
+        if (memo.containsKey(start)) {
+            return memo.get(start);
+        }
+        for (int end = start + 1; end <= s.length(); end++) {
+            if (wordDict.contains(s.substring(start, end)) && wordBreakHelper(s, wordDict, end, memo)) {
+                memo.put(start, true);
+                return true;
+            }
+        }
+        memo.put(start, false);
+        return false;
+    }
+
+    public static boolean wordBreak(String s, List<String> words) {
+        Set<String> wordDict = new HashSet<>(words);
+        Queue<Integer> queue = new LinkedList<>();
+        boolean[] visited = new boolean[s.length()];
+        queue.add(0);
+        while (!queue.isEmpty()) {
+            int start = queue.poll();
+            if (visited[start]) {
+                continue;
+            }
+            for (int end = start + 1; end <= s.length(); end++) {
+                if (wordDict.contains(s.substring(start, end))) {
+                    if (end == s.length()) {
+                        return true;
+                    }
+                    queue.add(end);
+                }
+            }
+            visited[start] = true;
+        }
+        return false;
+    }
+}

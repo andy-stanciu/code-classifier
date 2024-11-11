@@ -1,0 +1,72 @@
+class Solution {
+
+    public int[] findOrder(int V, int[][] arr) {
+        List<List<Integer>> adj = new ArrayList<>();
+        boolean[] vis = new boolean[V];
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] pre : arr) {
+            adj.get(pre[1]).add(pre[0]);
+        }
+        if (isCyclic(V, adj)) {
+            return new int[0];
+        }
+        int[] ans = new int[V];
+        ans = topoSort(V, adj);
+        return ans;
+    }
+
+    public static void dfstopo(int s, List<List<Integer>> adj, Stack<Integer> st, boolean[] vis) {
+        vis[s] = true;
+        for (Integer it : adj.get(s)) {
+            if (!vis[it])
+                dfstopo(it, adj, st, vis);
+        }
+        st.add(s);
+    }
+
+    static int[] topoSort(int V, List<List<Integer>> adj) {
+        boolean[] vis = new boolean[V];
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < V; i++) {
+            if (!vis[i]) {
+                dfstopo(i, adj, st, vis);
+            }
+        }
+        int[] ans = new int[V];
+        int idx = 0;
+        while (!st.isEmpty()) {
+            ans[idx++] = st.pop();
+        }
+        return ans;
+    }
+
+    public boolean dfs(List<List<Integer>> adj, boolean[] vis, boolean[] pathvis, int node) {
+        vis[node] = true;
+        pathvis[node] = true;
+        for (Integer it : adj.get(node)) {
+            if (!vis[it]) {
+                if (dfs(adj, vis, pathvis, it))
+                    return true;
+            } else if (pathvis[it]) {
+                return true;
+            }
+        }
+        pathvis[node] = false;
+        return false;
+    }
+
+    public boolean isCyclic(int V, List<List<Integer>> adj) {
+        boolean[] vis = new boolean[V];
+        boolean[] pathvis = new boolean[V];
+        for (int i = 0; i < V; i++) {
+            if (!vis[i]) {
+                if (dfs(adj, vis, pathvis, i)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}

@@ -1,0 +1,33 @@
+class Solution {
+
+    public int minSubArrayLen(int target, int[] nums) {
+        int[] prefix = new int[nums.length + 1];
+        for (int i = 1; i < prefix.length; i++) {
+            prefix[i] = prefix[i - 1] + nums[i - 1];
+        }
+        // no possible sum of all elements is >= target - return early.
+        if (prefix[prefix.length - 1] < target)
+            return 0;
+        int min = Integer.MAX_VALUE;
+        for (int i = 1; i < prefix.length; i++) {
+            // find the value "findMe" (i.e. prefix[?]) such that prefix[i] - findMe >= target
+            int findMe = prefix[i] - target;
+            // no possible solution exists, don\'t binary search.
+            if (findMe < prefix[0])
+                continue;
+            int lo = 0, hi = i;
+            while (lo <= hi) {
+                int mid = (hi - lo) / 2 + lo;
+                if (prefix[mid] <= findMe) {
+                    // every time the prefix value at mid is less than our "findMe",
+                    // we have a valid solution. Update possible min.
+                    min = Math.min(min, i - mid);
+                    lo = mid + 1;
+                } else {
+                    hi = mid - 1;
+                }
+            }
+        }
+        return min;
+    }
+}

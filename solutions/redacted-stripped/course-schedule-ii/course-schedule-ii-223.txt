@@ -1,0 +1,34 @@
+class Solution {
+
+    public int[] findOrder(int n, int[][] prerequisites) {
+        Map<Integer, List<Integer>> adj = new HashMap<>();
+        Map<Integer, List<Integer>> revAdj = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            adj.put(i, new ArrayList<>());
+            revAdj.put(i, new ArrayList<>());
+        }
+        for (int[] prereq : prerequisites) {
+            adj.get(prereq[0]).add(prereq[1]);
+            revAdj.get(prereq[1]).add(prereq[0]);
+        }
+        int[] degree = new int[n];
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            degree[i] = adj.get(i).size();
+            if (degree[i] == 0)
+                q.add(i);
+        }
+        int[] result = new int[n];
+        int idx = 0;
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            result[idx++] = node;
+            for (int nextNode : revAdj.get(node)) {
+                degree[nextNode] -= 1;
+                if (degree[nextNode] == 0)
+                    q.add(nextNode);
+            }
+        }
+        return idx == n ? result : new int[] {};
+    }
+}

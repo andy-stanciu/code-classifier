@@ -1,0 +1,30 @@
+class Solution {
+
+    public int minSubArrayLen(int target, int[] nums) {
+        int startIdx = 0;
+        int endIdx = 0;
+        int n = nums.length;
+        int minLen = Integer.MAX_VALUE;
+        int len = 0;
+        int sum = 0;
+        while (endIdx < n) {
+            // Expansion Phase
+            sum += nums[endIdx];
+            if (sum >= target) {
+                // Shrinking Phase
+                len = endIdx - startIdx + 1;
+                minLen = Math.min(minLen, len);
+                while (startIdx < endIdx && sum >= target) {
+                    sum -= nums[startIdx++];
+                    if (sum >= target) {
+                        len = endIdx - startIdx + 1;
+                        minLen = Math.min(minLen, len);
+                    }
+                }
+            }
+            endIdx++;
+        }
+        minLen = (minLen == Integer.MAX_VALUE) ? 0 : minLen;
+        return minLen;
+    }
+}

@@ -1,0 +1,52 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        boolean[] visited = new boolean[param1];
+        boolean[] inRecursion = new boolean[param1];
+        Stack<Integer> stack = new Stack<>();
+        List<List<Integer>> graph = new ArrayList<>();
+        // Initialize the adjacency list
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        // Build the graph
+        for (int[] pair : prerequisites) {
+            int a = pair[0];
+            int b = pair[1];
+            graph.get(b).add(a);
+        }
+        // Perform DFS for each course
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i] && dfs(i, graph, visited, inRecursion, stack)) {
+                // Cycle detected
+                return new int[] {};
+            }
+        }
+        // No cycles detected
+        int[] ans = new int[param1];
+        int i = 0;
+        while (!stack.isEmpty()) {
+            ans[i++] = stack.pop();
+        }
+        return ans;
+    }
+
+    public boolean dfs(int param2, List<List<Integer>> graph, boolean[] visited, boolean[] inRecursion, Stack<Integer> stack) {
+        visited[param2] = true;
+        inRecursion[param2] = true;
+        for (int next : graph.get(param2)) {
+            if (!visited[next] && dfs(next, graph, visited, inRecursion, stack)) {
+                // Cycle detected
+                return true;
+            } else if (inRecursion[next]) {
+                // Cycle detected
+                return true;
+            }
+        }
+        stack.push(param2);
+        // Backtrack
+        inRecursion[param2] = false;
+        // No cycle found
+        return false;
+    }
+}

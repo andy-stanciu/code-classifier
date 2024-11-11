@@ -1,0 +1,49 @@
+class Solution {
+
+    class Node {
+
+        TreeNode node;
+
+        int var1;
+
+        List<Integer> var2;
+
+        public Node(TreeNode node, int var1, List<Integer> var2) {
+            this.node = node;
+            this.var1 = var1;
+            this.var2 = var2;
+        }
+
+        public boolean isLeaf() {
+            return this.node.left == null && this.node.right == null;
+        }
+    }
+
+    public List<List<Integer>> method1(TreeNode root, int param1) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null)
+            return res;
+        Stack<Node> stack = new Stack<>();
+        stack.push(new Node(root, param1, Arrays.asList(root.val)));
+        while (!stack.isEmpty()) {
+            Node curr = stack.pop();
+            if (curr == null)
+                continue;
+            if (curr.isLeaf() && curr.node.val == curr.var1) {
+                res.add(curr.var2);
+                continue;
+            }
+            if (curr.node.left != null) {
+                List<Integer> var3 = new ArrayList<>(curr.var2);
+                var3.add(curr.node.left.val);
+                stack.push(new Node(curr.node.left, curr.var1 - curr.node.val, var3));
+            }
+            if (curr.node.right != null) {
+                List<Integer> var4 = new ArrayList<>(curr.var2);
+                var4.add(curr.node.right.val);
+                stack.push(new Node(curr.node.right, curr.var1 - curr.node.val, var4));
+            }
+        }
+        return res;
+    }
+}

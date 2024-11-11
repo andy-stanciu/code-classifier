@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] indegree = new int[param1];
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int var1 : indegree) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] preReq : prerequisites) {
+            adj.get(preReq[1]).add(preReq[0]);
+            indegree[preReq[0]]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        List<Integer> order = new ArrayList<>();
+        bfs(adj, order, queue, indegree, param1);
+        if (order.size() != param1) {
+            return new int[0];
+        }
+        int[] var2 = new int[param1];
+        for (int i = 0; i < order.size(); i++) {
+            var2[i] = order.get(i);
+        }
+        return var2;
+    }
+
+    private void bfs(List<List<Integer>> adj, List<Integer> order, Queue<Integer> queue, int[] indegree, int param1) {
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        while (!queue.isEmpty()) {
+            int var3 = queue.poll();
+            order.add(var3);
+            for (int var4 : adj.get(var3)) {
+                indegree[var4]--;
+                if (indegree[var4] == 0) {
+                    queue.add(var4);
+                }
+            }
+        }
+    }
+}

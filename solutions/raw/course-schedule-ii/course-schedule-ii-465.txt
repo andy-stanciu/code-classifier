@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // this can be translated to cycle detection using topo sort
+        //build adjacenly List
+        List<List<Integer>> adj = new ArrayList();
+        for (int i = 0; i < numCourses; i++) adj.add(new ArrayList<>());
+        for (int[] edge : prerequisites) adj.get(edge[1]).add(edge[0]);
+        //I\'m using topo sort to detect a cycle in the directed grraph.
+        // We can also use DFS with visited array and path visited array taht backtracks;
+        //BFS or Kahn\'s Algorithm
+        //get the in degrees of nodes
+        int[] indegrees = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) for (int node : adj.get(i)) {
+            indegrees[node]++;
+        }
+        //add indegreees 0 nodes to the queue
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) if (indegrees[i] == 0)
+            queue.offer(i);
+        //collect in topo array
+        List<Integer> topo = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            topo.add(node);
+            for (int neighbour : adj.get(node)) {
+                indegrees[neighbour]--;
+                if (indegrees[neighbour] == 0)
+                    queue.offer(neighbour);
+            }
+        }
+        // if size topo != num courses - i.e. we were not able to run a full topo sort
+        // i.e. it is not a DAG
+        int[] res = new int[topo.size()];
+        for (int i = 0; i < topo.size(); i++) res[i] = topo.get(i);
+        return (res.length == numCourses) ? res : new int[0];
+    }
+}

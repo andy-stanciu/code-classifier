@@ -1,0 +1,41 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; ++i) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; ++i) {
+            adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        int[] inDegree = new int[param1];
+        for (int i = 0; i < param1; ++i) {
+            for (int curr : adj.get(i)) {
+                inDegree[curr]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < param1; ++i) {
+            if (inDegree[i] == 0)
+                q.offer(i);
+        }
+        List<Integer> ans = new ArrayList<>();
+        while (!q.isEmpty()) {
+            int node = q.peek();
+            q.poll();
+            ans.add(node);
+            for (int nbr : adj.get(node)) {
+                inDegree[nbr]--;
+                if (inDegree[nbr] == 0)
+                    q.offer(nbr);
+            }
+        }
+        int[] res = new int[param1];
+        if (ans.size() != param1)
+            return new int[0];
+        for (int i = 0; i < param1; ++i) {
+            res[i] = ans.get(i);
+        }
+        return res;
+    }
+}

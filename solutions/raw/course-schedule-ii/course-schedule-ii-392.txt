@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // create a directed graph using the array
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) adj.add(new ArrayList<>());
+        //fill the graph with directed edges
+        // no. of edges
+        int m = prerequisites.length;
+        for (int i = 0; i < m; i++) {
+            adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        //---Now perform cycle detection using Kahn\'s Algo(Topological Sorting)---//
+        int v = numCourses;
+        //calculate indegree of each node
+        int[] indeg = new int[v];
+        for (int i = 0; i < v; i++) {
+            for (Integer it : adj.get(i)) indeg[it]++;
+        }
+        //add nodes with 0 indegree into queue
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < v; i++) if (indeg[i] == 0)
+            q.add(i);
+        // to store the order of topological sort
+        int[] topo = new int[v];
+        // count no. of nodes added in topo array
+        int cnt = 0;
+        int x = 0;
+        while (!q.isEmpty()) {
+            Integer node = q.remove();
+            topo[x++] = node;
+            cnt++;
+            for (Integer it : adj.get(node)) {
+                indeg[it]--;
+                if (indeg[it] == 0)
+                    q.add(it);
+            }
+        }
+        if (cnt == v)
+            return topo;
+        int[] nulli = {};
+        return nulli;
+    }
+}

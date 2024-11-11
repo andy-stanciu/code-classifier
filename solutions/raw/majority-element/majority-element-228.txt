@@ -1,0 +1,45 @@
+class Solution {
+
+    public int majorityElement(int[] nums) {
+        int n = nums.length;
+        int candidate = -1, count = 0;
+        knuthShuffle(nums);
+        quickSelect(nums, n / 2, 0, n - 1);
+        return nums[n / 2];
+    }
+
+    private void knuthShuffle(int[] nums) {
+        final Random rand = new Random();
+        for (int i = 0; i < nums.length; i++) {
+            final int j = rand.nextInt(i + 1);
+            exch(nums, i, j);
+        }
+    }
+
+    private void quickSelect(int[] nums, int target, int lo, int hi) {
+        if (hi <= lo)
+            return;
+        int lt = lo, i = lo, gt = hi;
+        int pivot = nums[lo];
+        while (i <= gt) {
+            if (nums[i] < pivot)
+                exch(nums, lt++, i++);
+            else if (nums[i] == pivot)
+                i++;
+            else
+                exch(nums, gt--, i);
+        }
+        if (target < lt)
+            quickSelect(nums, target, lo, lt - 1);
+        else if (target > gt)
+            quickSelect(nums, target, gt + 1, hi);
+        else
+            return;
+    }
+
+    private void exch(int[] nums, int i, int j) {
+        int swap = nums[i];
+        nums[i] = nums[j];
+        nums[j] = swap;
+    }
+}

@@ -1,0 +1,46 @@
+class Solution {
+
+    boolean topological(ArrayList<ArrayList<Integer>> graph, int curr, boolean[] vis, boolean[] top, Stack<Integer> s) {
+        vis[curr] = true;
+        top[curr] = true;
+        for (int i = 0; i < graph.get(curr).size(); i++) {
+            int t = graph.get(curr).get(i);
+            if (top[t])
+                return true;
+            if (!vis[t]) {
+                if (topological(graph, t, vis, top, s)) {
+                    return true;
+                }
+            }
+        }
+        s.push(curr);
+        top[curr] = false;
+        return false;
+    }
+
+    public int[] findOrder(int n, int[][] pre) {
+        boolean[] vis = new boolean[n];
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int i = 0; i < pre.length; i++) {
+            graph.get(pre[i][1]).add(pre[i][0]);
+        }
+        Stack<Integer> s = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            if (!vis[i]) {
+                if (topological(graph, i, vis, new boolean[n], s)) {
+                    return new int[0];
+                }
+            }
+        }
+        int[] order = new int[n];
+        int j = 0;
+        for (int i = s.size() - 1; i >= 0; i--) {
+            order[j] = s.pop();
+            j++;
+        }
+        return order;
+    }
+}

@@ -1,0 +1,89 @@
+class Solution {
+
+    public int[] findOrder(int n, int[][] pre) {
+        // making adjecency list
+        // note : [a,b] means we can go from b --> a
+        // edge is b --> a
+        // STEP 1 - PREPARING THE ADJECENCY LIST
+        // adding n empty Lists to the adjecency list
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }
+        // now we have n empty lists in adjecency list
+        // Traversing through pre and adding edges to adjecency list
+        for (int[] edge : pre) {
+            int to = edge[0];
+            int from = edge[1];
+            // IMPORTANT - CHECKING ITS UNIDIRECTIONAL
+            // checking if its unidirectional or not by checking to --> from is present before
+            if (adj.get(to).contains(from)) {
+                return new int[0];
+            }
+            // adding to in list at index of from
+            // i.e we can go from from--->to
+            // adj[from] - {to, .... , .. }
+            adj.get(from).add(to);
+        }
+        //now we are ready with our adjecency list
+        // STEP 2 - CHECKING ITS ACYCLIC
+        boolean[] mainVisited = new boolean[n];
+        for (int node = 0; node < n; node++) {
+            // if node is never visited in any dfs call before
+            if (mainVisited[node] == false) {
+                // making one fresh visited array for the current dfs call
+                boolean[] visited = new boolean[n];
+                // if it return true then its cyclic
+                if (acyclicDfs(node, adj, mainVisited, visited)) {
+                    return new int[0];
+                }
+            }
+        }
+        // Now if code comes till here then its confirmed that its not cyclic
+        // STEP 3 - FINDING TOPOSORT
+        Stack<Integer> st = new Stack<>();
+        boolean[] visited = new boolean[n];
+        for (int node = 0; node < n; node++) {
+            if (visited[node] == false)
+                topoDfs(node, adj, st, visited);
+        }
+        int[] toposort = new int[n];
+        int index = 0;
+        while (!st.isEmpty()) {
+            toposort[index++] = st.pop();
+        }
+        return toposort;
+    }
+
+    public void topoDfs(int node, List<List<Integer>> adj, Stack<Integer> st, boolean[] visited) {
+        visited[node] = true;
+        for (int nbr : adj.get(node)) {
+            if (visited[nbr] == false) {
+                topoDfs(nbr, adj, st, visited);
+            }
+        }
+        st.push(node);
+    }
+
+    public boolean acyclicDfs(int node, List<List<Integer>> adj, boolean[] mainVisited, boolean[] visited) {
+        // indicating that its visited its global (doesnt reset for every dfs call)
+        mainVisited[node] = true;
+        // (for this dfs call its visited before)
+        visited[node] = true;
+        for (int nbr : adj.get(node)) {
+            if (visited[nbr] == false) {
+                if (acyclicDfs(nbr, adj, mainVisited, visited)) {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
+        // <<----// VERY VERY IMPORTANT [0(true)-->1(true)-->3(true) then
+        visited[node] = false;
+        // while coming back 0(true)<--1(false)<--3(false)
+        // then only 0(true)-->2(true)--> gets 3 as (false)
+        // which is true if we dont mark false while going back
+        return false;
+    }
+}

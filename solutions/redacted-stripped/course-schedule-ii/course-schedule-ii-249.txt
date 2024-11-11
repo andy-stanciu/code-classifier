@@ -1,0 +1,49 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int n = prerequisites.length;
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; ++i) adj.add(new ArrayList<>());
+        for (int i = 0; i < n; ++i) adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        int[] ans = new int[param1];
+        if (detectCycle(adj, param1))
+            return new int[0];
+        Stack<Integer> mystack = new Stack<>();
+        boolean[] visited = new boolean[param1];
+        for (int i = 0; i < param1; ++i) if (!visited[i])
+            dfs(adj, i, visited, mystack);
+        int idx = 0;
+        while (!mystack.isEmpty()) {
+            ans[idx++] = mystack.pop();
+        }
+        return ans;
+    }
+
+    private boolean detectCycleUtil(List<List<Integer>> adj, int[] visited, int v) {
+        if (visited[v] == 1)
+            return true;
+        if (visited[v] == 2)
+            return false;
+        visited[v] = 1;
+        for (int i = 0; i < adj.get(v).size(); ++i) if (detectCycleUtil(adj, visited, adj.get(v).get(i)))
+            return true;
+        visited[v] = 2;
+        return false;
+    }
+
+    private boolean detectCycle(List<List<Integer>> adj, int n) {
+        int[] visited = new int[n];
+        Arrays.fill(visited, 0);
+        for (int i = 0; i < n; ++i) if (visited[i] == 0)
+            if (detectCycleUtil(adj, visited, i))
+                return true;
+        return false;
+    }
+
+    private void dfs(List<List<Integer>> adj, int v, boolean[] visited, Stack<Integer> mystack) {
+        visited[v] = true;
+        for (int i = 0; i < adj.get(v).size(); ++i) if (!visited[adj.get(v).get(i)])
+            dfs(adj, adj.get(v).get(i), visited, mystack);
+        mystack.push(v);
+    }
+}

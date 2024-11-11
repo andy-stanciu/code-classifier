@@ -1,0 +1,47 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        // Create an adjacency list to represent the graph
+        List<Integer>[] adjList = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            adjList[i] = new ArrayList<>();
+        }
+        // Populate the adjacency list with prerequisites
+        for (int[] prereq : prerequisites) {
+            // prereq[1] is a prerequisite for prereq[0]
+            adjList[prereq[1]].add(prereq[0]);
+        }
+        int[] visited = new int[param1];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < param1; i++) {
+            if (visited[i] == 0 && !dfs(i, visited, adjList, stack)) {
+                // Return an empty array if a cycle is detected
+                return new int[0];
+            }
+        }
+        int[] order = new int[param1];
+        int index = 0;
+        while (!stack.isEmpty()) {
+            order[index++] = stack.pop();
+        }
+        return order;
+    }
+
+    private boolean dfs(int param2, int[] visited, List<Integer>[] adjList, Stack<Integer> stack) {
+        // Mark as visiting
+        visited[param2] = 1;
+        for (int var1 : adjList[param2]) {
+            if (visited[var1] == 1) {
+                // Cycle detected
+                return false;
+            }
+            if (visited[var1] == 0 && !dfs(var1, visited, adjList, stack)) {
+                return false;
+            }
+        }
+        // Mark as visited
+        visited[param2] = 2;
+        stack.push(param2);
+        return true;
+    }
+}

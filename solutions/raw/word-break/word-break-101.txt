@@ -1,0 +1,51 @@
+class Solution {
+
+    class Node {
+
+        HashMap<Character, Node> child = new HashMap<>();
+
+        boolean isEnd = false;
+    }
+
+    public Node insert(List<String> b) {
+        Node root = new Node();
+        for (String a : b) {
+            Node temp = root;
+            for (char c : a.toCharArray()) {
+                temp = temp.child.computeIfAbsent(c, k -> new Node());
+            }
+            temp.isEnd = true;
+        }
+        return root;
+    }
+
+    public boolean isWord(String s, Node root, int ind, int[] a) {
+        if (ind >= s.length()) {
+            return true;
+        }
+        Node temp = root;
+        if (a[ind] != -1)
+            return a[ind] == 1;
+        for (int i = ind; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (!temp.child.containsKey(c)) {
+                a[ind] = 0;
+                return false;
+            }
+            temp = temp.child.get(c);
+            if (temp.isEnd && isWord(s, root, i + 1, a)) {
+                a[ind] = 1;
+                return true;
+            }
+        }
+        a[ind] = 0;
+        return false;
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Node root = insert(wordDict);
+        int[] a = new int[s.length()];
+        Arrays.fill(a, -1);
+        return isWord(s, root, 0, a);
+    }
+}

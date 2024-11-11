@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<Integer> var1 = new ArrayList<>();
+        List<Integer>[] successors = new List[param1];
+        int[] requirements = new int[param1];
+        for (int i = 0; i < prerequisites.length; i++) {
+            int x = prerequisites[i][0];
+            int y = prerequisites[i][1];
+            List<Integer> successorList = successors[y];
+            if (successorList == null) {
+                successorList = new ArrayList<>();
+                successors[y] = successorList;
+            }
+            successorList.add(x);
+            requirements[x]++;
+        }
+        for (int i = 0; i < param1; i++) {
+            if (requirements[i] == 0) {
+                method1(i, var1, successors, requirements);
+            }
+        }
+        if (var1.size() != param1) {
+            return new int[0];
+        }
+        return var1.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    private void method1(int i, List<Integer> var1, List<Integer>[] successors, int[] requirements) {
+        requirements[i]--;
+        if (requirements[i] > 0) {
+            return;
+        }
+        var1.add(i);
+        requirements[i]--;
+        List<Integer> successorList = successors[i];
+        if (successorList == null) {
+            return;
+        }
+        for (int successor : successorList) {
+            method1(successor, var1, successors, requirements);
+        }
+    }
+}

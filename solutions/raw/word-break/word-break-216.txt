@@ -1,0 +1,36 @@
+class Solution {
+
+    Boolean[] canSegment;
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        if (s == null || s.length() <= 0)
+            return true;
+        if (wordDict == null || wordDict.size() == 0)
+            return false;
+        canSegment = new Boolean[s.length()];
+        return segmentString(s, wordDict, 0);
+    }
+
+    private boolean segmentString(String s, List<String> wordDict, int start) {
+        //reach the end of str, one combination found
+        if (start == s.length())
+            return true;
+        //check before
+        if (canSegment[start] != null)
+            return canSegment[start];
+        //check all word match s from start - start+wordlen
+        for (String w : wordDict) {
+            //not enough char left
+            if (w.length() + start > s.length())
+                continue;
+            if (//match a word
+            w.equals(s.substring(start, start + w.length())) && segmentString(s, wordDict, start + w.length())) {
+                //check next
+                canSegment[start] = true;
+                return true;
+            }
+        }
+        canSegment[start] = false;
+        return false;
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // Step 1: Create the adjacency list and the indegree array
+        List<List<Integer>> adjList = new ArrayList<>();
+        int[] indegree = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            int course = prerequisite[0];
+            int prerequisiteCourse = prerequisite[1];
+            adjList.get(prerequisiteCourse).add(course);
+            indegree[course]++;
+        }
+        // Step 2: Perform the topological sorting
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        int[] order = new int[numCourses];
+        int index = 0;
+        while (!queue.isEmpty()) {
+            int course = queue.poll();
+            order[index++] = course;
+            for (int neighbor : adjList.get(course)) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0) {
+                    queue.offer(neighbor);
+                }
+            }
+        }
+        // Step 3: Check if there is a valid course order
+        if (index != numCourses) {
+            return new int[0];
+        }
+        return order;
+    }
+}

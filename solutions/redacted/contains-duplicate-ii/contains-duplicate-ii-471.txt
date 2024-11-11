@@ -1,0 +1,32 @@
+class Solution {
+
+    public boolean method1(int[] nums, int k) {
+        if (nums.length <= 1)
+            return false;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int left = 0;
+        int right = 0;
+        // Initialize the sliding window with the first k elements
+        while (right <= k && right < nums.length) {
+            map.put(nums[right], map.getOrDefault(nums[right], 0) + 1);
+            right++;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            // if the value is 1, it implies the element is itself
+            if (map.containsKey(nums[i]) && map.get(nums[i]) != 1)
+                return true;
+            // Expand the window to the right if it is not out of boundary
+            if (right < nums.length)
+                map.put(nums[right], map.getOrDefault(nums[right], 0) + 1);
+            // Shrink the window from the left if it is larger than k elements
+            if (i >= k) {
+                map.put(nums[left], map.get(nums[left]) - 1);
+                if (map.get(nums[left]) == 0)
+                    map.remove(nums[left]);
+                left++;
+            }
+            right++;
+        }
+        return false;
+    }
+}

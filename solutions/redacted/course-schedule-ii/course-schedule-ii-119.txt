@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int n = prerequisites.length;
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int i = 0; i < n; i++) {
+            int to = prerequisites[i][0];
+            int from = prerequisites[i][1];
+            adjList.get(from).add(to);
+        }
+        boolean[] visited = new boolean[param1];
+        boolean[] recStack = new boolean[param1];
+        List<Integer> inorder = new ArrayList<>();
+        int[] numOrder = new int[param1];
+        for (int i = 0; i < param1; i++) if (dfs(i, adjList, visited, recStack, inorder))
+            return new int[0];
+        for (int i = 0; i < param1; i++) {
+            numOrder[param1 - i - 1] = inorder.get(i);
+        }
+        return numOrder;
+    }
+
+    public boolean dfs(int vertex, List<List<Integer>> adjLst, boolean[] visited, boolean[] recStack, List<Integer> inorder) {
+        if (recStack[vertex]) {
+            return true;
+        }
+        if (visited[vertex]) {
+            return false;
+        }
+        visited[vertex] = true;
+        recStack[vertex] = true;
+        for (int i : adjLst.get(vertex)) {
+            if (dfs(i, adjLst, visited, recStack, inorder)) {
+                return true;
+            }
+        }
+        inorder.add(vertex);
+        recStack[vertex] = false;
+        return false;
+    }
+}

@@ -1,0 +1,25 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        // Initialize dp array where dp[i] indicates whether the substring s[0:i] can be segmented
+        boolean[] dp = new boolean[s.length() + 1];
+        // An empty string is always segmentable
+        dp[0] = true;
+        // Convert wordDict to a set for faster lookups
+        Set<String> wordSet = new HashSet<>(wordDict);
+        // Iterate over the length of the string
+        for (int i = 1; i <= s.length(); i++) {
+            // Check each possible partition of the substring s[0:i]
+            for (int j = 0; j < i; j++) {
+                // If s[0:j] is segmentable and s[j:i] is in the dictionary, mark s[0:i] as segmentable
+                if (dp[j] && wordSet.contains(s.substring(j, i))) {
+                    dp[i] = true;
+                    // No need to continue if dp[i] is already true
+                    break;
+                }
+            }
+        }
+        // Return whether the entire string can be segmented
+        return dp[s.length()];
+    }
+}

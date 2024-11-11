@@ -1,0 +1,68 @@
+class Solution {
+
+    public int[] topoSort(int numCourses, List<List<Integer>> adjList) {
+        int[] indegree = new int[numCourses];
+        /**
+         * Count indegrees
+         */
+        for (int i = 0; i < numCourses; i++) {
+            for (int adjNode : adjList.get(i)) {
+                indegree[adjNode]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        /**
+         * Node with indegree 0, Push in the stack
+         */
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0)
+                q.offer(i);
+        }
+        int topoElementCount = 0;
+        /**
+         * topo sort array
+         */
+        int[] courseOrdering = new int[numCourses];
+        Arrays.fill(courseOrdering, -1);
+        while (!q.isEmpty()) {
+            int front = q.poll();
+            /**
+             * Include front element in topo sort
+             */
+            courseOrdering[topoElementCount] = front;
+            topoElementCount++;
+            for (int adjNode : adjList.get(front)) {
+                /**
+                 * Reduce the indegree of the adjNode
+                 */
+                indegree[adjNode]--;
+                /**
+                 * Push in the queue if indegree becomes 0
+                 */
+                if (indegree[adjNode] == 0)
+                    q.offer(adjNode);
+            }
+        }
+        /**
+         * If DAG, topoElementCount == numCourses, Hence return
+         *        true, else return false
+         */
+        return topoElementCount == numCourses ? courseOrdering : new int[0];
+    }
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        /**
+         * Prepare directed Graph
+         */
+        for (int i = 0; i < prerequisites.length; i++) {
+            int from = prerequisites[i][1];
+            int to = prerequisites[i][0];
+            adjList.get(from).add(to);
+        }
+        return topoSort(numCourses, adjList);
+    }
+}

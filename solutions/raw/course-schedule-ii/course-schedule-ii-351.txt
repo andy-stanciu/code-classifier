@@ -1,0 +1,55 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> graph = IntStream.range(0, numCourses).mapToObj(i -> new ArrayList<Integer>()).collect(Collectors.toList());
+        for (int[] pair : prerequisites) {
+            int course = pair[0];
+            int dependent = pair[1];
+            graph.get(course).add(dependent);
+        }
+        NodeState[] courseState = new NodeState[numCourses];
+        Arrays.fill(courseState, NodeState.NOT_VISITED);
+        List<Integer> res = new ArrayList<>();
+        for (int course = 0; course < numCourses; course++) {
+            if (courseState[course] == NodeState.NOT_VISITED) {
+                if (performVisit(course, courseState, graph, res) == false) {
+                    return new int[0];
+                }
+            }
+        }
+        return res.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    private boolean performVisit(int course, NodeState[] courseState, List<List<Integer>> graph, List<Integer> res) {
+        if (courseState[course] == NodeState.VISITING) {
+            return false;
+        }
+        if (courseState[course] == NodeState.VISITED) {
+            return true;
+        }
+        courseState[course] = NodeState.VISITING;
+        for (int neighbour : graph.get(course)) {
+            if (performVisit(neighbour, courseState, graph, res) == false) {
+                return false;
+            }
+        }
+        courseState[course] = NodeState.VISITED;
+        res.add(course);
+        return true;
+    }
+
+    public enum NodeState {
+
+        NOT_VISITED(0), VISITING(1), VISITED(2);
+
+        private final int value;
+
+        NodeState(int v) {
+            this.value = v;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+}

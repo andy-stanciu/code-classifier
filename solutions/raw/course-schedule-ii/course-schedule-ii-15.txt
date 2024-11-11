@@ -1,0 +1,42 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] ans = new int[numCourses];
+        Map<Integer, List<Integer>> preMap = new HashMap<>();
+        for (int i = 0; i < numCourses; i++) {
+            preMap.put(i, new ArrayList<Integer>());
+        }
+        for (int[] row : prerequisites) {
+            int course = row[0];
+            int prereq = row[1];
+            List<Integer> allPrereq = preMap.get(course);
+            allPrereq.add(prereq);
+            preMap.put(course, allPrereq);
+        }
+        Set<Integer> visited = new HashSet<>();
+        Set<Integer> cycle = new HashSet<>();
+        List<Integer> ansList = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (!dfs(i, preMap, ansList, visited, cycle))
+                return new int[] {};
+        }
+        for (int i = 0; i < ansList.size(); i++) ans[i] = ansList.get(i);
+        return ans;
+    }
+
+    public boolean dfs(int course, Map<Integer, List<Integer>> preMap, List<Integer> ansList, Set<Integer> visited, Set<Integer> cycle) {
+        if (cycle.contains(course))
+            return false;
+        if (visited.contains(course))
+            return true;
+        cycle.add(course);
+        for (int prereq : preMap.get(course)) {
+            if (!dfs(prereq, preMap, ansList, visited, cycle))
+                return false;
+        }
+        cycle.remove(course);
+        visited.add(course);
+        ansList.add(course);
+        return true;
+    }
+}

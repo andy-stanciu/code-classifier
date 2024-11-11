@@ -1,0 +1,32 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        HashMap<Integer, List<Integer>> dependents = new HashMap();
+        int[] dependencies = new int[param1];
+        for (int[] prerequisite : prerequisites) {
+            dependents.computeIfAbsent(prerequisite[1], s -> new ArrayList()).add(prerequisite[0]);
+            dependencies[prerequisite[0]]++;
+        }
+        Queue<Integer> queue = new LinkedList();
+        for (int index = 0; index < param1; index++) {
+            if (dependencies[index] == 0) {
+                queue.add(index);
+            }
+        }
+        int[] order = new int[param1];
+        int orderIndex = 0;
+        while (!queue.isEmpty()) {
+            int var1 = queue.poll();
+            order[orderIndex++] = var1;
+            if (dependents.containsKey(var1)) {
+                for (int var2 : dependents.get(var1)) {
+                    dependencies[var2]--;
+                    if (dependencies[var2] == 0) {
+                        queue.add(var2);
+                    }
+                }
+            }
+        }
+        return orderIndex == param1 ? order : new int[0];
+    }
+}

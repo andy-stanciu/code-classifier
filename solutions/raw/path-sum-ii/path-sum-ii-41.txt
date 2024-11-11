@@ -1,0 +1,43 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> currentPath = new ArrayList<>();
+        sum(root, result, currentPath, targetSum, 0);
+        return result;
+    }
+
+    private void sum(TreeNode root, List<List<Integer>> result, List<Integer> currentPath, int target, int sum) {
+        if (root == null) {
+            return;
+        }
+        //add root value to currentPath
+        currentPath.add(root.val);
+        //Calculate sum
+        sum += root.val;
+        //check whether both roots are null and sum equal to target
+        if (root.left == null && root.right == null && sum == target) {
+            result.add(new ArrayList<>(currentPath));
+            //if yes add currentPath to result List
+        }
+        sum(root.left, result, currentPath, target, sum);
+        sum(root.right, result, currentPath, target, sum);
+        // To BackTrack the element
+        currentPath.remove(currentPath.size() - 1);
+    }
+}

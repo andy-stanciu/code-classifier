@@ -1,0 +1,40 @@
+class Solution {
+
+    List<List<String>> res = new ArrayList<>();
+
+    public List<List<String>> partition(String s) {
+        backtrack(s, 0, 0, new ArrayList<String>());
+        return res;
+    }
+
+    private void backtrack(String s, int i, int j, List<String> parts) {
+        //termination condition: end of the string
+        if (j == s.length()) {
+            res.add(new ArrayList<String>(parts));
+            return;
+        }
+        //decided not to partition
+        if (//can\'t do this at the end of s
+        j < s.length() - 1)
+            backtrack(s, i, j + 1, parts);
+        //chose to partition
+        if (isPalindrome(s.substring(i, j + 1))) {
+            //go ahead only if palindrome
+            parts.add(s.substring(i, j + 1));
+            backtrack(s, j + 1, j + 1, parts);
+            parts.remove(parts.size() - 1);
+        }
+    }
+
+    private boolean isPalindrome(String s) {
+        int i = 0, j = s.length() - 1;
+        while (i < j) {
+            if (s.charAt(i) != s.charAt(j)) {
+                return false;
+            }
+            i++;
+            j--;
+        }
+        return true;
+    }
+}

@@ -1,0 +1,153 @@
+// dfs
+// tc: e + v
+// sc: n + n + n + recursion stack n = n
+class Solution {
+
+    List<Integer> list;
+
+    // track if a class has been taken
+    boolean[] visited;
+
+    boolean hasCycle;
+
+    // track if a class is passed by twice during a path - if yes it is a cycle e.g 1->2 and 2->1
+    boolean[] inPath;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        visited = new boolean[param1];
+        inPath = new boolean[param1];
+        hasCycle = false;
+        list = new ArrayList<>();
+        // build graph dependency to classes
+        List<Integer>[] graph = buildGraph(param1, prerequisites);
+        // try to start from all classes without dependency-0 indegree. e.g 0->1->2 and 4->5->6
+        for (int i = 0; i < param1; i++) {
+            if (visited[i] == false) {
+                dfs(graph, i);
+                if (hasCycle)
+                    return new int[] {};
+            }
+        }
+        Collections.reverse(list);
+        // convert to  array
+        int[] res = new int[param1];
+        int index = 0;
+        for (int n : list) {
+            res[index] = n;
+            index++;
+        }
+        return res;
+    }
+
+    private void dfs(List<Integer>[] graph, int cur) {
+        if (inPath[cur]) {
+            hasCycle = true;
+        }
+        if (visited[cur] || hasCycle)
+            return;
+        // mark this class has been taken
+        visited[cur] = true;
+        // mark this class is on path - to check if can see it twice
+        inPath[cur] = true;
+        for (int n : graph[cur]) {
+            dfs(graph, n);
+        }
+        // have to do "postorder" - why?
+        // e.g 1->2->3 and 0->2->3. if do preorder than 1230, which is not correct. should be 3210 or 3201 either is fine.
+        list.add(cur);
+        // cur is taken in visited[], but it is not in path anymore, need to undo it
+        inPath[cur] = false;
+    }
+
+    private List<Integer>[] buildGraph(int n, int[][] edges) {
+        List<Integer>[] graph = new List[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] edge : edges) {
+            int from = edge[1];
+            int to = edge[0];
+            graph[from].add(to);
+        }
+        return graph;
+    }
+}
+/*
+// bfs
+// tc: e + v
+// sc: n + n + n = n
+class Solution {
+    List<Integer> list;
+    boolean[] visited;
+    int[] indegree;
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+      
+        visited = new boolean[numCourses];
+        list = new ArrayList<>();
+        indegree = new int[numCourses];
+        
+        for(int[] arr: prerequisites) {
+            indegree[arr[0]]++;
+        }
+        
+        // build graph dependency to classes
+        List<Integer>[] graph = buildGraph(numCourses, prerequisites);
+        
+        // try to start from all classes without dependency-0 indegree. e.g 0->1->2 and 4->5->6
+        for(int i = 0; i < indegree.length; i++) {
+            if(indegree[i] == 0 && visited[i] == false) {
+                bfs(graph, i);
+            }
+        }
+        
+        // if there is circle dependency e.g 1->2 and 2->1, then could not finish
+        if(list.size() < numCourses) return new int[]{};
+        
+        // convert to  array
+        int[] res = new int[numCourses];
+        int index = 0;
+        for(int n: list) {
+            res[index] = n;
+            index++;
+        }
+        
+        return res;
+    }
+    
+    private void bfs(List<Integer>[] graph, int cur) {
+        Queue<Integer> q = new LinkedList<Integer>();
+        q.add(cur);
+        
+        while(!q.isEmpty()) {
+            // take the class
+            cur = q.poll();
+            list.add(cur);
+            visited[cur] = true; // avoid duplicated visit
+            
+            for(int n: graph[cur]) {
+                indegree[n]--;
+                // only when there is no dependency, then we can take it and add it to take queue
+                if(indegree[n] == 0) q.add(n);
+            }
+            
+        }
+    }
+    
+    private List<Integer>[] buildGraph(int n, int[][] edges) {
+        List<Integer>[] graph = new List[n];
+        for(int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        
+        for(int[] edge: edges) {
+            int from = edge[1];
+            int to = edge[0];
+            
+            graph[from].add(to);
+        }
+        
+        return graph;
+    }
+}
+
+*/

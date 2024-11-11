@@ -1,0 +1,65 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        // this map is for tracking incoming nodes and we have useed value as Set cause we do not want to iterate the List and delete a specific node. We just want to quickly delete a node in O(1) time. For which Set is perfect.
+        HashMap<Integer, Set<Integer>> nodeToIncomingNodesMapping = new HashMap();
+        //we also need adjacency list to quickly check which nodes are connected with which node.
+        //Cause after we delete a node we need to check which nodes was connected to that node, so that
+        //we can reduce the incoming edges by one (as I have deleted a node) in the "nodeToIncomingNodesMapping" map. So both the maps are interconnected. Need to keep both of them in sync.
+        HashMap<Integer, List<Integer>> adjacencyList = new HashMap();
+        //create node to incoming map and create adjacency list map
+        for (int[] a : prerequisites) {
+            Set<Integer> tempSet = nodeToIncomingNodesMapping.getOrDefault(a[0], new HashSet<Integer>());
+            tempSet.add(a[1]);
+            nodeToIncomingNodesMapping.put(a[0], tempSet);
+            List<Integer> tempList = adjacencyList.getOrDefault(a[1], new ArrayList<Integer>());
+            tempList.add(a[0]);
+            adjacencyList.put(a[1], tempList);
+        }
+        Queue<Integer> queue = new LinkedList<Integer>();
+        for (int i = 0; i < param1; i++) {
+            if (!nodeToIncomingNodesMapping.containsKey(i)) {
+                queue.add(i);
+            }
+        }
+        //Creating one answer arrayList(Will convert it to array when I will be returning) which I will return from this method
+        List<Integer> answer = new ArrayList<Integer>();
+        while (!queue.isEmpty()) {
+            int topNode = queue.remove();
+            //I will add it to the answer as it was present in the queue which means this node has 0 incoming edges
+            answer.add(topNode);
+            //Now we need to correct both the maps as we have removed this node
+            //First we need to check which nodes will be impacted by deleting this top node. For that we need to use adjacency list
+            //we are using getOrDefault cause it might happen that in the adjacency list there is no key with respect to the topNode as it is a directed graph
+            List<Integer> impactedNodes = adjacencyList.getOrDefault(topNode, new ArrayList());
+            //Now we need to iterate this list and remove one incoming node from their set as topNode is deleted . We will use nodeToIncomingNodesMapping for this.
+            for (int impactedNode : impactedNodes) {
+                Set<Integer> imcomingNodesSet = nodeToIncomingNodesMapping.get(impactedNode);
+                //we are removing topNode from this set cause top node is deleted
+                // Here we have used set instead of list for this purpose. As I had to search the node in imcomingNodesSet to delete topNode if it would have been a list. As it is a set we can do it in O(1) time with remove method. Which made this code more fast.
+                imcomingNodesSet.remove(topNode);
+                //Now we need to check if the incoming nodes of this impactedNode has become 0 or not after deleting topNode.If it has become 0 then we need to add it in the queue and remove it from this nodeToIncomingNodesMapping as this impated node has become a new candite for removing from graph as it has zero incoming nodes
+                if (imcomingNodesSet.size() == 0) {
+                    queue.add(impactedNode);
+                    //as it has become zero so no point of keeping it here in this map
+                    nodeToIncomingNodesMapping.remove(impactedNode);
+                }
+            }
+        }
+        //this implies that there is one dependecy cycle present as we are saying that queue lenght is
+        //zero (i.e there is no node which has zero number of incoming edges) but nodeToIncomingNodesMapping\'s length is not zero which means there are some nodes left which has a dependecy which should not be an ideal case. "nodeToIncomingNodesMapping" map should be empty at the end of the while loop in the ideal case as we are deleting the nodes from nodeToIncomingNodesMapping whenever we are adding a node to queue.
+        if (nodeToIncomingNodesMapping.size() != 0)
+            return new int[] {};
+        //in ideal case return the answer that we have got
+        return convertListToArray(answer);
+    }
+
+    //a custom method for converting list to array
+    int[] convertListToArray(List<Integer> list) {
+        int[] array = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            array[i] = list.get(i);
+        }
+        return array;
+    }
+}

@@ -1,0 +1,56 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        //form a graph
+        //store neighbouring nodes
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            //we dont get null pointer exception,we are initilising it as a empty list
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            //1 should be completed before course 0
+            adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        //counting incoming degree at each node
+        //Iterate through each course\'s adjacency list and increment the in-degree for each course that appears in the list.
+        int[] inDegree = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            for (int j : adj.get(i)) {
+                //increasing the count
+                inDegree[j]++;
+            }
+        }
+        //This queue will be used for processing courses that can be taken immediately (courses with zero in-degree).
+        //Add all courses with zero in-degrees (i.e., courses that do not have any prerequisites) to the queue.
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (inDegree[i] == 0)
+                q.add(i);
+        }
+        //Process each course from the queue. For each course, add it to the topological order list and reduce the in-degrees of its dependent courses. If any dependent course\'s in-degree becomes zero, add it to the queue.
+        List<Integer> topoLi = new ArrayList<Integer>();
+        while (!q.isEmpty()) {
+            int node = q.peek();
+            q.remove();
+            topoLi.add(node);
+            // node is in topo sort so remove it from indegree
+            for (int i : adj.get(node)) {
+                inDegree[i]--;
+                if (inDegree[i] == 0) {
+                    q.add(i);
+                }
+            }
+        }
+        //If the number of courses processed in the topological sort is less than the total number of courses, it means there was a cycle (some courses couldn\'t be processed). In such a case, return an empty array.
+        if (topoLi.size() != param1) {
+            return new int[0];
+        }
+        // Convert list to array
+        int[] res = new int[topoLi.size()];
+        for (int i = 0; i < topoLi.size(); i++) {
+            res[i] = topoLi.get(i);
+        }
+        return res;
+    }
+}

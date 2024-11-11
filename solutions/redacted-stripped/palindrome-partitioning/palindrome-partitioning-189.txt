@@ -1,0 +1,38 @@
+class Solution {
+
+    String s;
+
+    public List<List<String>> partition(String s) {
+        this.s = s;
+        Map<Integer, List<List<String>>> mamo = new HashMap<>();
+        List<List<String>> empty = new ArrayList<>();
+        empty.add(new ArrayList());
+        mamo.put(s.length(), empty);
+        return partition(0, mamo);
+    }
+
+    private List<List<String>> partition(int start, Map<Integer, List<List<String>>> mamo) {
+        List<List<String>> ans = new ArrayList<>();
+        if (mamo.containsKey(start))
+            return mamo.get(start);
+        for (int i = start + 1; i <= s.length(); i++) {
+            String cur = (s.substring(start, i));
+            if (isPal(cur)) {
+                for (List<String> rest : partition(i, mamo)) {
+                    List<String> solFromStart = new ArrayList();
+                    solFromStart.add(cur);
+                    solFromStart.addAll(rest);
+                    ans.add(solFromStart);
+                }
+            }
+        }
+        mamo.put(start, ans);
+        return ans;
+    }
+
+    private boolean isPal(String s) {
+        for (int i = 0; i < s.length(); i++) if (s.charAt(i) != s.charAt(s.length() - i - 1))
+            return false;
+        return true;
+    }
+}

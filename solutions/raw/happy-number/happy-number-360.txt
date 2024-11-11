@@ -1,0 +1,22 @@
+class Solution {
+
+    public boolean isHappy(final int n) {
+        if (n == 1)
+            return true;
+        final Function<Integer, Integer> sos = a -> {
+            int sum = 0;
+            while (a != 0) {
+                int d = a % 10;
+                sum += d * d;
+                a /= 10;
+            }
+            return sum;
+        };
+        int slow = n, fast = sos.apply(n);
+        while (fast != 1 && fast != slow) {
+            slow = sos.apply(slow);
+            fast = sos.andThen(sos).apply(fast);
+        }
+        return fast == 1;
+    }
+}

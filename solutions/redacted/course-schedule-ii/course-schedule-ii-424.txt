@@ -1,0 +1,59 @@
+class Solution {
+
+    boolean cycle = false;
+
+    List<Integer> var1 = new ArrayList<>();
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        HashMap<Integer, List<Integer>> var2 = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            var2.put(i, new ArrayList<>());
+        }
+        if (prerequisites.length == 0) {
+            int[] res = new int[param1];
+            for (int i = 0; i < param1; i++) {
+                res[i] = i;
+            }
+            return res;
+        }
+        for (int[] n : prerequisites) {
+            if (n.length == 2)
+                var2.get(n[0]).add(n[1]);
+        }
+        boolean[] visited = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (cycle)
+                return new int[] {};
+            dfs(i, var2, visited);
+        }
+        if (cycle)
+            return new int[] {};
+        int[] result = new int[param1];
+        for (int i = 0; i < var1.size(); i++) {
+            result[i] = var1.get(i);
+        }
+        return result;
+    }
+
+    private void dfs(int currNode, HashMap<Integer, List<Integer>> var2, boolean[] visited) {
+        if (var1.contains(currNode))
+            return;
+        if (var2.containsKey(currNode) && var2.get(currNode).isEmpty()) {
+            var1.add(currNode);
+            return;
+        }
+        if (visited[currNode]) {
+            cycle = true;
+            return;
+        }
+        visited[currNode] = true;
+        List<Integer> children = var2.get(currNode);
+        for (Integer child : children) {
+            dfs(child, var2, visited);
+        }
+        if (!var1.contains(currNode)) {
+            var1.add(currNode);
+        }
+        visited[currNode] = false;
+    }
+}

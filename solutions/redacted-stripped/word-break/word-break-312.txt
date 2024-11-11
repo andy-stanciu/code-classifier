@@ -1,0 +1,28 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        Map<String, Boolean> dp = new HashMap<>();
+        Set<String> set = new HashSet<>(param1);
+        return helper(s, set, param1, dp);
+    }
+
+    public boolean helper(String s, Set<String> set, List<String> param1, Map<String, Boolean> dp) {
+        if (s.equals(""))
+            return true;
+        if (set.contains(s))
+            return true;
+        if (dp.containsKey(s))
+            return dp.get(s);
+        for (int i = 0; i < param1.size(); i++) {
+            int index = s.indexOf(param1.get(i));
+            if (index > -1) {
+                if (helper(s.substring(0, index), set, param1, dp) && helper(s.substring(index + param1.get(i).length()), set, param1, dp)) {
+                    dp.put(s, true);
+                    return true;
+                }
+            }
+        }
+        dp.put(s, false);
+        return false;
+    }
+}

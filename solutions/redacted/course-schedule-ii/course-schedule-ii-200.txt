@@ -1,0 +1,54 @@
+class Solution {
+
+    List<List<Integer>> graph;
+
+    boolean[] rstack;
+
+    boolean[] visited;
+
+    Stack<Integer> st;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        graph = new ArrayList<>();
+        rstack = new boolean[param1];
+        visited = new boolean[param1];
+        st = new Stack<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] pre : prerequisites) {
+            graph.get(pre[1]).add(pre[0]);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                if (isCyclic(i)) {
+                    return new int[0];
+                }
+            }
+        }
+        int[] res = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            res[i] = st.pop();
+        }
+        return res;
+    }
+
+    private boolean isCyclic(int param2) {
+        if (rstack[param2]) {
+            return true;
+        }
+        if (visited[param2]) {
+            return false;
+        }
+        visited[param2] = true;
+        rstack[param2] = true;
+        for (Integer pre : graph.get(param2)) {
+            if (isCyclic(pre)) {
+                return true;
+            }
+        }
+        rstack[param2] = false;
+        st.push(param2);
+        return false;
+    }
+}

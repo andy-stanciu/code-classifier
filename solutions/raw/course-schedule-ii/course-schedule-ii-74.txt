@@ -1,0 +1,40 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        int[] stateOfVisit = new int[numCourses];
+        int[] rs = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] pos : prerequisites) {
+            graph.get(pos[1]).add(pos[0]);
+            graph.get(pos[1]).sort((a, b) -> b - a);
+        }
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (stateOfVisit[i] == 0) {
+                if (checkCycle(i, graph, stateOfVisit, stack))
+                    return new int[0];
+            }
+        }
+        // if(stack.isEmpty()) return rs;
+        for (int i = 0; i < numCourses; i++) {
+            rs[i] = stack.pop();
+        }
+        return rs;
+    }
+
+    public boolean checkCycle(int node, List<List<Integer>> graph, int[] stateOfVisit, Stack<Integer> stack) {
+        stateOfVisit[node] = 1;
+        for (int i : graph.get(node)) {
+            if (stateOfVisit[i] == 1)
+                return true;
+            if (stateOfVisit[i] == 0 && checkCycle(i, graph, stateOfVisit, stack))
+                return true;
+        }
+        stateOfVisit[node] = 2;
+        stack.push(node);
+        return false;
+    }
+}

@@ -1,0 +1,47 @@
+class Solution {
+
+    int time = 0;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) adj.add(new ArrayList<Integer>());
+        for (int[] i : prerequisites) adj.get(i[1]).add(i[0]);
+        int[] d = new int[numCourses];
+        int[] f = new int[numCourses];
+        Arrays.fill(d, -1);
+        Arrays.fill(f, -1);
+        int[] finishing = new int[numCourses];
+        Stack<Integer> stack = new Stack<Integer>();
+        for (int course = 0; course < numCourses; course++) {
+            if (d[course] == -1) {
+                if (dfs(adj, d, f, stack, course) == false)
+                    return new int[0];
+            } else {
+                assert f[course] != -1;
+                continue;
+            }
+        }
+        for (int i = 0; i < numCourses; i++) {
+            finishing[i] = stack.pop();
+        }
+        return finishing;
+    }
+
+    public boolean dfs(List<List<Integer>> adj, int[] d, int[] f, Stack<Integer> stack, int course) {
+        // if(d[course] != -1 && f[course] == -1) return false;
+        // if(d[course] != -1 && f[course] != -1) return true;
+        d[course] = time++;
+        for (int dep : adj.get(course)) {
+            if (d[dep] != -1) {
+                if (f[dep] == -1)
+                    return false;
+            } else {
+                if (dfs(adj, d, f, stack, dep) == false)
+                    return false;
+            }
+        }
+        f[course] = time++;
+        stack.push(course);
+        return true;
+    }
+}

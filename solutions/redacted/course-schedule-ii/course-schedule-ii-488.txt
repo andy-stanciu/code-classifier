@@ -1,0 +1,36 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        HashSet<Integer> currStack = new HashSet<>();
+        boolean[] visited = new boolean[param1];
+        List<Integer> tempRes = new ArrayList<>();
+        int[] res = new int[param1];
+        for (int i = 0; i < param1; ++i) adj.add(new ArrayList<>());
+        for (int i = 0; i < prerequisites.length; ++i) adj.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        for (int i = 0; i < param1; ++i) {
+            if (visited[i] == false)
+                if (dfs(adj, i, currStack, tempRes, visited))
+                    return new int[0];
+        }
+        for (int i = 0; i < tempRes.size(); ++i) res[i] = tempRes.get(i);
+        return res;
+    }
+
+    public boolean dfs(List<List<Integer>> adj, int curr, HashSet<Integer> currStack, List<Integer> tempRes, boolean[] visited) {
+        if (currStack.contains(curr))
+            return true;
+        if (visited[curr] == true)
+            return false;
+        visited[curr] = true;
+        currStack.add(curr);
+        for (int i = 0; i < adj.get(curr).size(); ++i) {
+            if (dfs(adj, adj.get(curr).get(i), currStack, tempRes, visited))
+                return true;
+        }
+        tempRes.add(curr);
+        currStack.remove(curr);
+        //no cycle exists
+        return false;
+    }
+}

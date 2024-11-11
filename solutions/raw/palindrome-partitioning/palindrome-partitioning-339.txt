@@ -1,0 +1,29 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> list = new ArrayList<>();
+        backtrack(s, 0, new ArrayList<>(), list);
+        return list;
+    }
+
+    private void backtrack(String s, int startIndex, List<String> current, List<List<String>> list) {
+        if (startIndex >= s.length()) {
+            int idx = 0;
+            for (String str : current) idx += str.length();
+            list.add(new ArrayList<>(current));
+            return;
+        }
+        for (int i = startIndex; i < s.length(); i++) {
+            if (isPalindrome(s.substring(startIndex, i + 1))) {
+                current.add(s.substring(startIndex, i + 1));
+                backtrack(s, i + 1, current, list);
+                current.remove(current.size() - 1);
+            }
+        }
+    }
+
+    private boolean isPalindrome(String s) {
+        String reversed = new StringBuilder().append(s).reverse().toString();
+        return s.equals(reversed);
+    }
+}

@@ -1,0 +1,29 @@
+class Solution {
+
+    // approach: sliding window where we grow to the right & shrink from the left | O(N)
+    public int minSubArrayLen(int target, int[] nums) {
+        // list of numbers
+        int N = nums.length;
+        // track the answer: minimum length
+        int min = 0;
+        // left & right window border positions
+        int left = 0, right = 0;
+        // sum of current window (left:inc; right:exc)
+        int sum = 0;
+        // current length of window
+        int len = 0;
+        for (int i = 0; i < N; i++) {
+            // grow window on the right
+            sum += nums[right];
+            right++;
+            // shrink window on the left (as needed)
+            while (sum >= target) {
+                len = right - left;
+                min = (len < min) | min == 0 ? len : min;
+                sum -= nums[left];
+                left++;
+            }
+        }
+        return min;
+    }
+}

@@ -1,0 +1,87 @@
+class Solution {
+
+    /*
+
+    Step 1: Create HashMap and List with CourseNode
+    Step 2: Add prereqs to each course in the input. HashMap is used only here to fetch course nodes.
+    Step 3: Use List with couse nodes to begin DFS
+    Step 4: returned List with ording will be in reverse order since the last one will be added first during DFS
+    Step 5: just reverse the order from DFS list return to int[] and return
+
+    */
+    Map<Integer, CourseNode> courseMap = new HashMap<>();
+
+    List<CourseNode> courseList = new ArrayList<>();
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<Integer> result = new ArrayList<>();
+        // just build map with nodes and list with node
+        for (int i = 0; i < numCourses; i++) {
+            // this is required only during building prereqs for each course
+            courseMap.put(i, new CourseNode(i));
+            // this required only to iterate for DFS
+            courseList.add(courseMap.get(i));
+        }
+        //adding prereqs to each course
+        for (int i = 0; i < prerequisites.length; i++) {
+            int course = prerequisites[i][1];
+            int dep = prerequisites[i][0];
+            if (!courseMap.containsKey(course))
+                courseMap.put(course, new CourseNode(course));
+            if (!courseMap.containsKey(dep))
+                courseMap.put(dep, new CourseNode(dep));
+            CourseNode courseNode = courseMap.get(course);
+            CourseNode depNode = courseMap.get(dep);
+            courseNode.preReqs.add(depNode);
+        }
+        // actual dfs starts here
+        while (courseList.size() > 0) {
+            CourseNode node = courseList.get(courseList.size() - 1);
+            courseList.remove(courseList.size() - 1);
+            boolean isCyclic = dfs(node, result);
+            if (isCyclic)
+                return new int[0];
+        }
+        // this is to order the courses since the last one will be added first in DFS
+        int[] res = new int[result.size()];
+        for (int i = 0, j = result.size() - 1; i < result.size(); i++, j--) {
+            res[i] = result.get(j);
+        }
+        return res;
+    }
+
+    public boolean dfs(CourseNode node, List<Integer> result) {
+        if (node.visited)
+            return false;
+        if (node.visiting)
+            return true;
+        node.visiting = true;
+        for (CourseNode prereq : node.preReqs) {
+            boolean isCyclic = dfs(prereq, result);
+            if (isCyclic)
+                return true;
+        }
+        node.visited = true;
+        node.visiting = false;
+        result.add(node.val);
+        return false;
+    }
+
+    class CourseNode {
+
+        int val;
+
+        boolean visited;
+
+        boolean visiting;
+
+        List<CourseNode> preReqs;
+
+        CourseNode(int val) {
+            this.val = val;
+            this.preReqs = new ArrayList<>();
+            this.visited = false;
+            this.visiting = false;
+        }
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    static boolean dfsUtil(List<List<Integer>> adj, int curr, boolean[] visit, boolean[] path, Stack<Integer> seq) {
+        visit[curr] = true;
+        path[curr] = true;
+        for (int x : adj.get(curr)) {
+            if (path[x]) {
+                return true;
+            }
+            if (!visit[x] && dfsUtil(adj, x, visit, path, seq)) {
+                return true;
+            }
+        }
+        path[curr] = false;
+        seq.add(curr);
+        return false;
+    }
+
+    public int[] findOrder(int n, int[][] pre) {
+        List<List<Integer>> adj = new ArrayList<>();
+        boolean[] visit = new boolean[n];
+        boolean[] path = new boolean[n];
+        Stack<Integer> seq = new Stack<>();
+        int[] res = new int[n];
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < pre.length; i++) {
+            adj.get(pre[i][1]).add(pre[i][0]);
+        }
+        for (int i = 0; i < n; i++) {
+            if (!visit[i]) {
+                if (dfsUtil(adj, i, visit, path, seq)) {
+                    return new int[0];
+                }
+            }
+        }
+        int temp = 0;
+        while (!seq.isEmpty()) {
+            res[temp++] = seq.pop();
+        }
+        return res;
+    }
+}

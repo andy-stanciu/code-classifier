@@ -1,0 +1,35 @@
+class Solution {
+
+    // recursive function
+    public boolean rec(int start, int end, String s, Set<String> set) {
+        if (end == s.length())
+            if (set.contains(s.substring(start, end)))
+                return true;
+            else
+                return false;
+        if (set.contains(s.substring(start, end)))
+            return rec(end, end + 1, s, set) || rec(start, end + 1, s, set);
+        return rec(start, end + 1, s, set);
+    }
+
+    // Memoized Function
+    public boolean memo(int start, int end, String s, Set<String> set, Boolean[][] dp) {
+        if (end == s.length())
+            if (set.contains(s.substring(start, end)))
+                return true;
+            else
+                return false;
+        if (dp[start][end] != null)
+            return dp[start][end];
+        if (set.contains(s.substring(start, end)))
+            return dp[start][end] = memo(end, end + 1, s, set, dp) || memo(start, end + 1, s, set, dp);
+        return dp[start][end] = memo(start, end + 1, s, set, dp);
+    }
+
+    public boolean method1(String s, List<String> param1) {
+        Set<String> set = new HashSet<>(param1);
+        //return rec(0,1,s,set);
+        Boolean[][] dp = new Boolean[s.length() + 1][s.length() + 1];
+        return memo(0, 1, s, set, dp);
+    }
+}

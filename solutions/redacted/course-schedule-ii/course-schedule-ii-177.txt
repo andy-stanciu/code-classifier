@@ -1,0 +1,49 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        // use topological sort, start from every indegre 0 (aka no incoming edge vertex)
+        // edge case
+        int[] indegree = new int[param1];
+        List<Integer>[] adjList = new ArrayList[param1];
+        for (int i = 0; i < param1; i += 1) {
+            // instantiate all Lists in adjList
+            adjList[i] = new ArrayList<>();
+        }
+        // numCourse = 4, pre = [[1,0],[2,0],[3,1],[3,2]]
+        // indegree = [0, 1, 1, 2]
+        // index       0, 1, 2, 3
+        for (int[] pre : prerequisites) {
+            indegree[pre[0]] += 1;
+            // add the neighbors for this vertex
+            adjList[pre[1]].add(pre[0]);
+        }
+        // add all no indegree vertex into queue
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < indegree.length; i += 1) {
+            if (indegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        List<Integer> res = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            int curr = queue.poll();
+            res.add(curr);
+            for (int neighbor : adjList[curr]) {
+                indegree[neighbor] -= 1;
+                if (indegree[neighbor] == 0) {
+                    queue.add(neighbor);
+                }
+            }
+        }
+        for (int val : indegree) {
+            if (val > 0) {
+                return new int[0];
+            }
+        }
+        int[] finalRes = new int[res.size()];
+        for (int i = 0; i < res.size(); i += 1) {
+            finalRes[i] = res.get(i);
+        }
+        return finalRes;
+    }
+}

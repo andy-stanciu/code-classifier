@@ -1,0 +1,34 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        // Convert the word dictionary into a HashSet for O(1) lookups
+        Set<String> var1 = new HashSet<>(param1);
+        // Create a memoization array where -1 means uncomputed, 0 means false, and 1 means true
+        Boolean[] memo = new Boolean[s.length()];
+        // Call the recursive function starting from index 0
+        return method2(s, var1, 0, memo);
+    }
+
+    // Recursive function to check if the string can be segmented starting from index \'start\'
+    private boolean method2(String s, Set<String> var1, int start, Boolean[] memo) {
+        // If we have reached the end of the string, return true
+        if (start == s.length()) {
+            return true;
+        }
+        // If the result is already computed for this starting index, return it
+        if (memo[start] != null) {
+            return memo[start];
+        }
+        // Try to break the string at every possible point
+        for (int end = start + 1; end <= s.length(); end++) {
+            // If the substring s[start:end] is in the wordSet, recursively check the rest of the string
+            if (var1.contains(s.substring(start, end)) && method2(s, var1, end, memo)) {
+                memo[start] = true;
+                return true;
+            }
+        }
+        // If no valid segmentation is found, mark the result as false and return
+        memo[start] = false;
+        return false;
+    }
+}

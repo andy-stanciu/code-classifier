@@ -1,0 +1,42 @@
+class Solution {
+
+    public int evalRPN(String[] tokens) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        for (String token : tokens) {
+            if (isOperator(token)) {
+                // Pop two elements for the operation
+                int b = stack.pop();
+                int a = stack.pop();
+                // Perform the operation and push the result back onto the stack
+                stack.push(applyOperation(a, b, token));
+            } else {
+                // Push the operand onto the stack
+                stack.push(Integer.parseInt(token));
+            }
+        }
+        // The result is the only element left in the stack
+        return stack.pop();
+    }
+
+    // Helper method to check if a token is an operator
+    private boolean isOperator(String token) {
+        return "+-*/".contains(token);
+    }
+
+    // Helper method to apply the operation to two operands
+    private int applyOperation(int a, int b, String operator) {
+        switch(operator) {
+            case "+":
+                return a + b;
+            case "-":
+                return a - b;
+            case "*":
+                return a * b;
+            case "/":
+                // Integer division truncates toward zero
+                return a / b;
+            default:
+                throw new IllegalArgumentException("Invalid operator");
+        }
+    }
+}

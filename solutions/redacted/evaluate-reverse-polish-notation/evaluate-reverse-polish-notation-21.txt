@@ -1,0 +1,51 @@
+class Solution {
+
+    public static int evalRPN(String[] tokens) {
+        Stack<Integer> st = new Stack<>();
+        String operand = "";
+        for (int i = 0; i < tokens.length; i++) {
+            String ele = tokens[i];
+            // If its operand then we are storing for mathematical operation else we will push into stack
+            if (ele.equals("*") || ele.equals("/") || ele.equals("+") || ele.equals("-")) {
+                operand = ele;
+                // We need to pop 2 times to get 2 numbers to
+                // perform mathematical operation
+                int num1 = st.pop();
+                int num2 = st.pop();
+                int temp = 0;
+                // below are operations according to operand
+                // always take num2 operand num1 because
+                // st.pop() returns last pushed element
+                // take a look of bellow explanation
+                // Given Arr = {2 , 10, "/"}
+                // As we want operation :- 2 / 10 = 0
+                // 0 because int will not save the
+                //value after decimal point
+                // but if we do num1 / num2 then
+                // num1 = 10 and num2 = 2 and ans will 5
+                // to avoid this we are doing this
+                // And for next operation we need to push temp.
+                if (ele.equals("+")) {
+                    temp = num2 + num1;
+                    st.push(temp);
+                } else if (ele.equals("-")) {
+                    temp = num2 - num1;
+                    st.push(temp);
+                } else if (ele.equals("/")) {
+                    temp = num2 / num1;
+                    st.push(temp);
+                } else {
+                    temp = num2 * num1;
+                    st.push(temp);
+                }
+            } else {
+                // If it is number not operand we are pushing it
+                // into stack
+                st.push(Integer.parseInt(ele));
+            }
+        }
+        // after iterating over the array only ans
+        // will be remains in stack thats why we are returning it
+        return st.pop();
+    }
+}

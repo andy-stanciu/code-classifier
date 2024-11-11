@@ -1,0 +1,41 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        // To improve the word search time complexity
+        Set<String> var1 = new HashSet<>(param1);
+        // The search can be stopped when we reach the end of the string, which is the index with lengh of the string
+        // ie. for the text "abc", we need to cache the result of index 3 as well so we require an array of size 4
+        Boolean[] dp = new Boolean[s.length() + 1];
+        //Only if we can find a matching word for the beginning of the string, then only the search needs to continue, so only need to search for index 0
+        return method2(s, 0, var1, param1, dp);
+    }
+
+    private boolean method2(String s, int startIndex, Set<String> var1, List<String> param1, Boolean[] dp) {
+        int endIndex = 0;
+        // Check if cached value is avaiable for the startIndex
+        if (dp[startIndex] != null) {
+            return dp[startIndex];
+        }
+        // When the startIndex reaches length of the array, it means a complete match is found
+        if (startIndex == s.length()) {
+            dp[startIndex] = true;
+            return true;
+        }
+        // Check if any of the words match the start of the string
+        for (String var2 : param1) {
+            endIndex = startIndex + var2.length();
+            if (endIndex <= s.length()) {
+                if (var1.contains(s.substring(startIndex, endIndex))) {
+                    //if a match is found check the same for the remaining part of the string
+                    if (method2(s, endIndex, var1, param1, dp)) {
+                        dp[startIndex] = true;
+                        return true;
+                    }
+                }
+            }
+        }
+        // If it reaches here it means for this startIndex there is no complete match
+        dp[startIndex] = false;
+        return false;
+    }
+}

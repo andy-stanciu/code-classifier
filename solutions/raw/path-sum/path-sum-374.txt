@@ -1,0 +1,72 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        int left = 0;
+        int right = 0;
+        if (root != null) {
+            int sum = root.val;
+            boolean[] isMatch = new boolean[1];
+            left = leftTravese(root, sum, isMatch, targetSum);
+            if (isMatch[0] == true)
+                return true;
+            right = rightTravese(root, sum, isMatch, targetSum);
+            if (isMatch[0] == true)
+                return true;
+            if (left == -1001 && right == -1001 && sum == targetSum) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    int leftTravese(TreeNode root, int sum, boolean[] isMatch, int target) {
+        root = root.left;
+        int left = 0;
+        int right = 0;
+        int total = 0;
+        int val = -1001;
+        if (root != null) {
+            val = root.val;
+            total = sum + val;
+            left = leftTravese(root, total, isMatch, target);
+            right = rightTravese(root, total, isMatch, target);
+            if (left == -1001 && right == -1001 && total == target) {
+                isMatch[0] = true;
+            }
+        }
+        return val;
+    }
+
+    int rightTravese(TreeNode root, int sum, boolean[] isMatch, int target) {
+        root = root.right;
+        int left = 0;
+        int right = 0;
+        int total = 0;
+        int val = -1001;
+        if (root != null) {
+            val = root.val;
+            total = sum + val;
+            left = leftTravese(root, total, isMatch, target);
+            right = rightTravese(root, total, isMatch, target);
+            if (left == -1001 && right == -1001 && total == target) {
+                isMatch[0] = true;
+            }
+        }
+        return val;
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        TrieNode root = new TrieNode();
+        for (String var1 : param1) {
+            TrieNode curr = root;
+            for (char c : var1.toCharArray()) {
+                if (!curr.children.containsKey(c)) {
+                    curr.children.put(c, new TrieNode());
+                }
+                curr = curr.children.get(c);
+            }
+            curr.var2 = true;
+        }
+        boolean[] dp = new boolean[s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            if (i == 0 || dp[i - 1]) {
+                TrieNode curr = root;
+                for (int j = i; j < s.length(); j++) {
+                    char c = s.charAt(j);
+                    if (!curr.children.containsKey(c))
+                        break;
+                    curr = curr.children.get(c);
+                    if (curr.var2) {
+                        dp[j] = true;
+                    }
+                }
+            }
+        }
+        return dp[s.length() - 1];
+    }
+}
+
+class TrieNode {
+
+    boolean var2;
+
+    Map<Character, TrieNode> children;
+
+    TrieNode() {
+        this.children = new HashMap<>();
+    }
+}

@@ -1,0 +1,51 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        //create the required lists and datasets
+        List<List<Integer>> ans = new ArrayList();
+        List<Integer> data = new ArrayList();
+        dfs(root, targetSum, data, ans);
+        return ans;
+    }
+
+    private void dfs(TreeNode root, int sum, List<Integer> data, List<List<Integer>> ans) {
+        // base condition.
+        if (root == null)
+            return;
+        //we add the current root value into the dataset
+        data.add(root.val);
+        if (root.left == null && root.right == null && sum - root.val == 0) {
+            //this is where we check if the current root is a leaf node.
+            //and if the sum - current root value is zero.
+            //this means we have found a valid data set.
+            //add the dataset into the main list.
+            ans.add(new ArrayList<Integer>(data));
+        } else {
+            //if current node is not a leaf node, we take the possibility
+            //of going left and right by reducing the value of the sum
+            dfs(root.left, sum - root.val, data, ans);
+            dfs(root.right, sum - root.val, data, ans);
+        }
+        //this is very important. remember we added an element
+        //in the data set at very begining, we gotta remove it
+        //this is becuase in case of nested recursion, when going
+        //back, we may not require the child value and it should
+        //be removed.
+        data.remove(data.size() - 1);
+    }
+}

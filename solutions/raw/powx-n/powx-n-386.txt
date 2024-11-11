@@ -1,0 +1,35 @@
+class Solution {
+
+    public double myPow(double x, int n) {
+        // Handle the special case where n is Integer.MIN_VALUE
+        if (n == Integer.MIN_VALUE) {
+            if (x == 0) {
+                // 0^-2147483648 is considered as 0
+                return 0;
+            }
+            // Compute power with the maximum positive exponent and then invert
+            double halfPow = myPow(x, Integer.MAX_VALUE);
+            // (1 / (x^2147483648)) can be approximated as 1 / (x * x^2147483647)
+            return 1 / (halfPow * x);
+        }
+        // Handle the case when n is zero
+        if (n == 0)
+            return 1;
+        // Handle the case when n is negative
+        if (n < 0) {
+            x = 1 / x;
+            n = -n;
+        }
+        // Exponentiation by squaring
+        double result = 1;
+        double currentProduct = x;
+        while (n > 0) {
+            if ((n % 2) == 1) {
+                result *= currentProduct;
+            }
+            currentProduct *= currentProduct;
+            n /= 2;
+        }
+        return result;
+    }
+}

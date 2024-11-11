@@ -1,0 +1,53 @@
+class Solution {
+
+    boolean cycle;
+
+    boolean[] visited, marked;
+
+    ArrayList<ArrayList<Integer>> graph;
+
+    ArrayList<Integer> post;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        cycle = false;
+        graph = new ArrayList<ArrayList<Integer>>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<Integer>());
+        }
+        for (int[] c : prerequisites) {
+            int goal = c[0];
+            int prerequisite = c[1];
+            graph.get(prerequisite).add(goal);
+        }
+        visited = new boolean[numCourses];
+        marked = new boolean[numCourses];
+        post = new ArrayList<Integer>();
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i]) {
+                visit(i);
+            }
+        }
+        if (cycle)
+            return new int[] {};
+        int[] result = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            result[i] = post.get(i);
+        }
+        return result;
+    }
+
+    private void visit(int i) {
+        visited[i] = true;
+        marked[i] = true;
+        ArrayList<Integer> neighbors = graph.get(i);
+        for (int neighbor : neighbors) {
+            if (!visited[neighbor]) {
+                visit(neighbor);
+            } else if (marked[neighbor]) {
+                cycle = true;
+            }
+        }
+        marked[i] = false;
+        post.addFirst(i);
+    }
+}

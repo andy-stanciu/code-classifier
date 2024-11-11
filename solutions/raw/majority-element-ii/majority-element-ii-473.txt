@@ -1,0 +1,74 @@
+class Solution {
+
+    public List<Integer> majorityElement(int[] nums) {
+        //modified Boyer Moore Voting algo
+        int count1 = 0, count2 = 0;
+        int ele1 = Integer.MIN_VALUE, ele2 = Integer.MIN_VALUE;
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            //fetching the 2 eligible elemenyts for manual checking wrt threshold
+            if (count1 == 0 && ele2 != nums[i]) {
+                //same number cant be assigned to both variables
+                count1++;
+                ele1 = nums[i];
+            } else if (count2 == 0 && ele1 != nums[i]) {
+                count2++;
+                ele2 = nums[i];
+            } else if (ele1 == nums[i])
+                count1++;
+            else if (ele2 == nums[i])
+                count2++;
+            else {
+                count1--;
+                count2--;
+            }
+        }
+        //manual checking
+        List<Integer> ans = new ArrayList<>();
+        //reset to reuse
+        count1 = 0;
+        //reset to reuse
+        count2 = 0;
+        for (int i = 0; i < n; i++) {
+            if (ele1 == nums[i])
+                count1++;
+            if (ele2 == nums[i])
+                count2++;
+        }
+        int threshold = (int) (n / 3) + 1;
+        if (count1 >= threshold)
+            ans.add(ele1);
+        if (count2 >= threshold)
+            ans.add(ele2);
+        return ans;
+    }
+}
+//EASY SOLUTION USING HASHING
+/*
+class Solution {
+    public List<Integer> majorityElement(int[] nums) {
+        // Create a frequency map to store the count of each element
+        Map<Integer, Integer> elementCountMap = new HashMap<>();
+        
+        // Iterate through the input array to count element occurrences
+        for (int i = 0; i < nums.length; i++) {
+            elementCountMap.put(nums[i], elementCountMap.getOrDefault(nums[i], 0) + 1);
+        }
+        
+        List<Integer> majorityElements = new ArrayList<>();
+        int threshold = nums.length / 3;
+        
+        // Iterate through the frequency map to identify majority elements
+        for (Map.Entry<Integer, Integer> entry : elementCountMap.entrySet()) {
+            int element = entry.getKey();
+            int count = entry.getValue();
+            
+            // Check if the element count is greater than the threshold
+            if (count > threshold) {
+                majorityElements.add(element);
+            }
+        }
+        
+        return majorityElements;
+    }
+} */

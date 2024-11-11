@@ -1,0 +1,45 @@
+class Solution {
+
+    public int evalRPN(String[] tokens) {
+        final String add = "+";
+        final String sub = "-";
+        final String mul = "*";
+        final String div = "/";
+        HashSet<String> operators = new HashSet<>();
+        operators.add(add);
+        operators.add(sub);
+        operators.add(mul);
+        operators.add(div);
+        ArrayList<Integer> stack = new ArrayList<Integer>();
+        int result = 0;
+        for (int i = 0; i < tokens.length; i++) {
+            String eval = tokens[i];
+            if (operators.contains(eval)) {
+                int first = stack.remove(stack.size() - 1);
+                int second = stack.remove(stack.size() - 1);
+                int value = 0;
+                switch(eval) {
+                    case add:
+                        value = second + first;
+                        break;
+                    case sub:
+                        value = second - first;
+                        break;
+                    case mul:
+                        value = second * first;
+                        break;
+                    case div:
+                        value = second / first;
+                        break;
+                    default:
+                        System.out.println("This shouldn\'t happen: " + eval);
+                        break;
+                }
+                stack.add(value);
+            } else {
+                stack.add(Integer.valueOf(eval));
+            }
+        }
+        return stack.get(0);
+    }
+}

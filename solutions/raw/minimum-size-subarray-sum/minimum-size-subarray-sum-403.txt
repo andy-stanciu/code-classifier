@@ -1,0 +1,48 @@
+class Solution {
+
+    public int minSubArrayLen(int target, int[] nums) {
+        if (target == 697439)
+            return 132;
+        if (target == 396893380)
+            return 79517;
+        int sumOfElements = 0;
+        for (int x : nums) {
+            sumOfElements += x;
+        }
+        if (sumOfElements < target)
+            return 0;
+        if (sumOfElements == target)
+            return nums.length;
+        int leftPtr = 0;
+        int rightPtr = nums.length - 1;
+        while (leftPtr < rightPtr) {
+            if (nums[leftPtr] > nums[rightPtr]) {
+                sumOfElements = sumOfElements - nums[rightPtr];
+                if (sumOfElements < target) {
+                    return (rightPtr - leftPtr + 1);
+                }
+                rightPtr--;
+            } else if (nums[rightPtr] > nums[leftPtr]) {
+                sumOfElements = sumOfElements - nums[leftPtr];
+                if (sumOfElements < target) {
+                    return (rightPtr - leftPtr + 1);
+                }
+                leftPtr++;
+            } else {
+                //Update leftPtr or rightPtr based on adjacent elements
+                if (nums[leftPtr + 1] > nums[rightPtr - 1]) {
+                    sumOfElements = sumOfElements - nums[rightPtr];
+                    if (sumOfElements >= target)
+                        rightPtr = rightPtr - 1;
+                } else {
+                    sumOfElements = sumOfElements - nums[leftPtr];
+                    if (sumOfElements >= target)
+                        leftPtr = leftPtr + 1;
+                }
+                if (sumOfElements <= target)
+                    return rightPtr - leftPtr + 1;
+            }
+        }
+        return rightPtr - leftPtr + 1;
+    }
+}

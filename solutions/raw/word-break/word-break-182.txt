@@ -1,0 +1,26 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        // recursion + cache
+        int[] dp = new int[s.length()];
+        Set<String> dict = new HashSet<>(wordDict);
+        // System.out.println(dict);
+        return validate(0, s, dict, dp);
+    }
+
+    boolean validate(int start, String s, Set<String> dict, int[] dp) {
+        // System.out.println(s.substring(start));
+        if (start == s.length())
+            return true;
+        if (dp[start] != 0)
+            return dp[start] == 1;
+        for (int i = start; i < s.length(); i++) {
+            if (dict.contains(s.substring(start, i + 1)) && validate(i + 1, s, dict, dp)) {
+                dp[start] = 1;
+                return true;
+            }
+        }
+        dp[start] = -1;
+        return false;
+    }
+}

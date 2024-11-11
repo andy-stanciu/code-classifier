@@ -1,0 +1,25 @@
+class Solution {
+
+    public int minSubArrayLen(int target, int[] nums) {
+        int minWindowSize = Integer.MAX_VALUE;
+        // intially window\'s starting index and ending index is 0
+        int windowStart = 0;
+        int currWindowSum = 0;
+        // Let\'s keep increasing the size of the window from the right by doing windowEnd++
+        for (int windowEnd = 0; windowEnd < nums.length; windowEnd++) {
+            currWindowSum += nums[windowEnd];
+            /* if we see that currWindowSum is greater than or equal to target,
+			 then we will try to reduce size of window by moving windowStart to next index
+			 to do this, we will remove the windowStart value from the currSum and then move
+			 the windowStart index.
+			 At the same time, we will keep checking if this windowSize is meeting the condition 
+			and also smaller than the previously seen window */
+            while (currWindowSum >= target) {
+                minWindowSize = Math.min(minWindowSize, windowEnd - windowStart + 1);
+                currWindowSum -= nums[windowStart];
+                windowStart++;
+            }
+        }
+        return minWindowSize == Integer.MAX_VALUE ? 0 : minWindowSize;
+    }
+}

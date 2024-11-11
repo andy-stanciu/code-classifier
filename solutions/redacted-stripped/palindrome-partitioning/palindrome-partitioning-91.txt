@@ -1,0 +1,34 @@
+class Solution {
+
+    private boolean method1(String str) {
+        int leftPointer = 0;
+        int rightPointer = str.length() - 1;
+        while (leftPointer <= rightPointer) {
+            if (str.charAt(leftPointer) != str.charAt(rightPointer))
+                return false;
+            leftPointer++;
+            rightPointer--;
+        }
+        return true;
+    }
+
+    public void partition(String str, int index, String subString, List<String> param1, List<List<String>> param2) {
+        if (index >= str.length()) {
+            if (subString.isEmpty())
+                param2.add(new ArrayList(param1));
+            return;
+        }
+        if (method1(subString + str.charAt(index))) {
+            param1.add(subString + str.charAt(index));
+            partition(str, index + 1, "", param1, param2);
+            param1.remove(param1.size() - 1);
+        }
+        partition(str, index + 1, subString + str.charAt(index), param1, param2);
+    }
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> param2 = new ArrayList();
+        partition(s, 0, "", new ArrayList(), param2);
+        return param2;
+    }
+}

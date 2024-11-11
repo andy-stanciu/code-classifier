@@ -1,0 +1,47 @@
+/**
+ * begin: in degree = 0
+ * destination:
+ * sequence: bfs
+ */
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        //in degree
+        int[] indegree = new int[numCourses + 1];
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList());
+        }
+        //edge
+        for (int[] edge : prerequisites) {
+            graph.get(edge[1]).add(edge[0]);
+            indegree[edge[0]]++;
+        }
+        // storage the sequence
+        List<Integer> res = new ArrayList();
+        Queue<Integer> queue = new LinkedList();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        int outnum = 0;
+        while (!queue.isEmpty()) {
+            int x = queue.poll();
+            outnum++;
+            res.add(x);
+            List<Integer> list = graph.get(x);
+            for (int i : list) {
+                indegree[i]--;
+                if (indegree[i] == 0) {
+                    queue.offer(i);
+                }
+            }
+        }
+        if (outnum == numCourses) {
+            return res.stream().mapToInt(i -> i).toArray();
+        } else {
+            return new int[0];
+        }
+    }
+}

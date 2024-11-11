@@ -1,0 +1,42 @@
+class Solution {
+
+    public int[] findOrder(int nv, int[][] pre) {
+        int[] indeg = new int[nv];
+        int[] ans = new int[nv];
+        Arrays.fill(ans, -1);
+        Map<Integer, List<Integer>> g = new HashMap<>();
+        for (int i = 0; i < nv; i++) {
+            g.put(i, new ArrayList<>());
+        }
+        for (int i = 0; i < pre.length; i++) {
+            int u = pre[i][0], v = pre[i][1];
+            g.get(v).add(u);
+            indeg[u]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < indeg.length; i++) {
+            if (indeg[i] == 0) {
+                q.add(i);
+                indeg[i] = -1;
+            }
+        }
+        int k = 0;
+        while (!q.isEmpty()) {
+            int u = q.remove();
+            ans[k] = u;
+            k++;
+            for (int neighOfU : g.get(u)) {
+                if (indeg[neighOfU] != -1) {
+                    indeg[neighOfU]--;
+                    if (indeg[neighOfU] == 0) {
+                        q.add(neighOfU);
+                        indeg[neighOfU] = -1;
+                    }
+                }
+            }
+        }
+        if (ans[nv - 1] != -1)
+            return ans;
+        return new int[0];
+    }
+}

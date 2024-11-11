@@ -1,0 +1,56 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+// class Solution {
+//     public boolean hasPathSum(TreeNode root, int targetSum) {
+//         if( root == null ) //base case
+//             return false;
+//         Stack<TreeNode> path = new Stack<>();   //storing nodes
+//         Stack<Integer> pathSum = new Stack<>(); //storing cumulative sum of values from root to the current node
+//         path.add(root);
+//         pathSum.add(root.val);
+//         while( !path.isEmpty() ){
+//             TreeNode curr = path.pop();
+//             int currVal = pathSum.pop();
+//             if( curr.left == null && curr.right == null && currVal == targetSum ) //if the current node is a leaf and the path sum equals the target sum, return true
+//                 return true;
+//             if( curr.left != null ){ //add left chid and its path sum
+//                 path.add(curr.left);
+//                 pathSum.add(currVal + curr.left.val);
+//             }
+//             if( curr.right != null ){ //add right chid and its path sum
+//                 path.add(curr.right);
+//                 pathSum.add(currVal + curr.right.val);
+//             }
+//         }
+//         return false; //if no path is found whose sum matches the targetSum, return false
+//     }
+// }
+class Solution {
+
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        if (//base case
+        root == null)
+            return false;
+        if (//if we reach a leaf node, check if the current path sum equals targetSum
+        root.left == null && root.right == null)
+            return targetSum == root.val;
+        int newTargetSum = targetSum - root.val;
+        //recursively check the left and right subtrees with the updated sum
+        boolean leftHasPathSum = hasPathSum(root.left, newTargetSum);
+        boolean rightHasPathSum = hasPathSum(root.right, newTargetSum);
+        return leftHasPathSum || rightHasPathSum;
+    }
+}

@@ -1,0 +1,56 @@
+class Solution {
+
+    //Method to get the first consecutive n elements sum
+    public static int method1(int[] arr, int n) {
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            ans += arr[i];
+        }
+        return ans;
+    }
+
+    //Sliding window method to check whether we can meet target or greater value within the specified window lengths
+    public static boolean slidingWindow(int[] arr, int len, int target) {
+        int initialVal = method1(arr, len);
+        if (initialVal >= target) {
+            return true;
+        } else {
+            for (int i = 1; i <= arr.length - len; i++) {
+                initialVal -= arr[i - 1];
+                initialVal += arr[i + len - 1];
+                if (initialVal >= target) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static int method2(int target, int[] nums) {
+        //finding the maximum window size of nums for the reference
+        int var1 = 0;
+        int len = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (var1 + nums[i] >= target) {
+                len = i + 1;
+                break;
+            } else {
+                var1 += nums[i];
+            }
+        }
+        //we have to check window size from len to 0 if one window size fails we need to stop the loop
+        while (len > 0) {
+            if (slidingWindow(nums, len, target)) {
+                if (len > 1) {
+                    len -= 1;
+                } else {
+                    break;
+                }
+            } else {
+                len += 1;
+                break;
+            }
+        }
+        return len;
+    }
+}

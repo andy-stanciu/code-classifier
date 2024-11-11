@@ -1,0 +1,34 @@
+class Solution {
+
+    List<List<Integer>> resultList = new ArrayList<>();
+
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        if (root == null)
+            return resultList;
+        dfsHelper(root, sum, 0, new ArrayList<>());
+        return resultList;
+    }
+
+    private void dfsHelper(TreeNode node, int sum, int cumulativeSum, List<Integer> list) {
+        if (node != null) {
+            list.add(node.val);
+            cumulativeSum += node.val;
+        }
+        if (node == null) {
+            return;
+        }
+        if (node.left == null && node.right == null && cumulativeSum == sum) {
+            resultList.add(new ArrayList<>(list));
+        }
+        //following is the TRICKY part. to remove last elements from the list after adding to the resultList.
+        //after removal only root value remains to traverse the right subTree.
+        if (node.left != null) {
+            dfsHelper(node.left, sum, cumulativeSum, list);
+            list.remove(list.size() - 1);
+        }
+        if (node.right != null) {
+            dfsHelper(node.right, sum, cumulativeSum, list);
+            list.remove(list.size() - 1);
+        }
+    }
+}

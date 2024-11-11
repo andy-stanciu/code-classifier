@@ -1,0 +1,49 @@
+class Edge {
+
+    int dest;
+
+    Edge(int dest) {
+        this.dest = dest;
+    }
+}
+
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] arr = new int[param1];
+        int[] indeg = new int[param1];
+        ArrayList<Edge>[] graph = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] prereq : prerequisites) {
+            int a = prereq[0];
+            int b = prereq[1];
+            graph[b].add(new Edge(a));
+            indeg[a]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (indeg[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        int index = 0;
+        while (!queue.isEmpty()) {
+            int var1 = queue.poll();
+            arr[index++] = var1;
+            for (Edge edge : graph[var1]) {
+                int neighbor = edge.dest;
+                indeg[neighbor]--;
+                if (indeg[neighbor] == 0) {
+                    queue.offer(neighbor);
+                }
+            }
+        }
+        if (index == param1) {
+            return arr;
+        } else {
+            return new int[0];
+        }
+    }
+}

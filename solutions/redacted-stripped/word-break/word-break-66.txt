@@ -1,0 +1,31 @@
+class Solution {
+
+    private Set<String> misses = new HashSet<>();
+
+    public boolean method1(String s, List<String> param1) {
+        Map<Character, Set<String>> var1 = new HashMap<>();
+        for (String var3 : param1) {
+            Set<String> var2 = var1.getOrDefault(var3.charAt(0), new HashSet<>());
+            var2.add(var3);
+            var1.put(var3.charAt(0), var2);
+        }
+        return method1(s, var1);
+    }
+
+    private boolean method1(String s, Map<Character, Set<String>> var2) {
+        if (misses.contains(s)) {
+            return false;
+        }
+        for (String var3 : var2.getOrDefault(s.charAt(0), new HashSet<>())) {
+            if (s.equals(var3)) {
+                return true;
+            } else if (s.startsWith(var3)) {
+                if (method1(s.substring(var3.length()), var2)) {
+                    return true;
+                }
+            }
+        }
+        misses.add(s);
+        return false;
+    }
+}

@@ -1,0 +1,72 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        res = new LinkedHashSet<>();
+        boolean finish = canFinish(numCourses, prerequisites);
+        if (!finish) {
+            return new int[] {};
+        }
+        int[] ans = new int[res.size()];
+        int i = 0;
+        for (int a : res) {
+            ans[i] = a;
+            i++;
+        }
+        return ans;
+    }
+
+    Set<Integer> res;
+
+    Map<Integer, Boolean> mem = new HashMap<>();
+
+    Map<Integer, List<Integer>> map;
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        map = new HashMap<>();
+        for (int[] a : prerequisites) {
+            map.computeIfAbsent(a[0], k -> new ArrayList<>()).add(a[1]);
+        }
+        int count = 0;
+        for (int i = 0; i < numCourses; i++) {
+            Set<Integer> visited = new HashSet<>();
+            if (fun(i, visited)) {
+                count++;
+                // System.out.println("i " + i + " count " + count);
+            }
+        }
+        return count >= numCourses;
+    }
+
+    public boolean fun(int c, Set<Integer> visited) {
+        if (visited.contains(c)) {
+            return false;
+        }
+        if (mem.containsKey(c)) {
+            return mem.get(c);
+        }
+        int count = 0;
+        if (map.containsKey(c)) {
+            List<Integer> courses = map.get(c);
+            for (Integer cc : courses) {
+                visited.add(c);
+                boolean ret = fun(cc, visited);
+                mem.put(cc, ret);
+                // add neighbours first
+                res.add(cc);
+                if (!ret) {
+                    res.remove(cc);
+                    return false;
+                }
+                // revert as 1 course have multiple pre,dfs independetly
+                visited.remove(c);
+                // [[1,0],[2,6],[1,7],[6,4],[7,0],[0,5]]
+            }
+            // add parent
+            res.add(c);
+            return true;
+        }
+        // add if no prerequisite
+        res.add(c);
+        return true;
+    }
+}

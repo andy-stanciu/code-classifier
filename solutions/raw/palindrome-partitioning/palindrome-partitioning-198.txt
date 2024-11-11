@@ -1,0 +1,51 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        int n = s.length();
+        List<List<String>>[] idxpart = new ArrayList[n];
+        //base case i = 0
+        List<String> palins = findPalin(s, 0);
+        for (String palin : palins) {
+            List<String> p = new ArrayList<>();
+            p.add(palin);
+            int idx = palin.length() - 1;
+            idxpart[idx] = new ArrayList<List<String>>();
+            idxpart[idx].add(p);
+        }
+        for (int i = 1; i < n; i++) {
+            palins = findPalin(s, i);
+            for (String palin : palins) {
+                int idx = palin.length() - 1;
+                for (List<String> set : idxpart[i - 1]) {
+                    List<String> modi = new ArrayList<String>(set);
+                    modi.add(palin);
+                    if (idxpart[i + idx] == null) {
+                        idxpart[i + idx] = new ArrayList<List<String>>();
+                        idxpart[i + idx].add(modi);
+                    } else
+                        idxpart[i + idx].add(modi);
+                }
+            }
+        }
+        return idxpart[n - 1];
+    }
+
+    public List<String> findPalin(String s, int start) {
+        List<String> palins = new ArrayList<>();
+        String current = "";
+        for (int i = start; i < s.length(); i++) {
+            current += s.charAt(i);
+            if (isPalin(current))
+                palins.add(current);
+        }
+        return palins;
+    }
+
+    public boolean isPalin(String s) {
+        int l = s.length();
+        char[] cs = s.toCharArray();
+        for (int i = 0, j = l - 1; i <= j; i++, j--) if (cs[i] != cs[j])
+            return false;
+        return true;
+    }
+}

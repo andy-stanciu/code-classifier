@@ -1,0 +1,34 @@
+//Partition DP Concept
+class Solution {
+
+    public boolean solve(int i, String s, List<String> wordDict, int[] mem) {
+        // base case
+        if (i == s.length()) {
+            return true;
+        }
+        if (mem[i] != -1) {
+            return mem[i] == 1;
+        }
+        boolean flag = wordDict.contains(s);
+        for (int j = i; j <= s.length(); j++) {
+            if (wordDict.contains(s.substring(i, j))) {
+                flag = solve(j, s, wordDict, mem);
+                if (flag) {
+                    break;
+                }
+            }
+        }
+        if (flag) {
+            mem[i] = 1;
+        } else {
+            mem[i] = 0;
+        }
+        return flag;
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int[] mem = new int[s.length() + 1];
+        Arrays.fill(mem, -1);
+        return solve(0, s, wordDict, mem);
+    }
+}

@@ -1,0 +1,36 @@
+class Solution {
+
+    public int minSubArrayLen(int target, int[] nums) {
+        int j = nums.length - 1;
+        int minLength = Integer.MAX_VALUE;
+        if (nums[0] >= target || nums[j] >= target) {
+            minLength = 1;
+        }
+        for (int i = 1; i <= j; i++) {
+            nums[i] += nums[i - 1];
+        }
+        if (nums[j] < target) {
+            return 0;
+        }
+        if (nums[j] == target) {
+            minLength = Math.min(j + 1, minLength);
+        }
+        if (j >= 1 && nums[1] >= target) {
+            minLength = Math.min(2, minLength);
+        }
+        int l = 1;
+        int r = 1;
+        while (r < (j + 1)) {
+            if ((nums[r] - nums[l - 1]) >= target) {
+                minLength = Math.min((r - l + 1), minLength);
+                l++;
+            } else {
+                r++;
+            }
+            if (l >= r) {
+                break;
+            }
+        }
+        return minLength;
+    }
+}

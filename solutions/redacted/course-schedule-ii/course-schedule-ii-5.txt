@@ -1,0 +1,56 @@
+class Solution {
+
+    boolean isFinish = true;
+
+    Map<Integer, ArrayList<Integer>> map = new HashMap();
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        Set<Integer> visiting = new HashSet<>();
+        ArrayList<Integer> visited = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            map.put(i, new ArrayList<Integer>());
+        }
+        //require course mapping with prerequisites courses
+        for (int[] var1 : prerequisites) {
+            int required = var1[0];
+            int prerequisite = var1[1];
+            ArrayList<Integer> list = map.get(required);
+            list.add(prerequisite);
+            //update map value
+            map.put(required, list);
+        }
+        //start to complete all courses
+        for (int var2 = 0; var2 < param1; var2++) {
+            isFinish = isFinish && isCompleted(var2, visiting, visited);
+        }
+        if (isFinish) {
+            int[] var3 = new int[visited.size()];
+            int i = 0;
+            for (int var2 : visited) {
+                var3[i] = var2;
+                i++;
+            }
+            return var3;
+        }
+        return new int[0];
+    }
+
+    public boolean isCompleted(int var2, Set<Integer> visiting, ArrayList<Integer> visited) {
+        boolean check = true;
+        if (visiting.contains(var2)) {
+            return false;
+        }
+        if (visited.contains(var2)) {
+            return true;
+        }
+        visiting.add(var2);
+        ArrayList<Integer> var4 = map.get(var2);
+        for (int var5 : var4) {
+            boolean completed = isCompleted(var5, visiting, visited);
+            check = (completed && check);
+        }
+        visiting.remove(var2);
+        visited.add(var2);
+        return check;
+    }
+}

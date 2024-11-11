@@ -1,0 +1,56 @@
+class Solution {
+
+    private int Operator(int a, int b, String token) {
+        if (token.equals("+"))
+            return a + b;
+        if (token.equals("-"))
+            return a - b;
+        if (token.equals("*"))
+            return a * b;
+        if (token.equals("/"))
+            return a / b;
+        // Handle invalid operator
+        return -1;
+    }
+
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> st = new Stack<>();
+        for (String token : tokens) {
+            if (token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/")) {
+                int b = st.pop();
+                int a = st.pop();
+                int result = Operator(a, b, token);
+                st.push(result);
+            } else {
+                st.push(Integer.parseInt(token));
+            }
+        }
+        return st.pop();
+    }
+}
+/*
+
+class Solution {
+    public int evalRPN(String[] tokens) {
+        Map<String, BiFunction<Integer, Integer, Integer>> operators = new HashMap<>();
+        operators.put("+", (a, b) -> a + b);
+        operators.put("-", (a, b) -> a - b);
+        operators.put("*", (a, b) -> a * b);
+        operators.put("/", (a, b) -> a / b);
+
+        Stack<Integer> stack = new Stack<>();
+
+        for (String token : tokens) {
+            if (operators.containsKey(token)) {
+                int b = stack.pop();
+                int a = stack.pop();
+                stack.push(operators.get(token).apply(a, b));
+            } else {
+                stack.push(Integer.parseInt(token));
+            }
+        }
+
+        return stack.pop();
+    }
+}
+*/

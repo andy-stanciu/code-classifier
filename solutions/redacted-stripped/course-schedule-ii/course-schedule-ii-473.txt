@@ -1,0 +1,48 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        return topoSort(param1, createGraph(param1, prerequisites));
+    }
+
+    public ArrayList<ArrayList<Integer>> createGraph(int n, int[][] de) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<Integer>());
+        }
+        for (int i = 0; i < de.length; i++) {
+            adj.get(de[i][0]).add(de[i][1]);
+        }
+        return adj;
+    }
+
+    public int[] topoSort(int n, ArrayList<ArrayList<Integer>> adj) {
+        int[] topo = new int[n];
+        int[] indegree = new int[n];
+        for (int i = 0; i < n; i++) {
+            for (Integer it : adj.get(i)) {
+                indegree[it]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<Integer>();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        int ind = n - 1;
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            topo[ind--] = node;
+            for (int it : adj.get(node)) {
+                indegree[it]--;
+                if (indegree[it] == 0) {
+                    q.add(it);
+                }
+            }
+        }
+        if (ind < 0)
+            return topo;
+        int[] arr = {};
+        return arr;
+    }
+}

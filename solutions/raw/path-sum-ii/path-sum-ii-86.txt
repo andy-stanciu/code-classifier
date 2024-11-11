@@ -1,0 +1,50 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    int al = 0;
+
+    public List<List<Integer>> a = new ArrayList<>();
+
+    public List<Integer> p = new ArrayList<>();
+
+    public void max(TreeNode root, int x, List<List<Integer>> a) {
+        if (root == null)
+            return;
+        al += root.val;
+        p.add(root.val);
+        max(root.left, x, a);
+        max(root.right, x, a);
+        al -= root.val;
+        //System.out.println("A : "+a);
+        if (root.left == null && root.right == null) {
+            //ystem.out.println("vector : "+p);
+            root.val += al;
+            if (root.val == x) {
+                List<Integer> j = List.copyOf(p);
+                a.add(j);
+                // System.out.println("A : "+a);
+            }
+        }
+        p.remove((p.size() - 1));
+        return;
+    }
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        max(root, targetSum, a);
+        return a;
+    }
+}

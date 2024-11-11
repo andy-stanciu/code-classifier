@@ -1,0 +1,33 @@
+class Solution {
+
+    public List<List<Integer>> helper(TreeNode root, int param1) {
+        if (root == null)
+            return new ArrayList<>();
+        if (root.left == null && root.right == null) {
+            if (param1 == root.val) {
+                List<List<Integer>> outer = new ArrayList<>();
+                List<Integer> inner = new ArrayList<>();
+                inner.add(root.val);
+                outer.add(inner);
+                return outer;
+            } else
+                return new ArrayList<>();
+        }
+        List<List<Integer>> leftt;
+        List<List<Integer>> right;
+        leftt = helper(root.left, param1 - root.val);
+        right = helper(root.right, param1 - root.val);
+        for (int i = 0; i < leftt.size(); i++) {
+            leftt.get(i).add(0, root.val);
+        }
+        for (int i = 0; i < right.size(); i++) {
+            right.get(i).add(0, root.val);
+        }
+        leftt.addAll(right);
+        return leftt;
+    }
+
+    public List<List<Integer>> method1(TreeNode root, int param1) {
+        return helper(root, param1);
+    }
+}

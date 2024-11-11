@@ -1,0 +1,47 @@
+class Solution {
+
+    Set<Integer> set = new HashSet();
+
+    List<Integer> list = new ArrayList();
+
+    public int[] findOrder(int n, int[][] prerequisites) {
+        int[] result = new int[n];
+        ArrayList<Integer>[] prereqs = new ArrayList[n];
+        int[] count = new int[n];
+        for (int k = 0; k < n; k++) {
+            prereqs[k] = new ArrayList();
+        }
+        for (int[] temp : prerequisites) {
+            count[temp[0]]++;
+            prereqs[temp[1]].add(temp[0]);
+        }
+        for (int k = 0; k < count.length; k++) {
+            if (count[k] == 0) {
+                if (!set.contains(k)) {
+                    n = DFS(prereqs, count, n, k);
+                }
+            }
+        }
+        int k = 0;
+        for (int a : list) {
+            result[k++] = a;
+        }
+        return n == 0 ? result : new int[] {};
+    }
+
+    public int DFS(ArrayList<Integer>[] prereqs, int[] count, int n, int num) {
+        n--;
+        set.add(num);
+        list.add(num);
+        if (prereqs[num].size() == 0) {
+            return n;
+        }
+        for (int temp : prereqs[num]) {
+            count[temp]--;
+            if (count[temp] == 0) {
+                n = DFS(prereqs, count, n, temp);
+            }
+        }
+        return n;
+    }
+}

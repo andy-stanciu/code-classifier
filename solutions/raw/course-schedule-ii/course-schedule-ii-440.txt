@@ -1,0 +1,58 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int V = numCourses;
+        //arr for returning ans
+        int[] arr = new int[V];
+        //ind for storing indegree
+        int[] ind = new int[V];
+        //adj[] for adjacency matrix
+        ArrayList<Integer>[] adj = new ArrayList[V];
+        //creating adjacency matrix
+        for (int i = 0; i < V; i++) {
+            adj[i] = new ArrayList<Integer>();
+        }
+        for (int[] edge : prerequisites) {
+            adj[edge[1]].add(edge[0]);
+        }
+        //declaring queue
+        Queue<Integer> q = new LinkedList<>();
+        //finding indegree of every node
+        for (ArrayList<Integer> i : adj) {
+            for (int val : i) {
+                ind[val] += 1;
+            }
+        }
+        //index for knowing where to store in arr[]
+        int index = 0;
+        //push all the nodes which are having indegree 0
+        for (int i = 0; i < V; i++) {
+            if (ind[i] == 0) {
+                arr[index] = i;
+                q.add(i);
+                index++;
+            }
+        }
+        //perform the operation until queue is empty
+        while (!q.isEmpty()) {
+            int u = q.poll();
+            for (int i : adj[u]) {
+                //decrease the indegree of the neighbour of "u"
+                ind[i] -= 1;
+                if (ind[i] == 0) {
+                    //if indegree is 0 push it into the queue
+                    q.add(i);
+                    arr[index] = i;
+                    index++;
+                }
+            }
+        }
+        //if indegree of any node is >0 means not possible so return empty
+        for (int i : ind) {
+            if (i > 0)
+                return new int[] {};
+        }
+        //return the answer arr[]
+        return arr;
+    }
+}

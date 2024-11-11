@@ -1,0 +1,37 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        List<String> partialSolutions = new ArrayList<>();
+        HashSet<String> tried = new HashSet<>();
+        partialSolutions.add("");
+        return search(s, partialSolutions, tried, param1);
+    }
+
+    private boolean search(String original, List<String> partialSolutions, Set<String> tried, List<String> dict) {
+        if (partialSolutions.size() > 0) {
+            //Get the partial solution
+            String partial = partialSolutions.get(0);
+            partialSolutions.remove(0);
+            if (!tried.contains(partial)) {
+                tried.add(partial);
+                boolean solutionFound = false;
+                for (String var1 : dict) {
+                    if (original.equals(partial + var1)) {
+                        solutionFound = true;
+                        break;
+                    } else if (original.startsWith(partial + var1)) {
+                        partialSolutions.add(partial + var1);
+                        solutionFound = search(original, partialSolutions, tried, dict);
+                        if (solutionFound) {
+                            break;
+                        }
+                    }
+                }
+                if (solutionFound) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}

@@ -1,0 +1,30 @@
+class Solution {
+
+    int[][] mem;
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> set = new HashSet<>(wordDict);
+        mem = new int[s.length() + 1][s.length() + 1];
+        set.add("");
+        for (int[] arr : mem) {
+            Arrays.fill(arr, -1);
+        }
+        return rec(s, set, 0, 0) == 1 ? true : false;
+    }
+
+    public int rec(String inp, Set<String> set, int l, int h) {
+        if (l <= h && h < inp.length() && l < inp.length()) {
+            if (mem[l][h] != -1) {
+                return mem[l][h];
+            }
+            if (set.contains(inp.substring(l, h + 1))) {
+                mem[l][h] = (rec(inp, set, h + 1, h + 1) == 1 || rec(inp, set, l, h + 1) == 1) ? 1 : 0;
+            } else {
+                mem[l][h] = rec(inp, set, l, h + 1) == 1 ? 1 : 0;
+            }
+            return mem[l][h];
+        }
+        mem[l][h] = set.contains(inp.substring(l, h)) ? 1 : 0;
+        return mem[l][h];
+    }
+}

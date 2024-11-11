@@ -1,0 +1,47 @@
+class Solution {
+
+    private boolean method1(String s) {
+        int i = 0;
+        int j = s.length() - 1;
+        while (i < j) {
+            if (s.charAt(i) == s.charAt(j)) {
+                i++;
+                j--;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void helper(int n, int idx, int ppi, String s, List<String> temp, List<List<String>> palSubstrings, Boolean[][] memo) {
+        // ppi = previousPartitionIndex
+        if (memo[ppi + 1][idx + 1] == null)
+            memo[ppi + 1][idx + 1] = method1(s.substring(ppi + 1, idx + 1));
+        if (idx == n - 1) {
+            if (memo[ppi + 1][idx + 1]) {
+                temp.add(s.substring(ppi + 1, idx + 1));
+                palSubstrings.add(new ArrayList<>(temp));
+                temp.remove(temp.size() - 1);
+                // backtrack
+            }
+            return;
+        }
+        if (memo[ppi + 1][idx + 1]) {
+            temp.add(s.substring(ppi + 1, idx + 1));
+            helper(n, idx + 1, idx, s, temp, palSubstrings, memo);
+            temp.remove(temp.size() - 1);
+            // backtrack
+        }
+        helper(n, idx + 1, ppi, s, temp, palSubstrings, memo);
+    }
+
+    public List<List<String>> partition(String s) {
+        int n = s.length();
+        List<String> temp = new ArrayList<>();
+        List<List<String>> palSubstrings = new ArrayList<>();
+        Boolean[][] memo = new Boolean[n + 1][n + 1];
+        helper(n, 0, -1, s, temp, palSubstrings, memo);
+        return palSubstrings;
+    }
+}

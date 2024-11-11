@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        // Create an adjacency list to represent the graph of courses
+        List<Integer>[] graph = new List[param1];
+        Arrays.setAll(graph, x -> new ArrayList<>());
+        // Create an array to keep track of the number of incoming edges (in-degrees) to
+        // each node (course)
+        int[] inDegree = new int[param1];
+        // Build the graph and update in-degree count
+        for (int[] prerequisite : prerequisites) {
+            int var1 = prerequisite[0];
+            int var2 = prerequisite[1];
+            graph[var2].add(var1);
+            ++inDegree[var1];
+        }
+        // Queue for courses with no prerequisites (in-degree of 0)
+        Deque<Integer> queue = new ArrayDeque<>();
+        // Add all courses with no incoming edges to the queue
+        for (int i = 0; i < param1; ++i) {
+            if (inDegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        // Array for storing the course ordering
+        int[] order = new int[param1];
+        int var3 = 0;
+        // Perform BFS on the graph
+        while (!queue.isEmpty()) {
+            int var4 = queue.poll();
+            order[var3++] = var4;
+            // Go through all the adjacent courses and reduce their in-degrees
+            for (int var5 : graph[var4]) {
+                if (--inDegree[var5] == 0) {
+                    // If in-degree becomes 0, add it to the queue
+                    queue.offer(var5);
+                }
+            }
+        }
+        // If we have added all courses in order, return the order.
+        // Otherwise, there is a cycle and we return an empty array.
+        return var3 == param1 ? order : new int[0];
+    }
+}

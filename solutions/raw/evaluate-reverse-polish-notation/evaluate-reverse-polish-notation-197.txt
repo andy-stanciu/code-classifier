@@ -1,0 +1,45 @@
+class Solution {
+
+    public int evalRPN(String[] tokens) {
+        Set<String> operators = new HashSet<>();
+        operators.add("+");
+        operators.add("-");
+        operators.add("*");
+        operators.add("/");
+        Stack<String> operationStack = new Stack<>();
+        Integer result = 0;
+        for (int i = 0; i < tokens.length; i++) {
+            if (operators.contains(tokens[i])) {
+                Integer secondOperand = Integer.parseInt(operationStack.pop());
+                Integer firstOperand = Integer.parseInt(operationStack.pop());
+                switch(tokens[i]) {
+                    case "+":
+                        result = firstOperand + secondOperand;
+                        operationStack.push(result + "");
+                        break;
+                    case "-":
+                        result = firstOperand - secondOperand;
+                        operationStack.push(result + "");
+                        break;
+                    case "*":
+                        result = firstOperand * secondOperand;
+                        operationStack.push(result + "");
+                        break;
+                    case "/":
+                        if (secondOperand != 0) {
+                            result = firstOperand / secondOperand;
+                            operationStack.push(result + "");
+                        } else {
+                            System.out.println("Division by 0 not allowed");
+                        }
+                        break;
+                    default:
+                        System.out.println("Invalid Operation");
+                }
+            } else {
+                operationStack.push(tokens[i]);
+            }
+        }
+        return Integer.parseInt(operationStack.pop());
+    }
+}

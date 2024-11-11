@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<>());
+        }
+        int m = prerequisites.length;
+        for (int i = 0; i < m; i++) {
+            adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        //now adjacency list is created and we have to check for cycle using
+        //kahn\'s algorithm.
+        int[] indegree = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            for (int it : adj.get(i)) {
+                indegree[it]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<Integer>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        int[] topo = new int[param1];
+        int k = 0;
+        while (!q.isEmpty()) {
+            int i = q.poll();
+            topo[k] = i;
+            k++;
+            for (int it : adj.get(i)) {
+                indegree[it]--;
+                if (indegree[it] == 0) {
+                    q.add(it);
+                }
+            }
+        }
+        if (k == param1) {
+            return topo;
+        }
+        return new int[] {};
+    }
+}

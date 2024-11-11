@@ -1,0 +1,52 @@
+class Solution {
+
+    Set<Integer> var1;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        ArrayList<Integer>[] prerequisiteArray = new ArrayList[param1];
+        var1 = new LinkedHashSet<Integer>();
+        int[] var2 = new int[2001];
+        for (int[] prerequisite : prerequisites) {
+            if (prerequisiteArray[prerequisite[0]] == null) {
+                prerequisiteArray[prerequisite[0]] = new ArrayList<Integer>();
+            }
+            prerequisiteArray[prerequisite[0]].add(prerequisite[1]);
+        }
+        int[] visited = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            visited = new int[param1];
+            if (!canFinish(prerequisiteArray, i, visited)) {
+                return new int[0];
+            }
+        }
+        int[] response = new int[param1];
+        int i = 0;
+        for (Integer var3 : var1) {
+            response[i++] = var3;
+        }
+        return response;
+    }
+
+    public boolean canFinish(ArrayList<Integer>[] prerequisiteArray, int var3, int[] visited) {
+        if (visited[var3] == 1) {
+            return false;
+        }
+        if (visited[var3] == 2) {
+            return true;
+        }
+        ArrayList<Integer> var4 = prerequisiteArray[var3];
+        if (var4 == null) {
+            var1.add(var3);
+            return true;
+        }
+        visited[var3] = 1;
+        for (Integer preRequisite : var4) {
+            if (!canFinish(prerequisiteArray, preRequisite, visited)) {
+                return false;
+            }
+        }
+        visited[var3] = 2;
+        var1.add(var3);
+        return true;
+    }
+}

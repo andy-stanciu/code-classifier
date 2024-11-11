@@ -1,0 +1,44 @@
+class Solution {
+
+    Queue<Integer> queue = new LinkedList<Integer>();
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList();
+        for (int i = 0; i < numCourses; i++) adjList.add(new ArrayList<Integer>());
+        for (int i = 0; i < prerequisites.length; i++) adjList.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        // 0 - unvisted, 1-visited, 2 - completed
+        int[] color = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) if (hasCycle(adjList, color, i))
+            return new int[] {};
+        // 0 - unvisited, 1- visited
+        color = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) topologicalSort(adjList, color, i);
+        int[] result = new int[numCourses];
+        int i = 0;
+        while (!queue.isEmpty()) result[i++] = queue.poll();
+        return result;
+    }
+
+    private void topologicalSort(List<List<Integer>> adjList, int[] color, int node) {
+        if (color[node] == 1)
+            return;
+        color[node] = 1;
+        for (int neighbor : adjList.get(node)) {
+            if (color[neighbor] != 1)
+                topologicalSort(adjList, color, neighbor);
+        }
+        queue.offer(node);
+    }
+
+    private boolean hasCycle(List<List<Integer>> adjList, int[] color, int node) {
+        if (color[node] == 1)
+            return true;
+        color[node] = 1;
+        for (int neighbor : adjList.get(node)) {
+            if (color[neighbor] != 2 & hasCycle(adjList, color, neighbor))
+                return true;
+        }
+        color[node] = 2;
+        return false;
+    }
+}

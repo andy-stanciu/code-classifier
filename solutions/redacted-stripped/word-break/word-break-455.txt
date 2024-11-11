@@ -1,0 +1,31 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        return dp_mem(s, param1);
+    }
+
+    public boolean f(int i, String s, List<String> param1) {
+        if (i == s.length())
+            return true;
+        boolean state = false;
+        for (String var1 : param1) {
+            if ((var1.length() <= s.length() - i) && var1.equals(s.substring(i, i + var1.length()))) {
+                state |= f(i + var1.length(), s, param1);
+            }
+        }
+        return state;
+    }
+
+    public boolean dp_mem(String s, List<String> param2) {
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[s.length()] = true;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            for (String w : param2) {
+                if (s.length() - i >= w.length() && s.substring(i, i + w.length()).equals(w) && dp[i + w.length()]) {
+                    dp[i] = true;
+                }
+            }
+        }
+        return dp[0];
+    }
+}

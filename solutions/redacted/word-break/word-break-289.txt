@@ -1,0 +1,39 @@
+class Solution {
+
+    Set<String> mySet = new HashSet<>();
+
+    Map<String, Boolean> hashMap = new HashMap<>();
+
+    public boolean method1(String s, List<String> param1) {
+        for (String str : param1) {
+            mySet.add(str);
+        }
+        //mySet.forEach(element -> System.out.println(element));
+        for (int i = 0; i < s.length(); i++) {
+            String key = i + ":" + i;
+            boolean contains = mySet.contains(s.substring(i, i + 1));
+            hashMap.put(key, contains);
+        }
+        //hashMap.forEach((key, value) -> System.out.println(key + ": " + value));
+        return isInDict(s, 0, s.length() - 1);
+    }
+
+    private boolean isInDict(String s, int left, int right) {
+        String key = left + ":" + right;
+        if (hashMap.containsKey(key)) {
+            return hashMap.get(key);
+        }
+        String str = s.substring(left, right + 1);
+        if (mySet.contains(str)) {
+            hashMap.put(key, true);
+            return true;
+        }
+        for (int i = left; i < right; i++) {
+            hashMap.put(key, isInDict(s, left, i) && isInDict(s, i + 1, right));
+            if (hashMap.get(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}

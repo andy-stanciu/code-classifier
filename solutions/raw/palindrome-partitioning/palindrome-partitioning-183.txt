@@ -1,0 +1,29 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> result = new LinkedList<>();
+        final int len = s.length();
+        for (int i = 0; i < len; ++i) {
+            String sub = s.substring(0, i + 1);
+            if (isPalindrome(sub)) {
+                if (i + 1 == len)
+                    result.add(new LinkedList<String>(Collections.singletonList(s)));
+                else {
+                    final List<List<String>> t = partition(s.substring(i + 1, len));
+                    for (List<String> ls : t) ((LinkedList) ls).offerFirst(sub);
+                    result.addAll(t);
+                }
+            }
+        }
+        return result;
+    }
+
+    private static boolean isPalindrome(String str) {
+        int s = -1, e = str.length();
+        while (++s < --e) {
+            if (str.charAt(s) != str.charAt(e))
+                return false;
+        }
+        return true;
+    }
+}

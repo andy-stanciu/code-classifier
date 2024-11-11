@@ -1,0 +1,48 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        boolean[] done = new boolean[param1];
+        ArrayList<Integer>[] graph = new ArrayList[param1];
+        int[] inDigree = new int[param1];
+        Queue<Integer> qu = new LinkedList<Integer>();
+        for (int i = 0; i < prerequisites.length; i++) {
+            if (graph[prerequisites[i][1]] == null) {
+                graph[prerequisites[i][1]] = new ArrayList<Integer>();
+            }
+            graph[prerequisites[i][1]].add(prerequisites[i][0]);
+            inDigree[prerequisites[i][0]]++;
+        }
+        for (int i = 0; i < param1; i++) {
+            if (done[i] == true) {
+                continue;
+            }
+            if (inDigree[i] == 0) {
+                done[i] = true;
+                qu.add(i);
+            }
+        }
+        int[] resArr = new int[param1];
+        int p = 0;
+        while (qu.size() != 0) {
+            int n = qu.remove();
+            resArr[p] = n;
+            p++;
+            for (int i = 0; graph[n] != null && i < graph[n].size(); i++) {
+                inDigree[(int) graph[n].get(i)]--;
+            }
+            for (int i = 0; i < param1; i++) {
+                if (done[i] == true) {
+                    continue;
+                }
+                if (inDigree[i] == 0) {
+                    done[i] = true;
+                    qu.add(i);
+                }
+            }
+        }
+        if (p == param1) {
+            return (resArr);
+        }
+        return (new int[0]);
+    }
+}

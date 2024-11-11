@@ -1,0 +1,47 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        if (root == null) {
+            return false;
+        } else {
+            return depthFirstSearch(root, 0, targetSum);
+        }
+    }
+
+    public boolean depthFirstSearch(TreeNode node, int cumSum, int targetSum) {
+        //add treenode value to cumulativeSum
+        cumSum += node.val;
+        //if we reach an end node return true if targetSum has been reached after cumulativley adding sums otherwise return false
+        if (node.left == null && node.right == null) {
+            return cumSum == targetSum;
+        } else {
+            boolean targetSumFoundLeft = false;
+            boolean targetSumFoundRight = false;
+            //check left subtree if targetSum is found
+            if (node.left != null) {
+                targetSumFoundLeft = depthFirstSearch(node.left, cumSum, targetSum);
+            }
+            //check right subtree if targetSum is found
+            if (node.right != null) {
+                targetSumFoundRight = depthFirstSearch(node.right, cumSum, targetSum);
+            }
+            //if targetSum was found in either tree return true, otherwise return false
+            return targetSumFoundLeft || targetSumFoundRight;
+        }
+    }
+}

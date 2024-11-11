@@ -1,0 +1,47 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int n = prerequisites.length;
+        // create graph
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < n; i++) {
+            adj.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        // set indegree
+        int[] indegree = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            for (int j : adj.get(i)) {
+                indegree[j]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0)
+                q.add(i);
+        }
+        // traverse using bfs
+        List<Integer> top = new ArrayList<>();
+        while (!q.isEmpty()) {
+            int curr = q.remove();
+            top.add(curr);
+            for (int i : adj.get(curr)) {
+                indegree[i]--;
+                if (indegree[i] == 0)
+                    q.add(i);
+            }
+        }
+        // checking in return in array format
+        if (top.size() != numCourses) {
+            return new int[0];
+        }
+        int[] ans = new int[numCourses];
+        Collections.reverse(top);
+        for (int i = 0; i < numCourses; i++) {
+            ans[i] = top.get(i);
+        }
+        return ans;
+    }
+}

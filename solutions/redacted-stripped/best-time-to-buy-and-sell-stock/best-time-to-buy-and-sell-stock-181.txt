@@ -1,0 +1,42 @@
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        var n = prices.length;
+        var var1 = 0;
+        var var2 = 0;
+        var var3 = 0;
+        var var4 = 0;
+        var var5 = 0;
+        var var6 = -prices[0];
+        var var7 = 0;
+        var var8 = -prices[0];
+        for (int day = 1; day < n; day++) {
+            var5 = Math.max(var6, -prices[day]);
+            var1 = Math.max(var2, var6 + prices[day]);
+            var7 = Math.max(var8, var2 - prices[day]);
+            var3 = Math.max(var4, var8 + prices[day]);
+            var6 = var5;
+            var8 = var7;
+            var2 = var1;
+            var4 = var3;
+        }
+        return var3;
+    }
+
+    private int maxProfit(int[] nums, int day, int param1, int transLeft, Integer[][][] memo) {
+        if (day == nums.length || transLeft == 0) {
+            return 0;
+        }
+        if (memo[day][param1][transLeft] != null) {
+            return memo[day][param1][transLeft];
+        }
+        var noActionsProfit = maxProfit(nums, day + 1, param1, transLeft, memo);
+        var actionProfit = 0;
+        if (param1 == 1) {
+            actionProfit = nums[day] + maxProfit(nums, day + 1, 0, transLeft - 1, memo);
+        } else {
+            actionProfit = maxProfit(nums, day + 1, 1, transLeft, memo) - nums[day];
+        }
+        return memo[day][param1][transLeft] = Math.max(noActionsProfit, actionProfit);
+    }
+}

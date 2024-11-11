@@ -1,0 +1,30 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        Set<String> set = new HashSet<>(param1);
+        char[] charArray = s.toCharArray();
+        int[] byteArray = new int[charArray.length + 1];
+        Arrays.fill(byteArray, -1);
+        return checkArray(charArray, set, 0, byteArray);
+    }
+
+    private boolean checkArray(char[] charArray, Set<String> set, int startingIndex, int[] byteArray) {
+        if (startingIndex == charArray.length) {
+            byteArray[startingIndex] = 1;
+            return true;
+        }
+        if (byteArray[startingIndex] != -1) {
+            return byteArray[startingIndex] == 1;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = startingIndex; i < charArray.length; i++) {
+            sb.append(charArray[i]);
+            if (set.contains(sb.toString()) && byteArray[startingIndex] == -1 && checkArray(charArray, set, i + 1, byteArray)) {
+                byteArray[startingIndex] = 1;
+                return true;
+            }
+        }
+        byteArray[startingIndex] = 0;
+        return false;
+    }
+}

@@ -1,0 +1,51 @@
+class Solution {
+
+    List<List<String>> result = new ArrayList<>();
+
+    public List<List<String>> partition(String s) {
+        //start index
+        int i = 0;
+        //end index
+        int j = s.length() - 1;
+        List<String> tempAns = new ArrayList<>();
+        MCM(s, i, j, tempAns);
+        return result;
+    }
+
+    //using MCM pattern to solve this question
+    public void MCM(String s, int i, int j, List<String> tempAns) {
+        if (i > j) {
+            //base case
+            //add current string to the list of strings
+            result.add(new ArrayList<>(tempAns));
+            return;
+        }
+        for (int k = i; k <= j; k++) {
+            if (method1(s, i, k)) {
+                //check the current string for palindrome condition
+                String str = s.substring(i, k + 1);
+                //if palindrome then add it in the tempAns
+                tempAns.add(str);
+                //solve for kth position after current partition
+                MCM(s, k + 1, j, tempAns);
+                //remove last element to check for other possibilities
+                tempAns.remove(tempAns.size() - 1);
+            }
+        }
+    }
+
+    //normal palindrome function
+    public boolean method1(String s, int i, int j) {
+        if (i == j) {
+            return true;
+        }
+        while (i < j) {
+            if (s.charAt(i) != s.charAt(j)) {
+                return false;
+            }
+            i++;
+            j--;
+        }
+        return true;
+    }
+}

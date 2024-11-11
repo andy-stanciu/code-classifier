@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] findOrder(int numC, int[][] pre) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numC; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] arr : pre) {
+            adj.get(arr[1]).add(arr[0]);
+        }
+        int[] inDeg = new int[adj.size()];
+        for (int i = 0; i < adj.size(); i++) {
+            for (int j = 0; j < adj.get(i).size(); j++) {
+                int dest = adj.get(i).get(j);
+                inDeg[dest]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < inDeg.length; i++) {
+            if (inDeg[i] == 0) {
+                q.offer(i);
+            }
+        }
+        int[] res = new int[inDeg.length];
+        int k = 0;
+        int cnt = 0;
+        while (!q.isEmpty()) {
+            int curr = q.poll();
+            res[k++] = curr;
+            cnt++;
+            for (int i = 0; i < adj.get(curr).size(); i++) {
+                int neigh = adj.get(curr).get(i);
+                inDeg[neigh]--;
+                if (inDeg[neigh] == 0) {
+                    q.offer(neigh);
+                }
+            }
+        }
+        if (cnt == inDeg.length)
+            return res;
+        return new int[] {};
+    }
+}

@@ -1,0 +1,71 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    Set<TreeNode> n = new HashSet<>();
+
+    List<Integer> list = new ArrayList<>();
+
+    List<List<Integer>> ans = new ArrayList<>();
+
+    int target = 0;
+
+    TreeNode head;
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        if (root == null)
+            return new ArrayList<>();
+        if (targetSum == 0 && root.left == null && root.right == null)
+            return new ArrayList<>();
+        if (root.left == null && root.right == null) {
+            return new ArrayList<List<Integer>>() {
+
+                {
+                    add(new ArrayList<Integer>() {
+
+                        {
+                            add(root.val);
+                        }
+                    });
+                }
+            };
+        }
+        //if(targetSum == root.val || root.val == 1 && targetSum == 1)return new ArrayList<>();
+        this.target = targetSum;
+        head = root;
+        path(root, targetSum);
+        return ans;
+    }
+
+    private List<Integer> path(TreeNode root, int target) {
+        if (root == null || n.contains(root))
+            return list;
+        list.add(root.val);
+        n.add(root);
+        path(root.left, target - root.val);
+        if (root == head && list.isEmpty())
+            list.add(root.val);
+        path(root.right, target - root.val);
+        if (target - root.val == 0 && root.left == null && root.right == null) {
+            ans.add(new ArrayList<>(list));
+            target = this.target;
+            list.remove(list.size() - 1);
+            return list;
+        } else
+            list.remove(list.size() - 1);
+        return list;
+    }
+}

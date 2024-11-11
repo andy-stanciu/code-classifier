@@ -1,0 +1,69 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> res = new ArrayList<>();
+        pathSum(root, new LinkedList<Integer>(), res, targetSum);
+        return res;
+    }
+
+    //memory optimized
+    public void pathSum(TreeNode node, LinkedList<Integer> path, List<List<Integer>> res, int target) {
+        if (node == null)
+            return;
+        if (node.val == target && node.left == null && node.right == null) {
+            //found path
+            LinkedList<Integer> newPath = new LinkedList<Integer>(path);
+            newPath.add(node.val);
+            res.add(newPath);
+        } else {
+            path.add(node.val);
+            pathSum(node.left, path, res, target - node.val);
+            pathSum(node.right, path, res, target - node.val);
+            path.removeLast();
+        }
+    }
+    /*
+    public List<List<Integer>> pathSum(TreeNode node, LinkedList<Integer> path, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (node == null) return res;
+
+        if (node.val == target && node.left == null && node.right == null) {
+            //found path 
+            LinkedList<Integer> newPath = new LinkedList<Integer>(path);
+            newPath.add(node.val);
+            res.add(newPath);
+        } else {
+            path.add(node.val);
+
+            List<List<Integer>> leftPath = pathSum(node.left, path, target-node.val);
+            if (!leftPath.isEmpty()) {
+                res.addAll(leftPath);
+            }
+
+            List<List<Integer>> rightPath = pathSum(node.right, path, target-node.val);
+            if (!rightPath.isEmpty()) {
+                res.addAll(rightPath);
+            }
+
+            path.removeLast();
+        }
+
+        return res;
+    }
+    */
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        Set<String> set = new HashSet<>();
+        int min = 20, max = 0, len = s.length();
+        for (String str : param1) {
+            set.add(str);
+            int tempLen = str.length();
+            if (min > tempLen)
+                min = tempLen;
+            if (max < tempLen)
+                max = tempLen;
+        }
+        int[] memo = new int[len];
+        return method2(s, set, memo, min, max, 0, new StringBuilder(), len);
+    }
+
+    public boolean method2(String s, Set<String> set, int[] memo, int min, int max, int cur, StringBuilder param2, int len) {
+        if (cur == len)
+            return true;
+        if (memo[cur] != 0)
+            return memo[cur] == 1 ? true : false;
+        int temp = cur;
+        int curLength = 0;
+        while (curLength < min && cur < len) {
+            param2.append(s.charAt(cur++));
+            curLength++;
+        }
+        while (curLength <= max) {
+            if (set.contains(param2.toString()) && method2(s, set, memo, min, max, cur, new StringBuilder(), len)) {
+                memo[temp] = 1;
+                return true;
+            } else {
+                if (cur == len)
+                    break;
+                param2.append(s.charAt(cur++));
+                curLength++;
+            }
+        }
+        memo[temp] = 2;
+        return false;
+    }
+}

@@ -1,0 +1,50 @@
+class Solution {
+
+    // code to add the courses in topological sort
+    // and return false if a cycle is detected
+    private boolean dfs(int node, boolean[] visited, boolean[] pathVis, Stack<Integer> st, ArrayList<ArrayList<Integer>> adj) {
+        visited[node] = true;
+        pathVis[node] = true;
+        ArrayList<Integer> neighbors = adj.get(node);
+        for (int it : neighbors) {
+            if (pathVis[it] == true) {
+                return false;
+            } else if (visited[it] == false) {
+                if (!dfs(it, visited, pathVis, st, adj)) {
+                    return false;
+                }
+            }
+        }
+        pathVis[node] = false;
+        st.push(node);
+        return true;
+    }
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        // CREATING DIRECTED GRAPH AS ADJACENECY LIST
+        for (int i = 0; i < prerequisites.length; i++) {
+            adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        // DFS
+        Stack<Integer> st = new Stack<>();
+        boolean[] visited = new boolean[numCourses];
+        boolean[] pathVis = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i]) {
+                if (!dfs(i, visited, pathVis, st, adj)) {
+                    return new int[0];
+                }
+            }
+        }
+        int[] topoSort = new int[numCourses];
+        int i = -1;
+        while (!st.isEmpty()) {
+            topoSort[++i] = st.pop();
+        }
+        return topoSort;
+    }
+}

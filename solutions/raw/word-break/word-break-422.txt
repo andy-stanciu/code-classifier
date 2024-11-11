@@ -1,0 +1,30 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int[] cache = new int[s.length()];
+        return dfs(s, wordDict, 0, cache);
+    }
+
+    private boolean dfs(String s, List<String> wordDict, int index, int[] cache) {
+        if (index == s.length()) {
+            return true;
+        }
+        if (cache[index] == -1) {
+            return false;
+        }
+        for (String word : wordDict) {
+            boolean flag = true;
+            for (int i = 0; i < word.length(); i++) {
+                if (index + i >= s.length() || word.charAt(i) != s.charAt(index + i)) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag && dfs(s, wordDict, index + word.length(), cache)) {
+                return true;
+            }
+        }
+        cache[index] = -1;
+        return false;
+    }
+}

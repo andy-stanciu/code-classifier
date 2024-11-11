@@ -1,0 +1,52 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        boolean[] visited = new boolean[param1];
+        boolean[] helper = new boolean[param1];
+        int[] ans = new int[param1];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i <= param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            int u = prerequisite[0];
+            int v = prerequisite[1];
+            adjList.get(v).add(u);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (visited[i] == false) {
+                boolean isCycle = DFS(i, visited, adjList, stack, helper);
+                if (isCycle) {
+                    return new int[] {};
+                }
+            }
+        }
+        int k = 0;
+        while (!stack.isEmpty()) {
+            ans[k++] = stack.pop();
+        }
+        return ans;
+    }
+
+    private static boolean DFS(int start, boolean[] visited, List<List<Integer>> adjList, Stack<Integer> stack, boolean[] helper) {
+        visited[start] = true;
+        helper[start] = true;
+        List<Integer> nbrs = adjList.get(start);
+        for (int nbr : nbrs) {
+            if (helper[nbr]) {
+                return true;
+            }
+            if (visited[nbr] == false) {
+                visited[nbr] = true;
+                boolean isCycle = DFS(nbr, visited, adjList, stack, helper);
+                if (isCycle) {
+                    return true;
+                }
+            }
+        }
+        stack.push(start);
+        helper[start] = false;
+        return false;
+    }
+}

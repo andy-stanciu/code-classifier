@@ -1,0 +1,38 @@
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null)
+            return result;
+        List<Integer> path = new ArrayList<>();
+        Stack<TreeNode> nodeStack = new Stack<>();
+        Stack<Integer> sumStack = new Stack<>();
+        Stack<List<Integer>> pathStack = new Stack<>();
+        nodeStack.push(root);
+        sumStack.push(targetSum - root.val);
+        path.add(root.val);
+        pathStack.push(path);
+        while (!nodeStack.isEmpty()) {
+            TreeNode curr = nodeStack.pop();
+            int sum = sumStack.pop();
+            path = pathStack.pop();
+            if (curr.left == null && curr.right == null && sum == 0) {
+                result.add(path);
+            }
+            if (curr.left != null) {
+                nodeStack.push(curr.left);
+                sumStack.push(sum - curr.left.val);
+                List<Integer> pathCopy = new ArrayList<>(path);
+                pathCopy.add(curr.left.val);
+                pathStack.push(pathCopy);
+            }
+            if (curr.right != null) {
+                nodeStack.push(curr.right);
+                sumStack.push(sum - curr.right.val);
+                path.add(curr.right.val);
+                pathStack.push(path);
+            }
+        }
+        return result;
+    }
+}

@@ -1,0 +1,49 @@
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        //Answer list of lists of integers.
+        List<List<Integer>> answer = new ArrayList<>();
+        //Node list to keep track of nodes visited to each leaf.
+        List<Integer> nodeList = new ArrayList<>();
+        //Explicit stack to record nodes passed and not yet processed.
+        Stack<TreeNode> stack = new Stack<>();
+        //Pointer used to traverse the tree to not update the root.
+        TreeNode ptr = root;
+        //Running sum from root to ptr node.
+        int sum = 0;
+        //Iterative postorder traversal.
+        while (ptr != null || !stack.isEmpty()) {
+            while (ptr != null) {
+                //Add double of each pointer since post order is left, right, root
+                //we will need to pass the root twice.
+                stack.add(ptr);
+                stack.add(ptr);
+                //Add the node to the node list & increase the sum.
+                nodeList.add(ptr.val);
+                sum += ptr.val;
+                ptr = ptr.left;
+            }
+            ptr = stack.pop();
+            if (!stack.isEmpty() && stack.peek() == ptr) {
+                ptr = ptr.right;
+            } else {
+                //Both left and right have been processed.
+                //If the current node is a leaf and the sum is the target, we add a
+                //deep copy of our list using the array list copy constructor.
+                if (isLeaf(ptr) && sum == targetSum) {
+                    answer.add(new ArrayList<>(nodeList));
+                }
+                //Remove the node from our list as we are traversing back up the list.
+                nodeList.remove(nodeList.size() - 1);
+                sum -= ptr.val;
+                //Set the pointer to null to get the previous parent node off the stack.
+                ptr = null;
+            }
+        }
+        return answer;
+    }
+
+    private boolean isLeaf(TreeNode root) {
+        return root.left == null && root.right == null;
+    }
+}

@@ -1,0 +1,59 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int m = prerequisites.length;
+        List<List<Integer>> adj = getGraph(param1, prerequisites);
+        int[] inDegrees = new int[param1];
+        for (int vertex = 0; vertex < param1; vertex++) {
+            List<Integer> neighbours = adj.get(vertex);
+            for (int neighbour : neighbours) {
+                inDegrees[neighbour] += 1;
+            }
+        }
+        Deque<Integer> queue = new ArrayDeque<>();
+        for (int vertex = 0; vertex < param1; vertex++) {
+            if (inDegrees[vertex] == 0)
+                queue.addLast(vertex);
+        }
+        boolean[] visited = new boolean[param1];
+        List<Integer> topologicalSort = new ArrayList<>();
+        int totalVisitedVertices = bfsKahn(adj, queue, inDegrees, visited, topologicalSort);
+        if (totalVisitedVertices != param1) {
+            return new int[0];
+        }
+        return topologicalSort.stream().mapToInt(i -> i).toArray();
+    }
+
+    private int bfsKahn(List<List<Integer>> adj, Deque<Integer> queue, int[] inDegrees, boolean[] visited, List<Integer> topologicalSort) {
+        int visitedVertices = 0;
+        while (!queue.isEmpty()) {
+            int curr = queue.removeFirst();
+            if (visited[curr])
+                continue;
+            visited[curr] = true;
+            topologicalSort.add(curr);
+            visitedVertices += 1;
+            List<Integer> neighbours = adj.get(curr);
+            for (int neighbour : neighbours) {
+                inDegrees[neighbour] -= 1;
+                if (inDegrees[neighbour] == 0) {
+                    queue.addLast(neighbour);
+                }
+            }
+        }
+        return visitedVertices;
+    }
+
+    private List<List<Integer>> getGraph(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] edge : prerequisites) {
+            int var1 = edge[0];
+            int prereq = edge[1];
+            graph.get(prereq).add(var1);
+        }
+        return graph;
+    }
+}

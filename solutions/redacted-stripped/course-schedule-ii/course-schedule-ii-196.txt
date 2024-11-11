@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        Stack<Integer> stack = new Stack<>();
+        int[] visited = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            map.put(i, new ArrayList<>());
+        }
+        for (int[] prerequisite : prerequisites) {
+            int var1 = prerequisite[0], var2 = prerequisite[1];
+            map.get(var1).add(var2);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (!topologicalSort(i, visited, map, stack)) {
+                return new int[0];
+            }
+        }
+        int[] result = new int[stack.size()];
+        for (int i = result.length - 1; i >= 0; i--) {
+            result[i] = stack.pop();
+        }
+        return result;
+    }
+
+    private boolean topologicalSort(int var1, int[] visited, Map<Integer, List<Integer>> map, Stack<Integer> stack) {
+        if (visited[var1] == 1) {
+            return true;
+        }
+        if (visited[var1] == -1) {
+            return false;
+        }
+        visited[var1] = -1;
+        for (int var2 : map.get(var1)) {
+            if (!topologicalSort(var2, visited, map, stack)) {
+                return false;
+            }
+        }
+        visited[var1] = 1;
+        stack.push(var1);
+        return true;
+    }
+}

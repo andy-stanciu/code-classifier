@@ -1,0 +1,58 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        TrieDs root = new TrieDs();
+        for (int i = 0; i < param1.size(); i++) {
+            root.insert(param1.get(i));
+        }
+        return root.method3(s);
+    }
+
+    class TrieDs {
+
+        private TrieDs[] childNodes = new TrieDs[26];
+
+        private boolean isEow = false;
+
+        public void insert(String param2) {
+            TrieDs currNode = this;
+            for (int i = 0; i < param2.length(); i++) {
+                int index = param2.charAt(i) - 97;
+                if (currNode.childNodes[index] != null) {
+                    currNode = currNode.childNodes[index];
+                } else {
+                    TrieDs newNode = new TrieDs();
+                    currNode.childNodes[index] = newNode;
+                    currNode = newNode;
+                }
+            }
+            currNode.isEow = true;
+        }
+
+        public boolean method2(String param2) {
+            TrieDs currNode = this;
+            for (int i = 0; i < param2.length(); i++) {
+                int index = param2.charAt(i) - 97;
+                if (currNode.childNodes[index] == null) {
+                    return false;
+                }
+                currNode = currNode.childNodes[index];
+            }
+            return currNode.isEow;
+        }
+
+        public boolean method3(String param2) {
+            int n = param2.length();
+            boolean[] dp = new boolean[n + 1];
+            dp[0] = true;
+            for (int i = 1; i < n + 1; i++) {
+                for (int j = 0; j < i; j++) {
+                    if (dp[j] && method2(param2.substring(j, i))) {
+                        dp[i] = true;
+                    }
+                }
+            }
+            return dp[n];
+        }
+    }
+}

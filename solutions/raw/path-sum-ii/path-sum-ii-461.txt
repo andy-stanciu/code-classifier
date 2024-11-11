@@ -1,0 +1,76 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        /*
+        This problem has been asked in below companies:
+        Bloomberg
+        Amazon
+        Adobe
+
+
+        Time complexity: O(n^2)
+        As we are visiting all the nodes in the tree and once we found our path , n times
+        we are doing copy from one list to a new list - n times
+
+        In the worst case it could be possible that we need to do copy in all leaf nodes
+        and we in a complete tree there will be maximum nodes present in the last level
+
+        so total time complexity: n * n
+
+
+        Space complexity: O(n + h)
+
+        n is for the path list where are adding the node value
+        and h is for the recursion stack it could be log n or n
+
+        so total space complexity is O(n) we can say in worst case
+        Note that: we are not considering the output list space
+
+        A good article where we should consider the output space or not:
+        https://cs.stackexchange.com/questions/83574/does-space-complexity-analysis-usually-include-output-space
+        */
+        // to store all the paths
+        List<List<Integer>> allPaths = new ArrayList<>();
+        // to store the running path
+        List<Integer> path = new ArrayList<>();
+        pathSum(root, targetSum, path, allPaths);
+        return allPaths;
+    }
+
+    public void pathSum(TreeNode root, int targetSum, List<Integer> path, List<List<Integer>> allPaths) {
+        // base case
+        if (root == null)
+            return;
+        // add the current node value in path
+        path.add(root.val);
+        // if it is leaf node and the value remaining is equal to the value of the current node
+        // add the path into the pathlist
+        // before add we need to create an another object and copy all values from path to newly created object
+        if (targetSum == root.val && root.left == null && root.right == null) {
+            allPaths.add(new ArrayList<Integer>(path));
+        } else // otherwise find left side and right side
+        {
+            pathSum(root.left, targetSum - root.val, path, allPaths);
+            pathSum(root.right, targetSum - root.val, path, allPaths);
+        }
+        // we need to remove the elements also which we added
+        // because while going up from the recursion we dont want to remain the current value present
+        // in the path list
+        path.remove(path.size() - 1);
+    }
+}

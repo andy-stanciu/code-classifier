@@ -1,0 +1,56 @@
+public class Solution {
+
+    // Stores the final list of palindrome partitions
+    List<List<String>> resultLst;
+
+    // Temporary list to track current partition
+    ArrayList<String> currLst;
+
+    public List<List<String>> partition(String s) {
+        resultLst = new ArrayList<List<String>>();
+        currLst = new ArrayList<String>();
+        // Start backtracking from index 0
+        backTrack(s, 0);
+        return resultLst;
+    }
+
+    public void backTrack(String s, int l) {
+        if (currLst.size() > 0 && l >= s.length()) {
+            // If current partition is not empty and we\'ve reached the end of the string
+            // Clone the current partition
+            List<String> r = (ArrayList<String>) currLst.clone();
+            // Add it to the result list
+            resultLst.add(r);
+        }
+        for (int i = l; i < s.length(); i++) {
+            if (isPalindrome(s, l, i)) {
+                // If substring from l to i is a palindrome
+                if (l == i)
+                    // Single character palindrome
+                    currLst.add(Character.toString(s.charAt(i)));
+                else
+                    // Add the palindrome substring
+                    currLst.add(s.substring(l, i + 1));
+                // Recurse for the next index
+                backTrack(s, i + 1);
+                // Backtrack by removing the last added element
+                currLst.remove(currLst.size() - 1);
+            }
+        }
+    }
+
+    public boolean isPalindrome(String str, int l, int r) {
+        if (l == r)
+            // Single character is always a palindrome
+            return true;
+        while (l < r) {
+            if (str.charAt(l) != str.charAt(r))
+                // If characters don\'t match, it\'s not a palindrome
+                return false;
+            l++;
+            r--;
+        }
+        // All characters matched, so it\'s a palindrome
+        return true;
+    }
+}

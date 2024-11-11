@@ -1,0 +1,39 @@
+class Solution {
+
+    /*
+     */
+    public int[] findOrder(int n, int[][] prerequisites) {
+        List<List<Integer>> grid = new ArrayList<>();
+        for (int i = 0; i < n; i++) grid.add(new ArrayList<>());
+        for (int i = 0; i < prerequisites.length; i++) {
+            grid.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        Set<Integer> visited = new HashSet<>();
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            if (!visited.contains(i) && !dfs(i, grid, visited, st, new HashSet<>()))
+                return new int[] {};
+        }
+        int[] rs = new int[st.size()];
+        int i = 0;
+        while (!st.empty()) {
+            rs[i++] = st.pop();
+        }
+        return rs;
+    }
+
+    private boolean dfs(int node, List<List<Integer>> grid, Set<Integer> visited, Stack<Integer> st, Set<Integer> rec) {
+        visited.add(node);
+        rec.add(node);
+        for (int child : grid.get(node)) {
+            if (rec.contains(child))
+                return false;
+            if (!visited.contains(child) && !dfs(child, grid, visited, st, rec)) {
+                return false;
+            }
+        }
+        st.add(node);
+        rec.remove(node);
+        return true;
+    }
+}

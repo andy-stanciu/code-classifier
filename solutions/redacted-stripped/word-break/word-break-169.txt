@@ -1,0 +1,38 @@
+class Solution {
+
+    int[] dp;
+
+    Solution() {
+        dp = new int[301];
+        Arrays.fill(dp, -1);
+    }
+
+    public boolean method1(String s, List<String> param1) {
+        HashSet<String> h1 = new HashSet<>();
+        for (String st : param1) {
+            h1.add(st);
+        }
+        return solve(s, h1, 0, s.length());
+    }
+
+    boolean solve(String s, HashSet<String> h1, int index, int n) {
+        if (index == n) {
+            return true;
+        }
+        if (h1.contains(s)) {
+            return true;
+        }
+        if (dp[index] != -1) {
+            return dp[index] == 0 ? false : true;
+        }
+        for (int endIndex = index + 1; endIndex <= n; endIndex++) {
+            String sub = s.substring(index, endIndex);
+            if (h1.contains(sub) && solve(s, h1, endIndex, n)) {
+                dp[index] = 1;
+                return true;
+            }
+        }
+        dp[index] = 0;
+        return false;
+    }
+}

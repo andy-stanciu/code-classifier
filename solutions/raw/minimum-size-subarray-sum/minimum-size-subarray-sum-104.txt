@@ -1,0 +1,46 @@
+class Solution {
+
+    public int minSubArrayLen(int target, int[] nums) {
+        int sum = 0;
+        // int []preSum = new int[nums.length];
+        // for(int i=0;i<nums.length;i++)
+        // {preSum[i] = sum + nums[i];
+        // sum = preSum[i];}
+        sum = 0;
+        int k = 0;
+        while (k < nums.length && sum < target) {
+            sum += nums[k];
+            if (nums[k] >= target)
+                return 1;
+            k++;
+        }
+        if (k == nums.length && sum == target)
+            return k;
+        if (k == nums.length && sum < target)
+            return 0;
+        int minl = k;
+        int l = 0;
+        if (k == nums.length) {
+            while (sum - nums[l] >= target) {
+                sum = sum - nums[l];
+                l++;
+            }
+            return k - l;
+        }
+        while (k < nums.length) {
+            while (k >= l && sum - nums[l] >= target) {
+                sum = sum - nums[l];
+                l++;
+            }
+            minl = Math.min(minl, k - l);
+            sum = sum + nums[k];
+            k++;
+        }
+        while (k >= l && sum - nums[l] >= target) {
+            sum = sum - nums[l];
+            l++;
+        }
+        minl = Math.min(minl, k - l);
+        return minl;
+    }
+}

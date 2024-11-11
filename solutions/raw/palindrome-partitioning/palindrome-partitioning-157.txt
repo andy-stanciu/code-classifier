@@ -1,0 +1,40 @@
+class Solution {
+
+    public void solve(int index, String s, List<String> part, List<List<String>> ans) {
+        if (index == s.length()) {
+            //adding each palindrome substring to ans
+            ans.add(new ArrayList(part));
+            return;
+        }
+        for (int i = index; i < s.length(); i++) {
+            if (isPalindrome(s, index, i)) {
+                //checking if palindrome is forming or not
+                //considering the substring as palindrome exists
+                part.add(s.substring(index, i + 1));
+                //moving to next(i.e. i+1 index) for checking another palindrome substring
+                solve(i + 1, s, part, ans);
+                //removing last element from the list so that we can consider a new pattern of a substring in future
+                part.remove(part.size() - 1);
+            }
+        }
+    }
+
+    //checking if a given string is palindome or not
+    public Boolean isPalindrome(String s, int start, int end) {
+        while (start <= end) {
+            if (s.charAt(start) != s.charAt(end)) {
+                return false;
+            }
+            start += 1;
+            end -= 1;
+        }
+        return true;
+    }
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> ans = new ArrayList<>();
+        List<String> part = new ArrayList<>();
+        solve(0, s, part, ans);
+        return ans;
+    }
+}

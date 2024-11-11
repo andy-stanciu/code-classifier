@@ -1,0 +1,38 @@
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        if (root == null)
+            return res;
+        List<Integer> curr = new ArrayList<>();
+        dfs(root, sum, 0, res, curr);
+        return res;
+    }
+
+    public void dfs(TreeNode root, int sum, int pathSum, List<List<Integer>> res, List<Integer> curr) {
+        // System.out.println("On TreeNode " + root.val + "with pathSum " + pathSum);
+        // System.out.println(Arrays.toString(curr.toArray(new Integer[0])));
+        if (root.left == null && root.right == null) {
+            if (pathSum + root.val == sum) {
+                curr.add(root.val);
+                // System.out.println(Arrays.toString(curr.toArray(new Integer[0])));
+                //key step do not simply res.add(curr); this will end up correct amount of path but each path
+                //would be empty
+                res.add(new ArrayList<>(curr));
+                // System.out.println(Arrays.toString(res.get(res.size()-1).toArray(new Integer[0])));
+                curr.remove(curr.size() - 1);
+            }
+            return;
+        }
+        curr.add(root.val);
+        if (root.left != null) {
+            //no need to check sum here, you check at every start of recursion call
+            dfs(root.left, sum, pathSum + root.val, res, curr);
+        }
+        if (root.right != null) {
+            dfs(root.right, sum, pathSum + root.val, res, curr);
+        }
+        curr.remove(curr.size() - 1);
+        return;
+    }
+}

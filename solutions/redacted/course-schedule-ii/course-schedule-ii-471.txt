@@ -1,0 +1,41 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        // Store indegree of all courses; index: course id, element: prerequisites
+        int[] indegree = new int[param1];
+        // Store relations of all courses; key: prerequisites course id, val: nextCourse list
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        //get relationship of all courses
+        for (int[] pre : prerequisites) {
+            map.computeIfAbsent(pre[1], k -> new ArrayList<>()).add(pre[0]);
+            ++indegree[pre[0]];
+        }
+        // Store the courses we can take
+        Queue<Integer> q = new ArrayDeque<>();
+        int[] res = new int[param1];
+        int idx = 0;
+        //Find all the courses without prerequisites
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                q.offer(i);
+            }
+        }
+        // exit the loop after all possible courses are take
+        while (!q.isEmpty()) {
+            // the prerequisites course we currently take
+            int cur = q.poll();
+            --param1;
+            List<Integer> var1 = map.get(cur);
+            if (map.containsKey(cur)) {
+                // since the pre course is taken, change the indegree and see if we can take following courses
+                for (int next : var1) {
+                    if (--indegree[next] == 0) {
+                        q.offer(next);
+                    }
+                }
+            }
+            res[idx++] = cur;
+        }
+        return param1 == 0 ? res : new int[0];
+    }
+}

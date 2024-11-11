@@ -1,0 +1,37 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        int[] indegrees = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            map.put(i, new ArrayList<>());
+        }
+        for (int[] prere : prerequisites) {
+            map.get(prere[1]).add(prere[0]);
+            indegrees[prere[0]]++;
+        }
+        //record the nodes which are available to add to thw answer
+        Deque<Integer> deque = new LinkedList<>();
+        int[] ans = new int[numCourses];
+        int index = 0;
+        for (int i = 0; i < indegrees.length; i++) {
+            if (indegrees[i] == 0) {
+                deque.add(i);
+            }
+        }
+        while (!deque.isEmpty()) {
+            int cur = deque.poll();
+            ans[index++] = cur;
+            //update corresponding nodes indegree
+            for (int i = 0; i < map.get(cur).size(); i++) {
+                indegrees[map.get(cur).get(i)]--;
+                if (indegrees[map.get(cur).get(i)] == 0) {
+                    deque.add(map.get(cur).get(i));
+                }
+            }
+        }
+        if (index == numCourses)
+            return ans;
+        return new int[0];
+    }
+}

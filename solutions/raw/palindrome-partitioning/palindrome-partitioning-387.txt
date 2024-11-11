@@ -1,0 +1,41 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> ans = new ArrayList<>();
+        palindromePartition(s, new ArrayList<>(), ans);
+        return ans;
+    }
+
+    void palindromePartition(String s, List<String> curr, List<List<String>> ans) {
+        // base case when string is empty
+        if (s.length() == 0) {
+            ans.add(new ArrayList<>(curr));
+            return;
+        }
+        for (int i = 0; i < s.length(); i++) {
+            // loop beacuse partition can be at any position
+            // starting i th length ko check karo
+            String temp = s.substring(0, i + 1);
+            if (isPalindrome(temp)) {
+                // remaining string
+                String remaining = s.substring(i + 1);
+                curr.add(temp);
+                // here pass remaining string in recursion
+                palindromePartition(remaining, curr, ans);
+                curr.remove(curr.size() - 1);
+            }
+        }
+    }
+
+    boolean isPalindrome(String s) {
+        int i = 0, j = s.length() - 1;
+        while (i < j) {
+            if (s.charAt(i) != s.charAt(j)) {
+                return false;
+            }
+            i++;
+            j--;
+        }
+        return true;
+    }
+}

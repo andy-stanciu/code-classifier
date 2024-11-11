@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] visited = new int[numCourses];
+        Stack<Integer> st = new Stack<>();
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (// [[1,0],[0,1]]
+        // [[1,0],[0,1]]
+        int[] val : prerequisites) {
+            adj.get(val[1]).add(val[0]);
+        }
+        for (int i = 0; i < numCourses; i++) {
+            if (visited[i] == 0) {
+                if (!dfs(i, visited, adj, st))
+                    return new int[0];
+            }
+        }
+        int[] ans = new int[numCourses];
+        int i = 0;
+        while (!st.isEmpty()) {
+            //result.add(st.pop());
+            ans[i++] = st.pop();
+        }
+        return ans;
+    }
+
+    private boolean dfs(int node, int[] visited, List<List<Integer>> adj, Stack<Integer> st) {
+        visited[node] = 1;
+        for (int neighbor : adj.get(node)) {
+            if (visited[neighbor] == 0) {
+                if (!dfs(neighbor, visited, adj, st))
+                    return false;
+            } else if (visited[neighbor] == 1)
+                return false;
+        }
+        // Mark as visited
+        visited[node] = 2;
+        st.push(node);
+        return true;
+    }
+}

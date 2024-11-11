@@ -1,0 +1,54 @@
+class Solution {
+
+    private static final int notStarted = 0;
+
+    private static final int started = 1;
+
+    private static final int done = 2;
+
+    private int[] states;
+
+    private Deque<Integer> order;
+
+    private boolean isCyclic = false;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List[] graph = new List[numCourses];
+        for (int[] e : prerequisites) {
+            if (graph[e[1]] == null)
+                graph[e[1]] = new ArrayList<Integer>();
+            graph[e[1]].add(e[0]);
+        }
+        states = new int[numCourses];
+        order = new ArrayDeque<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (isCyclic)
+                return new int[0];
+            if (states[i] == notStarted)
+                dfs(i, graph);
+        }
+        int[] ans = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            ans[i] = order.pop();
+        }
+        return ans;
+    }
+
+    private void dfs(int i, List[] graph) {
+        if (isCyclic)
+            return;
+        states[i] = started;
+        if (graph[i] != null) {
+            for (int next : (List<Integer>) graph[i]) {
+                if (states[next] == notStarted)
+                    dfs(next, graph);
+                else if (states[next] == started) {
+                    isCyclic = true;
+                    return;
+                }
+            }
+        }
+        order.push(i);
+        states[i] = done;
+    }
+}

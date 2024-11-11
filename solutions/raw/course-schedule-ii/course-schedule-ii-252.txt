@@ -1,0 +1,66 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] pre) {
+        //prerequisites
+        //num of vetex
+        v = numCourses;
+        //num of edge
+        e = pre.length;
+        //size of graph
+        graph = new ArrayList[v];
+        for (int i = 0; i < v; i++) {
+            //initiating graph of every index of array
+            graph[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < e; i++) {
+            //adding vetex
+            addEdge(pre[i][0], pre[i][1]);
+        }
+        int[] indeg = new int[v];
+        for (int i = 0; i < e; i++) {
+            //calculating indregree
+            indeg[pre[i][0]]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < indeg.length; i++) {
+            //adding vetex with indeg 0
+            if (indeg[i] == 0) {
+                q.add(i);
+            }
+        }
+        if (q.isEmpty()) {
+            return new int[] {};
+        }
+        int[] ans = new int[v];
+        int idx = 0;
+        //performing bfs
+        while (!q.isEmpty()) {
+            int cur = q.remove();
+            ans[idx++] = cur;
+            for (int k = 0; k < graph[cur].size(); k++) {
+                int m = graph[cur].get(k);
+                indeg[m]--;
+                if (indeg[m] == 0) {
+                    q.add(m);
+                }
+            }
+        }
+        if (idx != v) {
+            //as we have to finish all courses
+            return new int[] {};
+        } else {
+            return ans;
+        }
+    }
+
+    static ArrayList<Integer>[] graph;
+
+    static int v;
+
+    static int e;
+
+    static void addEdge(int a, int b) {
+        //a array idx and b al ele
+        graph[b].add(a);
+    }
+}

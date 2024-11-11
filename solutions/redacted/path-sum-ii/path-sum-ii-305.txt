@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> method1(TreeNode root, int param1) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        method2(root, param1, new ArrayList<Integer>(), res);
+        return res;
+    }
+
+    void method2(TreeNode root, int param1, List<Integer> sol, List<List<Integer>> res) {
+        if (root == null)
+            return;
+        sol.add(root.val);
+        if (root.left == null && root.right == null && param1 == root.val) {
+            res.add(new ArrayList<Integer>(sol));
+        } else {
+            method2(root.left, param1 - root.val, sol, res);
+            method2(root.right, param1 - root.val, sol, res);
+        }
+        sol.remove(sol.size() - 1);
+    }
+}
+/*
+
+The sol.remove(sol.size() - 1); was tricky for me to wrap my head around, but if you look at the first input example (the one with a target sum of 22), and write out the recursion calls, you\'ll see what happens if you do not include this line. It is a form of backtracking to remove dead-end paths from the current solution.
+
+For instance - if we explore the lefthand side of the example 1 input tree, our calls are (assume that the arguments are pathSum(currentSolution, remainingTotal)
+
+pathSum([5], 17) <-- just added TreeNode value 5.
+pathSum([5, 4], 13) <-- just added TreeNode value 4.
+pathSum([5, 4, 11], 2) <-- just added TreeNode value 11
+pathSum([5, 4, 11, 7], -5) <-- this is a dead end (7 is a leaf node and our remaining target is still non-zero). We need to remove 7 before we explore the righthand side of the TreeNode(11).
+We are currently at TreeNode(11), just explored the left child tree and found it was a dead end. Now we explore the righthand side:
+
+Without the sol.remove(sol.size() - 1); line:
+5. pathSum([5, 8, 11, 7, 2], 0) <-- WRONG
+
+Two things to notice here:
+
+the 7 is still in the current solutions (this is why we need to remove it!)
+the remaining total is not -5 (that\'s when we are in the left child, but when we are making the call to explore the right child (TreeNode(2)), the remaining total is still 2. It comes from this line, where sol is 2:
+ pathSum(root.right, sum - root.val, sol, res);
+With the sol.remove(sol.size() - 1); line:
+5. pathSum([5, 8, 11, 2], 0) <-- CORRECT
+
+Hope this helps. It took me a while to understand exactly why this line was needed.
+*/

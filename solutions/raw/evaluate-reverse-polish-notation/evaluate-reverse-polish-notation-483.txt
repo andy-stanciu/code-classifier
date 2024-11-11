@@ -1,0 +1,36 @@
+class Solution {
+
+    private boolean isOp(String s) {
+        return (s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/"));
+    }
+
+    private int calc(String l, String r, String op) {
+        int l1 = Integer.parseInt(l);
+        int r1 = Integer.parseInt(r);
+        if (op.equals("+")) {
+            return l1 + r1;
+        } else if (op.equals("-")) {
+            return l1 - r1;
+        } else if (op.equals("*")) {
+            return l1 * r1;
+        } else {
+            return l1 / r1;
+        }
+    }
+
+    public int evalRPN(String[] t) {
+        String[] stack = new String[t.length];
+        int ans = 0, top = -1;
+        for (int i = 0; i < t.length; i++) {
+            if (isOp(t[i])) {
+                String r = stack[top--];
+                String l = stack[top--];
+                ans = calc(l, r, t[i]);
+                stack[++top] = Integer.toString(ans);
+            } else {
+                stack[++top] = t[i];
+            }
+        }
+        return Integer.parseInt(stack[0]);
+    }
+}

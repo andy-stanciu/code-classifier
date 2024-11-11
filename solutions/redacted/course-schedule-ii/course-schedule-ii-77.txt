@@ -1,0 +1,55 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        int[] vis = new int[param1];
+        // Tracks nodes in the current DFS path (for cycle detection)
+        int[] pathvis = new int[param1];
+        // Stack to store the topological sort order
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] edge : prerequisites) {
+            // Course that needs to be taken first
+            int par = edge[1];
+            // Course dependent on the previous course
+            int child = edge[0];
+            // Add directed edge from \'par\' to \'child\'
+            graph.get(par).add(child);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (vis[i] == 0) {
+                // If a cycle is detected, return an empty array
+                if (dfs(i, graph, vis, pathvis, st))
+                    return new int[] {};
+            }
+        }
+        // Retrieve the topological order from the stack
+        int[] sol = new int[st.size()];
+        for (int i = 0; i < sol.length; i++) {
+            sol[i] = st.pop();
+        }
+        return sol;
+    }
+
+    //check cycle exists. if not, push into stack
+    private boolean dfs(int node, List<List<Integer>> graph, int[] vis, int[] pathvis, Stack<Integer> st) {
+        vis[node] = 1;
+        pathvis[node] = 1;
+        for (int neigh : graph.get(node)) {
+            if (vis[neigh] == 0) {
+                // If a cycle is detected in DFS, return true
+                if (dfs(neigh, graph, vis, pathvis, st))
+                    return true;
+            } else // If the neighbor is part of the current path, we found a cycle
+            if (pathvis[neigh] == 1)
+                return true;
+        }
+        pathvis[node] = 0;
+        // Add the course to the topological order stack
+        st.push(node);
+        //No cycle found
+        return false;
+    }
+}

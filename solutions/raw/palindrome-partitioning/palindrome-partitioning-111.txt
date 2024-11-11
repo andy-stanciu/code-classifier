@@ -1,0 +1,57 @@
+class Solution {
+
+    HashMap<String, Boolean> is_palindrome_map = new HashMap<>();
+
+    HashMap<String, List<List<String>>> combinations = new HashMap<>();
+
+    boolean isPalindrome(String s) {
+        if (is_palindrome_map.containsKey(s))
+            return is_palindrome_map.get(s);
+        for (int i = 0; i < s.length() / 2; i++) if (s.charAt(i) != s.charAt(s.length() - 1 - i)) {
+            is_palindrome_map.put(s, false);
+            return false;
+        }
+        is_palindrome_map.put(s, true);
+        return true;
+    }
+
+    List<List<String>> dfs(String s) {
+        if (combinations.containsKey(s))
+            return combinations.get(s);
+        List<List<String>> list = new ArrayList<>();
+        for (int i = s.length(); i > 0; i--) {
+            String word = s.substring(0, i);
+            if (isPalindrome(word)) {
+                if (i < s.length()) {
+                    List<List<String>> combs = dfs(s.substring(i));
+                    for (List<String> list1 : combs) {
+                        List<String> save = new ArrayList<>();
+                        save.add(word);
+                        save.addAll(list1);
+                        list.add(save);
+                    }
+                } else {
+                    List<String> save = new ArrayList<>();
+                    save.add(word);
+                    list.add(save);
+                }
+            }
+        }
+        combinations.put(s, list);
+        return list;
+    }
+
+    public List<List<String>> partition(String s) {
+        for (char val : s.toCharArray()) {
+            if (!combinations.containsKey(String.valueOf(val))) {
+                List<String> list = new ArrayList<>();
+                List<List<String>> list1 = new ArrayList<>();
+                list.add(String.valueOf(val));
+                list1.add(list);
+                combinations.put(String.valueOf(val), list1);
+                is_palindrome_map.put(String.valueOf(val), true);
+            }
+        }
+        return dfs(s);
+    }
+}

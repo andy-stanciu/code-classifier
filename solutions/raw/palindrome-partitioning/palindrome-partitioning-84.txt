@@ -1,0 +1,41 @@
+class Solution {
+
+    public List<List<String>> list = new ArrayList<>();
+
+    public boolean palindrome(List<String> li) {
+        for (int i = 0; i < li.size(); i++) {
+            String str = li.get(i);
+            int k = str.length() - 1;
+            for (int j = 0; j < str.length() / 2; j++) {
+                if (str.charAt(j) != str.charAt(k)) {
+                    return false;
+                }
+                k--;
+            }
+        }
+        return true;
+    }
+
+    public void rec(String s, int start, List<String> li) {
+        if (start == s.length()) {
+            list.add(new ArrayList<>(li));
+            return;
+        }
+        for (int i = start; i < s.length(); i++) {
+            li.add(s.substring(start, i + 1));
+            rec(s, i + 1, li);
+            li.remove(li.size() - 1);
+        }
+    }
+
+    public List<List<String>> partition(String s) {
+        rec(s, 0, new ArrayList<>());
+        List<List<String>> l = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            if (palindrome(list.get(i))) {
+                l.add(new ArrayList<>(list.get(i)));
+            }
+        }
+        return l;
+    }
+}

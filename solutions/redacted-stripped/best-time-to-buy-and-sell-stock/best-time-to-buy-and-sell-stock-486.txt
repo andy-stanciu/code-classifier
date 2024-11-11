@@ -1,0 +1,35 @@
+class Solution {
+
+    private static int[][] memo;
+
+    public int maxProfit(int[] prices) {
+        init(prices);
+        return run(prices, 0, 0);
+    }
+
+    private void init(int[] prices) {
+        memo = new int[prices.length][2];
+        for (int[] row : memo) {
+            Arrays.fill(row, -1);
+        }
+    }
+
+    private int run(int[] prices, int idx, int taken) {
+        if (idx == prices.length && taken == 1) {
+            return Short.MIN_VALUE;
+        }
+        if (idx == prices.length) {
+            return 0;
+        }
+        if (memo[idx][taken] != -1) {
+            return memo[idx][taken];
+        }
+        if (taken == 1) {
+            memo[idx][taken] = Math.max(run(prices, idx + 1, 1), prices[idx]);
+            return memo[idx][taken];
+        } else {
+            memo[idx][taken] = Math.max(run(prices, idx + 1, 0), run(prices, idx + 1, 1) - prices[idx]);
+            return memo[idx][taken];
+        }
+    }
+}

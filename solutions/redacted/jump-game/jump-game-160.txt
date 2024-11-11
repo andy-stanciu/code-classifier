@@ -1,0 +1,35 @@
+class Solution {
+
+    public boolean method1(int[] param1) {
+        if (param1.length <= 1) {
+            return true;
+        }
+        Map<Integer, Boolean> canReachMap = new HashMap<>();
+        canReach(param1, 0, param1.length - 1, canReachMap);
+        return canReachMap.get(0);
+    }
+
+    private boolean canReach(int[] param1, int index, int lastIndex, Map<Integer, Boolean> canReachMap) {
+        if (index < 0 || index > lastIndex) {
+            return false;
+        }
+        if (canReachMap.containsKey(index)) {
+            return canReachMap.get(index);
+        }
+        if (index == lastIndex) {
+            canReachMap.put(index, true);
+            return true;
+        }
+        if (index + param1[index] == lastIndex) {
+            canReachMap.put(index, true);
+            return true;
+        }
+        boolean result = false;
+        int furthestIndex = Math.min(lastIndex, index + param1[index]);
+        for (int i = index + 1; i <= furthestIndex; ++i) {
+            result = result || canReach(param1, i, lastIndex, canReachMap);
+        }
+        canReachMap.put(index, result);
+        return result;
+    }
+}

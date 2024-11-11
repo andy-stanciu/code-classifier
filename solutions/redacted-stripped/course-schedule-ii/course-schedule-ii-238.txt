@@ -1,0 +1,51 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<Integer>[] adjList = createAdjList(param1, prerequisites);
+        int[] stack = new int[param1];
+        boolean[] vis = new boolean[param1];
+        int[] curr = new int[1];
+        for (int i = 0; i < param1; ++i) {
+            if (!vis[i]) {
+                if (!dfs(i, stack, curr, vis, adjList, new boolean[param1]))
+                    return new int[0];
+            }
+        }
+        return reverse(stack);
+    }
+
+    private int[] reverse(int[] arr) {
+        for (int i = 0, j = arr.length - 1; i < j; ++i, --j) {
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+        return arr;
+    }
+
+    private boolean dfs(int node, int[] stack, int[] curr, boolean[] vis, List<Integer>[] adjList, boolean[] cycle) {
+        vis[node] = true;
+        cycle[node] = true;
+        for (int neighbor : adjList[node]) {
+            if (cycle[neighbor])
+                return false;
+            if (!vis[neighbor]) {
+                if (!dfs(neighbor, stack, curr, vis, adjList, cycle))
+                    return false;
+            }
+        }
+        cycle[node] = false;
+        stack[curr[0]] = node;
+        curr[0]++;
+        return true;
+    }
+
+    private List<Integer>[] createAdjList(int n, int[][] arr) {
+        List<Integer>[] adjList = new List[n];
+        for (int i = 0; i < n; ++i) adjList[i] = new ArrayList<>();
+        for (int[] a : arr) {
+            adjList[a[1]].add(a[0]);
+        }
+        return adjList;
+    }
+}

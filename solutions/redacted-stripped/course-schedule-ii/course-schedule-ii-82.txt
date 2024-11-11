@@ -1,0 +1,47 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<Integer>[] orgPres = organizePrerequisites(param1, prerequisites);
+        List<Integer> var1 = new ArrayList<>();
+        boolean[] var2 = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!dfs(i, orgPres, new boolean[param1], var2, var1))
+                return new int[0];
+        }
+        int[] res = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            res[i] = var1.get(i);
+        }
+        return res;
+    }
+
+    private boolean dfs(int param2, List<Integer>[] orgPres, boolean[] visited, boolean[] var2, List<Integer> var1) {
+        if (var2[param2])
+            return true;
+        if (orgPres[param2] == null || var2[param2]) {
+            var2[param2] = true;
+            var1.add(param2);
+            return true;
+        }
+        if (visited[param2])
+            return false;
+        visited[param2] = true;
+        for (int pre : orgPres[param2]) {
+            if (!dfs(pre, orgPres, visited, var2, var1))
+                return false;
+        }
+        var2[param2] = true;
+        var1.add(param2);
+        return true;
+    }
+
+    private List[] organizePrerequisites(int n, int[][] prerequisites) {
+        List<Integer>[] res = new List[n];
+        for (int[] p : prerequisites) {
+            if (res[p[0]] == null)
+                res[p[0]] = new ArrayList<>();
+            res[p[0]].add(p[1]);
+        }
+        return res;
+    }
+}

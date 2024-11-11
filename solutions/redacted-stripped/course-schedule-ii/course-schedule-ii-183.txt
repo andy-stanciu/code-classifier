@@ -1,0 +1,89 @@
+class Solution {
+
+    class Vertex {
+
+        public int val;
+
+        public List<Vertex> neighbors;
+
+        public Vertex() {
+            val = 0;
+            neighbors = new ArrayList<Vertex>();
+        }
+
+        public Vertex(int _val) {
+            val = _val;
+            neighbors = new ArrayList<Vertex>();
+        }
+
+        public Vertex(int _val, ArrayList<Vertex> _neighbors) {
+            val = _val;
+            neighbors = _neighbors;
+        }
+    }
+
+    private Vertex[] instantiateGraph(int v, int[][] edges) {
+        Vertex[] vertices = new Vertex[v];
+        for (int i = 0; i != vertices.length; ++i) {
+            vertices[i] = new Vertex(i);
+        }
+        for (var e : edges) {
+            vertices[e[0]].neighbors.add(vertices[e[1]]);
+        }
+        return vertices;
+    }
+
+    public static void main(String[] args) {
+        int var1 = 2;
+        int[][] prerequisites = new int[][] { new int[] { 0, 1 }, new int[] { 1, 0 } };
+        var s = new Solution();
+        System.out.println(!s.cyclic(var1, s.instantiateGraph(var1, prerequisites)));
+    }
+
+    private boolean cyclic(int var1, Vertex[] vertices) {
+        boolean[] marked = new boolean[var1];
+        for (int i = 0; i != var1; ++i) {
+            if (!marked[i]) {
+                if (cyclicHelper(new boolean[var1], marked, vertices[i]))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean cyclicHelper(boolean[] visited, boolean[] marked, Vertex v) {
+        if (marked[v.val])
+            return false;
+        if (visited[v.val])
+            return true;
+        visited[v.val] = true;
+        for (var w : v.neighbors) {
+            if (cyclicHelper(visited, marked, w)) {
+                return true;
+            }
+        }
+        marked[v.val] = true;
+        visited[v.val] = false;
+        return false;
+    }
+
+    public int[] findOrder(int var1, int[][] prerequisites) {
+        var vertices = instantiateGraph(var1, prerequisites);
+        if (cyclic(var1, vertices))
+            return new int[0];
+        var list = new ArrayList<Integer>();
+        var visited = new boolean[var1];
+        for (var v : vertices) DFS(v, visited, list);
+        int[] array = new int[var1];
+        for (int i = 0; i != var1; ++i) array[i] = list.get(i);
+        return array;
+    }
+
+    private void DFS(Vertex v, boolean[] visited, ArrayList<Integer> postOrder) {
+        if (visited[v.val])
+            return;
+        visited[v.val] = true;
+        for (var w : v.neighbors) DFS(w, visited, postOrder);
+        postOrder.add(v.val);
+    }
+}

@@ -1,0 +1,48 @@
+class Solution {
+
+    HashSet<Integer> visited = new HashSet<>();
+
+    HashMap<Integer, List<Integer>> depMap;
+
+    int[] order;
+
+    int ind = 0;
+
+    int[] depCnt;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        depMap = new HashMap<>();
+        depCnt = new int[numCourses];
+        order = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            depMap.put(i, new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            depMap.get(prerequisites[i][1]).add(prerequisites[i][0]);
+            depCnt[prerequisites[i][0]]++;
+        }
+        for (int i = 0; i < numCourses; i++) {
+            findOrderItr(i);
+        }
+        if (visited.size() == numCourses) {
+            return order;
+        } else {
+            return new int[0];
+        }
+    }
+
+    public void findOrderItr(int course) {
+        if (visited.contains(course)) {
+            return;
+        }
+        if (depCnt[course] == 0) {
+            visited.add(course);
+            order[ind++] = course;
+            List<Integer> lst = depMap.get(course);
+            for (Integer i : lst) {
+                depCnt[i]--;
+                findOrderItr(i);
+            }
+        }
+    }
+}

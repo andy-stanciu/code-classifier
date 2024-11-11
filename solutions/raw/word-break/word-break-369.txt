@@ -1,0 +1,29 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        HashSet<String> set = new HashSet<>(wordDict);
+        int n = s.length();
+        int[][] dp = new int[n][n];
+        for (int i = 0; i < n; i++) Arrays.fill(dp[i], -1);
+        return check(s, 0, n - 1, set, dp);
+    }
+
+    private boolean check(String s, int start, int end, HashSet<String> set, int[][] dp) {
+        if (start > end)
+            return false;
+        if (dp[start][end] != -1)
+            return dp[start][end] == 1 ? true : false;
+        boolean ans = false;
+        if (set.contains(s.substring(start, end + 1))) {
+            dp[start][end] = 1;
+            return true;
+        } else {
+            for (int i = start; i < end; i++) {
+                ans = ans | (check(s, start, i, set, dp) & check(s, i + 1, end, set, dp));
+            }
+        }
+        dp[start][end] = (ans ? 1 : 0);
+        return ans;
+    }
+}
+//Upvote if helpful....

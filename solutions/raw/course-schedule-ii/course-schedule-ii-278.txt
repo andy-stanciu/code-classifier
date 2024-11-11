@@ -1,0 +1,49 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        ArrayList[] list = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            list[i] = new ArrayList<>();
+        }
+        for (int[] preQ : prerequisites) {
+            list[preQ[0]].add(preQ[1]);
+        }
+        int[] result = new int[numCourses];
+        ArrayList<Integer> res = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (!res.contains(i)) {
+                if (isCircle(res, list, i, new HashSet<>())) {
+                    return new int[0];
+                }
+            }
+        }
+        return res.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    public boolean isCircle(List<Integer> res, ArrayList[] list, int course, HashSet<Integer> set) {
+        if (set.contains(course)) {
+            return true;
+        }
+        if (list[course].size() == 0) {
+            if (!res.contains(course))
+                res.add(course);
+            return false;
+        }
+        set.add(course);
+        for (int i = 0; i < list[course].size(); ++i) {
+            if (isCircle(res, list, (int) list[course].get(i), set))
+                return true;
+        }
+        set.remove(course);
+        // remove from the list
+        list[course] = new ArrayList<>();
+        res.add(course);
+        return false;
+    }
+}
+// DFS and BFS
+// [[1,2],[0,1][2,1]] N = 2
+// 1 - 2
+// 0 - 1
+// 2 - 1
+// -- Circle

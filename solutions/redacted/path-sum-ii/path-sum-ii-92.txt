@@ -1,0 +1,53 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    private boolean isLeaf(TreeNode node) {
+        if (node == null) {
+            return true;
+        }
+        return node.left == null && node.right == null;
+    }
+
+    private void method1(TreeNode node, int param1, List<Integer> nodesSoFar, List<List<Integer>> result) {
+        if (node == null) {
+            return;
+        }
+        //preorder style
+        //make a choice
+        nodesSoFar.add(node.val);
+        if (isLeaf(node)) {
+            if (param1 - node.val == 0) {
+                result.add(new ArrayList<>(nodesSoFar));
+            }
+            nodesSoFar.remove(nodesSoFar.size() - 1);
+            return;
+        }
+        method1(node.left, param1 - node.val, nodesSoFar, result);
+        method1(node.right, param1 - node.val, nodesSoFar, result);
+        //once we are back from exploring left and right subtree, revert the choice
+        nodesSoFar.remove(nodesSoFar.size() - 1);
+    }
+
+    public List<List<Integer>> method2(TreeNode root, int param1) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        method1(root, param1, new ArrayList<>(), result);
+        return result;
+    }
+}

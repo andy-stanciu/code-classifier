@@ -1,0 +1,27 @@
+class Solution {
+
+    public boolean method1(String s, HashSet<String> set) {
+        boolean[] dp = new boolean[s.length()];
+        int l = 0;
+        while (l < s.length()) {
+            int k = l - 1;
+            if (set.contains(s.charAt(l)) || set.contains(s.substring(0, l + 1))) {
+                dp[l] = true;
+            } else {
+                while (k >= 0 && !(dp[k] && set.contains(s.substring(k + 1, l + 1)))) {
+                    k--;
+                }
+                if (k >= 0 && dp[k] && set.contains(s.substring(k + 1, l + 1))) {
+                    dp[l] = true;
+                }
+            }
+            l++;
+        }
+        return dp[s.length() - 1];
+    }
+
+    public boolean method2(String s, List<String> param1) {
+        HashSet<String> set = new HashSet<>(param1);
+        return method1(s, set);
+    }
+}

@@ -1,0 +1,34 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> res = new ArrayList<>();
+        dfs(s.toCharArray(), 0, new ArrayList<>(), res);
+        return res;
+    }
+
+    private void dfs(char[] s, int i, List<String> par, List<List<String>> res) {
+        if (i == s.length) {
+            res.add(new ArrayList<>(par));
+            return;
+        }
+        for (int j = i; j < s.length; j++) {
+            if (method1(s, i, j)) {
+                // public String(char[] c, int offset, int count)
+                // step forward
+                par.add(new String(s, i, j - i + 1));
+                dfs(s, j + 1, par, res);
+                // backtracking
+                par.remove(par.size() - 1);
+            }
+        }
+    }
+
+    // max length = 16 so isPalindrome costs limited resource
+    private boolean method1(char[] s, int i, int j) {
+        while (i < j && s[i] == s[j]) {
+            i++;
+            j--;
+        }
+        return i >= j;
+    }
+}

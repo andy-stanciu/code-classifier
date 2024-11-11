@@ -1,0 +1,52 @@
+class Solution {
+
+    boolean dfs(int i, int[] vis, Stack<Integer> st, List<List<Integer>> li, int[] pathVis) {
+        vis[i] = 1;
+        pathVis[i] = 1;
+        for (int it : li.get(i)) {
+            if (vis[it] == 0) {
+                if (dfs(it, vis, st, li, pathVis))
+                    return true;
+            } else if (pathVis[it] == 1) {
+                return true;
+            }
+        }
+        st.push(i);
+        pathVis[i] = 0;
+        return false;
+    }
+
+    public int[] findOrder(int param1, int[][] pre) {
+        List<List<Integer>> li = new ArrayList<>();
+        int v = param1;
+        if (v == 1)
+            return new int[] { 0 };
+        for (int i = 0; i < v; i++) {
+            li.add(new ArrayList<>());
+        }
+        int n = pre.length;
+        for (int i = 0; i < n; i++) {
+            int a = pre[i][0];
+            int b = pre[i][1];
+            if (!li.get(b).contains(a)) {
+                li.get(b).add(a);
+            }
+        }
+        int[] vis = new int[v];
+        int[] pathVis = new int[v];
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < v; i++) {
+            if (vis[i] == 0) {
+                if (dfs(i, vis, st, li, pathVis) == true) {
+                    return new int[] {};
+                }
+            }
+        }
+        int[] ans = new int[v];
+        int k = 0;
+        while (!st.isEmpty()) {
+            ans[k++] = st.pop();
+        }
+        return ans;
+    }
+}

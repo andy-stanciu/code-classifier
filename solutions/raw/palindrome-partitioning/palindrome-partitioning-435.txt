@@ -1,0 +1,35 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        //Using recursion TC-O(n * 2^n), SC-O(n),n is length of string
+        List<List<String>> list = new ArrayList<>();
+        helperPartition(s, list, new ArrayList<>());
+        return list;
+    }
+
+    private void helperPartition(String unProcessed, List<List<String>> list, List<String> temp) {
+        if (unProcessed.isEmpty()) {
+            list.add(new ArrayList<>(temp));
+            return;
+        }
+        for (int i = 0; i < unProcessed.length(); i++) {
+            //iterate over string
+            //substring the leftpart of string and check for palindrome,substring has i+1 exclusive
+            String leftPart = unProcessed.substring(0, i + 1);
+            if (isPalindrome(leftPart)) {
+                temp.add(leftPart);
+                //send rest string in recursive
+                helperPartition(unProcessed.substring(i + 1), list, temp);
+                temp.remove(temp.size() - 1);
+            }
+        }
+    }
+
+    private boolean isPalindrome(String leftPart) {
+        StringBuilder sb = new StringBuilder(leftPart);
+        if (leftPart.equals(sb.reverse().toString())) {
+            return true;
+        }
+        return false;
+    }
+}

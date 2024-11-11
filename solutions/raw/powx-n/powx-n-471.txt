@@ -1,0 +1,71 @@
+class Solution {
+
+    public double myPow(double multiplier, long power) {
+        if (power == 0) {
+            return 1;
+        } else // Edge cases
+        // Seems to be faster (more consistent 0ms) without these edge cases
+        // else if(multiplier == 1) {
+        //     return 1;
+        // }else if(multiplier == -1) {
+        //     return (power == 0 || Math.abs(power) % 2 == 0) ? 1 : -1;
+        // }
+        // else if(power == Integer.MIN_VALUE) { // int is -2^31 -> 2^31 -1 so -(min_value) is arbitrary
+        // // Alternatively use a long for the power
+        //     return 0; // UNLESS x(multiplier) = 1, since x is between -100 and 100, there is no way for the accuracy to be enough
+        // }
+        if (power < 0) {
+            multiplier = (1 / multiplier);
+            power = -power;
+        }
+        // power = number of operations
+        // Main idea is we\'re multiplying the result by itself ALWAYS
+        // So 2^4 != 2*2*2*2 but 2*2 == 4 -> 4*4 = 16
+        // But with this we can only get powers of 2 (2,4,8,16,etc)
+        // To extend this, the second idea is using exponentiation rules
+        // x^a * x^b = x^(a+b)
+        // Every number can be expressed as a sum of powers of two.
+        // For example, 5 = 4+1. 7 = 8+4+2+1.
+        // Knowing this, we need to save the powers of the sums.
+        // For example, power of 5 needs to save power of 4 and power of 1.
+        // Time complexity is O(log2(n)) because every number N can be expressed with at the sum of most log2(n) powers of two
+        // To calculate the pow(), mark the power of powers of two that need to be set
+        // setbits[i] = 0 if not marked, setbits[i] = -1 if marked
+        // These will be replaced with the values
+        double[] setbits = new double[32];
+        // Save the highest bit, we will calculate to this power initially.
+        int highestSetBit = -1;
+        // 32 bits for the number of bits in an integer.
+        for (int i = 0; i < 32; i++) {
+            if (((power >> i) & 1) == 1) {
+                // check if this bit is set
+                setbits[i] = -1;
+                highestSetBit = i;
+            }
+        }
+        // No need to mark the highest set bit because we will calculate there initiially
+        setbits[highestSetBit] = 0;
+        // Result starts at multiplier instead of the usual 1.
+        // This is because highestSetBit is zero-indexed and starts at 0 not 1.
+        // So we lose 1 operation. (instead of i < One, it is i < Zero)
+        double result = multiplier;
+        for (int i = 0; i < highestSetBit; i++) {
+            if (setbits[i] < 0) {
+                // If this power needs to be saved, save it.
+                setbits[i] = result;
+                // The reason we cannot multiply immediately is because it would f up
+                // (imagine 2 is the multiplier)
+                // the 2^1, 2^2, 2^4, 2^8, 2^16, ...
+                // and it would jump randomly into 2^3, 2^6, 2^8, ...
+                // The result will get inflated
+            }
+            result *= result;
+        }
+        // Multiply the saved results
+        for (int i = 0; i < 32; i++) {
+            if (setbits[i] != 0)
+                result *= setbits[i];
+        }
+        return result;
+    }
+}

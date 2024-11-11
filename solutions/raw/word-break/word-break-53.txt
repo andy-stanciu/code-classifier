@@ -1,0 +1,30 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        HashSet<String> set = new HashSet<>(wordDict);
+        return wordBreakHelper(s, set, 0, new Boolean[s.length()]);
+    }
+
+    public boolean wordBreakHelper(String s, HashSet<String> set, int start, Boolean[] memo) {
+        //When start will be at last index and then call will be made which will make start equal to
+        //s.length(), so return true, as empty String can be segmented.
+        if (start == s.length()) {
+            return true;
+        }
+        //memo[start] contains if s.substring(start) can be segmented or not. If it does not contain null,
+        //then return memo[start].
+        if (memo[start] != null) {
+            return memo[start];
+        }
+        for (int end = start; end < s.length(); end++) {
+            //If set contains s.substring(start, end + 1) and s.substring(end + 1) can be segmented,
+            //then return true.
+            if (set.contains(s.substring(start, end + 1)) && wordBreakHelper(s, set, end + 1, memo)) {
+                memo[start] = true;
+                return true;
+            }
+        }
+        memo[start] = false;
+        return false;
+    }
+}

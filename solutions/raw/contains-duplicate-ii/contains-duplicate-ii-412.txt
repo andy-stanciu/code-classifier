@@ -1,0 +1,33 @@
+class Solution {
+
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        if (k == 0) {
+            return false;
+        }
+        int n = nums.length;
+        int left = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(nums[left], 1);
+        for (int right = 1; right < n; right++) {
+            if (updateFrequency(nums[right], map)) {
+                return true;
+            }
+            if (Math.abs(right - left) >= k) {
+                map.remove(nums[left]);
+                left++;
+            }
+        }
+        return false;
+    }
+
+    static boolean updateFrequency(int key, HashMap<Integer, Integer> freqMap) {
+        if (!freqMap.containsKey(key)) {
+            freqMap.put(key, 1);
+            return false;
+        } else {
+            int frequency = freqMap.get(key);
+            freqMap.put(key, frequency + 1);
+            return true;
+        }
+    }
+}

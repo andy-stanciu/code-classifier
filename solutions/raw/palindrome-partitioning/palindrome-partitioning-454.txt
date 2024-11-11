@@ -1,0 +1,39 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        // To store final list of list
+        List<List<String>> res = new ArrayList<>();
+        // to store list
+        List<String> path = new ArrayList<>();
+        func(0, s, path, res);
+        return res;
+    }
+
+    static void func(int index, String s, List<String> path, List<List<String>> res) {
+        // While index reach the string length then the one answer will be add to the list of   list
+        if (index == s.length()) {
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        // travase for 0 index to till the length of the array
+        for (int i = index; i < s.length(); i++) {
+            // check if palindrome or not if palindrome then do further process if not then do nothing
+            if (isPalindrome(s, index, i)) {
+                path.add(s.substring(index, i + 1));
+                // call recursion for the next index means starting from i+1
+                func(i + 1, s, path, res);
+                // lastly remove the path because we donot want the seperate string we need original string, so when we backtrack then we remove the length
+                path.remove(path.size() - 1);
+            }
+        }
+    }
+
+    // this if for check if palindrome or not
+    static boolean isPalindrome(String s, int start, int end) {
+        while (start <= end) {
+            if (s.charAt(start++) != s.charAt(end--))
+                return false;
+        }
+        return true;
+    }
+}

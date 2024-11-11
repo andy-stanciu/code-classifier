@@ -1,0 +1,29 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> adjList = new HashMap<>();
+        int[] indegree = new int[param1];
+        for (int[] arr : prerequisites) {
+            ++indegree[arr[0]];
+            adjList.computeIfAbsent(arr[1], l -> new ArrayList<>()).add(arr[0]);
+        }
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
+        for (int i = 0; i < indegree.length; ++i) {
+            if (indegree[i] == 0)
+                queue.offer(i);
+        }
+        List<Integer> ans = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            ans.add(node);
+            for (int n : adjList.computeIfAbsent(node, l -> new ArrayList<>())) {
+                --indegree[n];
+                if (indegree[n] == 0)
+                    queue.offer(n);
+            }
+        }
+        if (ans.size() < param1)
+            return new int[] {};
+        return ans.stream().mapToInt(Integer::intValue).toArray();
+    }
+}

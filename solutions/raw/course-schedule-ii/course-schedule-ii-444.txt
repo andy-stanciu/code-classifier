@@ -1,0 +1,37 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        if (numCourses <= 0)
+            return new int[0];
+        //Initialize result
+        int[] result = new int[numCourses];
+        //Initialize an adjacency map
+        Set<Integer>[] adjacencyMap = new HashSet[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            adjacencyMap[i] = new HashSet<>();
+        }
+        int[] inDegree = new int[numCourses];
+        for (int[] p : prerequisites) {
+            inDegree[p[0]]++;
+            adjacencyMap[p[1]].add(p[0]);
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < inDegree.length; i++) {
+            if (inDegree[i] == 0)
+                queue.add(i);
+        }
+        int courseCount = 0;
+        while (!queue.isEmpty()) {
+            int curCourse = queue.poll();
+            result[courseCount] = curCourse;
+            courseCount++;
+            Set<Integer> next = adjacencyMap[curCourse];
+            for (int n : next) {
+                inDegree[n]--;
+                if (inDegree[n] == 0)
+                    queue.add(n);
+            }
+        }
+        return courseCount == numCourses ? result : new int[0];
+    }
+}

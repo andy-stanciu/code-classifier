@@ -1,0 +1,32 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        // Create a HashSet for faster lookup
+        HashSet<String> hs = new HashSet<>(wordDict);
+        char[] c = s.toCharArray();
+        Boolean[] memo = new Boolean[c.length];
+        return solve(c, hs, 0, memo);
+    }
+
+    private boolean solve(char[] c, HashSet<String> hs, int index, Boolean[] memo) {
+        if (index == c.length) {
+            return true;
+        }
+        if (memo[index] != null) {
+            return memo[index];
+        }
+        String word = "";
+        for (int i = index; i < c.length; i++) {
+            //n
+            word += c[i];
+            if (hs.contains(word)) {
+                if (solve(c, hs, i + 1, memo)) {
+                    memo[index] = true;
+                    return true;
+                }
+            }
+        }
+        memo[index] = false;
+        return false;
+    }
+}

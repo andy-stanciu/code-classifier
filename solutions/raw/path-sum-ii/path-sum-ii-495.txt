@@ -1,0 +1,35 @@
+class Solution {
+
+    List<List<Integer>> answers = new ArrayList<>();
+
+    int targetSum = 0;
+
+    private boolean isLeaf(TreeNode node) {
+        return node.left == null && node.right == null;
+    }
+
+    private void dfs(TreeNode node, List<Integer> currPath, int currSum) {
+        if (node == null) {
+            return;
+        }
+        int nextSum = node.val + currSum;
+        List<Integer> nextPath = new ArrayList<>(currPath);
+        nextPath.add(node.val);
+        if (isLeaf(node)) {
+            if (nextSum == targetSum) {
+                answers.add(nextPath);
+            }
+        }
+        dfs(node.left, nextPath, nextSum);
+        dfs(node.right, nextPath, nextSum);
+    }
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        if (root == null) {
+            return new ArrayList<>();
+        }
+        this.targetSum = targetSum;
+        dfs(root, new ArrayList<>(), 0);
+        return answers;
+    }
+}

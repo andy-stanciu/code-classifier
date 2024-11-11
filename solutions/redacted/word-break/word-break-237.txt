@@ -1,0 +1,40 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        HashSet<String> set = new HashSet<>();
+        int n = s.length();
+        int[][] dp = new int[n + 1][n + 1];
+        for (int[] row : dp) Arrays.fill(row, -1);
+        for (String i : param1) set.add(i);
+        return helper(s, 0, 0, set, dp);
+    }
+
+    public boolean helper(String s, int si, int ei, HashSet<String> set, int[][] dp) {
+        if (ei == s.length() - 1) {
+            if (set.contains(s.substring(si, ei + 1)))
+                return true;
+            else
+                return false;
+        }
+        if (dp[si][ei] != -1) {
+            if (dp[si][ei] == 0)
+                return false;
+            else
+                return true;
+        }
+        //not take
+        if (helper(s, si, ei + 1, set, dp)) {
+            dp[si][ei] = 1;
+            return true;
+        }
+        //take if possible
+        if (set.contains(s.substring(si, ei + 1))) {
+            if (helper(s, ei + 1, ei + 1, set, dp)) {
+                dp[si][ei] = 1;
+                return true;
+            }
+        }
+        dp[si][ei] = 0;
+        return false;
+    }
+}

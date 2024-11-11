@@ -1,0 +1,59 @@
+class Solution {
+
+    public class Edge {
+
+        int src;
+
+        int dest;
+
+        Edge(int src, int dest) {
+            this.src = src;
+            this.dest = dest;
+        }
+    }
+
+    // To Find the Indegree for BFS
+    public void calInDegree(ArrayList<Edge>[] graph, int[] indeg) {
+        for (int i = 0; i < graph.length; i++) {
+            for (int j = 0; j < graph[i].size(); j++) {
+                Edge e = graph[i].get(j);
+                indeg[e.dest]++;
+            }
+        }
+    }
+
+    public int[] findOrder(int num, int[][] pr) {
+        //Creating Graph
+        ArrayList<Edge>[] graph = new ArrayList[num];
+        for (int i = 0; i < num; i++) graph[i] = new ArrayList<>();
+        for (int i = 0; i < pr.length; i++) graph[pr[i][0]].add(new Edge(pr[i][0], pr[i][1]));
+        int[] indeg = new int[graph.length];
+        Queue<Integer> q = new LinkedList<>();
+        ArrayList<Integer> order = new ArrayList<>();
+        //Finding Indegree
+        calInDegree(graph, indeg);
+        for (int i = 0; i < indeg.length; i++) {
+            if (indeg[i] == 0)
+                q.add(i);
+        }
+        //Simple BFS
+        while (!q.isEmpty()) {
+            int curr = q.remove();
+            order.add(curr);
+            for (int i = 0; i < graph[curr].size(); i++) {
+                Edge e = graph[curr].get(i);
+                indeg[e.dest]--;
+                if (indeg[e.dest] == 0)
+                    q.add(e.dest);
+            }
+        }
+        //Handles Edge case of cycle.
+        if (order.size() != num)
+            order.clear();
+        //Reversing the order.
+        Collections.reverse(order);
+        int[] ans = new int[order.size()];
+        for (int i = 0; i < order.size(); i++) ans[i] = order.get(i);
+        return ans;
+    }
+}

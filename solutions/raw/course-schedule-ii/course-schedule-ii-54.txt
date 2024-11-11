@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        boolean[] inRecursion = new boolean[numCourses];
+        boolean[] visited = new boolean[numCourses];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] pre : prerequisites) {
+            adj.get(pre[1]).add(pre[0]);
+        }
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i] && topoSort(adj, inRecursion, visited, stack, i)) {
+                return new int[0];
+            }
+        }
+        int[] courseOrder = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            courseOrder[i] = stack.pop();
+        }
+        return courseOrder;
+    }
+
+    private boolean topoSort(List<List<Integer>> adj, boolean[] inRecursion, boolean[] visited, Stack<Integer> stack, int node) {
+        if (inRecursion[node]) {
+            return true;
+        }
+        if (visited[node]) {
+            return false;
+        }
+        inRecursion[node] = true;
+        visited[node] = true;
+        for (int neighbour : adj.get(node)) {
+            if (topoSort(adj, inRecursion, visited, stack, neighbour)) {
+                return true;
+            }
+        }
+        stack.push(node);
+        inRecursion[node] = false;
+        return false;
+    }
+}

@@ -1,0 +1,42 @@
+class Solution {
+
+    private List<List<String>> answer;
+
+    private boolean[][] memo;
+
+    public List<List<String>> partition(String s) {
+        memo = new boolean[s.length()][s.length()];
+        answer = new ArrayList<>();
+        findPartitions(s, 0, new ArrayList<>());
+        return answer;
+    }
+
+    private void findPartitions(String s, int startIdx, List<String> curr) {
+        if (startIdx == s.length()) {
+            answer.add(new ArrayList<>(curr));
+            return;
+        }
+        for (int i = startIdx; i < s.length(); i++) {
+            if (method1(s, startIdx, i)) {
+                curr.add(s.substring(startIdx, i + 1));
+                findPartitions(s, i + 1, curr);
+                curr.remove(curr.size() - 1);
+            }
+        }
+    }
+
+    private boolean method1(String s, int left, int right) {
+        if (left >= right) {
+            return true;
+        }
+        if (memo[left][right]) {
+            return true;
+        }
+        if (s.charAt(left) != s.charAt(right)) {
+            return false;
+        }
+        boolean isValid = method1(s, left + 1, right - 1);
+        memo[left][right] = isValid;
+        return isValid;
+    }
+}

@@ -1,0 +1,41 @@
+class Solution {
+
+    Boolean[] dpMemoization;
+
+    HashSet<String> wordDictionary;
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        if (s == null || s.length() == 0 || wordDict == null || wordDict.size() == 0) {
+            return false;
+        }
+        dpMemoization = new Boolean[s.length()];
+        wordDictionary = new HashSet<>();
+        wordDictionary.addAll(wordDict);
+        wordBreakUsingDpMemoization(s, 0);
+        return dpMemoization[0];
+    }
+
+    private void wordBreakUsingDpMemoization(String s, int index) {
+        if (index == s.length()) {
+            return;
+        }
+        if (dpMemoization[index] != null) {
+            return;
+        }
+        for (int i = index; i < s.length(); i++) {
+            String subString = s.substring(index, i + 1);
+            if (wordDictionary.contains(subString)) {
+                if (i == s.length() - 1) {
+                    dpMemoization[index] = true;
+                    return;
+                }
+                wordBreakUsingDpMemoization(s, i + 1);
+                if (dpMemoization[i + 1]) {
+                    dpMemoization[index] = true;
+                    return;
+                }
+            }
+        }
+        dpMemoization[index] = false;
+    }
+}

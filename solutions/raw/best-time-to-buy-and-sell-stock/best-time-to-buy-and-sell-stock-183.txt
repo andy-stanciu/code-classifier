@@ -1,0 +1,57 @@
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        //return maxProfit(prices, 0, 0, 0, new Integer[prices.length][2][2]);
+        var n = prices.length;
+        // 2d dp
+        //         var noStock = new int[n];
+        //         var haveStock = new int[n];
+        //         var justSold = new int[n];
+        //         noStock[0] = 0;
+        //         haveStock[0] = -prices[0];
+        //         justSold[0] = Integer.MIN_VALUE;
+        //         for (int day = 1; day < n; day++) {
+        //             noStock[day] = Math.max(noStock[day - 1], justSold[day - 1]);
+        //             haveStock[day] = Math.max(haveStock[day - 1], noStock[day - 1] - prices[day]);
+        //             justSold[day] = haveStock[day - 1] + prices[day];
+        //         }
+        //         return Math.max(justSold[n - 1], noStock[n - 1]);
+        // 0d dp
+        var noStockYesterday = 0;
+        var noStockToday = 0;
+        var hadStockYesterday = -prices[0];
+        var haveStockToday = 0;
+        var justSoldYesterday = Integer.MIN_VALUE;
+        var justSoldToday = 0;
+        for (int day = 1; day < n; day++) {
+            noStockToday = Math.max(noStockYesterday, justSoldYesterday);
+            haveStockToday = Math.max(hadStockYesterday, noStockYesterday - prices[day]);
+            justSoldToday = hadStockYesterday + prices[day];
+            noStockYesterday = noStockToday;
+            hadStockYesterday = haveStockToday;
+            justSoldYesterday = justSoldToday;
+        }
+        return Math.max(justSoldToday, noStockToday);
+    }
+
+    private int maxProfit(int[] prices, int day, int isCooldown, int haveStock, Integer[][][] memo) {
+        if (day == prices.length) {
+            return 0;
+        }
+        if (memo[day][haveStock][isCooldown] != null) {
+            return memo[day][haveStock][isCooldown];
+        }
+        var doNothingDay = maxProfit(prices, day + 1, 0, haveStock, memo);
+        var operationDay = 0;
+        if (haveStock == 1) {
+            // sell
+            operationDay = prices[day] + maxProfit(prices, day + 1, 1, 0, memo);
+        } else {
+            // buy
+            if (isCooldown == 0) {
+                operationDay = maxProfit(prices, day + 1, 0, 1, memo) - prices[day];
+            }
+        }
+        return memo[day][haveStock][isCooldown] = Math.max(doNothingDay, operationDay);
+    }
+}

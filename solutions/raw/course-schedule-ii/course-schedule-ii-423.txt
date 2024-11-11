@@ -1,0 +1,60 @@
+class Solution {
+
+    //simulating stack with array
+    int insertIndex = 0;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        //When we have a dependency graph question, if there is any component of the graph in which it is impossible to visit all the nodes, that means the component is cyclic. I.e there is no node that has no dependency/prerequisite. So if that\'s true, every course depends on some other course. No entry point. WIll guaranteed produce cycle. so if that\'s true, immediately return -1
+        //but we will be checking for cycles while the main algorithm is running:
+        //TOPOLOGICAL SORT DFS
+        //Basically, let\'s assume we have some way to traverse the graph already (i.e adjacency list already made). This adjacency list will be structured such that a node B points to Node A if Node B is a prerequisite for Node A. So prerequisite points to the course it is a prerequisite FOR
+        //now how topological sort works is that it starts exploring at any arbitrary non visited node in a non visited section of the graph
+        //it does a dfs along all its neighbors recursively
+        //once all of the neighbors of a particular node are discovered, then the node is added to a topological ordering stack. Then the algorithm backtracks of course.
+        //once the dfs is complete, a subsection of the graph would be fully explored
+        //It can be a subsection for one of two reasons:
+        //1. it is a disconnected component from the other parts of the graph
+        //2. We started a dfs at an arbitrary node which had prerequisite nodes, which were not reachable from the arbitrary node we chose to dfs on (becasue of the way our adjList/graph is structured. A node M points to all the nodes that have Node M as a prerequisite). So no course node can possibly lead back to a node that is a prerequisite to the arbitrary course node we started our DFS on. Otherwise that would be a cycle, which would invalidate the whole problem as graph must be asyclic.
+        //anyway, then we find some other arbitrary completely unvisited node to start that same dfs process above, and keep adding to the stack.
+        //at the end, we reverse all the element orders by popping all elements from stack into an array. Keep in mind that while doing all of that, if we find a cycle, quit immediately.
+        //Also note, for the arbitrary part, we have to visit every single course from 0 to numCourses-1 and see if it has been fully visited or not. This is because we want to discover all disconnected components or "islands" of the graph.
+        //you may be wondering about picking an arbitrary node to start a dfs.
+        //"What if that arbitrary node has a prerequisite we aren\'t considering before starting a dfs. Shoudln\'t we look for nodes without a prerequisite first and start dfs from there?\'"
+        //well that would would but not needed. You see, when we dfs a particular node N with existing prerequisites, that node and the whole subsection it leads to will be added in the stack first. Then if we later dfs a subsection of a graph from a node that actually served as a prerequisite of the node N from before, it would be added into the stack later. Now considering that the order of the stack at the end is reversed, the final ordering of the topological sort will have node N and its subgraph placed AFTER the other subgraph which was the prerequisite for node N\'s subgraph, preserving a valid order.
+        //0 = unvisited, 1 = current processing path, 2 = completely visited and leads to node with valid path/subsection with no cycles
+        byte[] visitingOrVisited = new byte[numCourses];
+        List<Integer>[] adjList = new ArrayList[numCourses];
+        int[] finalAnswerTopologicalOrder = new int[numCourses];
+        insertIndex = numCourses - 1;
+        buildAdjList(adjList, prerequisites, numCourses);
+        for (int i = 0; i < numCourses; i++) {
+            if (visitingOrVisited[i] == 0)
+                if (!dfs(i, visitingOrVisited, adjList, finalAnswerTopologicalOrder))
+                    return new int[0];
+        }
+        return finalAnswerTopologicalOrder;
+    }
+
+    public void buildAdjList(List<Integer>[] adjList, int[][] prerequisites, int numCourses) {
+        //adjlist[i] contains a list of courses that i is a prerequisite for
+        for (int i = 0; i < numCourses; i++) adjList[i] = new ArrayList<>();
+        for (int[] pre : prerequisites) adjList[pre[1]].add(pre[0]);
+    }
+
+    public boolean dfs(int curr, byte[] visitingOrVisited, List<Integer>[] adjList, int[] finalAnswerTopologicalOrder) {
+        if (visitingOrVisited[curr] == 2 || insertIndex < 0)
+            return true;
+        if (visitingOrVisited[curr] == 1)
+            return false;
+        List<Integer> followingCourses = adjList[curr];
+        visitingOrVisited[curr] = 1;
+        for (int neighbor : followingCourses) {
+            if (!dfs(neighbor, visitingOrVisited, adjList, finalAnswerTopologicalOrder))
+                return false;
+        }
+        visitingOrVisited[curr] = 2;
+        finalAnswerTopologicalOrder[insertIndex] = curr;
+        insertIndex--;
+        return true;
+    }
+}

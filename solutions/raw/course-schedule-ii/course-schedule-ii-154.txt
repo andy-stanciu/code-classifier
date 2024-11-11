@@ -1,0 +1,87 @@
+class Solution {
+
+    static class Node {
+
+        int value;
+
+        int inDegree = 0;
+
+        Set<Node> adjacent = new HashSet<>();
+
+        Node(int value) {
+            this.value = value;
+        }
+    }
+
+    static class Graph {
+
+        private final int numVertices;
+
+        private HashMap<Integer, Node> nodes = new HashMap<>();
+
+        Graph(int numVertices) {
+            this.numVertices = numVertices;
+        }
+
+        // adds isolated node to the graph
+        void addNode(int value) {
+            nodes.put(value, new Node(value));
+        }
+
+        // links two nodes in a graph
+        void addEdge(int from, int to) {
+            Node fromNode = nodes.computeIfAbsent(from, k -> new Node(from));
+            Node toNode = nodes.computeIfAbsent(to, k -> new Node(to));
+            fromNode.adjacent.add(toNode);
+        }
+
+        // returns nodes with no inbound edges
+        List<Node> getStartNodes() {
+            // TODO: if !build throw Error
+            return nodes.values().stream().filter(node -> node.inDegree == 0).collect(Collectors.toList());
+        }
+
+        // finilise graph building after feeding data to it
+        void build() {
+            // compliment with isolated nodes up to `numVertices`
+            if (this.nodes.size() < numVertices) {
+                for (int newNode = 0; newNode < numVertices; newNode++) {
+                    if (nodes.get(newNode) == null) {
+                        addNode(newNode);
+                    }
+                }
+            }
+            // compute in-degree per node
+            for (Map.Entry<Integer, Node> entry : nodes.entrySet()) {
+                Node node = entry.getValue();
+                for (Node adjacent : node.adjacent) {
+                    adjacent.inDegree++;
+                }
+            }
+        }
+    }
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        Graph graph = new Graph(numCourses);
+        for (int[] prerequisite : prerequisites) {
+            graph.addEdge(prerequisite[1], prerequisite[0]);
+        }
+        graph.build();
+        LinkedList<Node> queue = new LinkedList<>();
+        queue.addAll(graph.getStartNodes());
+        ArrayList<Integer> result = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            Node n = queue.poll();
+            result.add(n.value);
+            for (Node adj : n.adjacent) {
+                if (--adj.inDegree == 0) {
+                    queue.add(adj);
+                }
+            }
+        }
+        if (result.size() != numCourses) {
+            return new int[] {};
+        }
+        return result.stream().mapToInt(Integer::intValue).toArray();
+    }
+}

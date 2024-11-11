@@ -1,0 +1,41 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        this.wordDict = wordDict;
+        this.s = s;
+        this.dp = new int[s.length()];
+        return canBreak(0);
+    }
+
+    List<String> wordDict;
+
+    String s;
+
+    int[] dp;
+
+    private boolean canBreak(int start) {
+        if (start == s.length())
+            return true;
+        // check have we already calculated yet
+        if (dp[start] != 0)
+            return dp[start] == 1;
+        // try to match all word form dict
+        for (int i = 0; i < wordDict.size(); i++) {
+            String currDicWord = wordDict.get(i);
+            int end = start + currDicWord.length();
+            // out of bound
+            if (end > s.length())
+                continue;
+            String currWord = s.substring(start, end);
+            if (currDicWord.equals(currWord)) {
+                if (canBreak(end)) {
+                    dp[start] = 1;
+                    return true;
+                }
+            }
+        }
+        // memorize the result as false
+        dp[start] = -1;
+        return false;
+    }
+}

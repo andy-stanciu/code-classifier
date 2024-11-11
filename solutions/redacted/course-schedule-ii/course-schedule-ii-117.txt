@@ -1,0 +1,44 @@
+class Solution {
+
+    public boolean dfs(ArrayList<ArrayList<Integer>> adj, boolean[] visited, boolean[] path, Deque<Integer> st, int source) {
+        visited[source] = true;
+        path[source] = true;
+        for (int v : adj.get(source)) {
+            if (path[v])
+                return true;
+            if (!visited[v] && dfs(adj, visited, path, st, v))
+                return true;
+        }
+        path[source] = false;
+        st.push(source);
+        return false;
+    }
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        Deque<Integer> st = new ArrayDeque<>();
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        int n = prerequisites.length;
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < n; i++) {
+            int u = prerequisites[i][1];
+            int v = prerequisites[i][0];
+            adj.get(u).add(v);
+        }
+        boolean[] visited = new boolean[param1];
+        boolean[] path = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                if (dfs(adj, visited, path, st, i))
+                    return new int[0];
+            }
+        }
+        int m = st.size(), i = 0;
+        int[] ans = new int[m];
+        while (!st.isEmpty()) {
+            ans[i++] = st.pop();
+        }
+        return ans;
+    }
+}

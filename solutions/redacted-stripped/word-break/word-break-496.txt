@@ -1,0 +1,33 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        Set<String> dic = new HashSet<>();
+        for (String str : param1) {
+            dic.add(str);
+        }
+        return solve(0, s, dic, "");
+    }
+
+    Map<String, Boolean> memo = new HashMap<>();
+
+    private boolean solve(int idx, String s, Set<String> dic, String cur) {
+        String key = cur + idx;
+        if (memo.containsKey(key))
+            return memo.get(key);
+        if (idx == s.length())
+            return false;
+        cur += s.charAt(idx);
+        if (dic.contains(cur)) {
+            if (idx + 1 == s.length())
+                return true;
+            boolean var1 = solve(idx + 1, s, dic, "");
+            boolean var2 = solve(idx + 1, s, dic, cur);
+            boolean res = var1 | var2;
+            memo.put(key, res);
+            return res;
+        }
+        boolean res = solve(idx + 1, s, dic, cur);
+        memo.put(key, res);
+        return res;
+    }
+}

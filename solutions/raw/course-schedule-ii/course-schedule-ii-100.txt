@@ -1,0 +1,52 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // Create an adjacency list
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        // Array to keep track of in-degrees (number of prerequisites) for each course
+        int[] inDegree = new int[numCourses];
+        // Build the graph
+        for (int[] prerequisite : prerequisites) {
+            int course = prerequisite[0];
+            int pre = prerequisite[1];
+            adjList.get(pre).add(course);
+            inDegree[course]++;
+        }
+        // Queue to store courses with no prerequisites (in-degree 0)
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        // List to store the course order
+        List<Integer> order = new ArrayList<>();
+        // Process the courses in the queue
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            order.add(current);
+            // Decrease the in-degree of the adjacent courses
+            for (int neighbor : adjList.get(current)) {
+                inDegree[neighbor]--;
+                // If in-degree becomes 0, add it to the queue
+                if (inDegree[neighbor] == 0) {
+                    queue.add(neighbor);
+                }
+            }
+        }
+        // If the size of the order list is equal to numCourses, return the list
+        if (order.size() == numCourses) {
+            int[] result = new int[numCourses];
+            for (int i = 0; i < numCourses; i++) {
+                result[i] = order.get(i);
+            }
+            return result;
+        } else {
+            // If it\'s impossible to finish all courses, return an empty array
+            return new int[0];
+        }
+    }
+}

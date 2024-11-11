@@ -1,0 +1,52 @@
+class Solution {
+
+    // track the added visited node
+    int index = 0;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // try to use dfs
+        int[] ans = new int[numCourses];
+        index = numCourses - 1;
+        // build the graph
+        ArrayList<Integer>[] g = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            g[i] = new ArrayList<>();
+        }
+        for (int[] e : prerequisites) {
+            g[e[1]].add(e[0]);
+        }
+        // color = 0 indicates that the vertex has not been visited
+        // color = 1 indicates that the vertex has been on path
+        // color = 2 indicates that the vertex has been visited
+        int[] color = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            // detects a cycle exists
+            if (color[i] == 0 && !acyclic(g, i, color, ans)) {
+                return new int[0];
+            }
+        }
+        return ans;
+    }
+
+    boolean acyclic(ArrayList<Integer>[] g, int i, int[] color, int[] ans) {
+        if (color[i] == 1) {
+            // if on path already, means a cycle
+            return false;
+        }
+        if (color[i] == 2) {
+            // if visited already, means no need, such as 1->3, 2->3
+            return true;
+        }
+        // set i on path, then dfs
+        color[i] = 1;
+        for (int j : g[i]) {
+            if (!acyclic(g, j, color, ans)) {
+                return false;
+            }
+        }
+        // set i visited.
+        color[i] = 2;
+        ans[index--] = i;
+        return true;
+    }
+}

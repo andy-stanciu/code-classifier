@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean isPalindrome(String str) {
+        int left = 0;
+        int right = str.length() - 1;
+        while (left < right) {
+            if (str.charAt(left) != str.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+
+    public void solve(String ip, List<String> op, List<List<String>> ans) {
+        if (ip.length() == 0) {
+            ans.add(new ArrayList<>(op));
+            return;
+        }
+        for (int i = 1; i <= ip.length(); i++) {
+            String prefix = ip.substring(0, i);
+            if (isPalindrome(prefix)) {
+                op.add(prefix);
+                solve(ip.substring(i), op, ans);
+                // backtrack
+                op.remove(op.size() - 1);
+            }
+        }
+    }
+
+    public List<List<String>> partition(String s) {
+        List<String> op = new ArrayList<>();
+        List<List<String>> ans = new ArrayList<>();
+        solve(s, op, ans);
+        return ans;
+    }
+}

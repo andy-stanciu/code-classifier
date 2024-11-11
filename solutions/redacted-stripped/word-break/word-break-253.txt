@@ -1,0 +1,39 @@
+class Solution {
+
+    int[] dp;
+
+    int n;
+
+    private boolean isMatch(char[] w, String v, int i, int m) {
+        if (m > n - i)
+            return false;
+        for (int j = 0; j < m; j++) {
+            if (v.charAt(j) != w[j + i])
+                return false;
+        }
+        return true;
+    }
+
+    private boolean helper(int i, char[] w, List<String> param1) {
+        if (i == w.length)
+            return true;
+        if (dp[i] != -1)
+            return (dp[i] == 1);
+        boolean ret = false;
+        for (String var1 : param1) {
+            int m = var1.length();
+            if (isMatch(w, var1, i, m)) {
+                ret |= helper(i + m, w, param1);
+            }
+        }
+        dp[i] = (ret) ? 1 : 0;
+        return ret;
+    }
+
+    public boolean method1(String s, List<String> param1) {
+        n = s.length();
+        dp = new int[n];
+        Arrays.fill(dp, -1);
+        return helper(0, s.toCharArray(), param1);
+    }
+}

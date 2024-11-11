@@ -1,0 +1,46 @@
+class Solution {
+
+    public int[] findOrder(int n, int[][] prerequisites) {
+        List<List<Integer>> g = new ArrayList(n);
+        //indegree array for DAG
+        int[] id = new int[n];
+        //initialiaziton
+        for (int i = 0; i < n; i++) {
+            g.add(i, new ArrayList<Integer>());
+            id[i] = 0;
+        }
+        // graph construction
+        for (int[] e : prerequisites) {
+            g.get(e[1]).add(e[0]);
+            id[e[0]]++;
+        }
+        System.out.println(g);
+        // LL in java is FIFO Queue for BFS. Add node with 0 indegreee. Remove it and reduce
+        // its adj nodes indegree. If after reduction, we get new node with 0 indegree, push it
+        // queue.
+        LinkedList<Integer> q = new LinkedList<Integer>();
+        for (int i = 0; i < n; i++) {
+            if (id[i] == 0) {
+                q.add(i);
+            }
+        }
+        List<Integer> ans = new ArrayList<Integer>();
+        while (q.size() > 0) {
+            System.out.println(q);
+            n -= 1;
+            int u = q.removeFirst();
+            ans.add(u);
+            for (int v : g.get(u)) {
+                id[v]--;
+                if (id[v] == 0) {
+                    q.add(v);
+                }
+            }
+        }
+        // if we can not remove all nodes with indegree 0, it means cycle exists.
+        if (n != 0) {
+            ans.clear();
+        }
+        return ans.stream().mapToInt(i -> i).toArray();
+    }
+}

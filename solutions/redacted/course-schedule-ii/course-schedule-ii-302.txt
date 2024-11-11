@@ -1,0 +1,60 @@
+class Solution {
+
+    public int[] findOrder(int v, int[][] prerequisites) {
+        // Create an adjacency list to represent the graph
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < v; i++) {
+            adj.add(new ArrayList<>());
+        }
+        // Populate the adjacency list based on prerequisites
+        for (int i = 0; i < prerequisites.length; i++) {
+            int[] sub = prerequisites[i];
+            adj.get(sub[0]).add(sub[1]);
+        }
+        // Arrays to track visited nodes and currently traversed nodes during DFS
+        boolean[] vis = new boolean[v];
+        boolean[] cur = new boolean[v];
+        // List to store the topological ordering of nodes
+        List<Integer> arr = new ArrayList<>();
+        // Result array to be returned
+        int[] res = new int[v];
+        // Perform DFS for each node to check for cycles and find topological order
+        for (int i = 0; i < v; i++) {
+            if (isCyclic(i, vis, cur, arr, adj)) {
+                // If a cycle is detected, return an empty array
+                return new int[0];
+            }
+        }
+        // Convert the list of topologically ordered nodes to an array
+        int index = 0;
+        for (int j : arr) {
+            res[index] = j;
+            index++;
+        }
+        return res;
+    }
+
+    // Helper function to perform DFS and check for cycles
+    public static boolean isCyclic(int i, boolean[] vis, boolean[] cur, List<Integer> arr, ArrayList<ArrayList<Integer>> adj) {
+        if (!vis[i]) {
+            // Mark the current node as visited and being traversed
+            vis[i] = true;
+            cur[i] = true;
+            // Recursive DFS for all adjacent nodes
+            for (int j : adj.get(i)) {
+                if (!vis[j] && isCyclic(j, vis, cur, arr, adj)) {
+                    // If an unvisited node is encountered, continue DFS
+                    return true;
+                } else if (cur[j]) {
+                    // If a node is already being traversed, a cycle is detected
+                    return true;
+                }
+            }
+            // Add the current node to the topological ordering list
+            arr.add(new Integer(i));
+        }
+        // Mark the current node as no longer being traversed
+        cur[i] = false;
+        return false;
+    }
+}

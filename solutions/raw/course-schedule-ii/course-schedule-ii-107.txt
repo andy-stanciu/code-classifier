@@ -1,0 +1,61 @@
+class Solution {
+
+    public boolean dfs(int node, boolean[] vis, boolean[] inRecursion, Map<Integer, List<Integer>> map) {
+        vis[node] = true;
+        inRecursion[node] = true;
+        for (int currNode : map.getOrDefault(node, new ArrayList<>())) {
+            if (!vis[currNode] && dfs(currNode, vis, inRecursion, map)) {
+                return true;
+            } else if (inRecursion[currNode]) {
+                return true;
+            }
+        }
+        inRecursion[node] = false;
+        return false;
+    }
+
+    public int[] findOrder(int numCourses, int[][] pre) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        boolean[] vis = new boolean[numCourses];
+        boolean[] inRecursion = new boolean[numCourses];
+        for (int[] vec : pre) {
+            int a = vec[0];
+            int b = vec[1];
+            map.computeIfAbsent(b, k -> new ArrayList<>()).add(a);
+        }
+        int[] ans = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (!vis[i] && dfs(i, vis, inRecursion, map)) {
+                // means cycle is detected
+                return new int[] {};
+            }
+        }
+        Stack<Integer> stack = new Stack<>();
+        int[] visited = new int[numCourses];
+        topoSort(ans, map, stack, visited, numCourses);
+        int j = 0;
+        while (!stack.isEmpty()) {
+            ans[j] = stack.pop();
+            j++;
+        }
+        return ans;
+    }
+
+    public void dfs(int node, Map<Integer, List<Integer>> map, Stack<Integer> stack, int[] visited) {
+        visited[node] = 1;
+        for (int currNode : map.getOrDefault(node, new ArrayList<>())) {
+            if (visited[currNode] == 0) {
+                dfs(currNode, map, stack, visited);
+            }
+        }
+        stack.push(node);
+    }
+
+    public void topoSort(int[] ans, Map<Integer, List<Integer>> map, Stack<Integer> stack, int[] visited, int v) {
+        for (int i = 0; i < v; i++) {
+            if (visited[i] == 0) {
+                dfs(i, map, stack, visited);
+            }
+        }
+    }
+}

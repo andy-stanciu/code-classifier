@@ -1,0 +1,39 @@
+class Solution {
+
+    public int evalRPN(String[] tokens) {
+        // Base case: if there\'s only one value in the array.
+        if (tokens.length <= 1) {
+            return Integer.parseInt(tokens[0]);
+        }
+        int ans = 0;
+        List<Integer> l = new ArrayList<>();
+        // Iterate through each token.
+        for (String s : tokens) {
+            // Check if the token is an operator.
+            if ("+".equals(s)) {
+                ans = l.get(l.size() - 2) + l.get(l.size() - 1);
+                updateList(l, ans);
+            } else if ("-".equals(s)) {
+                ans = l.get(l.size() - 2) - l.get(l.size() - 1);
+                updateList(l, ans);
+            } else if ("*".equals(s)) {
+                ans = l.get(l.size() - 2) * l.get(l.size() - 1);
+                updateList(l, ans);
+            } else if ("/".equals(s)) {
+                ans = l.get(l.size() - 2) / l.get(l.size() - 1);
+                updateList(l, ans);
+            } else // If the token is a numeric value, parse it and add to the list.
+            {
+                l.add(Integer.parseInt(s));
+            }
+        }
+        return ans;
+    }
+
+    // Method to update the list after performing an operation.
+    public void updateList(List<Integer> l, int ans) {
+        l.remove(l.size() - 2);
+        l.remove(l.size() - 1);
+        l.add(ans);
+    }
+}

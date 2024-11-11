@@ -1,0 +1,37 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> list = new ArrayList<>();
+        List<String> path = new ArrayList<>();
+        explore(0, s, list, path);
+        return list;
+    }
+
+    public void explore(int start, String s, List<List<String>> result, List<String> path) {
+        //if our start position reaches end of the string
+        if (start == s.length()) {
+            result.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = start; i < s.length(); ++i) {
+            if (method1(s, start, i)) {
+                //in substring it takes value from start to i-1 element ;
+                //so if substring(0,1);- it will take (0,0) not (0 to 1) element ;
+                path.add(s.substring(start, i + 1));
+                explore(i + 1, s, result, path);
+                path.remove(path.size() - 1);
+            }
+        }
+    }
+
+    public boolean method1(String s, int left, int right) {
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+}

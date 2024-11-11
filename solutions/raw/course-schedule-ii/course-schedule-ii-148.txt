@@ -1,0 +1,71 @@
+class Solution {
+
+    static class Edge {
+
+        int src;
+
+        int dest;
+
+        public Edge(int src, int dest) {
+            this.src = src;
+            this.dest = dest;
+        }
+    }
+
+    public static ArrayList<Edge>[] buildGraph(int numCourses, int[][] prerequisites) {
+        ArrayList<Edge>[] graph = new ArrayList[numCourses];
+        for (int i = 0; i < graph.length; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] p : prerequisites) {
+            int course = p[0];
+            int pre = p[1];
+            graph[pre].add(new Edge(pre, course));
+        }
+        return graph;
+    }
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        ArrayList<Edge>[] graph = buildGraph(numCourses, prerequisites);
+        return kahnSort(graph);
+    }
+
+    public static int[] kahnSort(ArrayList<Edge>[] graph) {
+        int[] indeg = new int[graph.length];
+        calcIndeg(indeg, graph);
+        Queue<Integer> q = new LinkedList<>();
+        List<Integer> topo = new ArrayList<>();
+        for (int i = 0; i < indeg.length; i++) {
+            if (indeg[i] == 0) {
+                q.add(i);
+            }
+        }
+        while (!q.isEmpty()) {
+            int curr = q.poll();
+            topo.add(curr);
+            for (Edge e : graph[curr]) {
+                indeg[e.dest]--;
+                if (indeg[e.dest] == 0) {
+                    q.add(e.dest);
+                }
+            }
+        }
+        if (topo.size() != graph.length) {
+            return new int[0];
+        }
+        int[] result = new int[topo.size()];
+        for (int i = 0; i < topo.size(); i++) {
+            result[i] = topo.get(i);
+        }
+        return result;
+    }
+
+    public static void calcIndeg(int[] indeg, ArrayList<Edge>[] graph) {
+        for (int i = 0; i < graph.length; i++) {
+            int v = i;
+            for (Edge e : graph[v]) {
+                indeg[e.dest]++;
+            }
+        }
+    }
+}

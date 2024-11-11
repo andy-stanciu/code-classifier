@@ -1,0 +1,32 @@
+class Solution {
+
+    HashMap<String, Boolean> previousRes;
+
+    public boolean method1(String s, List<String> param1) {
+        previousRes = new HashMap<String, Boolean>();
+        return canBeBroken(s, param1);
+    }
+
+    private boolean canBeBroken(String s, List<String> param1) {
+        if (s.length() == 0) {
+            return true;
+        }
+        if (param1.contains(s)) {
+            return true;
+        }
+        if (previousRes.containsKey(s)) {
+            return previousRes.get(s);
+        }
+        boolean canThisBeBroken = false;
+        for (int i = 1; i < s.length(); i++) {
+            String firstPart = s.substring(0, i);
+            String secondPart = s.substring(i);
+            if (param1.contains(firstPart) && canBeBroken(secondPart, param1)) {
+                canThisBeBroken = true;
+                break;
+            }
+        }
+        previousRes.put(s, canThisBeBroken);
+        return canThisBeBroken;
+    }
+}

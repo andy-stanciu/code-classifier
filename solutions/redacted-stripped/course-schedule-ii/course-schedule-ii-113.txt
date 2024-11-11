@@ -1,0 +1,48 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int m = param1;
+        int[] indegree = new int[m];
+        int[] result = new int[m];
+        Stack<Integer> st = new Stack<Integer>();
+        List<ArrayList<Integer>> list = new ArrayList<ArrayList<Integer>>();
+        ;
+        for (int i = 0; i < m; i++) {
+            list.add(new ArrayList<>());
+        }
+        int n = prerequisites.length;
+        for (int i = 0; i < n; i++) {
+            int a = prerequisites[i][0];
+            int b = prerequisites[i][1];
+            list.get(a).add(b);
+            indegree[b]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < m; i++) {
+            if (indegree[i] == 0) {
+                System.out.println("Goint");
+                q.add(i);
+            }
+        }
+        int j = 0;
+        while (!q.isEmpty()) {
+            int val = q.poll();
+            System.out.println(val);
+            st.add(val);
+            for (int k : list.get(val)) {
+                indegree[k]--;
+                if (indegree[k] == 0)
+                    q.add(k);
+            }
+        }
+        int size = st.size();
+        while (!st.isEmpty()) {
+            result[j++] = st.pop();
+        }
+        if (size != m) {
+            System.out.println(st.size());
+            return new int[] {};
+        }
+        return result;
+    }
+}

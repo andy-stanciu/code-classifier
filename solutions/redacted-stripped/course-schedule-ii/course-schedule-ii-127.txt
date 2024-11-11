@@ -1,0 +1,66 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        res = new LinkedHashSet<>();
+        boolean finish = canFinish(param1, prerequisites);
+        if (!finish) {
+            return new int[] {};
+        }
+        int[] ans = new int[res.size()];
+        int i = 0;
+        for (int a : res) {
+            ans[i] = a;
+            i++;
+        }
+        return ans;
+    }
+
+    Set<Integer> res;
+
+    Map<Integer, Boolean> mem = new HashMap<>();
+
+    Map<Integer, List<Integer>> map;
+
+    public boolean canFinish(int param1, int[][] prerequisites) {
+        map = new HashMap<>();
+        for (int[] a : prerequisites) {
+            map.computeIfAbsent(a[0], k -> new ArrayList<>()).add(a[1]);
+        }
+        int count = 0;
+        for (int i = 0; i < param1; i++) {
+            Set<Integer> visited = new HashSet<>();
+            if (fun(i, visited)) {
+                count++;
+            }
+        }
+        return count >= param1;
+    }
+
+    public boolean fun(int c, Set<Integer> visited) {
+        if (visited.contains(c)) {
+            return false;
+        }
+        if (mem.containsKey(c)) {
+            return mem.get(c);
+        }
+        int count = 0;
+        if (map.containsKey(c)) {
+            List<Integer> var1 = map.get(c);
+            for (Integer cc : var1) {
+                visited.add(c);
+                boolean ret = fun(cc, visited);
+                mem.put(cc, ret);
+                res.add(cc);
+                if (!ret) {
+                    res.remove(cc);
+                    return false;
+                }
+                visited.remove(c);
+            }
+            res.add(c);
+            return true;
+        }
+        res.add(c);
+        return true;
+    }
+}

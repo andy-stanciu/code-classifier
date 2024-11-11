@@ -1,0 +1,62 @@
+class Solution {
+
+    static class Edge {
+
+        int src;
+
+        int desti;
+
+        public Edge(int src, int desti) {
+            this.src = src;
+            this.desti = desti;
+        }
+    }
+
+    public static void findIndegree(ArrayList<Edge>[] graph, int[] indeg) {
+        for (int i = 0; i < graph.length; i++) {
+            for (int j = 0; j < graph[i].size(); j++) {
+                Edge e = graph[i].get(j);
+                indeg[e.desti]++;
+            }
+        }
+    }
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] arr = new int[numCourses];
+        Stack<Integer> s = new Stack<>();
+        ArrayList<Edge>[] graph = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph[prerequisites[i][0]].add(new Edge(prerequisites[i][0], prerequisites[i][1]));
+        }
+        int[] indeg = new int[numCourses];
+        findIndegree(graph, indeg);
+        Queue q = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indeg[i] == 0) {
+                q.add(i);
+            }
+        }
+        while (!q.isEmpty()) {
+            int cur = (int) q.remove();
+            s.push(cur);
+            for (int i = 0; i < graph[cur].size(); i++) {
+                Edge e = graph[cur].get(i);
+                indeg[e.desti]--;
+                if (indeg[e.desti] == 0) {
+                    q.add(e.desti);
+                }
+            }
+        }
+        int k = 0;
+        while (!s.isEmpty()) {
+            arr[k++] = s.pop();
+        }
+        if (k == numCourses)
+            return arr;
+        int[] krr = {};
+        return krr;
+    }
+}

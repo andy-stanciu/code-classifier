@@ -1,0 +1,50 @@
+class Solution {
+
+    public int[][] dp;
+
+    public boolean helper(int i, String s, List<String> wordDict, String ns) {
+        if (i >= wordDict.size())
+            return false;
+        if (s.length() < ns.length())
+            return false;
+        if (dp[i][ns.length()] == -1) {
+            if (s.length() == ns.length()) {
+                if (s.equals(ns)) {
+                    dp[i][ns.length()] = 1;
+                    return true;
+                } else {
+                    dp[i][ns.length()] = 2;
+                    return false;
+                }
+            }
+            boolean a = false;
+            int n = ns.length();
+            String g = wordDict.get(i);
+            int m = g.length();
+            if (s.indexOf(g, n) == n) {
+                a = a | helper(i, s, wordDict, ns + wordDict.get(i));
+                if (!a && i != 0) {
+                    a = a | helper(0, s, wordDict, ns + wordDict.get(i));
+                }
+            }
+            if (!a)
+                a = a | helper(i + 1, s, wordDict, ns);
+            if (a)
+                dp[i][ns.length()] = 1;
+            else
+                dp[i][ns.length()] = 2;
+        }
+        if (dp[i][ns.length()] == 1)
+            return true;
+        else
+            return false;
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        dp = new int[wordDict.size()][s.length() + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        return helper(0, s, wordDict, "");
+    }
+}

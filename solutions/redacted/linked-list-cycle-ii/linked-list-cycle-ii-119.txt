@@ -1,0 +1,44 @@
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+
+    public ListNode method1(ListNode head) {
+        if (head == null || head.next == null) {
+            return null;
+        }
+        //two pointer judge wether any cycle in linked list
+        ListNode slow = head;
+        ListNode fast = head;
+        for (; fast != null && fast.next != null; ) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {
+                break;
+            }
+        }
+        if (fast == null || fast.next == null) {
+            return null;
+        }
+        //now we will prove why start == slow is the result:
+        // first\uFF0C we can assume X as the length between head and the node N which is tail connected
+        // second , we can assume Y as the length between node N and the node M which is fast pointer and slow pointer is equal.
+        // third, we can konw that when a pointer run X+Y or 2*(X+Y) will reach to the same node:node M. (fast Node and slow Node)
+        //so if the pointer run X or 2*(X+Y)-Y will reach node N.
+        //So we can let the slow pointer continue to travel X distance, and the slow pointer has traveled a total of X+Y+X distance, now we can get the nodeN
+        ListNode start = head;
+        for (; start != slow; ) {
+            start = start.next;
+            slow = slow.next;
+        }
+        return slow;
+    }
+}

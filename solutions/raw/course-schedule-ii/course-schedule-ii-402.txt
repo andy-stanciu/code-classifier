@@ -1,0 +1,31 @@
+class Solution {
+
+    public boolean dfs(List<List<Integer>> list, int[] visited, int index) {
+        List<Integer> cur = list.get(index);
+        visited[index] = 1;
+        for (int child : cur) {
+            if (visited[child] == 1)
+                return false;
+            if (visited[child] == 0)
+                if (!dfs(list, visited, child))
+                    return false;
+        }
+        visited[index] = 2;
+        return true;
+    }
+
+    public boolean canFinish(int n, int[][] nums) {
+        List<List<Integer>> list = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            list.add(new ArrayList<>());
+        }
+        for (int[] num : nums) {
+            list.get(num[1]).add(num[0]);
+        }
+        int[] visited = new int[n];
+        Arrays.fill(visited, 0);
+        for (int i = 0; i < n; i++) if (!dfs(list, visited, i))
+            return false;
+        return true;
+    }
+}

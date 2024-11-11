@@ -1,0 +1,117 @@
+class Solution {
+
+    public static int evalRPN(String[] tokens) {
+        Stack ss = new Stack();
+        int res = 0;
+        for (int i = 0; i < tokens.length; i++) {
+            if (isInteger(tokens[i])) {
+                ss.push(String.valueOf(tokens[i]));
+            } else if (tokens[i].equals("+") || tokens[i].equals("-") || tokens[i].equals("*") || tokens[i].equals("/")) {
+                int x2 = Integer.valueOf(ss.pop());
+                int x1 = Integer.valueOf(ss.pop());
+                if (tokens[i].equals("+")) {
+                    int res1 = x2 + x1;
+                    ss.push(String.valueOf(res1));
+                } else if (tokens[i].equals("-")) {
+                    int res1 = x1 - x2;
+                    ss.push(String.valueOf(res1));
+                } else if (tokens[i].equals("*")) {
+                    int res1 = x2 * x1;
+                    ss.push(String.valueOf(res1));
+                } else if (tokens[i].equals("/")) {
+                    int res1 = x1 / x2;
+                    ss.push(String.valueOf(res1));
+                }
+            }
+        }
+        res = Integer.valueOf(ss.pop());
+        return res;
+    }
+
+    public static boolean isInteger(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static class Node {
+
+        String val;
+
+        Node next;
+
+        public Node() {
+            super();
+        }
+
+        public Node(String val) {
+            super();
+            this.val = val;
+        }
+    }
+
+    public static class Sll {
+
+        Node head, tail;
+
+        public Sll() {
+            super();
+        }
+
+        public void insertFirst(String x) {
+            Node newNode = new Node(x);
+            if (head == null) {
+                head = tail = newNode;
+            } else {
+                newNode.next = head;
+                head = newNode;
+            }
+        }
+
+        public String deleteLast() {
+            if (head == null)
+                return null;
+            else {
+                Node cur = head;
+                head = head.next;
+                cur.next = null;
+                return cur.val;
+            }
+        }
+
+        public void printList() {
+            if (head == null)
+                return;
+            if (head.next == null) {
+                System.out.println(head.val);
+                return;
+            }
+            Node cur = head;
+            while (cur != null) {
+                System.out.println(cur.val);
+                cur = cur.next;
+            }
+        }
+    }
+
+    public static class Stack {
+
+        private Sll sll = new Sll();
+
+        public void push(String x) {
+            sll.insertFirst(x);
+            return;
+        }
+
+        public String pop() {
+            return sll.deleteLast();
+        }
+
+        public void print() {
+            sll.printList();
+        }
+    }
+}

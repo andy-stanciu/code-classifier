@@ -1,0 +1,56 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        DAG dag = new DAG(numCourses);
+        for (int[] prereq : prerequisites) {
+            dag.addEdge(prereq[1], prereq[0]);
+        }
+        int[] inDegs = new int[numCourses], order = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            for (int j : dag.adj(i)) {
+                inDegs[j]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegs[i] == 0) {
+                q.add(i);
+            }
+        }
+        int index = 0;
+        while (!q.isEmpty()) {
+            int currNode = q.poll();
+            order[index++] = currNode;
+            for (int j : dag.adj(currNode)) {
+                inDegs[j]--;
+                if (inDegs[j] == 0) {
+                    q.add(j);
+                }
+            }
+        }
+        return index == numCourses ? order : new int[] {};
+    }
+}
+
+class DAG {
+
+    private int V;
+
+    private ArrayList<Integer>[] adj;
+
+    public DAG(int V) {
+        this.V = V;
+        adj = new ArrayList[V];
+        for (int i = 0; i < V; i++) {
+            adj[i] = new ArrayList<>();
+        }
+    }
+
+    public void addEdge(int v, int w) {
+        adj[v].add(w);
+    }
+
+    public Iterable<Integer> adj(int v) {
+        return adj[v];
+    }
+}

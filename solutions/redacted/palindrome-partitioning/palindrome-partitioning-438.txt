@@ -1,0 +1,35 @@
+// In partitions, all the string should be covered.
+// At any point, we will check all substrings from that point which are palindrome, then add to list, and check for remaining.
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> result = new ArrayList<>();
+        form(s.toCharArray(), 0, new ArrayList(), result);
+        return result;
+    }
+
+    private void form(char[] str, int start, List<String> list, List<List<String>> result) {
+        if (start == str.length) {
+            result.add(new ArrayList(list));
+        }
+        for (int idx = start; idx < str.length; idx++) {
+            boolean var1 = method1(str, start, idx);
+            if (var1) {
+                // pick  a substring and add to list
+                list.add(new String(str, start, idx - start + 1));
+                // check for remaining
+                form(str, idx + 1, list, result);
+                // remove it. In next iteration, we increase the substring starting from current start.
+                list.remove(list.size() - 1);
+            }
+        }
+    }
+
+    private boolean method1(char[] str, int start, int end) {
+        while (start < end && str[start] == str[end]) {
+            start++;
+            end--;
+        }
+        return start >= end;
+    }
+}

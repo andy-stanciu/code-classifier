@@ -1,0 +1,39 @@
+class Solution {
+
+    Map<String, Boolean> memo = new HashMap<>();
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        return helper(s, wordDict, false);
+    }
+
+    boolean helper(String s, List<String> wordDict, boolean flag) {
+        if (memo.containsKey(s)) {
+            boolean x = memo.get(s);
+            return x;
+        }
+        if (s == null) {
+            return true;
+        }
+        String cur = "";
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            cur += c;
+            if (wordDict.contains(cur)) {
+                String temp = removeFirst(s, cur);
+                flag = flag || helper(temp, wordDict, flag);
+                memo.put(temp, flag);
+            }
+            if (flag) {
+                break;
+            }
+        }
+        return flag;
+    }
+
+    String removeFirst(String s, String cur) {
+        String ret = "";
+        int l = cur.length();
+        String c = s.substring(l);
+        return c.equals(ret) ? null : c;
+    }
+}

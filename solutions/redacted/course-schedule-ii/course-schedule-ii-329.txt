@@ -1,0 +1,61 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        boolean[] visit = new boolean[param1];
+        TreeNode[] node = new TreeNode[param1];
+        int[] prevNodeNum = new int[param1];
+        if (param1 == 1) {
+            return new int[] { 0 };
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            prevNodeNum[prerequisites[i][0]]++;
+            if (node[prerequisites[i][1]] == null) {
+                node[prerequisites[i][1]] = new TreeNode(prerequisites[i][1]);
+            }
+            if (node[prerequisites[i][0]] == null) {
+                node[prerequisites[i][0]] = new TreeNode(prerequisites[i][0]);
+            }
+            node[prerequisites[i][1]].next.add(node[prerequisites[i][0]]);
+        }
+        Deque<TreeNode> queue = new ArrayDeque();
+        for (int i = 0; i < prevNodeNum.length; i++) {
+            if (prevNodeNum[i] == 0) {
+                if (node[i] == null) {
+                    node[i] = new TreeNode(i);
+                }
+                queue.addFirst(node[i]);
+            }
+        }
+        int[] order = new int[param1];
+        int idx = 0;
+        while (!queue.isEmpty()) {
+            TreeNode curr = queue.removeLast();
+            order[idx++] = curr.val;
+            visit[curr.val] = true;
+            for (TreeNode next : curr.next) {
+                --prevNodeNum[next.val];
+                if (prevNodeNum[next.val] == 0) {
+                    queue.addFirst(next);
+                }
+            }
+        }
+        for (int i = 0; i < visit.length; i++) {
+            if (!visit[i]) {
+                return new int[0];
+            }
+        }
+        return order;
+    }
+}
+
+class TreeNode {
+
+    int val;
+
+    List<TreeNode> next;
+
+    public TreeNode(int val) {
+        this.val = val;
+        this.next = new ArrayList();
+    }
+}

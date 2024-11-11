@@ -1,0 +1,28 @@
+class Solution {
+
+    // substring -> whether it can be segmented by word dicts.
+    private Map<String, Boolean> wordBreakResults = new HashMap<>();
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> dicts = new HashSet<>(wordDict);
+        return wordBreak2(s, dicts);
+    }
+
+    private boolean wordBreak2(String s, Set<String> dicts) {
+        if (wordBreakResults.containsKey(s)) {
+            return wordBreakResults.get(s);
+        }
+        int len = s.length();
+        for (int i = 1; i <= len; i++) {
+            // i is comma position that can split out the first word.
+            String firstWord = s.substring(0, i);
+            if (dicts.contains(firstWord) && (i == len || wordBreak2(s.substring(i), dicts))) {
+                // here pay caution to that when i == s.length(), the subproblem input length == 0.
+                wordBreakResults.put(s, true);
+                return true;
+            }
+        }
+        wordBreakResults.put(s, false);
+        return false;
+    }
+}

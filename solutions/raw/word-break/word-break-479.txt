@@ -1,0 +1,49 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        boolean result = false;
+        //storing words from dictionary as sets of words categorized on the basis of word length. This helps in easy access and comparison
+        Map<Integer, Set<String>> dictOrganized = new HashMap<>();
+        reorganizeDict(wordDict, dictOrganized);
+        //Priority queue to store ending positions of different prefixes of s which can be properly broken down. It is a min hip which means the topmost element will store the ending position of the smallest prefix which hasn\'t been explored yet
+        Queue<Integer> dp = new PriorityQueue<>((a, b) -> Integer.compare(a, b));
+        //Stores indices already added to the priority queue so that they aren\'t added again
+        Set<Integer> addedPositions = new HashSet<>();
+        //explore all prefixes starting from index 0 of s to check if any of them is a valid word
+        result = explore(0, s, dictOrganized, dp, addedPositions);
+        while (dp.size() > 0) {
+            //remove the minimum index from the queue. This represents the ending index of the smallest prefix(which is also a valid word) that have not been explored so far
+            int position = dp.remove();
+            //explore the remaining part of the string and if the remaining part of the string can also further broken down into two parts - the first part being a breakable prefix and the remaining part being an unexplored substring
+            if (explore(position + 1, s, dictOrganized, dp, addedPositions))
+                return true;
+        }
+        return result;
+    }
+
+    //explore method adds end indices of all (breakable) prefixes formulated from the substring of s starting from an arbitary start index to the end of the string.
+    public boolean explore(int startPos, String s, Map<Integer, Set<String>> dictOrganized, Queue<Integer> queue, Set<Integer> addedPositions) {
+        for (int i = s.length(); i > startPos; i--) {
+            String substring = s.substring(startPos, i);
+            if (dictOrganized.containsKey(substring.length())) {
+                Set<String> wordsSet = dictOrganized.get(substring.length());
+                if (wordsSet.contains(substring) && !addedPositions.contains(i - 1)) {
+                    queue.add(i - 1);
+                    addedPositions.add(i - 1);
+                    if (i == s.length())
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    //storing words from dictionary as sets of words categorized on the basis of word length.
+    public void reorganizeDict(List<String> wordDict, Map<Integer, Set<String>> dictOrganized) {
+        for (String word : wordDict) {
+            Set<String> wordsSet = dictOrganized.getOrDefault(word.length(), new HashSet<String>());
+            wordsSet.add(word);
+            dictOrganized.put(word.length(), wordsSet);
+        }
+    }
+}

@@ -1,0 +1,48 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> ans = new ArrayList<>();
+        backtrack(s, ans, new ArrayList<String>(), 0, 0, s.length() - 1);
+        if (method1(s)) {
+        }
+        return ans;
+    }
+
+    public void backtrack(String s, List<List<String>> ans, ArrayList<String> curr, int start, int mid, int end) {
+        if (mid == end) {
+            if (method1(s.substring(start, mid + 1))) {
+                curr.add(s.substring(start, mid + 1));
+                ans.add(curr);
+            }
+            return;
+        }
+        if (start == end) {
+            curr.add(s.substring(start, end + 1));
+            ans.add(curr);
+            return;
+        }
+        if (start == mid) {
+            ArrayList<String> x = new ArrayList<>(List.copyOf(curr));
+            curr.add(String.valueOf(s.charAt(start)));
+            backtrack(s, ans, curr, mid + 1, mid + 1, end);
+            backtrack(s, ans, x, start, mid + 1, end);
+        } else if (method1(s.substring(start, mid + 1))) {
+            ArrayList<String> y = new ArrayList<>(List.copyOf(curr));
+            curr.add(s.substring(start, mid + 1));
+            backtrack(s, ans, curr, mid + 1, mid + 1, end);
+            backtrack(s, ans, y, start, mid + 1, end);
+        } else {
+            backtrack(s, ans, curr, start, mid + 1, end);
+        }
+    }
+
+    public boolean method1(String str) {
+        int low = 0, high = str.length() - 1;
+        while (low < high) {
+            if (str.charAt(low++) != str.charAt(high--)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

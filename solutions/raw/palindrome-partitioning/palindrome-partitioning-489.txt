@@ -1,0 +1,37 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        //store all Palindromic partitions
+        List<List<String>> allPartition = new ArrayList<>();
+        //to store current partitions
+        Deque<String> currPartition = new LinkedList<>();
+        // Call recursive function to generate all partitions and store in allPartition
+        generatePartition(s, allPartition, currPartition, 0, s.length());
+        return allPartition;
+    }
+
+    public void generatePartition(String str, List<List<String>> allPartition, Deque<String> currPartition, int s, int e) {
+        if (s >= e) {
+            allPartition.add(new ArrayList<>(currPartition));
+            return;
+        }
+        for (int i = s; i < e; i++) {
+            //If substring str[s, i] is Palindrome
+            if (isPalindrome(str, s, i)) {
+                currPartition.add(str.substring(s, i + 1));
+                //check for remaining substring
+                generatePartition(str, allPartition, currPartition, i + 1, e);
+                currPartition.removeLast();
+            }
+        }
+    }
+
+    public boolean isPalindrome(String str, int s, int e) {
+        while (s <= e) {
+            if (str.charAt(s++) != str.charAt(e--)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

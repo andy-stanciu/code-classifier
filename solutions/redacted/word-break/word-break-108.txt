@@ -1,0 +1,85 @@
+/**
+ * Example 3:
+ *
+ * Input: s = "catsandog", wordDict = ["cats","dog","sand","and","cat"]
+ * Output: false
+ *
+ * Initialization: dp = [true, false, false, false, false, false, false, false, false, false] (length = 9).
+ *
+ * Iteration:
+ *
+ * For i = 1:
+ *
+ * Check s[0:1] = "c" \u2192 not in wordDict. dp[1] = false.
+ * For i = 2:
+ *
+ * Check s[0:2] = "ca" \u2192 not in wordDict. dp[2] = false.
+ * For i = 3:
+ *
+ * Check s[0:3] = "cat" \u2192 in wordDict and dp[0] = true.
+ * Thus, dp[3] = true.
+ * For i = 4:
+ *
+ * Check s[0:4] = "cats" \u2192 in wordDict and dp[0] = true.
+ * Thus, dp[4] = true.
+ * For i = 5:
+ *
+ * Check all substrings, e.g., s[0:5] = "catsa", s[1:5] = "atsa", s[2:5] = "tsa", etc.
+ * No valid segmentation found. dp[5] = false.
+ * For i = 6:
+ *
+ * Check all substrings, e.g., s[0:6] = "catsan", s[1:6] = "atsan", etc.
+ * No valid segmentation found. dp[6] = false.
+ * For i = 7:
+ *
+ * Check all substrings, including s[0:7] = "catsand" \u2192 not in wordDict.
+ * Check s[3:7] = "sand" \u2192 **in wordDict** and dp[3] = true`.
+ * Thus, dp[7] = true.
+ * For i = 8:
+ *
+ * Check all substrings, e.g., s[0:8] = "catsando", s[1:8] = "atsando", etc.
+ * No valid segmentation found. dp[8] = false.
+ * For i = 9:
+ *
+ * Check all substrings, e.g., s[0:9] = "catsandog", s[1:9] = "atsandog", etc.
+ * No valid segmentation found. dp[9] = false.
+ * Final DP Array
+ * The final dp array would now reflect 9 elements:
+ *
+ * dp = [true, false, false, true, true, false, false, true, false, false]
+ */
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        if (s.length() == 0)
+            return true;
+        // for faster lookups
+        Set<String> dictSet = new HashSet<>(param1);
+        // at any given position i in string s, we need to know if valid string is present in wordDict upto that point based on previous postions.
+        // So create dp with length s.length + 1 and the final position should if it\'s possible or not.
+        boolean[] dp = new boolean[s.length() + 1];
+        // empty string base case
+        dp[0] = true;
+        int var1 = 0;
+        for (String var2 : dictSet) {
+            var1 = Math.max(var1, var2.length());
+        }
+        for (int i = 1; i <= s.length(); i++) {
+            // At any i, only the values need to be checked from the length of largest word in the set to the left
+            // Or else it will not be in the set anyways.
+            // Need not check from j = 0 and can be optimized.
+            for (int j = Math.max(i - var1, 0); j < i; j++) {
+                if (dp[j]) {
+                    if (dictSet.contains(s.substring(j, i))) {
+                        // i exclusive
+                        // +1 for the offset
+                        dp[i] = true;
+                        // at least one such occurrence is enough
+                        break;
+                    }
+                }
+            }
+        }
+        return dp[s.length()];
+    }
+}

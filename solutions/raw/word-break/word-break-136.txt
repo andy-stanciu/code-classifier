@@ -1,0 +1,96 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Trie dict = new Trie();
+        for (String word : wordDict) {
+            dict.insert(word);
+        }
+        return dict.wordBreak(s);
+    }
+}
+
+class Trie {
+
+    TrieNode root;
+
+    public Trie() {
+        this.root = new TrieNode();
+    }
+
+    public void insert(String word) {
+        TrieNode curr = root;
+        for (int i = 0; i < word.length(); i++) {
+            if (!curr.getChildren().containsKey(word.charAt(i))) {
+                curr.getChildren().put(word.charAt(i), new TrieNode());
+            }
+            curr = curr.getChildren().get(word.charAt(i));
+        }
+        curr.markAsWord();
+    }
+
+    public boolean search(String word, int index, Boolean[] dp) {
+        if (index == word.length())
+            return true;
+        if (dp[index] != null)
+            return dp[index];
+        TrieNode curr = root;
+        for (int i = index; i < word.length(); i++) {
+            char c = word.charAt(i);
+            if (!curr.getChildren().containsKey(c)) {
+                dp[index] = false;
+                return false;
+            }
+            curr = curr.getChildren().get(c);
+            if (curr.isWord() && search(word, i + 1, dp)) {
+                dp[index] = true;
+                return true;
+            }
+        }
+        dp[index] = false;
+        return false;
+    }
+
+    boolean wordBreak(String word) {
+        Boolean[] dp = new Boolean[word.length()];
+        return search(word, 0, dp);
+    }
+
+    public boolean startsWith(String prefix) {
+        TrieNode curr = root;
+        for (int i = 0; i < prefix.length(); i++) {
+            if (!curr.getChildren().containsKey(prefix.charAt(i))) {
+                return false;
+            }
+            curr = curr.getChildren().get(prefix.charAt(i));
+        }
+        return true;
+    }
+}
+
+class TrieNode {
+
+    private boolean word;
+
+    private HashMap<Character, TrieNode> children;
+
+    TrieNode() {
+        children = new HashMap<>();
+        word = false;
+    }
+
+    HashMap<Character, TrieNode> getChildren() {
+        return children;
+    }
+
+    void markAsWord() {
+        word = true;
+    }
+
+    void unmarkAsWord() {
+        word = false;
+    }
+
+    boolean isWord() {
+        return word;
+    }
+}

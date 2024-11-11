@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] ans = new int[numCourses];
+        if (numCourses == 1)
+            return new int[] { 0 };
+        if (prerequisites.length == 0) {
+            for (int i = 0; i < numCourses; i++) {
+                ans[i] = i;
+            }
+            return ans;
+        }
+        Map<Integer, List<Integer>> preqMap = new HashMap<>();
+        int[] indegree = new int[numCourses];
+        for (int[] preq : prerequisites) {
+            preqMap.computeIfAbsent(preq[1], k -> new ArrayList<Integer>()).add(preq[0]);
+            indegree[preq[0]]++;
+        }
+        Queue<Integer> coursesReady = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0)
+                coursesReady.add(i);
+        }
+        int completed = 0;
+        while (!coursesReady.isEmpty()) {
+            int course = coursesReady.poll();
+            ans[completed] = course;
+            completed++;
+            if (preqMap.containsKey(course)) {
+                for (Integer nxt : preqMap.get(course)) {
+                    indegree[nxt]--;
+                    if (indegree[nxt] == 0) {
+                        coursesReady.add(nxt);
+                    }
+                }
+            }
+        }
+        if (completed != numCourses)
+            return new int[0];
+        else
+            return ans;
+    }
+}

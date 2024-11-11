@@ -1,0 +1,32 @@
+class Solution {
+
+    private List<List<String>> ans = new ArrayList<>();
+
+    static boolean isPali(String s, int st, int end) {
+        while (st <= end) {
+            if (s.charAt(st++) != s.charAt(end--))
+                return false;
+        }
+        return true;
+    }
+
+    private void helper(int idx, String s, List<String> st) {
+        if (idx == s.length()) {
+            ans.add(new ArrayList<>(st));
+            return;
+        }
+        for (int i = idx; i < s.length(); ++i) {
+            if (isPali(s, idx, i)) {
+                st.add(s.substring(idx, i + 1));
+                helper(i + 1, s, st);
+                st.remove(st.size() - 1);
+            }
+        }
+    }
+
+    public List<List<String>> partition(String s) {
+        List<String> st = new ArrayList<>();
+        helper(0, s, st);
+        return ans;
+    }
+}

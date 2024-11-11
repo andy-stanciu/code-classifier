@@ -1,0 +1,47 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int V = param1;
+        // adjacency list
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] edge : prerequisites) {
+            int start = edge[1];
+            int end = edge[0];
+            // start points to end
+            adj.get(start).add(end);
+        }
+        // indegree of each node
+        int[] indegree = new int[V];
+        for (int i = 0; i < V; i++) {
+            for (int elem : adj.get(i)) {
+                indegree[elem]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<Integer>();
+        for (int i = 0; i < V; i++) {
+            if (indegree[i] == 0) {
+                // add terminal(indegree == 0) nodes to queue
+                q.add(i);
+            }
+        }
+        int[] topo = new int[V];
+        int i = 0;
+        while (!q.isEmpty()) {
+            int removed = q.remove();
+            topo[i++] = removed;
+            for (int neighbour : adj.get(removed)) {
+                // remove edge, indegree--
+                indegree[neighbour]--;
+                if (indegree[neighbour] == 0) {
+                    q.add(neighbour);
+                }
+            }
+        }
+        // no. of elements in topo sort array will be V if
+        // it is possible to schedule the courses
+        return (i == V) ? topo : new int[0];
+    }
+}

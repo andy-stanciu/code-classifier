@@ -1,0 +1,120 @@
+// not efficient as creating the new string each of the time here
+class olution {
+
+    public List<List<String>> partition(String s) {
+        // so now here we will create a list and a list of list which will sotre out all of the value
+        List<List<String>> ans = new ArrayList<>();
+        List<String> curr = new ArrayList<>();
+        // so now here we have make both so now calling the helper function in this
+        // helper(s , 0 , ans , curr);
+        partition(ans, s, 0, curr);
+        // so now ans contians all of the list we want
+        return ans;
+    }
+
+    public void helper(String s, int index, List<List<String>> ans, List<String> curr) {
+        // so now here the base case if string reaches the end then it is the base case
+        if (index == s.length()) {
+            // so now make a new arraylist which will contain our current list value and return it
+            ans.add(new ArrayList<String>(curr));
+            // and we have to close it
+            return;
+        }
+        // so now otherwise
+        String temp = "";
+        for (int i = index; i < s.length(); i++) {
+            // so now here we have to add the value to the temp here
+            temp += s.charAt(i);
+            // so now cheking if the curr value is palindrome or not
+            if (palin(temp)) {
+                // so now it means it is palindrome so we can add this into our string here
+                System.out.println(temp);
+                curr.add(temp);
+                // so now here we have to make the recursion call for the further step also
+                helper(s, i + 1, ans, curr);
+                // so now while at teh time of backtraking we have to also remove it as
+                // right side so new will be added as this all will be added in the main arraylist
+                curr.remove(curr.size() - 1);
+                // so remove the last index
+            }
+        }
+    }
+
+    boolean palin(String s) {
+        int start = 0;
+        int end = s.length() - 1;
+        while (start < end) {
+            if (s.charAt(start) != s.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+
+    public void partition(List<List<String>> res, String s, int ind, List<String> curr) {
+        // if we reach the end of string
+        // add the current list to the result
+        if (ind == s.length()) {
+            res.add(new ArrayList<String>(curr));
+            return;
+        }
+        // Store the current substring
+        String temp = "";
+        for (int i = ind; i < s.length(); i++) {
+            temp += s.charAt(i);
+            // check if string temp is palindrome or not
+            if (palin(temp)) {
+                System.out.println(temp);
+                // adds the string to current list
+                curr.add(temp);
+                // Recursive call for the remaining string
+                partition(res, s, i + 1, curr);
+                // Remove the string from the current list - (backtracking)
+                curr.remove(curr.size() - 1);
+            }
+        }
+    }
+}
+
+//efficient solution
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        // so now here we will create a list and a list of list which will sotre out all of the value
+        List<List<String>> ans = new ArrayList<>();
+        List<String> curr = new ArrayList<>();
+        helper(ans, curr, 0, s);
+        return ans;
+    }
+
+    void helper(List<List<String>> ans, List<String> curr, int index, String s) {
+        // so now here the base condition here also
+        if (index == s.length()) {
+            ans.add(new ArrayList<>(curr));
+            return;
+        }
+        // so now other wise here
+        for (int i = index; i < s.length(); i++) {
+            if (ispalin(s, index, i)) {
+                // so now we can add this value to our strign here
+                curr.add(s.substring(index, i + 1));
+                // so now recursive call for the other index here
+                helper(ans, curr, i + 1, s);
+                // so now for the removing it
+                curr.remove(curr.size() - 1);
+            }
+        }
+    }
+
+    boolean ispalin(String s, int start, int end) {
+        while (start <= end) {
+            if (s.charAt(start++) != s.charAt(end--)) {
+                return false;
+            }
+        }
+        // otherwise return the true
+        return true;
+    }
+}

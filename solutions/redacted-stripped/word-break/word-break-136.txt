@@ -1,0 +1,96 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        Trie dict = new Trie();
+        for (String var1 : param1) {
+            dict.insert(var1);
+        }
+        return dict.method1(s);
+    }
+}
+
+class Trie {
+
+    TrieNode root;
+
+    public Trie() {
+        this.root = new TrieNode();
+    }
+
+    public void insert(String var1) {
+        TrieNode curr = root;
+        for (int i = 0; i < var1.length(); i++) {
+            if (!curr.getChildren().containsKey(var1.charAt(i))) {
+                curr.getChildren().put(var1.charAt(i), new TrieNode());
+            }
+            curr = curr.getChildren().get(var1.charAt(i));
+        }
+        curr.method2();
+    }
+
+    public boolean search(String var1, int index, Boolean[] dp) {
+        if (index == var1.length())
+            return true;
+        if (dp[index] != null)
+            return dp[index];
+        TrieNode curr = root;
+        for (int i = index; i < var1.length(); i++) {
+            char c = var1.charAt(i);
+            if (!curr.getChildren().containsKey(c)) {
+                dp[index] = false;
+                return false;
+            }
+            curr = curr.getChildren().get(c);
+            if (curr.method4() && search(var1, i + 1, dp)) {
+                dp[index] = true;
+                return true;
+            }
+        }
+        dp[index] = false;
+        return false;
+    }
+
+    boolean method1(String var1) {
+        Boolean[] dp = new Boolean[var1.length()];
+        return search(var1, 0, dp);
+    }
+
+    public boolean startsWith(String prefix) {
+        TrieNode curr = root;
+        for (int i = 0; i < prefix.length(); i++) {
+            if (!curr.getChildren().containsKey(prefix.charAt(i))) {
+                return false;
+            }
+            curr = curr.getChildren().get(prefix.charAt(i));
+        }
+        return true;
+    }
+}
+
+class TrieNode {
+
+    private boolean var1;
+
+    private HashMap<Character, TrieNode> children;
+
+    TrieNode() {
+        children = new HashMap<>();
+        var1 = false;
+    }
+
+    HashMap<Character, TrieNode> getChildren() {
+        return children;
+    }
+
+    void method2() {
+        var1 = true;
+    }
+
+    void method3() {
+        var1 = false;
+    }
+
+    boolean method4() {
+        return var1;
+    }
+}

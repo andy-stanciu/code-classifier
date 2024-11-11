@@ -1,0 +1,41 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> list = new ArrayList<>();
+        List<String> ans = new ArrayList<>();
+        method1(0, s, list, ans);
+        return list;
+    }
+
+    private void method1(int idx, String s, List<List<String>> list, List<String> ans) {
+        if (idx == s.length()) {
+            // Add a new copy of the current partition to the result
+            list.add(new ArrayList<>(ans));
+            return;
+        }
+        for (int i = idx; i < s.length(); i++) {
+            // If the substring from idx to i is a palindrome
+            if (method2(idx, i, s)) {
+                // Add the palindrome substring
+                ans.add(s.substring(idx, i + 1));
+                // Recurse to find further partitions
+                method1(i + 1, s, list, ans);
+                // Backtrack
+                ans.remove(ans.size() - 1);
+            }
+        }
+    }
+
+    private boolean method2(int start, int end, String s) {
+        while (start < end) {
+            if (s.charAt(start) != s.charAt(end)) {
+                // Not a palindrome
+                return false;
+            }
+            start++;
+            end--;
+        }
+        // It\'s a palindrome
+        return true;
+    }
+}

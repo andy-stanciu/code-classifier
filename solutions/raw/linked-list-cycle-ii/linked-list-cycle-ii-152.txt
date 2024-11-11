@@ -1,0 +1,42 @@
+public class Solution {
+
+    public ListNode detectCycle(ListNode head) {
+        int l = countNodesinLoop(head);
+        if (//means no cycle
+        l == 0)
+            return null;
+        ListNode p1 = head;
+        ListNode p2 = head;
+        while (//traverse p1 l times
+        l != 0) {
+            p1 = p1.next;
+            l--;
+        }
+        while (//now move both forward until they meet , the will meet at the node where cycle begins
+        p1 != p2) {
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+        return p2;
+    }
+
+    int countNodesinLoop(ListNode head) {
+        ListNode fast = head;
+        ListNode slow = head;
+        int l = 0;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            if (//encountered cycle
+            fast == slow) {
+                //to count no of node , move slow again until it meets f in a cycle
+                do {
+                    l++;
+                    slow = slow.next;
+                } while (slow != fast);
+                return l;
+            }
+        }
+        return l;
+    }
+}

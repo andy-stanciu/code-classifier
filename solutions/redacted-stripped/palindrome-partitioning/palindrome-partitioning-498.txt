@@ -1,0 +1,47 @@
+class Solution {
+
+    String s;
+
+    List<List<String>> ans;
+
+    boolean[][] isPali;
+
+    private void solve(int i, int j) {
+        if (i < 0 || j == s.length())
+            return;
+        if (s.charAt(i) == s.charAt(j)) {
+            if (i == j || isPali[i + 1][j - 1] || j - i == 1) {
+                isPali[i][j] = true;
+                solve(i - 1, j + 1);
+            }
+            solve(i - 1, j);
+            solve(i, j + 1);
+        }
+    }
+
+    private void dfs(int i, List<String> path) {
+        if (i == s.length()) {
+            ans.add(new ArrayList<String>(path));
+            return;
+        }
+        for (int ii = i; ii < s.length(); ++ii) {
+            if (!isPali[i][ii])
+                continue;
+            int popPos = path.size();
+            path.add(s.substring(i, ii + 1));
+            dfs(ii + 1, path);
+            path.remove(popPos);
+        }
+    }
+
+    public List<List<String>> partition(String s) {
+        ans = new ArrayList<List<String>>();
+        isPali = new boolean[s.length()][s.length()];
+        this.s = s;
+        for (int i = 0; i < s.length(); ++i) {
+            solve(i, i);
+        }
+        dfs(0, new ArrayList<String>());
+        return ans;
+    }
+}

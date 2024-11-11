@@ -1,0 +1,35 @@
+public class Solution {
+
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> operands = new Stack<>();
+        for (String token : tokens) {
+            if (isSpecialChar(token)) {
+                int secondEle = operands.pop();
+                int firstEle = operands.pop();
+                operands.push(applyOp(firstEle, secondEle, token));
+            } else {
+                operands.push(Integer.parseInt(token));
+            }
+        }
+        return operands.peek();
+    }
+
+    private boolean isSpecialChar(String token) {
+        return "*".equals(token) || "/".equals(token) || "-".equals(token) || "+".equals(token);
+    }
+
+    private int applyOp(int firstEle, int secondEle, String token) {
+        switch(token) {
+            case "*":
+                return firstEle * secondEle;
+            case "/":
+                return firstEle / secondEle;
+            case "-":
+                return firstEle - secondEle;
+            case "+":
+                return firstEle + secondEle;
+            default:
+                throw new IllegalArgumentException("Invalid operation");
+        }
+    }
+}

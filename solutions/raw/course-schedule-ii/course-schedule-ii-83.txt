@@ -1,0 +1,42 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        int[] inDegree = new int[numCourses];
+        int[] res = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] prereq : prerequisites) {
+            int course = prereq[0];
+            int prerequisite = prereq[1];
+            adjList.get(prerequisite).add(course);
+            inDegree[course]++;
+        }
+        // Step 3: Initialize a queue and add all courses with in-degree 0
+        Queue<Integer> queue = new LinkedList<>();
+        int currInd = 0;
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree[i] == 0) {
+                res[currInd++] = i;
+                queue.add(i);
+            }
+        }
+        // Step 4: Perform BFS
+        int processedCourses = 0;
+        while (!queue.isEmpty()) {
+            int currentCourse = queue.poll();
+            processedCourses++;
+            // Reduce in-degree of neighboring courses
+            for (int neighbor : adjList.get(currentCourse)) {
+                inDegree[neighbor]--;
+                if (inDegree[neighbor] == 0) {
+                    res[currInd++] = neighbor;
+                    queue.add(neighbor);
+                }
+            }
+        }
+        // Step 5: Check if all courses were processed
+        return processedCourses == numCourses ? res : new int[0];
+    }
+}

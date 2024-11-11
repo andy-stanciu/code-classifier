@@ -1,0 +1,64 @@
+class TrieNode {
+
+    boolean var1;
+
+    Map<Character, TrieNode> children;
+
+    TrieNode() {
+        this.children = new HashMap<>();
+    }
+}
+
+class Solution {
+
+    private String s;
+
+    private int[] memo;
+
+    private TrieNode root;
+
+    private boolean dp(int i, int n) {
+        if (i == n) {
+            return true;
+        }
+        if (memo[i] != -1) {
+            return memo[i] == 1;
+        }
+        TrieNode curr = root;
+        for (int j = i; j < n; j++) {
+            char c = s.charAt(j);
+            if (curr.children.containsKey(c)) {
+                curr = curr.children.get(c);
+                if (curr.var1) {
+                    if (dp(j + 1, n)) {
+                        memo[i] = 1;
+                        return true;
+                    }
+                }
+            } else {
+                break;
+            }
+        }
+        memo[i] = 0;
+        return false;
+    }
+
+    public boolean method1(String s, List<String> param1) {
+        var n = s.length();
+        this.memo = new int[n];
+        Arrays.fill(this.memo, -1);
+        this.root = new TrieNode();
+        this.s = s;
+        for (String var2 : param1) {
+            TrieNode curr = root;
+            for (char c : var2.toCharArray()) {
+                if (!curr.children.containsKey(c)) {
+                    curr.children.put(c, new TrieNode());
+                }
+                curr = curr.children.get(c);
+            }
+            curr.var1 = true;
+        }
+        return dp(0, n);
+    }
+}

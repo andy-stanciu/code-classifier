@@ -1,0 +1,42 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        // Create an array to store the in-degree of each course
+        int[] inDegree = new int[param1];
+        // Create a map to represent the directed graph of prerequisites
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        // Iterate through the prerequisites array and update the in-degree and graph
+        for (int[] prereq : prerequisites) {
+            int var1 = prereq[0];
+            int var2 = prereq[1];
+            inDegree[var1]++;
+            graph.computeIfAbsent(var2, k -> new ArrayList<>()).add(var1);
+        }
+        // Create a queue to store courses with zero in-degree
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (inDegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        // Create an array to store the order of courses
+        int[] order = new int[param1];
+        int index = 0;
+        // Perform a BFS on the graph
+        while (!queue.isEmpty()) {
+            int var1 = queue.poll();
+            order[index++] = var1;
+            // Update the in-degree of each course and add any courses with zero in-degree to the queue
+            if (graph.containsKey(var1)) {
+                for (int var3 : graph.get(var1)) {
+                    inDegree[var3]--;
+                    if (inDegree[var3] == 0) {
+                        queue.offer(var3);
+                    }
+                }
+            }
+        }
+        // If all courses can be taken, return the order of courses, otherwise return an empty array
+        return index == param1 ? order : new int[0];
+    }
+}

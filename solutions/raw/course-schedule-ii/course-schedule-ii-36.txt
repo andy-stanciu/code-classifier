@@ -1,0 +1,46 @@
+public class Solution {
+
+    private List<Integer> orderCourse;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        orderCourse = new ArrayList<>();
+        List<Integer>[] adj = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            adj[i] = new ArrayList<>();
+        }
+        for (int[] prerequisite : prerequisites) {
+            adj[prerequisite[1]].add(prerequisite[0]);
+        }
+        boolean[] visit = new boolean[numCourses];
+        boolean[] inStack = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (dfs(i, adj, visit, inStack)) {
+                return new int[0];
+            }
+        }
+        int[] result = new int[orderCourse.size()];
+        for (int i = 0; i < orderCourse.size(); i++) {
+            result[i] = orderCourse.get(orderCourse.size() - 1 - i);
+        }
+        return result;
+    }
+
+    private boolean dfs(int node, List<Integer>[] adj, boolean[] visit, boolean[] inStack) {
+        if (inStack[node]) {
+            return true;
+        }
+        if (visit[node]) {
+            return false;
+        }
+        visit[node] = true;
+        inStack[node] = true;
+        for (int neighbour : adj[node]) {
+            if (dfs(neighbour, adj, visit, inStack)) {
+                return true;
+            }
+        }
+        inStack[node] = false;
+        orderCourse.add(node);
+        return false;
+    }
+}

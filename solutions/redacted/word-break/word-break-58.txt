@@ -1,0 +1,49 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        //return recWay2(s, wordDict);
+        return recWay1(s, param1);
+    }
+
+    boolean recWay2(String s, List<String> param1) {
+        Boolean[] memo = new Boolean[s.length() + 1];
+        return method2(s, new HashSet<>(param1), 0, memo);
+    }
+
+    boolean method2(String s, Set<String> param1, int k, Boolean[] memo) {
+        int n = s.length();
+        if (k == n)
+            return true;
+        if (memo[k] != null)
+            return memo[k];
+        for (int i = k + 1; i <= n; i++) {
+            String var1 = s.substring(k, i);
+            if (param1.contains(var1) && method2(s, param1, i, memo)) {
+                return memo[k] = true;
+            }
+        }
+        return memo[k] = false;
+    }
+
+    boolean recWay1(String s, List<String> param1) {
+        Boolean[] memo = new Boolean[s.length() + 1];
+        return method1(s, param1, 0, memo);
+    }
+
+    boolean method1(String s, List<String> param1, int k, Boolean[] memo) {
+        if (k == s.length()) {
+            return true;
+        }
+        if (memo[k] != null) {
+            return memo[k];
+        }
+        for (int i = 0; i < param1.size(); i++) {
+            String var1 = param1.get(i);
+            if (s.startsWith(var1, k)) {
+                if (method1(s, param1, k + var1.length(), memo))
+                    return memo[k] = true;
+            }
+        }
+        return memo[k] = false;
+    }
+}

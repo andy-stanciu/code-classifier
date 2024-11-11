@@ -1,0 +1,30 @@
+class Solution {
+
+    Map<String, Boolean> map = new HashMap<String, Boolean>();
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        // Base case: If the string is empty, it can be segmented (considered valid)
+        if (s.length() == 0) {
+            return true;
+        }
+        // Check the memoization map. If the string exists and is marked as false,
+        // it means we already determined it\'s not segmentable, so avoid redundant calculations
+        if (map.containsKey(s) && !map.get(s)) {
+            return false;
+        }
+        for (String str : wordDict) {
+            int len = str.length();
+            // Check if the current word (str) is a prefix of the string (s)
+            if (s.startsWith(str)) {
+                // Recursive call to check if the remaining string (substring) can be segmented
+                // using the same word dictionary
+                if (wordBreak(s.substring(len), wordDict)) {
+                    return true;
+                }
+            }
+        }
+        // If no valid segmentation is found for the current string, mark it as false in the memoization map
+        map.put(s, false);
+        return false;
+    }
+}

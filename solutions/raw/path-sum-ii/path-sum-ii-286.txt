@@ -1,0 +1,25 @@
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> result = new ArrayList<>();
+        helper(root, targetSum, new ArrayList<Integer>(), result);
+        return result;
+    }
+
+    void helper(TreeNode root, int target, List<Integer> list, List<List<Integer>> result) {
+        if (root == null)
+            return;
+        // We have a path, update result and add the current value.
+        if (root.left == null && root.right == null && target == root.val) {
+            result.add(new ArrayList<>(list));
+            result.get(result.size() - 1).add(root.val);
+            return;
+        }
+        // go to left and right
+        list.add(root.val);
+        helper(root.left, target - root.val, list, result);
+        helper(root.right, target - root.val, list, result);
+        // remove as we wind up the recursive call
+        list.remove(list.size() - 1);
+    }
+}

@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] ans = new int[param1];
+        int index = 0;
+        ArrayList<Integer>[] g = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            g[i] = new ArrayList<>();
+        }
+        int[] indegrees = new int[param1];
+        for (int[] e : prerequisites) {
+            g[e[1]].add(e[0]);
+            indegrees[e[0]]++;
+        }
+        Queue<Integer> queue = new ArrayDeque<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegrees[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                int v = queue.poll();
+                ans[index++] = v;
+                for (int adjacent : g[v]) {
+                    if (--indegrees[adjacent] == 0) {
+                        queue.offer(adjacent);
+                    }
+                }
+            }
+        }
+        if (index == param1) {
+            return ans;
+        }
+        return new int[0];
+    }
+}

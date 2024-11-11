@@ -1,0 +1,61 @@
+class Node {
+
+    int val;
+
+    List<Node> neighbors;
+
+    public Node(int val) {
+        this.val = val;
+        this.neighbors = new ArrayList<>();
+    }
+}
+
+public class Solution {
+
+    public Map<Integer, Node> buildGraph(int param1, int[][] prerequisites) {
+        Map<Integer, Node> graph = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            graph.put(i, new Node(i));
+        }
+        for (int[] prerequisite : prerequisites) {
+            int var1 = prerequisite[0];
+            int var2 = prerequisite[1];
+            graph.get(var2).neighbors.add(graph.get(var1));
+        }
+        return graph;
+    }
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        Map<Integer, Node> graph = buildGraph(param1, prerequisites);
+        Map<Node, Integer> inDegree = new HashMap<>();
+        for (Node node : graph.values()) {
+            inDegree.put(node, 0);
+        }
+        for (Node node : graph.values()) {
+            for (Node neighbor : node.neighbors) {
+                inDegree.put(neighbor, inDegree.get(neighbor) + 1);
+            }
+        }
+        Queue<Node> queue = new LinkedList<>();
+        List<Integer> result = new ArrayList<>();
+        for (Node node : graph.values()) {
+            if (inDegree.get(node) == 0) {
+                queue.add(node);
+            }
+        }
+        while (!queue.isEmpty()) {
+            Node current = queue.poll();
+            result.add(current.val);
+            for (Node neighbor : current.neighbors) {
+                inDegree.put(neighbor, inDegree.get(neighbor) - 1);
+                if (inDegree.get(neighbor) == 0) {
+                    queue.add(neighbor);
+                }
+            }
+        }
+        if (result.size() != param1) {
+            return new int[0];
+        }
+        return result.stream().mapToInt(i -> i).toArray();
+    }
+}

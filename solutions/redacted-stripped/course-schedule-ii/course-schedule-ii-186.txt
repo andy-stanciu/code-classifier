@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] topoSort(int param1, List<List<Integer>> adjList) {
+        int[] indegree = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            for (int adjNode : adjList.get(i)) {
+                indegree[adjNode]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0)
+                q.offer(i);
+        }
+        int topoElementCount = 0;
+        int[] var1 = new int[param1];
+        Arrays.fill(var1, -1);
+        while (!q.isEmpty()) {
+            int front = q.poll();
+            var1[topoElementCount] = front;
+            topoElementCount++;
+            for (int adjNode : adjList.get(front)) {
+                indegree[adjNode]--;
+                if (indegree[adjNode] == 0)
+                    q.offer(adjNode);
+            }
+        }
+        return topoElementCount == param1 ? var1 : new int[0];
+    }
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int from = prerequisites[i][1];
+            int to = prerequisites[i][0];
+            adjList.get(from).add(to);
+        }
+        return topoSort(param1, adjList);
+    }
+}

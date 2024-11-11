@@ -1,0 +1,70 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Triplet {
+
+    TreeNode node;
+
+    int sum;
+
+    String list;
+
+    Triplet(TreeNode node, int sum, String list) {
+        this.node = node;
+        this.sum = sum;
+        this.list = list;
+    }
+
+    public TreeNode getNode() {
+        return node;
+    }
+
+    public int getSum() {
+        return sum;
+    }
+
+    public String getList() {
+        return list;
+    }
+}
+
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> pathSum = new ArrayList<>();
+        if (root != null) {
+            Triplet tripletRoot = new Triplet(root, root.val, String.valueOf(root.val));
+            Stack<Triplet> stack = new Stack<>();
+            stack.push(tripletRoot);
+            while (!stack.isEmpty()) {
+                Triplet tripletNode = stack.pop();
+                TreeNode currentNode = tripletNode.getNode();
+                if (currentNode.left == null && currentNode.right == null && tripletNode.getSum() == targetSum) {
+                    String[] arr = tripletNode.getList().split(",");
+                    pathSum.add(Arrays.stream(arr).map(Integer::valueOf).collect(Collectors.toList()));
+                }
+                if (currentNode.right != null) {
+                    Triplet tripletNodeRight = new Triplet(currentNode.right, currentNode.right.val + tripletNode.getSum(), new String(tripletNode.getList() + "," + currentNode.right.val));
+                    stack.push(tripletNodeRight);
+                }
+                if (currentNode.left != null) {
+                    Triplet tripletNodeLeft = new Triplet(currentNode.left, currentNode.left.val + tripletNode.getSum(), tripletNode.getList() + "," + currentNode.left.val);
+                    stack.push(tripletNodeLeft);
+                }
+            }
+        }
+        return pathSum;
+    }
+}

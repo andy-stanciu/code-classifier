@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<Integer>());
+        }
+        for (int[] requisites : prerequisites) {
+            graph.get(requisites[0]).add(requisites[1]);
+        }
+        int[] reversePostOrder = new int[param1];
+        boolean[] hasCycle = new boolean[1];
+        int[] count = new int[1];
+        boolean[] visited = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            DFS(i, visited, new boolean[param1], hasCycle, reversePostOrder, count, graph);
+        }
+        if (hasCycle[0])
+            return new int[0];
+        else
+            return reversePostOrder;
+    }
+
+    private void DFS(int node, boolean[] visited, boolean[] trail, boolean[] hasCycle, int[] ans, int[] count, List<List<Integer>> graph) {
+        // base case for when you ever find a cycle at any branch of recursion.
+        if (hasCycle[0])
+            return;
+        // for when you encounter the cycle at first base case.
+        if (trail[node]) {
+            hasCycle[0] = true;
+            return;
+        }
+        // base case to avoid visited nodes in the graph.
+        if (visited[node])
+            return;
+        trail[node] = true;
+        visited[node] = true;
+        for (int i : graph.get(node)) {
+            DFS(i, visited, trail, hasCycle, ans, count, graph);
+        }
+        trail[node] = false;
+        ans[count[0]++] = node;
+    }
+}

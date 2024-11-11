@@ -1,0 +1,49 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        return method2(s, param1);
+    }
+
+    public boolean method2(String s, List<String> param1) {
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[dp.length - 1] = true;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            for (int j = i; j < dp.length; j++) {
+                if (dp[j] && param1.contains(s.substring(i, j))) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[0];
+    }
+
+    public boolean method3(String s, List<String> param1) {
+        Boolean[][] dp = new Boolean[s.length() + 1][s.length() + 1];
+        return find(0, s.length(), param1, dp, s);
+    }
+
+    boolean find(int startIndex, int endIndex, List<String> param1, Boolean[][] dp, String s) {
+        if (startIndex > endIndex || endIndex < 0) {
+            return false;
+        }
+        if (dp[startIndex][endIndex] != null) {
+            return dp[startIndex][endIndex];
+        }
+        String temp = s.substring(startIndex, endIndex);
+        if (param1.contains(temp)) {
+            dp[startIndex][endIndex] = true;
+            return true;
+        }
+        boolean ans = false;
+        for (int i = startIndex + 1; i <= endIndex; i++) {
+            boolean currentAns = find(i, endIndex, param1, dp, s);
+            if (currentAns) {
+                currentAns = find(startIndex, i, param1, dp, s);
+            }
+            ans = ans || currentAns;
+        }
+        dp[startIndex][endIndex] = ans;
+        return ans;
+    }
+}

@@ -1,0 +1,83 @@
+class Solution {
+
+    public List<Integer> method1(int[] nums) {
+        // max 2 elemnt will come
+        int n = nums.length;
+        // 1. brute force soln
+        /*  List<Integer> list = new ArrayList<>();   
+       for(int i =0;i<n;i++){
+        int cnt=0;       
+         if(list.size()==0||nums[i]!=list.get(0)){
+           cnt =0;
+          
+        for(int j =0;j<n;j++){
+          if(nums[i]==nums[j]){
+            cnt++;
+          }
+        }
+        if(cnt>n/3){
+            list.add(nums[i]);
+        }
+        if(list.size()==2){
+            break;
+        }
+       }
+       }
+      return list;*/
+        // optimal soln --> by using morees voting algorithm
+        int ele1 = Integer.MIN_VALUE;
+        int ele2 = Integer.MIN_VALUE;
+        int cnt1 = 0;
+        int cnt2 = 0;
+        for (int i = 0; i < n; i++) {
+            if (cnt1 == 0 && nums[i] != ele2) {
+                cnt1 = 1;
+                ele1 = nums[i];
+            } else if (cnt2 == 0 && nums[i] != ele1) {
+                cnt2 = 1;
+                ele2 = nums[i];
+            } else if (nums[i] == ele1) {
+                cnt1++;
+            } else if (nums[i] == ele2) {
+                cnt2++;
+            } else if (nums[i] != ele1) {
+                cnt1--;
+                cnt2--;
+            }
+        }
+        //  check ele1 and ele2 > n/3
+        List<Integer> list = new ArrayList<>();
+        int cntone = 0;
+        int cnttwo = 0;
+        for (int i = 0; i < n; i++) {
+            if (ele1 == nums[i]) {
+                cntone++;
+            }
+            if (ele2 == nums[i]) {
+                cnttwo++;
+            }
+        }
+        if (cntone > n / 3) {
+            list.add(ele1);
+        }
+        if (cnttwo > n / 3) {
+            list.add(ele2);
+        }
+        return list;
+        // better soln --> hash map
+        /* List<Integer> list = new ArrayList<>();
+   HashMap<Integer,Integer> mpp = new HashMap<>();
+   for(int i =0;i<n;i++){
+    int value = mpp.getOrDefault(nums[i],0);
+    mpp.put(nums[i],value+1);
+    int mini=(int)(n/3)+1;
+    if(mpp.get(nums[i])==mini){
+        list.add(nums[i]);
+    }
+    if(list.size()==0){
+        break;
+    }
+   }
+   return list;*/
+    }
+}

@@ -1,0 +1,32 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<Integer>[] graph = new List[param1];
+        Arrays.setAll(graph, x -> new ArrayList<>());
+        int[] inDegree = new int[param1];
+        for (int[] prerequisite : prerequisites) {
+            int var1 = prerequisite[0];
+            int var2 = prerequisite[1];
+            graph[var2].add(var1);
+            ++inDegree[var1];
+        }
+        Deque<Integer> queue = new ArrayDeque<>();
+        for (int i = 0; i < param1; ++i) {
+            if (inDegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        int[] order = new int[param1];
+        int var3 = 0;
+        while (!queue.isEmpty()) {
+            int var4 = queue.poll();
+            order[var3++] = var4;
+            for (int var5 : graph[var4]) {
+                if (--inDegree[var5] == 0) {
+                    queue.offer(var5);
+                }
+            }
+        }
+        return var3 == param1 ? order : new int[0];
+    }
+}

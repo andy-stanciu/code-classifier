@@ -1,0 +1,37 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> result = new ArrayList<>();
+        List<String> current = new ArrayList<>();
+        helper(s, result, current, 0);
+        return result;
+    }
+
+    private void helper(String s, List<List<String>> result, List<String> current, int start) {
+        if (start == s.length()) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+        for (int i = start + 1; i <= s.length(); i++) {
+            if (isValid(s.substring(start, i))) {
+                current.add(s.substring(start, i));
+                helper(s, result, current, i);
+                current.remove(current.size() - 1);
+            }
+        }
+    }
+
+    private boolean isValid(String s) {
+        char[] array = s.toCharArray();
+        int left = 0;
+        int right = array.length - 1;
+        while (left < right) {
+            if (array[left] != array[right]) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+}

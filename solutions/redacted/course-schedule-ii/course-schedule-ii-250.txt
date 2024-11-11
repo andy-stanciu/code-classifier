@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] ans = new int[param1];
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        boolean[] visited = new boolean[param1];
+        boolean[] recursionStack = new boolean[param1];
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < param1; i++) {
+            if (!dfs(graph, visited, recursionStack, i, st)) {
+                return new int[0];
+            }
+        }
+        int index = 0;
+        while (!st.isEmpty()) {
+            ans[index++] = st.pop();
+        }
+        return ans;
+    }
+
+    private boolean dfs(List<List<Integer>> graph, boolean[] recursionStack, boolean[] visited, int curr, Stack<Integer> st) {
+        if (recursionStack[curr])
+            return false;
+        if (visited[curr])
+            return true;
+        visited[curr] = true;
+        recursionStack[curr] = true;
+        for (int i = 0; i < graph.get(curr).size(); i++) {
+            if (!dfs(graph, recursionStack, visited, graph.get(curr).get(i), st)) {
+                return false;
+            }
+        }
+        st.push(curr);
+        recursionStack[curr] = false;
+        return true;
+    }
+}

@@ -1,0 +1,69 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // orginize the prerequisites into a array of lists
+        // indexs of array represents the course number
+        // elements are the list of prerequisites of the course
+        List<Integer>[] orgPres = organizePrerequisites(numCourses, prerequisites);
+        // dfs search for prerequisites of every courses
+        List<Integer> schedule = new ArrayList<>();
+        boolean[] takenCourse = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            // if this course can not be taken
+            // then it is impossible to finish all courses
+            if (!dfs(i, orgPres, new boolean[numCourses], takenCourse, schedule))
+                return new int[0];
+        }
+        // convert the list of schedule into an array
+        int[] res = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            res[i] = schedule.get(i);
+        }
+        return res;
+    }
+
+    // dfs helper function to dfs search for prerequisites of a course
+    // return true if this course is taken
+    private boolean dfs(int course, List<Integer>[] orgPres, boolean[] visited, boolean[] takenCourse, List<Integer> schedule) {
+        // if the course is already taken, return
+        if (takenCourse[course])
+            return true;
+        // if the course has no prerequisite, this course can be taken
+        // add this course to the schedule and mark this course as taken
+        if (orgPres[course] == null || takenCourse[course]) {
+            takenCourse[course] = true;
+            schedule.add(course);
+            return true;
+        }
+        // if the course is already visited during dfs search for the prerequisites
+        // it means that this course is the prerequisite of itself
+        // so this course can not be taken
+        if (visited[course])
+            return false;
+        // for all prerequisites of this course
+        // chech if they can be taken by dfs search their prerequisites
+        visited[course] = true;
+        for (int pre : orgPres[course]) {
+            // if the prerequiste can not be taken
+            // then this course can not be taken
+            if (!dfs(pre, orgPres, visited, takenCourse, schedule))
+                return false;
+        }
+        // all prereqiusites are already taken
+        // add this course to the schedule and mark this course as taken
+        takenCourse[course] = true;
+        schedule.add(course);
+        return true;
+    }
+
+    // helper function to organize prerequisite courses
+    private List[] organizePrerequisites(int n, int[][] prerequisites) {
+        List<Integer>[] res = new List[n];
+        for (int[] p : prerequisites) {
+            if (res[p[0]] == null)
+                res[p[0]] = new ArrayList<>();
+            res[p[0]].add(p[1]);
+        }
+        return res;
+    }
+}

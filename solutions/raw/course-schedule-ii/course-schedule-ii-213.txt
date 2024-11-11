@@ -1,0 +1,60 @@
+class Solution {
+
+    //Record the result of a backward traversal
+    List<Integer> postorder = new ArrayList<>();
+
+    //Record the presence or absence of a loop
+    boolean hasCycle = false;
+
+    boolean[] visited, onPath;
+
+    private List<Integer>[] buildGraph(int numCourses, int[][] prerequisites) {
+        //graph have "numCourses" nodes
+        List<Integer>[] graph = new LinkedList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new LinkedList<>();
+        }
+        for (int[] edge : prerequisites) {
+            //complete the course "start" to take "end"
+            int start = edge[1];
+            int end = edge[0];
+            graph[start].add(end);
+        }
+        return graph;
+    }
+
+    private void traverse(List<Integer>[] graph, int s) {
+        if (onPath[s])
+            hasCycle = true;
+        if (visited[s] || hasCycle)
+            return;
+        onPath[s] = true;
+        visited[s] = true;
+        for (int t : graph[s]) {
+            traverse(graph, t);
+        }
+        //post
+        postorder.add(s);
+        onPath[s] = false;
+    }
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<Integer>[] graph = buildGraph(numCourses, prerequisites);
+        onPath = new boolean[numCourses];
+        visited = new boolean[numCourses];
+        //trasversal graph
+        for (int i = 0; i < numCourses; i++) {
+            traverse(graph, i);
+        }
+        //if hasCycle cannot use Topological sorting
+        if (hasCycle)
+            return new int[] {};
+        //reverse of postorder is Topological sort
+        Collections.reverse(postorder);
+        int[] res = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            res[i] = postorder.get(i);
+        }
+        return res;
+    }
+}

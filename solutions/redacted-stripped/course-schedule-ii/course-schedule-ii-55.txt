@@ -1,0 +1,54 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] prereq : prerequisites) {
+            int var1 = prereq[0];
+            int var2 = prereq[1];
+            adj.get(var2).add(var1);
+        }
+        return topoSort(param1, adj);
+    }
+
+    static int[] topoSort(int V, ArrayList<ArrayList<Integer>> adj) {
+        ArrayList<Integer> t = new ArrayList<>();
+        boolean[] visited = new boolean[V];
+        boolean[] recStack = new boolean[V];
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                if (topo(V, adj, i, visited, recStack, t)) {
+                    return new int[0];
+                }
+            }
+        }
+        Collections.reverse(t);
+        int k = 0;
+        int[] ans = new int[V];
+        for (int i : t) {
+            ans[k++] = i;
+        }
+        return ans;
+    }
+
+    public static boolean topo(int V, ArrayList<ArrayList<Integer>> adj, int i, boolean[] visited, boolean[] recStack, ArrayList<Integer> t) {
+        if (recStack[i]) {
+            return true;
+        }
+        if (visited[i]) {
+            return false;
+        }
+        visited[i] = true;
+        recStack[i] = true;
+        for (int neighbor : adj.get(i)) {
+            if (topo(V, adj, neighbor, visited, recStack, t)) {
+                return true;
+            }
+        }
+        recStack[i] = false;
+        t.add(i);
+        return false;
+    }
+}

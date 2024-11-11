@@ -1,0 +1,55 @@
+class Solution {
+
+    int[] indegree = null;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<Integer>[] adjMatrix = makeAdjMatrix(param1, prerequisites);
+        int[] taskOrder = topSort(param1, adjMatrix, indegree);
+        return taskOrder;
+    }
+
+    int[] topSort(int param1, List<Integer>[] adjMatrix, int[] indegree) {
+        int[] topo = new int[param1];
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        int ind = 0;
+        while (!q.isEmpty()) {
+            int v = q.poll();
+            topo[ind++] = v;
+            List<Integer> nbrs = adjMatrix[v];
+            if (nbrs != null) {
+                for (int i : nbrs) {
+                    indegree[i]--;
+                    if (indegree[i] == 0) {
+                        q.add(i);
+                    }
+                }
+            }
+        }
+        if (ind != param1) {
+            return new int[] {};
+        }
+        return topo;
+    }
+
+    List<Integer>[] makeAdjMatrix(int param1, int[][] prerequisites) {
+        List<Integer>[] adjMatrix = new List[param1];
+        indegree = new int[param1];
+        for (int[] c : prerequisites) {
+            if (adjMatrix[c[1]] != null) {
+                adjMatrix[c[1]].add(c[0]);
+                indegree[c[0]]++;
+            } else {
+                List<Integer> neighbors = new ArrayList<>();
+                neighbors.add(c[0]);
+                indegree[c[0]]++;
+                adjMatrix[c[1]] = neighbors;
+            }
+        }
+        return adjMatrix;
+    }
+}

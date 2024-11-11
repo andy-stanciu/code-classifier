@@ -1,0 +1,52 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int n = s.length();
+        int[] dp = new int[n];
+        Arrays.fill(dp, -1);
+        return solve(0, s, wordDict, dp);
+    }
+
+    boolean solve(int index, String str, List<String> wordDict, int[] dp) {
+        int n = str.length();
+        if (index >= str.length())
+            return true;
+        if (dp[index] != -1) {
+            if (dp[index] == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        boolean res = false;
+        for (int i = 0; i < wordDict.size(); i++) {
+            boolean temp = false;
+            if (validate(index, str, wordDict.get(i))) {
+                temp = solve(index + wordDict.get(i).length(), str, wordDict, dp);
+            }
+            if (temp == true) {
+                res = true;
+                break;
+            }
+        }
+        if (res == true) {
+            dp[index] = 1;
+        } else {
+            dp[index] = 0;
+        }
+        return res;
+    }
+
+    boolean validate(int index, String str, String word) {
+        if (index + word.length() - 1 >= str.length())
+            return false;
+        boolean res = true;
+        for (int i = 0; i < word.length(); i++) {
+            if (word.charAt(i) != str.charAt(index + i)) {
+                res = false;
+                break;
+            }
+        }
+        return res;
+    }
+}

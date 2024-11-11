@@ -1,0 +1,65 @@
+// class Solution {
+//     public List<List<String>> partition(String s) {
+// List<List<String>> list = new ArrayList<>();
+// List<String> l = new ArrayList<>();
+// solve(s, l, list);
+// return list;
+//     }
+//     public void solve(String s, List<String> l, List<List<String>> list){
+//         if(s.length() == 0){
+//             list.add(new ArrayList<String>(l));
+//             return;
+//         }
+//         for(int i = 1; i <= s.length(); i++){
+//             String str = s.substring(0, i);
+//             if(palindrome(str)){
+//                 l.add(str);
+//                 solve(s.substring(i), l, list);
+//                 l.remove(l.size() - 1);
+//             }
+//         }
+//     }
+//     public boolean palindrome(String s) {
+//         int i = 0;
+//         int j = s.length() - 1;
+//         while(i < j) {
+//             if(s.charAt(i) != s.charAt(j)) {
+//                 return false;
+//             }
+//             i++;
+//             j--;
+//         }
+//         return true;
+//     }
+// }
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> list = new ArrayList<>();
+        List<String> l = new ArrayList<>();
+        boolean[][] dp = new boolean[s.length()][s.length()];
+        for (int j = 0; j < s.length(); j++) {
+            for (int i = 0; i <= j; i++) {
+                if (s.charAt(i) == s.charAt(j) && (j - i <= 2 || dp[i + 1][j - 1])) {
+                    dp[i][j] = true;
+                }
+            }
+        }
+        solve(s, 0, l, list, dp);
+        return list;
+    }
+
+    public void solve(String s, int idx, List<String> l, List<List<String>> list, boolean[][] dp) {
+        if (idx >= s.length()) {
+            list.add(new ArrayList<String>(l));
+            return;
+        }
+        for (int i = idx; i < s.length(); i++) {
+            if (dp[idx][i]) {
+                l.add(s.substring(idx, i + 1));
+                solve(s, i + 1, l, list, dp);
+                l.remove(l.size() - 1);
+            }
+        }
+    }
+}

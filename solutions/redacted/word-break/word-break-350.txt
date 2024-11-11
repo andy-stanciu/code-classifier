@@ -1,0 +1,41 @@
+class Solution {
+
+    Boolean[] dpMemoization;
+
+    HashSet<String> var1;
+
+    public boolean method1(String s, List<String> param1) {
+        if (s == null || s.length() == 0 || param1 == null || param1.size() == 0) {
+            return false;
+        }
+        dpMemoization = new Boolean[s.length()];
+        var1 = new HashSet<>();
+        var1.addAll(param1);
+        method2(s, 0);
+        return dpMemoization[0];
+    }
+
+    private void method2(String s, int index) {
+        if (index == s.length()) {
+            return;
+        }
+        if (dpMemoization[index] != null) {
+            return;
+        }
+        for (int i = index; i < s.length(); i++) {
+            String subString = s.substring(index, i + 1);
+            if (var1.contains(subString)) {
+                if (i == s.length() - 1) {
+                    dpMemoization[index] = true;
+                    return;
+                }
+                method2(s, i + 1);
+                if (dpMemoization[i + 1]) {
+                    dpMemoization[index] = true;
+                    return;
+                }
+            }
+        }
+        dpMemoization[index] = false;
+    }
+}

@@ -1,0 +1,54 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        if (s.isEmpty())
+            return new ArrayList<>();
+        HashMap<Integer, List<List<String>>> dp = new HashMap<>();
+        return dfs(s, 0, dp);
+    }
+
+    private List<List<String>> dfs(String s, int start, HashMap<Integer, List<List<String>>> dp) {
+        List<List<String>> res = new ArrayList<>();
+        if (dp.containsKey(start))
+            return dp.get(start);
+        if (s.length() == 1) {
+            List<String> list = new ArrayList<>();
+            list.add(s);
+            res.add(list);
+            return res;
+        }
+        if (s.length() == 0)
+            return res;
+        for (int j = start; j < s.length(); j++) {
+            String subStr = s.substring(start, j + 1);
+            if (isPalnidrom(subStr)) {
+                List<List<String>> listRigth = dfs(s, j + 1, dp);
+                for (List<String> rigth : listRigth) {
+                    List<String> newList = new ArrayList<String>();
+                    newList.add(subStr);
+                    newList.addAll(rigth);
+                    res.add(newList);
+                }
+                if (listRigth.isEmpty()) {
+                    List<String> list = new ArrayList<>();
+                    list.add(subStr);
+                    res.add(list);
+                }
+            }
+        }
+        dp.put(start, res);
+        return dp.get(start);
+    }
+
+    private boolean isPalnidrom(String s) {
+        int start = 0;
+        int end = s.length() - 1;
+        while (start < end) {
+            if (s.charAt(start) != s.charAt(end))
+                return false;
+            start++;
+            end--;
+        }
+        return true;
+    }
+}

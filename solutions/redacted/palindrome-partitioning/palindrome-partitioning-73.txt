@@ -1,0 +1,40 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> result = new ArrayList<>();
+        backtrack(s, 0, new ArrayList<>(), result);
+        return result;
+    }
+
+    private void backtrack(String s, int start, List<String> path, List<List<String>> result) {
+        // base case
+        if (start == s.length()) {
+            result.add(new ArrayList<>(path));
+            return;
+        }
+        // recursion
+        for (int last = start + 1; last <= s.length(); last++) {
+            String currentSub = s.substring(start, last);
+            if (method1(currentSub)) {
+                path.add(currentSub);
+                // function call
+                backtrack(s, last, path, result);
+                // backtracking step
+                path.remove(path.size() - 1);
+            }
+        }
+    }
+
+    private boolean method1(String sub) {
+        int left = 0;
+        int right = sub.length() - 1;
+        while (left < right) {
+            if (sub.charAt(left) != sub.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+}

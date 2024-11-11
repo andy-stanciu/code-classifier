@@ -1,0 +1,29 @@
+class Solution {
+
+    private int[] dp;
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        dp = new int[s.length() + 1];
+        Arrays.fill(dp, -1);
+        return wordBreakSub(s, 0, wordDict);
+    }
+
+    public boolean wordBreakSub(String s, int i, List<String> remainingWords) {
+        if (i == s.length())
+            return true;
+        if (dp[i] != -1)
+            return dp[i] == 1;
+        for (int it = 0; it < remainingWords.size(); it++) {
+            String word = remainingWords.get(it);
+            int endIndex = i + word.length();
+            if (endIndex > s.length())
+                continue;
+            if (word.equals(s.substring(i, endIndex)) && wordBreakSub(s, endIndex, remainingWords)) {
+                dp[i] = 1;
+                return true;
+            }
+        }
+        dp[i] = 0;
+        return false;
+    }
+}

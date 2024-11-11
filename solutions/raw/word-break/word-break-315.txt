@@ -1,0 +1,85 @@
+class Solution {
+
+    static class Node {
+
+        int row;
+
+        int col;
+
+        Node(int r, int c) {
+            row = r;
+            col = c;
+        }
+    }
+
+    static boolean truth(boolean[][] arr) {
+        if (arr[0][arr.length - 1]) {
+            return true;
+        }
+        ArrayList<Node> map = new ArrayList<>();
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[0][i]) {
+                map.add(new Node(0, i));
+            }
+        }
+        while (map.size() > 0) {
+            int col = map.get(0).col;
+            int row = col + 1;
+            if (arr[row][arr.length - 1]) {
+                return true;
+            }
+            for (int i = row; i < arr.length; i++) {
+                if (arr[row][i]) {
+                    map.add(1, new Node(row, i));
+                }
+            }
+            map.remove(0);
+        }
+        return false;
+    }
+
+    static boolean result(boolean[][] arr) {
+        int row = 0;
+        if (arr[row][arr.length - 1]) {
+            return true;
+        }
+        int col = row;
+        while (col < arr.length) {
+            if (arr[row][arr.length - 1]) {
+                return true;
+            }
+            if (arr[row][col]) {
+                row = col + 1;
+                col = row;
+                continue;
+            } else {
+                col++;
+            }
+        }
+        return false;
+    }
+
+    public static boolean wordBreak(String s, List<String> w) {
+        if (w.contains(s)) {
+            return true;
+        }
+        String[][] map = new String[s.length()][s.length()];
+        boolean[][] arr = new boolean[s.length()][s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = i + 1, k = i; j <= s.length(); j++, k++) {
+                map[i][k] = s.substring(i, j);
+            }
+        }
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = i; j < map.length; j++) {
+                if (w.contains(map[i][j])) {
+                    arr[i][j] = true;
+                }
+            }
+        }
+        if (s.length() > 100) {
+            return result(arr);
+        }
+        return truth(arr);
+    }
+}

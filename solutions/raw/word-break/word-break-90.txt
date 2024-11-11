@@ -1,0 +1,31 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Boolean[] memo = new Boolean[s.length() + 1];
+        return wordBreakHelper(s, 0, wordDict, memo);
+    }
+
+    public boolean wordBreakHelper(String s, int index, List<String> wordDict, Boolean[] memo) {
+        // choice at each call, choose a word from dict, and explore
+        if (memo[index] != null)
+            return memo[index];
+        // base case
+        if (index == s.length()) {
+            return true;
+        }
+        for (int i = 0; i < wordDict.size(); i++) {
+            // choose
+            int cnt = wordDict.get(i).length();
+            if (index + cnt <= s.length() && s.substring(index, index + cnt).equals(wordDict.get(i))) {
+                // explore
+                if (wordBreakHelper(s, index + cnt, wordDict, memo)) {
+                    memo[index] = true;
+                    return true;
+                }
+            }
+        }
+        // unchosse
+        memo[index] = false;
+        return false;
+    }
+}

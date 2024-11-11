@@ -1,0 +1,46 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] visited = new int[param1];
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<Integer>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            adj.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        Stack<Integer> s1 = new Stack<>();
+        int[] pathvisited = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            if (visited[i] == 0) {
+                if (toposort(adj, s1, visited, pathvisited, i)) {
+                    return new int[] {};
+                }
+            }
+        }
+        int[] ans = new int[s1.size()];
+        int index = s1.size() - 1;
+        while (!s1.isEmpty()) {
+            ans[index] = s1.pop();
+            index--;
+        }
+        return ans;
+    }
+
+    public boolean toposort(List<List<Integer>> adj, Stack<Integer> s1, int[] visited, int[] pathvisited, int node) {
+        visited[node] = 1;
+        pathvisited[node] = 1;
+        for (Integer neigh : adj.get(node)) {
+            if (visited[neigh] == 0) {
+                if (toposort(adj, s1, visited, pathvisited, neigh)) {
+                    return true;
+                }
+            } else if (pathvisited[neigh] == 1) {
+                return true;
+            }
+        }
+        pathvisited[node] = 0;
+        s1.push(node);
+        return false;
+    }
+}

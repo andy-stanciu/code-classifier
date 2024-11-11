@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int N = param1;
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < N; i++) {
+            graph.add(new ArrayList<Integer>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        int[] indeg = new int[N];
+        for (ArrayList<Integer> list : graph) {
+            for (int x : list) {
+                indeg[x]++;
+            }
+        }
+        Queue<Integer> q = new ArrayDeque<>();
+        for (int i = 0; i < N; i++) {
+            if (indeg[i] == 0) {
+                q.add(i);
+            }
+        }
+        ArrayList<Integer> topo = new ArrayList<>();
+        while (!q.isEmpty()) {
+            int front = q.remove();
+            topo.add(front);
+            for (int neibr : graph.get(front)) {
+                indeg[neibr]--;
+                if (indeg[neibr] == 0) {
+                    q.add(neibr);
+                }
+            }
+        }
+        if (topo.size() < N) {
+            return new int[0];
+        }
+        int[] ans = new int[N];
+        for (int i = 0; i < N; i++) {
+            ans[i] = topo.get(i);
+        }
+        return ans;
+    }
+}

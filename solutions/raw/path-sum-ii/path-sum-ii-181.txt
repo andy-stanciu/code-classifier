@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        if (root == null)
+            return new ArrayList<>();
+        return pathSumHelper(root, new ArrayList<>(), 0, targetSum);
+    }
+
+    private List<List<Integer>> pathSumHelper(TreeNode node, List<Integer> currentPath, int currentSum, int targetSum) {
+        List<List<Integer>> paths = new ArrayList<>();
+        if (node == null)
+            // Extra safeguard for null nodes
+            return paths;
+        // Add current node\'s value to path list
+        currentPath.add(node.val);
+        // Update current sum with node\'s value
+        currentSum += node.val;
+        // Check if it is a leaf node and if current path sum equals target sum
+        if (node.left == null && node.right == null) {
+            if (currentSum == targetSum) {
+                // Add a copy of the path list to result
+                paths.add(new ArrayList<>(currentPath));
+            }
+        } else {
+            // Recursively explore the children
+            if (node.left != null) {
+                paths.addAll(pathSumHelper(node.left, currentPath, currentSum, targetSum));
+            }
+            if (node.right != null) {
+                paths.addAll(pathSumHelper(node.right, currentPath, currentSum, targetSum));
+            }
+        }
+        // Remove the current node before going back up
+        currentPath.remove(currentPath.size() - 1);
+        return paths;
+    }
+}

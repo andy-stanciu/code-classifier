@@ -1,0 +1,40 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        ArrayList<Integer> courses = new ArrayList<Integer>();
+        boolean[] visited = new boolean[numCourses];
+        boolean[] visiting = new boolean[numCourses];
+        ArrayList<Integer>[] adj = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            adj[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            adj[prerequisites[i][0]].add(prerequisites[i][1]);
+        }
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i]) {
+                if (!DFS(i, adj, courses, visiting, visited))
+                    return new int[0];
+            }
+        }
+        int[] ans = new int[courses.size()];
+        for (int i = 0; i < courses.size(); i++) ans[i] = courses.get(i);
+        return ans;
+    }
+
+    public boolean DFS(int course, ArrayList<Integer>[] adj, ArrayList<Integer> courses, boolean[] visiting, boolean[] visited) {
+        if (visiting[course])
+            return false;
+        visiting[course] = true;
+        for (int preReq : adj[course]) {
+            if (!visited[preReq]) {
+                if (!DFS(preReq, adj, courses, visiting, visited))
+                    return false;
+            }
+        }
+        visited[course] = true;
+        visiting[course] = false;
+        courses.add(course);
+        return true;
+    }
+}

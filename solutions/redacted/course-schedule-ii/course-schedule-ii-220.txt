@@ -1,0 +1,51 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        // Build the adjacency list
+        for (int[] prerequisite : prerequisites) {
+            adjList.get(prerequisite[1]).add(prerequisite[0]);
+        }
+        // Perform topological sort
+        List<Integer> result = new ArrayList<>();
+        boolean[] visited = new boolean[param1];
+        boolean[] inStack = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                if (hasCycle(adjList, visited, inStack, i, result)) {
+                    // Cycle detected, return an empty array
+                    return new int[0];
+                }
+            }
+        }
+        // Convert the list to an array
+        int[] order = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            // Reverse the result
+            order[i] = result.get(param1 - 1 - i);
+        }
+        return order;
+    }
+
+    private boolean hasCycle(List<List<Integer>> adjList, boolean[] visited, boolean[] inStack, int node, List<Integer> result) {
+        visited[node] = true;
+        inStack[node] = true;
+        for (int neighbor : adjList.get(node)) {
+            if (!visited[neighbor]) {
+                if (hasCycle(adjList, visited, inStack, neighbor, result)) {
+                    return true;
+                }
+            } else if (inStack[neighbor]) {
+                // Cycle detected
+                return true;
+            }
+        }
+        inStack[node] = false;
+        // Add the node to the result in reverse order
+        result.add(node);
+        return false;
+    }
+}

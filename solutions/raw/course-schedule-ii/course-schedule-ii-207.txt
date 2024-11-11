@@ -1,0 +1,42 @@
+class Solution {
+
+    int idx;
+
+    int[] ans;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        idx = 0;
+        ans = new int[numCourses];
+        boolean[][] graph = new boolean[numCourses][numCourses];
+        for (int[] preq : prerequisites) {
+            graph[preq[0]][preq[1]] = true;
+        }
+        // Topological sort if possible
+        Boolean[] vis = new Boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (vis[i] == null && topologicalSortIsCycle(numCourses, i, graph, vis))
+                return new int[0];
+        }
+        return ans;
+    }
+
+    private boolean topologicalSortIsCycle(int numCourses, int u, boolean[][] graph, Boolean[] vis) {
+        if (vis[u] != null) {
+            if (// visiting
+            vis[u] == false)
+                return true;
+            else if (vis[u] == true)
+                return false;
+        }
+        // visiting
+        vis[u] = false;
+        for (int v = 0; v < numCourses; v++) {
+            if (graph[u][v] && topologicalSortIsCycle(numCourses, v, graph, vis))
+                return true;
+        }
+        ans[idx++] = u;
+        // visited
+        vis[u] = true;
+        return false;
+    }
+}

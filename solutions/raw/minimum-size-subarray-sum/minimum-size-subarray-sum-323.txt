@@ -1,0 +1,27 @@
+class Solution {
+
+    public int minSubArrayLen(int target, int[] nums) {
+        int n = nums.length;
+        if (n == 0) {
+            return 0;
+        }
+        int[] prefixSum = new int[n + 1];
+        prefixSum[0] = 0;
+        for (int i = 1; i <= n; i++) {
+            prefixSum[i] = prefixSum[i - 1] + nums[i - 1];
+        }
+        int minLength = Integer.MAX_VALUE;
+        int left = 0;
+        int right = 1;
+        while (right <= n) {
+            int sum = prefixSum[right] - prefixSum[left];
+            if (sum >= target) {
+                minLength = Math.min(minLength, right - left);
+                left++;
+            } else {
+                right++;
+            }
+        }
+        return minLength == Integer.MAX_VALUE ? 0 : minLength;
+    }
+}

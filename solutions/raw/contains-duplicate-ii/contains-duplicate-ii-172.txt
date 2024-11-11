@@ -1,0 +1,43 @@
+class Solution {
+
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        //Brute Force Solution
+        // for(int i = 0; i<nums.length; i++){
+        //     for(int j = i + 1; j<nums.length; j++){
+        //         if(nums[i] == nums[j] && Math.abs(i - j) <= k) return true;
+        //         else if(nums[i] == nums[j] && Math.abs(i - j) > k) break;
+        //     }
+        // }
+        // return false;
+        //TC: O(N) and SC : O(N)
+        // HashMap<Integer, Integer> hm = new HashMap<>();
+        // for(int i = 0; i<nums.length; i++){
+        //     int currentValue = nums[i];
+        //     if(hm.containsKey(currentValue)){
+        //         int currentKeyIndex = hm.get(currentValue);
+        //         if(Math.abs(currentKeyIndex - i) <= k) return true;
+        //         hm.put(currentValue, i);
+        //     }else{
+        //         hm.put(currentValue, i);
+        //     }
+        // }
+        // return false;
+        //sliding window
+        int i = 0;
+        int j = 0;
+        int n = nums.length;
+        HashSet<Integer> set = new HashSet<>();
+        while (i < n && j < n) {
+            //maintain k size window
+            while (j < n && (j - i) <= k) {
+                if (set.contains(nums[j]))
+                    return true;
+                set.add(nums[j++]);
+            }
+            //out of k window
+            //remove ith element from the set
+            set.remove(nums[i++]);
+        }
+        return false;
+    }
+}

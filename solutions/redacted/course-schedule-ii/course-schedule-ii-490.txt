@@ -1,0 +1,41 @@
+class Solution {
+
+    int ans[], it;
+
+    public boolean dfs(List<List<Integer>> l, int i, boolean[] vis, boolean[] dfsvis) {
+        vis[i] = true;
+        dfsvis[i] = true;
+        for (int j : l.get(i)) {
+            if (!vis[j]) {
+                if (dfs(l, j, vis, dfsvis))
+                    return true;
+            } else if (dfsvis[j])
+                return true;
+        }
+        ans[it--] = i;
+        dfsvis[i] = false;
+        return false;
+    }
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        ans = new int[param1];
+        it = param1 - 1;
+        boolean check = true;
+        List<List<Integer>> l = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            l.add(new ArrayList<>());
+        }
+        for (int[] i : prerequisites) {
+            l.get(i[1]).add(i[0]);
+        }
+        boolean[] vis = new boolean[param1];
+        boolean[] dfsvis = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!vis[i]) {
+                if (dfs(l, i, vis, dfsvis))
+                    check = false;
+            }
+        }
+        return check ? ans : new int[] {};
+    }
+}

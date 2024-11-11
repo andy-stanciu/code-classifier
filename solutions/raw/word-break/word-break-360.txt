@@ -1,0 +1,74 @@
+class Solution {
+
+    Map<Integer, Boolean> memo = new HashMap<>();
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        var dict = new HashSet<String>(wordDict);
+        return isSequencePossible(s, dict, 0);
+    }
+
+    private boolean isSequencePossible(String s, Set<String> dict, int idx) {
+        if (idx == s.length())
+            return true;
+        else if (memo.containsKey(idx))
+            return memo.get(idx);
+        //try to iterate from the given index and try to form all possible words
+        for (int i = idx; i < s.length(); i++) {
+            String currWord = s.substring(idx, i + 1);
+            if (dict.contains(currWord) && isSequencePossible(s, dict, i + 1)) {
+                memo.put(idx, true);
+                return true;
+            }
+        }
+        memo.put(idx, false);
+        return false;
+    }
+}
+/**
+ * Approach:
+ *  Throw the wordDict into a set for a faster look-up
+ *  Since we need to check all the possible ways for building a sentence we use sliding window
+ *  On each slide we lookup and try to check any possiblities till now which can lead us to the end
+ *  In other word we obtain the current window word and keep checking for next if exist
+ *  Edge case
+ *  There can be a possible senario where you find the word but that would further lead to fail
+ *     -> We need to recurssively consinder each possible word and let it explore from there till the end
+ *  Optimization
+ *  We use DP to store the response from the index we call the helper function which will save other similar call to just see
+ *      the already computed result.
+ *
+ * Complexity Analysis:
+ *
+ * TC: O(M + N * K)
+ * SC: O(N)
+ *
+ * Where M is the size of word dict and time taken to push into the set for lookup
+ * Where N is the Size of the given String on which we iterate
+ * Where K is the size of Window we maintain, by keep checking if the words is present in the loopup set
+ *
+ * Play:
+ *
+ * s = "catsandog", wordDict = ["cats","dog","sand","and","cat"]
+ *
+ *                                             cat
+ *                                 cat                     cats
+ *                 sand                        and                   catsandog
+ *         og               sandog         og            andog              X
+ *      X                       X       X                   X
+ *
+ * 1- lookupMap
+ *
+ * 2- fun helper(s, idx){
+ *     //check base
+ *
+ *     for(i -> n){
+ *         str = substring(idx, i + 1)
+ *         if(str has lookup){
+ *             if(helper(s, i + 1))
+ *                 return true
+ *
+ *         }
+ *     }
+ *     return false;
+ * }
+ */

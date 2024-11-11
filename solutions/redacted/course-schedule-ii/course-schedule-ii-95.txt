@@ -1,0 +1,67 @@
+class Solution {
+
+    static class Edge {
+
+        int src;
+
+        int des;
+
+        Edge(int src, int des) {
+            this.src = src;
+            this.des = des;
+        }
+    }
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int n = param1;
+        ArrayList<Edge>[] graph = new ArrayList[n];
+        // Initialize the graph
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        // Build the graph
+        for (int[] arr : prerequisites) {
+            int src = arr[1];
+            int des = arr[0];
+            graph[src].add(new Edge(src, des));
+        }
+        Stack<Integer> st = new Stack<>();
+        boolean[] vis = new boolean[n];
+        // To detect cycles
+        boolean[] recStack = new boolean[n];
+        for (int i = 0; i < param1; i++) {
+            if (!vis[i]) {
+                if (topo(st, param1, graph, vis, recStack, i)) {
+                    // Return empty array if a cycle is detected
+                    return new int[0];
+                }
+            }
+        }
+        int[] ans = new int[n];
+        int k = 0;
+        while (!st.isEmpty() && k < n) {
+            ans[k++] = st.pop();
+        }
+        return ans;
+    }
+
+    boolean topo(Stack<Integer> st, int param1, ArrayList<Edge>[] graph, boolean[] vis, boolean[] recStack, int curr) {
+        vis[curr] = true;
+        recStack[curr] = true;
+        for (int i = 0; i < graph[curr].size(); i++) {
+            Edge e = graph[curr].get(i);
+            if (!vis[e.des]) {
+                if (topo(st, param1, graph, vis, recStack, e.des)) {
+                    // Cycle detected
+                    return true;
+                }
+            } else if (recStack[e.des]) {
+                // Cycle detected
+                return true;
+            }
+        }
+        recStack[curr] = false;
+        st.push(curr);
+        return false;
+    }
+}

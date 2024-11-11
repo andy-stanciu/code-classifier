@@ -1,0 +1,23 @@
+class Solution {
+
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> st = new Stack<>();
+        int result = 0;
+        HashMap<String, BiFunction<Integer, Integer, Integer>> mp = new HashMap<>();
+        mp.put("+", (a, b) -> a + b);
+        mp.put("-", (a, b) -> a - b);
+        mp.put("*", (a, b) -> a * b);
+        mp.put("/", (a, b) -> a / b);
+        for (String token : tokens) {
+            if (token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/")) {
+                int b = st.pop();
+                int a = st.pop();
+                result = mp.get(token).apply(a, b);
+                st.push(result);
+            } else {
+                st.push(Integer.parseInt(token));
+            }
+        }
+        return st.pop();
+    }
+}

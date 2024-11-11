@@ -1,0 +1,30 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        // DP Approach - using Set
+        // dp[i] represents whether the first i characters can be broken down into dict words
+        int n = s.length();
+        boolean[] dp = new boolean[n + 1];
+        Set<String> set = new HashSet<>();
+        for (String word : wordDict) {
+            set.add(word);
+        }
+        // Saves the "solved" range, e.g. [0, i)
+        // Within the list, each element satisfies dp[i] == true
+        List<Integer> solved = new ArrayList<>();
+        // Base case
+        dp[0] = true;
+        solved.add(0);
+        //Induction rule
+        for (int i = 1; i <= n; i++) {
+            for (int j : solved) {
+                if (set.contains(s.substring(j, i))) {
+                    dp[i] = true;
+                    solved.add(i);
+                    break;
+                }
+            }
+        }
+        return dp[n];
+    }
+}

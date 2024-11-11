@@ -1,0 +1,35 @@
+class Solution {
+
+    public int[] findOrder(int n, int[][] pre) {
+        // make DAG
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        Queue<Integer> zeroIn = new LinkedList<>();
+        int[] in = new int[n];
+        for (int[] i : pre) {
+            List<Integer> a = map.getOrDefault(i[1], new ArrayList<>());
+            a.add(i[0]);
+            map.put(i[1], a);
+            in[i[0]]++;
+        }
+        for (int i = 0; i < n; i++) {
+            if (in[i] == 0)
+                zeroIn.add(i);
+        }
+        //TOPOSORT
+        int k = 0;
+        int[] ans = new int[n];
+        while (zeroIn.size() > 0) {
+            int rem = zeroIn.poll();
+            ans[k++] = rem;
+            for (int i : map.getOrDefault(rem, new ArrayList<>())) {
+                in[i]--;
+                if (in[i] == 0)
+                    zeroIn.add(i);
+            }
+        }
+        if (k < n) {
+            return new int[] {};
+        }
+        return ans;
+    }
+}

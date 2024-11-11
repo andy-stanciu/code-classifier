@@ -1,0 +1,66 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // Create a HashMap to store the adjacency list representation of the graph
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        // Initialize the adjacency list for each course
+        for (int i = 0; i <= numCourses; i++) {
+            map.put(i, new ArrayList<>());
+        }
+        // Create the adjacency list based on prerequisites
+        createAdj(map, prerequisites);
+        // Initialize arrays to track visited and currently visiting nodes
+        boolean[] visited = new boolean[numCourses];
+        boolean[] visiting = new boolean[numCourses];
+        // Initialize a list to store the topological order
+        List<Integer> ans = new ArrayList<>();
+        // Traverse each node and check for cycles
+        for (int i = 0; i < numCourses; i++) {
+            if (hasCycle(map, i, visited, visiting, ans)) {
+                // If a cycle is found, return an empty array indicating impossibility
+                return new int[] {};
+            }
+        }
+        // Convert List<Integer> to int[]
+        int[] result = new int[ans.size()];
+        for (int i = 0; i < ans.size(); i++) {
+            result[i] = ans.get(i);
+        }
+        return result;
+    }
+
+    // Recursive function to check for cycles using DFS
+    private boolean hasCycle(Map<Integer, List<Integer>> map, int curr, boolean[] visited, boolean[] visiting, List<Integer> ans) {
+        // If the node is already visited, return false indicating no cycle
+        if (visited[curr]) {
+            return false;
+        }
+        // If the node is currently being visited, a cycle is found
+        if (visiting[curr]) {
+            return true;
+        }
+        // Mark the node as currently being visited
+        visiting[curr] = true;
+        // Explore neighbors
+        for (int nbr : map.get(curr)) {
+            // Recursively check neighbors for cycles
+            if (hasCycle(map, nbr, visited, visiting, ans)) {
+                return true;
+            }
+        }
+        // Mark the node as visited and add it to the topological order
+        visiting[curr] = false;
+        visited[curr] = true;
+        ans.add(curr);
+        // No cycle found for this node
+        return false;
+    }
+
+    // Function to create the adjacency list
+    private void createAdj(Map<Integer, List<Integer>> map, int[][] prereq) {
+        for (int i = 0; i < prereq.length; i++) {
+            // Add the prerequisite relation to the adjacency list
+            map.get(prereq[i][0]).add(prereq[i][1]);
+        }
+    }
+}

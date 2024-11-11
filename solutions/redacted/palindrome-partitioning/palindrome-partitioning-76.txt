@@ -1,0 +1,39 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> ans = new ArrayList();
+        List<String> part = new ArrayList();
+        backTracking(s, ans, part, 0);
+        return ans;
+    }
+
+    public void backTracking(String s, List<List<String>> ans, List<String> part, int index) {
+        // If we reach the end of the string, add the current partition to the answer list
+        if (index >= s.length()) {
+            ans.add(new ArrayList(part));
+            return;
+        }
+        // Explore all possible partitions from the current index to the end of the string
+        for (int i = index; i < s.length(); i++) {
+            if (isPalidrome(s, index, i)) {
+                //if palidrome
+                // Extract the palindrome substring
+                String str = s.substring(index, i + 1);
+                part.add(str);
+                backTracking(s, ans, part, i + 1);
+                part.remove(part.size() - 1);
+            }
+        }
+    }
+
+    //isPalidrome funciton
+    public boolean isPalidrome(String s, int left, int right) {
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right))
+                return false;
+            left++;
+            right--;
+        }
+        return true;
+    }
+}

@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int[][] visited = new int[s.length()][s.length() + 1];
+        checkWordBreak(s, 0, wordDict, "", visited);
+        for (int i = 0; i <= s.length(); i++) {
+            if (visited[s.length() - 1][i] == 2) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkWordBreak(String s, int i, List<String> dic, String cs, int[][] v) {
+        if (i == s.length()) {
+            if (dic.contains(cs)) {
+                return true;
+            }
+            return false;
+        }
+        boolean vi = false;
+        if (v[i][cs.length()] == 0) {
+            if (dic.contains(cs + s.charAt(i))) {
+                vi = checkWordBreak(s, i + 1, dic, "", v) || checkWordBreak(s, i + 1, dic, cs + s.charAt(i), v);
+            }
+            vi = checkWordBreak(s, i + 1, dic, cs + s.charAt(i), v);
+            if (vi) {
+                v[i][cs.length()] = 2;
+            } else {
+                v[i][cs.length()] = 1;
+            }
+        }
+        if (v[i][cs.length()] == 2) {
+            return true;
+        }
+        return false;
+    }
+}

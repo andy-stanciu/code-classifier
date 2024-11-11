@@ -1,0 +1,64 @@
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        var n = prices.length;
+        // dp 2d
+        //         var haveStock = new int[n][3];
+        //         var noStock = new int[n][3];
+        //         // bought and sold on the 1st day
+        //         noStock[0][1] = 0;
+        //         // bought and sold on the 1st day
+        //         noStock[0][2] = 0;
+        //         // bought on the 1st day. T #1
+        //         haveStock[0][1] = -prices[0];
+        //         // bought, sold, bought on the 1st day. Thus T #2
+        //         haveStock[0][2] = -prices[0];
+        //         for (int day = 1; day < n; day++) {
+        //             haveStock[day][1] = Math.max(haveStock[day - 1][1], noStock[day - 1][0] - prices[day]);
+        //             noStock[day][1] = Math.max(noStock[day - 1][1], haveStock[day - 1][1] + prices[day]);
+        //             haveStock[day][2] = Math.max(haveStock[day - 1][2], noStock[day - 1][1] - prices[day]);
+        //             noStock[day][2] = Math.max(noStock[day - 1][2], haveStock[day - 1][2] + prices[day]);
+        //         }
+        //         return noStock[n - 1][2];
+        // dp O(1)
+        var var1 = 0;
+        var var2 = 0;
+        var var3 = 0;
+        var var4 = 0;
+        var var5 = 0;
+        var var6 = -prices[0];
+        var var7 = 0;
+        var var8 = -prices[0];
+        for (int day = 1; day < n; day++) {
+            var5 = Math.max(var6, -prices[day]);
+            var1 = Math.max(var2, var6 + prices[day]);
+            var7 = Math.max(var8, var2 - prices[day]);
+            var3 = Math.max(var4, var8 + prices[day]);
+            var6 = var5;
+            var8 = var7;
+            var2 = var1;
+            var4 = var3;
+        }
+        return var3;
+        // top-down + memo
+        //return maxProfit(prices, 0, 0, k, new Integer[prices.length][2][k + 1]);
+    }
+
+    private int maxProfit(int[] nums, int day, int param1, int transLeft, Integer[][][] memo) {
+        if (day == nums.length || transLeft == 0) {
+            return 0;
+        }
+        if (memo[day][param1][transLeft] != null) {
+            return memo[day][param1][transLeft];
+        }
+        // do nothing - skip day
+        var noActionsProfit = maxProfit(nums, day + 1, param1, transLeft, memo);
+        var actionProfit = 0;
+        if (param1 == 1) {
+            actionProfit = nums[day] + maxProfit(nums, day + 1, 0, transLeft - 1, memo);
+        } else {
+            actionProfit = maxProfit(nums, day + 1, 1, transLeft, memo) - nums[day];
+        }
+        return memo[day][param1][transLeft] = Math.max(noActionsProfit, actionProfit);
+    }
+}

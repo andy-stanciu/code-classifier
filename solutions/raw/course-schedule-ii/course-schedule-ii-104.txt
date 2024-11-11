@@ -1,0 +1,53 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        //form a graph
+        //store neighbouring nodes
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            //we dont get null pointer exception,we are initilising it as a empty list
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            //connecting the nodes
+            adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        //counting incoming degree at each node
+        int[] inDegree = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            for (int j : adj.get(i)) {
+                //increasing the count
+                inDegree[j]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree[i] == 0)
+                q.add(i);
+        }
+        List<Integer> topoLi = new ArrayList<Integer>();
+        while (!q.isEmpty()) {
+            int node = q.peek();
+            q.remove();
+            topoLi.add(node);
+            // node is in topo sort so remove it from indegree
+            for (int i : adj.get(node)) {
+                inDegree[i]--;
+                if (inDegree[i] == 0) {
+                    q.add(i);
+                }
+            }
+        }
+        // Check if we have processed all nodes
+        if (topoLi.size() != numCourses) {
+            // There was a cycle; return an empty array
+            return new int[0];
+        }
+        // Convert list to array
+        int[] res = new int[topoLi.size()];
+        for (int i = 0; i < topoLi.size(); i++) {
+            res[i] = topoLi.get(i);
+        }
+        return res;
+    }
+}

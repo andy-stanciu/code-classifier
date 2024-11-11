@@ -1,0 +1,34 @@
+class Solution {
+
+    public boolean isPallindrome(String p) {
+        int startIndex = 0;
+        int endIndex = p.length() - 1;
+        while (startIndex <= endIndex) {
+            if (p.charAt(startIndex) != p.charAt(endIndex))
+                return false;
+            startIndex++;
+            endIndex--;
+        }
+        return true;
+    }
+
+    public List<List<String>> generatePartitions(int index, List<String> ds, String s, List<List<String>> res) {
+        if (index == s.length()) {
+            res.add(new ArrayList<>(ds));
+            return res;
+        }
+        for (int i = index; i < s.length(); i++) {
+            String curr = s.substring(index, i + 1);
+            if (isPallindrome(curr)) {
+                ds.add(curr);
+                res = generatePartitions(i + 1, ds, s, res);
+                ds.remove(ds.size() - 1);
+            }
+        }
+        return res;
+    }
+
+    public List<List<String>> partition(String s) {
+        return generatePartitions(0, new ArrayList<>(), s, new ArrayList<>());
+    }
+}

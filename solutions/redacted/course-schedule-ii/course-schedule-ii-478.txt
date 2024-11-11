@@ -1,0 +1,45 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        int[] indegree = new int[param1];
+        int[] topo = new int[param1];
+        //create adjacency list
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] arr : prerequisites) {
+            int src = arr[1];
+            int dest = arr[0];
+            adj.get(src).add(dest);
+            //keep track of indegree of each element
+            indegree[dest] += 1;
+        }
+        //add all those whose indegree == 0
+        Queue<Integer> q = new ArrayDeque<>();
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0)
+                q.add(i);
+        }
+        int i = 0;
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            topo[i++] = node;
+            //for each neighbor, after considering his parent, reduce its in-degree
+            //if indegree==0, it means we can move to this element in topological sort
+            //add this element to queue
+            for (int neigh : adj.get(node)) {
+                indegree[neigh]--;
+                if (indegree[neigh] == 0)
+                    q.add(neigh);
+            }
+        }
+        //if a cycle occurrs, there will come a case where no element has indegree ==0 but there are still elements yet to be visited
+        //in this case, i will not have processed all the n elements
+        //this will tell us if there was a cycle in the graph or not
+        if (i == param1)
+            return topo;
+        else
+            return new int[] {};
+    }
+}

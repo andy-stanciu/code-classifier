@@ -1,0 +1,51 @@
+class trie {
+
+    ArrayList<trie> list;
+
+    boolean isEnd;
+
+    trie() {
+        list = new ArrayList<trie>();
+        for (int i = 0; i < 26; i++) {
+            list.add(null);
+        }
+        isEnd = false;
+    }
+}
+
+class Solution {
+
+    trie root;
+
+    private void insert(trie r, String word) {
+        if (word.length() == 0) {
+            r.isEnd = true;
+            return;
+        }
+        int ch = word.charAt(0) - 97;
+        if (r.list.get(ch) == null) {
+            r.list.set(ch, new trie());
+        }
+        insert(r.list.get(ch), word.substring(1));
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        root = new trie();
+        for (String str : wordDict) insert(root, str);
+        boolean[] dp = new boolean[s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            if (i == 0 || dp[i - 1]) {
+                trie temp = root;
+                for (int j = i; j < s.length(); j++) {
+                    if (temp.list.get(s.charAt(j) - 97) == null)
+                        break;
+                    temp = temp.list.get(s.charAt(j) - 97);
+                    if (temp.isEnd) {
+                        dp[j] = true;
+                    }
+                }
+            }
+        }
+        return dp[s.length() - 1];
+    }
+}

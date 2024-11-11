@@ -1,0 +1,30 @@
+class Solution {
+
+    public int[] findOrder(int n, int[][] prerequisites) {
+        int[] indegree = new int[n];
+        List<List<Integer>> adj = new ArrayList();
+        for (int i = 0; i < n; i++) adj.add(new ArrayList());
+        for (int[] prereq : prerequisites) {
+            indegree[prereq[0]]++;
+            adj.get(prereq[1]).add(prereq[0]);
+        }
+        Queue<Integer> q = new LinkedList();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0)
+                q.add(i);
+        }
+        int countVertices = 0;
+        int[] result = new int[n];
+        while (!q.isEmpty()) {
+            int curr = q.poll();
+            result[countVertices++] = curr;
+            for (int neighbor : adj.get(curr)) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0) {
+                    q.add(neighbor);
+                }
+            }
+        }
+        return countVertices == n ? result : new int[0];
+    }
+}

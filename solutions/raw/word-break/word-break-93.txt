@@ -1,0 +1,31 @@
+class Solution {
+
+    private HashMap<String, Boolean> memo = new HashMap<>();
+
+    public boolean check(String s, List<String> w, int i, int j) {
+        String inter = s.substring(i, j + 1);
+        if (memo.containsKey(s.substring(i))) {
+            return memo.get(s.substring(i));
+        }
+        if (w.contains(inter)) {
+            if (j == s.length() - 1) {
+                memo.put(s.substring(i), true);
+                return true;
+            }
+            boolean result = (check(s, w, j + 1, j + 1) || check(s, w, i, j + 1));
+            memo.put(s.substring(i), result);
+            return result;
+        }
+        if (j == s.length() - 1) {
+            memo.put(s.substring(i), false);
+            return false;
+        }
+        boolean result = check(s, w, i, j + 1);
+        memo.put(s.substring(i), result);
+        return result;
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        return check(s, wordDict, 0, 0);
+    }
+}

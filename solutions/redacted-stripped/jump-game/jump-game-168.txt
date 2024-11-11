@@ -1,0 +1,56 @@
+class Solution {
+
+    public boolean method1(int[] nums) {
+        return solve(nums, 0);
+        Boolean[] dp = new Boolean[nums.length];
+        return solve1(nums, 0, dp);
+        return solve2(nums);
+        int idx = nums.length - 1;
+        for (int i = nums.length - 1; i >= 0; --i) if (i + nums[i] >= idx)
+            idx = i;
+        return idx == 0;
+    }
+
+    public boolean solve2(int[] arr) {
+        Boolean[] dp = new Boolean[arr.length];
+        dp[arr.length - 1] = true;
+        for (int i = arr.length - 2; i >= 0; --i) {
+            int moves = Math.min(i + arr[i], arr.length - 1);
+            for (int j = i + 1; j <= moves; ++j) {
+                if (dp[j] != null && dp[j]) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[0] != null ? dp[0] : false;
+    }
+
+    public boolean solve1(int[] arr, int idx, Boolean[] dp) {
+        if (idx == arr.length - 1)
+            return true;
+        if (idx >= arr.length)
+            return false;
+        if (dp[idx] != null)
+            return dp[idx];
+        int moves = Math.min(idx + arr[idx], arr.length - 1);
+        for (int i = idx + 1; i <= moves; ++i) {
+            if (solve1(arr, i, dp)) {
+                return dp[idx] = true;
+            }
+        }
+        return dp[idx] = false;
+    }
+
+    public boolean solve(int[] arr, int idx) {
+        if (idx == arr.length - 1)
+            return true;
+        int moves = Math.min(idx + arr[idx], arr.length - 1);
+        for (int i = idx + 1; i <= moves; ++i) {
+            if (solve(arr, i)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}

@@ -1,0 +1,59 @@
+class Solution {
+
+    public List<Integer> majorityElement(int[] nums) {
+        int n = nums.length;
+        //int count = 0;
+        //Map<Integer, Integer> ansMap = new HashMap<>();
+        //List<Integer> ansList = new ArrayList<>();
+        int nBy3 = n / 3;
+        //Better Solution TC = O(n) SC = O(n)
+        // for(int i = 0; i < n; i++){
+        //     //int element = nums[i];
+        //     ansMap.put(nums[i], ansMap.getOrDefault(nums[i], 0) + 1);
+        //     if(ansMap.getOrDefault(nums[i], 0) > nBy3){
+        //         if(!ansList.contains(nums[i])){
+        //         ansList.add(nums[i]);
+        //         if(ansList.size() == 2){
+        //             break;
+        //         }
+        //         }
+        //     }
+        // }
+        // return ansList;
+        //Optimal TC = O(n) SC = O(1) Watch Striver\'s Moore\'s Voting Algorithm for clarification.
+        int count1 = 0;
+        int count2 = 0;
+        int el1 = Integer.MIN_VALUE;
+        int el2 = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i++) {
+            if (count1 == 0 && el2 != nums[i]) {
+                count1 = 1;
+                el1 = nums[i];
+            } else if (count2 == 0 && el1 != nums[i]) {
+                count2 = 1;
+                el2 = nums[i];
+            } else if (nums[i] == el1) {
+                count1++;
+            } else if (nums[i] == el2) {
+                count2++;
+            } else {
+                count1--;
+                count2--;
+            }
+        }
+        count1 = 0;
+        count2 = 0;
+        List<Integer> ansListOp = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == el1)
+                count1++;
+            if (nums[i] == el2)
+                count2++;
+        }
+        if (count1 > nBy3)
+            ansListOp.add(el1);
+        if (count2 > nBy3)
+            ansListOp.add(el2);
+        return ansListOp;
+    }
+}

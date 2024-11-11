@@ -1,0 +1,36 @@
+class Solution {
+
+    int max = 0;
+
+    HashMap<Integer, Boolean> mp = new HashMap<>();
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        HashSet<String> hs = new HashSet<>();
+        for (String ss : wordDict) {
+            max = Math.max(ss.length(), max);
+            hs.add(ss);
+        }
+        return perm(s, hs, 0);
+    }
+
+    public boolean perm(String s, HashSet<String> hs, int ind) {
+        if (ind >= s.length())
+            return true;
+        if (mp.containsKey(ind))
+            return mp.get(ind);
+        StringBuilder sb = new StringBuilder();
+        boolean found = false;
+        for (int i = ind; i < ind + max && i < s.length(); i++) {
+            sb.append(s.charAt(i));
+            if (hs.contains(sb.toString())) {
+                found = perm(s, hs, i + 1);
+                if (found) {
+                    mp.put(ind, true);
+                    return true;
+                }
+            }
+        }
+        mp.put(ind, found);
+        return found;
+    }
+}

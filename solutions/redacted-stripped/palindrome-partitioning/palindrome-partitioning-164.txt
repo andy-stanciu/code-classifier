@@ -1,0 +1,31 @@
+class Solution {
+
+    Map<String, List<List<String>>> hash = new HashMap<>();
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> results = new ArrayList<>();
+        if (s.isEmpty()) {
+            results.add(new LinkedList<>());
+            return results;
+        }
+        outer: for (int i = 0; i < s.length(); i++) {
+            for (int j = 0; j < (i + 1) / 2; j++) {
+                if (s.charAt(j) != s.charAt(i - j)) {
+                    continue outer;
+                }
+            }
+            String next = s.substring(i + 1);
+            List<List<String>> result = hash.get(next);
+            if (result == null) {
+                result = partition(next);
+                hash.put(next, result);
+            }
+            for (List<String> l : result) {
+                LinkedList<String> ll = new LinkedList(l);
+                ll.addFirst(s.substring(0, i + 1));
+                results.add(ll);
+            }
+        }
+        return results;
+    }
+}

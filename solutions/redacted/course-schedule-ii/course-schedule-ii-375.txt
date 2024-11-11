@@ -1,0 +1,49 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        LinkedList<Integer> res = new LinkedList<>();
+        List<List<Integer>> adj = new ArrayList<>();
+        int[] visited = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<Integer>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            adj.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        for (int i = 0; i < param1; i++) {
+            //courses are labeled from 0 to numCourses - 1
+            if (visited[i] == 0) {
+                //the course hasn\'t been picked/visited at all
+                if (isCyclic(i, res, adj, visited)) {
+                    return new int[0];
+                }
+            }
+        }
+        int[] arr = new int[res.size()];
+        for (int i = 0; i < res.size(); i++) {
+            arr[i] = res.get(i);
+        }
+        return arr;
+    }
+
+    private boolean isCyclic(int curr, LinkedList<Integer> res, List<List<Integer>> adj, int[] visited) {
+        if (visited[curr] == 2) {
+            res = new LinkedList<>();
+            return true;
+        }
+        //premark as visited twice
+        visited[curr] = 2;
+        for (int i = 0; i < adj.get(curr).size(); i++) {
+            if (visited[adj.get(curr).get(i)] != 1) {
+                if (isCyclic(adj.get(curr).get(i), res, adj, visited)) {
+                    return true;
+                }
+            }
+        }
+        //remark the course to 1 if there\'s no loop
+        visited[curr] = 1;
+        //add curr to \'res\' as it is not in any loop
+        res.add(curr);
+        return false;
+    }
+}

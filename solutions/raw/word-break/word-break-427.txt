@@ -1,0 +1,30 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        // Convert the word dictionary list into a HashSet for faster word lookup
+        Set<String> wordSet = new HashSet<>(wordDict);
+        // Initialize the memoization array to store results of subproblems
+        Boolean[] memo = new Boolean[s.length()];
+        // Call the recursive helper method with initial parameters
+        return wordBreak(s, 0, wordSet, memo);
+    }
+
+    // Helper method to check if s[i:] can be segmented
+    private boolean wordBreak(final String s, int i, Set<String> wordSet, Boolean[] memo) {
+        // Base case: If the index \'i\' reaches the end of the string \'s,\' it can be segmented
+        if (i == s.length())
+            return true;
+        // Check if the result for the current index \'i\' is already memoized
+        if (memo[i] != null)
+            return memo[i];
+        // Iterate over all possible substrings starting from the current index \'i\'
+        for (int j = i + 1; j <= s.length(); ++j) {
+            // Check if the substring s[i..j) can be found in the wordSet
+            // and if the rest of the string (s[j..]) can also be segmented
+            if (wordSet.contains(s.substring(i, j)) && wordBreak(s, j, wordSet, memo))
+                return memo[i] = true;
+        }
+        // If no valid segmentation is found, return false and memoize the result
+        return memo[i] = false;
+    }
+}

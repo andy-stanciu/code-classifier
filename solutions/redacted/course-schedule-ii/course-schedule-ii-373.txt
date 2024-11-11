@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] findOrder(int nc, int[][] pr) {
+        int[] ans = new int[nc];
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < nc; i++) {
+            adj.add(new ArrayList());
+        }
+        //creating Adjacency List
+        for (int i = 0; i < pr.length; i++) {
+            ArrayList<Integer> row = adj.get(pr[i][1]);
+            row.add(pr[i][0]);
+            adj.set(pr[i][1], row);
+        }
+        int[] freq = new int[nc];
+        //creating freq array for prerequisites
+        for (int i = 0; i < pr.length; i++) {
+            freq[pr[i][0]]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        //add elements with 0 dependency to queue
+        for (int i = 0; i < freq.length; i++) {
+            if (freq[i] == 0) {
+                q.add(i);
+            }
+        }
+        int x = 0;
+        while (q.size() > 0) {
+            int t = q.remove();
+            ans[x++] = t;
+            for (int i = 0; i < adj.get(t).size(); i++) {
+                int k = adj.get(t).get(i);
+                freq[k]--;
+                if (freq[k] == 0) {
+                    q.add(k);
+                }
+            }
+        }
+        if (x < nc) {
+            return new int[0];
+        }
+        return ans;
+    }
+}

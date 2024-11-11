@@ -1,0 +1,43 @@
+class Solution {
+
+    private List<List<String>> answer = new ArrayList<>();
+
+    private List<String> partion = new LinkedList<>();
+
+    public List<List<String>> partition(String s) {
+        char[] s_to_char = s.toCharArray();
+        backtracking(0, s_to_char);
+        return answer;
+    }
+
+    private void backtracking(int start_idx, char[] s_to_char) {
+        int length = s_to_char.length;
+        if (start_idx == length) {
+            answer.add(new ArrayList<>(partion));
+            return;
+        }
+        for (int i = start_idx; i < length; i++) {
+            StringBuilder sb = new StringBuilder();
+            for (int j = start_idx; j <= i; j++) {
+                sb.append(s_to_char[j]);
+            }
+            if (method1(sb)) {
+                partion.add(sb.toString());
+                backtracking(i + 1, s_to_char);
+                partion.removeLast();
+            }
+        }
+    }
+
+    private boolean method1(StringBuilder sb) {
+        int left = 0, right = sb.length() - 1;
+        while (left < right) {
+            if (sb.charAt(left) != sb.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+}

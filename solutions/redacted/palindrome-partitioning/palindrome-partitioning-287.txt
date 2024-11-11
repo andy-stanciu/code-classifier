@@ -1,0 +1,36 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> arr = new ArrayList<>();
+        List<String> ds = new ArrayList<>();
+        int[] dp = new int[s.length() + 1];
+        f(0, s, arr, ds);
+        return arr;
+    }
+
+    public static void f(int idx, String s, List<List<String>> arr, List<String> ds) {
+        if (idx == s.length()) {
+            arr.add(new ArrayList<>(ds));
+            return;
+        }
+        for (int i = idx + 1; i <= s.length(); i++) {
+            if (valid(idx, i - 1, s)) {
+                ds.add(s.substring(idx, i));
+                f(i, s, arr, ds);
+                ds.remove(ds.size() - 1);
+            }
+        }
+    }
+
+    public static boolean valid(int st, int end, String s) {
+        while (st < end) {
+            if (s.charAt(st) == s.charAt(end)) {
+                st++;
+                end--;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+}

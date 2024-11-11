@@ -1,0 +1,55 @@
+class Solution {
+
+    // stack node definition with node, sum-so-far and path attribute
+    class Node {
+
+        TreeNode node;
+
+        int sum;
+
+        List<Integer> path;
+
+        public Node(TreeNode node, int sum, List<Integer> path) {
+            this.node = node;
+            this.sum = sum;
+            this.path = path;
+        }
+
+        public boolean isLeaf() {
+            return this.node.left == null && this.node.right == null;
+        }
+    }
+
+    // iterative dfs with 1 stack
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null)
+            return res;
+        // initialise stack with first node
+        Stack<Node> stack = new Stack<>();
+        stack.push(new Node(root, targetSum, Arrays.asList(root.val)));
+        while (!stack.isEmpty()) {
+            //extract current node
+            Node curr = stack.pop();
+            if (curr == null)
+                continue;
+            // if node is leaf and the sum to this node = target sum then  add its path to result list
+            if (curr.isLeaf() && curr.node.val == curr.sum) {
+                res.add(curr.path);
+                continue;
+            }
+            // push left and right child onto stack for dfs
+            if (curr.node.left != null) {
+                List<Integer> lPath = new ArrayList<>(curr.path);
+                lPath.add(curr.node.left.val);
+                stack.push(new Node(curr.node.left, curr.sum - curr.node.val, lPath));
+            }
+            if (curr.node.right != null) {
+                List<Integer> rPath = new ArrayList<>(curr.path);
+                rPath.add(curr.node.right.val);
+                stack.push(new Node(curr.node.right, curr.sum - curr.node.val, rPath));
+            }
+        }
+        return res;
+    }
+}

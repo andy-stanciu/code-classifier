@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] findOrder(int V, int[][] matrix) {
+        List<List<Integer>> g = new ArrayList<>();
+        int[] indeg = new int[V];
+        for (int i = 0; i < V; i++) {
+            g.add(new ArrayList<>());
+        }
+        for (int[] edge : matrix) {
+            int a = edge[0], b = edge[1];
+            g.get(a).add(b);
+            indeg[b]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < V; i++) {
+            if (indeg[i] == 0)
+                q.add(i);
+        }
+        List<Integer> res = new ArrayList<>();
+        while (!q.isEmpty()) {
+            int curr = q.poll();
+            res.add(0, curr);
+            for (int ne : g.get(curr)) {
+                indeg[ne]--;
+                if (indeg[ne] == 0)
+                    q.add(ne);
+            }
+        }
+        if (res.size() != V)
+            return new int[0];
+        int[] ans = new int[V];
+        int i = 0;
+        for (int n : res) {
+            ans[i++] = n;
+        }
+        return ans;
+    }
+}

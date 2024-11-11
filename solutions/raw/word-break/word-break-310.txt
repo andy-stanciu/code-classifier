@@ -1,0 +1,31 @@
+class Solution {
+
+    int[][] m;
+
+    boolean solve(String s, List<String> dict, int k) {
+        int n = s.length();
+        if (k == n)
+            return true;
+        for (int j = 0; j < dict.size(); j++) {
+            String str = dict.get(j);
+            if (m[k][j] == 0)
+                continue;
+            int p = str.length();
+            if (n - k >= p && (s.substring(k, k + p).equals(str))) {
+                if (m[k][j] == 1 || solve(s, dict, k + p)) {
+                    m[k][j] = 1;
+                    return true;
+                } else
+                    m[k][j] = 0;
+            }
+        }
+        return false;
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int n = s.length(), k = wordDict.size();
+        m = new int[n][k];
+        for (int i = 0; i < n; i++) Arrays.fill(m[i], -1);
+        return solve(s, wordDict, 0);
+    }
+}

@@ -1,0 +1,30 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        Map<Character, List<String>> mp = new HashMap<Character, List<String>>();
+        for (String var1 : param1) {
+            mp.putIfAbsent(var1.charAt(0), new ArrayList<String>());
+            mp.get(var1.charAt(0)).add(var1);
+        }
+        int[] seen = new int[s.length()];
+        return helperUtil(s, 0, mp, seen);
+    }
+
+    public boolean helperUtil(String s, int index, Map<Character, List<String>> mp, int[] seen) {
+        if (index == s.length())
+            return true;
+        if (seen[index] == 1)
+            return false;
+        seen[index] = 1;
+        StringBuffer sb = new StringBuffer(s);
+        int flag = 0;
+        if (mp.containsKey(sb.charAt(index)))
+            for (String var1 : mp.get(sb.charAt(index))) {
+                if (s.length() >= index + var1.length() && var1.equals(sb.substring(index, index + var1.length())) && helperUtil(s, index + var1.length(), mp, seen))
+                    flag = 1;
+            }
+        if (flag == 1)
+            return true;
+        return false;
+    }
+}

@@ -1,0 +1,32 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int n = s.length();
+        int[] dp = new int[n];
+        Arrays.fill(dp, -1);
+        Set<String> set = new HashSet<>();
+        for (String str : wordDict) set.add(str);
+        return match(s, 0, dp, set);
+    }
+
+    boolean match(String s, int id, int[] dp, Set<String> set) {
+        int n = s.length();
+        if (id == n)
+            return true;
+        if (dp[id] != -1)
+            return dp[id] == 1 ? true : false;
+        String temp = "";
+        for (int i = id; i < n; ++i) {
+            temp = temp + s.charAt(i);
+            if (set.contains(temp)) {
+                boolean res = match(s, i + 1, dp, set);
+                if (res) {
+                    dp[id] = 1;
+                    return true;
+                }
+            }
+        }
+        dp[id] = 0;
+        return false;
+    }
+}

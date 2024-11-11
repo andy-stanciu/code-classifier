@@ -1,0 +1,53 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        if (param1 == 0) {
+            return new int[0];
+        }
+        boolean[] visited = new boolean[param1];
+        boolean[] onStack = new boolean[param1];
+        List<Integer> ans = new ArrayList<>();
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] pre : prerequisites) {
+            graph.get(pre[1]).add(pre[0]);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                if (!dfs(i, graph, visited, onStack, ans)) {
+                    return new int[0];
+                }
+            }
+        }
+        if (ans.size() != param1) {
+            return new int[0];
+        }
+        int[] res = new int[param1];
+        int idx = 0;
+        for (int i = ans.size() - 1; i >= 0; i--) {
+            res[idx++] = ans.get(i);
+        }
+        return res;
+    }
+
+    public boolean dfs(int curr, List<List<Integer>> graph, boolean[] visited, boolean[] onStack, List<Integer> ans) {
+        if (onStack[curr]) {
+            return false;
+        }
+        if (visited[curr]) {
+            return true;
+        }
+        visited[curr] = true;
+        onStack[curr] = true;
+        for (int next : graph.get(curr)) {
+            if (!dfs(next, graph, visited, onStack, ans)) {
+                return false;
+            }
+        }
+        onStack[curr] = false;
+        ans.add(curr);
+        return true;
+    }
+}

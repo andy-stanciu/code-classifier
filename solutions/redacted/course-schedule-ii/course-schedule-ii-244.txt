@@ -1,0 +1,51 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        HashMap<Integer, ArrayList<Integer>> prerequisitesMap = new HashMap();
+        HashMap<Integer, ArrayList<Integer>> dependencyMap = new HashMap();
+        for (int i = 0; i < prerequisites.length; i++) {
+            ArrayList<Integer> pList = prerequisitesMap.getOrDefault(prerequisites[i][1], new ArrayList());
+            pList.add(prerequisites[i][0]);
+            prerequisitesMap.put(prerequisites[i][1], pList);
+            ArrayList<Integer> dList = dependencyMap.getOrDefault(prerequisites[i][0], new ArrayList());
+            dList.add(prerequisites[i][1]);
+            dependencyMap.put(prerequisites[i][0], dList);
+        }
+        int[] result = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            result[i] = -1;
+        }
+        int var1 = 0;
+        // find root courses.
+        boolean var2 = false;
+        for (int i = 0; i < param1; i++) {
+            if (!dependencyMap.containsKey(i)) {
+                var2 = true;
+                result[var1] = i;
+                var1++;
+            }
+        }
+        if (!var2) {
+            return new int[0];
+        }
+        for (int i = 0; i < param1; i++) {
+            int var3 = result[i];
+            if (var3 == -1) {
+                return new int[0];
+            }
+            List<Integer> var4 = prerequisitesMap.getOrDefault(var3, new ArrayList());
+            for (Integer var6 : var4) {
+                List<Integer> var5 = dependencyMap.getOrDefault(var6, new ArrayList());
+                int removalIndex = var5.indexOf(var3);
+                if (removalIndex != -1) {
+                    var5.remove(removalIndex);
+                }
+                if (var5.isEmpty() && var1 < param1) {
+                    result[var1] = var6;
+                    var1++;
+                }
+            }
+        }
+        return result;
+    }
+}

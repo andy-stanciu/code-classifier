@@ -1,0 +1,68 @@
+class Solution {
+
+    public int[] findOrder(int n, int[][] prerequisites) {
+        ArrayList<Integer>[] graph = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int src = prerequisites[i][1];
+            int dest = prerequisites[i][0];
+            graph[src].add(dest);
+        }
+        if (isCyclic(graph, n)) {
+            return new int[] {};
+        }
+        Stack<Integer> stack = new Stack<>();
+        boolean[] vis = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            if (!vis[i]) {
+                findOrderUtil(graph, vis, stack, i);
+            }
+        }
+        int[] order = new int[stack.size()];
+        int i = 0;
+        while (!stack.isEmpty()) {
+            order[i++] = stack.pop();
+        }
+        return order;
+    }
+
+    void findOrderUtil(ArrayList<Integer>[] graph, boolean[] vis, Stack<Integer> stack, int curr) {
+        vis[curr] = true;
+        for (int i = 0; i < graph[curr].size(); i++) {
+            int dest = graph[curr].get(i);
+            if (!vis[dest]) {
+                findOrderUtil(graph, vis, stack, dest);
+            }
+        }
+        stack.push(curr);
+    }
+
+    boolean isCyclic(ArrayList<Integer>[] graph, int n) {
+        boolean[] vis = new boolean[n];
+        boolean[] stack = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            if (!vis[i] && isCyclicUtil(graph, vis, stack, i)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    boolean isCyclicUtil(ArrayList<Integer>[] graph, boolean[] vis, boolean[] stack, int curr) {
+        vis[curr] = true;
+        stack[curr] = true;
+        for (int i = 0; i < graph[curr].size(); i++) {
+            int dest = graph[curr].get(i);
+            if (stack[dest]) {
+                return true;
+            }
+            if (!vis[dest] && isCyclicUtil(graph, vis, stack, dest)) {
+                return true;
+            }
+        }
+        stack[curr] = false;
+        return false;
+    }
+}

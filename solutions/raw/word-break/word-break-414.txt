@@ -1,0 +1,33 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int n = s.length();
+        HashMap<String, Integer> map = new HashMap<>();
+        String[][] dp = new String[300][300];
+        for (int i = 0; i < wordDict.size(); i++) {
+            map.put(wordDict.get(i), 1);
+        }
+        class Dfs {
+
+            public boolean dfs(Integer i, Integer j) {
+                if (j == n - 1) {
+                    return map.containsKey(s.substring(i, j + 1));
+                }
+                if (dp[i][j] != null) {
+                    return Boolean.parseBoolean(dp[i][j]);
+                }
+                boolean one = false;
+                boolean two = false;
+                if (map.containsKey(s.substring(i, j + 1))) {
+                    two = dfs(j + 1, j + 1);
+                }
+                one = dfs(i, j + 1);
+                dp[i][j] = Boolean.toString((one || two));
+                ;
+                return Boolean.parseBoolean(dp[i][j]);
+            }
+        }
+        Dfs new_obj = new Dfs();
+        return new_obj.dfs(0, 0);
+    }
+}

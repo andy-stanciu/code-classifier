@@ -1,0 +1,40 @@
+class Solution {
+
+    public int[] findOrder(int N, int[][] prerequisites) {
+        HashMap<Integer, List<Integer>> dependency = new HashMap<>();
+        int[] indeg = new int[N];
+        for (int[] prerequisite : prerequisites) {
+            int to = prerequisite[0];
+            int from = prerequisite[1];
+            dependency.putIfAbsent(from, new ArrayList<>());
+            dependency.get(from).add(to);
+            indeg[to]++;
+        }
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
+        HashSet<Integer> seen = new HashSet<>();
+        for (int i = 0; i < N; i++) {
+            if (indeg[i] == 0) {
+                queue.add(i);
+            }
+        }
+        int[] ans = new int[N];
+        int ptr = 0;
+        while (!queue.isEmpty()) {
+            int course = queue.pollFirst();
+            if (!seen.add(course)) {
+                return new int[] {};
+            }
+            ans[ptr++] = course;
+            List<Integer> dependents = dependency.getOrDefault(course, Collections.emptyList());
+            for (int dependent : dependents) {
+                if (--indeg[dependent] == 0) {
+                    queue.add(dependent);
+                }
+            }
+        }
+        if (seen.size() == N) {
+            return ans;
+        }
+        return new int[] {};
+    }
+}

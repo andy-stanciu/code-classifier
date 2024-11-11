@@ -1,0 +1,45 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> rootToLeafPaths = new ArrayList<>();
+        if (root == null) {
+            return rootToLeafPaths;
+        }
+        findRootToLeafPaths(root, root.val, targetSum, new ArrayList<>(Arrays.asList(root.val)), rootToLeafPaths);
+        return rootToLeafPaths;
+    }
+
+    public void findRootToLeafPaths(TreeNode root, int currSum, int targetSum, List<Integer> currPath, List<List<Integer>> rootToLeafPaths) {
+        if (root.left == null && root.right == null) {
+            if (currSum == targetSum) {
+                rootToLeafPaths.add(new ArrayList<>(currPath));
+            }
+            return;
+        }
+        if (root.left != null) {
+            currPath.add(root.left.val);
+            findRootToLeafPaths(root.left, currSum + root.left.val, targetSum, currPath, rootToLeafPaths);
+            currPath.remove(currPath.size() - 1);
+        }
+        if (root.right != null) {
+            currPath.add(root.right.val);
+            findRootToLeafPaths(root.right, currSum + root.right.val, targetSum, currPath, rootToLeafPaths);
+            currPath.remove(currPath.size() - 1);
+        }
+    }
+}

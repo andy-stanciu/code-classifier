@@ -1,0 +1,52 @@
+class Solution {
+
+    List<List<String>> res;
+
+    Map<String, Boolean> map;
+
+    public List<List<String>> partition(String s) {
+        res = new ArrayList<>();
+        if (s.length() == 1) {
+            List<String> list = new ArrayList<>();
+            list.add(s);
+            res.add(list);
+            return res;
+        }
+        map = new HashMap<>();
+        backtrack(0, new ArrayList<>(), s);
+        return res;
+    }
+
+    public boolean method1(String s) {
+        if (s == "" || s.length() == 1)
+            return true;
+        if (s.charAt(0) != s.charAt(s.length() - 1))
+            return false;
+        return method1(s.substring(1, s.length() - 1));
+    }
+
+    public void backtrack(int start, List<String> list, String s) {
+        if (start >= s.length()) {
+            res.add(new ArrayList<>(list));
+            return;
+        }
+        for (int i = start + 1; i <= s.length(); i++) {
+            String cur = s.substring(start, i);
+            if (map.containsKey(cur)) {
+                if (map.get(cur)) {
+                    list.add(cur);
+                    backtrack(i, list, s);
+                    list.remove(list.size() - 1);
+                }
+            } else {
+                boolean flag = method1(cur);
+                map.put(cur, flag);
+                if (flag) {
+                    list.add(cur);
+                    backtrack(i, list, s);
+                    list.remove(list.size() - 1);
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        Stack<Integer> res = new Stack();
+        // prereq -> courses that need prereq
+        Map<Integer, List<Integer>> graph = new HashMap();
+        // construct graph
+        for (int[] prereq : prerequisites) {
+            List<Integer> val = graph.getOrDefault(prereq[1], new ArrayList());
+            val.add(prereq[0]);
+            graph.put(prereq[1], val);
+        }
+        // dfs
+        Set<Integer> visited = new HashSet();
+        for (int i = 0; i < numCourses; i++) {
+            Set<Integer> cycle = new HashSet();
+            if (!dfs(graph, i, visited, cycle, res))
+                return new int[0];
+        }
+        int[] ress = new int[res.size()];
+        for (int i = 0; i < ress.length; i++) {
+            ress[i] = res.pop();
+        }
+        return ress;
+    }
+
+    private static boolean dfs(Map<Integer, List<Integer>> graph, Integer curr, Set<Integer> visited, Set<Integer> cycle, List<Integer> res) {
+        if (!cycle.add(curr))
+            return false;
+        if (visited.contains(curr))
+            return true;
+        if (graph.get(curr) != null) {
+            for (Integer i : graph.get(curr)) {
+                if (visited.contains(i))
+                    continue;
+                if (!dfs(graph, i, visited, cycle, res))
+                    return false;
+            }
+        }
+        visited.add(curr);
+        res.add(curr);
+        return true;
+    }
+}

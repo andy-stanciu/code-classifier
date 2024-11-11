@@ -1,0 +1,57 @@
+class Solution {
+
+    class Edge {
+
+        int src;
+
+        int dest;
+
+        public Edge(int s, int d) {
+            this.src = s;
+            this.dest = d;
+        }
+    }
+
+    public static int[] arr;
+
+    public static int idx;
+
+    public boolean topoUtil(ArrayList<Edge>[] graph, int curr, int[] vis) {
+        if (vis[curr] == 0)
+            return true;
+        if (vis[curr] == 1)
+            return false;
+        vis[curr] = 0;
+        for (int i = 0; i < graph[curr].size(); i++) {
+            Edge e = graph[curr].get(i);
+            if (topoUtil(graph, e.dest, vis)) {
+                return true;
+            }
+        }
+        vis[curr] = 1;
+        arr[idx--] = curr;
+        return false;
+    }
+
+    public int[] findOrder(int n, int[][] matrix) {
+        ArrayList<Edge>[] graph = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] ele : matrix) {
+            graph[ele[1]].add(new Edge(ele[1], ele[0]));
+        }
+        arr = new int[n];
+        idx = n - 1;
+        int[] vis = new int[n];
+        Arrays.fill(vis, -1);
+        for (int i = 0; i < graph.length; i++) {
+            if (vis[i] == -1) {
+                if (topoUtil(graph, i, vis)) {
+                    return new int[0];
+                }
+            }
+        }
+        return arr;
+    }
+}

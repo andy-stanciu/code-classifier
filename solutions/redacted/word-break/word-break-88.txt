@@ -1,0 +1,25 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        Set<String> var1 = new HashSet<>(param1);
+        int n = s.length();
+        boolean[] dp = new boolean[n + 1];
+        dp[0] = true;
+        // Find the maximum length of any word in the wordSet to limit inner loop range
+        int var2 = 0;
+        for (String var3 : var1) {
+            var2 = Math.max(var2, var3.length());
+        }
+        for (int i = 1; i <= n; i++) {
+            // Only check up to maxWordLength characters before i to save time
+            for (int j = Math.max(0, i - var2); j < i; j++) {
+                if (dp[j] && var1.contains(s.substring(j, i))) {
+                    dp[i] = true;
+                    // No need to check further once dp[i] is true
+                    break;
+                }
+            }
+        }
+        return dp[n];
+    }
+}

@@ -1,0 +1,51 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        HashMap<Integer, ArrayList<Integer>> prerequisitesMap = new HashMap();
+        HashMap<Integer, ArrayList<Integer>> dependencyMap = new HashMap();
+        for (int i = 0; i < prerequisites.length; i++) {
+            ArrayList<Integer> pList = prerequisitesMap.getOrDefault(prerequisites[i][1], new ArrayList());
+            pList.add(prerequisites[i][0]);
+            prerequisitesMap.put(prerequisites[i][1], pList);
+            ArrayList<Integer> dList = dependencyMap.getOrDefault(prerequisites[i][0], new ArrayList());
+            dList.add(prerequisites[i][1]);
+            dependencyMap.put(prerequisites[i][0], dList);
+        }
+        int[] result = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            result[i] = -1;
+        }
+        int coursePointer = 0;
+        // find root courses.
+        boolean rootCourseFound = false;
+        for (int i = 0; i < numCourses; i++) {
+            if (!dependencyMap.containsKey(i)) {
+                rootCourseFound = true;
+                result[coursePointer] = i;
+                coursePointer++;
+            }
+        }
+        if (!rootCourseFound) {
+            return new int[0];
+        }
+        for (int i = 0; i < numCourses; i++) {
+            int currentCourse = result[i];
+            if (currentCourse == -1) {
+                return new int[0];
+            }
+            List<Integer> preReqCourses = prerequisitesMap.getOrDefault(currentCourse, new ArrayList());
+            for (Integer course : preReqCourses) {
+                List<Integer> dependentCourses = dependencyMap.getOrDefault(course, new ArrayList());
+                int removalIndex = dependentCourses.indexOf(currentCourse);
+                if (removalIndex != -1) {
+                    dependentCourses.remove(removalIndex);
+                }
+                if (dependentCourses.isEmpty() && coursePointer < numCourses) {
+                    result[coursePointer] = course;
+                    coursePointer++;
+                }
+            }
+        }
+        return result;
+    }
+}

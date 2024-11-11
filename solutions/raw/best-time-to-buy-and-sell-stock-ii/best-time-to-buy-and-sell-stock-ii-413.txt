@@ -1,0 +1,46 @@
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        // DP - Memoization
+        int n = prices.length;
+        int[][] dpMemo = new int[n][2];
+        // at each index we can either buy or sell, so matrix has n rows, 2 columns;
+        // sell = column 0, buy = column 1
+        // dp[i][0] = max profit achievable when we sell at index = i
+        // dp[i][1] = max profit achievable when we buy at index = i
+        for (int[] r : dpMemo) Arrays.fill(r, -1);
+        // 1 = buy, 0 = sell
+        return maxProfitStock(prices, 0, dpMemo, 1);
+    }
+
+    public int maxProfitStock(int[] prices, int index, int[][] dpMemo, int buyOrSell) {
+        if (index == prices.length)
+            return 0;
+        if (dpMemo[index][buyOrSell] != -1) {
+            return dpMemo[index][buyOrSell];
+        }
+        int maxProfit = 0;
+        if (buyOrSell == 1) {
+            // if we buy at index, we invest prices[index], so negative profit, and we need to sell in the remaining array, so last parameter buyOrSell becomes = 0, i.e. sell
+            int profitWhenBuyStockAtIndex = -prices[index] + maxProfitStock(prices, index + 1, dpMemo, 0);
+            // if we don\'t buy, we need to buy and sell in the remaining array
+            // so buyOrSell remains = 1, i.e. buy
+            int profitWhenSkipStockAtIndex = 0 + maxProfitStock(prices, index + 1, dpMemo, 1);
+            // maxProfit at index when we decide to buy at index
+            maxProfit = Math.max(profitWhenBuyStockAtIndex, profitWhenSkipStockAtIndex);
+        } else {
+            // if we sell at index, we get prices[index] and we need to start with buy in the remaining array
+            // so buyOrSell becomes = 1, i.e. buy
+            int profitWhenSellAtIndex = prices[index] + maxProfitStock(prices, index + 1, dpMemo, 1);
+            // if we don\'t sell, we need to sell in the remaining array
+            // so buyOrSell remains = 0, i.e. sell
+            int profitWhenSkipAtIndex = 0 + maxProfitStock(prices, index + 1, dpMemo, 0);
+            // maxProfit at index when we decide to sell at index
+            maxProfit = Math.max(profitWhenSellAtIndex, profitWhenSkipAtIndex);
+        }
+        // return the max profit achieved
+        dpMemo[index][buyOrSell] = maxProfit;
+        // final result is stored at dpMemp[0][1]
+        return dpMemo[index][buyOrSell];
+    }
+}

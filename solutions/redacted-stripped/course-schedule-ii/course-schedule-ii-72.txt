@@ -1,0 +1,37 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        HashMap<Integer, Integer> freq = new HashMap<>();
+        HashMap<Integer, List<Integer>> dep = new HashMap<>();
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
+        ArrayList<Integer> result = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            freq.put(i, 0);
+            dep.put(i, new ArrayList<>());
+        }
+        for (int[] pre : prerequisites) {
+            dep.get(pre[1]).add(pre[0]);
+            freq.put(pre[0], freq.get(pre[0]) + 1);
+        }
+        for (Map.Entry<Integer, Integer> a : freq.entrySet()) {
+            if (a.getValue() == 0)
+                queue.add(a.getKey());
+        }
+        while (!queue.isEmpty()) {
+            int key = queue.poll();
+            if (!result.contains(key)) {
+                result.add(key);
+                for (Integer b : dep.get(key)) {
+                    freq.put(b, freq.get(b) - 1);
+                    if (freq.get(b) == 0)
+                        queue.add(b);
+                }
+            }
+        }
+        Integer[] arr4 = new Integer[result.size()];
+        if (result.size() < freq.size())
+            return new int[] {};
+        else
+            return result.stream().mapToInt(i -> i).toArray();
+    }
+}

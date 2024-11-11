@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        HashMap<Integer, List<Integer>> var1 = new HashMap<>();
+        HashMap<Integer, HashSet<Integer>> var2 = new HashMap<>();
+        for (int[] pre : prerequisites) {
+            int var3 = pre[1];
+            int var4 = pre[0];
+            List<Integer> list = var1.getOrDefault(var3, new ArrayList<>());
+            list.add(var4);
+            var1.put(var3, list);
+            HashSet<Integer> prerequisiteSet = var2.getOrDefault(var4, new HashSet<>());
+            prerequisiteSet.add(var3);
+            var2.put(var4, prerequisiteSet);
+        }
+        int[] result = new int[param1];
+        int pos = 0;
+        Deque<Integer> stack = new ArrayDeque<>();
+        for (int i = 0; i < param1; i++) {
+            if (!var2.containsKey(i)) {
+                stack.push(i);
+            }
+        }
+        while (!stack.isEmpty()) {
+            int current = stack.pop();
+            result[pos++] = current;
+            List<Integer> neighbours = var1.getOrDefault(current, new ArrayList<>());
+            for (int neighbour : neighbours) {
+                HashSet<Integer> prereqs = var2.get(neighbour);
+                prereqs.remove(current);
+                if (prereqs.isEmpty()) {
+                    stack.push(neighbour);
+                }
+            }
+        }
+        return (pos == param1) ? result : new int[0];
+    }
+}

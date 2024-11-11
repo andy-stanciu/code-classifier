@@ -1,0 +1,25 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> words = new HashSet<>();
+        int maxWordLen = 0;
+        for (String word : wordDict) {
+            words.add(word);
+            maxWordLen = Math.max(maxWordLen, word.length());
+        }
+        return dp(s, 0, new HashSet<>(wordDict), new Boolean[s.length()], maxWordLen);
+    }
+
+    private boolean dp(String s, int i, Set<String> words, Boolean[] memo, int maxWordLen) {
+        if (i == s.length())
+            return true;
+        if (memo[i] != null)
+            return memo[i];
+        int maxlen = Math.min(i + maxWordLen, s.length());
+        for (int j = i; j < maxlen; ++j) {
+            if (words.contains(s.substring(i, j + 1)) && dp(s, j + 1, words, memo, maxWordLen))
+                return true;
+        }
+        return memo[i] = false;
+    }
+}

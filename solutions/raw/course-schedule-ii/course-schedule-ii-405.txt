@@ -1,0 +1,46 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        boolean[] satisfied = new boolean[numCourses];
+        Arrays.fill(satisfied, true);
+        List<List<Integer>> reverseGraph = new ArrayList<>();
+        // for checking cycle
+        HashSet<Integer> visited = new HashSet<>();
+        List<Integer> postOrder = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) reverseGraph.add(new ArrayList<>());
+        for (int[] pre : prerequisites) {
+            int from = pre[1], to = pre[0];
+            satisfied[to] = false;
+            reverseGraph.get(to).add(from);
+        }
+        for (int node = 0; node < numCourses; node++) {
+            if (!canSatisfy(node, reverseGraph, satisfied, visited, postOrder))
+                return new int[] {};
+        }
+        int[] res = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            res[i] = postOrder.get(i);
+        }
+        return res;
+    }
+
+    private boolean canSatisfy(int node, List<List<Integer>> reverseGraph, boolean[] satisfied, HashSet<Integer> visited, List<Integer> postOrder) {
+        if (satisfied[node] == true) {
+            if (!visited.contains(node)) {
+                visited.add(node);
+                postOrder.add(node);
+            }
+            return true;
+        }
+        if (visited.contains(node))
+            return false;
+        visited.add(node);
+        for (int preNode : reverseGraph.get(node)) {
+            if (!canSatisfy(preNode, reverseGraph, satisfied, visited, postOrder))
+                return false;
+        }
+        satisfied[node] = true;
+        postOrder.add(node);
+        return true;
+    }
+}

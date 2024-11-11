@@ -1,0 +1,55 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = IntStream.range(0, param1).mapToObj(i -> new ArrayList<Integer>()).collect(Collectors.toList());
+        for (int[] pair : prerequisites) {
+            int var1 = pair[0];
+            int dependent = pair[1];
+            graph.get(var1).add(dependent);
+        }
+        NodeState[] var2 = new NodeState[param1];
+        Arrays.fill(var2, NodeState.NOT_VISITED);
+        List<Integer> res = new ArrayList<>();
+        for (int var1 = 0; var1 < param1; var1++) {
+            if (var2[var1] == NodeState.NOT_VISITED) {
+                if (performVisit(var1, var2, graph, res) == false) {
+                    return new int[0];
+                }
+            }
+        }
+        return res.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    private boolean performVisit(int var1, NodeState[] var2, List<List<Integer>> graph, List<Integer> res) {
+        if (var2[var1] == NodeState.VISITING) {
+            return false;
+        }
+        if (var2[var1] == NodeState.VISITED) {
+            return true;
+        }
+        var2[var1] = NodeState.VISITING;
+        for (int neighbour : graph.get(var1)) {
+            if (performVisit(neighbour, var2, graph, res) == false) {
+                return false;
+            }
+        }
+        var2[var1] = NodeState.VISITED;
+        res.add(var1);
+        return true;
+    }
+
+    public enum NodeState {
+
+        NOT_VISITED(0), VISITING(1), VISITED(2);
+
+        private final int value;
+
+        NodeState(int v) {
+            this.value = v;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+}

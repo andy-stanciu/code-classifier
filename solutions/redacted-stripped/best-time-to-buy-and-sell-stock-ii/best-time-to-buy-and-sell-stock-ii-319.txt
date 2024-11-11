@@ -1,0 +1,35 @@
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        int n = prices.length;
+        int[] nextRow = new int[2];
+        int[] cur = new int[2];
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = 1; j >= 0; j--) {
+                int profit = Integer.MIN_VALUE;
+                if (j == 0) {
+                    profit = Math.max(-prices[i] + nextRow[1], 0 + nextRow[0]);
+                } else {
+                    profit = Math.max(prices[i] + nextRow[0], 0 + nextRow[1]);
+                }
+                cur[j] = profit;
+            }
+            nextRow = cur;
+        }
+        return nextRow[0];
+    }
+
+    public int findRecur(int idx, int param1, int[] prices, int[][] dp) {
+        if (idx == prices.length)
+            return 0;
+        if (dp[idx][param1] != -1)
+            return dp[idx][param1];
+        int profit = Integer.MIN_VALUE;
+        if (param1 == 0) {
+            profit = Math.max(-prices[idx] + findRecur(idx + 1, 1, prices, dp), 0 + findRecur(idx + 1, 0, prices, dp));
+        } else {
+            profit = Math.max(prices[idx] + findRecur(idx + 1, 0, prices, dp), 0 + findRecur(idx + 1, 1, prices, dp));
+        }
+        return dp[idx][param1] = profit;
+    }
+}

@@ -1,0 +1,47 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        //length == 0 implies no prerequisites , so we can just return all the courses.
+        if (prerequisites.length == 0) {
+            int[] res = new int[numCourses];
+            for (int i = 0; i < numCourses; i++) {
+                res[i] = i;
+            }
+            return res;
+        }
+        // Creating a Adjacency List
+        ArrayList<Integer>[] adjlist = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            adjlist[i] = new ArrayList<Integer>();
+        }
+        // Stores indegree
+        int[] indegree = new int[numCourses];
+        for (int i = 0; i < prerequisites.length; i++) {
+            adjlist[prerequisites[i][1]].add(prerequisites[i][0]);
+            indegree[prerequisites[i][0]]++;
+        }
+        //BFS - topological sort
+        Queue<Integer> q = new LinkedList<Integer>();
+        //Stores result
+        int[] res = new int[numCourses];
+        //:Add to the queue if indegree==0 (if it dont have a prerequisite or we have already learned/visited the prerequisite)
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        int k = 0;
+        while (!q.isEmpty()) {
+            int src = q.poll();
+            res[k++] = src;
+            for (int i : adjlist[src]) {
+                indegree[i]--;
+                if (indegree[i] == 0) {
+                    q.add(i);
+                }
+            }
+        }
+        // if k<numCourses then some there is a deadlock otherwise we can finish all courses
+        return k == numCourses ? res : new int[0];
+    }
+}

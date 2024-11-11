@@ -1,0 +1,38 @@
+class Solution {
+
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> stack = new Stack<>();
+        for (String s : tokens) {
+            if (!s.equals("+") && !s.equals("-") && !s.equals("/") && !s.equals("*")) {
+                stack.push(Integer.parseInt(s));
+            } else {
+                int num1 = 0;
+                int num2 = 0;
+                if (!stack.isEmpty()) {
+                    num1 = stack.pop();
+                    num2 = stack.pop();
+                    // why we are putting num2, num1
+                    // let say 3 - 4  what will be it\'s Reverse Polish Notation or postfix
+                    // it will be 34- we know we will be 4 from stack first and then 3 hence
+                    int temp = performOperation(s, num2, num1);
+                    stack.push(temp);
+                }
+            }
+        }
+        return stack.pop();
+    }
+
+    private int performOperation(String s, int num1, int num2) {
+        if (s.equals("+")) {
+            return num1 + num2;
+        }
+        if (s.equals("*")) {
+            return num1 * num2;
+        }
+        if (s.equals("/")) {
+            return num1 / num2;
+        } else {
+            return num1 - num2;
+        }
+    }
+}

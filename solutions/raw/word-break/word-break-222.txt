@@ -1,0 +1,21 @@
+class Solution {
+
+    boolean dpSolution(String str, Set<String> set) {
+        int n = str.length();
+        boolean[][] dp = new boolean[n + 1][n + 1];
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n - i + 1; j++) {
+                int k = i + j - 1;
+                dp[j][k] = set.contains(str.substring(j - 1, k));
+                for (int l = j; l < k && !dp[j][k]; l++) dp[j][k] = dp[j][l] && dp[l + 1][k];
+            }
+        }
+        return dp[1][n];
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> set = new HashSet<>();
+        for (String word : wordDict) set.add(word);
+        return dpSolution(s, set);
+    }
+}

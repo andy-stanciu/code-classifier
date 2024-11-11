@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public void slove(TreeNode root, int param1, List<List<Integer>> ans, List<Integer> temp, int param2) {
+        if (root == null) {
+            return;
+        }
+        if (root.right == null && root.left == null) {
+            // include current node
+            temp.add(root.val);
+            param2 += root.val;
+            // check for target sum
+            if (param2 == param1) {
+                //
+                ans.add(new ArrayList<>(temp));
+            }
+            // exclude
+            param2 -= root.val;
+            temp.remove(temp.size() - 1);
+        }
+        // include current node
+        temp.add(root.val);
+        param2 += root.val;
+        slove(root.left, param1, ans, temp, param2);
+        slove(root.right, param1, ans, temp, param2);
+        // backtrack
+        temp.remove(temp.size() - 1);
+        param2 -= root.val;
+    }
+
+    public List<List<Integer>> method1(TreeNode root, int param1) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        int param2 = 0;
+        slove(root, param1, ans, temp, param2);
+        return ans;
+    }
+}

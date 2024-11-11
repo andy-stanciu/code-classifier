@@ -1,0 +1,27 @@
+class Solution {
+
+    public boolean canWordBreak(String s, List<String> wordDict, int start, Map<Integer, Boolean> map) {
+        if (start == s.length()) {
+            return true;
+        }
+        if (map.containsKey(start)) {
+            return map.get(start);
+        }
+        for (String word : wordDict) {
+            int len = word.length();
+            if (start + len <= s.length() && s.substring(start, start + len).equals(word)) {
+                if (canWordBreak(s, wordDict, start + len, map)) {
+                    map.put(start, true);
+                    return true;
+                }
+            }
+        }
+        map.put(start, false);
+        return false;
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Map<Integer, Boolean> map = new HashMap<>();
+        return canWordBreak(s, wordDict, 0, map);
+    }
+}

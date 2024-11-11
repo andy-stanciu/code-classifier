@@ -1,0 +1,36 @@
+class Solution {
+
+    public boolean isPalindrom(int start, int end, String s) {
+        while (start < end) {
+            if (s.charAt(start) != s.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+
+    public void backtrack(int indx, int n, String s, List<String> store, List<List<String>> ans) {
+        if (indx == n) {
+            List<String> temp = new ArrayList<>();
+            temp.addAll(store);
+            ans.add(temp);
+            return;
+        }
+        for (int i = indx; i < n; i++) {
+            if (isPalindrom(indx, i, s)) {
+                store.add(s.substring(indx, i + 1));
+                backtrack(i + 1, n, s, store, ans);
+                store.removeLast();
+            }
+        }
+    }
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> ans = new ArrayList<>();
+        List<String> store = new ArrayList<>();
+        backtrack(0, s.length(), s, store, ans);
+        return ans;
+    }
+}

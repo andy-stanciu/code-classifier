@@ -1,0 +1,46 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        HashMap<Integer, List<Integer>> dependencyMap = new HashMap<>();
+        int[] indegreeCount = new int[param1];
+        int[] result = new int[param1];
+        Queue<Integer> bfsQueue = new LinkedList<>();
+        int idx = 0;
+        // Populate indegree count and dependency map
+        for (int[] prereq : prerequisites) {
+            int var1 = prereq[1];
+            int var2 = prereq[0];
+            indegreeCount[var2]++;
+            if (!dependencyMap.containsKey(var1)) {
+                dependencyMap.put(var1, new ArrayList<>());
+            }
+            dependencyMap.get(var1).add(var2);
+        }
+        // Add courses with no prerequisites to the queue
+        for (int i = 0; i < param1; i++) {
+            if (indegreeCount[i] == 0) {
+                bfsQueue.add(i);
+            }
+        }
+        // Perform BFS traversal
+        while (!bfsQueue.isEmpty()) {
+            int var3 = bfsQueue.poll();
+            // Add the current course to the result array
+            result[idx++] = var3;
+            // Decrement the count of prerequisites for each dependent course
+            List<Integer> var4 = dependencyMap.getOrDefault(var3, Collections.emptyList());
+            for (int var5 : var4) {
+                indegreeCount[var5]--;
+                // If the prerequisites for the dependent course become zero, add it to the queue
+                if (indegreeCount[var5] == 0) {
+                    bfsQueue.add(var5);
+                }
+            }
+        }
+        // Check if all courses are included in the result array
+        if (idx == param1)
+            return result;
+        // If not all courses are included, return an empty array
+        return new int[0];
+    }
+}

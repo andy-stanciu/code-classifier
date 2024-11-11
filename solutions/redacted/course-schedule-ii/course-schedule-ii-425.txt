@@ -1,0 +1,43 @@
+class Solution {
+
+    boolean flag = true;
+
+    List<Integer> result = new ArrayList<>();
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        int[] used = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            if (prerequisites[i][0] == prerequisites[i][1])
+                return new int[] {};
+            List<Integer> arr = graph.get(prerequisites[i][0]);
+            arr.add(prerequisites[i][1]);
+        }
+        for (int i = 0; i < param1; i++) if (used[i] == 0)
+            dfs(i, used, graph);
+        if (flag) {
+            int[] res = new int[param1];
+            for (int i = 0; i < param1; i++) {
+                res[i] = result.get(i);
+            }
+            return res;
+        } else
+            return new int[] {};
+    }
+
+    private void dfs(int v, int[] used, List<List<Integer>> graph) {
+        used[v] = 1;
+        for (Integer to : graph.get(v)) {
+            if (used[to] == 1) {
+                flag = false;
+            } else if (used[to] == 0) {
+                dfs(to, used, graph);
+            }
+        }
+        used[v] = 2;
+        result.add(v);
+    }
+}

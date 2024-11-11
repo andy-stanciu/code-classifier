@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prereq) {
+        // Make graph -----------------------------
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) graph.add(new ArrayList<>());
+        for (int i = 0; i < prereq.length; i++) graph.get(prereq[i][1]).add(prereq[i][0]);
+        // --------------------------------------------
+        boolean[] vis = new boolean[param1];
+        boolean[] path = new boolean[param1];
+        Stack<Integer> s = new Stack<>();
+        // Traverse to nodes that are left unvisited
+        for (int i = 0; i < param1; i++) {
+            if (!vis[i])
+                if (// ie if cycle exist return empty array
+                dfs(i, graph, vis, path, s) == true)
+                    return new int[] {};
+        }
+        int[] ans = new int[s.size()];
+        int i = 0;
+        while (// Here stack has all the nodes in topological order
+        !s.isEmpty()) {
+            ans[i] = s.pop();
+            i++;
+        }
+        return ans;
+    }
+
+    public boolean dfs(int src, ArrayList<ArrayList<Integer>> graph, boolean[] vis, boolean[] path, Stack<Integer> s) {
+        vis[src] = true;
+        path[src] = true;
+        for (Integer i : graph.get(src)) {
+            if (!vis[i]) {
+                if (dfs(i, graph, vis, path, s))
+                    return true;
+            } else if (// Checking the cycle
+            path[i] == true)
+                return true;
+        }
+        s.add(src);
+        path[src] = false;
+        return false;
+    }
+}

@@ -1,0 +1,27 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        // Create a HashSet for faster lookup of words in the dictionary
+        Set<String> dict = new HashSet<>(wordDict);
+        int n = s.length();
+        // Create a boolean array dp, where dp[i] will be true if substring s[0:i] can be segmented using words from the dictionary
+        boolean[] dp = new boolean[n + 1];
+        // Base case: An empty string can always be segmented using an empty word dictionary
+        dp[0] = true;
+        // Iterate through the input string from left to right, considering different substrings
+        for (int i = 1; i <= n; i++) {
+            // For each substring s[0:i], iterate through all possible positions to split it (j from 0 to i-1)
+            for (int j = 0; j < i; j++) {
+                // If the substring s[0:j] can be segmented and the substring s[j:i] is present in the dictionary,
+                //Then we can say that the substring s[0:i] can be segmented using words from the dictionary.
+                if (dp[j] && dict.contains(s.substring(j, i))) {
+                    dp[i] = true;
+                    // If we found a match, no need to check further, break out of the loop.
+                    break;
+                }
+            }
+        }
+        // The value of dp[n] represents whether the entire input string s can be segmented or not.
+        return dp[n];
+    }
+}

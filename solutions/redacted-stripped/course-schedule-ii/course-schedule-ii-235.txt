@@ -1,0 +1,64 @@
+class Solution {
+
+    public int[] findOrder(int n, int[][] pre) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] edge : pre) {
+            int to = edge[0];
+            int from = edge[1];
+            if (adj.get(to).contains(from)) {
+                return new int[0];
+            }
+            adj.get(from).add(to);
+        }
+        boolean[] mainVisited = new boolean[n];
+        for (int node = 0; node < n; node++) {
+            if (mainVisited[node] == false) {
+                boolean[] visited = new boolean[n];
+                if (acyclicDfs(node, adj, mainVisited, visited)) {
+                    return new int[0];
+                }
+            }
+        }
+        Stack<Integer> st = new Stack<>();
+        boolean[] visited = new boolean[n];
+        for (int node = 0; node < n; node++) {
+            if (visited[node] == false)
+                topoDfs(node, adj, st, visited);
+        }
+        int[] toposort = new int[n];
+        int index = 0;
+        while (!st.isEmpty()) {
+            toposort[index++] = st.pop();
+        }
+        return toposort;
+    }
+
+    public void topoDfs(int node, List<List<Integer>> adj, Stack<Integer> st, boolean[] visited) {
+        visited[node] = true;
+        for (int nbr : adj.get(node)) {
+            if (visited[nbr] == false) {
+                topoDfs(nbr, adj, st, visited);
+            }
+        }
+        st.push(node);
+    }
+
+    public boolean acyclicDfs(int node, List<List<Integer>> adj, boolean[] mainVisited, boolean[] visited) {
+        mainVisited[node] = true;
+        visited[node] = true;
+        for (int nbr : adj.get(node)) {
+            if (visited[nbr] == false) {
+                if (acyclicDfs(nbr, adj, mainVisited, visited)) {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
+        visited[node] = false;
+        return false;
+    }
+}

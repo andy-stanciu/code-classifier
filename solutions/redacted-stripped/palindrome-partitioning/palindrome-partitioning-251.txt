@@ -1,0 +1,61 @@
+class Solution {
+
+    private StringBuilder givenStr;
+
+    private int givenStrLength;
+
+    private List<List<String>> result;
+
+    private List<String> subsResult;
+
+    public List<List<String>> partition(String s) {
+        givenStr = new StringBuilder(s);
+        givenStrLength = s.length();
+        subsResult = new ArrayList<String>();
+        return new AbstractList<List<String>>() {
+
+            @Override
+            public int size() {
+                init();
+                return result.size();
+            }
+
+            @Override
+            public List<String> get(int index) {
+                init();
+                return result.get(index);
+            }
+
+            private void init() {
+                if (result != null)
+                    return;
+                result = new ArrayList<List<String>>();
+                dfs(0);
+            }
+        };
+    }
+
+    private void dfs(int startIndex) {
+        if (startIndex == givenStrLength) {
+            result.add(new ArrayList<String>(subsResult));
+            return;
+        }
+        for (int i = startIndex; i < givenStrLength; i++) {
+            if (!method1(givenStr, startIndex, i))
+                continue;
+            subsResult.add(givenStr.substring(startIndex, i + 1));
+            dfs(i + 1);
+            subsResult.remove(subsResult.size() - 1);
+        }
+    }
+
+    private boolean method1(StringBuilder s, int low, int high) {
+        while (low < high) {
+            if (s.charAt(low) != s.charAt(high))
+                return false;
+            low++;
+            high--;
+        }
+        return true;
+    }
+}

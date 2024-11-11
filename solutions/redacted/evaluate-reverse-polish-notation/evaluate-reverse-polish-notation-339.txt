@@ -1,0 +1,24 @@
+class Solution {
+
+    public int evalRPN(String[] tokens) {
+        if (tokens.length == 0) {
+            return 0;
+        }
+        Map<String, BiFunction<Integer, Integer, Integer>> map = new HashMap<>();
+        map.put("+", (a, b) -> a + b);
+        map.put("-", (a, b) -> a - b);
+        map.put("*", (a, b) -> a * b);
+        map.put("/", (a, b) -> a / b);
+        List<Integer> stack = new ArrayList<>();
+        for (String token : tokens) {
+            if (token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/")) {
+                int first = stack.remove(stack.size() - 1);
+                int second = stack.remove(stack.size() - 1);
+                stack.add(map.get(token).apply(second, first));
+            } else {
+                stack.add(Integer.parseInt(token));
+            }
+        }
+        return stack.get(0);
+    }
+}

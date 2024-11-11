@@ -1,0 +1,45 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<Integer>());
+        }
+        for (int[] edge : prerequisites) {
+            graph.get(edge[0]).add(edge[1]);
+        }
+        Stack<Integer> stack = new Stack<>();
+        boolean[] visited = new boolean[param1];
+        boolean[] pathVisited = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i]) {
+                if (isCycle(graph, visited, pathVisited, stack, i)) {
+                    return new int[0];
+                }
+            }
+        }
+        int[] topoSortOrder = new int[param1];
+        int index = param1 - 1;
+        while (!stack.isEmpty()) {
+            topoSortOrder[index--] = stack.pop();
+        }
+        return topoSortOrder;
+    }
+
+    private boolean isCycle(ArrayList<ArrayList<Integer>> graph, boolean[] visited, boolean[] pathVisited, Stack<Integer> stack, int u) {
+        visited[u] = true;
+        pathVisited[u] = true;
+        for (int v : graph.get(u)) {
+            if (!visited[v]) {
+                if (isCycle(graph, visited, pathVisited, stack, v)) {
+                    return true;
+                }
+            } else if (pathVisited[v]) {
+                return true;
+            }
+        }
+        pathVisited[u] = false;
+        stack.add(u);
+        return false;
+    }
+}

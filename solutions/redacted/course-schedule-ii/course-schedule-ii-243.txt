@@ -1,0 +1,59 @@
+class Node {
+
+    int var1;
+
+    String status;
+
+    List<Integer> deps;
+
+    Node(int var1) {
+        this.var1 = var1;
+        this.status = "not started";
+        this.deps = new ArrayList<>();
+    }
+}
+
+class Solution {
+
+    private String call(List<Node> graph, List<Integer> res, int start) {
+        if (graph.get(start).status.equals("done")) {
+            return "";
+        }
+        if (graph.get(start).status.equals("in progress")) {
+            return "cycle";
+        }
+        graph.get(start).status = "in progress";
+        for (Integer dep : graph.get(start).deps) {
+            String ret = call(graph, res, dep);
+            if (ret.equals("cycle")) {
+                return "cycle";
+            }
+        }
+        res.add(start);
+        graph.get(start).status = "done";
+        return "";
+    }
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] res = new int[param1];
+        List<Node> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new Node(i));
+        }
+        for (int[] pre : prerequisites) {
+            graph.get(pre[0]).deps.add(pre[1]);
+        }
+        List<Integer> resL = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            String ret = call(graph, resL, i);
+            if (ret.equals("cycle"))
+                return new int[] {};
+        }
+        int i = 0;
+        while (i < param1) {
+            res[i] = resL.get(i);
+            i++;
+        }
+        return res;
+    }
+}

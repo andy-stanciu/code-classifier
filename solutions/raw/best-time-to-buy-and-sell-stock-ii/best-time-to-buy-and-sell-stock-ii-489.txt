@@ -1,0 +1,35 @@
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        int[][] dp = new int[prices.length][2];
+        for (int[] curr : dp) {
+            Arrays.fill(curr, -1);
+        }
+        return find(prices, 0, 0, dp);
+    }
+
+    public int find(int[] prices, int idx, int decisioin, int[][] dp) {
+        if (idx == prices.length) {
+            return 0;
+        }
+        //current trasaction we can either buty or sell
+        // buy
+        if (dp[idx][decisioin] != -1) {
+            return dp[idx][decisioin];
+        }
+        int buyMax = 0;
+        int sellMax = 0;
+        if (decisioin == 0) {
+            // Either buy now or buy the next day
+            int buyNow = -prices[idx] + find(prices, idx + 1, 1, dp);
+            int buyLater = find(prices, idx + 1, 0, dp);
+            buyMax = Math.max(buyNow, buyLater);
+        } else {
+            int sellNow = prices[idx] + find(prices, idx + 1, 0, dp);
+            int sellLater = find(prices, idx + 1, 1, dp);
+            sellMax = Math.max(sellNow, sellLater);
+        }
+        dp[idx][decisioin] = Math.max(sellMax, buyMax);
+        return dp[idx][decisioin];
+    }
+}

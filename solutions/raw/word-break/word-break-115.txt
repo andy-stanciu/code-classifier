@@ -1,0 +1,32 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int[] dp = new int[s.length()];
+        Arrays.fill(dp, -1);
+        return solve(s, wordDict, 0, dp);
+    }
+
+    private boolean solve(String s, List<String> workDict, int index, int[] dp) {
+        //base case
+        if (index == s.length()) {
+            return true;
+        }
+        if (dp[index] != -1) {
+            return dp[index] == 0 ? true : false;
+        }
+        String updatedString = s.substring(index);
+        for (String str : workDict) {
+            if (updatedString.startsWith(str)) {
+                boolean present = solve(s, workDict, index + str.length(), dp);
+                if (present)
+                    dp[index] = 0;
+                else
+                    dp[index] = 1;
+                if (present)
+                    return true;
+            }
+        }
+        dp[index] = 1;
+        return false;
+    }
+}

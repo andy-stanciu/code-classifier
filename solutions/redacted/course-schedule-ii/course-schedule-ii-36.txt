@@ -1,0 +1,46 @@
+public class Solution {
+
+    private List<Integer> var1;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        var1 = new ArrayList<>();
+        List<Integer>[] adj = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            adj[i] = new ArrayList<>();
+        }
+        for (int[] prerequisite : prerequisites) {
+            adj[prerequisite[1]].add(prerequisite[0]);
+        }
+        boolean[] visit = new boolean[param1];
+        boolean[] inStack = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (dfs(i, adj, visit, inStack)) {
+                return new int[0];
+            }
+        }
+        int[] result = new int[var1.size()];
+        for (int i = 0; i < var1.size(); i++) {
+            result[i] = var1.get(var1.size() - 1 - i);
+        }
+        return result;
+    }
+
+    private boolean dfs(int node, List<Integer>[] adj, boolean[] visit, boolean[] inStack) {
+        if (inStack[node]) {
+            return true;
+        }
+        if (visit[node]) {
+            return false;
+        }
+        visit[node] = true;
+        inStack[node] = true;
+        for (int neighbour : adj[node]) {
+            if (dfs(neighbour, adj, visit, inStack)) {
+                return true;
+            }
+        }
+        inStack[node] = false;
+        var1.add(node);
+        return false;
+    }
+}

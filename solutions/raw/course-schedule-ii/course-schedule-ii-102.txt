@@ -1,0 +1,46 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.put(i, new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        boolean[] vis = new boolean[numCourses];
+        boolean[] pathVis = new boolean[numCourses];
+        Stack<Integer> s = new Stack<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (!vis[i]) {
+                if (isCycle(graph, i, vis, pathVis, s)) {
+                    return new int[] {};
+                }
+            }
+        }
+        int[] res = new int[numCourses];
+        for (int i = 0; i < numCourses && !s.isEmpty(); i++) {
+            res[i] = s.pop();
+        }
+        return res;
+    }
+
+    public boolean isCycle(Map<Integer, List<Integer>> graph, int src, boolean[] vis, boolean[] pathVis, Stack<Integer> s) {
+        if (pathVis[src]) {
+            return true;
+        }
+        if (vis[src]) {
+            return false;
+        }
+        vis[src] = true;
+        pathVis[src] = true;
+        for (int neig : graph.get(src)) {
+            if (isCycle(graph, neig, vis, pathVis, s)) {
+                return true;
+            }
+        }
+        pathVis[src] = false;
+        s.push(src);
+        return false;
+    }
+}

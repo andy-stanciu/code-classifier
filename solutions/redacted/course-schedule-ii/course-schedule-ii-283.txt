@@ -1,0 +1,48 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        // Initialize in-degrees and adjacency list
+        int[] inDegrees = new int[param1];
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        // Build the graph and calculate in-degrees
+        for (int[] prerequisite : prerequisites) {
+            int var1 = prerequisite[0];
+            int var2 = prerequisite[1];
+            graph.computeIfAbsent(var2, k -> new ArrayList<>()).add(var1);
+            inDegrees[var1]++;
+        }
+        // Initialize a queue for topological sorting
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (inDegrees[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        // Perform topological sorting
+        List<Integer> result = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            int var1 = queue.poll();
+            result.add(var1);
+            if (graph.containsKey(var1)) {
+                for (int var3 : graph.get(var1)) {
+                    inDegrees[var3]--;
+                    if (inDegrees[var3] == 0) {
+                        queue.offer(var3);
+                    }
+                }
+            }
+        }
+        // Check if all courses are taken
+        if (result.size() == param1) {
+            // Convert list to array
+            int[] resultArray = new int[param1];
+            for (int i = 0; i < param1; i++) {
+                resultArray[i] = result.get(i);
+            }
+            return resultArray;
+        } else {
+            // It is impossible to finish all courses
+            return new int[0];
+        }
+    }
+}

@@ -1,0 +1,48 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<Integer>[] map = getMap(param1, prerequisites);
+        boolean[] visited = new boolean[param1];
+        boolean[] hasInpath = new boolean[param1];
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i] && dfs(i, map, visited, hasInpath, result)) {
+                return new int[0];
+            }
+        }
+        int[] data = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            data[i] = result.get(result.size() - i - 1);
+        }
+        return data;
+    }
+
+    private boolean dfs(int start, List<Integer>[] map, boolean[] visited, boolean[] hasInpath, List<Integer> result) {
+        hasInpath[start] = true;
+        visited[start] = true;
+        for (int child : map[start]) {
+            if (hasInpath[child]) {
+                return true;
+            }
+            if (!visited[child] && dfs(child, map, visited, hasInpath, result)) {
+                return true;
+            }
+        }
+        result.add(start);
+        hasInpath[start] = false;
+        return false;
+    }
+
+    private List<Integer>[] getMap(int param1, int[][] prerequisites) {
+        List<Integer>[] map = new List[param1];
+        for (int i = 0; i < param1; i++) {
+            map[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int start = prerequisites[i][0];
+            int end = prerequisites[i][1];
+            map[end].add(start);
+        }
+        return map;
+    }
+}

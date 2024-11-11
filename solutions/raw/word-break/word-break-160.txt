@@ -1,0 +1,64 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        TrieDs root = new TrieDs();
+        for (int i = 0; i < wordDict.size(); i++) {
+            root.insert(wordDict.get(i));
+        }
+        return root.canWordBreak(s);
+    }
+
+    class TrieDs {
+
+        private TrieDs[] childNodes = new TrieDs[26];
+
+        private boolean isEow = false;
+
+        public void insert(String word) {
+            TrieDs currNode = this;
+            for (int i = 0; i < word.length(); i++) {
+                int index = word.charAt(i) - 97;
+                if (currNode.childNodes[index] != null) {
+                    currNode = currNode.childNodes[index];
+                } else {
+                    TrieDs newNode = new TrieDs();
+                    currNode.childNodes[index] = newNode;
+                    currNode = newNode;
+                }
+            }
+            currNode.isEow = true;
+        }
+
+        public boolean isWordExists(String word) {
+            TrieDs currNode = this;
+            for (int i = 0; i < word.length(); i++) {
+                int index = word.charAt(i) - 97;
+                if (currNode.childNodes[index] == null) {
+                    return false;
+                }
+                currNode = currNode.childNodes[index];
+            }
+            return currNode.isEow;
+        }
+
+        public boolean canWordBreak(String word) {
+            int n = word.length();
+            boolean[] dp = new boolean[n + 1];
+            dp[0] = true;
+            for (int i = 0; i < n; i++) {
+                if (!dp[i])
+                    continue;
+                TrieDs currNode = this;
+                for (int j = i; j < n; j++) {
+                    int index = word.charAt(j) - 97;
+                    if (currNode.childNodes[index] == null)
+                        break;
+                    currNode = currNode.childNodes[index];
+                    if (currNode.isEow)
+                        dp[j + 1] = true;
+                }
+            }
+            return dp[n];
+        }
+    }
+}

@@ -1,0 +1,42 @@
+class Solution {
+
+    public static boolean method1(String s, List<String> param1) {
+        int N = s.length();
+        int M = param1.size();
+        HashSet<String> set = new HashSet<>(param1);
+        // \u5B9A\u4E49dp\u6570\u7EC4\uFF1A
+        boolean[] dp = new boolean[N + 1];
+        // dp\u6570\u7EC4\u521D\u59CB\u5316\uFF1A
+        dp[0] = true;
+        // \u5F00\u59CB\u904D\u5386\u6570\u7EC4 - \u5148\u904D\u5386\u80CC\u5305\u540E\u904D\u5386\u7269\u54C1
+        for (int j = 1; j <= N; j++) {
+            for (int i = 0; i < M; i++) {
+                if (param1.get(i).length() <= j) {
+                    dp[j] = dp[j] || (dp[j - param1.get(i).length()] && set.contains(s.substring(j - param1.get(i).length(), j)));
+                }
+            }
+        }
+        return dp[N];
+    }
+}
+/**
+ * 0: \u5B8C\u5168\u80CC\u5305\u95EE\u9898\uFF1A
+ * \u56E0\u4E3A\u6BCF\u4E00\u4E2A\u5355\u8BCD\u53EF\u4EE5\u88AB\u91CD\u590D\u7684\u4F7F\u7528
+ *
+ * 1: dp\u6570\u7EC4\u4EE5\u53CA\u6570\u7EC4\u4E0B\u6807\u7684\u542B\u4E49\uFF1A
+ * \u80CC\u5305\uFF1A\u5B57\u7B26\u4E32
+ * \u7269\u54C1\uFF1A\u5355\u8BCD\u6570\u7EC4
+ * \u5B57\u7B26\u4E32\u7684\u957F\u5EA6\u5982\u679C\u662Fj\u7684\u8BDD\uFF0C\u5982\u679C\u53EF\u4EE5\u88AB\u62C6\u5206\u6210\u5355\u8BCD\u6570\u7EC4\u4E2D\u7684\u5355\u8BCD\uFF0C\u5219dp[j]\u4E3Atrue
+ *
+ * 2: dp\u6570\u7EC4\u7684\u9012\u63A8\u516C\u5F0F\uFF1A
+ * \u6765\u5230\u7B2Ci\u4E2A\u5355\u8BCD\uFF0C
+ * - \u4E0D\u8981\u7B2Ci\u4E2A\u5355\u8BCD\uFF1Adp[j]
+ * - \u8981\u7B2Ci\u4E2A\u5355\u8BCD\uFF1Adp[j - i] && i~j\u7684\u5355\u8BCD\u4E0E\u7B2Ci\u4E2A\u5355\u8BCD\u662F\u5426\u4E00\u81F4
+ * \u7ED3\u679C\uFF1Adp[j] = dp[j] || dp[j - i] && i~j\u7684\u5355\u8BCD\u4E0E\u7B2Ci\u4E2A\u5355\u8BCD\u662F\u5426\u4E00\u81F4
+ *
+ * 3\uFF1A\u521D\u59CB\u5316\uFF1A
+ * dp[0] = true\uFF0C \u5982\u679C\u662Ffalse\u7684\u8BDD\u540E\u9762\u7684\u90FD\u662Ffalse
+ *
+ * 4:\u904D\u5386\u987A\u5E8F:
+ * \u6392\u5217\u95EE\u9898 - \u5148\u904D\u5386\u80CC\u5305\u540E\u904D\u5386\u7269\u54C1
+ */

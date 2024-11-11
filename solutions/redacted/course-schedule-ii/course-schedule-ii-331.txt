@@ -1,0 +1,43 @@
+class Solution {
+
+    //Time Complexity: O(n) - Memoization
+    //Space Complexity: O(n*m)
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<Integer> result = new ArrayList<>();
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            graph.put(i, new ArrayList<>());
+        }
+        for (int[] prerequesite : prerequisites) {
+            graph.get(prerequesite[0]).add(prerequesite[1]);
+        }
+        //0 - non verified
+        //1 - verified
+        //-1 - seen
+        int[] var1 = new int[param1];
+        for (int var2 = 0; var2 < param1; var2++) {
+            if (!canComplete(var2, graph, result, var1)) {
+                return new int[] {};
+            }
+        }
+        return result.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    private boolean canComplete(int var2, Map<Integer, List<Integer>> graph, List<Integer> result, int[] var1) {
+        if (var1[var2] == 1) {
+            return true;
+        }
+        if (var1[var2] == -1) {
+            return false;
+        }
+        var1[var2] = -1;
+        for (int prerequesite : graph.get(var2)) {
+            if (!canComplete(prerequesite, graph, result, var1)) {
+                return false;
+            }
+        }
+        result.add(var2);
+        var1[var2] = 1;
+        return true;
+    }
+}

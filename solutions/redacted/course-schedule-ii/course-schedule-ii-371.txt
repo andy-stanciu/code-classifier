@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] findOrder(int V, int[][] mat) {
+        List<List<Integer>> adjL = new ArrayList<>(V);
+        /* creating adjacency list */
+        for (int i = 0; i < V; i++) adjL.add(new ArrayList<>());
+        /* filling adjL (directed edges) */
+        int n = mat.length;
+        //track everyone\'s in-degree
+        int[] indeg = new int[V];
+        for (int i = 0; i < n; i++) {
+            adjL.get(mat[i][1]).add(mat[i][0]);
+            indeg[mat[i][0]]++;
+        }
+        /* Kahn\'s Algo */
+        Queue<Integer> q = new LinkedList<>();
+        /* Fill Queue With Vertices, indgeg=0 */
+        for (int i = 0; i < V; i++) {
+            if (indeg[i] == 0)
+                q.add(i);
+        }
+        /* BFS */
+        int[] res = new int[V];
+        int ptr = 0;
+        while (!q.isEmpty()) {
+            int node = q.remove();
+            for (int i = 0; i < adjL.get(node).size(); i++) {
+                int m = adjL.get(node).get(i);
+                indeg[m]--;
+                if (indeg[m] == 0)
+                    q.add(m);
+            }
+            res[ptr] = node;
+            ptr++;
+        }
+        return ptr == V ? res : new int[0];
+    }
+}

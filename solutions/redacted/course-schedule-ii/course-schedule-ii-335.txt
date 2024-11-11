@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<Integer>[] adj = new List[param1];
+        int[] indegree = new int[param1];
+        int[] result = new int[param1];
+        int index = 0;
+        // Build adjacency list and indegree array
+        for (int[] pair : prerequisites) {
+            int var1 = pair[0];
+            int prerequisite = pair[1];
+            if (adj[prerequisite] == null) {
+                adj[prerequisite] = new ArrayList<>();
+            }
+            adj[prerequisite].add(var1);
+            indegree[var1]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        // Add courses with indegree 0 to the queue
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                queue.offer(i);
+                // Add to the result array
+                result[index++] = i;
+            }
+        }
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            if (adj[current] != null) {
+                for (int next : adj[current]) {
+                    indegree[next]--;
+                    if (indegree[next] == 0) {
+                        queue.offer(next);
+                        // Add to the result array
+                        result[index++] = next;
+                    }
+                }
+            }
+        }
+        // If all courses are taken, return the result array
+        return index == param1 ? result : new int[] {};
+    }
+}

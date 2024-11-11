@@ -1,0 +1,41 @@
+class Solution {
+
+    public int[] findOrder(int n, int[][] prerequisites) {
+        int[] inDegree = new int[n];
+        ArrayList<Integer> answer = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<Integer>());
+        }
+        int edges = prerequisites.length;
+        for (int i = 0; i < edges; i++) {
+            int from = prerequisites[i][1];
+            int to = prerequisites[i][0];
+            adj.get(from).add(to);
+            inDegree[to]++;
+        }
+        Queue<Integer> q = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            if (inDegree[i] == 0) {
+                q.offer(i);
+            }
+        }
+        while (!q.isEmpty()) {
+            Integer node = q.poll();
+            answer.add(node);
+            for (Integer neigh : adj.get(node)) {
+                --inDegree[neigh];
+                if (inDegree[neigh] == 0) {
+                    q.offer(neigh);
+                }
+            }
+        }
+        int[] ans = new int[answer.size()];
+        for (int i = 0; i < answer.size(); i++) {
+            ans[i] = answer.get(i);
+        }
+        if (ans.length == n)
+            return ans;
+        return new int[0];
+    }
+}

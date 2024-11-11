@@ -1,0 +1,44 @@
+class Solution {
+
+    public Map<Integer, Integer> findInDegree(Map<Integer, List<Integer>> graph) {
+        Map<Integer, Integer> inDegree = new HashMap<>();
+        graph.keySet().forEach(key -> {
+            inDegree.put(key, 0);
+        });
+        graph.entrySet().forEach(entry -> {
+            for (int neighbor : entry.getValue()) {
+                inDegree.put(neighbor, inDegree.get(neighbor) + 1);
+            }
+        });
+        return inDegree;
+    }
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int i = 0; i < param1; i++) {
+            graph.put(i, new ArrayList<Integer>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        Map<Integer, Integer> inDegree = findInDegree(graph);
+        Queue<Integer> queue = new ArrayDeque<>();
+        inDegree.keySet().forEach(key -> {
+            if (inDegree.get(key) == 0) {
+                queue.add(key);
+            }
+        });
+        List<Integer> res = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            int n = queue.poll();
+            res.add(n);
+            for (int neighbour : graph.get(n)) {
+                inDegree.put(neighbour, inDegree.get(neighbour) - 1);
+                if (inDegree.get(neighbour) == 0) {
+                    queue.add(neighbour);
+                }
+            }
+        }
+        return res.size() == param1 ? res.stream().mapToInt(Integer::intValue).toArray() : new int[0];
+    }
+}

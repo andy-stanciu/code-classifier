@@ -1,0 +1,23 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int n = s.length();
+        boolean[][] sol = new boolean[n][n];
+        for (int d = 0; d < n; d++) {
+            for (int L = 0; L < n; L++) {
+                int R = L + d;
+                if (R < n) {
+                    boolean wordExists = wordDict.contains(s.substring(L, R + 1));
+                    if (!wordExists) {
+                        for (int k = L; k < R; k++) {
+                            sol[L][R] = sol[L][R] || (sol[L][k] && sol[k + 1][R]);
+                        }
+                    } else {
+                        sol[L][R] = true;
+                    }
+                }
+            }
+        }
+        return sol[0][n - 1];
+    }
+}

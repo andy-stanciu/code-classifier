@@ -1,0 +1,112 @@
+class Solution {
+
+    public static String masterString;
+
+    public static List<String> var1 = new ArrayList<>();
+
+    public static List<List<String>> output = new ArrayList<>();
+
+    public static String getMasterString() {
+        return masterString;
+    }
+
+    public static void setMasterString(String masterString) {
+        Solution.masterString = masterString;
+    }
+
+    public static List<String> method1() {
+        return var1;
+    }
+
+    public static List<List<String>> getOutput() {
+        return output;
+    }
+
+    public List<List<String>> partition(String s) {
+        // String s = "abbab";
+        setMasterString(s);
+        getOutput().clear();
+        method1().clear();
+        if (s.length() == 1) {
+            List<String> masterStringAsList = new ArrayList<>();
+            masterStringAsList.add(s);
+            getOutput().add(masterStringAsList);
+        } else {
+            getPartition(s);
+            addSingleCharacterPartitions(s);
+            if (method2(s)) {
+                List<String> masterStringAsList = new ArrayList<>();
+                masterStringAsList.add(s);
+                getOutput().add(masterStringAsList);
+            }
+        }
+        return getOutput();
+    }
+
+    private static void getPartition(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            String subString1 = s.substring(0, i + 1);
+            String subString2 = s.substring(i + 1);
+            if (subString2.isEmpty()) {
+                break;
+            }
+            if (method2(subString1)) {
+                if (var1.isEmpty() && masterString.length() > s.length()) {
+                    var1.addAll(getRecentPortionSubString1(s));
+                }
+                var1.add(subString1);
+                if (method2(subString2) && haveReachedCompleteValidPartition(subString2)) {
+                    List<String> validPartitionsCopy = new ArrayList<>(var1);
+                    validPartitionsCopy.add(subString2);
+                    getOutput().add(validPartitionsCopy);
+                }
+                if (subString2.length() > 1) {
+                    getPartition(subString2);
+                }
+                var1.remove(var1.size() - 1);
+            }
+        }
+    }
+
+    private static List<String> getRecentPortionSubString1(String substring) {
+        List<String> lastOutputList = getOutput().get(getOutput().size() - 1);
+        StringBuilder firstPortionStr = new StringBuilder();
+        List<String> firstPortionList = new ArrayList<>();
+        for (String str : lastOutputList) {
+            firstPortionList.add(str);
+            firstPortionStr.append(str);
+            if (firstPortionStr.toString().concat(substring).equals(getMasterString())) {
+                return firstPortionList;
+            }
+        }
+        return firstPortionList;
+    }
+
+    private static boolean haveReachedCompleteValidPartition(String subString) {
+        StringBuilder lstStr = new StringBuilder();
+        for (String str : method1()) {
+            lstStr.append(str);
+        }
+        lstStr.append(subString);
+        return getMasterString().equals(lstStr.toString());
+    }
+
+    private static boolean method2(String s) {
+        int start = 0, end = s.length() - 1;
+        while (start < end) {
+            if (s.charAt(start) != s.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+
+    private static void addSingleCharacterPartitions(String s) {
+        List<String> singleCharList = Arrays.asList(s.split(""));
+        if (!getOutput().contains(singleCharList)) {
+            getOutput().add(singleCharList);
+        }
+    }
+}

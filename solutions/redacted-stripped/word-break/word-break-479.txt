@@ -1,0 +1,41 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        boolean result = false;
+        Map<Integer, Set<String>> dictOrganized = new HashMap<>();
+        reorganizeDict(param1, dictOrganized);
+        Queue<Integer> dp = new PriorityQueue<>((a, b) -> Integer.compare(a, b));
+        Set<Integer> addedPositions = new HashSet<>();
+        result = explore(0, s, dictOrganized, dp, addedPositions);
+        while (dp.size() > 0) {
+            int position = dp.remove();
+            if (explore(position + 1, s, dictOrganized, dp, addedPositions))
+                return true;
+        }
+        return result;
+    }
+
+    public boolean explore(int startPos, String s, Map<Integer, Set<String>> dictOrganized, Queue<Integer> queue, Set<Integer> addedPositions) {
+        for (int i = s.length(); i > startPos; i--) {
+            String substring = s.substring(startPos, i);
+            if (dictOrganized.containsKey(substring.length())) {
+                Set<String> var1 = dictOrganized.get(substring.length());
+                if (var1.contains(substring) && !addedPositions.contains(i - 1)) {
+                    queue.add(i - 1);
+                    addedPositions.add(i - 1);
+                    if (i == s.length())
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void reorganizeDict(List<String> param1, Map<Integer, Set<String>> dictOrganized) {
+        for (String var2 : param1) {
+            Set<String> var1 = dictOrganized.getOrDefault(var2.length(), new HashSet<String>());
+            var1.add(var2);
+            dictOrganized.put(var2.length(), var1);
+        }
+    }
+}

@@ -1,0 +1,67 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<Integer>[] adjacencyList = new List[param1];
+        for (int i = 0; i < param1; i++) {
+            adjacencyList[i] = new ArrayList<>();
+        }
+        for (int[] dep : prerequisites) {
+            List<Integer> children = adjacencyList[dep[1]];
+            children.add(dep[0]);
+        }
+        int[] inDegree = new int[param1];
+        for (int[] dep : prerequisites) {
+            inDegree[dep[0]]++;
+        }
+        return fullDFS(inDegree, adjacencyList, param1);
+    }
+
+    private int[] fullDFS(int[] inDegree, List<Integer>[] adjacencyList, int param1) {
+        boolean[] visited = new boolean[param1];
+        boolean[] ready = new boolean[param1];
+        int[] result = new int[param1];
+        int total = 0;
+        Stack<Integer> var1 = new Stack<>();
+        for (int i = 0; i < param1; i++) {
+            if (inDegree[i] == 0) {
+                var1.push(i);
+            }
+        }
+        while (!var1.isEmpty()) {
+            int current = var1.pop();
+            if (ready[current])
+                continue;
+            if (visited[current]) {
+                result[total++] = current;
+                ready[current] = true;
+                continue;
+            }
+            visited[current] = true;
+            List<Integer> var2 = adjacencyList[current];
+            if (var2.size() > 0) {
+                var1.push(current);
+                for (Integer var3 : var2) {
+                    if (!visited[var3])
+                        var1.push(var3);
+                    else // cycle detection
+                    if (!ready[var3])
+                        return new int[0];
+                }
+            } else {
+                result[total++] = current;
+                ready[current] = true;
+            }
+        }
+        reverse(result);
+        return total == param1 ? result : new int[0];
+    }
+
+    private void reverse(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n / 2; i++) {
+            int temp = arr[i];
+            arr[i] = arr[n - i - 1];
+            arr[n - i - 1] = temp;
+        }
+    }
+}

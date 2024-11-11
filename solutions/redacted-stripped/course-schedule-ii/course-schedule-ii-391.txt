@@ -1,0 +1,83 @@
+class Solution {
+
+    public class Edge {
+
+        int src;
+
+        int dest;
+
+        public Edge(int src, int dest) {
+            this.src = src;
+            this.dest = dest;
+        }
+    }
+
+    public static void calculateIndeg(ArrayList<Edge>[] graph, int[] indegree) {
+        for (int i = 0; i < graph.length; i++) {
+            for (int j = 0; j < graph[i].size(); j++) {
+                Edge e = graph[i].get(j);
+                indegree[e.dest]++;
+            }
+        }
+    }
+
+    public boolean hasCycle(ArrayList<Edge>[] graph, boolean[] visited, boolean[] recStack, int curr) {
+        if (recStack[curr])
+            return true;
+        if (visited[curr])
+            return false;
+        visited[curr] = true;
+        recStack[curr] = true;
+        for (Edge e : graph[curr]) {
+            if (hasCycle(graph, visited, recStack, e.dest))
+                return true;
+        }
+        recStack[curr] = false;
+        return false;
+    }
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int n = param1;
+        ArrayList<Edge>[] graph = new ArrayList[n];
+        int[] indegree = new int[n];
+        for (int i = 0; i < graph.length; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int src = prerequisites[i][0];
+            int dest = prerequisites[i][1];
+            graph[dest].add(new Edge(dest, src));
+        }
+        boolean[] visited = new boolean[n];
+        boolean[] recStack = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            if (!visited[i] && hasCycle(graph, visited, recStack, i)) {
+                return new int[0];
+            }
+        }
+        int[] ans = new int[n];
+        Queue<Integer> q = new LinkedList<>();
+        ArrayList<Integer> list = new ArrayList<>();
+        calculateIndeg(graph, indegree);
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        while (!q.isEmpty()) {
+            int curr = q.remove();
+            list.add(curr);
+            for (int i = 0; i < graph[curr].size(); i++) {
+                Edge e = graph[curr].get(i);
+                indegree[e.dest]--;
+                if (indegree[e.dest] == 0) {
+                    q.add(e.dest);
+                }
+            }
+        }
+        for (int i = 0; i < list.size(); i++) {
+            ans[i] = list.get(i);
+        }
+        return ans;
+    }
+}

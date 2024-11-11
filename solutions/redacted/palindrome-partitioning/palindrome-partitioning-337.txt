@@ -1,0 +1,52 @@
+class Solution {
+
+    boolean[][] var1;
+
+    String[][] subStrings;
+
+    public List<List<String>> partition(String s) {
+        int n = s.length();
+        subStrings = new String[n + 1][n + 1];
+        var1 = new boolean[n + 1][n + 1];
+        List<List<String>> outerListAns = new ArrayList<List<String>>();
+        // here we create a DP array for palindrome, and a 2D array for substrings using nested for loops
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j <= n; j++) {
+                subStrings[i][j] = s.substring(i, j);
+                var1[i][j] = method1(subStrings[i][j]);
+            }
+        }
+        List<String> innerList = new ArrayList<String>();
+        backTrackPartitionSS(s, 0, innerList, outerListAns);
+        // System.out.println(outerListAns);
+        return outerListAns;
+    }
+
+    public void backTrackPartitionSS(String s, int index, List<String> innerList, List<List<String>> outerListAns) {
+        if (index == s.length()) {
+            outerListAns.add(new ArrayList<String>(innerList));
+            return;
+        }
+        for (int i = index + 1; i <= s.length(); i++) {
+            if (!var1[index][i]) {
+                continue;
+            }
+            innerList.add(subStrings[index][i]);
+            backTrackPartitionSS(s, i, innerList, outerListAns);
+            innerList.remove(innerList.size() - 1);
+        }
+    }
+
+    public boolean method1(String s) {
+        int i = 0;
+        int j = s.length() - 1;
+        while (i < j) {
+            if (s.charAt(i) != s.charAt(j)) {
+                return false;
+            }
+            i++;
+            j--;
+        }
+        return true;
+    }
+}

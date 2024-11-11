@@ -1,0 +1,29 @@
+class Solution {
+
+    Map<String, Boolean> map;
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        map = new HashMap<>();
+        return dp(s, wordDict, 0, 0);
+    }
+
+    public boolean dp(String s, List<String> wordDict, int i, int j) {
+        String key = s + "-" + i + "-" + "j";
+        if (map.containsKey(key)) {
+            return map.get(key);
+        }
+        if (s == "") {
+            return true;
+        }
+        if (j > s.length()) {
+            return false;
+        }
+        if (wordDict.contains(s.substring(i, j))) {
+            map.put(key, (dp(s.substring(j, s.length()), wordDict, 0, 0) || dp(s, wordDict, i, ++j)));
+            return map.get(key);
+        } else {
+            map.put(key, dp(s, wordDict, i, ++j));
+            return map.get(key);
+        }
+    }
+}

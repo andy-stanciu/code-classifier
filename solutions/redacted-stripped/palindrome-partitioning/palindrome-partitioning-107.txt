@@ -1,0 +1,42 @@
+class Solution {
+
+    static List<List<String>> adi = new ArrayList<>();
+
+    static List<String> ne = new ArrayList<>();
+
+    public static List<List<String>> partition(String s) {
+        adi.clear();
+        ne.clear();
+        partitionHelper(s, 0);
+        return adi;
+    }
+
+    public static void partitionHelper(String s, int start) {
+        if (start == s.length()) {
+            adi.add(new ArrayList<>(ne));
+            return;
+        }
+        for (int i = start; i < s.length(); i++) {
+            String x = s.substring(start, i + 1);
+            if (check(x)) {
+                ne.add(x);
+                partitionHelper(s, i + 1);
+                ne.remove(ne.size() - 1);
+            }
+        }
+    }
+
+    static boolean che(int low, int high, String s) {
+        if (low >= high) {
+            return true;
+        }
+        if (s.charAt(low) != s.charAt(high)) {
+            return false;
+        }
+        return che(low + 1, high - 1, s);
+    }
+
+    static boolean check(String s) {
+        return che(0, s.length() - 1, s);
+    }
+}

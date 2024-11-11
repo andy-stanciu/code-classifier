@@ -1,0 +1,33 @@
+class Solution {
+
+    /**
+     *     gotta use TRIE for optimal timing.
+     */
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> wordDictionary = new HashSet<>();
+        for (String word : wordDict) {
+            wordDictionary.add(word);
+        }
+        Map<String, Boolean> MEMO = new HashMap<>();
+        return isPossible(0, s, new String(), wordDictionary, MEMO);
+    }
+
+    public boolean isPossible(int idx, String s, String prefix, Set<String> wordDictionary, Map<String, Boolean> MEMO) {
+        if (idx == s.length()) {
+            return true;
+        }
+        String key = idx + "|" + prefix;
+        if (MEMO.containsKey(key)) {
+            return MEMO.get(key);
+        }
+        boolean ans = false;
+        for (int i = idx; i <= s.length(); i++) {
+            String currentPrefix = s.substring(idx, i);
+            if (wordDictionary.contains(currentPrefix) && isPossible(i, s, currentPrefix, wordDictionary, MEMO)) {
+                ans = true;
+            }
+        }
+        MEMO.put(key, ans);
+        return ans;
+    }
+}

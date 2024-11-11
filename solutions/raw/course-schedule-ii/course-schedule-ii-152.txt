@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] indegree = new int[numCourses];
+        calIndegree(prerequisites, indegree);
+        int[] res = new int[numCourses];
+        Queue<Integer> que = new LinkedList<>();
+        // Add all courses with no prerequisites (indegree 0) to the queue
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0)
+                que.add(i);
+        }
+        int idx = 0;
+        while (!que.isEmpty()) {
+            int curr = que.remove();
+            res[idx++] = curr;
+            // Iterate over the prerequisites array using a for loop with index
+            for (int i = 0; i < prerequisites.length; i++) {
+                if (prerequisites[i][1] == curr) {
+                    indegree[prerequisites[i][0]]--;
+                    if (indegree[prerequisites[i][0]] == 0) {
+                        que.add(prerequisites[i][0]);
+                    }
+                }
+            }
+        }
+        // Check if we were able to add all courses to the result
+        if (idx != numCourses)
+            return new int[0];
+        return res;
+    }
+
+    public void calIndegree(int[][] graph, int[] indegree) {
+        for (int i = 0; i < graph.length; i++) {
+            indegree[graph[i][0]]++;
+        }
+    }
+}

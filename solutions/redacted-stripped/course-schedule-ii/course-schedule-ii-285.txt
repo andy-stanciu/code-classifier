@@ -1,0 +1,47 @@
+class Solution {
+
+    int[] res;
+
+    int k = 0;
+
+    void topo(List<List<Integer>> e, int v) {
+        int[] ideg = new int[v];
+        for (int i = 0; i < v; i++) {
+            for (int node : e.get(i)) {
+                ideg[node]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < v; i++) {
+            if (ideg[i] == 0)
+                q.add(i);
+        }
+        res = new int[v];
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            res[k++] = node;
+            for (int i : e.get(node)) {
+                ideg[i]--;
+                if (ideg[i] == 0)
+                    q.add(i);
+            }
+        }
+    }
+
+    public int[] findOrder(int v, int[][] g) {
+        List<List<Integer>> e = new ArrayList<>();
+        for (int i = 0; i < v; i++) {
+            e.add(new ArrayList<>());
+        }
+        for (int i = 0; i < g.length; i++) {
+            e.get(g[i][1]).add(g[i][0]);
+        }
+        topo(e, v);
+        if (k == v) {
+            return res;
+        } else {
+            int[] demo = {};
+            return demo;
+        }
+    }
+}

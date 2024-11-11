@@ -1,0 +1,61 @@
+class Solution {
+
+    int idx = -1;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        boolean[] visited = new boolean[param1];
+        boolean[] var1 = new boolean[param1];
+        int[] order = new int[param1];
+        ArrayList<Integer>[] graph = new ArrayList[param1];
+        idx = param1 - 1;
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] edge : prerequisites) {
+            int src = edge[1];
+            int dst = edge[0];
+            graph[src].add(dst);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (!visited[i] && isCyclic(graph, visited, var1, i)) {
+                return new int[] {};
+            }
+        }
+        for (int i = 0; i < param1; i++) {
+            if (!var1[i]) {
+                topSort(graph, order, var1, i);
+            }
+        }
+        return order;
+    }
+
+    private void topSort(ArrayList<Integer>[] graph, int[] order, boolean[] var1, int node) {
+        if (var1[node]) {
+            return;
+        }
+        var1[node] = true;
+        for (int i = 0; i < graph[node].size(); i++) {
+            topSort(graph, order, var1, graph[node].get(i));
+        }
+        order[idx--] = node;
+    }
+
+    private boolean isCyclic(ArrayList<Integer>[] graph, boolean[] visited, boolean[] var1, int node) {
+        if (var1[node]) {
+            return true;
+        }
+        if (visited[node]) {
+            return false;
+        }
+        visited[node] = true;
+        var1[node] = true;
+        for (int i = 0; i < graph[node].size(); i++) {
+            if (isCyclic(graph, visited, var1, graph[node].get(i))) {
+                var1[node] = false;
+                return true;
+            }
+        }
+        var1[node] = false;
+        return false;
+    }
+}

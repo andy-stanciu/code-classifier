@@ -1,0 +1,52 @@
+class Solution {
+
+    Set<Integer> courseOrder;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        ArrayList<Integer>[] prerequisiteArray = new ArrayList[numCourses];
+        courseOrder = new LinkedHashSet<Integer>();
+        int[] courses = new int[2001];
+        for (int[] prerequisite : prerequisites) {
+            if (prerequisiteArray[prerequisite[0]] == null) {
+                prerequisiteArray[prerequisite[0]] = new ArrayList<Integer>();
+            }
+            prerequisiteArray[prerequisite[0]].add(prerequisite[1]);
+        }
+        int[] visited = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            visited = new int[numCourses];
+            if (!canFinish(prerequisiteArray, i, visited)) {
+                return new int[0];
+            }
+        }
+        int[] response = new int[numCourses];
+        int i = 0;
+        for (Integer course : courseOrder) {
+            response[i++] = course;
+        }
+        return response;
+    }
+
+    public boolean canFinish(ArrayList<Integer>[] prerequisiteArray, int course, int[] visited) {
+        if (visited[course] == 1) {
+            return false;
+        }
+        if (visited[course] == 2) {
+            return true;
+        }
+        ArrayList<Integer> preRequisiteCourse = prerequisiteArray[course];
+        if (preRequisiteCourse == null) {
+            courseOrder.add(course);
+            return true;
+        }
+        visited[course] = 1;
+        for (Integer preRequisite : preRequisiteCourse) {
+            if (!canFinish(prerequisiteArray, preRequisite, visited)) {
+                return false;
+            }
+        }
+        visited[course] = 2;
+        courseOrder.add(course);
+        return true;
+    }
+}

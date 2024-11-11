@@ -1,0 +1,126 @@
+class Solution {
+
+    //I\'ll suggest to do the takeUForward method as that is more easy and intuitive
+    //and same code will work in 2,3 and 4 variation of this question with small change
+    //https://www.youtube.com/watch?v=HWJ9kIPpzXs&ab_channel=Pepcoding
+    public int maxProfit(int[] prices) {
+        if (prices.length == 1) {
+            return 0;
+        }
+        int profit = 0;
+        int buyDay = 0, sellDay = 0;
+        for (int i = 1; i < prices.length; i++) {
+            if (prices[i] >= prices[i - 1]) {
+                sellDay++;
+            } else {
+                //even if the the days are constant downwards, sellDay and buyDay
+                //will be same so the prices[sellDay] - prices[buyDay] = 0;
+                profit += prices[sellDay] - prices[buyDay];
+                buyDay = sellDay = i;
+            }
+        }
+        //catering if you can sell on last day, even
+        profit += prices[sellDay] - prices[buyDay];
+        //if you are at low point on last day that day also, sellDay and buyDay will be same
+        //so profit won\'t change.
+        return profit;
+    }
+    //THis is also fine just a finer version of above solution
+    //above one is more easy to understand, this is next step
+    //  public int maxProfit(int[] prices) {
+    //     if(prices.length==1){
+    //         return 0;
+    //     }
+    //     int sum=0;
+    //     for(int i=1;i<prices.length;i++){
+    //         if(prices[i]-prices[i-1]>0){
+    //             sum+=prices[i]-prices[i-1];
+    //         }
+    //     }
+    //     return sum;
+    // }
+    //articles to read
+    //https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/solutions/1569081/java-simple-clean-dp-solutions-for-all-6-buy-sell-stock-questions-on-leetcode/
+    //https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/solutions/108870/most-consistent-ways-of-dealing-with-the-series-of-stock-problems/
+    //https://www.youtube.com/watch?v=nGJmxkUJQGs&ab_channel=takeUforward
+    // public int maxProfit(int[] prices) {
+    //     int n = prices.length;
+    //     if (n == 1) {
+    //         return 0;
+    //     }
+    //     int[] dp = new int[2];
+    //     dp[0] = dp[1] = 0;
+    //     for (int i = n - 1; i >= 0; i--) {
+    //         for (int j = 0; j < 2; j++) {
+    //             int maxBuy = 0, maxSell = 0;
+    //             if (j == 0) { //sell
+    //                 int profitSell = prices[i] + dp[1];
+    //                 int profitNotSell = dp[0];
+    //                 maxSell = Math.max(profitSell, profitNotSell);
+    //             } else {    //buy
+    //                 int profitBought = -prices[i] + dp[0];
+    //                 int profitNotBought = dp[1];
+    //                 maxBuy = Math.max(profitBought, profitNotBought);
+    //             }
+    //             dp[j] = Math.max(maxBuy, maxSell);
+    //         }
+    //     }
+    //     return dp[1];
+    // }
+    // public int maxProfit(int[] prices) {
+    //     int n = prices.length;
+    //     if (n == 1) {
+    //         return 0;
+    //     }
+    //     int[][] dp = new int[n + 1][2];
+    //     dp[n][0] = dp[n][1] = 0;
+    //     for (int i = n - 1; i >= 0; i--) {
+    //         for (int j = 0; j < 2; j++) {
+    //             int maxBuy = 0, maxSell = 0;
+    //             if (j == 0) { //sell
+    //                 int profitSell = prices[i] + dp[i + 1][1];
+    //                 int profitNotSell = dp[i + 1][0];
+    //                 maxSell = Math.max(profitSell, profitNotSell);
+    //             } else {    //buy
+    //                 int profitBought = -prices[i] + dp[i + 1][0];
+    //                 int profitNotBought = dp[i + 1][1];
+    //                 maxBuy = Math.max(profitBought, profitNotBought);
+    //             }
+    //             dp[i][j] = Math.max(maxBuy, maxSell);
+    //         }
+    //     }
+    //     return dp[0][1];
+    // }
+    // public int maxProfit(int[] prices) {
+    //     int n = prices.length;
+    //     if (n == 1) {
+    //         return 0;
+    //     }
+    //     int[][] dp = new int[n][2];
+    //     for (int[] row : dp) {
+    //         Arrays.fill(row, -1);
+    //     }
+    //     helper(prices, 0, 1, dp);        //1 mean you can buy the stock
+    //     return dp[0][1];
+    // }
+    // private int helper(int[] prices, int i, int canBuy, int[][] dp) {
+    //     if (i == prices.length) {
+    //         return 0;
+    //     }
+    //     if (dp[i][canBuy] != -1) {
+    //         return dp[i][canBuy];
+    //     }
+    //     int profitBought = 0, profitNotBought = 0, profitSell = 0, profitNotSell = 0;
+    //     int maxBuy = 0, maxSell = 0;
+    //     if (canBuy == 1) {   //you can buy the stock
+    //         profitBought = -prices[i] + helper(prices, i + 1, 0, dp); //you bought it
+    //         profitNotBought = helper(prices, i + 1, 1, dp); //you didn\'t buy the stock
+    //         maxBuy = Math.max(maxBuy, Math.max(profitBought, profitNotBought));
+    //     } else {        //you cannot buy the stock
+    //         profitSell = prices[i] + helper(prices, i + 1, 1, dp);   //you sold the stock
+    //         profitNotSell = helper(prices, i + 1, 0, dp);       //you didn\'t sell the stock
+    //         maxSell = Math.max(maxSell, Math.max(profitSell, profitNotSell));
+    //     }
+    //     return dp[i][canBuy] = Math.max(maxBuy, maxSell);
+    // }
+}

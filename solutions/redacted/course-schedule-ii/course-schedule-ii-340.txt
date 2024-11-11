@@ -1,0 +1,37 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        //Return TopoSort using BFS and Detect Cycle in Direceted Graph
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; i++) adj.add(new ArrayList<>());
+        for (int[] edge : prerequisites) {
+            int x = edge[1];
+            int y = edge[0];
+            adj.get(x).add(y);
+        }
+        int[] indegree = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            for (int node : adj.get(i)) indegree[node] += 1;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0)
+                q.add(i);
+        }
+        List<Integer> topoList = new ArrayList<>();
+        int[] topoSort = new int[param1];
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            topoList.add(node);
+            for (int neighbour : adj.get(node)) {
+                indegree[neighbour] -= 1;
+                if (indegree[neighbour] == 0)
+                    q.add(neighbour);
+            }
+        }
+        if (topoList.size() < param1)
+            return new int[0];
+        for (int i = 0; i < param1; i++) topoSort[i] = topoList.get(i);
+        return topoSort;
+    }
+}

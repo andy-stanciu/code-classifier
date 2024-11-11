@@ -1,0 +1,37 @@
+class Solution {
+
+    List<List<String>> res = new ArrayList<>();
+
+    public List<List<String>> partition(String s) {
+        int len = s.length();
+        boolean[][] dp = new boolean[len][len];
+        for (int l = 1; l <= s.length(); l++) {
+            for (int i = 0; i + l - 1 < s.length(); i++) {
+                int j = i + l - 1;
+                if (l == 1) {
+                    dp[i][j] = true;
+                } else if (l == 2) {
+                    dp[i][j] = (s.charAt(i) == s.charAt(j));
+                } else {
+                    dp[i][j] = dp[i + 1][j - 1] && (s.charAt(i) == s.charAt(j));
+                }
+            }
+        }
+        dfs(dp, new ArrayList<>(), 0, s);
+        return res;
+    }
+
+    public void dfs(boolean[][] dp, List<String> cur, int curI, String s) {
+        if (curI == s.length()) {
+            res.add(new ArrayList<>(cur));
+            return;
+        }
+        for (int i = curI; i < s.length(); i++) {
+            if (dp[curI][i]) {
+                cur.add(s.substring(curI, i + 1));
+                dfs(dp, cur, i + 1, s);
+                cur.remove(cur.size() - 1);
+            }
+        }
+    }
+}

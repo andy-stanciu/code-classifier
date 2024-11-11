@@ -1,0 +1,38 @@
+class Solution {
+
+    public int fun(int[] prices, int i, int canBuy, int[][] dp) {
+        if (i == prices.length) {
+            return 0;
+        }
+        if (dp[i][canBuy] != -1) {
+            return dp[i][canBuy];
+        }
+        int take, notTake;
+        if (canBuy == 1) {
+            // We can buy
+            // Option to buy or skip
+            // Buy and move to next day with canBuy = 0
+            take = -prices[i] + fun(prices, i + 1, 0, dp);
+            // Skip buying and move to next day with canBuy = 1
+            notTake = fun(prices, i + 1, 1, dp);
+        } else {
+            // We can sell
+            // Option to sell or skip
+            // Sell and move to next day with canBuy = 1
+            take = prices[i] + fun(prices, i + 1, 1, dp);
+            // Skip selling and move to next day with canBuy = 0
+            notTake = fun(prices, i + 1, 0, dp);
+        }
+        dp[i][canBuy] = Math.max(take, notTake);
+        return dp[i][canBuy];
+    }
+
+    public int maxProfit(int[] prices) {
+        int[][] dp = new int[prices.length][2];
+        for (int[] arr : dp) {
+            Arrays.fill(arr, -1);
+        }
+        // Start from day 0 with the option to buy
+        return fun(prices, 0, 1, dp);
+    }
+}

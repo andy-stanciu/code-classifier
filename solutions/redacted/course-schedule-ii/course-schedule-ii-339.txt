@@ -1,0 +1,39 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; i++) adj.add(new ArrayList<>());
+        for (int[] edge : prerequisites) {
+            int x = edge[1];
+            int y = edge[0];
+            adj.get(x).add(y);
+        }
+        int[] vis = new int[param1];
+        int[] dfsvis = new int[param1];
+        List<Integer> topoList = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            if (vis[i] == 0) {
+                if (dfsDetectCycleTopoSort(adj, i, vis, dfsvis, topoList))
+                    return new int[0];
+            }
+        }
+        int[] toposort = new int[param1];
+        for (int i = 0; i < param1; i++) toposort[i] = topoList.get(param1 - i - 1);
+        return toposort;
+    }
+
+    public boolean dfsDetectCycleTopoSort(List<List<Integer>> adj, int index, int[] vis, int[] dfsvis, List<Integer> topoList) {
+        vis[index] = 1;
+        dfsvis[index] = 1;
+        for (int neighbour : adj.get(index)) {
+            if (vis[neighbour] == 0) {
+                if (dfsDetectCycleTopoSort(adj, neighbour, vis, dfsvis, topoList))
+                    return true;
+            } else if (dfsvis[neighbour] == 1)
+                return true;
+        }
+        topoList.add(index);
+        dfsvis[index] = 0;
+        return false;
+    }
+}

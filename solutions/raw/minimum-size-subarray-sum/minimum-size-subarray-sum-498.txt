@@ -1,0 +1,39 @@
+class Solution {
+
+    public int minSubArrayLen(int target, int[] nums) {
+        //sum of window
+        int sums = 0;
+        //window size to reach target
+        int tw = 0;
+        //index of right of the window
+        int j = 0;
+        //smallest window size to reach target
+        int sw = Integer.MAX_VALUE;
+        for (int i = 0; i < nums.length; i++) {
+            //reduce the left window size by 1
+            if (i == 0) {
+                sums = 0;
+                tw = 0;
+            } else {
+                sums -= nums[i - 1];
+                tw--;
+            }
+            //try to achieve the target by increasing right window size
+            while (sums < target && j < nums.length) {
+                sums += nums[j];
+                tw++;
+                j++;
+            }
+            //re-evaluate sw, if sums is achieved target by reduction of left window or increasing right window
+            if (sums >= target) {
+                sw = Math.min(sw, tw);
+            }
+        }
+        //return 0, if sums never target
+        if (sw == Integer.MAX_VALUE) {
+            return 0;
+        } else {
+            return sw;
+        }
+    }
+}

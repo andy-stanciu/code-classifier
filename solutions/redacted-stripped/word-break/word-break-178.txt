@@ -1,0 +1,60 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        Set<String> var1 = new HashSet<>(param1);
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = i; j >= 0; j--) {
+                dp[i + 1] = dp[j] && var1.contains(s.substring(j, i + 1));
+                if (dp[i + 1])
+                    break;
+            }
+        }
+        return dp[s.length()];
+    }
+
+    public static boolean method2(String s, List<String> param1) {
+        return method3(s, new HashSet<String>(param1), 0, new HashMap<>());
+    }
+
+    private static boolean method3(String s, Set<String> param1, int start, Map<Integer, Boolean> memo) {
+        if (start == s.length()) {
+            return true;
+        }
+        if (memo.containsKey(start)) {
+            return memo.get(start);
+        }
+        for (int end = start + 1; end <= s.length(); end++) {
+            if (param1.contains(s.substring(start, end)) && method3(s, param1, end, memo)) {
+                memo.put(start, true);
+                return true;
+            }
+        }
+        memo.put(start, false);
+        return false;
+    }
+
+    public static boolean method4(String s, List<String> var1) {
+        Set<String> param1 = new HashSet<>(var1);
+        Queue<Integer> queue = new LinkedList<>();
+        boolean[] visited = new boolean[s.length()];
+        queue.add(0);
+        while (!queue.isEmpty()) {
+            int start = queue.poll();
+            if (visited[start]) {
+                continue;
+            }
+            for (int end = start + 1; end <= s.length(); end++) {
+                if (param1.contains(s.substring(start, end))) {
+                    if (end == s.length()) {
+                        return true;
+                    }
+                    queue.add(end);
+                }
+            }
+            visited[start] = true;
+        }
+        return false;
+    }
+}

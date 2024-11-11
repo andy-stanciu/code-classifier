@@ -1,0 +1,29 @@
+class Solution {
+
+    int[][] dp = new int[100000][2];
+
+    int Profit(int i, int[] v, int f) {
+        if (i >= v.length)
+            return 0;
+        if (dp[i][f] != -1)
+            return dp[i][f];
+        int op1 = 0, op2 = 0;
+        if (f == 0) {
+            int buy = -v[i] + Profit(i + 1, v, 1);
+            int notbuy = Profit(i + 1, v, 0);
+            op1 = Math.max(buy, notbuy);
+        } else {
+            int sell = v[i] + Profit(i + 1, v, 0);
+            int notsell = Profit(i + 1, v, 1);
+            op2 = Math.max(sell, notsell);
+        }
+        return dp[i][f] = Math.max(op1, op2);
+    }
+
+    public int maxProfit(int[] prices) {
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        return Profit(0, prices, 0);
+    }
+}

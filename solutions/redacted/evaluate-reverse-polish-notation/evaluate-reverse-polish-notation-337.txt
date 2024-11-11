@@ -1,0 +1,35 @@
+class Solution {
+
+    private final Set<String> operators = Set.of("+", "-", "*", "/");
+
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> stack = new Stack<>();
+        for (String token : tokens) {
+            if (!operators.contains(token)) {
+                stack.push(Integer.parseInt(token));
+            } else {
+                int right = stack.pop();
+                int left = stack.pop();
+                stack.push(get_result(token, left, right));
+            }
+        }
+        return stack.pop();
+    }
+
+    public int get_result(String operator, int left, int right) {
+        switch(operator) {
+            case "+":
+                return left + right;
+            case "-":
+                return left - right;
+            case "*":
+                return left * right;
+            case "/":
+                if (right == 0)
+                    throw new ArithmeticException("Division by zero.");
+                return left / right;
+            default:
+                throw new IllegalArgumentException("Unsupported operator: " + operator);
+        }
+    }
+}

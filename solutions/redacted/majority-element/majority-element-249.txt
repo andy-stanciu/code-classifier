@@ -1,0 +1,39 @@
+class Solution {
+
+    public int method1(int[] nums) {
+        //1. check by divide and conquer algo
+        return dAndC(nums, 0, nums.length - 1);
+    }
+
+    private int dAndC(int[] nums, int l, int r) {
+        //2. if left and right are equal: by default the element would return
+        if (l == r)
+            return nums[l];
+        //3. calculate middle
+        int mid = (r - l) / 2 + l;
+        // l = 0, r = 5 mid = 5-0/2 + 0 = 2
+        //l = mid+1 = 3, r = 5 mid = 5-3/2 + 3 = 4
+        //4. recurse through left and right
+        int left = dAndC(nums, l, mid);
+        //left starts at l and end at mid
+        int right = dAndC(nums, mid + 1, r);
+        //right starts at mid+1 and ends at r
+        //5. if both left & right equal: by default return one of them
+        if (left == right)
+            return left;
+        // 6. If not equal: take counts each for both sides
+        int leftCount = 0;
+        int rightCount = 0;
+        //7. for loop to iterate through the complete set
+        for (int i = l; i <= r; i++) {
+            //7.1. if nums value at i equal to left(already found at 4.): increase its count
+            if (nums[i] == left)
+                leftCount++;
+            //7.2 same as 7.1 if equals to right (already found at 4.)
+            if (nums[i] == right)
+                rightCount++;
+        }
+        //8. check both counts and return the one with higher count value
+        return leftCount > rightCount ? left : right;
+    }
+}

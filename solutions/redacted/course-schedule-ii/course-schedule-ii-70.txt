@@ -1,0 +1,48 @@
+class Solution {
+
+    int[] color;
+
+    Stack<Integer> orderingStack;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        color = new int[param1];
+        List<Integer>[] graph = new List[param1];
+        orderingStack = new Stack<>();
+        int[] res = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] prerequisite : prerequisites) {
+            graph[prerequisite[1]].add(prerequisite[0]);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (color[i] == 0) {
+                if (isCyclic(graph, i)) {
+                    return new int[0];
+                }
+            }
+        }
+        // Create order from stack
+        int k = 0;
+        while (!orderingStack.isEmpty()) {
+            res[k] = orderingStack.pop();
+            k++;
+        }
+        return res;
+    }
+
+    public boolean isCyclic(List<Integer>[] graph, int node) {
+        color[node] = 1;
+        for (int child : graph[node]) {
+            if (color[child] == 1)
+                return true;
+            if (color[child] == 0) {
+                if (isCyclic(graph, child))
+                    return true;
+            }
+        }
+        color[node] = 2;
+        orderingStack.push(node);
+        return false;
+    }
+}

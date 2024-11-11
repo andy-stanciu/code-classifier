@@ -1,0 +1,52 @@
+class Solution {
+
+    // result list to be returned
+    List<List<Integer>> result = new ArrayList<>();
+
+    List<Integer> temp = new ArrayList<>();
+
+    /*temp list that is dynamic which will be added to the result list
+	if and only if these 2 conditions are satisfied  */
+    // 1. we\'ve gotten to a leaf node (i.e. a node with  no children)
+    // 2. the currentSum is equal to the targeSum given
+    // Declaring the targetSum as a global variable so we don\'t have to pass it inside our recursive function
+    int targetSum;
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        //Now, assigning the global variable to the targetSum given;
+        this.targetSum = targetSum;
+        if (//Check if root is empty;
+        root == null)
+            //If yes, simply return empty result
+            return result;
+        //Calling the recursive function now, passing in the root node and an initial sum value of 0
+        recur(root, 0);
+        //Returning the resultList
+        return result;
+    }
+
+    //This is the recursive function
+    void recur(TreeNode root, int sum) {
+        // *We don\'t need a base case as a check will always be made if the node to be passed into this function is null or not*
+        //Get currentSum which is the addition of sum passed into this function and the value of its root
+        int currentSum = sum + root.val;
+        //Adding the root\'s value to the tempList
+        temp.add(root.val);
+        if (//Reason we don\'t need a  base case
+        root.left != null)
+            //Calling the recursive function passing root\'s left (if ! null) and the currentSum
+            recur(root.left, currentSum);
+        if (//Another Reason we don\'t need a  base case
+        root.right != null)
+            //Calling the recursive function passing root\'s right (if ! null) and the same currentSum
+            recur(root.right, currentSum);
+        //Once we recur on root\'s left and right node, then we have to satisfy 2 conditions  in order to add our tempList to our resultList
+        //1. If currentSum == targetSum
+        //2.  If this current node(root) is a leaf node (i.e. if root\'s left == null and root\'s right == null)
+        if (currentSum == targetSum && root.left == null && root.right == null)
+            // If true, then we add temp to result
+            result.add(new ArrayList<>(temp));
+        //Then , we simply BACKTRACK by removing this node from our tempList as we return from this present recursive call.
+        temp.remove(temp.size() - 1);
+    }
+}

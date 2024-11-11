@@ -1,0 +1,48 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public void solve(TreeNode root, int targetSum, int sum, List<Integer> temp, List<List<Integer>> ans) {
+        if (root == null)
+            return;
+        //add sum
+        sum += root.val;
+        //add the val to temp
+        temp.add(root.val);
+        //if found correct sum and is leaf nod
+        if (root.left == null && root.right == null && sum == targetSum) {
+            //since java uses shallow copy
+            //when adding list to another list
+            //so original temp will get deleted
+            //if we backtrack just now
+            //that\'s why instead we add copy of temp everytime
+            ans.add(new ArrayList<>(temp));
+        }
+        //go to left subtree
+        solve(root.left, targetSum, sum, temp, ans);
+        //go to right subtree
+        solve(root.right, targetSum, sum, temp, ans);
+        // backtracking and removing temp ele
+        temp.remove(temp.size() - 1);
+    }
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<Integer> temp = new ArrayList<>();
+        List<List<Integer>> ans = new ArrayList<>();
+        solve(root, targetSum, 0, temp, ans);
+        return ans;
+    }
+}

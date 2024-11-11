@@ -1,0 +1,34 @@
+public class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        int[] inDegree = new int[param1];
+        for (int[] edge : prerequisites) {
+            int from = edge[1], to = edge[0];
+            graph.get(from).add(to);
+            inDegree[to]++;
+        }
+        Queue<Integer> queue = new ArrayDeque<>();
+        for (int i = 0; i < param1; i++) {
+            if (inDegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        int[] topoOrder = new int[param1];
+        int count = 0;
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            topoOrder[count++] = node;
+            for (int nb : graph.get(node)) {
+                inDegree[nb]--;
+                if (inDegree[nb] == 0) {
+                    queue.offer(nb);
+                }
+            }
+        }
+        return (count == param1) ? topoOrder : new int[0];
+    }
+}

@@ -1,0 +1,77 @@
+class Solution {
+
+    Item item = new Item();
+
+    int[][] dp;
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        dp = new int[s.length()][s.length()];
+        for (int[] i : dp) {
+            Arrays.fill(i, -1);
+        }
+        for (String word : wordDict) {
+            generateTrie(word);
+        }
+        return canFormSentence(0, 0, s, item);
+    }
+
+    void generateTrie(String word) {
+        Item curr = item;
+        int size = 0;
+        for (char c : word.toCharArray()) {
+            if (!curr.map.containsKey(c)) {
+                curr.map.put(c, new Item());
+            }
+            curr = curr.map.get(c);
+            size += 1;
+        }
+        curr.isEnd = true;
+        curr.size = size;
+    }
+
+    boolean canFormSentence(int ind, int size, String word, Item curr) {
+        if (ind >= word.length())
+            return curr.isEnd && size == curr.size;
+        // System.out.println(size + " " + ind + " " + dp[size][ind]);
+        if (dp[size][ind] != -1)
+            return dp[size][ind] == 1;
+        char c = word.charAt(ind);
+        if (!curr.map.containsKey(c))
+            return false;
+        Item newItem = curr.map.get(c);
+        boolean res = false;
+        if (newItem.isEnd && newItem.size == size + 1) {
+            res = canFormSentence(ind + 1, size + 1, word, newItem) || canFormSentence(ind + 1, 0, word, item);
+        } else {
+            res = canFormSentence(ind + 1, size + 1, word, newItem);
+        }
+        dp[size][ind] = res ? 1 : 0;
+        return res;
+    }
+}
+
+class Item {
+
+    HashMap<Character, Item> map;
+
+    boolean isEnd;
+
+    int size;
+
+    Item() {
+        map = new HashMap<>();
+        isEnd = false;
+        size = 0;
+    }
+
+    Item(HashMap<Character, Item> map, boolean isEnd, int size) {
+        this.map = map;
+        this.isEnd = isEnd;
+        this.size = size;
+    }
+
+    @Override
+    public String toString() {
+        return isEnd + " " + size;
+    }
+}

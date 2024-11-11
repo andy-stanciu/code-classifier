@@ -1,0 +1,37 @@
+class Solution {
+
+    boolean var1 = false;
+
+    public int maxProfit(int[] prices) {
+        //first is to buy when the price is low
+        //the price is low when the next element is grater
+        int myShare = 0;
+        int var2 = 0;
+        for (int i = 0; i < prices.length; i++) {
+            if (!var1) {
+                //buy
+                myShare = method1(prices, i);
+            } else if ((prices[i] < prices[i - 1] && var1)) {
+                //sell
+                var2 = var2 + (prices[i - 1] - myShare);
+                var1 = false;
+                //try to buy
+                myShare = method1(prices, i);
+            } else if (var1 && i == prices.length - 1 && myShare < prices[i]) {
+                var2 = var2 + (prices[i] - myShare);
+                var1 = false;
+            }
+        }
+        return var2;
+    }
+
+    private int method1(int[] prices, int i) {
+        int myShare = 0;
+        if (i < prices.length - 1 && prices[i] < prices[i + 1]) {
+            //buy
+            myShare = prices[i];
+            var1 = true;
+        }
+        return myShare;
+    }
+}

@@ -1,0 +1,42 @@
+class Solution {
+
+    boolean isOperator(String s) {
+        return s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/");
+    }
+
+    int processExpression(int first, int second, String s) {
+        // String first = Integer.parseInt(a);
+        // String second = Integer.parseInt(b);
+        if (s.equals("+")) {
+            return first + second;
+        }
+        if (s.equals("-")) {
+            return second - first;
+        }
+        if (s.equals("*")) {
+            return first * second;
+        }
+        if (s.equals("/")) {
+            return second / first;
+        }
+        return 0;
+    }
+
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> s1 = new Stack<>();
+        for (String token : tokens) {
+            if (!isOperator(token)) {
+                s1.push(Integer.parseInt(token));
+            } else {
+                if (s1.size() >= 2) {
+                    int first = s1.pop();
+                    int second = s1.pop();
+                    int ans = processExpression(first, second, token);
+                    s1.push(ans);
+                }
+            }
+            //System.out.println(s1.toString());
+        }
+        return s1.peek();
+    }
+}

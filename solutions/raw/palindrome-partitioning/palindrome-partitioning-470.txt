@@ -1,0 +1,31 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> ans = new ArrayList<>();
+        partition(s, ans, new ArrayList<>(), 0, 0);
+        return ans;
+    }
+
+    private void partition(String s, List<List<String>> ans, List<String> temp, int start, int end) {
+        if (start < 0 || end >= s.length())
+            return;
+        if (s.charAt(start) == s.charAt(end)) {
+            temp.add(s.substring(start, end + 1));
+            if (end == s.length() - 1) {
+                ans.add(new ArrayList<>(temp));
+                temp.remove(temp.size() - 1);
+                return;
+            }
+            partition(s, ans, temp, end + 1, end + 1);
+            temp.remove(temp.size() - 1);
+            if (start == end)
+                partition(s, ans, temp, start, start + 1);
+            if (temp.size() > 0 && temp.get(temp.size() - 1).length() == 1) {
+                String str = temp.get(temp.size() - 1);
+                temp.remove(temp.size() - 1);
+                partition(s, ans, temp, start - 1, end + 1);
+                temp.add(str);
+            }
+        }
+    }
+}

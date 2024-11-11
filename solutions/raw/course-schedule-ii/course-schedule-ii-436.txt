@@ -1,0 +1,56 @@
+class Solution {
+
+    private int index = 0;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // for each course, create objects and add prerequisites
+        Course[] courses = new Course[numCourses];
+        // add a course in each position
+        for (int i = 0; i < numCourses; i++) {
+            courses[i] = new Course(i);
+        }
+        // fill prereq for each course
+        for (int[] pre : prerequisites) {
+            courses[pre[0]].prerequisites.add(courses[pre[1]]);
+        }
+        int[] order = new int[numCourses];
+        // go through each course and check if it can be completed
+        for (Course course : courses) {
+            if (isCyclic(course, order))
+                return new int[0];
+        }
+        return order;
+    }
+
+    public boolean isCyclic(Course course, int[] order) {
+        if (course.visited == true)
+            return true;
+        if (course.tested == true)
+            return false;
+        course.visited = true;
+        for (Course pre : course.prerequisites) if (isCyclic(pre, order))
+            return true;
+        course.tested = true;
+        course.visited = false;
+        // the last one without prereq will be added because index is a global variable
+        order[index++] = course.value;
+        return false;
+    }
+
+    class Course {
+
+        boolean visited = false;
+
+        boolean tested = false;
+
+        int value;
+
+        List<Course> prerequisites = new ArrayList<>();
+
+        List<Integer> order = new ArrayList<>();
+
+        Course(int value) {
+            this.value = value;
+        }
+    }
+}

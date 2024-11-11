@@ -1,0 +1,26 @@
+interface basicCalculaor {
+
+    Integer calc(Integer op1, Integer op2);
+}
+
+class Solution {
+
+    public int evalRPN(String[] tokens) {
+        Map<String, basicCalculaor> map = new HashMap<>();
+        map.put("+", (op1, op2) -> op1 + op2);
+        map.put("*", (op1, op2) -> op1 * op2);
+        map.put("-", (op1, op2) -> op1 - op2);
+        map.put("/", (op1, op2) -> op1 / op2);
+        Stack<Integer> st = new Stack<>();
+        for (String s : tokens) {
+            if (map.containsKey(s)) {
+                Integer op2 = st.pop();
+                Integer op1 = st.pop();
+                st.push(map.get(s).calc(op1, op2));
+            } else {
+                st.push(Integer.valueOf(s));
+            }
+        }
+        return st.pop();
+    }
+}

@@ -1,0 +1,56 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> method1(TreeNode root, int param1) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        method2(root, param1, ans, temp);
+        return ans;
+    }
+
+    public void method2(TreeNode root, int param1, List<List<Integer>> ans, List<Integer> temp) {
+        // case where the prev node is not a leaf node
+        if (root == null) {
+            return;
+        }
+        // when leaf node and target sum == 0
+        if ((root.left == null && root.right == null) && 0 == (param1 - root.val)) {
+            // in java list is passed as reference so copied all the items and make ans
+            List<Integer> arr = new ArrayList<>();
+            // adding the present value
+            temp.add(root.val);
+            // copy method
+            arr.addAll(temp);
+            ans.add(arr);
+            // removing the temp ans as a backtracking
+            temp.remove(temp.size() - 1);
+            return;
+        } else // case where the root is null but not fullfiling the target value
+        if ((root.left == null && root.right == null)) {
+            return;
+        }
+        // assuming and adding the present value for future calls
+        temp.add(root.val);
+        //decreasing the targetsum to keep track of value
+        param1 -= root.val;
+        method2(root.left, param1, ans, temp);
+        method2(root.right, param1, ans, temp);
+        // removing the temp ans as a backtracking when recursive call made
+        temp.remove(temp.size() - 1);
+        return;
+    }
+}

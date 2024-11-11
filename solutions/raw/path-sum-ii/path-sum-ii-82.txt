@@ -1,0 +1,43 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> currentPath = new ArrayList<>();
+        if (root == null)
+            return res;
+        dfs(root, res, currentPath, targetSum);
+        return res;
+    }
+
+    public void dfs(TreeNode node, List<List<Integer>> res, List<Integer> currentPath, int targetSum) {
+        if (node == null)
+            return;
+        currentPath.add(node.val);
+        // Check if it\'s a leaf node and targetSum equals the node\'s value
+        if (node.left == null && node.right == null && targetSum == node.val) {
+            // Make a copy of the current path
+            res.add(new ArrayList<>(currentPath));
+        } else {
+            // Subtract the current node value from targetSum and recurse
+            dfs(node.left, res, currentPath, targetSum - node.val);
+            dfs(node.right, res, currentPath, targetSum - node.val);
+        }
+        // Backtrack after exploring both subtrees
+        currentPath.remove(currentPath.size() - 1);
+    }
+}

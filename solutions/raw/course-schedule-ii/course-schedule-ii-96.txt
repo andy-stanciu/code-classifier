@@ -1,0 +1,53 @@
+class Solution {
+
+    private boolean hasCycle = false;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> graph = generateGraph(prerequisites);
+        Stack<Integer> stack = new Stack<>();
+        int[] visited = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (visited[i] == 0) {
+                topologicalSort(graph, i, stack, visited);
+                if (hasCycle) {
+                    break;
+                }
+            }
+        }
+        if (hasCycle) {
+            return new int[0];
+        }
+        int[] result = new int[stack.size()];
+        int index = 0;
+        while (!stack.isEmpty()) {
+            result[index++] = stack.pop();
+        }
+        return result;
+    }
+
+    private void topologicalSort(Map<Integer, List<Integer>> graph, int vertex, Stack<Integer> stack, int[] visited) {
+        if (hasCycle) {
+            return;
+        }
+        visited[vertex] = 1;
+        for (int adjacent : graph.getOrDefault(vertex, new ArrayList<>())) {
+            if (visited[adjacent] == 0) {
+                topologicalSort(graph, adjacent, stack, visited);
+            } else if (visited[adjacent] == 1) {
+                hasCycle = true;
+                break;
+            }
+        }
+        visited[vertex] = 2;
+        stack.push(vertex);
+    }
+
+    private Map<Integer, List<Integer>> generateGraph(int[][] prerequisites) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int[] arr : prerequisites) {
+            map.putIfAbsent(arr[1], new ArrayList<>());
+            map.get(arr[1]).add(arr[0]);
+        }
+        return map;
+    }
+}

@@ -1,0 +1,55 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        /**
+         *        This is the top down approach with memoization.
+         *        Here, we split string at every possible index
+         *        If first part is present in dictionary, then we
+         *        recur for the second part and do the same recursively.
+         *        Doing this, if we reach at end of the String, that means
+         *        words are present in the dictionary => we return true
+         *
+         *        Using memoization, we store previously processed state
+         *        so that it is not processed again.
+         *
+         *        Time Complexity :
+         *            O(N * 2 ^ (N - 1)) (Where N is length of String s) -> If no memoization.
+         *            For above time complexity analysis : https://leetcode.com/problems/word-break/solutions/169383/The-Time-Complexity-of-The-Brute-Force-Method-Should-Be-O(2n)-and-Prove-It-Below/
+         *
+         *            Also refer to below :
+         *
+         *            T(N) = T(N-1) + T(N-2) + ... + T(0)
+         *            T(N-1) = T(N-2) + ... + T(0)
+         *            T(N) - T(N-1) = T(N-1)
+         *            T(N) = 2*T(N-1)
+         *            T(N-1) = 2 * T(N-2)
+         *            => T(N) = 2 ^ (N - 1)
+         *
+         *            Why N * -> because at each stage we are calculating substring method. In worstcase, this is O(N)
+         *
+         *            O(N * (N ^ 2)) If memoization is used.
+         *            N ^ 2 -> because with memoization, for each substring we are processing only once
+         *            => Number of possible substrings for string of length of N => N ^ 2
+         *
+         *        Space Complexity : O(N) -> ** assuming number of dictionary elements less than length of s **
+         *            Keeping a cache with N Keys
+         *            Recursive stack with atmost N method calls.
+         */
+        return checkIfCouldBeSegmented(s, 0, new HashSet<>(wordDict), new HashMap<>());
+    }
+
+    private boolean checkIfCouldBeSegmented(String s, int index, Set<String> dict, Map<Integer, Boolean> cache) {
+        if (cache.containsKey(index))
+            return cache.get(index);
+        if (index == s.length())
+            return true;
+        for (int end = index + 1; end <= s.length(); end++) {
+            if (dict.contains(s.substring(index, end)) && checkIfCouldBeSegmented(s, end, dict, cache)) {
+                cache.put(index, true);
+                return true;
+            }
+        }
+        cache.put(index, false);
+        return false;
+    }
+}

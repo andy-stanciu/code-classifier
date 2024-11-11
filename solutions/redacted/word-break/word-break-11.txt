@@ -1,0 +1,36 @@
+class Solution {
+
+    Set<String> dictionary;
+
+    Map<String, Boolean> memo;
+
+    public boolean method1(String s, String cur, int index) {
+        // this will always form a unique key, eg. cur = leet, index = 4, then key = leet_4;
+        String key = cur + "_" + index;
+        // if already memoized then simply returning
+        if (memo.containsKey(key))
+            return memo.get(key);
+        // checking base condition
+        if (index == s.length()) {
+            return dictionary.contains(cur);
+        }
+        char c = s.charAt(index);
+        /* 1 */
+        if (dictionary.contains(cur)) {
+            if (method1(s, "" + c, index + 1)) {
+                memo.put(key, true);
+                return true;
+            }
+        }
+        /* 2 */
+        memo.put(key, method1(s, cur + c, index + 1));
+        return memo.get(key);
+    }
+
+    public boolean method2(String s, List<String> param1) {
+        dictionary = new HashSet<>();
+        memo = new HashMap<>();
+        for (String var1 : param1) dictionary.add(var1);
+        return method1(s, "", 0);
+    }
+}

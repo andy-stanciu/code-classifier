@@ -1,0 +1,74 @@
+class Solution {
+
+    TrieNode var1 = new TrieNode();
+
+    Set<Integer> checked = new HashSet<>();
+
+    String string;
+
+    boolean result = false;
+
+    public boolean method1(String s, List<String> param1) {
+        string = s;
+        method2(param1);
+        dfs(0);
+        return result;
+    }
+
+    private void dfs(int index) {
+        if (index == string.length()) {
+            result = true;
+            return;
+        }
+        if (checked.contains(index)) {
+            return;
+        }
+        checked.add(index);
+        TrieNode var2 = var1;
+        while (index < string.length()) {
+            var2 = var2.get(string.charAt(index++));
+            if (var2 != null) {
+                if (var2.var4) {
+                    dfs(index);
+                }
+            } else {
+                break;
+            }
+        }
+    }
+
+    private void method2(List<String> param2) {
+        for (String var3 : param2) {
+            char[] chars = var3.toCharArray();
+            TrieNode lastTrie = var1;
+            for (char c : chars) {
+                lastTrie = lastTrie.addNext(c);
+            }
+            lastTrie.markAsLastCharacter();
+        }
+    }
+
+    class TrieNode {
+
+        boolean var4 = false;
+
+        Map<Character, TrieNode> next = new HashMap<>();
+
+        public TrieNode addNext(char c) {
+            TrieNode value = next.get(c);
+            if (value == null) {
+                value = new TrieNode();
+                next.put(c, value);
+            }
+            return value;
+        }
+
+        public void markAsLastCharacter() {
+            var4 = true;
+        }
+
+        public TrieNode get(char c) {
+            return next.get(c);
+        }
+    }
+}

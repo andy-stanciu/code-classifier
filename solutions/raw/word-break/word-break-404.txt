@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Boolean[] dp = new Boolean[s.length()];
+        return solve(s, wordDict, 0, dp);
+    }
+
+    private boolean solve(String s, List<String> wordDict, int i, Boolean[] dp) {
+        if (i == s.length()) {
+            return true;
+        }
+        if (dp[i] != null) {
+            return dp[i];
+        }
+        dp[i] = false;
+        for (String word : wordDict) {
+            if (isMatching(s, i, word)) {
+                dp[i] = solve(s, wordDict, i + word.length(), dp);
+            }
+            if (dp[i]) {
+                break;
+            }
+        }
+        return dp[i];
+    }
+
+    private boolean isMatching(String s, int i, String word) {
+        for (int j = i, k = 0; k < word.length(); j++, k++) {
+            if (j == s.length()) {
+                return false;
+            }
+            if (s.charAt(j) != word.charAt(k)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

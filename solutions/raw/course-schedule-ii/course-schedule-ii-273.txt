@@ -1,0 +1,42 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<Integer>[] graph = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new ArrayList();
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int fromNode = prerequisites[i][0];
+            int toNode = prerequisites[i][1];
+            graph[fromNode].add(toNode);
+        }
+        Set<Integer> visited = new LinkedHashSet<Integer>();
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited.contains(i)) {
+                Set<Integer> visitedInPath = new HashSet<>();
+                visitedInPath.add(i);
+                boolean canVisit = canVisit(i, graph, visited, visitedInPath);
+                if (!canVisit) {
+                    return new int[0];
+                }
+            }
+        }
+        return visited.stream().mapToInt(i -> i).toArray();
+    }
+
+    boolean canVisit(int node, List<Integer>[] graph, Set<Integer> visited, Set<Integer> visitedInPath) {
+        for (Integer nb : graph[node]) {
+            if (!visited.contains(nb)) {
+                if (visitedInPath.contains(nb)) {
+                    return false;
+                }
+                visitedInPath.add(nb);
+                boolean success = canVisit(nb, graph, visited, visitedInPath);
+                if (!success)
+                    return false;
+            }
+        }
+        visited.add(node);
+        return true;
+    }
+}

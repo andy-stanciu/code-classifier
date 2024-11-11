@@ -1,0 +1,28 @@
+class Solution {
+
+    private final static Map<String, BiFunction<Integer, Integer, Integer>> operators = new HashMap<>() {
+
+        {
+            put("+", (a, b) -> a + b);
+            put("-", (a, b) -> a - b);
+            put("*", (a, b) -> a * b);
+            put("/", (a, b) -> a / b);
+        }
+    };
+
+    private LinkedList<Integer> stack = new LinkedList<>();
+
+    public int evalRPN(String[] tokens) {
+        for (String s : tokens) {
+            if (operators.containsKey(s)) {
+                int a = stack.pop();
+                int b = stack.pop();
+                var func = operators.get(s);
+                stack.push(func.apply(b, a));
+            } else {
+                stack.push(Integer.parseInt(s));
+            }
+        }
+        return stack.pop();
+    }
+}

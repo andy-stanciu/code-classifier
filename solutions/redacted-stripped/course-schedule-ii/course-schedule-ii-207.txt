@@ -1,0 +1,38 @@
+class Solution {
+
+    int idx;
+
+    int[] ans;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        idx = 0;
+        ans = new int[param1];
+        boolean[][] graph = new boolean[param1][param1];
+        for (int[] preq : prerequisites) {
+            graph[preq[0]][preq[1]] = true;
+        }
+        Boolean[] vis = new Boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (vis[i] == null && topologicalSortIsCycle(param1, i, graph, vis))
+                return new int[0];
+        }
+        return ans;
+    }
+
+    private boolean topologicalSortIsCycle(int param1, int u, boolean[][] graph, Boolean[] vis) {
+        if (vis[u] != null) {
+            if (vis[u] == false)
+                return true;
+            else if (vis[u] == true)
+                return false;
+        }
+        vis[u] = false;
+        for (int v = 0; v < param1; v++) {
+            if (graph[u][v] && topologicalSortIsCycle(param1, v, graph, vis))
+                return true;
+        }
+        ans[idx++] = u;
+        vis[u] = true;
+        return false;
+    }
+}

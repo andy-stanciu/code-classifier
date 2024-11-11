@@ -1,0 +1,72 @@
+class Solution {
+
+    class Edge {
+
+        int dest;
+
+        Edge(int d) {
+            this.dest = d;
+        }
+    }
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        ArrayList<Edge>[] graph = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        // Build adjacency list
+        for (int[] prerequisite : prerequisites) {
+            graph[prerequisite[1]].add(new Edge(prerequisite[0]));
+        }
+        // Check for cycle
+        boolean[] visited = new boolean[numCourses];
+        boolean[] inStack = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i] && hasCycle(graph, i, visited, inStack)) {
+                return new int[0];
+            }
+        }
+        // Topological sort
+        Stack<Integer> stack = new Stack<>();
+        visited = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i]) {
+                dfs(graph, i, visited, stack);
+            }
+        }
+        // Construct result
+        int[] result = new int[numCourses];
+        int index = 0;
+        while (!stack.isEmpty()) {
+            result[index++] = stack.pop();
+        }
+        return result;
+    }
+
+    boolean hasCycle(ArrayList<Edge>[] graph, int curr, boolean[] visited, boolean[] inStack) {
+        visited[curr] = true;
+        inStack[curr] = true;
+        for (Edge e : graph[curr]) {
+            if (!visited[e.dest]) {
+                if (hasCycle(graph, e.dest, visited, inStack)) {
+                    return true;
+                }
+            } else if (inStack[e.dest]) {
+                // Cycle detected
+                return true;
+            }
+        }
+        inStack[curr] = false;
+        return false;
+    }
+
+    void dfs(ArrayList<Edge>[] graph, int curr, boolean[] visited, Stack<Integer> stack) {
+        visited[curr] = true;
+        for (Edge e : graph[curr]) {
+            if (!visited[e.dest]) {
+                dfs(graph, e.dest, visited, stack);
+            }
+        }
+        stack.push(curr);
+    }
+}

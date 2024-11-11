@@ -1,0 +1,42 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // Step 1: Build the graph
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        int[] inDegree = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph.put(i, new ArrayList<>());
+        }
+        for (int[] prereq : prerequisites) {
+            int course = prereq[0];
+            int prerequisite = prereq[1];
+            graph.get(prerequisite).add(course);
+            inDegree[course]++;
+        }
+        // Step 2: Initialize the queue with courses having no prerequisites
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        // Step 3: Process the graph
+        List<Integer> result = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            int course = queue.poll();
+            result.add(course);
+            for (int neighbor : graph.get(course)) {
+                inDegree[neighbor]--;
+                if (inDegree[neighbor] == 0) {
+                    queue.add(neighbor);
+                }
+            }
+        }
+        // Step 4: Check if we were able to process all courses
+        if (result.size() == numCourses) {
+            return result.stream().mapToInt(i -> i).toArray();
+        } else {
+            return new int[0];
+        }
+    }
+}

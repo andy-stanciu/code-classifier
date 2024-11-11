@@ -1,0 +1,49 @@
+class Solution {
+
+    int index;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        index = 0;
+        int[] res = new int[param1];
+        HashMap<Integer, Set<Integer>> graph = new HashMap<>();
+        Set<Integer> visited = new HashSet<>();
+        for (int[] temp : prerequisites) {
+            if (!graph.containsKey(temp[0]))
+                graph.put(temp[0], new HashSet<>());
+            graph.get(temp[0]).add(temp[1]);
+        }
+        for (int i = 0; i < param1; i++) {
+            if (!visited.contains(i)) {
+                int val = dfs(graph, i, visited, res, new HashSet<>());
+                if (val == -1)
+                    return new int[] {};
+                res[index++] = val;
+                visited.add(val);
+            }
+        }
+        return res;
+    }
+
+    public int dfs(HashMap<Integer, Set<Integer>> graph, int curr, Set<Integer> visited, int[] res, Set<Integer> vis) {
+        if (vis.contains(curr)) {
+            return -1;
+        }
+        if (!graph.containsKey(curr)) {
+            return curr;
+        }
+        vis.add(curr);
+        for (int i : graph.get(curr)) {
+            if (!visited.contains(i)) {
+                int val = dfs(graph, i, visited, res, vis);
+                if (val == -1) {
+                    curr = -1;
+                    break;
+                }
+                res[index++] = val;
+                visited.add(val);
+            }
+        }
+        vis.remove(curr);
+        return curr;
+    }
+}

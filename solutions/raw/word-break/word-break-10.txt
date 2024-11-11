@@ -1,0 +1,23 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> dict = new HashSet<>(wordDict);
+        Map<String, Boolean> visited = new HashMap<>();
+        return backtrack(s, dict, "", 0, visited);
+    }
+
+    private boolean backtrack(String s, Set<String> dict, String v, int i, Map<String, Boolean> visited) {
+        if (i == s.length())
+            return v.isEmpty();
+        String visitedKey = (i - v.length()) + "_" + i;
+        if (visited.containsKey(visitedKey))
+            return visited.get(visitedKey);
+        boolean res = false;
+        if (dict.contains(v + s.charAt(i)))
+            res = backtrack(s, dict, "", i + 1, visited);
+        if (!res)
+            res = backtrack(s, dict, v + s.charAt(i), i + 1, visited);
+        visited.put(visitedKey, res);
+        return res;
+    }
+}

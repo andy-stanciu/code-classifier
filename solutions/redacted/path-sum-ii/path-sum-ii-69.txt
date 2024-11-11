@@ -1,0 +1,44 @@
+class Solution {
+
+    public List<List<Integer>> method1(TreeNode root, int param1) {
+        int var1 = 0;
+        List<List<Integer>> ans = new ArrayList<>();
+        Stack<Integer> var2 = new Stack<>();
+        int steps = 1;
+        while (root != null) {
+            if (root.left == null) {
+                var2.push(root.val);
+                var1 += root.val;
+                if (root.right == null && var1 == param1) {
+                    ans.add(new ArrayList<>(var2));
+                }
+                root = root.right;
+            } else {
+                TreeNode predecessor = root.left;
+                steps = 1;
+                while (predecessor.right != null && predecessor.right != root) {
+                    predecessor = predecessor.right;
+                    steps++;
+                }
+                if (predecessor.right == null) {
+                    predecessor.right = root;
+                    var2.add(root.val);
+                    var1 += root.val;
+                    root = root.left;
+                } else {
+                    if (predecessor.left == null) {
+                        if (var1 == param1) {
+                            ans.add(new ArrayList<>(var2));
+                        }
+                    }
+                    for (int i = 0; i < steps; i++) {
+                        var1 -= var2.pop();
+                    }
+                    predecessor.right = null;
+                    root = root.right;
+                }
+            }
+        }
+        return ans;
+    }
+}

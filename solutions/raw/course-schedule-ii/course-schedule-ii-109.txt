@@ -1,0 +1,51 @@
+class Solution {
+
+    int[] nodeStatus;
+
+    Queue<Integer> result;
+
+    int currIndex = 0;
+
+    ArrayList<HashSet<Integer>> tree;
+
+    public boolean helper(int courseNum) {
+        if (nodeStatus[courseNum] == 2) {
+            return true;
+        }
+        if (nodeStatus[courseNum] == 1) {
+            return false;
+        }
+        nodeStatus[courseNum] = 1;
+        for (int dest : tree.get(courseNum)) {
+            if (!helper(dest)) {
+                return false;
+            }
+        }
+        nodeStatus[courseNum] = 2;
+        result.add(courseNum);
+        return true;
+    }
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // 0 represents hasn\'t been touched yet, 1 represents currently being visiting, 2 means visited
+        nodeStatus = new int[numCourses];
+        result = new LinkedList<Integer>();
+        tree = new ArrayList<HashSet<Integer>>(numCourses);
+        for (int i = 0; i < numCourses; ++i) {
+            tree.add(new HashSet());
+        }
+        for (int i = 0; i < prerequisites.length; ++i) {
+            tree.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        for (int i = 0; i < numCourses; ++i) {
+            if (!helper(i)) {
+                return new int[0];
+            }
+        }
+        int[] ans = new int[numCourses];
+        for (int i = 0; i < numCourses; ++i) {
+            ans[i] = result.poll();
+        }
+        return ans;
+    }
+}

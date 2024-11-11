@@ -1,0 +1,79 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        GraphNode[] nodes = new GraphNode[numCourses];
+        int[] result = new int[numCourses];
+        // Use ArrayDeque for a more efficient queue implementation
+        Queue<GraphNode> queue = new ArrayDeque<>();
+        for (int i = 0; i < numCourses; ++i) {
+            nodes[i] = new GraphNode(i);
+        }
+        for (int[] prerequisite : prerequisites) {
+            GraphNode dest = nodes[prerequisite[0]];
+            GraphNode src = nodes[prerequisite[1]];
+            // Add outgoing node and increment incoming count
+            src.addOutGoingNode(dest);
+            dest.incrIncomingNodesCount();
+        }
+        // Initialize the queue with nodes having no incoming edges
+        for (GraphNode node : nodes) {
+            if (node.getIncomingNodesCount() == 0) {
+                queue.offer(node);
+            }
+        }
+        int idx = 0;
+        // Perform topological sort using BFS
+        while (!queue.isEmpty()) {
+            GraphNode node = queue.poll();
+            result[idx++] = node.getValue();
+            // Update incoming counts and enqueue nodes with no incoming edges
+            for (GraphNode gNode : node.getOutGoingNodes()) {
+                gNode.decrIncomingNodesCount();
+                if (gNode.getIncomingNodesCount() == 0) {
+                    queue.offer(gNode);
+                }
+            }
+        }
+        // Check for a valid ordering, return an empty array if not possible
+        return idx < numCourses ? new int[0] : result;
+    }
+
+    static class GraphNode {
+
+        private final int value;
+
+        private final List<GraphNode> outGoingNodes;
+
+        private int incomingNodesCount;
+
+        GraphNode(int value) {
+            this.value = value;
+            this.outGoingNodes = new ArrayList<>();
+            this.incomingNodesCount = 0;
+        }
+
+        public int getValue() {
+            return this.value;
+        }
+
+        public List<GraphNode> getOutGoingNodes() {
+            return this.outGoingNodes;
+        }
+
+        public void addOutGoingNode(GraphNode node) {
+            this.outGoingNodes.add(node);
+        }
+
+        public void incrIncomingNodesCount() {
+            this.incomingNodesCount++;
+        }
+
+        public void decrIncomingNodesCount() {
+            this.incomingNodesCount--;
+        }
+
+        public int getIncomingNodesCount() {
+            return this.incomingNodesCount;
+        }
+    }
+}

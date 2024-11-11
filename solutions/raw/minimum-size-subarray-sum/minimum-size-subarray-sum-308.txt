@@ -1,0 +1,35 @@
+class Solution {
+
+    // Adjusted binary search to return the insertion point if target is not found
+    public int bs(int[] num, int tgt) {
+        int low = 0, high = num.length - 1;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (num[mid] == tgt) {
+                return mid;
+            } else if (num[mid] < tgt) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        // If not found, return the insertion point
+        return low;
+    }
+
+    public int minSubArrayLen(int target, int[] nums) {
+        int[] pre = new int[nums.length + 1];
+        for (int i = 1; i < pre.length; i++) {
+            pre[i] = pre[i - 1] + nums[i - 1];
+        }
+        int res = Integer.MAX_VALUE;
+        for (int i = 0; i < pre.length; i++) {
+            int tgt = pre[i] + target;
+            int found = bs(pre, tgt);
+            if (found < pre.length) {
+                res = Math.min(res, found - i);
+            }
+        }
+        return res == Integer.MAX_VALUE ? 0 : res;
+    }
+}

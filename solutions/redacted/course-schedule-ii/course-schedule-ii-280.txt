@@ -1,0 +1,67 @@
+class Node {
+
+    int val;
+
+    boolean decide;
+
+    List<Node> list;
+
+    public Node(int val) {
+        this.val = val;
+        list = new ArrayList<>();
+    }
+}
+
+class Solution {
+
+    public static int index;
+
+    public static boolean dfs(boolean[] visited, boolean[] decided, Node node, int[] arr) {
+        visited[node.val] = true;
+        List<Node> list = node.list;
+        boolean ans = true;
+        for (int i = 0; i < list.size(); i++) {
+            Node curr = list.get(i);
+            if (visited[curr.val] && decided[curr.val] == false) {
+                return false;
+            }
+            if (visited[curr.val] && decided[curr.val]) {
+                ans = ans && curr.decide;
+            } else {
+                ans = ans && dfs(visited, decided, curr, arr);
+            }
+        }
+        decided[node.val] = true;
+        node.decide = ans;
+        arr[index++] = node.val;
+        return ans;
+    }
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        index = 0;
+        int n = param1;
+        boolean[] visited = new boolean[n];
+        boolean[] decided = new boolean[n];
+        Node[] gph = new Node[n];
+        for (int i = 0; i < n; i++) {
+            gph[i] = new Node(i);
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            int a = prerequisites[i][0];
+            int b = prerequisites[i][1];
+            gph[a].list.add(gph[b]);
+        }
+        boolean d = true;
+        int[] ans = new int[n];
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                d = d && dfs(visited, decided, gph[i], ans);
+            }
+        }
+        if (!d) {
+            System.out.println("EMPTY");
+            ans = new int[0];
+        }
+        return ans;
+    }
+}

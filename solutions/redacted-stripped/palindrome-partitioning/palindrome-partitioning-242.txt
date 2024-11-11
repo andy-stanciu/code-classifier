@@ -1,0 +1,51 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> ans = new ArrayList<>();
+        List<String> l1 = new ArrayList<>();
+        helper(s, 0, 0, l1, ans);
+        return ans;
+    }
+
+    public void helper(String s, int si, int idx, List<String> l1, List<List<String>> ans) {
+        if (idx == s.length()) {
+            if (si == idx) {
+                List<String> curr = new ArrayList<>();
+                for (String str : l1) {
+                    curr.add(str);
+                }
+                ans.add(curr);
+            } else if (si < idx) {
+                if (method1(s, si, idx - 1)) {
+                    List<String> curr = new ArrayList<>();
+                    l1.add(s.substring(si));
+                    for (String str : l1) {
+                        curr.add(str);
+                    }
+                    ans.add(curr);
+                    l1.remove(l1.size() - 1);
+                }
+            }
+            return;
+        }
+        if (method1(s, si, idx - 1) && idx != si) {
+            l1.add(s.substring(si, idx));
+            helper(s, idx, idx + 1, l1, ans);
+            l1.remove(l1.size() - 1);
+        }
+        helper(s, si, idx + 1, l1, ans);
+    }
+
+    public boolean method1(String s, int si, int ei) {
+        int left = si, right = ei;
+        if (left > right)
+            return false;
+        while (left <= right) {
+            if (s.charAt(left) != s.charAt(right))
+                return false;
+            left++;
+            right--;
+        }
+        return true;
+    }
+}

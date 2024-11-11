@@ -1,0 +1,50 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> method1(TreeNode root, int param1) {
+        //create a list which will add all the current path to it
+        List<Integer> curr = new ArrayList<>();
+        //create a 2D list where we will store all valid path
+        List<List<Integer>> res = new ArrayList<>();
+        //if the value of the root is null then there is no path exists so return the empty list
+        if (root == null) {
+            return res;
+        }
+        //create a helper function which will find all paths and add to the result list
+        helper(root, param1, curr, res);
+        return res;
+    }
+
+    private void helper(TreeNode node, int param1, List<Integer> curr, List<List<Integer>> res) {
+        //if the current node is null then just return there is no path
+        if (node == null) {
+            return;
+        }
+        //add the current element to the current list
+        curr.add(node.val);
+        //check if we are in the leaf node and the remaining target sum is equal to the value of that leaf node or not.if it is equal to the target sum then it is a valid path and add it to the result list. Here we are creating a snapshot of the current path because if we store the current path directly then during backtracking it will also modify the result list. so we will create a new arraylist which contains same elements as current path and store it in the result so that while backtracking it will not be modified
+        if (node.left == null && node.right == null && node.val == param1) {
+            res.add(new ArrayList<>(curr));
+        } else {
+            //made recursion call for left and right child and also reduce the value of the target sum by the value of the current node
+            helper(node.left, param1 - node.val, curr, res);
+            helper(node.right, param1 - node.val, curr, res);
+        }
+        //Backtracking -if the current path is not a valid path then remove the last added node
+        curr.remove(curr.size() - 1);
+    }
+}

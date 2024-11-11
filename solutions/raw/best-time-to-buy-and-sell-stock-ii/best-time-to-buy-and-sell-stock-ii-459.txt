@@ -1,0 +1,44 @@
+class Solution {
+
+    public int helper(int[] prices, int i, boolean hasStock, int[][] dp) {
+        // base
+        if (i == prices.length) {
+            return 0;
+        }
+        // Convert boolean to int (0 or 1) for dp indexing
+        int stockState = hasStock ? 1 : 0;
+        // Check if already calculated
+        if (dp[i][stockState] != -1) {
+            return dp[i][stockState];
+        }
+        // If we have stock, we can either sell it or not sell it
+        if (hasStock) {
+            // sell it
+            int profit1 = prices[i] + helper(prices, i + 1, false, dp);
+            // not sell it
+            int profit2 = helper(prices, i + 1, true, dp);
+            dp[i][stockState] = Math.max(profit1, profit2);
+        } else {
+            // If we don\'t have stock, we can either buy it or not buy it
+            // buy it
+            int profit1 = -prices[i] + helper(prices, i + 1, true, dp);
+            // not buy it
+            int profit2 = helper(prices, i + 1, false, dp);
+            dp[i][stockState] = Math.max(profit1, profit2);
+        }
+        return dp[i][stockState];
+    }
+
+    public int maxProfit(int[] prices) {
+        // Each day => We have two options => if we have stock => then sell it or not sell it
+        // If we don\'t have stock => then buy it or not buy it
+        int[][] dp = new int[prices.length][2];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        //Initally , we dont have any stock
+        boolean hasStock = false;
+        int maxProfit = helper(prices, 0, hasStock, dp);
+        return maxProfit;
+    }
+}

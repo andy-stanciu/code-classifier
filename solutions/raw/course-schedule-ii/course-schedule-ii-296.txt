@@ -1,0 +1,46 @@
+class Solution {
+
+    public int[] findOrder(int n, int[][] prerequisites) {
+        int[] vis = new int[n];
+        int[] path = new int[n];
+        List<List<Integer>> al = new ArrayList<>();
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            al.add(new ArrayList<>());
+        }
+        for (int[] t : prerequisites) {
+            al.get(t[1]).add(t[0]);
+        }
+        for (int i = 0; i < n; i++) {
+            if (vis[i] == 0) {
+                if (dfs_cycle(i, vis, path, al, stack)) {
+                    return new int[0];
+                }
+            }
+        }
+        int[] res = new int[stack.size()];
+        int counter = 0;
+        while (!stack.isEmpty()) {
+            int curr = stack.pop();
+            res[counter++] = curr;
+        }
+        return res;
+    }
+
+    public boolean dfs_cycle(int i, int[] vis, int[] path, List<List<Integer>> al, Stack<Integer> stack) {
+        vis[i] = 1;
+        path[i] = 1;
+        for (int neighbour : al.get(i)) {
+            if (vis[neighbour] == 0) {
+                if (dfs_cycle(neighbour, vis, path, al, stack)) {
+                    return true;
+                }
+            } else if (path[neighbour] == 1) {
+                return true;
+            }
+        }
+        path[i] = 0;
+        stack.push(i);
+        return false;
+    }
+}

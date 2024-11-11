@@ -1,0 +1,35 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        return helper(s, 0);
+    }
+
+    private List<List<String>> helper(String s, int start) {
+        if (s.length() == start) {
+            List<List<String>> re = new ArrayList<>();
+            List<String> st = new ArrayList<>();
+            re.add(st);
+            return re;
+        }
+        List<List<String>> re = new ArrayList<>();
+        for (int i = start; i < s.length(); i++) {
+            if (isMatch(s, start, i)) {
+                List<List<String>> temp = helper(s, i + 1);
+                String matched = s.substring(start, i + 1);
+                for (List<String> list : temp) {
+                    list.add(0, matched);
+                }
+                re.addAll(temp);
+            }
+        }
+        return re;
+    }
+
+    private boolean isMatch(String s, int start, int end) {
+        for (int i = 0; i + start <= end - i; i++) {
+            if (s.charAt(i + start) != s.charAt(end - i))
+                return false;
+        }
+        return true;
+    }
+}

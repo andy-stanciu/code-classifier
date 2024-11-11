@@ -1,0 +1,42 @@
+class Solution {
+
+    private boolean isValidPalindrome(String str) {
+        int leftPointer = 0;
+        int rightPointer = str.length() - 1;
+        while (leftPointer <= rightPointer) {
+            if (str.charAt(leftPointer) != str.charAt(rightPointer))
+                return false;
+            leftPointer++;
+            rightPointer--;
+        }
+        return true;
+    }
+
+    public void partition(String str, int index, String subString, List<String> palindromePartition, List<List<String>> palindromePartitions) {
+        if (index >= str.length()) {
+            if (subString.isEmpty())
+                palindromePartitions.add(new ArrayList(palindromePartition));
+            return;
+        }
+        // Character at current index is part of new partition.
+        if (isValidPalindrome(subString + str.charAt(index))) {
+            palindromePartition.add(subString + str.charAt(index));
+            partition(str, index + 1, "", palindromePartition, palindromePartitions);
+            palindromePartition.remove(palindromePartition.size() - 1);
+        }
+        // Character at current index is part of existing partition.
+        partition(str, index + 1, subString + str.charAt(index), palindromePartition, palindromePartitions);
+    }
+
+    public List<List<String>> partition(String s) {
+        /**
+         *            approach backtracking
+         *
+         *            1. Character at current index is part of existing partition.
+         *            2. Character at current index is part of new partition.
+         */
+        List<List<String>> palindromePartitions = new ArrayList();
+        partition(s, 0, "", new ArrayList(), palindromePartitions);
+        return palindromePartitions;
+    }
+}

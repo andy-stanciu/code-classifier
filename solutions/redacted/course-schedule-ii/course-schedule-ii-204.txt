@@ -1,0 +1,53 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = adjMatrix(param1, prerequisites);
+        int[] inDegree = new int[param1];
+        Queue<Integer> q = new LinkedList<>();
+        int[] order = new int[param1];
+        fillInDegree(param1, adj, inDegree);
+        for (int i = 0; i < param1; i++) {
+            if (inDegree[i] == 0)
+                q.add(i);
+        }
+        int count = method1(adj, inDegree, order, q);
+        return count == param1 ? order : new int[] {};
+    }
+
+    private void fillInDegree(int param1, ArrayList<ArrayList<Integer>> adj, int[] inDegree) {
+        for (int u = 0; u < param1; u++) {
+            for (int v : adj.get(u)) {
+                inDegree[v]++;
+            }
+        }
+    }
+
+    private ArrayList<ArrayList<Integer>> adjMatrix(int param1, int[][] prerequisites) {
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] pair : prerequisites) {
+            int var1 = pair[0];
+            int prerequisite = pair[1];
+            adj.get(prerequisite).add(var1);
+        }
+        return adj;
+    }
+
+    public int method1(ArrayList<ArrayList<Integer>> adj, int[] inDegree, int[] order, Queue<Integer> q) {
+        int count = 0;
+        int i = 0;
+        while (!q.isEmpty()) {
+            int current = q.remove();
+            order[i++] = current;
+            count++;
+            for (int v : adj.get(current)) {
+                inDegree[v]--;
+                if (inDegree[v] == 0)
+                    q.add(v);
+            }
+        }
+        return count;
+    }
+}

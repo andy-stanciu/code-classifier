@@ -1,0 +1,40 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] degree = new int[numCourses];
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int[] pre : prerequisites) {
+            int a = pre[0];
+            int b = pre[1];
+            degree[a]++;
+            List<Integer> list = map.get(b);
+            if (list == null) {
+                list = new ArrayList<>();
+            }
+            list.add(a);
+            map.put(b, list);
+        }
+        int[] res = new int[numCourses];
+        int k = 0;
+        Deque<Integer> queue = new ArrayDeque<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (degree[i] == 0) {
+                queue.offer(i);
+                res[k++] = i;
+            }
+        }
+        while (queue.size() > 0) {
+            Integer num = queue.pop();
+            List<Integer> ll = map.get(num);
+            if (ll != null) {
+                for (int j : ll) {
+                    if (--degree[j] == 0) {
+                        queue.offer(j);
+                        res[k++] = j;
+                    }
+                }
+            }
+        }
+        return k == numCourses ? res : new int[0];
+    }
+}

@@ -1,0 +1,45 @@
+class Solution {
+
+    public int maxProfit(int k, int[] prices) {
+        // !!!
+        // for more details look at problem #3
+        // !!!
+        var n = prices.length;
+        if (k == 0 || n == 0) {
+            return 0;
+        }
+        //         // dp 2 x 2d
+        //         var haveStock = new int[n][k + 1];
+        //         var noStock = new int[n][k + 1];
+        //         for (int i = 1; i <= k; i++) {
+        //             // bought, sold, bought on the 1st day. Thus T #i
+        //             haveStock[0][i] = -prices[0];
+        //         }
+        //         for (int day = 1; day < n; day++) {
+        //             for (int i = 1; i <= k; i++) {
+        //                 haveStock[day][i] = Math.max(haveStock[day - 1][i], noStock[day - 1][i - 1] - prices[day]);
+        //                 noStock[day][i] = Math.max(noStock[day - 1][i], haveStock[day - 1][i] + prices[day]);
+        //             }
+        //         }
+        //         return noStock[n - 1][k];
+        // dp 2 x 1d
+        var yesterdayHadStock = new int[k + 1];
+        var yesterdayNoStock = new int[k + 1];
+        for (int i = 1; i <= k; i++) {
+            // bought, sold, bought on the 1st day. Thus T #i
+            yesterdayHadStock[i] = -prices[0];
+        }
+        var todayHaveStock = new int[k + 1];
+        var todayNoStock = new int[k + 1];
+        for (int day = 1; day < n; day++) {
+            for (int i = 1; i <= k; i++) {
+                todayHaveStock[i] = Math.max(yesterdayHadStock[i], yesterdayNoStock[i - 1] - prices[day]);
+                todayNoStock[i] = Math.max(yesterdayNoStock[i], yesterdayHadStock[i] + prices[day]);
+                // move today to yesterday
+                yesterdayHadStock[i] = todayHaveStock[i];
+                yesterdayNoStock[i] = todayNoStock[i];
+            }
+        }
+        return yesterdayNoStock[k];
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    Index[] memo;
+
+    public boolean method1(int[] nums) {
+        int n = nums.length;
+        // memo = new Index[n];
+        // Arrays.fill(memo, Index.U);
+        // memo[n-1] = Index.G;
+        // return canJumpFromPos(0,nums);
+        int maxIndex = 0;
+        for (int i = 0; i < n; i++) {
+            if (i <= maxIndex) {
+                maxIndex = Math.max(maxIndex, i + nums[i]);
+            } else
+                return false;
+        }
+        return maxIndex >= n - 1;
+    }
+
+    public boolean method2(int pos, int[] nums) {
+        if (memo[pos] != Index.U) {
+            return memo[pos] == Index.G ? true : false;
+        }
+        int var1 = Math.min(pos + nums[pos], nums.length - 1);
+        for (int nextPos = pos + 1; nextPos <= var1; nextPos++) {
+            if (method2(nextPos, nums)) {
+                memo[pos] = Index.G;
+                return true;
+            }
+        }
+        memo[pos] = Index.B;
+        return false;
+    }
+}
+
+enum Index {
+
+    G, B, U
+}

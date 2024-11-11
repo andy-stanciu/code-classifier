@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>(param1);
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        int[] inDegree = new int[param1];
+        int[] ordering = new int[param1];
+        buildAdjListAndInDegree(adjList, inDegree, prerequisites);
+        Queue<Integer> que = new LinkedList<Integer>();
+        for (int i = 0; i < param1; i++) {
+            if (inDegree[i] == 0) {
+                que.add(i);
+            }
+        }
+        int count = 0;
+        while (!que.isEmpty()) {
+            Integer node = que.remove();
+            List<Integer> neighbors = adjList.get(node);
+            for (int i = 0; i < neighbors.size(); i++) {
+                int neigbor = neighbors.get(i);
+                inDegree[neigbor]--;
+                if (inDegree[neigbor] == 0) {
+                    que.add(neigbor);
+                }
+            }
+            ordering[count] = node;
+            count++;
+        }
+        if (count != param1)
+            return new int[] {};
+        return ordering;
+    }
+
+    private void buildAdjListAndInDegree(List<List<Integer>> adjList, int[] inDegree, int[][] prerequisites) {
+        for (int i = 0; i < prerequisites.length; i++) {
+            int[] prerequisite = prerequisites[i];
+            adjList.get(prerequisite[1]).add(prerequisite[0]);
+            inDegree[prerequisite[0]]++;
+        }
+    }
+}

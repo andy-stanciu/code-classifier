@@ -1,0 +1,35 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        boolean[][] dp = new boolean[s.length()][s.length()];
+        int n = s.length();
+        for (int i = 0; i < n; i++) {
+            dp[i][i] = true;
+        }
+        for (int len = 2; len <= n; len++) {
+            for (int i = 0; i <= n - len; i++) {
+                int j = i + len - 1;
+                if (s.charAt(i) == s.charAt(j) && (len == 2 || dp[i + 1][j - 1])) {
+                    dp[i][j] = true;
+                }
+            }
+        }
+        List<List<String>> res = new ArrayList<>();
+        helper(res, new ArrayList<>(), dp, s, 0);
+        return res;
+    }
+
+    private void helper(List<List<String>> res, List<String> path, boolean[][] dp, String s, int pos) {
+        if (pos == s.length()) {
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = pos; i < s.length(); i++) {
+            if (dp[pos][i]) {
+                path.add(s.substring(pos, i + 1));
+                helper(res, path, dp, s, i + 1);
+                path.remove(path.size() - 1);
+            }
+        }
+    }
+}

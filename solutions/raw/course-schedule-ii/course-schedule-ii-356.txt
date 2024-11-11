@@ -1,0 +1,40 @@
+class Solution {
+
+    // track the added visited node
+    int index = 0;
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // try to use dfs
+        int[] ans = new int[numCourses];
+        // build the graph
+        ArrayList<Integer>[] g = new ArrayList[numCourses];
+        int[] indegrees = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            g[i] = new ArrayList<>();
+        }
+        for (int[] e : prerequisites) {
+            g[e[1]].add(e[0]);
+            indegrees[e[0]]++;
+        }
+        // dfs
+        boolean[] visited = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (!visited[i] && indegrees[i] == 0)
+                dfs(g, i, ans, indegrees, visited);
+        }
+        if (index != numCourses) {
+            return new int[0];
+        }
+        return ans;
+    }
+
+    void dfs(ArrayList<Integer>[] g, int i, int[] ans, int[] indegrees, boolean[] visited) {
+        ans[index++] = i;
+        visited[i] = true;
+        for (int j : g[i]) {
+            if (!visited[j] && --indegrees[j] == 0) {
+                dfs(g, j, ans, indegrees, visited);
+            }
+        }
+    }
+}

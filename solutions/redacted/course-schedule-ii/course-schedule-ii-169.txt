@@ -1,0 +1,47 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] indegree = new int[param1];
+        // Iterate over the prerequisites array
+        for (int[] prerequisite : prerequisites) {
+            // The course that depends on another course
+            int var1 = prerequisite[0];
+            // The prerequisite course
+            int prereq = prerequisite[1];
+            // Increment the indegree for the course, as it has one more prerequisite
+            indegree[var1]++;
+        }
+        // Queue to store courses with no prerequisites (indegree 0)
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        // Array to store the topological order
+        int[] topo = new int[param1];
+        int index = 0;
+        // Process courses with no prerequisites and reduce indegree of dependent courses
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            topo[index++] = node;
+            // Decrease indegree of adjacent courses
+            for (int[] prerequisite : prerequisites) {
+                if (prerequisite[1] == node) {
+                    int var2 = prerequisite[0];
+                    indegree[var2]--;
+                    if (indegree[var2] == 0) {
+                        q.add(var2);
+                    }
+                }
+            }
+        }
+        // Check for cycle (if not all courses are processed)
+        if (index != param1) {
+            // Return an empty array to indicate a cycle
+            return new int[0];
+        }
+        // Return the topological order of courses
+        return topo;
+    }
+}

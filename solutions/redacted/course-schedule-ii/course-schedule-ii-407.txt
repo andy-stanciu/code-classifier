@@ -1,0 +1,55 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        var graph = createGraph(prerequisites);
+        var inDegree = new int[param1];
+        for (var var3 : graph.entrySet()) {
+            var var1 = var3.getKey();
+            var var2 = var3.getValue();
+            inDegree[var1] = var2.size();
+        }
+        return method1(param1, graph, inDegree);
+    }
+
+    private static int[] method1(int param1, Map<Integer, Set<Integer>> graph, int[] inDegree) {
+        var var4 = new ArrayList<Integer>();
+        var bfsQueue = new LinkedList<Integer>();
+        for (var i = 0; i < inDegree.length; i++) {
+            if (inDegree[i] == 0) {
+                bfsQueue.add(i);
+            }
+        }
+        while (!bfsQueue.isEmpty()) {
+            var var5 = bfsQueue.remove();
+            var4.add(var5);
+            for (var var3 : graph.entrySet()) {
+                var var1 = var3.getKey();
+                var var2 = var3.getValue();
+                if (Objects.equals(var1, var5)) {
+                    continue;
+                }
+                if (var2.contains(var5)) {
+                    var2.remove(var5);
+                    inDegree[var1]--;
+                    if (inDegree[var1] == 0) {
+                        bfsQueue.add(var1);
+                    }
+                }
+            }
+        }
+        return var4.size() == param1 ? var4.stream().mapToInt(integer -> integer).toArray() : new int[0];
+    }
+
+    private static Map<Integer, Set<Integer>> createGraph(int[][] prerequisites) {
+        var graph = new HashMap<Integer, Set<Integer>>();
+        for (int[] var7 : prerequisites) {
+            var var1 = var7[0];
+            var var6 = var7[1];
+            if (!graph.containsKey(var1)) {
+                graph.put(var1, new HashSet<>());
+            }
+            graph.get(var1).add(var6);
+        }
+        return graph;
+    }
+}

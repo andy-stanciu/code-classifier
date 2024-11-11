@@ -1,0 +1,36 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            adjList.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        int[] visited = new int[param1];
+        List<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            if (visited[i] == 0 && hasCycle(i, adjList, visited, ans)) {
+                int[] empRes = new int[0];
+                return empRes;
+            }
+        }
+        return ans.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    public boolean hasCycle(int param2, List<List<Integer>> adjList, int[] visited, List<Integer> ans) {
+        visited[param2] = 2;
+        boolean isCycle = false;
+        for (int ngh : adjList.get(param2)) {
+            if (visited[ngh] == 0) {
+                isCycle = isCycle | hasCycle(ngh, adjList, visited, ans);
+            } else if (visited[ngh] == 2) {
+                return true;
+            }
+        }
+        ans.add(param2);
+        visited[param2] = 1;
+        return isCycle;
+    }
+}

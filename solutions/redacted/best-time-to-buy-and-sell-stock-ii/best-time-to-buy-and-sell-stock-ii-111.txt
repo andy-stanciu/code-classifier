@@ -1,0 +1,36 @@
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        // int[][] dp = new int[prices.length + 1][2];
+        int[] next = new int[2];
+        for (int ind = prices.length - 1; ind >= 0; ind--) {
+            int[] curr = new int[2];
+            for (int flag = 0; flag <= 1; flag++) {
+                if (flag == 0) {
+                    // dp[ind][flag] = Math.max(dp[ind + 1][1 - flag] - prices[ind], dp[ind + 1][flag]);
+                    curr[flag] = Math.max(next[1 - flag] - prices[ind], next[flag]);
+                } else {
+                    // dp[ind][flag] = Math.max(dp[ind + 1][1 - flag] + prices[ind], dp[ind + 1][flag]);
+                    curr[flag] = Math.max(next[1 - flag] + prices[ind], next[flag]);
+                }
+            }
+            next = curr;
+        }
+        // return dp[0][0];
+        return next[0];
+        // int[][] dp = new int[prices.length][2];
+        // for(int[] nums:dp) Arrays.fill(nums, -1);
+        // return task(0, 0, prices, dp);
+    }
+
+    static int task(int ind, int flag, int[] prices, int[][] dp) {
+        if (ind == prices.length)
+            return 0;
+        if (dp[ind][flag] != -1)
+            return dp[ind][flag];
+        if (flag == 0) {
+            return dp[ind][flag] = Math.max(task(ind + 1, 1 - flag, prices, dp) - prices[ind], task(ind + 1, flag, prices, dp));
+        }
+        return dp[ind][flag] = Math.max(task(ind + 1, 1 - flag, prices, dp) + prices[ind], task(ind + 1, flag, prices, dp));
+    }
+}

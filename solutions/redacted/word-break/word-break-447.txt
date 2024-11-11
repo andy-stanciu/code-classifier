@@ -1,0 +1,45 @@
+public class Solution {
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        System.out.println(solution.method1("leetcode", List.of("leet", "code")));
+        System.out.println(solution.method1("cars", List.of("car", "ca", "rs")));
+    }
+
+    public boolean method1(String s, List<String> param1) {
+        List<char[]> var1 = new ArrayList<>();
+        for (String dict : param1) {
+            char[] dictArr = dict.toCharArray();
+            var1.add(dictArr);
+        }
+        char[] charArr = s.toCharArray();
+        Boolean[] hasMatchCache = new Boolean[charArr.length];
+        return recursive(0, charArr, var1, hasMatchCache);
+    }
+
+    private boolean recursive(int index, char[] charArr, List<char[]> var1, Boolean[] hasMatchCache) {
+        if (index == charArr.length) {
+            return true;
+        }
+        if (hasMatchCache[index] == null) {
+            boolean hasMatch = false;
+            for (char[] param1 : var1) {
+                int pointer = index;
+                boolean isMatch = true;
+                for (char c : param1) {
+                    if (pointer >= charArr.length || charArr[pointer++] != c) {
+                        isMatch = false;
+                        break;
+                    }
+                }
+                if (isMatch) {
+                    if (recursive(pointer, charArr, var1, hasMatchCache)) {
+                        hasMatch = true;
+                    }
+                }
+            }
+            hasMatchCache[index] = hasMatch;
+        }
+        return hasMatchCache[index];
+    }
+}

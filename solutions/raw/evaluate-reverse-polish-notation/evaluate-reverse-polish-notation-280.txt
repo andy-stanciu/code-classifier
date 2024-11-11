@@ -1,0 +1,42 @@
+class Solution {
+
+    private static final BiFunction<Integer, Integer, Integer> ADD = (x, y) -> x + y;
+
+    private static final BiFunction<Integer, Integer, Integer> SUB = (x, y) -> x - y;
+
+    private static final BiFunction<Integer, Integer, Integer> MUL = (x, y) -> x * y;
+
+    private static final BiFunction<Integer, Integer, Integer> DIV = (x, y) -> x / y;
+
+    public int evalRPN(String[] tokens) {
+        if (tokens == null || tokens.length == 0) {
+            return 0;
+        }
+        Deque<Integer> stack = new ArrayDeque<>();
+        for (String token : tokens) {
+            switch(token) {
+                case "+":
+                    apply(stack, ADD);
+                    break;
+                case "-":
+                    apply(stack, SUB);
+                    break;
+                case "*":
+                    apply(stack, MUL);
+                    break;
+                case "/":
+                    apply(stack, DIV);
+                    break;
+                default:
+                    stack.push(Integer.parseInt(token));
+                    break;
+            }
+        }
+        return stack.pop();
+    }
+
+    private void apply(Deque<Integer> stack, BiFunction<Integer, Integer, Integer> func) {
+        int second = stack.pop(), first = stack.pop();
+        stack.push(func.apply(first, second));
+    }
+}

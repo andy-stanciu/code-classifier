@@ -1,0 +1,40 @@
+class Solution {
+
+    int insertIndex = 0;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        byte[] visitingOrVisited = new byte[param1];
+        List<Integer>[] adjList = new ArrayList[param1];
+        int[] finalAnswerTopologicalOrder = new int[param1];
+        insertIndex = param1 - 1;
+        buildAdjList(adjList, prerequisites, param1);
+        for (int i = 0; i < param1; i++) {
+            if (visitingOrVisited[i] == 0)
+                if (!dfs(i, visitingOrVisited, adjList, finalAnswerTopologicalOrder))
+                    return new int[0];
+        }
+        return finalAnswerTopologicalOrder;
+    }
+
+    public void buildAdjList(List<Integer>[] adjList, int[][] prerequisites, int param1) {
+        for (int i = 0; i < param1; i++) adjList[i] = new ArrayList<>();
+        for (int[] pre : prerequisites) adjList[pre[1]].add(pre[0]);
+    }
+
+    public boolean dfs(int curr, byte[] visitingOrVisited, List<Integer>[] adjList, int[] finalAnswerTopologicalOrder) {
+        if (visitingOrVisited[curr] == 2 || insertIndex < 0)
+            return true;
+        if (visitingOrVisited[curr] == 1)
+            return false;
+        List<Integer> var1 = adjList[curr];
+        visitingOrVisited[curr] = 1;
+        for (int neighbor : var1) {
+            if (!dfs(neighbor, visitingOrVisited, adjList, finalAnswerTopologicalOrder))
+                return false;
+        }
+        visitingOrVisited[curr] = 2;
+        finalAnswerTopologicalOrder[insertIndex] = curr;
+        insertIndex--;
+        return true;
+    }
+}

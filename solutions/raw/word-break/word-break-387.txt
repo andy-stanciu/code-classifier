@@ -1,0 +1,27 @@
+class Solution {
+
+    private Map<String, Boolean> memoizationMap = new ConcurrentSkipListMap<>();
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> wordDictionary = new HashSet<>(wordDict);
+        wordDict.forEach(word -> memoizationMap.put(word, true));
+        return wordCheckWithDictionary(s, wordDictionary);
+    }
+
+    private boolean wordCheckWithDictionary(String word, Set<String> wordDictionary) {
+        int wordLength = word.length();
+        if (wordLength == 0) {
+            return true;
+        } else {
+            for (int i = 0; i < wordLength; i++) {
+                if (wordDictionary.contains(word.substring(0, i + 1))) {
+                    Boolean result = memoizationMap.computeIfAbsent(word.substring(i + 1), (key) -> wordCheckWithDictionary(key, wordDictionary));
+                    if (Boolean.TRUE.equals(result)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+}

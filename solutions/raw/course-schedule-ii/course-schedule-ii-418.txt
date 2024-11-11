@@ -1,0 +1,37 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        //STEP 1: Prepare the adjacency list
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) adj.add(new ArrayList());
+        //indegree of each vetex
+        int[] indegree = new int[numCourses];
+        for (int i = 0; i < prerequisites.length; i++) {
+            adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+            indegree[prerequisites[i][0]]++;
+        }
+        //STEP 2: add all the vertex with indegree 0 to queue
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+        int[] topo = new int[numCourses];
+        int pos = 0;
+        while (!q.isEmpty()) {
+            int temp = q.poll();
+            topo[pos++] = temp;
+            //make indegree of neighbour element reduce by 1
+            for (int i = 0; i < adj.get(temp).size(); i++) {
+                indegree[adj.get(temp).get(i)]--;
+                if (indegree[adj.get(temp).get(i)] == 0)
+                    q.add(adj.get(temp).get(i));
+            }
+        }
+        if (pos == numCourses)
+            return topo;
+        int[] topo2 = {};
+        return topo2;
+    }
+}

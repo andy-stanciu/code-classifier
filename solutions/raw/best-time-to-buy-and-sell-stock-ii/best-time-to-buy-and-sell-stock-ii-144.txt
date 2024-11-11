@@ -1,0 +1,47 @@
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        int index = 0, minPrice = 10000000, max = 0, profit = 0;
+        while (index < prices.length) {
+            int i = buy(index, prices, minPrice);
+            if (i - 1 >= 0) {
+                minPrice = prices[i - 1];
+            } else {
+                return profit;
+            }
+            i = sell(i - 1, prices, minPrice);
+            if (i - 1 >= 0) {
+                max = prices[i - 1];
+            } else {
+                return profit;
+            }
+            profit += max - minPrice;
+            minPrice = 1000000;
+            max = -1;
+            index = i;
+        }
+        return profit;
+    }
+
+    private int buy(int index, int[] prices, int minPrice) {
+        while (index < prices.length) {
+            if (prices[index] > minPrice) {
+                return index;
+            }
+            minPrice = prices[index];
+            index++;
+        }
+        return 0;
+    }
+
+    private int sell(int index, int[] prices, int max) {
+        while (index < prices.length) {
+            if (prices[index] < max) {
+                return index;
+            }
+            max = prices[index];
+            index++;
+        }
+        return index;
+    }
+}

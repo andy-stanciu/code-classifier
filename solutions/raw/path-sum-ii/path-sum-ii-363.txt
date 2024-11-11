@@ -1,0 +1,87 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        int sum = 0;
+        int idx = -1;
+        rec(root, targetSum, ans, temp, sum, idx);
+        return ans;
+    }
+
+    void rec(TreeNode root, int targetSum, List<List<Integer>> ans, List<Integer> temp, int sum, int idx) {
+        if (root == null)
+            return;
+        temp.add(root.val);
+        idx++;
+        sum = sum + root.val;
+        if (root.left == null && root.right == null) {
+            if (sum == targetSum) {
+                ans.add(new ArrayList<>(temp));
+                temp.remove(idx);
+                idx--;
+                sum = sum - root.val;
+                return;
+            } else {
+                temp.remove(idx);
+                idx--;
+                sum = sum - root.val;
+                return;
+            }
+        }
+        if (root.left != null) {
+            rec(root.left, targetSum, ans, temp, sum, idx);
+        }
+        if (root.right != null) {
+            rec(root.right, targetSum, ans, temp, sum, idx);
+        }
+        temp.remove(idx);
+        idx--;
+        sum = sum - root.val;
+        return;
+    }
+}
+/*
+class Solution {
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> ans=new ArrayList();
+       List<Integer> li=new ArrayList();
+       path(root,targetSum,ans,li);
+       return ans;
+    }
+     void path(TreeNode root,int sum,List<List<Integer>> ans,List<Integer> li){
+   
+        if(root==null){
+            return;
+        }
+      li.add(root.val);
+
+      if(root.left==null && root.right==null){
+           sum-=root.val;
+            if(sum==0){
+            ans.add(new ArrayList<>(li));
+            }
+      }
+     
+     
+      path(root.left,sum-root.val,ans,li);
+      path(root.right,sum-root.val,ans,li);
+      li.remove(li.size()-1);
+    }
+}
+*/

@@ -1,0 +1,27 @@
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        int n = prices.length;
+        int[][] dp = new int[n][2];
+        for (int[] rows : dp) {
+            Arrays.fill(rows, -1);
+        }
+        return memoziation(0, 0, n, dp, prices);
+    }
+
+    public static int memoziation(int index, int buy, int n, int[][] dp, int[] prices) {
+        if (index == n) {
+            return 0;
+        }
+        if (dp[index][buy] != -1) {
+            return dp[index][buy];
+        }
+        int p = 0;
+        if (buy == 0) {
+            p = Math.max(-prices[index] + memoziation(index + 1, 1, n, dp, prices), memoziation(index + 1, 0, n, dp, prices));
+        } else {
+            p = Math.max(prices[index] + memoziation(index + 1, 0, n, dp, prices), memoziation(index + 1, 1, n, dp, prices));
+        }
+        return dp[index][buy] = p;
+    }
+}

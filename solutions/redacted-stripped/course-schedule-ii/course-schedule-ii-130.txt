@@ -1,0 +1,46 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[] inDegree = new int[param1];
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] pair : prerequisites) {
+            int a = pair[0];
+            int b = pair[1];
+            graph.get(b).add(a);
+            inDegree[a]++;
+        }
+        return topologicalSort(param1, graph, inDegree);
+    }
+
+    public int[] topologicalSort(int param1, List<List<Integer>> graph, int[] inDegree) {
+        Queue<Integer> queue = new LinkedList<>();
+        int[] res = new int[param1];
+        int count = 0;
+        for (int i = 0; i < param1; i++) {
+            if (inDegree[i] == 0) {
+                queue.add(i);
+                res[count] = i;
+                count++;
+            }
+        }
+        while (!queue.isEmpty()) {
+            int var1 = queue.poll();
+            for (int next : graph.get(var1)) {
+                inDegree[next]--;
+                if (inDegree[next] == 0) {
+                    queue.add(next);
+                    res[count] = next;
+                    count++;
+                }
+            }
+        }
+        if (param1 == count) {
+            return res;
+        } else {
+            return new int[] {};
+        }
+    }
+}

@@ -1,0 +1,33 @@
+class Solution {
+
+    public int check(int[] prices, int i, int isStockBuyed, int[][] dp) {
+        if (i == prices.length) {
+            return 0;
+        }
+        if (i == prices.length - 1 && isStockBuyed == 0) {
+            dp[i][0] = 0;
+            return 0;
+        }
+        if (dp[i][isStockBuyed] != -1)
+            return dp[i][isStockBuyed];
+        if (isStockBuyed == 0) {
+            int buy = check(prices, i + 1, 1, dp) - prices[i];
+            int notBuy = check(prices, i + 1, 0, dp);
+            return dp[i][0] = Math.max(buy, notBuy);
+        } else {
+            int sell = check(prices, i + 1, 0, dp) + prices[i];
+            int notSell = check(prices, i + 1, 1, dp);
+            return dp[i][1] = Math.max(sell, notSell);
+        }
+    }
+
+    public int maxProfit(int[] prices) {
+        int[][] dp = new int[prices.length][2];
+        for (int i = 0; i < prices.length; i++) {
+            dp[i][0] = -1;
+            dp[i][1] = -1;
+        }
+        int ans = check(prices, 0, 0, dp);
+        return ans;
+    }
+}

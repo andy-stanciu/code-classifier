@@ -1,0 +1,48 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] ans = new int[numCourses];
+        int[] incomingEdges = new int[numCourses];
+        List<Integer>[] graph = new ArrayList[numCourses];
+        for (int i = 0; i < graph.length; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] pre : prerequisites) {
+            int u = pre[0];
+            int v = pre[1];
+            //u is dependent on v     V=>U
+            //indicates directed edge from v to u => u is dependent on v
+            graph[v].add(u);
+            incomingEdges[u]++;
+        }
+        int idx = 0;
+        Queue<Integer> que = new ArrayDeque<>();
+        for (int i = 0; i < incomingEdges.length; i++) {
+            if (incomingEdges[i] == 0) {
+                que.add(i);
+                ans[idx] = i;
+                idx++;
+            }
+        }
+        while (que.size() > 0) {
+            int independentNode = que.poll();
+            for (int i = 0; i < graph[independentNode].size(); i++) {
+                int v = graph[independentNode].get(i);
+                //our v was dependenent on independentNode but now independentNode is removed so solving dependencies for v
+                incomingEdges[v]--;
+                if (incomingEdges[v] == 0) {
+                    que.add(v);
+                    ans[idx] = v;
+                    idx++;
+                }
+            }
+        }
+        boolean solved = false;
+        for (int i = 0; i < incomingEdges.length; i++) {
+            if (incomingEdges[i] != 0) {
+                return new int[0];
+            }
+        }
+        return ans;
+    }
+}

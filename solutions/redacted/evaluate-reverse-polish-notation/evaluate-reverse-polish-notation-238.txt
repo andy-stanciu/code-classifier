@@ -1,0 +1,46 @@
+class Solution {
+
+    public int evalRPN(String[] tokens) {
+        // use ArrayList to mimic stack without need for pointer
+        ArrayList<Integer> stack = new ArrayList<Integer>();
+        // iterate through tokens
+        for (String token : tokens) {
+            // helper method to determine if token is a valid operator
+            if (operator(token)) {
+                // retrieve values from stack in reverse order
+                // will set up for n1 __ n2
+                int n2 = stack.remove(stack.size() - 1);
+                int n1 = stack.remove(stack.size() - 1);
+                int temp = operate(token, n1, n2);
+                // adds new value to stack
+                stack.add(temp);
+            } else {
+                //adds integer to stack
+                stack.add(Integer.parseInt(token));
+            }
+        }
+        // returns stacks value
+        return stack.get(0);
+    }
+
+    public boolean operator(String token) {
+        // helper method to get valid operators
+        return token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/");
+    }
+
+    public int operate(String operator, int n1, int n2) {
+        // helper method to complete operations
+        switch(operator) {
+            case "+":
+                return n1 + n2;
+            case "-":
+                return n1 - n2;
+            case "*":
+                return n1 * n2;
+            case "/":
+                return n1 / n2;
+            default:
+                return 201;
+        }
+    }
+}

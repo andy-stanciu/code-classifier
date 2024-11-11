@@ -1,0 +1,29 @@
+interface BinaryOp {
+
+    int op(int a, int b);
+}
+
+class Solution {
+
+    public int evalRPN(String[] tokens) {
+        Deque<Integer> stk = new LinkedList<>();
+        HashMap<String, BinaryOp> ops = new HashMap<>();
+        ops.put("+", (a, b) -> a + b);
+        ops.put("-", (a, b) -> a - b);
+        ops.put("*", (a, b) -> a * b);
+        ops.put("/", (a, b) -> a / b);
+        int p1, p2;
+        BinaryOp curOp;
+        for (String s : tokens) {
+            curOp = ops.getOrDefault(s, null);
+            if (curOp != null) {
+                p2 = stk.removeFirst();
+                p1 = stk.removeFirst();
+                stk.addFirst(curOp.op(p1, p2));
+            } else {
+                stk.addFirst(Integer.valueOf(s));
+            }
+        }
+        return stk.removeFirst();
+    }
+}

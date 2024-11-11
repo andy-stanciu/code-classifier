@@ -1,0 +1,37 @@
+class Solution {
+
+    List<List<String>> ans = new ArrayList<>();
+
+    public List<List<String>> partition(String s) {
+        int n = s.length();
+        boolean[][] dp = new boolean[n][n];
+        for (int i = n - 1; i >= 0; i--) {
+            for (int len = 1; i + len <= n; len++) {
+                int j = i + len - 1;
+                if (i == j) {
+                    dp[i][j] = true;
+                } else if (i + 1 == j && s.charAt(i) == s.charAt(j)) {
+                    dp[i][j] = true;
+                } else if (dp[i + 1][j - 1] && s.charAt(i) == s.charAt(j)) {
+                    dp[i][j] = true;
+                }
+            }
+        }
+        helper(s, dp, 0, new ArrayList<>());
+        return ans;
+    }
+
+    public void helper(String s, boolean[][] dp, int index, ArrayList<String> tempList) {
+        if (index == s.length()) {
+            ans.add(new ArrayList<>(tempList));
+        } else {
+            for (int i = index; i < s.length(); i++) {
+                if (dp[index][i]) {
+                    tempList.add(s.substring(index, i + 1));
+                    helper(s, dp, i + 1, tempList);
+                    tempList.remove(tempList.size() - 1);
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,39 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        int V = param1;
+        for (int i = 0; i < V; i++) adj.add(new ArrayList<>());
+        for (int i = 0; i < prerequisites.length; i++) {
+            adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        int[] vis = new int[V];
+        int[] path = new int[V];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < V; i++) {
+            if (vis[i] == 0) {
+                if (dfs(adj, i, vis, stack, path))
+                    return new int[] {};
+            }
+        }
+        int j = 0;
+        int[] res = new int[V];
+        while (!stack.isEmpty()) res[j++] = stack.pop();
+        return res;
+    }
+
+    boolean dfs(List<List<Integer>> adj, int i, int[] vis, Stack<Integer> stack, int[] path) {
+        vis[i] = 1;
+        path[i] = 1;
+        for (int ad : adj.get(i)) {
+            if (vis[ad] == 0) {
+                if (dfs(adj, ad, vis, stack, path))
+                    return true;
+            } else if (path[ad] == 1)
+                return true;
+        }
+        path[i] = 0;
+        stack.add(i);
+        return false;
+    }
+}

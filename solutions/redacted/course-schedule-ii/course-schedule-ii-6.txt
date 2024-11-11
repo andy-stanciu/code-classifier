@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        // Adjacency List
+        List[] adjList = new List[param1];
+        int[] indegree = new int[param1];
+        // Remember, 1 -> 0 means 0 before 1 (for this question)
+        for (int[] preq : prerequisites) {
+            if (adjList[preq[1]] == null)
+                adjList[preq[1]] = new ArrayList<Integer>();
+            adjList[preq[1]].add(preq[0]);
+            indegree[preq[0]]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        // Enqueue all courses with 0 indegree (they have no prerequisites)
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0)
+                queue.add(i);
+        }
+        int[] ans = new int[param1];
+        int ptr = 0;
+        while (!queue.isEmpty()) {
+            int popped = queue.remove();
+            ans[ptr++] = popped;
+            if (adjList[popped] == null)
+                continue;
+            for (var node : adjList[popped]) {
+                // Destory the connection (reduce indegree by 1)
+                if (--indegree[(Integer) node] == 0)
+                    queue.add((Integer) node);
+            }
+        }
+        if (param1 == ptr)
+            return ans;
+        else
+            return new int[] {};
+    }
+}

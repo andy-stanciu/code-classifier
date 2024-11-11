@@ -1,0 +1,50 @@
+class Solution {
+
+    int VISITED = 1;
+
+    int VISITING = 2;
+
+    List<Integer> order = new ArrayList();
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] states = new int[numCourses];
+        Map<Integer, List<Integer>> graph = new HashMap();
+        for (int[] pre_req : prerequisites) {
+            int course = pre_req[0];
+            int require = pre_req[1];
+            graph.putIfAbsent(course, new ArrayList());
+            graph.get(course).add(require);
+        }
+        for (int i = 0; i < numCourses; i++) {
+            if (!dfs(i, graph, states)) {
+                return new int[0];
+            }
+        }
+        int[] result = new int[order.size()];
+        int i = 0;
+        for (Integer node : order) {
+            result[i] = node;
+            i += 1;
+        }
+        return result;
+    }
+
+    public boolean dfs(Integer node, Map<Integer, List<Integer>> graph, int[] states) {
+        if (states[node] == VISITING) {
+            return false;
+        } else if (states[node] == VISITED) {
+            return true;
+        }
+        states[node] = VISITING;
+        if (graph.containsKey(node)) {
+            for (Integer neigh : graph.get(node)) {
+                if (!dfs(neigh, graph, states)) {
+                    return false;
+                }
+            }
+        }
+        states[node] = VISITED;
+        order.add(node);
+        return true;
+    }
+}

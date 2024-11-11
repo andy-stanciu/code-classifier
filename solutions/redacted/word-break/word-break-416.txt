@@ -1,0 +1,33 @@
+class Solution {
+
+    /**
+     *     gotta use TRIE for optimal timing.
+     */
+    public boolean method1(String s, List<String> param1) {
+        Set<String> var1 = new HashSet<>();
+        for (String var2 : param1) {
+            var1.add(var2);
+        }
+        Map<String, Boolean> MEMO = new HashMap<>();
+        return isPossible(0, s, new String(), var1, MEMO);
+    }
+
+    public boolean isPossible(int idx, String s, String prefix, Set<String> var1, Map<String, Boolean> MEMO) {
+        if (idx == s.length()) {
+            return true;
+        }
+        String key = idx + "|" + prefix;
+        if (MEMO.containsKey(key)) {
+            return MEMO.get(key);
+        }
+        boolean ans = false;
+        for (int i = idx; i <= s.length(); i++) {
+            String currentPrefix = s.substring(idx, i);
+            if (var1.contains(currentPrefix) && isPossible(i, s, currentPrefix, var1, MEMO)) {
+                ans = true;
+            }
+        }
+        MEMO.put(key, ans);
+        return ans;
+    }
+}

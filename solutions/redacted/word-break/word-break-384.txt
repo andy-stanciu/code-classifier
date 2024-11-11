@@ -1,0 +1,44 @@
+class Solution {
+
+    public int method1(int ind, int[] dp, HashMap<String, Boolean> mpp, String s) {
+        if (ind == s.length())
+            return 1;
+        if (dp[ind] != -1)
+            return dp[ind];
+        String tmp = "";
+        for (int i = ind; i < s.length(); i++) {
+            tmp += s.charAt(i);
+            if (mpp.containsKey(tmp) && method1(i + 1, dp, mpp, s) == 1) {
+                return dp[ind] = 1;
+            }
+        }
+        return dp[ind] = 0;
+    }
+
+    // Top Down
+    public boolean method2(String s, List<String> param1) {
+        HashMap<String, Boolean> mpp = new HashMap<>();
+        for (String str : param1) mpp.put(str, true);
+        int n = s.length(), dp[] = new int[n];
+        Arrays.fill(dp, -1);
+        return method1(0, dp, mpp, s) == 1;
+    }
+
+    // Bottom Up
+    public boolean method3(String s, List<String> param1) {
+        HashMap<String, Boolean> mpp = new HashMap<>();
+        for (String str : param1) mpp.put(str, true);
+        int n = s.length(), dp[] = new int[n + 1];
+        dp[n] = 1;
+        for (int ind = n - 1; ind >= 0; ind--) {
+            String tmp = "";
+            for (int i = ind; i < s.length(); i++) {
+                tmp += s.charAt(i);
+                if (mpp.containsKey(tmp) && dp[i + 1] == 1) {
+                    dp[ind] = 1;
+                }
+            }
+        }
+        return dp[0] == 1;
+    }
+}

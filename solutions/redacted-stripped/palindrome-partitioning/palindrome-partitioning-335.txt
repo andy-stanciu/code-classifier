@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>>[] dp = new ArrayList[s.length() + 1];
+        dp[s.length()] = new ArrayList<>();
+        dp[s.length()].add(new ArrayList<>());
+        for (int b = s.length() - 1; b >= 0; b--) {
+            dp[b] = new ArrayList<>();
+            for (int i = b; i < s.length(); i++) {
+                if (method1(s, b, i)) {
+                    for (List<String> p : dp[i + 1]) {
+                        List<String> ans = new ArrayList<>();
+                        ans.add(s.substring(b, i + 1));
+                        ans.addAll(p);
+                        dp[b].add(ans);
+                    }
+                }
+            }
+        }
+        return dp[0];
+    }
+
+    private boolean method1(String s, int i, int j) {
+        while (i < j && s.charAt(i) == s.charAt(j)) {
+            i++;
+            j--;
+        }
+        return i >= j;
+    }
+}

@@ -1,0 +1,75 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        if (param1 == 1) {
+            return new int[] { 0 };
+        }
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph.get(prerequisites[i][1]).add(prerequisites[i][0]);
+        }
+        if (isCycle(graph)) {
+            return new int[] {};
+        }
+        int[] ans = new int[param1];
+        int[] indeg = new int[param1];
+        for (int i = 0; i < param1; i++) {
+            for (int j = 0; j < graph.get(i).size(); j++) {
+                indeg[graph.get(i).get(j)]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < indeg.length; i++) {
+            if (indeg[i] == 0) {
+                q.add(i);
+            }
+        }
+        int z = 0;
+        while (!q.isEmpty()) {
+            int curr = q.remove();
+            ans[z] = curr;
+            z++;
+            for (int i = 0; i < graph.get(curr).size(); i++) {
+                indeg[graph.get(curr).get(i)]--;
+                if (indeg[graph.get(curr).get(i)] == 0) {
+                    q.add(graph.get(curr).get(i));
+                }
+            }
+        }
+        return ans;
+    }
+
+    public static boolean isCycle(ArrayList<ArrayList<Integer>> graph) {
+        boolean[] vis = new boolean[graph.size()];
+        boolean[] stack = new boolean[graph.size()];
+        for (int i = 0; i < graph.size(); i++) {
+            if (!vis[i]) {
+                if (isCycleUtil(graph, i, vis, stack)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean isCycleUtil(ArrayList<ArrayList<Integer>> graph, int curr, boolean[] vis, boolean[] stack) {
+        vis[curr] = true;
+        stack[curr] = true;
+        for (int i = 0; i < graph.get(curr).size(); i++) {
+            int e = graph.get(curr).get(i);
+            if (stack[e]) {
+                return true;
+            }
+            if (!vis[e]) {
+                if (isCycleUtil(graph, e, vis, stack)) {
+                    return true;
+                }
+            }
+        }
+        stack[curr] = false;
+        return false;
+    }
+}

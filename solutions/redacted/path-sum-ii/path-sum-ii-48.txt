@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public void solve(TreeNode root, int param1, int param2, List<Integer> param3, List<List<Integer>> ans) {
+        //base case
+        if (root == null) {
+            return;
+        }
+        //leaf node pe pahuch gae
+        if (root.left == null && root.right == null) {
+            //leaf node add kardi
+            param3.add(root.val);
+            param1 += root.val;
+            //ab agar hamara sum === targetsum ke barabar h to ye path valid h to isko add kardo main list m
+            if (param1 == param2) {
+                ans.add(new ArrayList<>(param3));
+            }
+            //agar nhi h to hum backtrack karenge-exclude
+            param3.remove(param3.size() - 1);
+            param1 -= root.val;
+            return;
+        }
+        //leaf node nhi h hum add karete chalenge
+        param3.add(root.val);
+        param1 += root.val;
+        //call for right and left subtree
+        solve(root.left, param1, param2, param3, ans);
+        solve(root.right, param1, param2, param3, ans);
+        //backtrack
+        param3.remove(param3.size() - 1);
+        param1 -= root.val;
+    }
+
+    public List<List<Integer>> method1(TreeNode root, int param2) {
+        List<List<Integer>> ans = new ArrayList<>();
+        int param1 = 0;
+        List<Integer> param3 = new ArrayList<>();
+        solve(root, param1, param2, param3, ans);
+        return ans;
+    }
+}

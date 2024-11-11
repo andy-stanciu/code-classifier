@@ -1,0 +1,151 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        Graph2 var1 = new Graph2(param1);
+        for (int[] releation : prerequisites) {
+            var1.addEdge(releation[1], releation[0]);
+        }
+        if (prerequisites == null || prerequisites.length == 0) {
+            int[] solution = new int[param1];
+            for (int i = 0; i < param1; i++) {
+                solution[i] = i;
+            }
+            return solution;
+        }
+        if (var1.isGraphCircular()) {
+            return new int[0];
+        } else {
+            List<Integer> solutionList = var1.topologicalOrder();
+            if (solutionList.size() == param1) {
+                int[] array = solutionList.stream().mapToInt(Integer::intValue).toArray();
+                return array;
+            } else {
+                int[] solutionArray = new int[param1];
+                int counter = 0;
+                for (int i = 0; i < param1; i++) {
+                    if (!solutionList.contains(i)) {
+                        solutionArray[counter] = i;
+                        counter++;
+                    }
+                }
+                for (Integer solutionInt : solutionList) {
+                    solutionArray[counter] = solutionInt;
+                    counter++;
+                }
+                return solutionArray;
+            }
+        }
+    }
+}
+
+public class Graph2 {
+
+    private int verticesCount;
+
+    private Map<Integer, Vertex> vertexMap;
+
+    private Map<Integer, Integer> indegreeMap;
+
+    public Graph2(int verticesCount) {
+        this.verticesCount = verticesCount;
+        vertexMap = new HashMap<>();
+        indegreeMap = new HashMap<>();
+    }
+
+    public void addEdge(int source, int destination) {
+        vertexMap.putIfAbsent(source, new Vertex(source));
+        vertexMap.putIfAbsent(destination, new Vertex(destination));
+        vertexMap.get(source).addNeighbor(vertexMap.get(destination));
+        indegreeMap.putIfAbsent(source, 0);
+        indegreeMap.putIfAbsent(destination, 0);
+        indegreeMap.put(destination, indegreeMap.get(destination) + 1);
+    }
+
+    public boolean isGraphCircular() {
+        List<Integer> topologicalOrder = this.topologicalOrder();
+        if (topologicalOrder.size() != indegreeMap.size()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public List<Integer> topologicalOrder() {
+        Map<Integer, Integer> integerMapCopy = new HashMap<>(indegreeMap);
+        Queue<Integer> queue = new LinkedList<>();
+        List<Integer> topologicalList = new ArrayList<>();
+        integerMapCopy.forEach((vertex, indegreeValue) -> {
+            if (indegreeValue == 0) {
+                queue.add(vertex);
+            }
+        });
+        while (!queue.isEmpty()) {
+            Integer eachVertex = queue.poll();
+            topologicalList.add(eachVertex);
+            List<Vertex> neighbours = vertexMap.get(eachVertex).getNeighbors();
+            for (Vertex neighbour : neighbours) {
+                Integer newValue = integerMapCopy.get(neighbour.getLabel()) - 1;
+                integerMapCopy.put(neighbour.getLabel(), newValue);
+                if (integerMapCopy.get(neighbour.getLabel()) == 0) {
+                    queue.add(neighbour.getLabel());
+                }
+            }
+        }
+        return topologicalList;
+    }
+
+    public Integer findSemester() {
+        Map<Integer, Integer> integerMapCopy = new HashMap<>(indegreeMap);
+        Queue<Integer> queue = new LinkedList<>();
+        for (Map.Entry<Integer, Integer> entry : integerMapCopy.entrySet()) {
+            if (entry.getValue() == 0) {
+                queue.add(entry.getKey());
+            }
+        }
+        int semesterCount = 0;
+        int queueSize = queue.size();
+        int counter = 0;
+        while (!queue.isEmpty()) {
+            Integer eachVertex = queue.poll();
+            counter++;
+            List<Vertex> neighbours = vertexMap.get(eachVertex).getNeighbors();
+            for (Vertex neighbour : neighbours) {
+                Integer newValue = integerMapCopy.get(neighbour.getLabel()) - 1;
+                integerMapCopy.put(neighbour.getLabel(), newValue);
+                if (integerMapCopy.get(neighbour.getLabel()) == 0) {
+                    queue.add(neighbour.getLabel());
+                }
+            }
+            if (queueSize == counter) {
+                semesterCount = semesterCount + 1;
+                counter = 0;
+                queueSize = queue.size();
+            }
+        }
+        return semesterCount;
+    }
+
+    class Vertex {
+
+        private int label;
+
+        private List<Vertex> neighbors;
+
+        public Vertex(int label) {
+            this.label = label;
+            this.neighbors = new ArrayList<>();
+        }
+
+        public int getLabel() {
+            return label;
+        }
+
+        public List<Vertex> getNeighbors() {
+            return neighbors;
+        }
+
+        public void addNeighbor(Vertex vertex) {
+            this.neighbors.add(vertex);
+        }
+    }
+}

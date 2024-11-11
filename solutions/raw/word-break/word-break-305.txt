@@ -1,0 +1,59 @@
+class Solution {
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        HashMap<String, Boolean> cache = new HashMap<>();
+        //return findString("" , s, wordDict,cache);
+        int[] memo = new int[s.length() + 1];
+        Arrays.fill(memo, -1);
+        return checkString(0, s, wordDict, memo);
+    }
+
+    public boolean checkString(int index, String s, List<String> wordDict, int[] memo) {
+        if (index == s.length()) {
+            return true;
+        }
+        if (index > s.length() - 1) {
+            return false;
+        }
+        if (memo[index] != -1) {
+            if (memo[index] == 0) {
+                return false;
+            }
+            return true;
+        }
+        for (String str : wordDict) {
+            if (index + str.length() > s.length()) {
+                continue;
+            }
+            if (s.substring(index, index + str.length()).equals(str)) {
+                if (checkString(index + str.length(), s, wordDict, memo)) {
+                    memo[index] = 1;
+                    return true;
+                }
+            }
+        }
+        memo[index] = 0;
+        return false;
+    }
+
+    public boolean findString(String res, String s, List<String> wordDict, HashMap<String, Boolean> cache) {
+        if (res.equals(s)) {
+            return true;
+        }
+        if (// here actually would have used equal to as well. Saw this while writing this post. Feel free to try this too.
+        res.length() > s.length()) {
+            return false;
+        }
+        if (cache.containsKey(res)) {
+            return cache.get(res);
+        }
+        for (String str : wordDict) {
+            if (findString(res + str, s, wordDict, cache)) {
+                cache.put(res, true);
+                return true;
+            }
+        }
+        cache.put(res, false);
+        return false;
+    }
+}

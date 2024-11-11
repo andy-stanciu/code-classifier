@@ -1,0 +1,40 @@
+class Solution {
+
+    String s;
+
+    Set<String> set;
+
+    Map<Integer, Boolean> cache;
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        // BRUTE-FORCE : n^2;
+        // DP - recursive : n
+        /**
+         *        1. sub-problem : sufixes return boolean;
+         *        2. Guess : Iterate from current till end
+         *        3. Recurence
+         *        4. Memoization : store boolean for Index
+         *        5. Original Problem check.
+         */
+        this.s = s;
+        cache = new HashMap<>();
+        set = new HashSet<>(wordDict);
+        return dp(0);
+    }
+
+    boolean dp(int index) {
+        if (cache.containsKey(index))
+            return cache.get(index);
+        if (index >= s.length())
+            return true;
+        for (int i = index; i < s.length(); i++) {
+            String str = s.substring(index, i + 1);
+            if (set.contains(str) && dp(i + 1)) {
+                cache.put(index, true);
+                return true;
+            }
+        }
+        cache.put(index, false);
+        return false;
+    }
+}

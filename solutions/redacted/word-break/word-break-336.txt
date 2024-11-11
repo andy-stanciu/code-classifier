@@ -1,0 +1,45 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        if (s.equals(""))
+            return true;
+        for (int i = 0; i < param1.size(); i++) {
+            String prefix = param1.get(i);
+            if (s.startsWith(prefix)) {
+                String newString = s.substring(prefix.length());
+                if (method1(newString, param1) == true) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean method2(String s, List<String> param1, Map<String, Boolean> memo) {
+        if (memo.containsKey(s))
+            return memo.get(s);
+        if (s.equals(""))
+            return true;
+        for (int i = 0; i < param1.size(); i++) {
+            String prefix = param1.get(i);
+            if (s.startsWith(prefix)) {
+                String newString = s.substring(prefix.length());
+                if (method2(newString, param1, memo) == true) {
+                    memo.put(s, true);
+                    return memo.get(s);
+                }
+            }
+        }
+        memo.put(s, false);
+        return memo.get(s);
+    }
+
+    public boolean method3(String s, List<String> param1) {
+        //Recursion: start
+        // return wordBreakR(s,wordDict);
+        //Recursion: end
+        //Top-Down: start
+        return method2(s, param1, new HashMap<String, Boolean>());
+        //Top-Down: end
+    }
+}

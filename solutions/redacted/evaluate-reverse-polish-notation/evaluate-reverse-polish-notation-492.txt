@@ -1,0 +1,23 @@
+class Solution {
+
+    private static final Map<String, BiFunction<Integer, Integer, Integer>> OPERATIONS = Map.of("+", Integer::sum, "-", (x, y) -> x - y, "*", (x, y) -> x * y, "/", (x, y) -> x / y);
+
+    public int evalRPN(String[] tokens) {
+        var stack = new Stack<Integer>();
+        for (var t : tokens) {
+            if (!isOp(t)) {
+                stack.push(Integer.parseInt(t));
+                continue;
+            }
+            var op = OPERATIONS.get(t);
+            var y = stack.pop();
+            var x = stack.pop();
+            stack.push(op.apply(x, y));
+        }
+        return stack.pop();
+    }
+
+    private boolean isOp(String token) {
+        return OPERATIONS.containsKey(token);
+    }
+}

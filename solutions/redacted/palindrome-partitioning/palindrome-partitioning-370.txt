@@ -1,0 +1,43 @@
+class Solution {
+
+    // Helper function to recursively find and generate palindrome partitions
+    private void solve(int i, int n, List<String> temp, String s, List<List<String>> ans, boolean[][] param1) {
+        // If we have processed the entire string, add the partition to the answer
+        if (i >= n) {
+            ans.add(new ArrayList<>(temp));
+            return;
+        }
+        // Iterate through the string and check for palindrome substrings
+        for (int index = i; index < n; index++) {
+            String str = s.substring(i, index + 1);
+            // If the substring is a palindrome, add it to the temporary partition
+            if (param1[i][index]) {
+                temp.add(str);
+                // Recursively explore further partitions
+                solve(index + 1, n, temp, s, ans, param1);
+                // Backtrack by removing the last element to try different partitions
+                temp.remove(temp.size() - 1);
+            }
+        }
+    }
+
+    public List<List<String>> partition(String s) {
+        int n = s.length();
+        List<List<String>> ans = new ArrayList<>();
+        List<String> temp = new ArrayList<>();
+        // Create a matrix to store whether substrings are palindromes or not
+        boolean[][] param1 = new boolean[n][n];
+        // Precompute palindromes in the string
+        for (int len = 1; len <= n; len++) {
+            for (int i = 0; i + len - 1 < n; i++) {
+                int j = i + len - 1;
+                if (s.charAt(i) == s.charAt(j) && (len <= 2 || param1[i + 1][j - 1])) {
+                    param1[i][j] = true;
+                }
+            }
+        }
+        // Call the solve function to find and generate all valid partitions
+        solve(0, n, temp, s, ans, param1);
+        return ans;
+    }
+}

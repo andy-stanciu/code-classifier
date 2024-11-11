@@ -1,0 +1,34 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List[] adjList = new List[param1];
+        int[] indegree = new int[param1];
+        for (int[] preq : prerequisites) {
+            if (adjList[preq[1]] == null)
+                adjList[preq[1]] = new ArrayList<Integer>();
+            adjList[preq[1]].add(preq[0]);
+            indegree[preq[0]]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < param1; i++) {
+            if (indegree[i] == 0)
+                queue.add(i);
+        }
+        int[] ans = new int[param1];
+        int ptr = 0;
+        while (!queue.isEmpty()) {
+            int popped = queue.remove();
+            ans[ptr++] = popped;
+            if (adjList[popped] == null)
+                continue;
+            for (var node : adjList[popped]) {
+                if (--indegree[(Integer) node] == 0)
+                    queue.add((Integer) node);
+            }
+        }
+        if (param1 == ptr)
+            return ans;
+        else
+            return new int[] {};
+    }
+}

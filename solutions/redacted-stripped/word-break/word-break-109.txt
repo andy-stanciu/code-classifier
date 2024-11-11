@@ -1,0 +1,33 @@
+class Solution {
+
+    HashMap<String, Boolean> map;
+
+    boolean backtrack(StringBuffer s, List<String> param1, int i) {
+        if (s.isEmpty())
+            return true;
+        if (i >= s.length()) {
+            return false;
+        }
+        for (String st : param1) {
+            if (i + 1 <= s.length() && s.substring(0, i + 1).equals(st)) {
+                StringBuffer cutString = new StringBuffer(s);
+                cutString = cutString.replace(0, i + 1, "");
+                String key = cutString + "@" + st;
+                if (map.containsKey(key)) {
+                    return map.get(key);
+                }
+                boolean ans = backtrack(cutString, param1, 0);
+                map.put(key, ans);
+                if (ans) {
+                    return true;
+                }
+            }
+        }
+        return backtrack(s, param1, i + 1);
+    }
+
+    public boolean method1(String s, List<String> param1) {
+        map = new HashMap<>();
+        return backtrack(new StringBuffer(s), param1, 0);
+    }
+}

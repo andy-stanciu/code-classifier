@@ -1,0 +1,59 @@
+class Solution {
+
+    // List to store all valid palindrome partitions
+    ArrayList<List<String>> ans;
+
+    public List<List<String>> partition(String s) {
+        ans = new ArrayList<List<String>>();
+        partitionHelper(s, 0, 1, new ArrayList<String>());
+        return ans;
+    }
+
+    private void partitionHelper(String s, int i, int j, ArrayList<String> l) {
+        // Base case: reached end of string - valid partition found
+        if (i == s.length()) {
+            ans.add(new ArrayList<String>(l));
+            return;
+        }
+        // Base case: substring end index out of bounds
+        if (j > s.length())
+            return;
+        // If current substring is palindrome
+        if (isPalindrome2(s, i, j)) {
+            // Add current palindrome to partition
+            l.add(s.substring(i, j));
+            // Recurse starting from j
+            partitionHelper(s, j, j + 1, l);
+            // Backtrack: remove current palindrome
+            l.remove(l.size() - 1);
+        }
+        // Try with a longer substring
+        partitionHelper(s, i, j + 1, l);
+    }
+
+    // Original palindrome check using substring
+    private boolean isPalindrome1(String s) {
+        int i = 0;
+        int j = s.length() - 1;
+        while (i < j) {
+            if (s.charAt(i) != s.charAt(j)) {
+                return false;
+            }
+            i++;
+            j--;
+        }
+        return true;
+    }
+
+    // Optimized palindrome check using indices
+    private boolean isPalindrome2(String s, int start, int end) {
+        while (start < end - 1) {
+            if (s.charAt(start) != s.charAt(end - 1)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+}

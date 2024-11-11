@@ -1,0 +1,27 @@
+class Solution {
+
+    private Map<String, Boolean> memoizationMap = new ConcurrentSkipListMap<>();
+
+    public boolean method1(String s, List<String> param2) {
+        Set<String> var1 = new HashSet<>(param2);
+        param2.forEach(param1 -> memoizationMap.put(param1, true));
+        return method2(s, var1);
+    }
+
+    private boolean method2(String param1, Set<String> var1) {
+        int var2 = param1.length();
+        if (var2 == 0) {
+            return true;
+        } else {
+            for (int i = 0; i < var2; i++) {
+                if (var1.contains(param1.substring(0, i + 1))) {
+                    Boolean result = memoizationMap.computeIfAbsent(param1.substring(i + 1), (key) -> method2(key, var1));
+                    if (Boolean.TRUE.equals(result)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+}

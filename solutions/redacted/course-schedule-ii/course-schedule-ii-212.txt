@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        int[][] adj = new int[param1][param1];
+        int[] indegree = new int[param1];
+        // Create adjacency matrix for the graph
+        for (int[] prerequisite : prerequisites) {
+            int i = prerequisite[1];
+            int j = prerequisite[0];
+            adj[i][j] = 1;
+        }
+        // Created indegree list
+        for (int i = 0; i < param1; i++) for (int j = 0; j < param1; j++) indegree[i] += adj[j][i];
+        // Perform BFS to detect cycle in the directed graph
+        Queue<Integer> queue = new LinkedList<>();
+        boolean[] visited = new boolean[param1];
+        for (int i = 0; i < param1; i++) if (indegree[i] == 0)
+            queue.add(i);
+        int count = 0;
+        int[] var1 = new int[param1];
+        while (!queue.isEmpty()) {
+            int vertex = queue.poll();
+            var1[count] = vertex;
+            count++;
+            visited[vertex] = true;
+            for (int i = 0; i < param1; i++) {
+                if (adj[vertex][i] == 1 && visited[i] == false) {
+                    indegree[i]--;
+                    if (indegree[i] == 0)
+                        queue.add(i);
+                }
+            }
+        }
+        if (count == param1)
+            return var1;
+        return new int[] {};
+    }
+}

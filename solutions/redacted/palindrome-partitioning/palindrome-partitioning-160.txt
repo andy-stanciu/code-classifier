@@ -1,0 +1,43 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        // partition all substring, then check to see if
+        // all substring all palindrome, if one of possible
+        // substrin not palindrome, will not add to the res
+        List<List<String>> res = new ArrayList<>();
+        List<String> temp = new ArrayList<>();
+        dfs(s, res, temp, 0);
+        return res;
+    }
+
+    private void dfs(String s, List<List<String>> res, List<String> temp, int start) {
+        // if start ever has pass the last element of s
+        // we know all the possible substring has been consider
+        // and all valid.
+        if (start == s.length()) {
+            res.add(new ArrayList<>(temp));
+        }
+        for (int end = start + 1; end <= s.length(); end += 1) {
+            String curr = s.substring(start, end);
+            if (!method1(curr)) {
+                continue;
+            }
+            temp.add(curr);
+            dfs(s, res, temp, end);
+            temp.remove(temp.size() - 1);
+        }
+    }
+
+    private boolean method1(String s) {
+        int left = 0;
+        int right = s.length() - 1;
+        while (left <= right) {
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+            left += 1;
+            right -= 1;
+        }
+        return true;
+    }
+}

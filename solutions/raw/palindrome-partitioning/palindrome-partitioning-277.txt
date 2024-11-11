@@ -1,0 +1,49 @@
+class Solution {
+
+    // 1 - prepare required variables.
+    public List<List<String>> ans = new ArrayList<>();
+
+    public List<List<String>> partition(String s) {
+        // 2 - call recursion function
+        partionHelper(0, s, new ArrayList<>(), ans);
+        return ans;
+    }
+
+    public void partionHelper(int ind, String s, List<String> ds, List<List<String>> ans) {
+        // 3 - base case
+        // As ind gets equal to the length of string s -> basically it means it has
+        // traversed all indexes.
+        // So list of substring can be added to the result/ans/output list.
+        if (ind == s.length()) {
+            ans.add(new ArrayList<>(ds));
+            return;
+        }
+        // 4 - lopping over the string to find partitions consisiting of list of
+        // palindromes.
+        for (int i = ind; i < s.length(); ++i) {
+            // 5 - create partition if palindrome is found
+            // If the susbstring is palindrome then partition it
+            // else continue the loop to find appropriate palindrome further
+            if (!isPalindrome(s, ind, i))
+                continue;
+            // 6 - add palindromes to the list -> which will be added to ans list at
+            // s.length()
+            // storing specific substring to ds (viz obviously palindrome)
+            ds.add(s.substring(ind, i + 1));
+            // further recursive call to find other palindromes (based on the previous
+            // partitions made)
+            partionHelper(i + 1, s, ds, ans);
+            // reverse recursion so removing element.
+            ds.remove(ds.size() - 1);
+        }
+    }
+
+    // checks whether substring formed from string is palindrome or not.
+    public boolean isPalindrome(String str, int left, int right) {
+        while (left <= right) {
+            if (str.charAt(left++) != str.charAt(right--))
+                return false;
+        }
+        return true;
+    }
+}

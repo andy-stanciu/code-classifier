@@ -1,0 +1,46 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> result = new ArrayList<>();
+        Map<String, List<List<String>>> memo = new HashMap<>();
+        partitionHelper(s, memo);
+        return memo.get(s);
+    }
+
+    private List<List<String>> partitionHelper(String s, Map<String, List<List<String>>> memo) {
+        if (memo.containsKey(s)) {
+            return memo.get(s);
+        }
+        List<List<String>> partitions = new ArrayList<>();
+        if (s.length() == 0) {
+            partitions.add(new ArrayList<>());
+            return partitions;
+        }
+        for (int i = 0; i < s.length(); i++) {
+            String prefix = s.substring(0, i + 1);
+            if (method1(prefix)) {
+                String suffix = s.substring(i + 1);
+                List<List<String>> suffixPartitions = partitionHelper(suffix, memo);
+                for (List<String> partition : suffixPartitions) {
+                    List<String> newPartition = new ArrayList<>();
+                    newPartition.addAll(partition);
+                    newPartition.add(0, prefix);
+                    partitions.add(newPartition);
+                }
+            }
+        }
+        memo.put(s, partitions);
+        return partitions;
+    }
+
+    private boolean method1(String s) {
+        int left = 0;
+        int right = s.length() - 1;
+        while (left < right) {
+            if (s.charAt(left++) != s.charAt(right--)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

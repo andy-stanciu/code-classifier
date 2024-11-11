@@ -1,0 +1,37 @@
+class Solution {
+
+    public int[] findOrder(int num, int[][] pre) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < num; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < pre.length; i++) {
+            adj.get(pre[i][1]).add(pre[i][0]);
+        }
+        Queue<Integer> q = new LinkedList<>();
+        int[] indegree = new int[num];
+        for (int i = 0; i < num; i++) {
+            for (int j : adj.get(i)) {
+                indegree[j]++;
+            }
+        }
+        for (int i = 0; i < num; i++) {
+            if (indegree[i] == 0)
+                q.add(i);
+        }
+        int[] ans = new int[num];
+        int idx = 0;
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            ans[idx++] = node;
+            for (int i : adj.get(node)) {
+                indegree[i]--;
+                if (indegree[i] == 0)
+                    q.add(i);
+            }
+        }
+        if (idx != num)
+            return new int[0];
+        return ans;
+    }
+}

@@ -1,0 +1,35 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        final int n = s.length();
+        // Find the maximum length of words in the word dictionary
+        final int maxLength = getMaxLength(param1);
+        // Convert the word dictionary list into a HashSet for faster word lookup
+        Set<String> var1 = new HashSet<>(param1);
+        // Initialize the dp array, where dp[i] represents whether s[0..i) can be segmented
+        boolean[] dp = new boolean[n + 1];
+        dp[0] = true;
+        // Loop through all positions in the string \'s\'
+        for (int i = 1; i <= n; ++i) {
+            // Iterate over the substring s[j..i) where j is from i-1 to 0
+            for (int j = i - 1; j >= 0; --j) {
+                // Break the inner loop if the current substring length is greater than the max length of words
+                if (i - j > maxLength)
+                    break;
+                // Check if s[j..i) can be found in the wordSet and s[0..j) can be segmented
+                if (dp[j] && var1.contains(s.substring(j, i))) {
+                    // If both conditions are true, mark dp[i] as true and break the inner loop
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        // Return whether the entire string \'s\' can be segmented
+        return dp[n];
+    }
+
+    // Helper method to find the maximum length of words in the word dictionary
+    private int getMaxLength(List<String> param1) {
+        return param1.stream().mapToInt(String::length).max().getAsInt();
+    }
+}

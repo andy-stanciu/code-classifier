@@ -1,0 +1,48 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int i = 0; i <= param1; i++) {
+            map.put(i, new ArrayList<>());
+        }
+        createAdj(map, prerequisites);
+        boolean[] visited = new boolean[param1];
+        boolean[] visiting = new boolean[param1];
+        List<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < param1; i++) {
+            if (hasCycle(map, i, visited, visiting, ans)) {
+                return new int[] {};
+            }
+        }
+        int[] result = new int[ans.size()];
+        for (int i = 0; i < ans.size(); i++) {
+            result[i] = ans.get(i);
+        }
+        return result;
+    }
+
+    private boolean hasCycle(Map<Integer, List<Integer>> map, int curr, boolean[] visited, boolean[] visiting, List<Integer> ans) {
+        if (visited[curr]) {
+            return false;
+        }
+        if (visiting[curr]) {
+            return true;
+        }
+        visiting[curr] = true;
+        for (int nbr : map.get(curr)) {
+            if (hasCycle(map, nbr, visited, visiting, ans)) {
+                return true;
+            }
+        }
+        visiting[curr] = false;
+        visited[curr] = true;
+        ans.add(curr);
+        return false;
+    }
+
+    private void createAdj(Map<Integer, List<Integer>> map, int[][] prereq) {
+        for (int i = 0; i < prereq.length; i++) {
+            map.get(prereq[i][0]).add(prereq[i][1]);
+        }
+    }
+}

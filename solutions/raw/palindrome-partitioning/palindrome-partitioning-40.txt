@@ -1,0 +1,25 @@
+class Solution {
+
+    public static List<List<String>> partition(String s) {
+        int len = s.length();
+        List<List<String>>[] res = new List[len + 1];
+        res[0] = new ArrayList<List<String>>();
+        res[0].add(new ArrayList<String>());
+        boolean[][] isPal = new boolean[len][len];
+        for (int r = 0; r < s.length(); r++) {
+            res[r + 1] = new ArrayList<List<String>>();
+            for (int l = 0; l <= r; l++) {
+                if (s.charAt(l) == s.charAt(r) && (r - l <= 2 || isPal[l + 1][r - 1])) {
+                    isPal[l][r] = true;
+                    String newFinishingPalindrome = s.substring(l, r + 1);
+                    for (List<String> prevRes : res[l]) {
+                        List<String> newRes = new ArrayList<String>(prevRes);
+                        newRes.add(newFinishingPalindrome);
+                        res[r + 1].add(newRes);
+                    }
+                }
+            }
+        }
+        return res[len];
+    }
+}

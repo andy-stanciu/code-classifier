@@ -1,0 +1,40 @@
+class Solution {
+
+    int[] dp;
+
+    int n;
+
+    private boolean isMatch(char[] w, String v, int i, int m) {
+        if (m > n - i)
+            return false;
+        for (int j = 0; j < m; j++) {
+            if (v.charAt(j) != w[j + i])
+                return false;
+        }
+        return true;
+    }
+
+    private boolean helper(int i, char[] w, List<String> words) {
+        if (i == w.length)
+            return true;
+        if (dp[i] != -1)
+            return (dp[i] == 1);
+        boolean ret = false;
+        for (String word : words) {
+            int m = word.length();
+            if (isMatch(w, word, i, m)) {
+                ret |= helper(i + m, w, words);
+            }
+        }
+        dp[i] = (ret) ? 1 : 0;
+        return ret;
+    }
+
+    public boolean wordBreak(String s, List<String> words) {
+        n = s.length();
+        // int m = words.length;
+        dp = new int[n];
+        Arrays.fill(dp, -1);
+        return helper(0, s.toCharArray(), words);
+    }
+}

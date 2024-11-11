@@ -1,0 +1,50 @@
+class Solution {
+
+    int n;
+
+    public void method1(boolean[][] dp, String s) {
+        //len 1 and 2
+        for (int i = 0; i < n; i++) {
+            dp[i][i] = true;
+            if (i < n - 1 && s.charAt(i) == s.charAt(i + 1))
+                dp[i][i + 1] = true;
+        }
+        for (int len = 2; len < n; len++) {
+            for (int i = 0; i < n - len; i++) {
+                int j = i + len;
+                if (dp[i + 1][j - 1] && s.charAt(i) == s.charAt(j))
+                    dp[i][j] = true;
+            }
+        }
+    }
+
+    public List<List<String>> partition(int index, String s, boolean[][] param1, List<List<String>>[] dp) {
+        List<List<String>> res = new ArrayList();
+        if (index == n) {
+            res.add(new ArrayList());
+            return res;
+        }
+        if (dp[index] != null)
+            return dp[index];
+        for (int i = index; i < n; i++) {
+            if (param1[index][i]) {
+                List<List<String>> arr = partition(i + 1, s, param1, dp);
+                for (List<String> a : arr) {
+                    //necessary to work with copy
+                    List<String> temp = new ArrayList(a);
+                    temp.add(0, s.substring(index, i + 1));
+                    res.add(temp);
+                }
+            }
+        }
+        return dp[index] = res;
+    }
+
+    public List<List<String>> partition(String s) {
+        n = s.length();
+        boolean[][] var1 = new boolean[n][n];
+        List<List<String>>[] dp = new ArrayList[n];
+        method1(var1, s);
+        return partition(0, s, var1, dp);
+    }
+}

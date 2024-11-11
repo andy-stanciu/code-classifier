@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // Create an adjacency list
+        List<Integer>[] adjList = new List[numCourses];
+        int[] indegree = new int[numCourses];
+        // Initialize the adjacency list and indegree array
+        for (int i = 0; i < numCourses; i++) {
+            adjList[i] = new ArrayList<>();
+        }
+        // Build the graph
+        for (int[] edge : prerequisites) {
+            int course = edge[0];
+            int prereq = edge[1];
+            indegree[course]++;
+            adjList[prereq].add(course);
+        }
+        // Queue for processing nodes with zero indegree
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        // List to store the order of courses
+        List<Integer> result = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            result.add(node);
+            for (int neighbor : adjList[node]) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0) {
+                    queue.offer(neighbor);
+                }
+            }
+        }
+        // If the result list size is not equal to numCourses, there\'s a cycle
+        if (result.size() != numCourses) {
+            return new int[] {};
+        }
+        // Convert the result list to an array
+        return result.stream().mapToInt(Integer::intValue).toArray();
+    }
+}

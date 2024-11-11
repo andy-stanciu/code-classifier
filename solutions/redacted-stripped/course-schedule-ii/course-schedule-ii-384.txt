@@ -1,0 +1,82 @@
+class G {
+
+    HashMap<Integer, List<Integer>> adjaceList;
+
+    int vertices;
+
+    int edges;
+
+    int[] visited;
+
+    int[] indegrees;
+
+    G(int v, int e) {
+        vertices = v;
+        edges = e;
+        adjaceList = new HashMap<>();
+        visited = new int[vertices];
+        Arrays.fill(visited, 0);
+        indegrees = new int[vertices];
+        Arrays.fill(indegrees, 0);
+    }
+
+    void _add(int a, int b) {
+        List<Integer> elements = adjaceList.getOrDefault(a, new ArrayList<>());
+        elements.add(b);
+        adjaceList.put(a, elements);
+        indegrees[b]++;
+    }
+
+    void feed(int a, int b) {
+        _add(a, b);
+        _add(b, a);
+    }
+
+    List<Integer> get(int a) {
+        visited[a] = 1;
+        return adjaceList.getOrDefault(a, new ArrayList<>());
+    }
+
+    Boolean isVisited(int a) {
+        return visited[a] != 0;
+    }
+
+    void clear() {
+        Arrays.fill(visited, 0);
+    }
+}
+
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        G graph = new G(param1, prerequisites.length);
+        for (int[] arr : prerequisites) {
+            graph._add(arr[1], arr[0]);
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < graph.indegrees.length; i++) {
+            if (graph.indegrees[i] == 0)
+                queue.add(i);
+        }
+        List<Integer> ans = new ArrayList<>();
+        while (queue.size() > 0) {
+            int element = queue.poll();
+            ans.add(element);
+            List<Integer> nn = graph.get(element);
+            for (Integer n : nn) {
+                graph.indegrees[n]--;
+                if (graph.indegrees[n] == 0 && !graph.isVisited(n)) {
+                    queue.add(n);
+                }
+            }
+        }
+        if (ans.size() != param1)
+            return new int[] {};
+        int[] answer = new int[ans.size()];
+        int ap = 0;
+        for (Integer ig : ans) {
+            answer[ap++] = ig;
+        }
+        return answer;
+    }
+}

@@ -1,0 +1,39 @@
+class Solution {
+
+    // create the memoization map to save results and avoid repeat computations
+    // you can use Boolean[] instead of map so you will have better performance but I think it is less understandable because you have to use indexes in recursively methos instead of string - it\'s awful
+    private final Map<String, Boolean> cache = new HashMap<>();
+
+    private Set<String> dictionary;
+
+    public boolean method1(String s, List<String> param1) {
+        // convert the list into set for faster lookup
+        dictionary = new HashSet<>(param1);
+        // recursion with memoization
+        return isStringFromDictionary(s);
+    }
+
+    private boolean isStringFromDictionary(String stringRest) {
+        if (stringRest == null || stringRest.length() == 0) {
+            // empty string at the end always exists
+            return true;
+        }
+        if (cache.containsKey(stringRest)) {
+            // return previous result for current rest of the string
+            // if not it will be O(2^n) time complexity because for each lookup will repeat checking all of word rest combinations
+            return cache.get(stringRest);
+        }
+        // check each part of stringRest
+        for (int endIdx = 1; endIdx <= stringRest.length(); endIdx++) {
+            String leftStringRest = stringRest.substring(0, endIdx);
+            String rightStringRest = stringRest.substring(endIdx, stringRest.length());
+            if (dictionary.contains(leftStringRest) && isStringFromDictionary(rightStringRest)) {
+                cache.put(stringRest, true);
+                return true;
+            }
+        }
+        // if no existing words in dict for current rest of the string, save false result
+        cache.put(stringRest, false);
+        return false;
+    }
+}

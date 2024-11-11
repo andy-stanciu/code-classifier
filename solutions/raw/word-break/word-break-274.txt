@@ -1,0 +1,33 @@
+class Solution {
+
+    private static int[] dp;
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        if (s == null || wordDict == null || wordDict.size() < 1) {
+            return false;
+        }
+        boolean[] mem = new boolean[s.length()];
+        return wordBreak(s, wordDict, mem, 0);
+    }
+
+    private boolean wordBreak(String s, List<String> wordDict, boolean[] mem, int start) {
+        for (String word : wordDict) {
+            if (word.length() + start <= s.length() && !mem[start + word.length() - 1]) {
+                if (matches(s, word, start)) {
+                    mem[start + word.length() - 1] = true;
+                    wordBreak(s, wordDict, mem, start + word.length());
+                }
+            }
+        }
+        return mem[s.length() - 1];
+    }
+
+    private boolean matches(String s, String word, int start) {
+        for (int i = 0; i < word.length(); i++) {
+            if (s.charAt(start + i) != word.charAt(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

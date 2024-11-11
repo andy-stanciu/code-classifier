@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] weight = new int[numCourses];
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        Queue<Integer> queue = new LinkedList<>();
+        int[] output = new int[numCourses];
+        for (int i = 0; i < prerequisites.length; i++) {
+            List<Integer> vals = new ArrayList<>();
+            if (map.containsKey(prerequisites[i][1]))
+                vals = map.get(prerequisites[i][1]);
+            vals.add(prerequisites[i][0]);
+            weight[prerequisites[i][0]] = weight[prerequisites[i][0]] + 1;
+            map.put(prerequisites[i][1], vals);
+        }
+        for (int i = 0; i < numCourses; i++) {
+            if (weight[i] == 0) {
+                queue.add(i);
+            }
+        }
+        int index = 0;
+        while (queue.size() != 0) {
+            int val = queue.poll();
+            output[index] = val;
+            if (map.containsKey(val)) {
+                List<Integer> vals = map.get(val);
+                for (int i = 0; i < vals.size(); i++) {
+                    weight[vals.get(i)] = weight[vals.get(i)] - 1;
+                    if (weight[vals.get(i)] == 0)
+                        queue.add(vals.get(i));
+                }
+            }
+            numCourses--;
+            index++;
+            if (numCourses < 0)
+                return new int[0];
+        }
+        if (numCourses == 0)
+            return output;
+        else
+            return new int[0];
+    }
+}

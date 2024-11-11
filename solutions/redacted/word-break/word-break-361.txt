@@ -1,0 +1,35 @@
+class Solution {
+
+    Set<String> set;
+
+    int[][] dp;
+
+    public boolean method1(String s, List<String> param1) {
+        set = new HashSet<>(param1);
+        dp = new int[s.length()][s.length() + 1];
+        for (int i = 0; i < s.length(); i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        return method2(s, 0, 1);
+    }
+
+    private boolean method2(String s, int start, int mid) {
+        if (mid > s.length())
+            return false;
+        if (dp[start][mid] != -1) {
+            return dp[start][mid] == 1;
+        }
+        boolean left = set.contains(s.substring(start, mid));
+        boolean right = s.substring(mid, s.length()).isEmpty() || set.contains(s.substring(mid, s.length()));
+        boolean ans = false;
+        if (left && right) {
+            ans = true;
+        } else if (left) {
+            ans = method2(s, start, mid + 1) || method2(s, mid, mid + 1);
+        } else {
+            ans = method2(s, start, mid + 1);
+        }
+        dp[start][mid] = ans ? 1 : 0;
+        return ans;
+    }
+}

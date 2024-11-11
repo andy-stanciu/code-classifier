@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prereq) {
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < param1; i++) graph.add(new ArrayList<>());
+        for (int i = 0; i < prereq.length; i++) graph.get(prereq[i][1]).add(prereq[i][0]);
+        boolean[] vis = new boolean[param1];
+        boolean[] path = new boolean[param1];
+        Stack<Integer> s = new Stack<>();
+        for (int i = 0; i < param1; i++) {
+            if (!vis[i])
+                if (dfs(i, graph, vis, path, s) == true)
+                    return new int[] {};
+        }
+        int[] ans = new int[s.size()];
+        int i = 0;
+        while (!s.isEmpty()) {
+            ans[i] = s.pop();
+            i++;
+        }
+        return ans;
+    }
+
+    public boolean dfs(int src, ArrayList<ArrayList<Integer>> graph, boolean[] vis, boolean[] path, Stack<Integer> s) {
+        vis[src] = true;
+        path[src] = true;
+        for (Integer i : graph.get(src)) {
+            if (!vis[i]) {
+                if (dfs(i, graph, vis, path, s))
+                    return true;
+            } else if (path[i] == true)
+                return true;
+        }
+        s.add(src);
+        path[src] = false;
+        return false;
+    }
+}

@@ -1,0 +1,45 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+//Runtime --> 0ms
+// Time Complexity-->O(N)
+//count variable to check how many paths satisfy the condition
+//sum is a temporary variable which will be used in DFS(Deapth First Search) to add up the sum of the value of the nodes in the path
+class Solution {
+
+    public int count = 0;
+
+    public int sum = 0;
+
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        dfs(root, targetSum);
+        return count > 0 ? true : false;
+    }
+
+    //helper dfs function
+    public void dfs(TreeNode root, int targetSum) {
+        if (root == null)
+            return;
+        sum += root.val;
+        if (root.left == null && root.right == null) {
+            if (sum == targetSum)
+                count++;
+        }
+        dfs(root.left, targetSum);
+        dfs(root.right, targetSum);
+        //to get all paths we will have to subtract the value of the node which we have already travelled-->while traveling from bottom to up in a path of the tree
+        sum -= root.val;
+    }
+}

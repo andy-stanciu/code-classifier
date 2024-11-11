@@ -1,0 +1,55 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        var graph = createGraph(prerequisites);
+        var inDegree = new int[numCourses];
+        for (var coursesAndPrerequisites : graph.entrySet()) {
+            var currentCourse = coursesAndPrerequisites.getKey();
+            var currentCoursePrerequisites = coursesAndPrerequisites.getValue();
+            inDegree[currentCourse] = currentCoursePrerequisites.size();
+        }
+        return getCourseOrder(numCourses, graph, inDegree);
+    }
+
+    private static int[] getCourseOrder(int numCourses, Map<Integer, Set<Integer>> graph, int[] inDegree) {
+        var courseOrderAsList = new ArrayList<Integer>();
+        var bfsQueue = new LinkedList<Integer>();
+        for (var i = 0; i < inDegree.length; i++) {
+            if (inDegree[i] == 0) {
+                bfsQueue.add(i);
+            }
+        }
+        while (!bfsQueue.isEmpty()) {
+            var courseThatCanBeTaken = bfsQueue.remove();
+            courseOrderAsList.add(courseThatCanBeTaken);
+            for (var coursesAndPrerequisites : graph.entrySet()) {
+                var currentCourse = coursesAndPrerequisites.getKey();
+                var currentCoursePrerequisites = coursesAndPrerequisites.getValue();
+                if (Objects.equals(currentCourse, courseThatCanBeTaken)) {
+                    continue;
+                }
+                if (currentCoursePrerequisites.contains(courseThatCanBeTaken)) {
+                    currentCoursePrerequisites.remove(courseThatCanBeTaken);
+                    inDegree[currentCourse]--;
+                    if (inDegree[currentCourse] == 0) {
+                        bfsQueue.add(currentCourse);
+                    }
+                }
+            }
+        }
+        return courseOrderAsList.size() == numCourses ? courseOrderAsList.stream().mapToInt(integer -> integer).toArray() : new int[0];
+    }
+
+    private static Map<Integer, Set<Integer>> createGraph(int[][] prerequisites) {
+        var graph = new HashMap<Integer, Set<Integer>>();
+        for (int[] courseAndPrerequisite : prerequisites) {
+            var currentCourse = courseAndPrerequisite[0];
+            var currentCoursePrerequisite = courseAndPrerequisite[1];
+            if (!graph.containsKey(currentCourse)) {
+                graph.put(currentCourse, new HashSet<>());
+            }
+            graph.get(currentCourse).add(currentCoursePrerequisite);
+        }
+        return graph;
+    }
+}

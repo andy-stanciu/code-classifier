@@ -1,0 +1,48 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        return generateAllSubstrings(s);
+    }
+
+    boolean isPalinDrome(String str) {
+        int n = str.length();
+        if (n == 1) {
+            return true;
+        }
+        int firstIndex = 0;
+        int lastIndex = n - 1;
+        while (firstIndex < lastIndex) {
+            if (str.charAt(firstIndex) != str.charAt(lastIndex)) {
+                return false;
+            }
+            firstIndex++;
+            lastIndex--;
+        }
+        return true;
+    }
+
+    List<List<String>> generateAllSubstrings(String s) {
+        Pair<String, List> newPair = new Pair(s, new ArrayList<>());
+        List<List<String>> ans = new ArrayList<>();
+        Stack<Pair> stack = new Stack<>();
+        stack.push(newPair);
+        while (!stack.isEmpty()) {
+            Pair<String, List> pair = stack.pop();
+            String ds = pair.getKey();
+            List<String> path = pair.getValue();
+            if (ds.isEmpty()) {
+                ans.add(new ArrayList<>(path));
+                continue;
+            }
+            for (int i = 0; i < ds.length(); i++) {
+                String substring = ds.substring(0, i + 1);
+                if (isPalinDrome(substring)) {
+                    path.add(substring);
+                    stack.push(new Pair(ds.substring(i + 1), new ArrayList<>(path)));
+                    path.remove(path.size() - 1);
+                }
+            }
+        }
+        return ans;
+    }
+}

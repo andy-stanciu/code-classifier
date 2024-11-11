@@ -1,0 +1,50 @@
+class Solution {
+
+    public int[][] dp;
+
+    public boolean helper(int i, String s, List<String> param1, String ns) {
+        if (i >= param1.size())
+            return false;
+        if (s.length() < ns.length())
+            return false;
+        if (dp[i][ns.length()] == -1) {
+            if (s.length() == ns.length()) {
+                if (s.equals(ns)) {
+                    dp[i][ns.length()] = 1;
+                    return true;
+                } else {
+                    dp[i][ns.length()] = 2;
+                    return false;
+                }
+            }
+            boolean a = false;
+            int n = ns.length();
+            String g = param1.get(i);
+            int m = g.length();
+            if (s.indexOf(g, n) == n) {
+                a = a | helper(i, s, param1, ns + param1.get(i));
+                if (!a && i != 0) {
+                    a = a | helper(0, s, param1, ns + param1.get(i));
+                }
+            }
+            if (!a)
+                a = a | helper(i + 1, s, param1, ns);
+            if (a)
+                dp[i][ns.length()] = 1;
+            else
+                dp[i][ns.length()] = 2;
+        }
+        if (dp[i][ns.length()] == 1)
+            return true;
+        else
+            return false;
+    }
+
+    public boolean method1(String s, List<String> param1) {
+        dp = new int[param1.size()][s.length() + 1];
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+        return helper(0, s, param1, "");
+    }
+}

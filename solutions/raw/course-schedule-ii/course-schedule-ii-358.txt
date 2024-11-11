@@ -1,0 +1,36 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        boolean[] vis = new boolean[numCourses];
+        boolean[] visPath = new boolean[numCourses];
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) adj.add(new ArrayList<>());
+        createAdj(prerequisites, adj);
+        int[] res = new int[numCourses];
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < numCourses; i++) if (!vis[i])
+            dfs(adj, i, vis, st, visPath);
+        if (st.size() != numCourses)
+            return new int[0];
+        int i = 0;
+        while (!st.isEmpty()) res[i++] = st.pop();
+        return res;
+    }
+
+    public void createAdj(int[][] pre, List<List<Integer>> adj) {
+        for (int[] p : pre) adj.get(p[1]).add(p[0]);
+    }
+
+    public void dfs(List<List<Integer>> adj, int node, boolean[] vis, Stack<Integer> st, boolean[] visPath) {
+        vis[node] = true;
+        visPath[node] = true;
+        for (int neigh : adj.get(node)) {
+            if (visPath[neigh])
+                return;
+            if (!vis[neigh])
+                dfs(adj, neigh, vis, st, visPath);
+        }
+        st.add(node);
+        visPath[node] = false;
+    }
+}

@@ -1,0 +1,45 @@
+class Solution {
+
+    public int evalRPN(String[] tokens) {
+        /**
+         *        - create a stack that will store integers.
+         *        - loop through the tokens and check if it\'s one of the operators
+         *         one by one. Chnaged the string to integer. If it is then pop the
+         *         stack two times and perform that specific operations. and then push
+         *         that value to the stack.
+         *        - Else if it is not a operator then push the current value.
+         *        - at the end of the loop, peek the stack and then return it.
+         */
+        Stack<Integer> stack = new Stack<>();
+        for (String token : tokens) {
+            if (isOperator(token)) {
+                int num1 = stack.pop();
+                int num2 = stack.pop();
+                int value = applyCalculation(num2, num1, token);
+                stack.push(value);
+            } else {
+                stack.push(Integer.parseInt(token));
+            }
+        }
+        return stack.pop();
+    }
+
+    public boolean isOperator(String token) {
+        return token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/");
+    }
+
+    public int applyCalculation(int a, int b, String token) {
+        switch(token) {
+            case "+":
+                return a + b;
+            case "-":
+                return a - b;
+            case "*":
+                return a * b;
+            case "/":
+                return a / b;
+            default:
+                throw new IllegalArgumentException("Unknown operator: " + token);
+        }
+    }
+}

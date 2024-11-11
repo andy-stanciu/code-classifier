@@ -1,0 +1,48 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // Initialize in-degrees and adjacency list
+        int[] inDegrees = new int[numCourses];
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        // Build the graph and calculate in-degrees
+        for (int[] prerequisite : prerequisites) {
+            int course = prerequisite[0];
+            int prerequisiteCourse = prerequisite[1];
+            graph.computeIfAbsent(prerequisiteCourse, k -> new ArrayList<>()).add(course);
+            inDegrees[course]++;
+        }
+        // Initialize a queue for topological sorting
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegrees[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        // Perform topological sorting
+        List<Integer> result = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            int course = queue.poll();
+            result.add(course);
+            if (graph.containsKey(course)) {
+                for (int nextCourse : graph.get(course)) {
+                    inDegrees[nextCourse]--;
+                    if (inDegrees[nextCourse] == 0) {
+                        queue.offer(nextCourse);
+                    }
+                }
+            }
+        }
+        // Check if all courses are taken
+        if (result.size() == numCourses) {
+            // Convert list to array
+            int[] resultArray = new int[numCourses];
+            for (int i = 0; i < numCourses; i++) {
+                resultArray[i] = result.get(i);
+            }
+            return resultArray;
+        } else {
+            // It is impossible to finish all courses
+            return new int[0];
+        }
+    }
+}

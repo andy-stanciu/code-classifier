@@ -1,0 +1,54 @@
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] p) {
+        if (numCourses == 1 && p.length == 0)
+            return new int[] { 0 };
+        List<List<Integer>> graph = buildGraph(numCourses, p);
+        return storeOrder(graph, numCourses);
+    }
+
+    public int[] storeOrder(List<List<Integer>> graph, int n) {
+        int[] ans = new int[n];
+        int[] integree = new int[n];
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            List<Integer> nbr = graph.get(i);
+            for (int v : nbr) {
+                integree[v]++;
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            if (integree[i] == 0)
+                q.add(i);
+        }
+        if (q.size() == 0)
+            return new int[0];
+        int i = 0;
+        while (q.size() > 0) {
+            int rem = q.remove();
+            ans[i++] = rem;
+            List<Integer> nbr = graph.get(rem);
+            for (int v : nbr) {
+                integree[v]--;
+                if (integree[v] == 0)
+                    q.add(v);
+            }
+        }
+        for (i = 0; i < n; i++) {
+            if (integree[i] != 0)
+                return new int[0];
+        }
+        return ans;
+    }
+
+    public List<List<Integer>> buildGraph(int numCourses, int[][] p) {
+        List<List<Integer>> graphList = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graphList.add(new ArrayList<>());
+        }
+        for (int[] conn : p) {
+            graphList.get(conn[1]).add(conn[0]);
+        }
+        return graphList;
+    }
+}

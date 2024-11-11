@@ -1,0 +1,31 @@
+class Solution {
+
+    public boolean method1(String s, List<String> param1) {
+        Boolean[] memo = new Boolean[s.length() + 1];
+        return method2(s, 0, param1, memo);
+    }
+
+    public boolean method2(String s, int index, List<String> param1, Boolean[] memo) {
+        // choice at each call, choose a word from dict, and explore
+        if (memo[index] != null)
+            return memo[index];
+        // base case
+        if (index == s.length()) {
+            return true;
+        }
+        for (int i = 0; i < param1.size(); i++) {
+            // choose
+            int cnt = param1.get(i).length();
+            if (index + cnt <= s.length() && s.substring(index, index + cnt).equals(param1.get(i))) {
+                // explore
+                if (method2(s, index + cnt, param1, memo)) {
+                    memo[index] = true;
+                    return true;
+                }
+            }
+        }
+        // unchosse
+        memo[index] = false;
+        return false;
+    }
+}

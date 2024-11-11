@@ -1,0 +1,40 @@
+class Solution {
+
+    public List<List<String>> partition(String s) {
+        // Initialize an empty list to store the results
+        List<List<String>> result = new ArrayList<>();
+        // Call the helper function to find all the valid partitions
+        partitionHelper(s, 0, new ArrayList<>(), result);
+        return result;
+    }
+
+    private void partitionHelper(String s, int start, List<String> current, List<List<String>> result) {
+        // If we\'ve reached the end of the string, we have a valid partition
+        if (start == s.length()) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+        // Try partitioning the remaining string into substrings
+        for (int i = start + 1; i <= s.length(); i++) {
+            String substring = s.substring(start, i);
+            // If the current substring is a palindrome, add it to the current partition
+            if (isPalindrome(substring)) {
+                current.add(substring);
+                // Recursively call the helper function with the updated current partition and start index
+                partitionHelper(s, i, current, result);
+                // Remove the last substring before trying the next partition
+                current.remove(current.size() - 1);
+            }
+        }
+    }
+
+    private boolean isPalindrome(String s) {
+        // Compare the first and last characters, second and second to last characters, and so on
+        for (int i = 0; i < s.length() / 2; i++) {
+            if (s.charAt(i) != s.charAt(s.length() - 1 - i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

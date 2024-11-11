@@ -1,0 +1,51 @@
+class Solution {
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        ArrayList<Integer>[] graph = new ArrayList[param1];
+        for (int i = 0; i < param1; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] prerequisite : prerequisites) {
+            graph[prerequisite[1]].add(prerequisite[0]);
+        }
+        return topSort(graph);
+    }
+
+    public int[] topSort(ArrayList<Integer>[] graph) {
+        int[] indeg = new int[graph.length];
+        calcIndeg(graph, indeg);
+        Queue<Integer> q = new LinkedList<>();
+        ArrayList<Integer> result = new ArrayList<>();
+        for (int i = 0; i < indeg.length; i++) {
+            if (indeg[i] == 0) {
+                q.add(i);
+            }
+        }
+        while (!q.isEmpty()) {
+            int curr = q.remove();
+            result.add(curr);
+            for (int neighbor : graph[curr]) {
+                indeg[neighbor]--;
+                if (indeg[neighbor] == 0) {
+                    q.add(neighbor);
+                }
+            }
+        }
+        if (result.size() != graph.length) {
+            return new int[0];
+        }
+        int[] resArray = new int[result.size()];
+        for (int i = 0; i < result.size(); i++) {
+            resArray[i] = result.get(i);
+        }
+        return resArray;
+    }
+
+    public void calcIndeg(ArrayList<Integer>[] graph, int[] indeg) {
+        for (int i = 0; i < graph.length; i++) {
+            for (int neighbor : graph[i]) {
+                indeg[neighbor]++;
+            }
+        }
+    }
+}

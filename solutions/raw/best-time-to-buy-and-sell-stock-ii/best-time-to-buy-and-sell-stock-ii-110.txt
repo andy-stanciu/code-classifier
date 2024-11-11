@@ -1,0 +1,33 @@
+// State machine:
+// At each day i, there are two states: [have] / [don\'t] have the stock.
+// At each state, there are two moves one can do:
+// 1) [i-1][have]: do_nothing -> [i][have], sell -> [i][don\'t];
+// 2) [i-1][don\'t]: do nothing -> [i][don\'t], buy -> [i][have];
+// Which gives us the following DP equation.
+//    dp[i][have] = max(dp[i-1][don\'t] - prices[i], dp[i-1][have])
+//    dp[i][don\'t] = max(dp[i-1][have] + prices[i], dp[i-1][don\'t])
+// Where:
+//  1) dp[i][x] is at that state, the money one has. which means:
+//  2) buying stock cause you lose money (- prices[i] above)
+//  3) and selling stock cause you gain money (+ prices[i] above)
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        // 0 have, 1 don\'t.
+        int[][] dp = new int[prices.length][2];
+        // Buy at prices[0] (1st day).
+        dp[0][0] = -prices[0];
+        // Impossible to sell at day 1. Keep it 0.
+        dp[0][1] = 0;
+        for (int i = 1; i < prices.length; i++) {
+            dp[i][0] = Math.max(dp[i - 1][1] - prices[i], dp[i - 1][0]);
+            dp[i][1] = Math.max(dp[i - 1][0] + prices[i], dp[i - 1][1]);
+        }
+        // Return the last day at the sell state.
+        return dp[prices.length - 1][1];
+    }
+}
+// Optimization:
+// We don\'t need a O(2n) size 2D arr to store every day.
+// Just store the previous day\'s sell or buy state is enough.
+// Which makes the Space O(1).

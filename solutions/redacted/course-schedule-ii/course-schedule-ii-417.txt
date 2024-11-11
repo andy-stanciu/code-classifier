@@ -1,0 +1,45 @@
+class Solution {
+
+    Stack<Integer> stk = new Stack();
+
+    boolean[] vis;
+
+    public int[] findOrder(int param1, int[][] prerequisites) {
+        List<List<Integer>> Adj = new ArrayList();
+        for (int i = 0; i < param1; i++) {
+            Adj.add(new ArrayList());
+        }
+        for (int[] prereq : prerequisites) {
+            Adj.get(prereq[1]).add(prereq[0]);
+        }
+        //topological sort
+        int[] order = new int[param1];
+        vis = new boolean[param1];
+        for (int i = 0; i < param1; i++) {
+            if (!vis[i]) {
+                if (topoSort(i, Adj, new boolean[param1]))
+                    return new int[0];
+            }
+        }
+        for (int i = 0; i < param1; i++) {
+            order[i] = stk.pop();
+        }
+        return order;
+    }
+
+    boolean topoSort(int ind, List<List<Integer>> Adj, boolean[] pathvis) {
+        if (pathvis[ind])
+            return true;
+        if (vis[ind])
+            return false;
+        vis[ind] = true;
+        pathvis[ind] = true;
+        boolean cycle = false;
+        for (int next : Adj.get(ind)) {
+            cycle |= topoSort(next, Adj, pathvis);
+        }
+        stk.push(ind);
+        pathvis[ind] = false;
+        return cycle;
+    }
+}

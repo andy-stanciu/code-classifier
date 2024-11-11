@@ -1,0 +1,29 @@
+class Solution {
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        return pathSum(root, new ArrayList<>(), 0, targetSum);
+    }
+
+    private List<List<Integer>> pathSum(TreeNode node, List<Integer> path, int preSum, int targetSum) {
+        if (node == null) {
+            return Collections.emptyList();
+        }
+        if (node.left == null && node.right == null) {
+            if (preSum + node.val == targetSum) {
+                List<Integer> result = new ArrayList<>();
+                result.addAll(path);
+                result.add(node.val);
+                return Arrays.asList(result);
+            } else {
+                return Collections.emptyList();
+            }
+        }
+        List<Integer> newPath = new ArrayList<>();
+        newPath.addAll(path);
+        newPath.add(node.val);
+        List<List<Integer>> finalResult = new ArrayList<>();
+        finalResult.addAll(pathSum(node.left, newPath, preSum + node.val, targetSum));
+        finalResult.addAll(pathSum(node.right, newPath, preSum + node.val, targetSum));
+        return finalResult;
+    }
+}
