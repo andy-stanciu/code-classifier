@@ -1,0 +1,62 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public int kthSmallest(TreeNode root, int k) {
+        //counter for the number of nodes visited
+        int count = 0;
+        //start from the root
+        TreeNode curr = root;
+        while (curr != null) {
+            if (curr.left == null) {
+                //visit the current node
+                count++;
+                if (count == k) {
+                    //if it\'s the kth smallest, return its value
+                    return curr.val;
+                }
+                //move to the right child
+                curr = curr.right;
+            } else {
+                //find the rightmost node in the left subtree
+                TreeNode p = curr.left;
+                while (p.right != null && p.right != curr) {
+                    p = p.right;
+                }
+                //make the current node the right child of its predecessor
+                if (p.right == null) {
+                    //create a temporary link
+                    p.right = curr;
+                    //move to the left child
+                    curr = curr.left;
+                } else {
+                    //revert the changes made to restore the original tree
+                    //remove the temporary link
+                    p.right = null;
+                    //visit the current node
+                    count++;
+                    if (count == k) {
+                        //if it\'s the kth smallest, return its value
+                        return curr.val;
+                    }
+                    //move to the right child
+                    curr = curr.right;
+                }
+            }
+        }
+        return -1;
+    }
+}

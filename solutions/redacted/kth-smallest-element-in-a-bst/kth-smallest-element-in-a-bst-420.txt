@@ -1,0 +1,78 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    ArrayList<Integer> list = new ArrayList<>();
+
+    public int method1(TreeNode root, int k) {
+        traverse(root);
+        return method2(0, list.size() - 1, k);
+    }
+
+    private void traverse(TreeNode node) {
+        if (node != null) {
+            traverse(node.left);
+            list.add(node.val);
+            traverse(node.right);
+        }
+    }
+
+    private int method2(int start, int end, int k) {
+        // base case
+        if (start == end) {
+            return list.get(start);
+        }
+        // pivot index
+        int q = partition(start, end);
+        // number of elements on the low side of the partition
+        int var1 = q - start + 1;
+        if (k == var1) {
+            return list.get(q);
+        } else if (k < var1) {
+            return method2(start, q - 1, k);
+        } else {
+            return method2(q + 1, end, k - var1);
+        }
+    }
+
+    private int partition(int start, int end) {
+        //  the pivot
+        int pivot = list.get(end);
+        //  highest index into the low side
+        int i = start - 1;
+        //  process each element other than the pivot
+        for (int j = start; j <= end - 1; j++) {
+            //  does this element belong on the low side?
+            if (list.get(j) <= pivot) {
+                //  index of a new slot in the low side
+                i++;
+                //  put this element there
+                swap(i, j);
+            }
+        }
+        int var2 = i + 1;
+        //  pivot goes just to the right of the low side
+        swap(var2, end);
+        //  return new index of the pivot
+        return var2;
+    }
+
+    private void swap(int i, int j) {
+        int t = list.get(i);
+        list.set(i, list.get(j));
+        list.set(j, t);
+    }
+}

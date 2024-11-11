@@ -1,0 +1,45 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public int kthSmallest(TreeNode root, int k) {
+        // Array to keep track of the remaining nodes to visit before reaching the kth smallest
+        int[] stop = new int[1];
+        // Initialize with k
+        stop[0] = k;
+        // Perform the in-order traversal to find the kth smallest element
+        int ans = traverse(root, stop);
+        return ans;
+    }
+
+    public static int traverse(TreeNode root, int[] stop) {
+        // Base case: if the node is null, return -1
+        if (root == null)
+            return -1;
+        // Recur on the left subtree
+        int left = traverse(root.left, stop);
+        // If the kth element is found in the left subtree, return it
+        if (left != -1)
+            return left;
+        // Decrement the count of remaining nodes to visit
+        stop[0]--;
+        // If the current node is the kth node, return its value
+        if (stop[0] == 0)
+            return root.val;
+        // Recur on the right subtree
+        return traverse(root.right, stop);
+    }
+}

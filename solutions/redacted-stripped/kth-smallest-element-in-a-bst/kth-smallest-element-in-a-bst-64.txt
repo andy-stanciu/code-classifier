@@ -1,0 +1,61 @@
+public class TreeNode {
+
+    int val;
+
+    int descendant;
+
+    TreeNode left;
+
+    TreeNode right;
+
+    TreeNode() {
+    }
+
+    TreeNode(int val) {
+        this.val = val;
+        this.descendant = 1;
+    }
+
+    TreeNode(int val, int descendant, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+        this.descendant = descendant;
+    }
+}
+
+class Solution {
+
+    private void rebuildTree(TreeNode root) {
+        if (root == null)
+            return;
+        if (root.left != null) {
+            rebuildTree(root.left);
+            root.descendant += root.left.descendant;
+        }
+        if (root.right != null) {
+            rebuildTree(root.right);
+            root.descendant += root.right.descendant;
+        }
+    }
+
+    public int method1(TreeNode root, int k) {
+        rebuildTree(root);
+        return dfs(root, k);
+    }
+
+    public int dfs(TreeNode node, int k) {
+        if (node.left != null) {
+            if (k <= node.left.descendant) {
+                return dfs(node.left, k);
+            } else if (k > node.left.descendant + 1) {
+                return dfs(node.right, k - node.left.descendant - 1);
+            }
+            return node.val;
+        } else {
+            if (k == 1)
+                return node.val;
+            return dfs(node.right, k - 1);
+        }
+    }
+}

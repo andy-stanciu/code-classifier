@@ -1,0 +1,63 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    int count = 0, var1 = 0;
+
+    public void morrisTraversal(TreeNode root, int k) {
+        while (root != null) {
+            if (root.left == null) {
+                count++;
+                if (count == k) {
+                    var1 = root.val;
+                    break;
+                }
+                root = root.right;
+            } else {
+                TreeNode prev = root.left;
+                while (prev.right != null && prev.right != root) prev = prev.right;
+                if (prev.right == null) {
+                    prev.right = root;
+                    root = root.left;
+                } else {
+                    prev.right = null;
+                    count++;
+                    if (count == k) {
+                        var1 = root.val;
+                        break;
+                    }
+                    root = root.right;
+                }
+            }
+        }
+    }
+
+    public void dfs(TreeNode root, int k) {
+        if (root == null || count >= k)
+            return;
+        dfs(root.left, k);
+        count++;
+        if (count == k)
+            var1 = root.val;
+        dfs(root.right, k);
+    }
+
+    public int method1(TreeNode root, int k) {
+        //dfs(root,k);
+        morrisTraversal(root, k);
+        return var1;
+    }
+}

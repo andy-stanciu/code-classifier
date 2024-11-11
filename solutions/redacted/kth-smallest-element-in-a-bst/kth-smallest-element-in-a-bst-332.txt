@@ -1,0 +1,58 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    class RetVal {
+
+        // -1 means not found
+        int var1 = -1;
+
+        int countTillNow = 0;
+
+        public RetVal() {
+        }
+    }
+
+    private RetVal method1(TreeNode root, int k) {
+        RetVal rValue = new RetVal();
+        if (root == null) {
+            return rValue;
+        }
+        //Find kth smallest in the left side
+        var leftRVal = method1(root.left, k);
+        if (leftRVal.var1 != -1) {
+            return leftRVal;
+        }
+        //If not found see if current root is kth element
+        if (k == leftRVal.countTillNow + 1) {
+            rValue.var1 = root.val;
+            return rValue;
+        }
+        //If not find kth smallest (k-countTillNow) on the right side
+        var rightRVal = method1(root.right, k - leftRVal.countTillNow - 1);
+        if (rightRVal.var1 != -1) {
+            return rightRVal;
+        }
+        //If not found return countTillNow
+        rValue.countTillNow = leftRVal.countTillNow + rightRVal.countTillNow + 1;
+        return rValue;
+    }
+
+    public int method2(TreeNode root, int k) {
+        RetVal rValue = method1(root, k);
+        return rValue.var1;
+    }
+}

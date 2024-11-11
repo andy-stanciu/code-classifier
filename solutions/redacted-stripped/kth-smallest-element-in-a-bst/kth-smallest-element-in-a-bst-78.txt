@@ -1,0 +1,47 @@
+public class Solution {
+
+    private Pair<Integer, Integer> morris(TreeNode cur, int k) {
+        int ans = 0, cnt = 0;
+        while (cur != null) {
+            if (cur.left == null) {
+                k--;
+                cnt++;
+                cur = cur.right;
+            } else {
+                TreeNode prev = cur.left;
+                while (prev.right != null && prev.right != cur) {
+                    prev = prev.right;
+                }
+                if (prev.right == null) {
+                    prev.right = cur;
+                    cur = cur.left;
+                } else {
+                    prev.right = null;
+                    k--;
+                    cnt++;
+                    cur = cur.right;
+                }
+            }
+            if (k == 1)
+                ans = cur.val;
+        }
+        return new Pair<>(ans, cnt);
+    }
+
+    private int method1(TreeNode root, int k) {
+        if (k == 1 && root.left == null)
+            return root.val;
+        Pair<Integer, Integer> pr = morris(root, k);
+        return pr.getKey();
+    }
+
+    public int method2(TreeNode root, int k) {
+        return method1(root, k);
+    }
+
+    public int method3(TreeNode root, int k) {
+        Pair<Integer, Integer> pr = morris(root, k);
+        int newK = pr.getValue() - k + 1;
+        return method1(root, newK);
+    }
+}

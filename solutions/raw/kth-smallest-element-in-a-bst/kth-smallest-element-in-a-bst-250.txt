@@ -1,0 +1,74 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+// class Solution {
+//     private Queue<Integer> queue = new LinkedList<>();
+//     private void inOrderTraversal(TreeNode root){
+//         if( root == null ) return;
+//         inOrderTraversal(root.left);
+//         queue.add(root.val);
+//         inOrderTraversal(root.right);
+//     }
+//     public int kthSmallest(TreeNode root, int k) {
+//         inOrderTraversal(root);
+//         int ans = -1;
+//         for( int i=0; i<k; i++ ){
+//             if( queue.isEmpty() ) return ans;
+//             ans = queue.poll();
+//         }
+//         return ans;
+//     }
+// }
+class Solution {
+
+    //variable to store the kth node\'s value
+    private int res = -1;
+
+    //counter variable for keeping the count of the node visited
+    private int count = 0;
+
+    private void inOrderTraversal(TreeNode root, int k) {
+        if (root == null)
+            return;
+        //recursively go to the leftmost node
+        inOrderTraversal(root.left, k);
+        //increment count as the left subtree is visited and root is being visited now
+        count++;
+        if (count == k) {
+            //if the count is equal to the k i.e. we have visited the kth node
+            //update the res
+            res = root.val;
+            return;
+        }
+        //if the root node is not the kth node visit the right subtree
+        inOrderTraversal(root.right, k);
+    }
+
+    public int kthSmallest(TreeNode root, int k) {
+        //this will update the res to the kth node\'s value
+        inOrderTraversal(root, k);
+        return res;
+    }
+}
+/*Comparison
+Queue-Based Approach:
+
+Time Complexity: O(n + k)
+Space Complexity: O(n + h)
+
+Optimized Approach:
+
+Time Complexity: O(n)
+Space Complexity: O(h)*/
