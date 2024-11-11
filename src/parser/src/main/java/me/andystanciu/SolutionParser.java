@@ -63,6 +63,12 @@ public final class SolutionParser {
             var parseResult = parser.parse(sourceCode);
             parseResult.ifSuccessful(compilationUnit -> {
                 this.compilationUnit = compilationUnit;
+                try {
+                    // overwrite source path with formatted code
+                    Files.write(sourcePath, compilationUnit.toString().getBytes());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             });
         } catch (IOException e) {
             throw new RuntimeException(e);

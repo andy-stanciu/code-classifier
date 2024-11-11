@@ -8,6 +8,7 @@ This is a UW CSE493g1 deep learning project by students Andy Stanciu & Rich Chen
   1. Redacting "sensitive identifiers" from the source code, i.e. if any permutation of the problem title appears within an identifier in the solution, it is replaced with a generic "method1" or "var1" identifier.
   2. Stripping comments from the source code.
   3. Standardizing the formatting and whitespace of the source code.
+- `src/preprocessing` - Various Python utilities for further data preprocessing.
 
 ## Instructions
 1. Scrape Leetcode problem solutions. Example:
@@ -18,4 +19,8 @@ This is a UW CSE493g1 deep learning project by students Andy Stanciu & Rich Chen
 2. (Optional) Preprocess Leetcode solutions by standardizing their formatting, redacting sensitive identifiers, and/or stripping comments. 
    1. Execute `src/parser/src/main/me/andystanciu/Main.java`.
    2. If successful, for each (compiling) solution `foo` for LeetCode problem `Foo` in `solutions/raw/Foo/foo.txt`, an equivalent redacted and stripped + redacted version can be found in `solutions/redacted/Foo/foo.txt` and `solutions/redacted-stripped/Foo/foo.txt`, respectively.
-3. Work in progress...
+3. Configure `MAX_SOLUTION_COUNT` in `src/preprocessing/preprocessing_constants.py`, and run `prune_solutions.py` to prune any extraneous solutions:
+   ```
+   python3 src/preprocessing/prune_solutions.py
+   ```
+4. Work in progress...

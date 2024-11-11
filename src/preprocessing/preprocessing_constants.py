@@ -1,0 +1,2 @@
+SOLUTIONS_DIR = "../../solutions"
+MAX_SOLUTION_COUNT = 500

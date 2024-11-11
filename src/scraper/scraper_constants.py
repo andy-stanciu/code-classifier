@@ -1,10 +1,11 @@
+SOLUTIONS_DIR = "../../solutions/raw"
+
 LEETCODE_GRAPHQL_URL = "https://leetcode.com/graphql/"
 HEADERS = {
     "Content-Type": "application/json",
     "User-Agent": "Mozilla/5.0",
     "Origin": "https://leetcode.com"
 }
-SOLUTIONS_DIR = "../../solutions/raw"
 
 communitySolution_query = """
 query communitySolution($topicId: Int!) {
