@@ -1,0 +1,50 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        List<int[]> change = new ArrayList<int[]>();
+        int m = board.length, n = board[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int zeroes = count(board, i, j, 0);
+                int ones = count(board, i, j, 1);
+                if ((board[i][j] == 1 && ones < 2) || (board[i][j] == 1 && ones > 3) || board[i][j] == 0 && ones == 3) {
+                    int[] arr = { i, j };
+                    change.add(arr);
+                }
+            }
+        }
+        for (int[] c : change) {
+            int val = board[c[0]][c[1]];
+            board[c[0]][c[1]] = (val == 0) ? 1 : 0;
+        }
+    }
+
+    int count(int[][] board, int i, int j, int val) {
+        int c = 0;
+        //up
+        if (i > 0 && board[i - 1][j] == val)
+            c++;
+        //right
+        if (j < board[0].length - 1 && board[i][j + 1] == val)
+            c++;
+        // down
+        if (i < board.length - 1 && board[i + 1][j] == val)
+            c++;
+        //left
+        if (j > 0 && board[i][j - 1] == val)
+            c++;
+        //leftup
+        if (i > 0 && j > 0 && board[i - 1][j - 1] == val)
+            c++;
+        //upright
+        if (i > 0 && j < board[0].length - 1 && board[i - 1][j + 1] == val)
+            c++;
+        //downleft
+        if (i < board.length - 1 && j > 0 && board[i + 1][j - 1] == val)
+            c++;
+        //downright
+        if (i < board.length - 1 && j < board[0].length - 1 && board[i + 1][j + 1] == val)
+            c++;
+        return c;
+    }
+}

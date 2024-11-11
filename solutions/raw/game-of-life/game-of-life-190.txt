@@ -1,0 +1,55 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        helper(board, 0, 0);
+    }
+
+    private void helper(int[][] board, int r, int c) {
+        int m = board.length;
+        int n = board[0].length;
+        boolean flag = false;
+        for (int i = r; i < m; i++) {
+            c = flag ? 0 : c;
+            for (int j = c; j < n; j++) {
+                int currentCells = calculateCells(board, i, j);
+                if (board[i][j] == 1 && (currentCells < 2 || currentCells > 3)) {
+                    if (j < n - 1) {
+                        helper(board, i, j + 1);
+                    } else {
+                        helper(board, i + 1, 0);
+                    }
+                    board[i][j] = 0;
+                    return;
+                } else if (board[i][j] == 0 && currentCells == 3) {
+                    if (j < n - 1) {
+                        helper(board, i, j + 1);
+                    } else {
+                        helper(board, i + 1, 0);
+                    }
+                    board[i][j] = 1;
+                    return;
+                }
+                flag = true;
+            }
+        }
+    }
+
+    int[][] moves = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 } };
+
+    private int calculateCells(int[][] board, int r, int c) {
+        int liveCells = 0;
+        for (int i = 0; i < 8; i++) {
+            if (isSafe(board, r + moves[i][0], c + moves[i][1]) && board[r + moves[i][0]][c + moves[i][1]] == 1) {
+                liveCells++;
+            }
+            if (liveCells > 3) {
+                return liveCells;
+            }
+        }
+        return liveCells;
+    }
+
+    private boolean isSafe(int[][] board, int r, int c) {
+        return r > -1 && r < board.length && c > -1 && c < board[0].length;
+    }
+}

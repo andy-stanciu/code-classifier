@@ -1,0 +1,61 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums);
+        List<List<Integer>> al = new ArrayList<>();
+        boolean p = false;
+        boolean n = false;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] < 0) {
+                p = true;
+            }
+            if (nums[i] > 0) {
+                n = true;
+            }
+        }
+        // if all elements are positive and target is negative
+        if (p == false && target < 0) {
+            return al;
+        }
+        // if all elements are negative and target is postive
+        if (n == false && target > 0) {
+            return al;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            for (int j = i + 1; j < nums.length; j++) {
+                if (j > i + 1 && nums[j] == nums[j - 1]) {
+                    continue;
+                }
+                int k = j + 1;
+                int l = nums.length - 1;
+                while (k < l) {
+                    long sum = (long) (nums[i] + nums[j] + nums[k] + nums[l]);
+                    if (sum > target) {
+                        l--;
+                    } else if (sum < target) {
+                        k++;
+                    } else {
+                        List<Integer> ele = new ArrayList<>();
+                        ele.add(nums[i]);
+                        ele.add(nums[j]);
+                        ele.add(nums[k]);
+                        ele.add(nums[l]);
+                        al.add(ele);
+                        k++;
+                        l--;
+                        while (k < l && nums[k] == nums[k - 1]) {
+                            k++;
+                        }
+                        while (k < l && nums[l] == nums[l + 1]) {
+                            l--;
+                        }
+                    }
+                }
+            }
+        }
+        return al;
+    }
+}

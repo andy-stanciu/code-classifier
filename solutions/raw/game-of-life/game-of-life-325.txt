@@ -1,0 +1,46 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        int[][] result = new int[m][n];
+        for (int x = 0; x < m; x++) {
+            for (int y = 0; y < n; y++) {
+                int val = board[x][y];
+                int liveNeighbours = this.getLiveNeighbours(x, y, board);
+                if (val == 1 && liveNeighbours < 2) {
+                    result[x][y] = 0;
+                } else if (val == 1 && liveNeighbours > 3) {
+                    result[x][y] = 0;
+                } else if (val == 0 && liveNeighbours == 3) {
+                    result[x][y] = 1;
+                } else {
+                    result[x][y] = val;
+                }
+            }
+        }
+        for (int x = 0; x < m; x++) {
+            for (int y = 0; y < n; y++) {
+                board[x][y] = result[x][y];
+            }
+        }
+    }
+
+    private int getLiveNeighbours(int x1, int y1, int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        int count = 0;
+        for (int x = x1 - 1; x <= x1 + 1; x++) {
+            for (int y = y1 - 1; y <= y1 + 1; y++) {
+                if (x < 0 || x >= m || y < 0 || y >= n) {
+                    continue;
+                }
+                if (x == x1 && y == y1) {
+                    continue;
+                }
+                count += board[x][y];
+            }
+        }
+        return count;
+    }
+}

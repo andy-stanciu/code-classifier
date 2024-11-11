@@ -1,0 +1,57 @@
+class Solution {
+
+    class pair {
+
+        int i;
+
+        int j;
+
+        int val;
+
+        pair(int a, int b, int c) {
+            i = a;
+            j = b;
+            val = c;
+        }
+    }
+
+    int getval(int[][] board, int i, int j) {
+        if (i < 0 || j < 0 || i >= board.length || j >= board[0].length) {
+            return 0;
+        }
+        return board[i][j];
+    }
+
+    public void gameOfLife(int[][] board) {
+        ArrayList<pair> al = new ArrayList<>();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                int c = 0;
+                c += getval(board, i + 1, j);
+                c += getval(board, i - 1, j);
+                c += getval(board, i, j + 1);
+                c += getval(board, i, j - 1);
+                c += getval(board, i + 1, j + 1);
+                c += getval(board, i + 1, j - 1);
+                c += getval(board, i - 1, j + 1);
+                c += getval(board, i - 1, j - 1);
+                if (board[i][j] == 1) {
+                    if (c < 2) {
+                        al.add(new pair(i, j, 0));
+                    } else if (c == 2 || c == 3) {
+                        al.add(new pair(i, j, 1));
+                    } else {
+                        al.add(new pair(i, j, 0));
+                    }
+                } else {
+                    if (c == 3) {
+                        al.add(new pair(i, j, 1));
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < al.size(); i++) {
+            board[al.get(i).i][al.get(i).j] = al.get(i).val;
+        }
+    }
+}

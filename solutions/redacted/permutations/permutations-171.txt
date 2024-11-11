@@ -1,0 +1,27 @@
+class Solution {
+
+    public List<List<Integer>> permute(int[] nums) {
+        Set<List<Integer>> resultSet = new HashSet<>();
+        List<Integer> orriginList = Arrays.stream(nums).boxed().collect(Collectors.toList());
+        resultSet.add(orriginList);
+        permute(orriginList, resultSet);
+        return new ArrayList<>(resultSet);
+    }
+
+    private void permute(List<Integer> list, Set<List<Integer>> result) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int p = i + 1; p < list.size(); p++) {
+                if (list.get(i) != list.get(p)) {
+                    List<Integer> newList = new ArrayList<>(list);
+                    int temp = newList.get(i);
+                    newList.set(i, list.get(p));
+                    newList.set(p, temp);
+                    if (!result.contains(newList)) {
+                        result.add(newList);
+                        permute(newList, result);
+                    }
+                }
+            }
+        }
+    }
+}

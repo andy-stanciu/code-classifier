@@ -1,0 +1,37 @@
+/**
+ * Backtracking (Recursive Solution)
+ *
+ * Time complexity = InternalNodes in the RecursionTree   +   K * LeafNodes in RecursionTree
+ *                 = (C(N,0) + C(N,1) + ... + C(N,K-1))   +   K * C(N,K)
+ *
+ * Space Complexity = O(K) -> Depth of Recursion tree + Size of TempList
+ *
+ * N, K -> Input numbers.
+ */
+class Solution1 {
+
+    public List<List<Integer>> combine(int n, int k) {
+        if (n <= 0 || k < 0) {
+            throw new IllegalArgumentException("invalid input");
+        }
+        List<List<Integer>> result = new ArrayList<>();
+        if (k == 0) {
+            result.add(new ArrayList<>());
+            return result;
+        }
+        combineHelper(n, k, new ArrayList<>(), result);
+        return result;
+    }
+
+    private void combineHelper(int n, int k, List<Integer> temp, List<List<Integer>> result) {
+        if (k == 0) {
+            result.add(new ArrayList<>(temp));
+            return;
+        }
+        for (int i = n; i >= 1; i--) {
+            temp.add(i);
+            combineHelper(i - 1, k - 1, temp, result);
+            temp.remove(temp.size() - 1);
+        }
+    }
+}

@@ -1,0 +1,32 @@
+class Solution {
+
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>>[][] cache = new List[n + 1][k];
+        combine(1, n, 0, k, cache);
+        return cache[1][0];
+    }
+
+    private List<List<Integer>> combine(int index, int n, int length, int k, List<List<Integer>>[][] cache) {
+        if (cache[index][length] == null) {
+            List<List<Integer>> combinations = new ArrayList<>();
+            if (length == k - 1) {
+                combinations.add(List.of(index));
+            }
+            if (length < k - 1) {
+                List<List<Integer>> addIt = combine(index + 1, n, length + 1, k, cache);
+                for (List<Integer> answer : addIt) {
+                    List<Integer> comb = new ArrayList<>(1 + answer.size());
+                    comb.add(index);
+                    comb.addAll(answer);
+                    combinations.add(comb);
+                }
+            }
+            if (n - index >= k - length) {
+                List<List<Integer>> skipIt = combine(index + 1, n, length, k, cache);
+                combinations.addAll(skipIt);
+            }
+            cache[index][length] = combinations;
+        }
+        return cache[index][length];
+    }
+}

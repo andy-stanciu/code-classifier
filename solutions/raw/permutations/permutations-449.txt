@@ -1,0 +1,32 @@
+class Solution {
+
+    public List<List<Integer>> permute(int[] nums) {
+        int size = nums.length;
+        List<List<Integer>> results = new ArrayList<>();
+        Set<Integer> bag = new HashSet<>();
+        int[] buffer = new int[size];
+        mutate(nums, size, results, bag, buffer, 0);
+        return results;
+    }
+
+    private static void mutate(int[] nums, int size, List<List<Integer>> results, Set<Integer> bag, int[] buffer, int idx) {
+        if (idx == size) {
+            List<Integer> result = new ArrayList<>(size);
+            for (int i = 0; i < size; i++) {
+                result.add(buffer[i]);
+            }
+            results.add(result);
+        } else {
+            for (int i = 0; i < size; i++) {
+                int num = nums[i];
+                if (bag.contains(num)) {
+                    continue;
+                }
+                buffer[idx] = num;
+                bag.add(num);
+                mutate(nums, size, results, bag, buffer, idx + 1);
+                bag.remove(num);
+            }
+        }
+    }
+}

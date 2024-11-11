@@ -1,0 +1,34 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        for (int i = 0; i < board.length; ++i) {
+            for (int j = 0; j < board[0].length; ++j) {
+                precalculateCell(board, i, j);
+            }
+        }
+        updateState(board);
+    }
+
+    private void precalculateCell(int[][] board, int i, int j) {
+        final int neighborsCount = 1 + isCellAlive(board, i - 1, j - 1) + isCellAlive(board, i - 1, j) + isCellAlive(board, i - 1, j + 1) + isCellAlive(board, i, j - 1) + isCellAlive(board, i, j + 1) + isCellAlive(board, i + 1, j) + isCellAlive(board, i + 1, j + 1) + isCellAlive(board, i + 1, j - 1);
+        board[i][j] = (board[i][j] == 0 ? -1 : 1) * neighborsCount;
+    }
+
+    private int isCellAlive(int[][] board, int i, int j) {
+        return i >= 0 && j >= 0 && i < board.length && j < board[0].length && board[i][j] > 0 ? 1 : 0;
+    }
+
+    private void updateState(int[][] board) {
+        for (int i = 0; i < board.length; ++i) {
+            for (int j = 0; j < board[0].length; ++j) {
+                final boolean isCellAlive = isCellAlive(board, i, j) > 0 ? true : false;
+                final int neighborsCount = (isCellAlive ? 1 : -1) * board[i][j] - 1;
+                if (isCellAlive && neighborsCount == 2 || neighborsCount == 3) {
+                    board[i][j] = 1;
+                } else {
+                    board[i][j] = 0;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,109 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int r = board.length;
+        int c = board[0].length;
+        int[][] state = new int[r][c];
+        if (r == 1 && c == 1) {
+            board[0][0] = 0;
+            return;
+        }
+        for (int row = 1; row < r - 1; row++) {
+            // all rows but the first and last
+            for (int col = 0; col < c; col++) {
+                int nbrs = 0;
+                if (col > 0) {
+                    nbrs += board[row - 1][col - 1];
+                    nbrs += board[row][col - 1];
+                    nbrs += board[row + 1][col - 1];
+                }
+                nbrs += board[row - 1][col];
+                nbrs += board[row + 1][col];
+                if (col < c - 1) {
+                    nbrs += board[row - 1][col + 1];
+                    nbrs += board[row][col + 1];
+                    nbrs += board[row + 1][col + 1];
+                }
+                if (board[row][col] == 1) {
+                    // was a live cell
+                    if (nbrs < 2 || nbrs > 3) {
+                        // now is dead
+                        state[row][col] = 0;
+                    } else {
+                        // survives
+                        state[row][col] = 1;
+                    }
+                } else {
+                    // was a dead cell
+                    // now lives
+                    if (nbrs == 3)
+                        state[row][col] = 1;
+                }
+            }
+        }
+        // now for the first and last rows
+        if (r > 1) {
+            // but only if there is a first and last row
+            for (int col = 0; col < c; col++) {
+                // first row
+                int nbrs = 0;
+                if (col > 0) {
+                    nbrs += board[0][col - 1];
+                    nbrs += board[1][col - 1];
+                }
+                nbrs += board[1][col];
+                if (col < c - 1) {
+                    nbrs += board[0][col + 1];
+                    nbrs += board[1][col + 1];
+                }
+                if (board[0][col] == 1) {
+                    // was a live cell
+                    if (nbrs < 2 || nbrs > 3) {
+                        // now is dead
+                        state[0][col] = 0;
+                    } else {
+                        // survives
+                        state[0][col] = 1;
+                    }
+                } else {
+                    // was a dead cell
+                    if (nbrs == 3)
+                        state[0][col] = 1;
+                }
+            }
+            for (int col = 0; col < c; col++) {
+                // last row
+                int nbrs = 0;
+                if (col > 0) {
+                    nbrs += board[r - 2][col - 1];
+                    nbrs += board[r - 1][col - 1];
+                }
+                nbrs += board[r - 2][col];
+                if (col < c - 1) {
+                    nbrs += board[r - 2][col + 1];
+                    nbrs += board[r - 1][col + 1];
+                }
+                if (board[r - 1][col] == 1) {
+                    // was a live cell
+                    if (nbrs < 2 || nbrs > 3) {
+                        // now is dead
+                        state[r - 1][col] = 0;
+                    } else {
+                        // survives
+                        state[r - 1][col] = 1;
+                    }
+                } else {
+                    // was a dead cell
+                    if (nbrs == 3)
+                        state[r - 1][col] = 1;
+                }
+            }
+        }
+        for (int row = 0; row < r; row++) {
+            // copy over to board
+            for (int col = 0; col < c; col++) {
+                board[row][col] = state[row][col];
+            }
+        }
+    }
+}

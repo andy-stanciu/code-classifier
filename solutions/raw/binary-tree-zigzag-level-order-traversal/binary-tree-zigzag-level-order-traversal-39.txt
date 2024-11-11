@@ -1,0 +1,58 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    private List<List<Integer>> result;
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        result = new ArrayList<>();
+        if (root == null)
+            return result;
+        Deque<TreeNode> deque = new ArrayDeque<>();
+        deque.offer(root);
+        // Start from left to right
+        boolean leftToRight = true;
+        while (!deque.isEmpty()) {
+            int size = deque.size();
+            List<Integer> levelNodes = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                if (leftToRight) {
+                    // Remove from front
+                    TreeNode node = deque.pollFirst();
+                    levelNodes.add(node.val);
+                    // Add children left to right
+                    if (node.left != null)
+                        deque.offerLast(node.left);
+                    if (node.right != null)
+                        deque.offerLast(node.right);
+                } else {
+                    // Remove from back
+                    TreeNode node = deque.pollLast();
+                    levelNodes.add(node.val);
+                    // Add children right to left
+                    if (node.right != null)
+                        deque.offerFirst(node.right);
+                    if (node.left != null)
+                        deque.offerFirst(node.left);
+                }
+            }
+            result.add(levelNodes);
+            // Switch direction for the next level
+            leftToRight = !leftToRight;
+        }
+        return result;
+    }
+}

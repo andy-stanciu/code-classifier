@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
+ * }
+ */
+class Solution {
+
+    /* Trying stanislav-iablokov\'s method */
+    public int countNodes(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        Queue<TreeNode> nodes = new ArrayDeque<>();
+        nodes.add(root);
+        int sum = 0;
+        while (!nodes.isEmpty()) {
+            int size = nodes.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode current = nodes.poll();
+                TreeNode left = current.left;
+                TreeNode right = current.right;
+                int leftHeight = 1;
+                int rightHeight = 1;
+                while (left != null) {
+                    leftHeight++;
+                    left = left.left;
+                }
+                while (right != null) {
+                    rightHeight++;
+                    right = right.right;
+                }
+                boolean isBalanced = leftHeight == rightHeight;
+                if (isBalanced) {
+                    // if the sub-tree is balanced we can calculate the whole sub-tree size in O(1)
+                    sum += Math.pow(2, leftHeight) - 1;
+                    continue;
+                }
+                sum += 1;
+                Optional.ofNullable(current.right).ifPresent(nodes::add);
+                Optional.ofNullable(current.left).ifPresent(nodes::add);
+            }
+        }
+        return sum;
+    }
+}

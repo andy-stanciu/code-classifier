@@ -1,0 +1,67 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> method1(TreeNode root) {
+        List<List<Integer>> arr = new ArrayList<>();
+        Queue<TreeNode> q = new LinkedList<>();
+        if (root == null) {
+            return arr;
+        }
+        q.add(root);
+        q.add(null);
+        int flag = 0;
+        while (q.size() > 1) {
+            List<Integer> ar = new ArrayList<>();
+            if (flag == 0) {
+                TreeNode curr = q.remove();
+                while (curr != null) {
+                    ar.add(curr.val);
+                    if (curr.left != null) {
+                        q.add(curr.left);
+                    }
+                    if (curr.right != null) {
+                        q.add(curr.right);
+                    }
+                    curr = q.remove();
+                }
+                q.add(null);
+                flag = 1;
+            } else {
+                Stack<Integer> s = new Stack<Integer>();
+                TreeNode curr = q.remove();
+                while (curr != null) {
+                    s.push(curr.val);
+                    if (curr.left != null) {
+                        q.add(curr.left);
+                    }
+                    if (curr.right != null) {
+                        q.add(curr.right);
+                    }
+                    curr = q.remove();
+                }
+                q.add(null);
+                flag = 0;
+                while (s.size() > 0) {
+                    int ptr = s.pop();
+                    ar.add(ptr);
+                }
+            }
+            arr.add(ar);
+        }
+        return arr;
+    }
+}

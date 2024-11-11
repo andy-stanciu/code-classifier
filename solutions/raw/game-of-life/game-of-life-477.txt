@@ -1,0 +1,42 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        final int M = board.length, N = board[0].length;
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                int num = board[i][j];
+                if ((num & 1) == 1) {
+                    adjustNeighbors(board, i, j, M, N);
+                }
+            }
+        }
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                int num = board[i][j];
+                if (num == 14 || num == 7 || num == 15) {
+                    board[i][j] = 1;
+                } else {
+                    board[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    private void adjustNeighbors(int[][] board, int r, int c, int M, int N) {
+        for (int i = r - 1; i <= r + 1; i++) {
+            if (i < 0 || i >= M)
+                continue;
+            for (int j = c - 1; j <= c + 1; j++) {
+                if (j < 0 || j >= N || (i == r && j == c))
+                    continue;
+                int num = board[i][j];
+                int lastDig = (num & 1);
+                if (lastDig == 0) {
+                    board[i][j] = ((num << 1) | 2);
+                } else {
+                    board[i][j] = ((num << 1) | 1);
+                }
+            }
+        }
+    }
+}

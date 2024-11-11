@@ -1,0 +1,62 @@
+class Solution {
+
+    public int method1(int[] nums) {
+        //find all positive integers in the nums
+        int count = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] > 0) {
+                count++;
+            } else {
+                nums[i] = 0;
+            }
+        }
+        /* set integers to zero, which are less than the count (since we aren\'t worried about the integer more than size of the array) */
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] > count) {
+                nums[i] = 0;
+            }
+        }
+        //System.out.println(Arrays.toString(nums));
+        /* sort the array      */
+        //O(1) size
+        int spaceOne;
+        int n = 1;
+        while (n <= nums.length) {
+            if (nums[n - 1] == 0) {
+                n++;
+                continue;
+            }
+            if (nums[n - 1] == n) {
+                n++;
+            } else {
+                spaceOne = nums[n - 1];
+                //System.out.println("spaceOne="+spaceOne+" and n="+n);
+                /* check for duplicates */
+                if (nums[spaceOne - 1] == spaceOne) {
+                    nums[n - 1] = 0;
+                } else //Place the interger to the right place
+                {
+                    while (spaceOne != 0 && nums[spaceOne - 1] != spaceOne) {
+                        /* it looks like a nested loop but it is just a shortcut to sort the linked integers won\'t impact the run time much, we can use just \'if\' here */
+                        int temp = nums[spaceOne - 1];
+                        nums[spaceOne - 1] = spaceOne;
+                        spaceOne = temp;
+                    }
+                }
+            }
+        }
+        //System.out.println(Arrays.toString(nums));
+        /* now find the fist encounter of zero */
+        int maxNumber = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0) {
+                return i + 1;
+            }
+            if (maxNumber < nums[i]) {
+                maxNumber = nums[i];
+            }
+        }
+        return maxNumber + 1;
+        /* if given array was already sorted we will reach here*/
+    }
+}

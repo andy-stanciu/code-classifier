@@ -1,0 +1,89 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        // Approach 1 Brute force
+        // Time Complexity O(n**4)
+        // Space Complexity O(n**4)
+        // Set<List<Integer>> result = new HashSet<>();
+        // int n = nums.length;
+        // for(int i=0; i<n; i++){
+        //     for(int j=i+1; j<n; j++){
+        //         for(int k=j+1; k<n; k++){
+        //             for(int l=k+1; l<n; l++){
+        //                 long sum = nums[i] + nums[j];
+        //                 sum+=nums[k];
+        //                 sum+=nums[l];
+        //                 if(sum==target){
+        //                     List<Integer> temp = Arrays.asList(nums[i],nums[j],nums[k],nums[l]);
+        //                     Collections.sort(temp);
+        //                     result.add(temp);
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // return new ArrayList<>(result);
+        // Approach 2 Using HashSet
+        // time Complexity O(n**3)
+        // Space Complexity O(n**2)
+        // Set<List<Integer>> result = new HashSet<>();
+        // int n = nums.length;
+        // for(int i=0; i<n; i++){
+        //     for(int j=i+1; j<n; j++){
+        //         Set<Long> temp = new HashSet<>();
+        //         for(int k=j+1; k<n; k++){
+        //             long compliment =(long) target - ((long) nums[i]+ (long) nums[j]+ (long) nums[k]);
+        //             if(temp.contains(compliment)){
+        //                 List<Integer> quadruple = Arrays.asList(nums[i],nums[j],nums[k],(int) compliment);
+        //                 Collections.sort(quadruple);
+        //                 result.add(quadruple);
+        //             }
+        //             temp.add((long) nums[k]);
+        //         }
+        //     }
+        // }
+        // System.gc();
+        // return new ArrayList<>(result);
+        // Approach 3 Two Pointer
+        int n = nums.length;
+        List<List<Integer>> result = new ArrayList<>();
+        Arrays.sort(nums);
+        for (int i = 0; i < n; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            for (int j = i + 1; j < n; j++) {
+                if (j > i + 1 && nums[j] == nums[j - 1]) {
+                    continue;
+                }
+                int k = j + 1;
+                int l = n - 1;
+                while (k < l) {
+                    long sum = (long) nums[i] + (long) nums[j];
+                    sum += (long) nums[k];
+                    sum += (long) nums[l];
+                    if (sum < (long) target) {
+                        k++;
+                    } else if (sum > (long) target) {
+                        l--;
+                    } else {
+                        List<Integer> quadruple = Arrays.asList(nums[i], nums[j], nums[k], nums[l]);
+                        result.add(quadruple);
+                        k++;
+                        l--;
+                        while (k < l && nums[k] == nums[k - 1]) {
+                            k++;
+                            continue;
+                        }
+                        while (k < l && nums[l] == nums[l + 1]) {
+                            l--;
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+        System.gc();
+        return result;
+    }
+}

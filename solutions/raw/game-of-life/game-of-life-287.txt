@@ -1,0 +1,33 @@
+class Solution {
+
+    public static void gameOfLife(int[][] board) {
+        int[] dx = { -1, 0, 1, 0, -1, -1, 1, 1 };
+        int[] dy = { 0, -1, 0, 1, -1, 1, -1, 1 };
+        int m = board.length;
+        int n = board[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int val = 0;
+                for (int k = 0; k < 8; k++) {
+                    val += (isSafe(i + dx[k], j + dy[k], m, n, board)) ? 0 : board[i + dx[k]][j + dy[k]] % 2;
+                }
+                board[i][j] = board[i][j] + 2 * val;
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int val = board[i][j] % 2;
+                int count = board[i][j] / 2;
+                if ((val == 1 && count >= 2 && count <= 3) || (val == 0 && count == 3)) {
+                    board[i][j] = 1;
+                } else {
+                    board[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    private static boolean isSafe(int i, int j, int m, int n, int[][] board) {
+        return i < 0 || i >= m || j < 0 || j >= n;
+    }
+}

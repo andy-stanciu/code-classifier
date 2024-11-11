@@ -1,0 +1,31 @@
+class Solution {
+
+    public int firstMissingPositive(int[] nums) {
+        int n = nums.length;
+        // pre-process array so that non-positive ints are overwritten with n + 1;
+        // why n + 1? coz this is the safest value to choose during
+        // floyd cycle way which we are about to do in second for loop below
+        for (int i = 0; i < n; i++) {
+            if (nums[i] <= 0)
+                nums[i] = n + 1;
+        }
+        // Take abs of A[i] and then make sure its within bounds and use that as index.
+        // This is also called as Floyd Cycle algorithm or something. Another fancy name I think is tortoise-hare.
+        for (int i = 0; i < n; i++) {
+            int num = Math.abs(nums[i]);
+            if (num > 0 && num <= n) {
+                // Now indicate that the +ve value num was found.
+                // We indicate this by setting nums[num - 1] as a negative value;
+                // Why does this work? We are using the negative sign in the array to indicate that
+                // a positive value has been found. On the other hand, value itself is encoded in Math.abs(nums[i])
+                nums[num - 1] = -Math.abs(nums[num - 1]);
+            }
+        }
+        // Now check for the first value where nums[i] is not negative and we have found our answer
+        for (int i = 0; i < n; i++) {
+            if (nums[i] > 0)
+                return i + 1;
+        }
+        return n + 1;
+    }
+}

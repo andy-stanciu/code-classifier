@@ -1,0 +1,46 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> ans = new ArrayList();
+        if (nums.length < 4) {
+            return ans;
+        }
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length; i++) {
+            if (i == 0 || nums[i] != nums[i - 1]) {
+                ans.addAll(getQuad(target, nums, i));
+            }
+        }
+        return ans;
+    }
+
+    public List<List<Integer>> getQuad(int target, int[] nums, int i) {
+        List<List<Integer>> ans = new ArrayList();
+        for (int j = i + 1; j < nums.length; j++) {
+            if (i == j - 1 || nums[j] != nums[j - 1]) {
+                ans.addAll(getTrio(i, j, nums, target));
+            }
+        }
+        return ans;
+    }
+
+    private List<List<Integer>> getTrio(int i, int j, int[] nums, long target) {
+        List<List<Integer>> triplets = new ArrayList();
+        int tmp = -nums[i] - nums[j];
+        long key = target - nums[i] - nums[j];
+        int l = j + 1, r = nums.length - 1;
+        while (l < r) {
+            long sum = nums[l] + nums[r];
+            if (sum == key && (l == j + 1 || r == nums.length - 1 || nums[l] != nums[l - 1] || nums[r] != nums[r + 1])) {
+                triplets.add(Arrays.asList(nums[i], nums[j], nums[l], nums[r]));
+                l++;
+                r--;
+            } else if (sum > key) {
+                r--;
+            } else {
+                l++;
+            }
+        }
+        return triplets;
+    }
+}

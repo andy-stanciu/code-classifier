@@ -1,0 +1,27 @@
+class Solution {
+
+    public int firstMissingPositive(int[] nums) {
+        int n = nums.length;
+        // We have to find the first number in {1..n} which is NOT in nums
+        // Therefore, put every positive number between {1..n} into the correct index
+        // Ie, nums[i]=1, switch ith index and 0th index, nums[i]=3, switch ith index and 2nd index
+        for (int i = 0; i < n; i++) {
+            // Continue if nums[i] is already in the correct location OR
+            // nums[i] is outside {1..n}
+            if (nums[i] == i + 1 || nums[i] <= 0 || nums[i] > n)
+                continue;
+            //Switch it (use an if statement to handle infinite loops like {1,1})
+            if (nums[i] != nums[nums[i] - 1]) {
+                int tmp = nums[i];
+                nums[i] = nums[tmp - 1];
+                nums[tmp - 1] = tmp;
+                i--;
+            }
+        }
+        // Find the first element which is not in the correct place
+        for (int i = 0; i < n; i++) if (nums[i] != i + 1)
+            return i + 1;
+        //If we are here, then nums is {1..n}, and thus n+1 is the result
+        return n + 1;
+    }
+}

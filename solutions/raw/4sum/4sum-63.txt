@@ -1,0 +1,63 @@
+class Solution {
+
+    int[] nums;
+
+    int size;
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        // action plan:
+        // for 4 sum, we have 2 outer loops then two sum approach - takes O(N^3)
+        // for k sum, we need k-2 outer loops then call two sum  - takes O(N^(k-1))
+        // we will use recursion for this. keep on deducing the work area until it comes to 2 sum calculation.
+        // 1. sort the array as we do for 4 sum or 3 sum or 2 sum
+        Arrays.sort(nums);
+        // hold nums and its size as class member in order to have access over all recursive stack.
+        this.nums = nums;
+        size = nums.length;
+        // call the recursion method with desired k and target
+        // for k = 4 sum
+        return kSumRecursion(0, 4, (long) target);
+    }
+
+    public List<List<Integer>> kSumRecursion(int index, int k, long target) {
+        List<List<Integer>> output = new ArrayList();
+        if (k == 2) {
+            //base case
+            output = twoSum(index, size - 1, target);
+        } else {
+            // deduce until k becomes 2
+            for (int i = index; i < size - k + 1; i++) {
+                List<List<Integer>> temp = kSumRecursion(i + 1, k - 1, target - nums[i]);
+                if (!temp.isEmpty()) {
+                    for (List<Integer> li : temp) {
+                        li.add(0, nums[i]);
+                        output.add(li);
+                    }
+                }
+                // avoid duplicate
+                while (i < size - k + 1 && nums[i + 1] == nums[i]) i++;
+            }
+        }
+        return output;
+    }
+
+    public List<List<Integer>> twoSum(int i, int j, long target) {
+        List<List<Integer>> output = new ArrayList<>();
+        while (i < j) {
+            long sum = (long) nums[i] + nums[j];
+            if (sum > target)
+                j--;
+            else if (sum < target)
+                i++;
+            else {
+                List<Integer> pair = new ArrayList(Arrays.asList(nums[i], nums[j]));
+                output.add(pair);
+                // to avoid duplicates
+                int ti = nums[i], tj = nums[j];
+                while (i < j && nums[i] == ti) i++;
+                while (j > i && nums[j] == tj) j--;
+            }
+        }
+        return output;
+    }
+}

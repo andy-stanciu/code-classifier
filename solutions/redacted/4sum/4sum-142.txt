@@ -1,0 +1,73 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        if (nums.length < 4) {
+            return Collections.emptyList();
+        }
+        Arrays.sort(nums);
+        // over/under flow
+        long targetLong = target;
+        if (targetLong < ((long) nums[0]) * 4) {
+            return Collections.emptyList();
+        }
+        if (((long) nums[nums.length - 1]) * 4 < targetLong) {
+            return Collections.emptyList();
+        }
+        ArrayList<List<Integer>> result = new ArrayList<>();
+        for (int l = 0; l < nums.length - 3; l++) {
+            long remaining = targetLong - nums[l];
+            // smallest is larger then target
+            if (remaining - nums[l + 1] - nums[l + 2] - nums[l + 3] < 0) {
+                break;
+            }
+            if (0 < l && nums[l] == nums[l - 1]) {
+                // avoid l dups
+                continue;
+            }
+            // largest is smaller then target
+            if (0 < remaining - nums[nums.length - 1] - nums[nums.length - 2] - nums[nums.length - 3]) {
+                continue;
+            }
+            threeSum(nums, nums[l], l + 1, remaining, result);
+        }
+        return result;
+    }
+
+    public void threeSum(int[] nums, int firstNumber, int startIndex, long remaining, ArrayList<List<Integer>> result) {
+        for (int i = startIndex; i < nums.length - 2; i++) {
+            int j = i + 1;
+            // smallest is larger then remaining
+            if (remaining - nums[i] - nums[j] - nums[j + 1] < 0) {
+                break;
+            }
+            if (startIndex < i && nums[i] == nums[i - 1]) {
+                // avoid i dups
+                continue;
+            }
+            int k = nums.length - 1;
+            // largest is smaller then remaining
+            if (0 < remaining - nums[i] - nums[k] - nums[k - 1]) {
+                continue;
+            }
+            while (j < k) {
+                long total = nums[i] + nums[j] + nums[k];
+                if (total < remaining) {
+                    j++;
+                } else if (remaining < total) {
+                    k--;
+                } else {
+                    result.add(Arrays.asList(firstNumber, nums[i], nums[j], nums[k]));
+                    j++;
+                    while (j < k && nums[j] == nums[j - 1]) {
+                        // avoid j dups
+                        j++;
+                    }
+                    while (j < k && nums[k] == nums[k - 1]) {
+                        // avoid k dups
+                        k--;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,51 @@
+class Solution {
+
+    int[][] dir = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, -1 }, { 1, -1 }, { -1, 1 }, { 1, 1 } };
+
+    public void method1(int[][] board) {
+        List<State> changeState = new ArrayList<>();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                identifyChange(i, j, board, changeState);
+            }
+        }
+        for (State s : changeState) {
+            board[s.row][s.col] = s.c;
+        }
+    }
+
+    public void identifyChange(int row, int col, int[][] board, List<State> changeState) {
+        int countLive = 0;
+        ;
+        for (int[] x : dir) {
+            int rowN = row + x[0];
+            int colN = col + x[1];
+            if (rowN >= 0 && rowN < board.length && colN >= 0 && colN < board[0].length) {
+                if (board[rowN][colN] == 1)
+                    countLive++;
+            }
+        }
+        if (board[row][col] == 1) {
+            if (countLive < 2 || countLive > 3)
+                changeState.add(new State(row, col, 0));
+        } else {
+            if (countLive == 3)
+                changeState.add(new State(row, col, 1));
+        }
+    }
+}
+
+class State {
+
+    int row;
+
+    int col;
+
+    int c;
+
+    public State(int row, int col, int c) {
+        this.row = row;
+        this.col = col;
+        this.c = c;
+    }
+}

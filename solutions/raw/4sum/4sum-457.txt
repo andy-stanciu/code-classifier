@@ -1,0 +1,53 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        // size of the array
+        int len = nums.length;
+        // list of quadruplets that add to the target
+        List<List<Integer>> ans = new ArrayList<>();
+        // sort the given array:
+        Arrays.sort(nums);
+        // calculating the quadruplets:
+        for (int first = 0; first < len - 1; first++) {
+            // avoid the duplicates while moving first
+            if (first > 0 && nums[first] == nums[first - 1])
+                continue;
+            for (int second = first + 1; second < len - 2; second++) {
+                // avoid the duplicates while moving second
+                if (second > first + 1 && nums[second] == nums[second - 1])
+                    continue;
+                // 2 pointers logic
+                int left = second + 1;
+                int right = len - 1;
+                while (left < right) {
+                    // sum is calculated separately to avoid long overflow if written as long sum = nums[first] + nums[second] + nums[left] + nums[right] will cause long overflow and fail testcase 292.
+                    long sum = nums[first];
+                    sum += nums[second];
+                    sum += nums[left];
+                    sum += nums[right];
+                    if (sum == target) {
+                        List<Integer> temp = new ArrayList<>();
+                        temp.add(nums[first]);
+                        temp.add(nums[second]);
+                        temp.add(nums[left]);
+                        temp.add(nums[right]);
+                        ans.add(temp);
+                        left++;
+                        right--;
+                        // skip the duplicates left and right pointers
+                        while (left < right && nums[left] == nums[left - 1]) left++;
+                        while (left < right && nums[right] == nums[right + 1]) right--;
+                    } else if (// if sum is less than the target then increment left pointer so to increase the sum
+                    sum < target)
+                        // if sum is less than the target then increment left pointer so to increase the sum
+                        left++;
+                    else
+                        // if sum is greater than the target then increment right pointer so to decrease the sum
+                        right--;
+                }
+            }
+        }
+        // return the list of list of integers containing unique quadruplets that add to the target
+        return ans;
+    }
+}

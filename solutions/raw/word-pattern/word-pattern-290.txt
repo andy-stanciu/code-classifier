@@ -1,0 +1,33 @@
+class Solution {
+
+    public boolean wordPattern(String pattern, String s) {
+        HashMap<Character, String> map = new HashMap<>();
+        List<String> strList = new ArrayList<>();
+        toStrArray(s, strList);
+        if (strList.size() != pattern.length()) {
+            return false;
+        }
+        for (int i = 0; i < pattern.length(); i++) {
+            if (map.containsKey(pattern.charAt(i))) {
+                if (!map.get(pattern.charAt(i)).equals(strList.get(i))) {
+                    return false;
+                }
+            } else {
+                if (map.containsValue(strList.get(i)))
+                    return false;
+                map.put(pattern.charAt(i), strList.get(i));
+            }
+        }
+        return true;
+    }
+
+    public void toStrArray(String s, List<String> strList) {
+        if (!s.contains(" ")) {
+            strList.add(s);
+            return;
+        }
+        String cut = s.substring(0, s.indexOf(" "));
+        strList.add(cut);
+        toStrArray(s.substring(s.indexOf(" ") + 1, s.length()), strList);
+    }
+}

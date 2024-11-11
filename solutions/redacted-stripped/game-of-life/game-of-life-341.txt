@@ -1,0 +1,47 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int m = board.length, n = board[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (isLivable(board, i, j, m, n)) {
+                    board[i][j] = board[i][j] == 1 ? 1 : 2;
+                } else {
+                    board[i][j] = board[i][j] == 0 ? 0 : 3;
+                }
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 2) {
+                    board[i][j] = 1;
+                }
+                if (board[i][j] == 3) {
+                    board[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    private boolean isLivable(int[][] board, int i, int j, int m, int n) {
+        int count = getTotalLiveNeighCount(board, i, j, m, n);
+        return board[i][j] == 1 ? count == 2 || count == 3 : count == 3;
+    }
+
+    private boolean isBounded(int[][] board, int i, int j, int m, int n) {
+        return i >= 0 && i < m && j >= 0 && j < n;
+    }
+
+    private int getTotalLiveNeighCount(int[][] board, int i, int j, int m, int n) {
+        int count = 0;
+        int[][] dirs = new int[][] { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+        for (int[] dir : dirs) {
+            int nextI = dir[0] + i;
+            int nextJ = dir[1] + j;
+            if (isBounded(board, nextI, nextJ, m, n) && (board[nextI][nextJ] == 1 || board[nextI][nextJ] == 3)) {
+                count++;
+            }
+        }
+        return count;
+    }
+}

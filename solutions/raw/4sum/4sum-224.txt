@@ -1,0 +1,50 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        // set up the result which woulkde be an arrray of arrays
+        // of numbers adding up to the target
+        List<List<Integer>> result = new ArrayList<>();
+        //return if the arry given is null or less than 4
+        if (nums == null || nums.length < 4)
+            return result;
+        //sort the array
+        Arrays.sort(nums);
+        // start a for llop to go through the given array
+        // this would be the fisrt pointer pointing at the current element in array
+        for (int i = 0; i < nums.length - 3; i++) {
+            //if current element is same as previous skip
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+            // second loop like for 3 sum this time we are searching for a sum equal
+            // to the compliment
+            for (int j = i + 1; j < nums.length - 2; j++) {
+                // skip if elemt is same as previous element
+                if (j > i + 1 && nums[j] == nums[j - 1])
+                    continue;
+                // set up the two pointers going from left (element after j) and
+                // right end of array, both moving towards the middle
+                int left = j + 1;
+                int right = nums.length - 1;
+                while (left < right) {
+                    //it is import5ant to note the "long" used here instead of int
+                    // it is used in case we get cases of very large numbers like
+                    // 10000002992992
+                    long sum = (long) nums[i] + nums[j] + nums[left] + nums[right];
+                    if (sum == target) {
+                        result.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+                        left++;
+                        right--;
+                        // avoiding duplication
+                        while (left < right && nums[left] == nums[left - 1]) left++;
+                        while (left < right && nums[right] == nums[right + 1]) right--;
+                    } else if (sum < target) {
+                        left++;
+                    } else {
+                        right--;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}

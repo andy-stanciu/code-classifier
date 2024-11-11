@@ -1,0 +1,30 @@
+class Solution {
+
+    Set<List<Integer>> s = new HashSet();
+
+    public List<List<Integer>> combine(int n, int k) {
+        boolean[] visited = new boolean[n + 1];
+        List<List<Integer>> result = new ArrayList<>();
+        helper(result, new ArrayList(), n, k, visited, 1);
+        return result;
+    }
+
+    private void helper(List<List<Integer>> result, List<Integer> currentList, int n, int k, boolean[] visited, int start) {
+        if (currentList.size() == k) {
+            if (!s.contains(currentList)) {
+                s.add(new ArrayList(currentList));
+                result.add(new ArrayList(currentList));
+            }
+            return;
+        }
+        for (int i = start; i <= n; i++) {
+            if (!visited[i]) {
+                visited[i] = true;
+                currentList.add(i);
+                helper(result, currentList, n, k, visited, ++start);
+                visited[i] = false;
+                currentList.remove(currentList.size() - 1);
+            }
+        }
+    }
+}

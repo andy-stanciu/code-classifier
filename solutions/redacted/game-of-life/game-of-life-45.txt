@@ -1,0 +1,49 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        if (board == null || board.length == 0 || board[0].length == 0)
+            return;
+        int m = board.length;
+        int n = board[0].length;
+        int[][] dirs = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 }, { 1, 1 }, { -1, -1 }, { 1, -1 }, { -1, 1 } };
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int liveNeighborCounts = method2(board, i, j, dirs);
+                if (board[i][j] == 1) {
+                    // Current cell is alive
+                    if (liveNeighborCounts < 2 || liveNeighborCounts > 3)
+                        // alive but marked dead
+                        board[i][j] = -1;
+                } else {
+                    // Current cell is dead
+                    if (liveNeighborCounts == 3)
+                        // Dead but marked alive
+                        board[i][j] = -2;
+                }
+            }
+        }
+        // Finalize the board
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == -1)
+                    board[i][j] = 0;
+                else if (board[i][j] == -2)
+                    board[i][j] = 1;
+            }
+        }
+    }
+
+    private static int method2(int[][] board, int row, int col, int[][] dirs) {
+        int counts = 0;
+        for (int[] dir : dirs) {
+            int x = row + dir[0];
+            int y = col + dir[1];
+            if (x >= 0 && x < board.length && y >= 0 && y < board[0].length) {
+                // Count original live cells (including temporarily marked -1 as live)
+                if (board[x][y] == 1 || board[x][y] == -1)
+                    counts++;
+            }
+        }
+        return counts;
+    }
+}

@@ -1,0 +1,69 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        int m = board.length, n = board[0].length;
+        int[] arr = new int[8];
+        int ones = 0, zeros = 0;
+        // Let 0 to 1 change be equal to 2
+        // Let 1 to 2 change be equal to 3
+        // Mean, 2 : Current Generation = 0 & Next Generation = 1
+        // Mean, 3 : Current Generation = 1 & Next Generation = 0
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                ones = 0;
+                zeros = 0;
+                // Eight neighbors (horizontal, vertical, diagonal)
+                // top
+                arr[0] = i - 1 >= 0 ? board[i - 1][j] : -1;
+                // bottom
+                arr[1] = i + 1 < m ? board[i + 1][j] : -1;
+                // left
+                arr[2] = j - 1 >= 0 ? board[i][j - 1] : -1;
+                // right
+                arr[3] = j + 1 < n ? board[i][j + 1] : -1;
+                // top-left
+                arr[4] = i - 1 >= 0 && j - 1 >= 0 ? board[i - 1][j - 1] : -1;
+                // top-right
+                arr[5] = i - 1 >= 0 && j + 1 < n ? board[i - 1][j + 1] : -1;
+                // bottom-left
+                arr[6] = i + 1 < m && j - 1 >= 0 ? board[i + 1][j - 1] : -1;
+                // bottom-right
+                arr[7] = i + 1 < m && j + 1 < n ? board[i + 1][j + 1] : -1;
+                // This loop always run for 8 times and
+                // size of the arr[] array will 8 only everytime, it does not depends upon the input size
+                // So, this is a constant Operation
+                // So, this will not effect the Time and Space Complexity
+                for (int k = 0; k < 8; k++) {
+                    if (arr[k] == 1 || arr[k] == 3) {
+                        ones++;
+                    }
+                    if (arr[k] == 0 || arr[k] == 2) {
+                        zeros++;
+                    }
+                }
+                if (board[i][j] == 0) {
+                    if (ones == 3) {
+                        // 0 -> 1 = 2
+                        board[i][j] = 2;
+                    }
+                } else {
+                    if (ones < 2 || ones > 3) {
+                        // 1 -> 0 = 3
+                        board[i][j] = 3;
+                    }
+                }
+            }
+        }
+        // Making final changes in the Next Generation
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 2) {
+                    board[i][j] = 1;
+                }
+                if (board[i][j] == 3) {
+                    board[i][j] = 0;
+                }
+            }
+        }
+    }
+}

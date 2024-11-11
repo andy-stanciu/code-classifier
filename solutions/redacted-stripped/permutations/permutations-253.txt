@@ -1,0 +1,31 @@
+class Solution {
+
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> results = new ArrayList<>();
+        List<Integer> currPerm = new ArrayList<>();
+        getPerms(nums, results, currPerm);
+        return results;
+    }
+
+    private static int[] splice(int[] nums, int remove) {
+        int[] rest = new int[nums.length - 1];
+        for (int i = 0, j = 0; i < nums.length; i++) if (i != remove)
+            rest[j++] = nums[i];
+        return rest;
+    }
+
+    private static void getPerms(int[] nums, List<List<Integer>> results, List<Integer> currPerm) {
+        if (nums.length == 1) {
+            currPerm.add(nums[0]);
+            results.add(new ArrayList<>(currPerm));
+            currPerm.removeLast();
+        } else {
+            for (int i = 0; i < nums.length; i++) {
+                int[] theRest = splice(nums, i);
+                currPerm.add(nums[i]);
+                getPerms(theRest, results, currPerm);
+                currPerm.removeLast();
+            }
+        }
+    }
+}

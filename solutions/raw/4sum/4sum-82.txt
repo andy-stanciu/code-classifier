@@ -1,0 +1,37 @@
+class Solution {
+
+    private void threeSum(int[] nums, int target, int s, List<List<Integer>> res) {
+        int n = nums.length;
+        for (int i = s + 1; i < n; i++) {
+            int a = nums[i];
+            int l = i + 1, r = n - 1;
+            while (l < r) {
+                int b = nums[l], c = nums[r];
+                int curDiff = ((target - a) - b) - c;
+                if (curDiff == 0) {
+                    res.add(Arrays.asList(nums[s], a, b, c));
+                    l++;
+                    r--;
+                    while (l < r && nums[l - 1] == nums[l]) l++;
+                    while (l < r && nums[r + 1] == nums[r]) r--;
+                } else if (curDiff < 0) {
+                    r--;
+                } else {
+                    l++;
+                }
+            }
+            while (i < n - 1 && nums[i] == nums[i + 1]) i++;
+        }
+    }
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums);
+        ArrayList<List<Integer>> res = new ArrayList<List<Integer>>();
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            threeSum(nums, target - nums[i], i, res);
+            while (i < n - 1 && nums[i] == nums[i + 1]) i++;
+        }
+        return res;
+    }
+}

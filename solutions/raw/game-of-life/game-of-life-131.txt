@@ -1,0 +1,37 @@
+class Solution {
+
+    public int live(int i, int j, int[][] board, int col, int row) {
+        int count = 0;
+        for (int x = i - 1; x <= i + 1; x++) {
+            for (int y = j - 1; y <= j + 1; y++) {
+                // Skip the cell itself and out of bounds cells
+                if ((x == i && y == j) || x < 0 || x >= row || y < 0 || y >= col)
+                    continue;
+                count += board[x][y];
+            }
+        }
+        if (board[i][j] == 1 && (count < 2 || count > 3))
+            return 0;
+        if (board[i][j] == 0 && count == 3)
+            return 1;
+        if (board[i][j] == 1 && (count == 2 || count == 3))
+            return 1;
+        return 0;
+    }
+
+    public void gameOfLife(int[][] board) {
+        int n = board.length, i = 0, j = 0;
+        int m = board[0].length;
+        int[][] copy = new int[n][m];
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < m; j++) {
+                copy[i][j] = board[i][j];
+            }
+        }
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < m; j++) {
+                board[i][j] = live(i, j, copy, m, n);
+            }
+        }
+    }
+}

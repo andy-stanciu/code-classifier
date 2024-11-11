@@ -1,0 +1,51 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        // Create a copy of the board to store the next state
+        int[][] nextState = new int[m][n];
+        // Define eight directions for neighbor cells
+        int[] dx = { -1, -1, -1, 0, 0, 1, 1, 1 };
+        int[] dy = { -1, 0, 1, -1, 1, -1, 0, 1 };
+        // Iterate through each cell in the current state
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // Count of live neighbors
+                int liveNeighbors = 0;
+                // Check all eight neighboring cells
+                for (int k = 0; k < 8; k++) {
+                    int x = i + dx[k];
+                    int y = j + dy[k];
+                    // Check if the neighboring cell is within the bounds of the board
+                    if (x >= 0 && x < m && y >= 0 && y < n) {
+                        liveNeighbors += board[x][y];
+                    }
+                }
+                // Apply the Game of Life rules
+                if (board[i][j] == 1) {
+                    // Rule 1 and Rule 3
+                    if (liveNeighbors < 2 || liveNeighbors > 3) {
+                        // Cell dies
+                        nextState[i][j] = 0;
+                    } else {
+                        // Cell lives
+                        nextState[i][j] = 1;
+                    }
+                } else {
+                    // Rule 4
+                    if (liveNeighbors == 3) {
+                        // Dead cell becomes alive
+                        nextState[i][j] = 1;
+                    }
+                }
+            }
+        }
+        // Copy the next state back to the original board
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                board[i][j] = nextState[i][j];
+            }
+        }
+    }
+}

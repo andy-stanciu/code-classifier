@@ -1,0 +1,34 @@
+class Solution {
+
+    public List<List<Integer>> permute(int[] nums) {
+        int max = 0;
+        for (int i : nums) {
+            max = Math.max(max, i);
+        }
+        boolean[] visited = new boolean[max + 11];
+        //List<Integer>  local_list = new ArrayList<>();
+        List<List<Integer>> ans = new ArrayList<>();
+        int[] local_list = new int[nums.length];
+        helper(visited, local_list, nums, ans, 0);
+        return ans;
+    }
+
+    void helper(boolean[] visited, int[] local_list, int[] nums, List<List<Integer>> ans, int index) {
+        if (index == local_list.length) {
+            List<Integer> copy = new ArrayList<>();
+            for (int i : local_list) {
+                copy.add(i);
+            }
+            ans.add(copy);
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (!(visited[nums[i] + 10])) {
+                local_list[index] = nums[i];
+                visited[nums[i] + 10] = true;
+                helper(visited, local_list, nums, ans, index + 1);
+                visited[nums[i] + 10] = false;
+            }
+        }
+    }
+}

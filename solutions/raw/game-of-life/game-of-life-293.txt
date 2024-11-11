@@ -1,0 +1,57 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        int yEnd = board.length - 1, xEnd = board[0].length - 1;
+        for (int y = 0; y <= yEnd; y++) {
+            for (int x = 0; x <= xEnd; x++) {
+                int currCell = board[y][x];
+                // Count how many live neighbors
+                int liveCells = checkLiveNeighbors(board, x, y);
+                // if cell\'s last bit is a 1(alive)
+                if ((currCell & 1) == 1) {
+                    if (liveCells < 2 || liveCells > 3) {
+                        // 1 in binary is 01 so after shift it becomes 0(dead)
+                        board[y][x] = 1;
+                    } else if (liveCells <= 3) {
+                        // 3 in binary is 11 so after shift it stays 1(alive)
+                        board[y][x] = 3;
+                    }
+                } else {
+                    // if dead cell has 3 neighbors
+                    if (liveCells == 3) {
+                        // 2 in binary is 10 so after shift it becomes 1(alive)
+                        board[y][x] = 2;
+                    } else {
+                        // 0 in binary is 00 so cell stays dead
+                        board[y][x] = 0;
+                    }
+                }
+            }
+        }
+        // Shift the bits of each cell by one place to the right
+        for (int y = 0; y <= yEnd; y++) {
+            for (int x = 0; x <= xEnd; x++) {
+                board[y][x] = board[y][x] >> 1;
+            }
+        }
+    }
+
+    public int checkLiveNeighbors(int[][] board, int xPos, int yPos) {
+        int liveCells = 0;
+        for (int y = yPos - 1; y <= yPos + 1; y++) {
+            for (int x = xPos - 1; x <= xPos + 1; x++) {
+                // if in the center, skip it
+                if (x == xPos && y == yPos)
+                    continue;
+                // neighbor is in the matrix
+                if (y >= 0 && y < board.length && x >= 0 && x < board[0].length) {
+                    // if the cell\'s last bit is a 1 meaning it\'s currently a 1
+                    // Increment live cell counter
+                    if ((board[y][x] & 1) == 1)
+                        liveCells++;
+                }
+            }
+        }
+        return liveCells;
+    }
+}

@@ -1,0 +1,46 @@
+class Solution {
+
+    private static final int[][] DIRECTIONS = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+
+    public void method1(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int liveNeighbors = countLiveNeighbors(board, i, j, m, n);
+                if (board[i][j] == 1) {
+                    if (liveNeighbors < 2 || liveNeighbors > 3) {
+                        board[i][j] += 20;
+                    } else {
+                        board[i][j] += 10;
+                    }
+                } else {
+                    if (liveNeighbors == 3) {
+                        board[i][j] += 10;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] / 10 == 1) {
+                    board[i][j] = 1;
+                } else {
+                    board[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    private int countLiveNeighbors(int[][] board, int i, int j, int m, int n) {
+        int count = 0;
+        for (int[] direction : DIRECTIONS) {
+            int newRow = i + direction[0];
+            int newCol = j + direction[1];
+            if (newRow >= 0 && newRow < m && newCol >= 0 && newCol < n) {
+                count += board[newRow][newCol] % 10;
+            }
+        }
+        return count;
+    }
+}

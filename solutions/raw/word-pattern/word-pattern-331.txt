@@ -1,0 +1,37 @@
+class Solution {
+
+    public boolean wordPattern(String pattern, String s) {
+        if (pattern == null || s == null || s.trim().isEmpty()) {
+            return false;
+        }
+        s = s.trim();
+        String[] words = s.split(" ");
+        if (pattern.length() != words.length) {
+            // Patterns and words have unequal lengths
+            return false;
+        }
+        Map<Character, String> map = new HashMap<>();
+        Set<String> mappedWords = new HashSet<>();
+        for (int i = 0; i < pattern.length(); i++) {
+            char currentChar = pattern.charAt(i);
+            String currentWord = words[i];
+            if (map.containsKey(currentChar)) {
+                // If pattern character is already mapped, check if it maps to the same word
+                if (!map.get(pattern.charAt(i)).equalsIgnoreCase(currentWord)) {
+                    // Pattern character maps to a different word
+                    return false;
+                }
+            } else {
+                // If pattern character is not mapped yet, check if the word is already mapped
+                // to another character
+                if (mappedWords.contains(currentWord)) {
+                    // Word is mapped to another pattern character
+                    return false;
+                }
+                map.put(currentChar, currentWord);
+                mappedWords.add(currentWord);
+            }
+        }
+        return true;
+    }
+}

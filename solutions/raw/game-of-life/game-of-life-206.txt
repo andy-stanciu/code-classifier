@@ -1,0 +1,34 @@
+class Solution {
+
+    public int count_life_in_8_directions(int current_i, int current_j, int R, int C, int[][] matrix) {
+        int life_count = 0;
+        for (int[] coordinates : (new int[][] { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, 1 }, { -1, -1 }, { 1, 1 }, { 1, -1 } })) {
+            int next_i = coordinates[0];
+            int next_j = coordinates[1];
+            int new_i = (current_i + next_i);
+            int new_j = (current_j + next_j);
+            if ((new_i >= 0) && (new_i < R) && (new_j >= 0) && (new_j < C) && (matrix[new_i][new_j] == 1)) {
+                life_count++;
+            }
+        }
+        return life_count;
+    }
+
+    public void gameOfLife(int[][] matrix) {
+        int R = matrix.length;
+        int C = matrix[0].length;
+        int[][] neighbours_life_count_matrix = new int[R][C];
+        for (int i = 0; (i < R); i++) {
+            for (int j = 0; (j < C); j++) {
+                neighbours_life_count_matrix[i][j] = count_life_in_8_directions(i, j, R, C, matrix);
+            }
+        }
+        for (int i = 0; (i < R); i++) {
+            for (int j = 0; (j < C); j++) {
+                boolean condition_1 = ((matrix[i][j] == 0) && (neighbours_life_count_matrix[i][j] == 3));
+                boolean condition_2 = ((matrix[i][j] == 1) && ((neighbours_life_count_matrix[i][j] < 2) || (neighbours_life_count_matrix[i][j] > 3)));
+                matrix[i][j] = ((condition_1) ? (1) : ((condition_2) ? (0) : (matrix[i][j])));
+            }
+        }
+    }
+}

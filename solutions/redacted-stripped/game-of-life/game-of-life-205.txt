@@ -1,0 +1,40 @@
+class Solution {
+
+    int[][] neighbour = { { -1, -1 }, { -1, 0 }, { 0, -1 }, { -1, 1 }, { 1, -1 }, { 0, 1 }, { 1, 0 }, { 1, 1 } };
+
+    public void method1(int[][] board) {
+        if (board == null)
+            return;
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                int sum = getNeighbourSum(board, i, j);
+                if (board[i][j] == 1 && (sum == 2 || sum == 3)) {
+                    board[i][j] = 3;
+                } else if (board[i][j] == 0 && sum == 3) {
+                    board[i][j] = 1;
+                } else if (board[i][j] == 1) {
+                    board[i][j] = 2;
+                }
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                board[i][j] = (board[i][j] & 1);
+            }
+        }
+    }
+
+    private int getNeighbourSum(int[][] board, int i, int j) {
+        int sum = 0;
+        for (int a = 0; a < neighbour.length; a++) {
+            int x = i + neighbour[a][0], y = j + neighbour[a][1];
+            if (x >= 0 && y >= 0 && x < board.length && y < board[0].length) {
+                if (a <= 3)
+                    sum += ((board[x][y] & 2) >> 1);
+                else
+                    sum += board[x][y];
+            }
+        }
+        return sum;
+    }
+}

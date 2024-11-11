@@ -1,0 +1,55 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int orgVal = getBitAtKthPos(0, board[i][j]);
+                int[] neighbors = new int[8];
+                //right
+                neighbors[0] = j < n - 1 ? getBitAtKthPos(0, board[i][j + 1]) : 0;
+                //left
+                neighbors[1] = j > 0 ? getBitAtKthPos(0, board[i][j - 1]) : 0;
+                // top
+                neighbors[2] = i > 0 ? getBitAtKthPos(0, board[i - 1][j]) : 0;
+                //bottom
+                neighbors[3] = i < m - 1 ? getBitAtKthPos(0, board[i + 1][j]) : 0;
+                // top right
+                neighbors[4] = i > 0 && j < n - 1 ? getBitAtKthPos(0, board[i - 1][j + 1]) : 0;
+                // top left
+                neighbors[5] = i > 0 && j > 0 ? getBitAtKthPos(0, board[i - 1][j - 1]) : 0;
+                // bott right
+                neighbors[6] = i < m - 1 && j < n - 1 ? getBitAtKthPos(0, board[i + 1][j + 1]) : 0;
+                // bott left
+                neighbors[7] = i < m - 1 && j > 0 ? getBitAtKthPos(0, board[i + 1][j - 1]) : 0;
+                int var1 = 0;
+                for (int num : neighbors) {
+                    var1 += (num >= 1 ? 1 : 0);
+                }
+                if (orgVal == 1) {
+                    if (var1 == 2 || var1 == 3) {
+                        // set bit at 4 to 1
+                        board[i][j] = setBitAtKthPos(4, orgVal);
+                    }
+                } else if (var1 == 3) {
+                    // set bit at 4 to 1
+                    board[i][j] = setBitAtKthPos(4, orgVal);
+                }
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                board[i][j] = getBitAtKthPos(4, board[i][j]);
+            }
+        }
+    }
+
+    int getBitAtKthPos(int k, int num) {
+        return (num >> k) & 1;
+    }
+
+    int setBitAtKthPos(int k, int num) {
+        return num | (1 << k);
+    }
+}

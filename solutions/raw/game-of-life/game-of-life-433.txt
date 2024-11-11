@@ -1,0 +1,35 @@
+class Solution {
+
+    private int rows;
+
+    private int columns;
+
+    private int[][] shadow;
+
+    public void gameOfLife(int[][] board) {
+        rows = board.length;
+        columns = board[0].length;
+        shadow = new int[rows][columns];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                shadow[i][j] = board[i][j];
+            }
+        }
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) board[i][j] = deadOrAlive(i, j);
+        }
+    }
+
+    private int deadOrAlive(int row, int col) {
+        int[][] neighbors = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+        int neighborCount = 0;
+        for (int i = 0; i < neighbors.length; i++) {
+            int r = row + neighbors[i][0];
+            int c = col + neighbors[i][1];
+            if (c < 0 || r < 0 || r >= rows || c >= columns)
+                continue;
+            neighborCount += shadow[r][c];
+        }
+        return (neighborCount == 2 && shadow[row][col] == 1) || neighborCount == 3 ? 1 : 0;
+    }
+}

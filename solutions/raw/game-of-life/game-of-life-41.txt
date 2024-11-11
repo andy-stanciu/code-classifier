@@ -1,0 +1,50 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        int rows = board.length;
+        int cols = board[0].length;
+        // Directions array to find 8 neighboring cells for a given cell
+        int[] neighbors = { 0, 1, -1 };
+        // Iterate through the board cell by cell
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                // Count live neighbors
+                int liveNeighbors = 0;
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        if (!(neighbors[i] == 0 && neighbors[j] == 0)) {
+                            int r = row + neighbors[i];
+                            int c = col + neighbors[j];
+                            // Check the validity of the neighboring cell and whether it was originally a live cell
+                            if (r >= 0 && r < rows && c >= 0 && c < cols && Math.abs(board[r][c]) == 1) {
+                                liveNeighbors++;
+                            }
+                        }
+                    }
+                }
+                // Rule 1 or Rule 3: live cell with < 2 or > 3 live neighbors dies
+                if (board[row][col] == 1 && (liveNeighbors < 2 || liveNeighbors > 3)) {
+                    // Mark cell as dead-to-live
+                    board[row][col] = -1;
+                }
+                // Rule 4: dead cell with exactly 3 live neighbors becomes alive
+                if (board[row][col] == 0 && liveNeighbors == 3) {
+                    // Mark cell as dead-to-live
+                    board[row][col] = 2;
+                }
+            }
+        }
+        // Final pass to update the board to the new state
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                if (board[row][col] == -1) {
+                    // Convert to dead
+                    board[row][col] = 0;
+                } else if (board[row][col] == 2) {
+                    // Convert to alive
+                    board[row][col] = 1;
+                }
+            }
+        }
+    }
+}

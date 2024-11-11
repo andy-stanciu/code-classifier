@@ -1,0 +1,61 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        //mark 2 as current live, next die
+        //mark 3 as current die, next live
+        int n = board.length, m = board[0].length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                int[] count = counter(board, i, j, n, m);
+                //live one.
+                if (board[i][j] == 1) {
+                    if (count[0] < 2 || count[0] > 3) {
+                        board[i][j] = 2;
+                    }
+                } else {
+                    //dead one.
+                    if (count[0] == 3) {
+                        board[i][j] = 3;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (board[i][j] == 2) {
+                    board[i][j] = 0;
+                } else if (board[i][j] == 3) {
+                    board[i][j] = 1;
+                }
+            }
+        }
+    }
+
+    /**
+     *     count[0] means live ones.
+     *     count[1] means dead ones.
+     */
+    private int[] counter(int[][] board, int i, int j, int n, int m) {
+        int rs = i - 1 < 0 ? 0 : i - 1;
+        int cs = j - 1 < 0 ? 0 : j - 1;
+        int re = i + 1 > n - 1 ? n - 1 : i + 1;
+        int ce = j + 1 > m - 1 ? m - 1 : j + 1;
+        int[] count = new int[2];
+        count[0] = 0;
+        count[1] = 0;
+        for (int r = rs; r <= re; r++) {
+            for (int c = cs; c <= ce; c++) {
+                if (r == i && c == j) {
+                    continue;
+                }
+                if (board[r][c] == 1 || board[r][c] == 2) {
+                    count[0]++;
+                }
+                if (board[r][c] == 0 || board[r][c] == 3) {
+                    count[1]++;
+                }
+            }
+        }
+        return count;
+    }
+}

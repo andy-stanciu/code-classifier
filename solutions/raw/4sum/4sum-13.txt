@@ -1,0 +1,52 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        // Sort the given array
+        Arrays.sort(nums);
+        // Create a List to hold the answer
+        List<List<Integer>> L = new ArrayList<>();
+        for (int i = 0; i < nums.length - 3; i++) {
+            while (i > 0 && i < nums.length - 3 && nums[i] == nums[i - 1]) {
+                i++;
+            }
+            if (i == nums.length - 3)
+                break;
+            for (int j = i + 1; j < nums.length - 2; j++) {
+                while (j < nums.length - 2 && j - i > 1 && nums[j] == nums[j - 1]) {
+                    j++;
+                }
+                if (j == nums.length - 2)
+                    break;
+                for (int k = j + 1; k < nums.length - 1; k++) {
+                    while (k < nums.length - 1 && k - j > 1 && nums[k] == nums[k - 1]) {
+                        k++;
+                    }
+                    if (k == nums.length - 1)
+                        break;
+                    long search = (long) target - nums[i] - nums[j] - nums[k];
+                    // Apply binary search to find the 4th element
+                    int s = k + 1;
+                    int e = nums.length - 1;
+                    while (s <= e) {
+                        int m = s + (e - s) / 2;
+                        if (nums[m] == search) {
+                            // Add elements inside the list
+                            List<Integer> l = new ArrayList<>();
+                            l.add(nums[i]);
+                            l.add(nums[j]);
+                            l.add(nums[k]);
+                            l.add(nums[m]);
+                            // Add list to the main list
+                            L.add(l);
+                            break;
+                        } else if (nums[m] > search)
+                            e = m - 1;
+                        else
+                            s = m + 1;
+                    }
+                }
+            }
+        }
+        return L;
+    }
+}

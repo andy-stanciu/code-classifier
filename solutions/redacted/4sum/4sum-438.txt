@@ -1,0 +1,55 @@
+/*
+    OPTIMAL- (Two Pointer(k and l))
+    T(n) = O(n^3)
+    S(n) = O(number of quadruplets),space is used only to return the result. 
+    (no extraspace like hashset)
+
+    Two Pointer, using two nested loops for i and j and using k and l 
+    as pointer from j+1 to length and checking all unique combination.
+
+    In worst case the nested list(result) can take space upto O(n^2).
+    This occurs when, for example, all combinations of indices (i, j, k, l) 
+    form unique quadruplets. 
+*/
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        int size = nums.length;
+        // sort the array
+        // test-array: -2, -1, 0, 0, 1, 2
+        Arrays.sort(nums);
+        for (int i = 0; i < size; i++) {
+            if (// i++, if next value == previous value
+            i > 0 && nums[i - 1] == nums[i])
+                continue;
+            for (int j = i + 1; j < size; j++) {
+                if (// i++, if next value == previous value
+                j > i + 1 && nums[j - 1] == nums[j])
+                    continue;
+                int k = j + 1;
+                int l = size - 1;
+                while (k < l) {
+                    long sum = (long) nums[i] + nums[j] + nums[k] + nums[l];
+                    if (sum == target) {
+                        result.add(Arrays.asList(nums[i], nums[j], nums[k], nums[l]));
+                        k++;
+                        l--;
+                        // k++ and l--, while next value == previous value
+                        while (k < l && nums[k - 1] == nums[k]) k++;
+                        while (k < l && nums[l + 1] == nums[l]) l--;
+                    } else if (sum < target) {
+                        k++;
+                        // k++, if next value == previous value
+                        while (k < l && nums[k - 1] == nums[k]) k++;
+                    } else {
+                        l--;
+                        // l--, if next value == previous value
+                        while (k < l && nums[l + 1] == nums[l]) l--;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}

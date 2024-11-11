@@ -1,0 +1,71 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        /*
+        // Approach 1 - With Set
+        Set<List<Integer>> res = new HashSet<>();
+        Arrays.sort(nums);
+        for(int i=0; i<nums.length; i++) {
+            for(int j=i+1; j<nums.length; j++) {
+                Set<Long> st = new HashSet<>();
+                Map<Long, Integer> map = new HashMap<>();
+                for(int k=j+1; k<nums.length; k++) {
+                    long sum = nums[i] + nums[j];
+                    sum += nums[k];
+                    long fourth = target - sum;
+                    //if(st.contains(fourth)) {
+                    if(map.containsKey(fourth)) {
+                        List<Integer> subList  = new ArrayList<>(Arrays.asList(nums[i], nums[j], nums[k], (int)fourth));
+                        Collections.sort(subList);
+                        res.add(subList);
+                    }
+                    else {
+                        //st.add((long)nums[k]);
+                        map.put((long)(nums[k]), k);
+                    }
+                }
+            }
+        }
+        List<List<Integer>> op = new ArrayList<>(res);
+        return op;
+        */
+        // Approach 2 - Without Set
+        List<List<Integer>> op = new ArrayList<>();
+        Arrays.sort(nums);
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            for (int j = i + 1; j < n; j++) {
+                if (j != i + 1 && nums[j] == nums[j - 1]) {
+                    continue;
+                }
+                int k = j + 1;
+                int l = n - 1;
+                while (k < l) {
+                    long sum = nums[i];
+                    sum += nums[j];
+                    sum += nums[k];
+                    sum += nums[l];
+                    if (sum == target) {
+                        op.add(Arrays.asList(nums[i], nums[j], nums[k], nums[l]));
+                        k++;
+                        while (k < l && nums[k] == nums[k - 1]) {
+                            k++;
+                        }
+                        l--;
+                        while (k < l && nums[l] == nums[l + 1]) {
+                            l--;
+                        }
+                    } else if (sum < target) {
+                        k++;
+                    } else {
+                        l--;
+                    }
+                }
+            }
+        }
+        return op;
+    }
+}

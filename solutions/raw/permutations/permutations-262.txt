@@ -1,0 +1,47 @@
+class Solution {
+
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        if (nums.length == 1) {
+            List<Integer> an = new ArrayList<Integer>();
+            an.add(nums[0]);
+            result.add(an);
+            return result;
+        }
+        int[] availables = new int[nums.length];
+        int[] index = new int[nums.length];
+        int availableBits = (1 << nums.length) - 1;
+        availables[0] = availableBits;
+        int pos = 0;
+        while (pos != 0 || availables[0] != 0) {
+            int ways = availables[pos];
+            if (ways == 0) {
+                pos--;
+                continue;
+            }
+            int actualIndex = 0;
+            while (((1 << actualIndex) & ways) == 0) {
+                actualIndex++;
+            }
+            int num = 1 << actualIndex;
+            availables[pos] = ways ^ num;
+            index[pos] = actualIndex;
+            if (pos == nums.length - 1) {
+                List<Integer> ans = new ArrayList<Integer>();
+                result.add(ans);
+                for (int i = 0; i < nums.length; i++) {
+                    ans.add(nums[index[i]]);
+                }
+                pos--;
+                continue;
+            }
+            pos++;
+            num = availableBits;
+            for (int ind = 0; ind < pos; ind++) {
+                num = num ^ (1 << index[ind]);
+            }
+            availables[pos] = num;
+        }
+        return result;
+    }
+}

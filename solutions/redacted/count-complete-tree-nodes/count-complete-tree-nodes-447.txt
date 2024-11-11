@@ -1,0 +1,62 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public int method1(TreeNode root) {
+        if (root == null)
+            return 0;
+        // get height of tree:
+        int h = 0;
+        TreeNode tmp = root;
+        while (tmp.left != null) {
+            h++;
+            tmp = tmp.left;
+        }
+        // binary search:
+        List<Boolean> path = new LinkedList<>();
+        for (int i = 0; i < h; i++) {
+            TreeNode node = root;
+            // (1): step i-times into the correct, known halves
+            int j = 0;
+            while (j < i) {
+                boolean rightHalf = path.get(j);
+                node = rightHalf ? node.right : node.left;
+                j++;
+            }
+            // (2)&(3): go right once, then left until the end
+            while (j < h) {
+                node = j == i ? node.right : node.left;
+                j++;
+            }
+            boolean rightHalf = node != null;
+            path.add(rightHalf);
+        }
+        // turn boolean path into number (e.g. [true, false, false] = 100 binary = 4 decimal)
+        int lastLeaf = 0;
+        int len = path.size();
+        for (int i = 0; i < len; i++) {
+            if (!path.get(i))
+                continue;
+            lastLeaf += (int) Math.pow(2, len - 1 - i);
+        }
+        // e.g. tree of height 3 can have max. 2^4 - 1 nodes.
+        int var1 = ((int) Math.pow(2, h + 1)) - 1;
+        // e.g. tree of height 3 can have max. leaf with binary number 2^3 - 1.
+        int maxLeaf = ((int) Math.pow(2, h)) - 1;
+        int missingLeaves = maxLeaf - lastLeaf;
+        return var1 - missingLeaves;
+    }
+}

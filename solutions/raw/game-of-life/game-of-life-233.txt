@@ -1,0 +1,55 @@
+class Solution {
+
+    final static int DEAD = 0;
+
+    final static int LIVE = 1;
+
+    final static int DYING = 2;
+
+    final static int RESURCTING = 3;
+
+    final static int[][] MOVES = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { 1, 1 }, { -1, -1 }, { -1, 1 }, { 1, -1 } };
+
+    public void gameOfLife(int[][] board) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                int liveNeighbours = getLiveNeighboursCount(board, i, j);
+                if (board[i][j] == LIVE) {
+                    if (liveNeighbours < 2 || liveNeighbours > 3) {
+                        board[i][j] = DYING;
+                    }
+                } else {
+                    if (liveNeighbours == 3) {
+                        board[i][j] = RESURCTING;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == DYING) {
+                    board[i][j] = DEAD;
+                } else if (board[i][j] == RESURCTING) {
+                    board[i][j] = LIVE;
+                }
+            }
+        }
+    }
+
+    private int getLiveNeighboursCount(int[][] board, int x, int y) {
+        int count = 0;
+        for (int[] move : MOVES) {
+            if (isLive(board, x + move[0], y + move[1])) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private boolean isLive(int[][] board, int x, int y) {
+        if (x >= 0 && x < board.length && y >= 0 && y < board[0].length) {
+            return board[x][y] == LIVE || board[x][y] == DYING;
+        }
+        return false;
+    }
+}

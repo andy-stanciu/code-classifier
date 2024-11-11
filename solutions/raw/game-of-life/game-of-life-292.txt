@@ -1,0 +1,58 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        int yEnd = board.length - 1, xEnd = board[0].length - 1;
+        // Create a copy of the board
+        // To avoid updating a cell based on an already updated cell
+        int[][] prevBoard = new int[yEnd + 1][xEnd + 1];
+        for (int y = 0; y <= yEnd; y++) {
+            for (int x = 0; x <= xEnd; x++) {
+                prevBoard[y][x] = board[y][x];
+            }
+        }
+        // Loop through each element in the matrix
+        for (int y = 0; y <= yEnd; y++) {
+            for (int x = 0; x <= xEnd; x++) {
+                int currCell = prevBoard[y][x];
+                int liveCells = checkLiveNeighbors(prevBoard, x, y);
+                // Update the cell based on the game rules
+                // live cell has less than 2 living neighbors
+                if (currCell == 1 && liveCells < 2) {
+                    // cell dies of under-population
+                    board[y][x] = 0;
+                    // live cell has 2 or 3 neighbors
+                } else if (currCell == 1 && liveCells <= 3) {
+                    // cell keeps living
+                    board[y][x] = 1;
+                    // live cell has more than 3 neighbors
+                } else if (currCell == 1 && liveCells > 3) {
+                    // cell dies of over-population
+                    board[y][x] = 0;
+                    // dead cell has exactly 3 neighbors
+                } else if (currCell == 0 && liveCells == 3) {
+                    // cell is born through reproduction
+                    board[y][x] = 1;
+                }
+            }
+        }
+    }
+
+    public int checkLiveNeighbors(int[][] board, int xPos, int yPos) {
+        int liveCells = 0;
+        // Loop through all 8 neighbors of the cell starting in top-left
+        for (int y = yPos - 1; y <= yPos + 1; y++) {
+            for (int x = xPos - 1; x <= xPos + 1; x++) {
+                // if this is the center cell, ignore it
+                if (x == xPos && y == yPos)
+                    continue;
+                // if the neighbor is outside the matrix, ignore it
+                if (y < 0 || x < 0 || y >= board.length || x >= board[0].length)
+                    continue;
+                // increment live cell counter if the neighbor is 1(alive)
+                if (board[y][x] == 1)
+                    liveCells++;
+            }
+        }
+        return liveCells;
+    }
+}

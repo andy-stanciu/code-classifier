@@ -1,0 +1,32 @@
+class Solution {
+
+    public List<List<Integer>> permute(int[] nums) {
+        List<Integer> numList = Arrays.stream(nums).boxed().collect(Collectors.toList());
+        List<List<Integer>> result = new ArrayList<>();
+        return permuteHelper(numList);
+    }
+
+    public List<List<Integer>> permuteHelper(List<Integer> numList) {
+        ArrayList<List<Integer>> res = new ArrayList<>();
+        if (numList.size() == 1) {
+            List<Integer> a = new ArrayList<>();
+            a.add(numList.get(0));
+            res.add(a);
+            return res;
+        }
+        for (int i = 0; i < numList.size(); i++) {
+            List<Integer> temp = new ArrayList<>();
+            temp.addAll(numList);
+            Integer element = numList.get(i);
+            temp.remove(element);
+            List<List<Integer>> permutes = permuteHelper(temp);
+            for (List<Integer> permute : permutes) {
+                List<Integer> p = new ArrayList<>();
+                p.addAll(permute);
+                p.add(0, element);
+                res.add(p);
+            }
+        }
+        return res;
+    }
+}

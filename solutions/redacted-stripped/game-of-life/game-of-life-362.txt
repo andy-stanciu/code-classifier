@@ -1,0 +1,37 @@
+class Solution {
+
+    static int[] neighboursi = new int[] { -1, -1, -1, 0, 0, 1, 1, 1 };
+
+    static int[] neighboursj = new int[] { -1, 0, 1, -1, 1, -1, 0, 1 };
+
+    public void method1(int[][] board) {
+        int rows = board.length;
+        int cols = board[0].length;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                updateForIndex(board, i, j);
+            }
+        }
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                board[i][j] = board[i][j] / 2;
+            }
+        }
+    }
+
+    void updateForIndex(int[][] board, int i, int j) {
+        int count_alive = 0;
+        for (int k = 0; k < 8; k++) {
+            int curr_i = i + neighboursi[k];
+            int curr_j = j + neighboursj[k];
+            if (curr_i >= 0 && curr_i < board.length && curr_j >= 0 && curr_j < board[0].length) {
+                if ((board[curr_i][curr_j] & 1) == 1) {
+                    count_alive++;
+                }
+            }
+        }
+        if ((board[i][j] == 0 && count_alive == 3) || (board[i][j] == 1 && (count_alive == 2 || count_alive == 3))) {
+            board[i][j] |= 2;
+        }
+    }
+}

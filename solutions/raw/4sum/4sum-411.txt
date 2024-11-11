@@ -1,0 +1,46 @@
+//[-1,0,-5,-2,-2,-4,0,1,-2] -9 [-5,-4,-2,-2,-2,-1,0,0,1]
+//[1000000000,1000000000,1000000000,1000000000] -294967296
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        int len = nums.length;
+        Arrays.sort(nums);
+        for (int i = 0; i < len - 3; i++) {
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+            for (int j = i + 1; j < len - 2; j++) {
+                if (j > i + 1 && nums[j] == nums[j - 1])
+                    continue;
+                long newTarget = (long) target - nums[i] - nums[j];
+                // don\'t try to prune early, we can put pruning at the last step.
+                if ((newTarget >= 0 && newTarget < nums[j + 1]) || (newTarget < 0 && newTarget > nums[len - 1])) {
+                    //cover positive and negative target
+                    break;
+                }
+                // use the double pointer for the sorted array, this 2-sum approach using 2-pointers is not same with original 2-sum approach which uses hash.
+                for (int k = j + 1, l = len - 1; k < l; ) {
+                    if (k > j + 1 && nums[k] == nums[k - 1]) {
+                        // skip duplicated num
+                        k++;
+                        continue;
+                    }
+                    if (l < len - 1 && nums[l] == nums[l + 1]) {
+                        l--;
+                        continue;
+                    }
+                    if (nums[k] + nums[l] == newTarget) {
+                        ans.add(Arrays.asList(nums[i], nums[j], nums[k], nums[l]));
+                        k++;
+                        l--;
+                    } else if (nums[k] + nums[l] < newTarget) {
+                        k++;
+                    } else {
+                        l--;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+}

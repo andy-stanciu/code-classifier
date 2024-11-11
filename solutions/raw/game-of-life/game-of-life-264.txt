@@ -1,0 +1,47 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        if (m == 1 && n == 1) {
+            board[0][0] = 0;
+            return;
+        }
+        int[][] neighbors = { { -1, 0 }, { -1, 1 }, { -1, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, -1 }, { 0, 1 } };
+        int[][] temp = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                temp[i][j] = board[i][j];
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int current = temp[i][j];
+                int current_x = i;
+                int current_y = j;
+                int live_neighbors = 0;
+                for (int[] nei : neighbors) {
+                    int next_x = current_x + nei[0];
+                    int next_y = current_y + nei[1];
+                    if (next_x >= 0 && next_x < m && next_y >= 0 && next_y < n && temp[next_x][next_y] == 1) {
+                        live_neighbors++;
+                    }
+                }
+                if (current == 0) {
+                    if (live_neighbors == 3) {
+                        board[current_x][current_y] = 1;
+                    }
+                }
+                if (current == 1) {
+                    if (live_neighbors < 2) {
+                        board[current_x][current_y] = 0;
+                    } else if (live_neighbors == 2 || live_neighbors == 3) {
+                        board[current_x][current_y] = 1;
+                    } else {
+                        board[current_x][current_y] = 0;
+                    }
+                }
+            }
+        }
+    }
+}

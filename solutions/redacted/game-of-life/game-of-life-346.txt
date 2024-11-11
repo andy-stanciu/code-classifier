@@ -1,0 +1,49 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        // initailize a duplicate board
+        int[][] duplicateBoard = new int[board.length][board[0].length];
+        // duplicate board is required because we are changing the real board while iteration so it will
+        // affect the processing of later elements
+        // fill the duplicate board
+        for (int i = 0; i < board.length; i++) for (int j = 0; j < board[0].length; j++) duplicateBoard[i][j] = board[i][j];
+        // 8 steps to check all the 8 neighbours of any particular cell
+        int[][] steps = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+        // simply iterate over all the elements of board
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                // normal variables to take steps
+                int nbri, nbrj;
+                // a count of live neighbours of any cell
+                int liveCount = 0;
+                for (int[] step : steps) {
+                    // take steps in all 8 directions
+                    // step in ith direction
+                    nbri = i + step[0];
+                    // step in jth direction
+                    nbrj = j + step[1];
+                    // if by taking this step we are getting out of bound then simply skip this step and continue
+                    if (nbri < 0 || nbri >= board.length || nbrj < 0 || nbrj >= board[0].length)
+                        continue;
+                    // if we are not out of bound then check if this neighbour is live
+                    // if its is the increament liveCount
+                    if (duplicateBoard[nbri][nbrj] == 1)
+                        liveCount++;
+                }
+                // now we have the count of live neighbours of (i,j)th cell
+                // only thing we have to do now is apply rules
+                // so if the (i,j)th cell is live
+                if (duplicateBoard[i][j] == 1) {
+                    // then if it has live neighbour less than 2 or more than 3
+                    // make it dead
+                    if (liveCount < 2 || liveCount > 3)
+                        board[i][j] = 0;
+                } else if (liveCount == 3) {
+                    // else if the (i,j)th cell is dead and it has exactly three live neighbours
+                    // make it live
+                    board[i][j] = 1;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        int rlen = board.length;
+        int clen = board[0].length;
+        for (int r = 0; r < rlen; r++) {
+            for (int c = 0; c < clen; c++) {
+                int liveNeighbours = getLiveNeigbours(board, new int[] { r, c });
+                // Rule 1 & 4
+                if (board[r][c] == 1 && (liveNeighbours < 2 || liveNeighbours > 3))
+                    board[r][c] = -1;
+                // Rule 3
+                if (board[r][c] == 0 && liveNeighbours == 3)
+                    board[r][c] = 2;
+                // Skip Rule 2
+            }
+        }
+        for (int r = 0; r < rlen; r++) {
+            for (int c = 0; c < clen; c++) {
+                // the value is 1 if it is 1 or 2
+                // else if it is -1, its 0
+                if (board[r][c] > 0)
+                    board[r][c] = 1;
+                else
+                    board[r][c] = 0;
+            }
+        }
+    }
+
+    public int getLiveNeigbours(int[][] board, int[] curr) {
+        int[][] dir = new int[][] { { 0, 1 }, { 0, -1 }, { -1, 0 }, { 1, 0 }, { -1, -1 }, { 1, 1 }, { -1, 1 }, { 1, -1 } };
+        int noOfLiveNeighbours = 0;
+        for (int[] d : dir) {
+            int newr = d[0] + curr[0];
+            int newc = d[1] + curr[1];
+            // if the value is 0, skip it
+            // if the value is 2, skip it cause earlier it was 0
+            if (newr < 0 || newc < 0 || newr >= board.length || newc >= board[0].length || board[newr][newc] == 0 || board[newr][newc] == 2)
+                continue;
+            noOfLiveNeighbours++;
+        }
+        return noOfLiveNeighbours;
+    }
+}

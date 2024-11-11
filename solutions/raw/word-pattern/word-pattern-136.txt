@@ -1,0 +1,37 @@
+class Solution {
+
+    public boolean wordPattern(String pattern, String s) {
+        // HashMap to map pattern characters to words
+        HashMap<Character, String> hm = new HashMap<>();
+        // Reverse HashMap to map words to pattern characters
+        HashMap<String, Character> hmRev = new HashMap<>();
+        // Split the string s into words
+        String[] words = s.split(" ");
+        // If the length of the pattern and the number of words don\'t match, return false
+        if (words.length != pattern.length()) {
+            return false;
+        }
+        // Iterate over the characters in the pattern and words in the string
+        for (int i = 0; i < words.length; i++) {
+            char currentChar = pattern.charAt(i);
+            String currentWord = words[i];
+            // If the character exists in the HashMap, check if it matches the current word
+            if (hm.containsKey(currentChar)) {
+                if (!hm.get(currentChar).equals(currentWord)) {
+                    // If it doesn\'t match, return false
+                    return false;
+                }
+            } else {
+                // If the word is already mapped to another character, return false
+                if (hmRev.containsKey(currentWord)) {
+                    return false;
+                }
+                // Create new mappings in both hashmaps
+                hm.put(currentChar, currentWord);
+                hmRev.put(currentWord, currentChar);
+            }
+        }
+        // If no conflicts were found, the pattern matches the string
+        return true;
+    }
+}

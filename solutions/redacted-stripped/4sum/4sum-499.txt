@@ -1,0 +1,59 @@
+class Solution {
+
+    private void swap(int[] nums, int a, int b) {
+        int tmp = nums[a];
+        nums[a] = nums[b];
+        nums[b] = tmp;
+    }
+
+    private void qSort(int[] nums, int l, int r) {
+        if (r <= l) {
+            return;
+        }
+        int m = l + (r - l) / 2, p = l;
+        swap(nums, m, r);
+        for (int i = l; i < r; i++) {
+            if (nums[i] < nums[r]) {
+                swap(nums, i, p++);
+            }
+        }
+        swap(nums, p, r);
+        qSort(nums, l, p - 1);
+        qSort(nums, p + 1, r);
+    }
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        qSort(nums, 0, nums.length - 1);
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        for (int i = 0; i < nums.length - 3; i++) {
+            if (0 < i && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            for (int j = i + 1; j < nums.length - 2; j++) {
+                if (i + 1 < j && nums[j] == nums[j - 1]) {
+                    continue;
+                }
+                int l = j + 1, r = nums.length - 1;
+                while (l < r) {
+                    long sum = (long) nums[i] + (long) nums[j] + (long) nums[l] + (long) nums[r];
+                    if (sum < target) {
+                        l++;
+                    } else if (target < sum) {
+                        r--;
+                    } else {
+                        res.add(new ArrayList<>(Arrays.asList(nums[i], nums[j], nums[l], nums[r])));
+                        while (l < r && nums[l] == nums[l + 1]) {
+                            l++;
+                        }
+                        while (l < r && nums[r] == nums[r - 1]) {
+                            r--;
+                        }
+                        l++;
+                        r--;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+}

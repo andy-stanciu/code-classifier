@@ -1,0 +1,58 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    Map<Integer, List<Integer>> m = new HashMap();
+
+    List<List<Integer>> l = new ArrayList();
+
+    public List<List<Integer>> method1(TreeNode root) {
+        int height = 0, cnt = 0;
+        helper(root, height);
+        for (Map.Entry<Integer, List<Integer>> k : m.entrySet()) {
+            if (cnt % 2 == 0)
+                l.add(k.getValue());
+            else {
+                List<Integer> p = k.getValue();
+                List<Integer> t = new ArrayList();
+                for (int i = p.size() - 1; i >= 0; i--) {
+                    t.add(p.get(i));
+                }
+                System.out.println(p + " hdhd" + t);
+                l.add(t);
+            }
+            cnt++;
+        }
+        return l;
+    }
+
+    public void helper(TreeNode root, int height) {
+        if (root == null)
+            return;
+        if (m.containsKey(height)) {
+            List<Integer> list1 = m.get(height);
+            list1.add(root.val);
+            m.put(height, list1);
+        } else {
+            List<Integer> list = new ArrayList();
+            list.add(root.val);
+            m.put(height, list);
+        }
+        helper(root.left, height + 1);
+        helper(root.right, height + 1);
+        return;
+    }
+}

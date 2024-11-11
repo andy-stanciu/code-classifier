@@ -1,0 +1,30 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int cells = board.length * board[0].length;
+        nextState(board, 0, cells);
+    }
+
+    private void nextState(int[][] board, int position, int cells) {
+        if (position >= cells)
+            return;
+        int n = board.length, m = board[0].length;
+        int row = position / m, col = position % m;
+        int live = 0;
+        int[][] neighbours = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+        for (int[] neighbour : neighbours) {
+            int r = row + neighbour[0], c = col + neighbour[1];
+            if (r >= 0 && r < n && c >= 0 && c < m && board[r][c] == 1)
+                live++;
+        }
+        if (board[row][col] == 0 && live == 3) {
+            nextState(board, position + 1, cells);
+            board[row][col] = 1;
+        } else if (board[row][col] == 1 && (live == 2 || live == 3)) {
+            nextState(board, position + 1, cells);
+        } else {
+            nextState(board, position + 1, cells);
+            board[row][col] = 0;
+        }
+    }
+}

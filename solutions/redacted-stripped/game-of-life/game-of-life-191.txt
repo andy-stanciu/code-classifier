@@ -1,0 +1,47 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int r = board.length;
+        int c = board[0].length;
+        int[][] nextState = new int[r][c];
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                nextState[i][j] = board[i][j];
+            }
+        }
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                int liveNeighbor = countLiveNeighbor(board, i, j);
+                if (board[i][j] == 1) {
+                    if (liveNeighbor < 2 || liveNeighbor > 3) {
+                        nextState[i][j] = 0;
+                    }
+                } else {
+                    if (liveNeighbor == 3) {
+                        nextState[i][j] = 1;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                board[i][j] = nextState[i][j];
+            }
+        }
+    }
+
+    private int countLiveNeighbor(int[][] matrix, int r, int c) {
+        int row = matrix.length;
+        int col = matrix[0].length;
+        int count = 0;
+        int[][] directions = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+        for (int[] dir : directions) {
+            int newRow = r + dir[0];
+            int newCol = c + dir[1];
+            if (newRow >= 0 && newRow < row && newCol >= 0 && newCol < col && matrix[newRow][newCol] == 1) {
+                count++;
+            }
+        }
+        return count;
+    }
+}

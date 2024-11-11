@@ -1,0 +1,110 @@
+class Solution {
+
+    // C(2,1) = [1] [2]
+    //        C(1,0) = []  K = 0 so pick NOTHING
+    //        C(1,1) = [1]
+    // C(4,2) = [[1,2],[1,3],[2,3],   [1,4],[2,4],[3,4]]
+    //     C(3,1) = [1,4] [2,4] [3,4]
+    //        C(3,1) = [1] [2] [3]
+    //          C(2,0) = [ [] ]
+    //          C(2,1) = [1] [2]
+    //              C(1,0) = [ [] ]
+    //              C(1,1) = [1]
+    //        C(3,2) = [1,3] [2,3] [1,2]
+    //              C(2,1) = [1] [2]
+    //                    C(1,0) = [ [] ]
+    //                    C(1,1) = [1]
+    //              C(2,2) = [1,2]
+    //                    C(1,1) = [1]
+    //                    C(1,2) = [ ]
+    //
+    // C(n,k) = C(n - 1,k - 1) + C(n - 1,k) MEANING:
+    // seq after N choices and K picks = add Nth item to C(n-1,k-1) + don\'t add it to C(n - 1,k)
+    // IDEA 2: Iterative, converting the problem into building sequences of numbers:
+    // a.k.a build all possible numbers with K digits, where each digit is BIGGER than previous
+    // this removes duplicates !!!!
+    // Basically iterating over combinations lexicographically !!!!!!!!
+    // 0,1      idx
+    // 1,2,3,4  val   N = 4  k = 2
+    // 3,4      maxVal
+    // 12367  can\'t increment last 2   N = 7 k = 5
+    // 12456
+    // Simplified of below: notice, we can just use J and every time increment all until the end; which is usually 1 item (the last one)
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> prevL = new ArrayList<>(k);
+        res.add(prevL);
+        for (int i = 1; i <= k; i++) prevL.add(i);
+        int j = k - 1;
+        while (true) {
+            // index to increment; = num digits already added on left
+            while (// must have enough numbers to fill up to K, all increasing IMPORTANT
+            // can\'t be incremented; maxValForIndex = n - (k - j - 1);
+            j >= 0 && prevL.get(j) >= (n - (k - j - 1))) j--;
+            if (j < 0)
+                break;
+            List<Integer> newL = new ArrayList<>(prevL);
+            // increment jth index
+            newL.set(j, newL.get(j) + 1);
+            // all next must be +1 of previous
+            while (j + 1 < k) newL.set(j + 1, newL.get(j++) + 1);
+            res.add(newL);
+            prevL = newL;
+        }
+        return res;
+    }
+    //    public List<List<Integer>> combine(int n, int k) {
+    //        List<List<Integer>> res = new ArrayList<>();
+    //        List<Integer> prevL = new ArrayList<>(k);
+    //        res.add(prevL);
+    //        for (int i = 1; i <= k; i++) prevL.add(i);
+    //
+    //        int j = k - 1;
+    //        while (true) { // index to increment; = num digits already added on left
+    //            int q = j;
+    //            while (q >= 0 && prevL.get(q) >= (n - (k - q - 1))) q--; // can\'t be incremented; maxValForIndex = n - (k - j - 1); // must have enough numbers to fill up to K, all increasing IMPORTANT
+    //            if (q < 0) break;
+    //            if (q < j) {
+    //                List<Integer> newL = new ArrayList<>(prevL);
+    //                newL.set(q, newL.get(q) + 1);
+    //                while (q + 1 < k) newL.set(q + 1, newL.get(q++) + 1);
+    //                res.add(newL);
+    //                prevL = newL;
+    //            }
+    //
+    //            for (int val = prevL.get(j) + 1; val <= n; val++) { // last num
+    //                List<Integer> newL = new ArrayList<>(prevL);
+    //                newL.set(j, val);
+    //                res.add(newL);
+    //                prevL = newL;
+    //            }
+    //        }
+    //
+    //        return res;
+    //    }
+    //    public List<List<Integer>> combine(int n, int k) {
+    //        if (k > n || k < 0) return new ArrayList<>(); // // not enough options; INVALID LIST
+    //        if (k == 0) {  // valid list will be populated later; N = 0 K = 0 will HIT here to add EMPTY start sequence to be populated later !!!!
+    //            List<List<Integer>> result = new ArrayList<>();
+    //            result.add(new ArrayList<>(k));
+    //            return result;
+    //        }
+    //        List<List<Integer>> result = combine(n - 1, k - 1);
+    //        for (List<Integer> list : result) list.add(n); // add Nth item to C(n-1,k-1)
+    //        result.addAll(combine(n - 1, k));
+    //        return result;
+    //    }
+    //    void backtrack(int lastAdded, LinkedList<Integer> list) {
+    //        if (list.size() == k) {
+    //            res.add(new ArrayList<>(list));
+    //            return;
+    //        }
+    //        if (n - lastAdded < k - list.size()) return; // not enough choices to fill up to K
+    //
+    //        for (int j = lastAdded + 1; j <= n; j++) {
+    //            list.add(j);
+    //            backtrack(j, list);
+    //            list.removeLast();
+    //        }
+    //    }
+}

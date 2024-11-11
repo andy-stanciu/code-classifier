@@ -1,0 +1,52 @@
+class Solution {
+
+    //general rule for K-Sums is to try to break the problem down into multiple 2-sums
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        //if we dont have at least 4 values, then just return an empty list
+        if (nums.length < 4) {
+            List<List<Integer>> emptyList = new ArrayList<>();
+            return emptyList;
+        }
+        //could use a hashset for this to avoid repetitions
+        HashSet<List<Integer>> set = new HashSet<>();
+        //sort the numbers so we can use two pointers
+        Arrays.sort(nums);
+        //loop through all quadruplet iterations
+        for (int first = 0; first < nums.length - 3; first++) {
+            for (int second = first + 1; second < nums.length - 2; second++) {
+                //looping through all of third and fourth is too inefficient
+                //break down to two-sum
+                int left = second + 1;
+                int right = nums.length - 1;
+                //left = third, right = fourth
+                while (left < right) {
+                    long sum = (long) nums[first] + nums[second] + nums[left] + nums[right];
+                    if (sum == target) {
+                        List<Integer> list = new ArrayList<Integer>();
+                        list.add(nums[first]);
+                        list.add(nums[second]);
+                        list.add(nums[left]);
+                        list.add(nums[right]);
+                        set.add(list);
+                        left++;
+                        right--;
+                    } else if (sum < target) {
+                        left++;
+                    } else {
+                        right--;
+                    }
+                }
+                //JZ: Added after -- runtime optimization -- skip duplicates
+                while (second < (nums.length - 3) && nums[second] == nums[second + 1]) {
+                    second++;
+                }
+            }
+            //JZ: Added after -- runtime optimization -- skip duplicates
+            while (first < (nums.length - 4) && nums[first] == nums[first + 1]) {
+                first++;
+            }
+        }
+        List<List<Integer>> ret = new ArrayList<>(set);
+        return ret;
+    }
+}

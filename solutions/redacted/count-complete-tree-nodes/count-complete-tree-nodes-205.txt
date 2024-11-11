@@ -1,0 +1,74 @@
+class Solution {
+
+    public int method1(TreeNode root) {
+        // If the root is null, there are no nodes, so return 0
+        if (root == null) {
+            return 0;
+        }
+        // Get the height of the tree (maximum depth)
+        int h = getHeight(root);
+        // 2^(h-1) Minimum possible number of nodes on the last level, you can use 1 as well.
+        int left = 1 << (h - 1);
+        // 2^h-1 Maximum possible number of nodes on the last level, you can use 2^h as well
+        int right = (1 << h) - 1;
+        // 2^h-1 Maximum possible number of nodes on the last level, you can use 2^h as well
+        ;
+        // Variable to store the final count of nodes
+        int ans = 0;
+        Deque<Integer> parents = new ArrayDeque<>();
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            parents.clear();
+            // Get the list of parent indices leading to the node at position \'mid\'
+            parentsList(root, mid, parents);
+            // Check if a node exists at the position \'mid\'
+            if (isAvailable(root, parents)) {
+                ans = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return ans;
+    }
+
+    int getHeight(TreeNode root) {
+        int var1 = 0;
+        while (root != null) {
+            root = root.left;
+            var1++;
+        }
+        return var1;
+    }
+
+    // generate the list of parent indices leading to a node at a given
+    // index - root index start form 1 so left child is 2*parent and right is
+    // 2*parent+1;
+    // parent= child/2
+    void parentsList(TreeNode root, int index, Deque<Integer> parents) {
+        // Convert the index into a list of parent indices
+        while (index != 0) {
+            parents.push(index);
+            index = index / 2;
+        }
+    }
+
+    // Function to check if a node exists at a position described by the stack of
+    // parent indices
+    boolean isAvailable(TreeNode root, Deque<Integer> stack) {
+        if (root == null) {
+            return false;
+        }
+        // Pop the current index from the stack
+        int curr = stack.pop();
+        if (stack.isEmpty()) {
+            // If the stack is empty, we\'ve reached the target node
+            return true;
+        }
+        // Check whether to go left or right depending on the next index in the stack
+        if (curr * 2 == stack.peek()) {
+            return isAvailable(root.left, stack);
+        }
+        return isAvailable(root.right, stack);
+    }
+}

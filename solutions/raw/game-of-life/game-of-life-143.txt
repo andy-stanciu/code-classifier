@@ -1,0 +1,44 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        // Yeh arrays 8 directions ke coordinate shifts represent karte hain.
+        int[] xDisplacement = { 1, -1, 0, 0, 1, -1, 1, -1 };
+        int[] yDisplacement = { 0, 0, 1, -1, 1, -1, -1, 1 };
+        int rows = board.length;
+        int columns = board[0].length;
+        // Pehla loop: rules apply karo aur state transitions ke markers use karo
+        for (int row = 0; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
+                int zindaPadosiCount = 0;
+                // Zinda padosi count karo
+                for (int direction = 0; direction < 8; direction++) {
+                    int newRow = row + xDisplacement[direction];
+                    int newColumn = column + yDisplacement[direction];
+                    if (newRow >= 0 && newRow < rows && newColumn >= 0 && newColumn < columns) {
+                        zindaPadosiCount += board[newRow][newColumn] > 0 ? 1 : 0;
+                    }
+                }
+                // Rules apply karo aur markers set karo transitions ke liye
+                if (board[row][column] == 1 && (zindaPadosiCount < 2 || zindaPadosiCount > 3)) {
+                    // Zinda cell ko marne ke liye 2 mark karo
+                    board[row][column] = 2;
+                } else if (board[row][column] == 0 && zindaPadosiCount == 3) {
+                    // Mura cell ko zinda karne ke liye -1 mark karo
+                    board[row][column] = -1;
+                }
+            }
+        }
+        // Dusra loop: board ko next state mein update karo
+        for (int row = 0; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
+                if (board[row][column] == 2) {
+                    // Marker 2 ko 0 (mura) mein convert karo
+                    board[row][column] = 0;
+                } else if (board[row][column] == -1) {
+                    // Marker -1 ko 1 (zinda) mein convert karo
+                    board[row][column] = 1;
+                }
+            }
+        }
+    }
+}

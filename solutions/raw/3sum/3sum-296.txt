@@ -1,0 +1,84 @@
+class Solution {
+
+    static class Triplet {
+
+        int first;
+
+        int second;
+
+        int third;
+
+        public Triplet(int first, int second, int third) {
+            this.first = first;
+            this.second = second;
+            this.third = third;
+        }
+
+        private Map<Integer, Integer> frequencyCount() {
+            Map<Integer, Integer> count = new HashMap<>();
+            int[] nums = { first, second, third };
+            for (int num : nums) {
+                count.put(num, count.getOrDefault(num, 0) + 1);
+            }
+            return count;
+        }
+
+        @Override
+        public int hashCode() {
+            Map<Integer, Integer> count = frequencyCount();
+            int hash = 1;
+            List<Map.Entry<Integer, Integer>> sortedCount = new ArrayList<>(count.entrySet());
+            sortedCount.sort(Map.Entry.comparingByKey());
+            for (Map.Entry<Integer, Integer> entry : sortedCount) {
+                hash = 31 * hash + entry.getKey();
+                hash = 31 * hash + entry.getValue();
+            }
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null || getClass() != obj.getClass())
+                return false;
+            Triplet other = (Triplet) obj;
+            return this.frequencyCount().equals(other.frequencyCount());
+        }
+    }
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        Set<Triplet> results = new HashSet<>();
+        int candidateIndex = 0;
+        int low = 1;
+        int high = nums.length - 1;
+        while (candidateIndex < nums.length) {
+            if (low >= high) {
+                candidateIndex++;
+                low = candidateIndex + 1;
+                high = nums.length - 1;
+                continue;
+            }
+            int candidateNumber = nums[candidateIndex];
+            int lowNumber = nums[low];
+            int highNumber = nums[high];
+            int result = candidateNumber + lowNumber + highNumber;
+            if (result < 0) {
+                low++;
+            } else if (result > 0) {
+                high--;
+            } else {
+                Triplet triplet = new Triplet(candidateNumber, lowNumber, highNumber);
+                results.add(triplet);
+                low++;
+                high--;
+            }
+        }
+        List<List<Integer>> resultList = new ArrayList<>();
+        for (Triplet triplet : results) {
+            resultList.add(Arrays.asList(triplet.first, triplet.second, triplet.third));
+        }
+        return resultList;
+    }
+}

@@ -1,0 +1,58 @@
+class Solution {
+
+    int[][] dir = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 }, { -1, 1 }, { 1, 1 }, { 1, -1 }, { -1, -1 } };
+
+    public void method1(int[][] board) {
+        int lr = board.length;
+        int lc = board[0].length;
+        int[][] ans = new int[lr][lc];
+        for (int i = 0; i < lr; i++) {
+            for (int j = 0; j < lc; j++) {
+                if (board[i][j] == 0) {
+                    int x = check_zero(board, i, j, lr, lc);
+                    ans[i][j] = x;
+                } else {
+                    int y = check_one(board, i, j, lr, lc);
+                    ans[i][j] = y;
+                }
+            }
+        }
+        for (int i = 0; i < lr; i++) {
+            for (int j = 0; j < lc; j++) {
+                board[i][j] = ans[i][j];
+            }
+        }
+    }
+
+    public int check_zero(int[][] board, int i, int j, int lr, int lc) {
+        int live = 0;
+        for (int[] d : dir) {
+            int r = i + d[0];
+            int c = j + d[1];
+            if (r >= 0 && r < lr && c >= 0 && c < lc) {
+                if (board[r][c] == 1)
+                    live += 1;
+            }
+        }
+        if (live == 3)
+            return 1;
+        return 0;
+    }
+
+    public int check_one(int[][] board, int i, int j, int lr, int lc) {
+        int live = 0;
+        for (int[] d : dir) {
+            int r = i + d[0];
+            int c = j + d[1];
+            if (r >= 0 && r < lr && c >= 0 && c < lc) {
+                if (board[r][c] == 1)
+                    live += 1;
+            }
+        }
+        if (live < 2)
+            return 0;
+        else if (live > 3)
+            return 0;
+        return 1;
+    }
+}

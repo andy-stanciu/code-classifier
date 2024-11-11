@@ -1,0 +1,43 @@
+class Solution {
+
+    boolean[][] vis;
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Set<List<Integer>> ans = new HashSet<>();
+        Arrays.sort(nums);
+        int n = nums.length;
+        if (n < 4)
+            return new ArrayList<>(ans);
+        vis = new boolean[n][n];
+        helper(nums, 0, n - 1, (long) target, ans);
+        return new ArrayList<>(ans);
+    }
+
+    private void helper(int[] nums, int i, int j, long target, Set<List<Integer>> ans) {
+        if (i >= j)
+            return;
+        if (vis[i][j])
+            return;
+        vis[i][j] = true;
+        int k = i + 1;
+        int l = j - 1;
+        long sum = (long) nums[i] + (long) nums[j];
+        while (k < l) {
+            long temp = sum + ((long) nums[k] + (long) nums[l]);
+            if (temp == target) {
+                ans.add(Arrays.asList(nums[i], nums[k], nums[l], nums[j]));
+                while (k < l && nums[k] == nums[k + 1]) k++;
+                while (l > k && nums[l] == nums[l - 1]) l--;
+                k++;
+                l--;
+            } else if (temp < target) {
+                k++;
+            } else {
+                l--;
+            }
+        }
+        helper(nums, i, j - 1, target, ans);
+        helper(nums, i + 1, j, target, ans);
+        helper(nums, i + 1, j - 1, target, ans);
+    }
+}

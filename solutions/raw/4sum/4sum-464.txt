@@ -1,0 +1,29 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        HashSet<List<Integer>> ans = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                // store potential 3rd element for set
+                HashSet<Long> hs = new HashSet<>();
+                for (int k = j + 1; k < nums.length; k++) {
+                    /* remember to always convert right side acc to left otherwise overflow occurs on right and is saved in left side. 
+So conversion of data type for right side\'s calculation is important !! */
+                    long sum = (long) nums[i] + nums[j] + nums[k];
+                    // like 2sum
+                    long fourth = target - sum;
+                    if (hs.contains(fourth)) {
+                        List<Integer> temp = Arrays.asList(nums[i], nums[j], nums[k], (int) fourth);
+                        temp.sort(Integer::compareTo);
+                        ans.add(temp);
+                    }
+                    /* k will move to next so element which is next k could be 4th element and i & j could be 1st and 2nd. 
+So any element that satisfy as the 3rd elements would be between j and k. 
+So as k moves ahead, its past iterated k(s) can be potential 3rd element for the set[]*/
+                    hs.add((long) nums[k]);
+                }
+            }
+        }
+        return new ArrayList(ans);
+    }
+}

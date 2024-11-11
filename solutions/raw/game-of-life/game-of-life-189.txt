@@ -1,0 +1,98 @@
+class Solution {
+
+    public class CellState {
+
+        public Integer oldState;
+
+        public Integer newState;
+
+        public CellState(Integer oldState, Integer newState) {
+            this.oldState = oldState;
+            this.newState = newState;
+        }
+    }
+
+    public int getNeighbours(int row, int col, int[][] board, HashMap<Integer, CellState> truthTable) {
+        var liveNeighbours = 0;
+        var rows = board.length - 1;
+        var cols = board[0].length - 1;
+        // up
+        if (row - 1 >= 0) {
+            var cell = board[row - 1][col];
+            liveNeighbours += cell > 1 ? truthTable.get(cell).oldState : cell;
+        }
+        // left
+        if (col - 1 >= 0) {
+            var cell = board[row][col - 1];
+            liveNeighbours += cell > 1 ? truthTable.get(cell).oldState : cell;
+        }
+        // right
+        if (col + 1 <= cols) {
+            var cell = board[row][col + 1];
+            liveNeighbours += cell > 1 ? truthTable.get(cell).oldState : cell;
+        }
+        // down
+        if (row + 1 <= rows) {
+            var cell = board[row + 1][col];
+            liveNeighbours += cell > 1 ? truthTable.get(cell).oldState : cell;
+        }
+        // top-left
+        if (row - 1 >= 0 && col - 1 >= 0) {
+            var cell = board[row - 1][col - 1];
+            liveNeighbours += cell > 1 ? truthTable.get(cell).oldState : cell;
+        }
+        // bottom-left
+        if (row + 1 <= rows && col - 1 >= 0) {
+            var cell = board[row + 1][col - 1];
+            liveNeighbours += cell > 1 ? truthTable.get(cell).oldState : cell;
+        }
+        // top-right
+        if (row - 1 >= 0 && col + 1 <= cols) {
+            var cell = board[row - 1][col + 1];
+            liveNeighbours += cell > 1 ? truthTable.get(cell).oldState : cell;
+        }
+        // bottom-right
+        if (row + 1 <= rows && col + 1 <= cols) {
+            var cell = board[row + 1][col + 1];
+            liveNeighbours += cell > 1 ? truthTable.get(cell).oldState : cell;
+        }
+        return liveNeighbours;
+    }
+
+    public void gameOfLife(int[][] board) {
+        HashMap<Integer, CellState> truthTable = new HashMap();
+        // original | new | state
+        //   0      |  1  | 2
+        //   0      |  0  | 3
+        //   1      |  0  | 4
+        //   1      |  1  | 5
+        truthTable.put(2, new CellState(0, 1));
+        truthTable.put(3, new CellState(0, 0));
+        truthTable.put(4, new CellState(1, 0));
+        truthTable.put(5, new CellState(1, 1));
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                var cell = board[i][j];
+                var currentCell = (cell > 1) ? truthTable.get(cell).oldState : cell;
+                var liveNeighbours = getNeighbours(i, j, board, truthTable);
+                if (currentCell == 0 && liveNeighbours == 3) {
+                    board[i][j] = 2;
+                }
+                if (currentCell == 1 && liveNeighbours < 2) {
+                    board[i][j] = 4;
+                }
+                if (currentCell == 1 && liveNeighbours > 3) {
+                    board[i][j] = 4;
+                }
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                var cell = board[i][j];
+                if (cell > 1) {
+                    board[i][j] = truthTable.get(cell).newState;
+                }
+            }
+        }
+    }
+}

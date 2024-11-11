@@ -1,0 +1,90 @@
+class Solution {
+
+    // 1 up
+    public int up(int[][] board, int i, int j) {
+        if (i > 0)
+            return board[i - 1][j];
+        return 0;
+    }
+
+    // 2 down
+    public int down(int[][] board, int i, int j) {
+        if (i < board.length - 1)
+            return board[i + 1][j];
+        return 0;
+    }
+
+    // 3 left
+    public int left(int[][] board, int i, int j) {
+        if (j > 0)
+            return board[i][j - 1];
+        return 0;
+    }
+
+    // 4 right
+    public int right(int[][] board, int i, int j) {
+        if (j < board[0].length - 1)
+            return board[i][j + 1];
+        return 0;
+    }
+
+    // up right
+    public int upright(int[][] board, int i, int j) {
+        if (i > 0 && j < board[0].length - 1)
+            return board[i - 1][j + 1];
+        return 0;
+    }
+
+    // up left
+    public int upleft(int[][] board, int i, int j) {
+        if (i > 0 && j > 0)
+            return board[i - 1][j - 1];
+        return 0;
+    }
+
+    // down right
+    public int downright(int[][] board, int i, int j) {
+        if (i < board.length - 1 && j < board[0].length - 1)
+            return board[i + 1][j + 1];
+        return 0;
+    }
+
+    // down left
+    public int downleft(int[][] board, int i, int j) {
+        if (i < board.length - 1 && j > 0)
+            return board[i + 1][j - 1];
+        return 0;
+    }
+
+    public void method1(int[][] board) {
+        int n = board.length;
+        int m = board[0].length;
+        int[][] copyBoard = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                copyBoard[i][j] = board[i][j];
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                int sum = 0;
+                if (i == 0 && j == 0) {
+                    sum = right(copyBoard, i, j) + down(copyBoard, i, j) + downright(copyBoard, i, j);
+                } else if (i == 0 && j == m - 1) {
+                    sum = left(copyBoard, i, j) + down(copyBoard, i, j) + downleft(copyBoard, i, j);
+                } else if (i == n - 1 && j == 0) {
+                    sum = right(copyBoard, i, j) + up(copyBoard, i, j) + upright(copyBoard, i, j);
+                } else if (i == n - 1 && j == m - 1) {
+                    sum = left(copyBoard, i, j) + up(copyBoard, i, j) + upleft(copyBoard, i, j);
+                } else {
+                    sum = up(copyBoard, i, j) + down(copyBoard, i, j) + left(copyBoard, i, j) + right(copyBoard, i, j) + upright(copyBoard, i, j) + upleft(copyBoard, i, j) + downright(copyBoard, i, j) + downleft(copyBoard, i, j);
+                }
+                if (copyBoard[i][j] == 1 && (sum < 2 || sum > 3)) {
+                    board[i][j] = 0;
+                } else if (copyBoard[i][j] == 0 && sum == 3) {
+                    board[i][j] = 1;
+                }
+            }
+        }
+    }
+}

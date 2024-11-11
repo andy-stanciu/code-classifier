@@ -1,0 +1,113 @@
+class Solution {
+
+    final int MOD = 1_000_000_007;
+
+    public List<List<Integer>> fourSum(int[] arr, int target) {
+        //so now i have search the all their is no any good idea to solve rather than having the two pointer
+        // apporache here
+        List<List<Integer>> list = new ArrayList<>();
+        if (arr == null || arr.length < 4) {
+            //corner case
+            return list;
+        }
+        // this is the edge case here
+        // so now we have to sort the array
+        Arrays.sort(arr);
+        // so now here
+        for (int i = 0; i < arr.length - 3; i++) {
+            if (i > 0 && arr[i] == arr[i - 1]) {
+                continue;
+            }
+            // so now here else
+            for (int j = i + 1; j < arr.length - 2; j++) {
+                // so now here agian we have to skip the duplicates here
+                if (j > i + 1 && arr[j] == arr[j - 1]) {
+                    continue;
+                }
+                // so now here we have define the k and l
+                int k = j + 1;
+                int l = arr.length - 1;
+                // so now here
+                while (k < l) {
+                    // so now here we have add all of then
+                    long sum = (long) arr[i] + (long) arr[j] + (long) arr[k] + (long) arr[l];
+                    // so now here
+                    if (sum == target) {
+                        // so now we find the value here so we have to update it here
+                        list.add(Arrays.asList(arr[i], arr[j], arr[k], arr[l]));
+                        // so now here we have to again get rid out of the duplicates so now
+                        while (k < l && arr[k] == arr[k + 1]) {
+                            // so we have to increase the k here
+                            k++;
+                        }
+                        while (k < l && arr[l] == arr[l - 1]) {
+                            l--;
+                        }
+                        // so now the normal for find the answer here
+                        k++;
+                        l--;
+                    } else // so now here other case
+                    if (sum < target) {
+                        // note that here else if require as we don\'t want to  excute both of the statment here so use the else if here
+                        k++;
+                    } else {
+                        l--;
+                    }
+                }
+            }
+        }
+        return list;
+    }
+}
+
+// genrealiszed solution of the k sum here
+class olution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> result = new ArrayList();
+        if (nums == null) {
+            return result;
+        }
+        Arrays.sort(nums);
+        helper(result, nums, target, 4, 0, new ArrayList());
+        return result;
+    }
+
+    private void helper(List<List<Integer>> result, int[] nums, int target, int count, int idx, List<Integer> subR) {
+        if (count == 2) {
+            int k = idx;
+            int l = nums.length - 1;
+            while (k < l) {
+                int sum = nums[k] + nums[l];
+                if (sum == target) {
+                    subR.add(nums[k]);
+                    subR.add(nums[l]);
+                    result.add(new ArrayList(subR));
+                    subR.remove(subR.size() - 1);
+                    subR.remove(subR.size() - 1);
+                    k++;
+                    l--;
+                    while (k < l && nums[k] == nums[k - 1]) {
+                        k++;
+                    }
+                    while (k < l && nums[l] == nums[l + 1]) {
+                        l--;
+                    }
+                } else if (sum > target) {
+                    l--;
+                } else {
+                    k++;
+                }
+            }
+        } else {
+            for (int i = idx; i < nums.length; i++) {
+                if (i != idx && nums[i] == nums[i - 1]) {
+                    continue;
+                }
+                subR.add(nums[i]);
+                helper(result, nums, target - nums[i], count - 1, i + 1, subR);
+                subR.remove(subR.size() - 1);
+            }
+        }
+    }
+}

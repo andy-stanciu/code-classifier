@@ -1,0 +1,41 @@
+class Solution {
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        // Create a list to store the result of triplets
+        List<List<Integer>> list = new ArrayList<>();
+        // Sort the input array to simplify finding triplets
+        Arrays.sort(nums);
+        // Get the length of the input array
+        int n = nums.length;
+        // Loop through the array, but stop at n-2 to leave room for at least two other elements
+        for (int x = 0; x < n - 2; x++) {
+            // Skip duplicates for the first element to avoid repeated triplets
+            if (x == 0 || (x > 0 && nums[x] != nums[x - 1])) {
+                // Set two pointers: left (l) starts right after the current element, and right (r) starts at the end
+                int l = x + 1, r = n - 1;
+                // Continue until the two pointers meet
+                while (l < r) {
+                    // Check if the sum of nums[l] + nums[r] equals the negative of nums[i]
+                    if (nums[l] + nums[r] == -1 * nums[x]) {
+                        // If a triplet is found, add it to the result list
+                        list.add(Arrays.asList(nums[x], nums[l], nums[r]));
+                        // Move the left pointer forward while skipping duplicates
+                        while (l < r && nums[l] == nums[l + 1]) l++;
+                        // Move the right pointer backward while skipping duplicates
+                        while (l < r && nums[r] == nums[r - 1]) r--;
+                        // Move both pointers closer to each other
+                        l++;
+                        r--;
+                    } else // If the sum is too small, move the left pointer to the right to increase the sum
+                    if (nums[l] + nums[r] < -1 * nums[x])
+                        l++;
+                    else
+                        // If the sum is too large, move the right pointer to the left to decrease the sum
+                        r--;
+                }
+            }
+        }
+        // Return the list of found triplets
+        return list;
+    }
+}

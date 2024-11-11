@@ -1,0 +1,64 @@
+class Solution {
+
+    public static void method1(TreeNode root, List<List<Integer>> list, int param1) {
+        // CREATING STACK FOR THOSE LEVEL WHICH NEEDED TO REVERSE
+        Stack<Integer> st = new Stack<>();
+        // EDGE CASE IF ROOOT == NULL
+        if (root == null) {
+            return;
+        }
+        // CREATING QUEUE FOR STORING EACH LEVEL ELEMENT
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        q.add(null);
+        while (!q.isEmpty()) {
+            TreeNode curr = q.remove();
+            if (curr == null) {
+                // HERE REVERSING ELEMENT
+                // NOTE : WE ASSUME HERE STARTING LEVEL WITH 0
+                if (param1 % 2 != 0) {
+                    while (!st.isEmpty()) {
+                        list.get(param1).add(st.pop());
+                    }
+                }
+                param1++;
+                // ADDING NEXT INDEX IN 2D LIST EX: { {} , {THIS} , {...}}
+                list.add(new ArrayList<>());
+                if (q.isEmpty()) {
+                    break;
+                } else {
+                    q.add(null);
+                }
+            } else {
+                // HERE SIMPLY ADDING ELEMENT WHICH NEED NOT TO REVERSE
+                if (param1 % 2 == 0) {
+                    list.get(param1).add(curr.val);
+                } else {
+                    // HERE ADDING ELEMENT TO STACK WHICH NEEDED TO REVERSE
+                    st.add(curr.val);
+                }
+                // HERE ADDING ELEMENT TO QUEUE
+                if (curr.left != null) {
+                    q.add(curr.left);
+                }
+                if (curr.right != null) {
+                    q.add(curr.right);
+                }
+            }
+        }
+    }
+
+    public List<List<Integer>> method2(TreeNode root) {
+        // 2D LIST FOR STORING OUTPUT
+        List<List<Integer>> list = new ArrayList<>();
+        // OUR BINARY TREE LEVEL
+        int param1 = 0;
+        //FIIRST INDEX OF 2D LIST EX: { {THIS} , {} , {} }
+        list.add(new ArrayList<>());
+        // CALLING OUR FUNCTION
+        method1(root, list, param1);
+        // REMOVING LAST INDEX OF 2D LIST AS IT WAS CREATED IN LAST AND IT WAS EMPTY
+        list.remove(list.size() - 1);
+        return list;
+    }
+}

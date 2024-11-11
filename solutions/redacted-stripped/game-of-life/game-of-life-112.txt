@@ -1,0 +1,42 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        if (board == null || board.length == 0)
+            return;
+        int rows = board.length;
+        int cols = board[0].length;
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                int liveNeighbors = countLiveNeighbors(board, row, col);
+                if (board[row][col] == 1 && (liveNeighbors < 2 || liveNeighbors > 3)) {
+                    board[row][col] = -1;
+                }
+                if (board[row][col] == 0 && liveNeighbors == 3) {
+                    board[row][col] = 2;
+                }
+            }
+        }
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                if (board[row][col] > 0) {
+                    board[row][col] = 1;
+                } else {
+                    board[row][col] = 0;
+                }
+            }
+        }
+    }
+
+    private int countLiveNeighbors(int[][] board, int row, int col) {
+        int liveNeighbors = 0;
+        int[][] directions = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+        for (int[] direction : directions) {
+            int newRow = row + direction[0];
+            int newCol = col + direction[1];
+            if (newRow >= 0 && newRow < board.length && newCol >= 0 && newCol < board[0].length && Math.abs(board[newRow][newCol]) == 1) {
+                liveNeighbors++;
+            }
+        }
+        return liveNeighbors;
+    }
+}

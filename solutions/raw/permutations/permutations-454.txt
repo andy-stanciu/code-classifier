@@ -1,0 +1,85 @@
+class Solution {
+
+    //approach 1
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> res = new LinkedList<>();
+        List<List<Integer>> lastRes = new LinkedList<>();
+        lastRes.add(new LinkedList<Integer>());
+        for (int num : nums) {
+            //try to add num at all position of previous permutations
+            for (List<Integer> list : lastRes) {
+                //insert the current num at all positions for each list
+                int size = list.size();
+                for (int j = 0; j < size; j++) {
+                    List<Integer> current = new LinkedList<>(list);
+                    current.add(j, num);
+                    res.add(current);
+                }
+                List<Integer> lastSet = new LinkedList<>(list);
+                lastSet.add(num);
+                res.add(lastSet);
+            }
+            lastRes = res;
+            res = new LinkedList<>();
+        }
+        return lastRes;
+    }
+
+    //-----approach 2
+    public List<List<Integer>> permute2(int[] nums) {
+        List<List<Integer>> res = new LinkedList<>();
+        find(res, nums, 0);
+        return res;
+    }
+
+    public void find(List<List<Integer>> res, int[] nums, int curpos) {
+        if (curpos == nums.length) {
+            List<Integer> newSet = new LinkedList<>();
+            for (int num : nums) {
+                newSet.add(num);
+            }
+            res.add(newSet);
+            return;
+        }
+        //we have to fill the curpos with all choices we have, and we have all the elements after curpos including itself.
+        //placing all elements one by one at its place recursively.
+        for (int j = curpos; j < nums.length; j++) {
+            swap(nums, curpos, j);
+            find(res, nums, curpos + 1);
+            swap(nums, curpos, j);
+        }
+    }
+
+    public void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    //--appraoch 3
+    public List<List<Integer>> permute3(int[] nums) {
+        List<List<Integer>> res = new LinkedList<>();
+        List<Integer> choices = new LinkedList<>();
+        for (int num : nums) {
+            choices.add(num);
+        }
+        find(res, choices, new LinkedList<Integer>());
+        return res;
+    }
+
+    public void find(List<List<Integer>> res, List<Integer> choices, List<Integer> currentSet) {
+        if (choices.isEmpty()) {
+            List<Integer> newSet = new LinkedList<>(currentSet);
+            res.add(newSet);
+            return;
+        }
+        int size = choices.size();
+        for (int i = 0; i < size; i++) {
+            int num = choices.removeFirst();
+            currentSet.add(num);
+            find(res, choices, currentSet);
+            currentSet.removeLast();
+            choices.addLast(num);
+        }
+    }
+}

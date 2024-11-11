@@ -1,0 +1,39 @@
+class Solution {
+
+    public List<List<Integer>> permute(int[] nums) {
+        // create a list to store all permutations
+        List<List<Integer>> ans = new ArrayList<>();
+        // create a list to store the current permutation being built
+        ArrayList<Integer> ds = new ArrayList<>();
+        // create an array to keep track of whether each element has been used in the current permutation
+        boolean[] freq = new boolean[nums.length];
+        // call the helper function to generate all permutations
+        helper(nums, freq, ds, ans);
+        // return the list of permutations
+        return ans;
+    }
+
+    public void helper(int[] nums, boolean[] freq, ArrayList<Integer> ds, List<List<Integer>> ans) {
+        // if the current permutation is the same length as the original array,
+        // add it to the list of permutations and return
+        if (ds.size() == nums.length) {
+            ans.add(new ArrayList<>(ds));
+            return;
+        }
+        // iterate through each element in the original array
+        for (int i = 0; i < nums.length; i++) {
+            // if the current element has not already been used in the current permutation
+            if (!freq[i]) {
+                // mark the current element as used
+                freq[i] = true;
+                // add the current element to the current permutation
+                ds.add(nums[i]);
+                // call the helper function recursively to generate all permutations using the current element
+                helper(nums, freq, ds, ans);
+                // remove the current element from the current permutation and mark it as unused
+                ds.remove(ds.size() - 1);
+                freq[i] = false;
+            }
+        }
+    }
+}

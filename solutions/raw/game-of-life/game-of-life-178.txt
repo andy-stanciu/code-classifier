@@ -1,0 +1,58 @@
+class Solution {
+
+    int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 } };
+
+    public void gameOfLife(int[][] board) {
+        // Call a recursion method to update teh cell value
+        gameOfLife(board, 0, 0, board.length, board[0].length);
+    }
+
+    private void gameOfLife(int[][] board, int i, int j, int n, int m) {
+        // if j is equal to m means we have exceed the cell value, so set the j is zero and increament the i, if i is equal to n means we traverse the all value
+        if (j == m) {
+            j = 0;
+            if (++i == n)
+                return;
+        }
+        int cell;
+        if (board[i][j] == 0) {
+            // dead cell case
+            cell = getDeidCellValue(board, i, j, n, m);
+        } else {
+            // live cell case
+            cell = getLiveCellValue(board, i, j, n, m);
+        }
+        // call the recursion method and increament the j value by one
+        gameOfLife(board, i, j + 1, n, m);
+        // at the end we update the value, becase we have to calculate the value with old one, it will run at the end
+        board[i][j] = cell;
+    }
+
+    private int getLiveCellValue(int[][] board, int i, int j, int n, int m) {
+        int live = getLive(board, i, j, n, m);
+        if (live < 2)
+            return 0;
+        return live < 4 ? 1 : 0;
+    }
+
+    private int getDeidCellValue(int[][] board, int i, int j, int n, int m) {
+        int live = getLive(board, i, j, n, m);
+        return live == 3 ? 1 : 0;
+    }
+
+    private int getLive(int[][] board, int i, int j, int n, int m) {
+        int live = 0;
+        for (int[] direction : directions) {
+            // neighbor\'s row index
+            int updateI = i + direction[0];
+            // neighbor\'s column index
+            int updateJ = j + direction[1];
+            // Check if the neighbor is within bounds and alive
+            if (updateI >= 0 && updateI < n && updateJ >= 0 && updateJ < m && board[updateI][updateJ] == 1) {
+                // Increment live count
+                live++;
+            }
+        }
+        return live;
+    }
+}

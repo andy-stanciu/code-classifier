@@ -1,0 +1,55 @@
+class Solution {
+
+    private List<List<Integer>> method1(List<List<Integer>> ls, int param1, Stack<TreeNode> s) {
+        if (s.isEmpty())
+            return ls;
+        Stack<TreeNode> sNew = new Stack<TreeNode>();
+        if (param1 % 2 == 0) {
+            while (!s.isEmpty()) {
+                TreeNode root = s.pop();
+                if (param1 >= ls.size()) {
+                    List<Integer> l = new LinkedList<Integer>();
+                    l.add(root.val);
+                    ls.add(l);
+                } else {
+                    ls.get(param1).add(root.val);
+                }
+                if (root.left != null)
+                    sNew.push(root.left);
+                if (root.right != null)
+                    sNew.push(root.right);
+            }
+        } else {
+            while (!s.isEmpty()) {
+                TreeNode root = s.pop();
+                if (param1 >= ls.size()) {
+                    List<Integer> l = new LinkedList<Integer>();
+                    l.add(root.val);
+                    ls.add(l);
+                } else {
+                    ls.get(param1).add(root.val);
+                }
+                if (root.right != null)
+                    sNew.push(root.right);
+                if (root.left != null)
+                    sNew.push(root.left);
+            }
+        }
+        return method1(ls, param1 + 1, sNew);
+    }
+
+    public List<List<Integer>> method2(TreeNode root) {
+        List<List<Integer>> ls = new LinkedList<List<Integer>>();
+        if (root == null)
+            return ls;
+        List<Integer> l = new LinkedList<Integer>();
+        l.add(root.val);
+        ls.add(l);
+        Stack<TreeNode> s = new Stack<>();
+        if (root.left != null)
+            s.push(root.left);
+        if (root.right != null)
+            s.push(root.right);
+        return method1(ls, 1, s);
+    }
+}

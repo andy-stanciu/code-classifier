@@ -1,0 +1,42 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int yEnd = board.length - 1, xEnd = board[0].length - 1;
+        int[][] prevBoard = new int[yEnd + 1][xEnd + 1];
+        for (int y = 0; y <= yEnd; y++) {
+            for (int x = 0; x <= xEnd; x++) {
+                prevBoard[y][x] = board[y][x];
+            }
+        }
+        for (int y = 0; y <= yEnd; y++) {
+            for (int x = 0; x <= xEnd; x++) {
+                int currCell = prevBoard[y][x];
+                int liveCells = checkLiveNeighbors(prevBoard, x, y);
+                if (currCell == 1 && liveCells < 2) {
+                    board[y][x] = 0;
+                } else if (currCell == 1 && liveCells <= 3) {
+                    board[y][x] = 1;
+                } else if (currCell == 1 && liveCells > 3) {
+                    board[y][x] = 0;
+                } else if (currCell == 0 && liveCells == 3) {
+                    board[y][x] = 1;
+                }
+            }
+        }
+    }
+
+    public int checkLiveNeighbors(int[][] board, int xPos, int yPos) {
+        int liveCells = 0;
+        for (int y = yPos - 1; y <= yPos + 1; y++) {
+            for (int x = xPos - 1; x <= xPos + 1; x++) {
+                if (x == xPos && y == yPos)
+                    continue;
+                if (y < 0 || x < 0 || y >= board.length || x >= board[0].length)
+                    continue;
+                if (board[y][x] == 1)
+                    liveCells++;
+            }
+        }
+        return liveCells;
+    }
+}

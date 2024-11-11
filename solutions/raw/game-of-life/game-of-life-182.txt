@@ -1,0 +1,45 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        int n = board.length;
+        int m = board[0].length;
+        int[][] vis = new int[n][m];
+        int[] del_row = { -1, -1, -1, 0, 0, 1, 1, 1 };
+        int[] del_col = { -1, 0, 1, -1, 1, -1, 0, 1 };
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                // All eight directions
+                int count = 0;
+                for (int k = 0; k < 8; k++) {
+                    int nr = del_row[k] + i;
+                    int nc = del_col[k] + j;
+                    if (nr >= 0 && nr < n && nc >= 0 && nc < m) {
+                        if (board[nr][nc] == 1)
+                            count++;
+                    }
+                }
+                // dead cell
+                if (board[i][j] == 0) {
+                    if (count == 3)
+                        vis[i][j] = 1;
+                } else // live cell
+                {
+                    // 1.under population
+                    if (count < 2)
+                        vis[i][j] = 0;
+                    else // 2.next generation
+                    if (count == 2 || count == 3)
+                        vis[i][j] = 1;
+                    else // 3.over populated
+                    if (count > 3)
+                        vis[i][j] = 0;
+                }
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                board[i][j] = vis[i][j];
+            }
+        }
+    }
+}

@@ -1,0 +1,56 @@
+class Solution {
+
+    public int method1(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int h = getHeight(root);
+        int left = 1 << (h - 1);
+        int right = (1 << h) - 1;
+        ;
+        int ans = 0;
+        Deque<Integer> parents = new ArrayDeque<>();
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            parents.clear();
+            parentsList(root, mid, parents);
+            if (isAvailable(root, parents)) {
+                ans = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return ans;
+    }
+
+    int getHeight(TreeNode root) {
+        int var1 = 0;
+        while (root != null) {
+            root = root.left;
+            var1++;
+        }
+        return var1;
+    }
+
+    void parentsList(TreeNode root, int index, Deque<Integer> parents) {
+        while (index != 0) {
+            parents.push(index);
+            index = index / 2;
+        }
+    }
+
+    boolean isAvailable(TreeNode root, Deque<Integer> stack) {
+        if (root == null) {
+            return false;
+        }
+        int curr = stack.pop();
+        if (stack.isEmpty()) {
+            return true;
+        }
+        if (curr * 2 == stack.peek()) {
+            return isAvailable(root.left, stack);
+        }
+        return isAvailable(root.right, stack);
+    }
+}

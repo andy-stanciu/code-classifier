@@ -1,0 +1,52 @@
+class Solution {
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        // sort this shit out in a non-decreasing order
+        // for each number, in the array, for the rest of the array to the right, find the two numbers that would work out a 0
+        // this is done by doing a range reduction. it\'s gauranteed to find all the possible answers in that way because the array is already sorted, for the increased value of the left, only a descreased value of the right can compensate. in this way we dont\' have to go back and forth
+        // for each number it could find multiple anwers
+        // when moving left/right pointers we can skip the duplicates.
+        // when moving the number pointer we can also skip the duplicates too because if there exists an answer for that number the answer must have been already added
+        List<List<Integer>> answer = new ArrayList<>();
+        // [-4, -1, -1, -0, 1 ,2]
+        Arrays.sort(nums);
+        int currNumPtr = 0;
+        while (currNumPtr < nums.length - 2) {
+            int leftPtr = currNumPtr + 1;
+            int rightPtr = nums.length - 1;
+            while (leftPtr < rightPtr) {
+                // search answer by narrowing the range
+                int sum = nums[currNumPtr] + nums[leftPtr] + nums[rightPtr];
+                if (sum == 0) {
+                    // found it
+                    answer.add(Arrays.asList(nums[currNumPtr], nums[leftPtr], nums[rightPtr]));
+                }
+                if (sum > 0) {
+                    // need to shrink the range from the right
+                    while (rightPtr > leftPtr) {
+                        --rightPtr;
+                        if (nums[rightPtr] < nums[rightPtr + 1]) {
+                            break;
+                        }
+                    }
+                } else {
+                    // need to shrink the range from the left
+                    while (rightPtr > leftPtr) {
+                        ++leftPtr;
+                        if (nums[leftPtr] > nums[leftPtr - 1]) {
+                            break;
+                        }
+                    }
+                }
+            }
+            currNumPtr++;
+            while (nums[currNumPtr] == nums[currNumPtr - 1]) {
+                if (currNumPtr == nums.length - 2) {
+                    break;
+                }
+                currNumPtr++;
+            }
+        }
+        return answer;
+    }
+}

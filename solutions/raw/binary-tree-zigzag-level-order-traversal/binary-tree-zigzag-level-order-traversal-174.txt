@@ -1,0 +1,48 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        if (root == null) {
+            return new ArrayList<>();
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        //this variable will determine whether we reverse the current list or not, if t he zigZag variable is -1 then we reverse the current list, if not we keep the currentList the same. the zigZag variable will either be -1 or 1
+        int zigZag = 1;
+        List<List<Integer>> answer = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            List<Integer> levelNodes = new ArrayList<>();
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode current = queue.remove();
+                levelNodes.add(current.val);
+                if (current.left != null) {
+                    queue.add(current.left);
+                }
+                if (current.right != null) {
+                    queue.add(current.right);
+                }
+            }
+            if (zigZag == -1) {
+                Collections.reverse(levelNodes);
+            }
+            answer.add(levelNodes);
+            zigZag *= -1;
+        }
+        return answer;
+    }
+}

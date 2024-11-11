@@ -1,0 +1,52 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> lst = new ArrayList<List<Integer>>();
+        int n = nums.length;
+        if (n < 4) {
+            return lst;
+        }
+        List<Integer> numList = new ArrayList<Integer>();
+        HashMap<Integer, Integer> mp = new HashMap<Integer, Integer>();
+        for (int i = 0; i < n; i++) {
+            numList.add(nums[i]);
+            if (mp.containsKey(nums[i])) {
+                mp.put(nums[i], mp.get(nums[i]) + 1);
+            } else {
+                mp.put(nums[i], 1);
+            }
+        }
+        long sumx = 0;
+        for (Map.Entry<Integer, Integer> m : mp.entrySet()) {
+            if (m.getValue() == n) {
+                for (int i = 0; i < 4; i++) {
+                    sumx = sumx + nums[i];
+                }
+                if (sumx == (long) target) {
+                    List<Integer> buffer = new ArrayList<>(List.of(nums[0], nums[0], nums[0], nums[0]));
+                    lst.add(buffer);
+                    return lst;
+                } else {
+                    return lst;
+                }
+            }
+        }
+        Collections.sort(numList);
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                for (int k = j + 1; k < n; k++) {
+                    for (int l = k + 1; l < n; l++) {
+                        sumx = (long) numList.get(i) + (long) numList.get(j) + (long) numList.get(k) + (long) numList.get(l);
+                        if (sumx == target) {
+                            List<Integer> buffer = new ArrayList<>(List.of(numList.get(i), numList.get(j), numList.get(k), numList.get(l)));
+                            if (!lst.contains(buffer)) {
+                                lst.add(buffer);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return lst;
+    }
+}

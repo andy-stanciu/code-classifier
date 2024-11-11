@@ -1,0 +1,74 @@
+enum LifeStates {
+
+    DEAD(0),
+    LIVE(1),
+    DEAD_NEXT_DEAD(2),
+    DEAD_NEXT_LIVE(3),
+    LIVE_NEXT_DEAD(4),
+    LIVE_NEXT_LIVE(5);
+
+    private final int state;
+
+    LifeStates(int state) {
+        this.state = state;
+    }
+
+    public int getState() {
+        return this.state;
+    }
+}
+
+class Solution {
+
+    public void method1(int[][] board) {
+        final int m = board.length;
+        final int n = board[0].length;
+        // Calculate Next State
+        for (int row = 0; row < m; ++row) {
+            for (int col = 0; col < n; ++col) {
+                int liveNeighbors = getLiveNeighborCount(board, row, col);
+                if (board[row][col] == LifeStates.LIVE.getState() || board[row][col] == LifeStates.LIVE_NEXT_DEAD.getState() || board[row][col] == LifeStates.LIVE_NEXT_LIVE.getState()) {
+                    if (liveNeighbors < 2) {
+                        board[row][col] = LifeStates.LIVE_NEXT_DEAD.getState();
+                    } else if (liveNeighbors < 4) {
+                        board[row][col] = LifeStates.LIVE_NEXT_LIVE.getState();
+                    } else {
+                        board[row][col] = LifeStates.LIVE_NEXT_DEAD.getState();
+                    }
+                } else {
+                    if (liveNeighbors == 3) {
+                        board[row][col] = LifeStates.DEAD_NEXT_LIVE.getState();
+                    }
+                }
+            }
+        }
+        // Set Next State
+        for (int row = 0; row < m; ++row) {
+            for (int col = 0; col < n; ++col) {
+                if (board[row][col] == LifeStates.LIVE.getState() || board[row][col] == LifeStates.LIVE_NEXT_LIVE.getState() || board[row][col] == LifeStates.DEAD_NEXT_LIVE.getState()) {
+                    board[row][col] = LifeStates.LIVE.getState();
+                } else {
+                    board[row][col] = LifeStates.DEAD.getState();
+                }
+            }
+        }
+    }
+
+    private int getLiveNeighborCount(int[][] board, int row, int col) {
+        int count = 0;
+        final int rowStart = Math.max(0, row - 1);
+        final int rowEnd = Math.min(board.length - 1, row + 1);
+        final int colStart = Math.max(0, col - 1);
+        final int colEnd = Math.min(board[0].length - 1, col + 1);
+        for (int rowItr = rowStart; rowItr <= rowEnd; ++rowItr) {
+            for (int colItr = colStart; colItr <= colEnd; ++colItr) {
+                if (rowItr == row && colItr == col)
+                    continue;
+                if (board[rowItr][colItr] == LifeStates.LIVE.getState() || board[rowItr][colItr] == LifeStates.LIVE_NEXT_DEAD.getState() || board[rowItr][colItr] == LifeStates.LIVE_NEXT_LIVE.getState()) {
+                    ++count;
+                }
+            }
+        }
+        return count;
+    }
+}

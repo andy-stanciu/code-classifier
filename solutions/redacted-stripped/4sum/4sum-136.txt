@@ -1,0 +1,52 @@
+class Solution {
+
+    List<List<Integer>> ans = new ArrayList<>();
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums);
+        int start = 0;
+        int end = nums.length - 1;
+        for (int i = 0; i < nums.length; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            for (int j = nums.length - 1; j > i; j--) {
+                if (j < nums.length - 1 && nums[j] == nums[j + 1]) {
+                    continue;
+                }
+                possible(nums, i + 1, j - 1, target);
+            }
+        }
+        return ans;
+    }
+
+    public void possible(int[] nums, int i, int j, int target) {
+        int a = nums[i - 1];
+        int b = nums[j + 1];
+        while (i < j) {
+            if (a + b + nums[i] + nums[j] == target && !((a < 0 && b < 0 && nums[i] < 0 && nums[j] < 0 && target > 0) || (a > 0 && b > 0 && nums[i] > 0 && nums[j] > 0 && target < 0))) {
+                List<Integer> t = new ArrayList<>();
+                t.add(a);
+                t.add(nums[i]);
+                t.add(nums[j]);
+                t.add(b);
+                if (!ans.contains(t)) {
+                    ans.add(t);
+                }
+                i++;
+                j--;
+                while (i < j && nums[i] == nums[i - 1]) {
+                    i++;
+                }
+                while (i < j && nums[j + 1] == nums[j]) {
+                    j--;
+                }
+            } else if (a + b + nums[i] + nums[j] < target) {
+                i++;
+            } else {
+                j--;
+            }
+        }
+        return;
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    public int method1(TreeNode root) {
+        if (root == null)
+            return 0;
+        int h = 0;
+        TreeNode tmp = root;
+        while (tmp.left != null) {
+            h++;
+            tmp = tmp.left;
+        }
+        List<Boolean> path = new LinkedList<>();
+        for (int i = 0; i < h; i++) {
+            TreeNode node = root;
+            int j = 0;
+            while (j < i) {
+                boolean rightHalf = path.get(j);
+                node = rightHalf ? node.right : node.left;
+                j++;
+            }
+            while (j < h) {
+                node = j == i ? node.right : node.left;
+                j++;
+            }
+            boolean rightHalf = node != null;
+            path.add(rightHalf);
+        }
+        int lastLeaf = 0;
+        int len = path.size();
+        for (int i = 0; i < len; i++) {
+            if (!path.get(i))
+                continue;
+            lastLeaf += (int) Math.pow(2, len - 1 - i);
+        }
+        int var1 = ((int) Math.pow(2, h + 1)) - 1;
+        int maxLeaf = ((int) Math.pow(2, h)) - 1;
+        int missingLeaves = maxLeaf - lastLeaf;
+        return var1 - missingLeaves;
+    }
+}

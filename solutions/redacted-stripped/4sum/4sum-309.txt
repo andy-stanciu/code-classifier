@@ -1,0 +1,43 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> cur = new ArrayList<>();
+        kSum(nums, 0, nums.length - 1, 4, (long) target, res, cur);
+        return res;
+    }
+
+    private void kSum(int[] nums, int low, int high, int k, long target, List<List<Integer>> res, List<Integer> cur) {
+        if (k == 2) {
+            while (low < high) {
+                if ((long) (target) == (long) (nums[high] + nums[low])) {
+                    cur.add(nums[low]);
+                    cur.add(nums[high]);
+                    res.add(new ArrayList<>(cur));
+                    cur.remove(cur.size() - 1);
+                    cur.remove(cur.size() - 1);
+                    low += 1;
+                    high -= 1;
+                    while (low < high && nums[low] == nums[low - 1]) low += 1;
+                    while (low < high && high + 1 < nums.length && nums[high] == nums[high + 1]) high -= 1;
+                    System.out.println(low + " " + high);
+                } else if (nums[low] + nums[high] < target) {
+                    low += 1;
+                } else {
+                    high -= 1;
+                }
+            }
+        } else {
+            for (int index = low; index <= high - k + 1; index++) {
+                if (nums[index] > 0 && target < 0 && nums[index] > target)
+                    break;
+                if (index - 1 >= low && nums[index] == nums[index - 1])
+                    continue;
+                cur.add(nums[index]);
+                kSum(nums, index + 1, high, k - 1, target - nums[index], res, cur);
+                cur.remove(cur.size() - 1);
+            }
+        }
+    }
+}

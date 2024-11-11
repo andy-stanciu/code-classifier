@@ -1,0 +1,50 @@
+class Solution {
+
+    public static void method1(TreeNode root, List<List<Integer>> list, int param1) {
+        Stack<Integer> st = new Stack<>();
+        if (root == null) {
+            return;
+        }
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        q.add(null);
+        while (!q.isEmpty()) {
+            TreeNode curr = q.remove();
+            if (curr == null) {
+                if (param1 % 2 != 0) {
+                    while (!st.isEmpty()) {
+                        list.get(param1).add(st.pop());
+                    }
+                }
+                param1++;
+                list.add(new ArrayList<>());
+                if (q.isEmpty()) {
+                    break;
+                } else {
+                    q.add(null);
+                }
+            } else {
+                if (param1 % 2 == 0) {
+                    list.get(param1).add(curr.val);
+                } else {
+                    st.add(curr.val);
+                }
+                if (curr.left != null) {
+                    q.add(curr.left);
+                }
+                if (curr.right != null) {
+                    q.add(curr.right);
+                }
+            }
+        }
+    }
+
+    public List<List<Integer>> method2(TreeNode root) {
+        List<List<Integer>> list = new ArrayList<>();
+        int param1 = 0;
+        list.add(new ArrayList<>());
+        method1(root, list, param1);
+        list.remove(list.size() - 1);
+        return list;
+    }
+}

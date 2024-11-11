@@ -1,0 +1,29 @@
+class Solution {
+
+    public int firstMissingPositive(int[] nums) {
+        int n = nums.length;
+        // Swap integers so that in the resulting array, ki = i for all 0 <= ki < n.
+        for (int i = 0; i <= n - 1; i++) {
+            while (nums[i] >= 0 && nums[i] != i && nums[i] <= n - 1 && nums[nums[i]] != nums[i]) {
+                swap(nums, i, nums[i]);
+            }
+        }
+        // Iterate through the resulting array starting from 1 (since we want smallest positive integer). The first i, where ki != i, is the answer.
+        for (int i = 1; i <= n - 1; i++) {
+            int ki = nums[i];
+            if (ki != i) {
+                return i;
+            }
+        }
+        // if ki = i for all integers i,...,n-1, then the smallest positive integer not in the array is the number after the last, kn-1 = n-1, which is n.
+        // Why is the first index here? Well we don\'t know what to do with index 0...since we\'re looking for a positive integer.
+        // So we artificially move element at index 0 to element at index n = nums.length.
+        return nums[0] == n ? n + 1 : n;
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}

@@ -1,0 +1,55 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                int living = 0;
+                // count the number of living neighours
+                if (getPrevState(board, i + 1, j))
+                    living++;
+                if (getPrevState(board, i - 1, j))
+                    living++;
+                if (getPrevState(board, i + 1, j + 1))
+                    living++;
+                if (getPrevState(board, i + 1, j - 1))
+                    living++;
+                if (getPrevState(board, i - 1, j + 1))
+                    living++;
+                if (getPrevState(board, i - 1, j - 1))
+                    living++;
+                if (getPrevState(board, i, j + 1))
+                    living++;
+                if (getPrevState(board, i, j - 1))
+                    living++;
+                // compute answer for current cell
+                if (board[i][j] == 1) {
+                    if (living < 2 || living > 3)
+                        board[i][j] = 11;
+                } else {
+                    if (living == 3)
+                        board[i][j] = 10;
+                }
+            }
+        }
+        // convert each cell to current state
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == 10)
+                    board[i][j] = 1;
+                if (board[i][j] == 11)
+                    board[i][j] = 0;
+            }
+        }
+    }
+
+    // function returns the prevState of a cell
+    static boolean getPrevState(int[][] board, int i, int j) {
+        // base case
+        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length)
+            return false;
+        int num = board[i][j];
+        if (num == 0 || num == 10)
+            return false;
+        return true;
+    }
+}

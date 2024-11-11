@@ -1,0 +1,33 @@
+class Solution {
+
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        dfs(nums, 0, new ArrayList<>(), result);
+        return result;
+    }
+
+    private void dfs(int[] nums, int index, List<Integer> inner, List<List<Integer>> res) {
+        if (index >= nums.length) {
+            res.add(new ArrayList<>(inner));
+            return;
+        }
+        inner.add(nums[index]);
+        dfs(nums, index + 1, inner, res);
+        inner.remove(inner.size() - 1);
+        int i = index + 1;
+        while (i < nums.length) {
+            swap(nums, i, index);
+            inner.add(nums[index]);
+            dfs(nums, index + 1, inner, res);
+            swap(nums, i, index);
+            inner.remove(inner.size() - 1);
+            i++;
+        }
+    }
+
+    private void swap(int[] nums, int first, int second) {
+        int tmp = nums[first];
+        nums[first] = nums[second];
+        nums[second] = tmp;
+    }
+}

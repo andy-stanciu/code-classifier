@@ -1,0 +1,31 @@
+class Solution {
+
+    public void gameOfLife(int[][] board) {
+        int rows = board.length, cols = board[0].length;
+        int[][] processBoard = new int[rows + 2][cols + 2];
+        int[] rowBoxIndexes = { 0, 0, 0, 2, 2, 2, 1, 1 };
+        int[] colBoxIndexes = { 0, 1, 2, 0, 1, 2, 0, 2 };
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                processBoard[i + 1][j + 1] = board[i][j];
+            }
+        }
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                int sum = 0;
+                for (int k = 0; k < 8; k++) {
+                    sum = sum + processBoard[rowBoxIndexes[k] + i][colBoxIndexes[k] + j];
+                }
+                if (processBoard[i + 1][j + 1] == 1) {
+                    if (sum < 2)
+                        board[i][j] = 0;
+                    else if (sum == 2 || sum == 3)
+                        board[i][j] = 1;
+                    else if (sum > 3)
+                        board[i][j] = 0;
+                } else if (processBoard[i + 1][j + 1] == 0 && sum == 3)
+                    board[i][j] = 1;
+            }
+        }
+    }
+}

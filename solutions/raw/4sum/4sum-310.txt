@@ -1,0 +1,58 @@
+public class // Declaring a public class named Solution
+Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        // Declaring a method that takes an array of integers and a target integer, returns a list of lists of integers
+        // Sorting the input array nums in ascending order
+        Arrays.sort(nums);
+        // Creating an ArrayList to store quadruplets (lists of 4 integers)
+        List<List<Integer>> quadruplets = new ArrayList<>();
+        // Getting the length of the input array nums
+        int n = nums.length;
+        // Check if the target is negative and sum of smallest 4 elements is larger than target
+        for (int i = 0; i < n - 3; i++) {
+            // Looping through the array until the fourth-to-last element
+            // Skipping duplicates in the array
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+            for (int j = i + 1; j < n - 2; j++) {
+                // Looping through the array from the next element after i until the third-to-last element
+                // Skipping duplicates in the array
+                if (j > i + 1 && nums[j] == nums[j - 1])
+                    continue;
+                // Initializing left pointer to the next element after j
+                int left = j + 1;
+                // Initializing right pointer to the last element in the array
+                int right = n - 1;
+                while (left < right) {
+                    // Looping until left pointer is less than the right pointer
+                    // Calculating the sum of four elements as long to avoid overflow
+                    long sum = (long) nums[i] + (long) nums[j] + (long) nums[left] + (long) nums[right];
+                    if (sum == target) {
+                        // If the sum equals the target
+                        // Adding the quadruplet to the result list
+                        quadruplets.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+                        // Skipping duplicates from the left side
+                        while (left < right && nums[left] == nums[left + 1]) left++;
+                        // Skipping duplicates from the right side
+                        while (left < right && nums[right] == nums[right - 1]) right--;
+                        // Moving the left pointer to the next unique element
+                        left++;
+                        // Moving the right pointer to the next unique element
+                        right--;
+                    } else if (sum < target) {
+                        // If the sum is less than the target
+                        // Move the left pointer to increase the sum
+                        left++;
+                    } else {
+                        // If the sum is greater than the target
+                        // Move the right pointer to decrease the sum
+                        right--;
+                    }
+                }
+            }
+        }
+        // Returning the list of quadruplets
+        return quadruplets;
+    }
+}

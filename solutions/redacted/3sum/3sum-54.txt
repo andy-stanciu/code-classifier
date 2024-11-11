@@ -1,0 +1,38 @@
+class Solution {
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        Set<List<Integer>> set = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            // For every element nums[i], find a pair of elements nums[left] and nums[right] whose sum is equal to (0 - nums[i])
+            // We can use binary search since we sorted the array. This is similar to Two sum problem.
+            // This will give you one of the triplets - (i, left, right)
+            // Add this to the result list only if we didn\'t already. This can be verified using a set.
+            int target = 0 - nums[i];
+            binarySearch(nums, target, i, set);
+        }
+        return new ArrayList<>(set);
+    }
+
+    private void binarySearch(int[] nums, int target, int i, Set<List<Integer>> set) {
+        int left = 0, right = nums.length - 1;
+        while (left < right) {
+            int sum = nums[left] + nums[right];
+            if (sum < target) {
+                left++;
+            } else if (sum > target) {
+                right--;
+            } else {
+                if (left != i && right != i) {
+                    List<Integer> list = Arrays.asList(nums[i], nums[left], nums[right]);
+                    Collections.sort(list);
+                    if (!set.contains(list)) {
+                        set.add(list);
+                    }
+                }
+                left++;
+                right--;
+            }
+        }
+    }
+}

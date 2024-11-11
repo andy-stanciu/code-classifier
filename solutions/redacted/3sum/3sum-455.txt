@@ -1,0 +1,43 @@
+class Solution {
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        // Sort the array to make it easier to avoid duplicates and use two pointers
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        // Loop through the array, treating each number as the potential first number of the triplet
+        for (int i = 0; i < nums.length - 2; i++) {
+            // Skip duplicates for the first number
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            // Use two pointers to find the other two numbers that make up the triplet
+            int left = i + 1;
+            int right = nums.length - 1;
+            while (left < right) {
+                int sum = nums[i] + nums[left] + nums[right];
+                if (sum == 0) {
+                    // Found a triplet that sums to zero, add it to the result
+                    result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                    // Skip duplicates for the second number
+                    while (left < right && nums[left] == nums[left + 1]) {
+                        left++;
+                    }
+                    // Skip duplicates for the third number
+                    while (left < right && nums[right] == nums[right - 1]) {
+                        right--;
+                    }
+                    // Move the pointers
+                    left++;
+                    right--;
+                } else if (sum < 0) {
+                    // If the sum is less than zero, move the left pointer to the right
+                    left++;
+                } else {
+                    // If the sum is greater than zero, move the right pointer to the left
+                    right--;
+                }
+            }
+        }
+        return result;
+    }
+}

@@ -1,0 +1,54 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        for (int i = 0; i < nums.length - 3; i++) {
+            if (i != 0 && nums[i] == nums[i - 1])
+                continue;
+            if ((long) nums[i] + nums[i + 1] + nums[i + 2] + nums[i + 3] > (long) target)
+                break;
+            for (int j = i + 1; j < nums.length - 2; j++) {
+                if (j != i + 1 && nums[j] == nums[j - 1])
+                    continue;
+                if ((long) nums[i] + nums[j] + nums[j + 1] + nums[j + 2] > (long) target)
+                    break;
+                long leftSum = nums[i] + nums[j];
+                long need = (long) target - leftSum;
+                findTwoSum(j + 1, need, result, nums, nums[i], nums[j]);
+            }
+        }
+        return result;
+    }
+
+    public void findTwoSum(int index, long target, List<List<Integer>> result, int[] nums, int first, int second) {
+        int left = index;
+        int right = nums.length - 1;
+        while (left < right) {
+            if ((long) nums[left] + nums[left + 1] > (long) target)
+                break;
+            if (left != index && nums[left] == nums[left - 1]) {
+                left++;
+                continue;
+            }
+            if (right != nums.length - 1 && nums[right] == nums[right + 1]) {
+                right--;
+                continue;
+            }
+            if ((long) nums[left] + nums[right] == (long) target) {
+                List<Integer> list = new ArrayList<>();
+                list.add(first);
+                list.add(second);
+                list.add(nums[left]);
+                list.add(nums[right]);
+                result.add(list);
+                left++;
+                right--;
+            } else if ((long) nums[left] + nums[right] < (long) target) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+    }
+}

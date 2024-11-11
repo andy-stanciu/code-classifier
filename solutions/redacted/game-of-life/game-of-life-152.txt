@@ -1,0 +1,47 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        if (board == null || board.length == 0)
+            return;
+        int y = board[0].length;
+        int x = board.length;
+        int[][] copy = new int[x][y];
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                copy[i][j] = board[i][j];
+            }
+        }
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                int nearBy = countTheOnes(copy, i, j);
+                if (copy[i][j] == 0 && nearBy == 3) {
+                    board[i][j] = 1;
+                } else if (copy[i][j] == 1 && (nearBy < 2 || nearBy > 3)) {
+                    board[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    public int countTheOnes(int[][] board, int i, int j) {
+        int count = 0;
+        int m = board.length;
+        int n = board[0].length;
+        // Define the directions for the 8 neighbors
+        int[] directions = { -1, 0, 1 };
+        for (int x : directions) {
+            for (int y : directions) {
+                // Skip the current cell itself
+                if (x == 0 && y == 0)
+                    continue;
+                int ni = i + x;
+                int nj = j + y;
+                // Check bounds and count the live neighbors
+                if (ni >= 0 && ni < m && nj >= 0 && nj < n && board[ni][nj] == 1) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+}

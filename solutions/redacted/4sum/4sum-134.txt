@@ -1,0 +1,41 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] arr, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        if (arr.length < 4)
+            return ans;
+        Arrays.sort(arr);
+        for (int i = 0; i < arr.length - 3; i++) {
+            if (i > 0 && arr[i] == arr[i - 1])
+                continue;
+            if ((long) arr[i] + (long) arr[i + 1] + (long) arr[i + 2] + (long) arr[i + 3] > target)
+                break;
+            if ((long) arr[i] + (long) arr[arr.length - 1] + (long) arr[arr.length - 2] + (long) arr[arr.length - 3] < target)
+                continue;
+            for (int j = i + 1; j < arr.length - 2; j++) {
+                if (j > i + 1 && arr[j] == arr[j - 1])
+                    continue;
+                if ((long) arr[i] + (long) arr[j] + (long) arr[j + 1] + (long) arr[j + 2] > target)
+                    break;
+                if ((long) arr[i] + (long) arr[j] + (long) arr[arr.length - 1] + (long) arr[arr.length - 2] < target)
+                    continue;
+                int k = j + 1, l = arr.length - 1;
+                while (k < l) {
+                    long sum = (long) arr[i] + (long) arr[j] + (long) arr[k] + (long) arr[l];
+                    if (sum == (long) target) {
+                        ans.add(Arrays.asList(arr[i], arr[j], arr[k], arr[l]));
+                        k++;
+                        l--;
+                        while (k < l && arr[k] == arr[k - 1]) k++;
+                        while (k < l && arr[l] == arr[l + 1]) l--;
+                    } else if (sum > (long) target) {
+                        l--;
+                    } else {
+                        k++;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+}

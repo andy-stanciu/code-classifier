@@ -1,0 +1,39 @@
+class Solution {
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length - 2; i++) {
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+            int j = i + 1;
+            int k = i + 2;
+            // just optimization
+            if (nums[i] + nums[j] + nums[k] > 0)
+                return res;
+            // just optimization
+            if (nums[i] + nums[nums.length - 2] + nums[nums.length - 1] < 0)
+                continue;
+            while (k < nums.length) {
+                if (k + 1 < nums.length && nums[k + 1] == nums[k]) {
+                    k++;
+                    continue;
+                }
+                // just optimization
+                if (nums[i] + nums[i + 1] + nums[k] > 0)
+                    break;
+                // here, the pointer j sholuld just try to move a little left and right to find a value that will give zero sum
+                // move a little left
+                while (nums[i] + nums[j] + nums[k] > 0 && j - 1 > i) j--;
+                // move a little right
+                while (nums[i] + nums[j] + nums[k] < 0 && j + 1 < k) j++;
+                // check and save result
+                if (nums[i] + nums[j] + nums[k] == 0) {
+                    res.add(Arrays.asList(nums[i], nums[j], nums[k]));
+                }
+                k++;
+            }
+        }
+        return res;
+    }
+}

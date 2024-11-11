@@ -1,0 +1,31 @@
+class Solution {
+
+    List<List<Integer>> ans = null;
+
+    public void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    public void permutationUtil(int[] nums, int l, int r) {
+        if (l == r) {
+            List<Integer> list = IntStream.of(nums).boxed().collect(Collectors.toList());
+            ans.add(new ArrayList<>(list));
+        } else {
+            for (int i = l; i <= r; i++) {
+                swap(nums, i, l);
+                permutationUtil(nums, l + 1, r);
+                swap(nums, i, l);
+            }
+        }
+    }
+
+    public List<List<Integer>> permute(int[] nums) {
+        ans = new ArrayList<>();
+        Arrays.sort(nums);
+        int n = nums.length;
+        permutationUtil(nums, 0, n - 1);
+        return ans;
+    }
+}

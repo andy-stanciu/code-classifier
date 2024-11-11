@@ -1,0 +1,66 @@
+class Solution {
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        int numberOfElements = 4;
+        Set<List<Integer>> result = new HashSet<>();
+        if (nums.length < numberOfElements)
+            // empty
+            return new ArrayList<List<Integer>>(result);
+        Arrays.sort(nums);
+        nums = cleanUpNums(nums, numberOfElements);
+        // Stores if a number can
+        // be used or not
+        boolean[] visited = new boolean[nums.length];
+        ArrayList<Integer> temp = new ArrayList<>();
+        Rec(numberOfElements, 0l, temp, visited, result, 0, nums, target);
+        return new ArrayList<List<Integer>>(result);
+    }
+
+    // all combinations of N numbers from alphabet whose sum is target and
+    // intermediate sum is K
+    static void Rec(int N, long K, ArrayList<Integer> temp, boolean[] visited, Set<List<Integer>> result, int last, int[] alphabet, int target) {
+        // Base case
+        if (N == 0 && K == target) {
+            //
+            result.add(new ArrayList<>(temp));
+            return;
+        }
+        if (N <= 0)
+            return;
+        // Traverse the range [1, end of all]
+        for (int i = last; i < alphabet.length; i++) {
+            if (!visited[i]) {
+                // Mark i visitedited
+                visited[i] = true;
+                // Push element i into the vector
+                temp.add(alphabet[i]);
+                // Recursive call
+                Rec(N - 1, K + alphabet[i], temp, visited, result, i + 1, alphabet, target);
+                // Pop the last element
+                // from temp
+                temp.remove(temp.size() - 1);
+                // Mark element i unvisitedited
+                visited[i] = false;
+            }
+        }
+    }
+
+    public int[] cleanUpNums(int[] nums, int numberOfElements) {
+        // elements suppose to be sorted!
+        List<Integer> wrapper = new ArrayList<Integer>();
+        for (int i = 0; i < numberOfElements; i++) {
+            wrapper.add(nums[i]);
+        }
+        for (int i = numberOfElements; i < nums.length; i++) {
+            boolean same = true;
+            for (int j = 0; j < numberOfElements; j++) {
+                same = same && (wrapper.get(j) == nums[i]);
+            }
+            if (same) {
+                // omit
+            } else
+                wrapper.add(nums[i]);
+        }
+        return wrapper.stream().filter(x -> x instanceof Integer).mapToInt(i -> i).toArray();
+    }
+}

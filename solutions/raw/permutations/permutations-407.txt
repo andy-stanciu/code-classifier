@@ -1,0 +1,53 @@
+class Solution {
+
+    public List<List<Integer>> permute(int[] nums) {
+        if (nums.length <= 1) {
+            // Halting Condition: if array is of size 1 (each recursive call decreases 1 element)
+            //creates inner 1d arrayList (single permutation)
+            List<Integer> innerList = new ArrayList<>();
+            //creates full 2d arrayList (all permutations)
+            List<List<Integer>> allPermutations = new ArrayList<>();
+            //add last remaining element in arr to start a new permutation
+            innerList.add(nums[0]);
+            // adds new made permutation to all permutation arrayList (current permutation only has 1st value)
+            allPermutations.add(innerList);
+            //returns all permutation arrayList;
+            return allPermutations;
+        } else {
+            //Recursive Case: nums.length > 1
+            //creates full 2d arrayList (all permutations)
+            List<List<Integer>> allPermutations = new ArrayList<>();
+            for (int i = 0; i < nums.length; i++) {
+                //iterating through all numbers in nums, creating new arr for all permutations w/o 1 element (see line 20)
+                int x = 0;
+                //creates new num array w/o 1 element
+                int[] newNums = new int[nums.length - 1];
+                for (int j = 0; j < nums.length; j++) {
+                    //iterating nums array, adding all elements exept at nums[i]
+                    if (j != i) {
+                        newNums[x] = nums[j];
+                        x++;
+                    }
+                }
+                //creates new partly-done all permuations 2d arr from recursive call (passing nums - 1 element)
+                List<List<Integer>> permuteList = permute(newNums);
+                for (List<Integer> list : permuteList) {
+                    //iterating through every permutation in all permuations
+                    //adds element that has been removed from recursive call (current element in backtracking tree)
+                    list.add(nums[i]);
+                    //creates inner 1d arrayList (single permutation)
+                    List<Integer> innerList = new ArrayList<>();
+                    for (Integer num : list) {
+                        //interates through every number in partly-done permuation arrayList
+                        //tranfers Integer num to innerList (single permutation)
+                        innerList.add(num);
+                    }
+                    //adds a permutation to all permutations
+                    allPermutations.add(innerList);
+                }
+            }
+            //returns all permutations
+            return allPermutations;
+        }
+    }
+}

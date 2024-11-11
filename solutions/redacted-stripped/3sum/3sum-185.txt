@@ -1,0 +1,32 @@
+class Solution {
+
+    public void tS(List<List<Integer>> list, int[] nums, int f, int r, int sum) {
+        while (f < r) {
+            if (nums[f] + nums[r] < sum)
+                f++;
+            else if (nums[f] + nums[r] > sum)
+                r--;
+            else {
+                ArrayList<Integer> arr = new ArrayList<Integer>();
+                arr.add(-sum);
+                arr.add(nums[f]);
+                arr.add(nums[r]);
+                list.add(arr);
+                f++;
+                r--;
+                while (f < r && nums[f] == nums[f - 1]) f++;
+                while (f < r && nums[r] == nums[r + 1]) r--;
+            }
+        }
+    }
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> list = new ArrayList<>();
+        int n = nums.length;
+        tS(list, nums, 1, n - 1, -nums[0]);
+        for (int i = 1; i < n; i++) if (nums[i] != nums[i - 1])
+            tS(list, nums, i + 1, n - 1, -nums[i]);
+        return list;
+    }
+}

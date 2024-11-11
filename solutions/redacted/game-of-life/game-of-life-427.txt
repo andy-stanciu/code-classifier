@@ -1,0 +1,68 @@
+class Solution {
+
+    private static final int DEAD = 0;
+
+    private static final int ALIVE = 1;
+
+    private static final int[][] DIRECTIONS_MATRIX = { // UP
+    // DOWN
+    // RIGHT
+    // LEFT
+    // NE
+    // NW
+    { 0, -1 }, // SE
+    { 0, 1 }, // SW
+    { 1, 0 }, { -1, 0 }, { 1, -1 }, { -1, -1 }, { 1, 1 }, { -1, 1 } };
+
+    public void method1(int[][] board) {
+        if (board == null || board.length == 0) {
+            return;
+        }
+        int[][] tempBoard = new int[board.length][board[0].length];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                int var1 = method2(board, i, j);
+                if (board[i][j] == ALIVE) {
+                    handleLiveCellScenarios(tempBoard, var1, i, j);
+                } else {
+                    handleDeadCellScenarios(tempBoard, var1, i, j);
+                }
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                board[i][j] = tempBoard[i][j];
+            }
+        }
+    }
+
+    private int method2(int[][] board, int xCoordinate, int yCoordinate) {
+        int var1 = 0;
+        for (int[] direction : DIRECTIONS_MATRIX) {
+            int newXCoordinate = xCoordinate + direction[0];
+            int newYCoordinate = yCoordinate + direction[1];
+            if (isNeighborAlive(board, newXCoordinate, newYCoordinate)) {
+                var1++;
+            }
+        }
+        return var1;
+    }
+
+    private boolean isNeighborAlive(int[][] board, int xCoordinate, int yCoordinate) {
+        return xCoordinate < board.length && xCoordinate >= 0 && yCoordinate < board[0].length && yCoordinate >= 0 && board[xCoordinate][yCoordinate] == ALIVE;
+    }
+
+    private void handleLiveCellScenarios(int[][] board, int var1, int xCoordinate, int yCoordinate) {
+        if (var1 < 2 || var1 > 3) {
+            board[xCoordinate][yCoordinate] = DEAD;
+        } else {
+            board[xCoordinate][yCoordinate] = ALIVE;
+        }
+    }
+
+    private void handleDeadCellScenarios(int[][] board, int var1, int xCoordinate, int yCoordinate) {
+        if (var1 == 3) {
+            board[xCoordinate][yCoordinate] = ALIVE;
+        }
+    }
+}

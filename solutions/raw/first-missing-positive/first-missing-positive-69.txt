@@ -1,0 +1,45 @@
+class Solution {
+
+    public int firstMissingPositive(int[] nums) {
+        // O(n) time, O(1) space;
+        int n = nums.length, size = 0;
+        // -> Since: max(min integer not in nums ) <= n+1
+        // -> we find the number of bits i.e. (size) of n
+        // -> we know that no number <= n will have (size)th bit to 1
+        // therefore we set the (size)th bit of the i to 1 if there exists
+        // nums[j] such that nums[j] = i.
+        // -> this set bit will be used in the final iteration as the judging criteria
+        // -> for all values <=0 && values > n, we first partition them
+        //and then we set them to zero so that there does not arrive any conflict of  (size)th bit = 1 beforehand.
+        // -> I have used zero indexing so if we have nums[j] = 1,
+        // (size)th bit of nums[0] will be set to 1 and not of nums[1]
+        // CODE:
+        //calculating the variable size:
+        while (n > 0) {
+            n = n >> 1;
+            size++;
+        }
+        n = nums.length;
+        int pivot = 0;
+        // using partitioning to partition values not to be included in the array (negatives, zeros, and values > n):
+        for (int i = 0; i < n; i++) {
+            if (nums[i] <= 0 || nums[i] > n) {
+                int temp = nums[i];
+                nums[i] = nums[pivot];
+                nums[pivot] = temp;
+                pivot++;
+            }
+        }
+        // setting all bits to zero for values not in range 1 - n:
+        for (int i = 0; i < pivot; i++) nums[i] = 0;
+        //setting the (size)th bit to 1 for all values in range
+        for (int i = pivot; i < n; i++) {
+            nums[(nums[i] - 1) & ((1 << size) - 1)] |= (1 << size);
+        }
+        //final checking condition iteration
+        for (int i = 0; i < n; i++) if ((nums[i] & (1 << size)) == 0)
+            return i + 1;
+        //if all 1-n are present, then we return n+1
+        return n + 1;
+    }
+}

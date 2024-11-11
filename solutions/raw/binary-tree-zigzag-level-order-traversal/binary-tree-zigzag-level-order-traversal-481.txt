@@ -1,0 +1,70 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    private List<List<Integer>> zigzagLevelOrderHelper(List<List<Integer>> ls, int level, Stack<TreeNode> s) {
+        if (s.isEmpty())
+            return ls;
+        Stack<TreeNode> sNew = new Stack<TreeNode>();
+        if (level % 2 == 0) {
+            while (!s.isEmpty()) {
+                TreeNode root = s.pop();
+                if (level >= ls.size()) {
+                    List<Integer> l = new LinkedList<Integer>();
+                    l.add(root.val);
+                    ls.add(l);
+                } else {
+                    ls.get(level).add(root.val);
+                }
+                if (root.left != null)
+                    sNew.push(root.left);
+                if (root.right != null)
+                    sNew.push(root.right);
+            }
+        } else {
+            while (!s.isEmpty()) {
+                TreeNode root = s.pop();
+                if (level >= ls.size()) {
+                    List<Integer> l = new LinkedList<Integer>();
+                    l.add(root.val);
+                    ls.add(l);
+                } else {
+                    ls.get(level).add(root.val);
+                }
+                if (root.right != null)
+                    sNew.push(root.right);
+                if (root.left != null)
+                    sNew.push(root.left);
+            }
+        }
+        return zigzagLevelOrderHelper(ls, level + 1, sNew);
+    }
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> ls = new LinkedList<List<Integer>>();
+        if (root == null)
+            return ls;
+        List<Integer> l = new LinkedList<Integer>();
+        l.add(root.val);
+        ls.add(l);
+        Stack<TreeNode> s = new Stack<>();
+        if (root.left != null)
+            s.push(root.left);
+        if (root.right != null)
+            s.push(root.right);
+        return zigzagLevelOrderHelper(ls, 1, s);
+    }
+}

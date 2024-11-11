@@ -1,0 +1,38 @@
+class Solution {
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        // Sort the array first so that we can use two pointers
+        Arrays.sort(nums);
+        List<List<Integer>> res = new ArrayList<>();
+        // Go through each starting point of the array and find a
+        // possible combination that satisfies the condition.
+        for (int i = 0; i < nums.length && nums[i] <= 0; ++i) {
+            if (i == 0 || nums[i - 1] != nums[i]) {
+                twoSumII(nums, i, res);
+            }
+        }
+        return res;
+    }
+
+    private void twoSumII(int[] nums, int i, List<List<Integer>> res) {
+        int left = i + 1, right = nums.length - 1;
+        while (left < right) {
+            int sum = nums[i] + nums[left] + nums[right];
+            if (sum == 0) {
+                // Once we added the current combination, we move the pointers
+                // to avoid duplicate comb
+                res.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                left++;
+                right--;
+                // skip over any duplicate numbers
+                while (left < right && nums[left] == nums[left - 1]) {
+                    left++;
+                }
+            } else if (sum > 0) {
+                right--;
+            } else {
+                left++;
+            }
+        }
+    }
+}

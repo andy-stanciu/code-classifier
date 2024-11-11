@@ -1,0 +1,37 @@
+class Solution {
+
+    public List<List<Integer>> combine(int n, int k) {
+        int size = (int) (factorial(n) / ((factorial(n - k) * factorial(k))));
+        ArrayList<List<Integer>> result = new ArrayList<>(size);
+        List<Integer> first = new ArrayList<>(k);
+        for (int i = 0; i < k; i++) {
+            first.add(i + 1);
+        }
+        result.add(first);
+        List<Integer> previous = first;
+        for (int i = 1; i < size; i++) {
+            List<Integer> current = new ArrayList<>(previous);
+            previous = current;
+            for (int j = k - 1; j >= 0; j--) {
+                int val = previous.get(j) + 1;
+                if (val <= n - (k - 1 - j)) {
+                    current.set(j, val);
+                    for (int l = j + 1; l < k; l++) {
+                        current.set(l, current.get(j) + (l - j));
+                    }
+                    break;
+                }
+            }
+            result.add(current);
+        }
+        return result;
+    }
+
+    private long factorial(int n) {
+        if (n <= 1)
+            return 1;
+        if (n == 2)
+            return 2;
+        return n * factorial(n - 1);
+    }
+}

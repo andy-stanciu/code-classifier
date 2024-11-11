@@ -1,0 +1,31 @@
+public class Solution {
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        int N = nums.length;
+        HashMap<Integer, Integer> valToIdx = new HashMap<>();
+        for (int i = 0; i < N; i++) valToIdx.put(nums[i], i);
+        HashSet<String> dup = new HashSet<>();
+        List<List<Integer>> triplets = new LinkedList<>();
+        for (int i = 0; i < N; i++) {
+            int val1 = nums[i];
+            for (int j = i + 1; j < N; j++) {
+                int val2 = nums[j];
+                int needVal = 0 - val1 - val2;
+                if (valToIdx.containsKey(needVal)) {
+                    int needIdx = valToIdx.get(needVal);
+                    if (needIdx == i || needIdx == j)
+                        continue;
+                    int[] triplet = new int[] { val1, val2, needVal };
+                    Arrays.sort(triplet);
+                    StringBuilder builder = new StringBuilder();
+                    for (int val : triplet) builder.append(val);
+                    if (dup.contains(builder.toString()))
+                        continue;
+                    triplets.add(Arrays.asList(val1, val2, needVal));
+                    dup.add(builder.toString());
+                }
+            }
+        }
+        return triplets;
+    }
+}

@@ -1,0 +1,39 @@
+class Solution {
+
+    private class PermuteEntry {
+
+        public Set<Integer> set;
+
+        public List<Integer> arr;
+
+        PermuteEntry(List<Integer> arr, Set<Integer> set) {
+            this.arr = arr;
+            this.set = set;
+        }
+    }
+
+    public List<List<Integer>> permute(int[] nums) {
+        // iterative approach
+        Stack<PermuteEntry> stack = new Stack<>();
+        List<List<Integer>> ans = new ArrayList<>();
+        stack.push(new PermuteEntry(new ArrayList<>(), new HashSet<>()));
+        while (!stack.isEmpty()) {
+            PermuteEntry entry = stack.pop();
+            if (entry.arr.size() == nums.length) {
+                ans.add(entry.arr);
+                continue;
+            }
+            for (int i = 0; i < nums.length; i++) {
+                if (entry.set.contains(i)) {
+                    continue;
+                }
+                List<Integer> newEntry = new ArrayList<>(entry.arr);
+                Set<Integer> nSet = new HashSet<>(entry.set);
+                newEntry.add(nums[i]);
+                nSet.add(i);
+                stack.push(new PermuteEntry(newEntry, nSet));
+            }
+        }
+        return ans;
+    }
+}

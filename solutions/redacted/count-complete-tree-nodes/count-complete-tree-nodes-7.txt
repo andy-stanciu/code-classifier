@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    /**
+     *        This O (LogN * LogN) solution. H is approx LogN in complete binary tree.
+     *        When the heights are same in both sides we directly calculate height using formula. 2 ^ Height -1.
+     *        Else loop on left and right + 1 for root node.
+     */
+    public int method1(TreeNode root) {
+        if (root == null)
+            return 0;
+        int leftHeight = getLeftHeight(root);
+        int rightHeight = getRightHeight(root);
+        if (leftHeight == rightHeight) {
+            // use 1 << leftHeight as well to make it faster instead of 2 Power Height. Shifting 1 by height times to the left will give you the same answer.
+            return (int) Math.pow(2, leftHeight) - 1;
+            // E.g: 2 ^ 3 = 8; left shifting 1 by 3 times give 1000 in binary, which is 8.
+        } else {
+            // 1 is for the root node.
+            return 1 + method1(root.left) + method1(root.right);
+        }
+    }
+
+    int getLeftHeight(TreeNode node) {
+        int height = 0;
+        while (node != null) {
+            height++;
+            node = node.left;
+        }
+        return height;
+    }
+
+    int getRightHeight(TreeNode node) {
+        int height = 0;
+        while (node != null) {
+            height++;
+            node = node.right;
+        }
+        return height;
+    }
+}

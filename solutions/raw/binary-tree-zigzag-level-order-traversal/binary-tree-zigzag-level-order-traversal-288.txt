@@ -1,0 +1,57 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode treeNode) {
+        List<List<Integer>> zigzagLevelOrder = new ArrayList<>();
+        boolean reverseNext = true;
+        if (treeNode == null) {
+            return zigzagLevelOrder;
+        }
+        int currentLevelSize;
+        TreeNode currentTreeNode;
+        List<Integer> currentLevelOrder;
+        Deque<TreeNode> deque = new ArrayDeque<>();
+        deque.offer(treeNode);
+        while (deque.isEmpty() == false) {
+            currentLevelSize = deque.size();
+            currentLevelOrder = new ArrayList<>();
+            for (int index = 0; index < currentLevelSize; index++) {
+                if (reverseNext == true) {
+                    currentTreeNode = deque.pollLast();
+                    if (currentTreeNode.left != null) {
+                        deque.offerFirst(currentTreeNode.left);
+                    }
+                    if (currentTreeNode.right != null) {
+                        deque.offerFirst(currentTreeNode.right);
+                    }
+                } else {
+                    currentTreeNode = deque.pollFirst();
+                    if (currentTreeNode.right != null) {
+                        deque.offerLast(currentTreeNode.right);
+                    }
+                    if (currentTreeNode.left != null) {
+                        deque.offerLast(currentTreeNode.left);
+                    }
+                }
+                currentLevelOrder.add(Integer.valueOf(currentTreeNode.val));
+            }
+            reverseNext = !reverseNext;
+            zigzagLevelOrder.add(currentLevelOrder);
+        }
+        return zigzagLevelOrder;
+    }
+}

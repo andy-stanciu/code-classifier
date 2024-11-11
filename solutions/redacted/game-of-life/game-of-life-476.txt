@@ -1,0 +1,57 @@
+class Solution {
+
+    static int[] row = { -1, -1, -1, 0, 0, 1, 1, 1 };
+
+    static int[] col = { -1, 0, 1, -1, 1, -1, 0, 1 };
+
+    public static boolean isSafe(int x, int y, int[][] board) {
+        return (x >= 0 && x < board.length) && (y >= 0 && y < board[0].length) && ((board[x][y] == 1) || (board[x][y] == -1));
+    }
+
+    public static boolean isSafeOne(int x, int y, int[][] board) {
+        return (x >= 0 && x < board.length) && (y >= 0 && y < board[0].length) && ((board[x][y] == 1) || (board[x][y] == -1));
+    }
+
+    public static void SolveZero(int[][] board, int i, int j) {
+        int count = 0;
+        for (int k = 0; k < row.length; k++) {
+            if (isSafe(i + row[k], j + col[k], board)) {
+                count += 1;
+                if (count > 3)
+                    break;
+            }
+        }
+        if (count == 3)
+            board[i][j] = -2;
+    }
+
+    public static void SolveOne(int[][] board, int i, int j) {
+        int count = 0;
+        for (int k = 0; k < row.length; k++) {
+            if (isSafeOne(i + row[k], j + col[k], board)) {
+                count += 1;
+            }
+        }
+        if (count > 3 || count < 2)
+            board[i][j] = -1;
+    }
+
+    public void method1(int[][] board) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == 0)
+                    SolveZero(board, i, j);
+                else
+                    SolveOne(board, i, j);
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == -1)
+                    board[i][j] = 0;
+                if (board[i][j] == -2)
+                    board[i][j] = 1;
+            }
+        }
+    }
+}

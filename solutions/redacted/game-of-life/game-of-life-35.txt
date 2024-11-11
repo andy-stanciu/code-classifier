@@ -1,0 +1,45 @@
+class Solution {
+
+    public void method1(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        int[][] directions = { { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 }, { -1, -1 }, { 0, -1 }, { 1, -1 } };
+        List<int[]> toBeDead = new ArrayList<>();
+        List<int[]> toBeLive = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int liveNeighbours = 0;
+                // count live neighbours.
+                for (int[] d : directions) {
+                    int row = i + d[0];
+                    int col = j + d[1];
+                    // make sure the neighbour is within the board.
+                    if (row < 0 || m <= row || col < 0 || n <= col) {
+                        continue;
+                    }
+                    if (board[row][col] == 1) {
+                        liveNeighbours++;
+                    }
+                }
+                // a dead cell with with exactly 3 live neigbbours becomes a live cell.
+                if (board[i][j] == 0 && liveNeighbours == 3) {
+                    toBeLive.add(new int[] { i, j });
+                    continue;
+                }
+                // a live cell with exactly 2 or 3 live neighbours lives on the next generation.
+                if (liveNeighbours == 2 || liveNeighbours == 3) {
+                    continue;
+                }
+                // a live cell with fewer than 2 live neighbours or more than 3 ones dies.
+                toBeDead.add(new int[] { i, j });
+            }
+        }
+        // change the state of the cells in the lists.
+        for (int[] cell : toBeDead) {
+            board[cell[0]][cell[1]] = 0;
+        }
+        for (int[] cell : toBeLive) {
+            board[cell[0]][cell[1]] = 1;
+        }
+    }
+}
