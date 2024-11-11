@@ -4,4 +4,4 @@
 COUNT=900
 
 python3 scraper.py \
-  -p majority-element-ii -c $COUNT
+  -p kth-smallest-element-in-a-bst -c $COUNT
