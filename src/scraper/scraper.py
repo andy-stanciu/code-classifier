@@ -24,12 +24,12 @@ def scrape_code(solution_id):
 
         solutions = []
         for code_block in code_blocks:
-            # hacky way to filter out (almost) all non-java solutions/extraneous code blocks
-            if code_block.lower().startswith("java []"):
+            if 'class Solution' in code_block: # best attempt at filtering out Java solutions
                 code_block = code_block.replace("\\n", "\n")  # fix newlines
                 code_block = code_block.replace("\\t", "\t")  # fix tabs
                 code_block = code_block.replace("\'", "'")  # fix apostrophes
-                code_block = re.sub(r'^.*\n', '', code_block, count=1)  # remove first line, which is always "java []"
+                if code_block.lower().startswith("java []"):
+                    code_block = re.sub(r'^.*\n', '', code_block, count=1)  # remove first line, which is "java []"
                 code_block = re.sub(r'\s*import\s+[^;]*?;\s*(\r\n|\r|\n)?', '', code_block, flags=re.IGNORECASE)  # remove any import statements
                 solutions.append(code_block)
         
