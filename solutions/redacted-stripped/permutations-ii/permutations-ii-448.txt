@@ -1,0 +1,36 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        int N = nums.length;
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> answer = new ArrayList<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int num : nums) {
+            if (map.containsKey(num)) {
+                int value = map.get(num) + 1;
+                map.put(num, value);
+            } else {
+                map.put(num, 1);
+            }
+        }
+        helper(result, answer, nums, N, map);
+        return result;
+    }
+
+    public void helper(List<List<Integer>> result, List<Integer> current, int[] nums, int N, HashMap<Integer, Integer> map) {
+        if (current.size() == N) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+        for (Integer num : map.keySet()) {
+            if (map.get(num) < 1) {
+                continue;
+            }
+            map.put(num, map.get(num) - 1);
+            current.add(num);
+            helper(result, current, nums, N, map);
+            current.remove(current.size() - 1);
+            map.put(num, map.get(num) + 1);
+        }
+    }
+}

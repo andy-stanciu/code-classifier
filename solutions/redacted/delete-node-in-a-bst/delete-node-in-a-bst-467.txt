@@ -1,0 +1,76 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode RightMost(TreeNode src) {
+        TreeNode temp = src.left;
+        while (temp.right != null) temp = temp.right;
+        temp.right = src.right;
+        return src.left;
+    }
+
+    public TreeNode method1(TreeNode root, int key) {
+        // Serching node-:
+        if (root == null)
+            return null;
+        TreeNode src = root;
+        TreeNode parent = null;
+        while (src != null) {
+            if (src.val == key)
+                break;
+            parent = src;
+            if (src.val > key)
+                src = src.left;
+            else if (src.val < key)
+                src = src.right;
+        }
+        // if key not found-:
+        if (src == null)
+            return root;
+        // If we have to delete root node-:
+        if (parent == null) {
+            if (root.left != null && root.right != null)
+                return RightMost(root);
+            else if (root.left == null)
+                return root.right;
+            else if (root.right == null)
+                return root.left;
+            else
+                return null;
+        }
+        //Otherwise-:
+        // it will tell about which node will be modifed left or right
+        TreeNode var1 = null;
+        // if the node we want to delete haven\'t left and right node-:
+        if (src.left == null && src.right == null)
+            var1 = null;
+        else // if the node we want to delete have both left and right node-:
+        if (src.left != null && src.left != null) {
+            var1 = RightMost(src);
+        } else // if left is null but not right -:
+        if (src.left == null)
+            var1 = src.right;
+        else // if right is null but not left -:
+        if (src.right == null)
+            var1 = src.left;
+        // Now adding modified subtree with parent of deleted node-:
+        if (parent.val > src.val)
+            parent.left = var1;
+        else
+            parent.right = var1;
+        return root;
+    }
+}

@@ -1,0 +1,28 @@
+class Solution {
+
+    ArrayList<List<Integer>> answer = new ArrayList<>();
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        HashSet<Integer> seen = new HashSet<>();
+        search(nums, new ArrayList<Integer>(), seen);
+        return answer;
+    }
+
+    public void search(int[] nums, ArrayList<Integer> current, HashSet<Integer> seen) {
+        if (current.size() == nums.length) {
+            answer.add(new ArrayList<>(current));
+            return;
+        }
+        for (int x = 0; x < nums.length; x++) {
+            if (seen.contains(x) || (x > 0 && nums[x] == nums[x - 1] && !seen.contains(x - 1))) {
+                continue;
+            }
+            current.add(nums[x]);
+            seen.add(x);
+            search(nums, current, seen);
+            current.remove(current.size() - 1);
+            seen.remove(x);
+        }
+    }
+}

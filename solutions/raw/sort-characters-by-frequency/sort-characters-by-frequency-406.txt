@@ -1,0 +1,42 @@
+class Solution {
+
+    public class Pair {
+
+        char str;
+
+        int freq;
+
+        Pair(char str, int freq) {
+            this.str = str;
+            this.freq = freq;
+        }
+    }
+
+    public String frequencySort(String s) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> {
+            return b.freq - a.freq;
+        });
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (map.containsKey(ch)) {
+                pq.add(new Pair(ch, map.get(ch)));
+                map.remove(ch);
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        while (pq.size() > 0) {
+            Pair p = pq.remove();
+            char c = p.str;
+            int freq = p.freq;
+            while (freq-- > 0) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+}

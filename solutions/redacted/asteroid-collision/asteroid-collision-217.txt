@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        int[] res = new int[param1.length];
+        // The size of stack
+        int p = 0;
+        for (int num : param1) {
+            if (num < 0) {
+                // whether current asteroid exploded
+                boolean explode = false;
+                while (p > 0 && res[p - 1] > 0) {
+                    final int sum = num + res[p - 1];
+                    if (sum > 0) {
+                        // Current asteroid is destroyed by a larger asteroid
+                        explode = true;
+                        break;
+                    } else if (sum < 0) {
+                        // Current asteroid destroys a smaller asteroid
+                        p--;
+                    } else {
+                        // Current asteroid and a same size asteroid both explode
+                        p--;
+                        explode = true;
+                        break;
+                    }
+                }
+                if (!explode) {
+                    res[p] = num;
+                    p++;
+                }
+            } else {
+                res[p] = num;
+                p++;
+            }
+        }
+        return Arrays.copyOf(res, p);
+    }
+}

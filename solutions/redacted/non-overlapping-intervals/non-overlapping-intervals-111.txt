@@ -1,0 +1,40 @@
+class Solution {
+
+    public int method1(int[][] param1) {
+        // Initialize a counter for the number of intervals that need to be removed
+        int var1 = 0;
+        // Sort the intervals based on their end times (interval[1]).
+        // If two intervals have the same end time, they are sorted by their start times.
+        // Sorting by end times helps us to make the greedy choice of picking the interval
+        // that finishes the earliest, leaving more room for subsequent intervals.
+        Arrays.sort(param1, (interval1, interval2) -> {
+            if (interval1[1] == interval2[1]) {
+                // Secondary sort by start time
+                return interval1[0] - interval2[0];
+            } else {
+                // Primary sort by end time
+                return interval1[1] - interval2[1];
+            }
+        });
+        // Initialize the end time of the last included interval in the non-overlapping set.
+        // Start with the end time of the first interval in the sorted array.
+        int lastIncludedIntervalEnd = param1[0][1];
+        // Traverse the sorted intervals starting from the second one.
+        for (int i = 1; i < param1.length; i++) {
+            // Check if the current interval overlaps with the last included interval.
+            // If the start time of the current interval is greater than or equal to the end time
+            // of the last included interval, it means there is no overlap.
+            if (param1[i][0] >= lastIncludedIntervalEnd) {
+                // Update the last included interval\'s end time to the current interval\'s end time
+                lastIncludedIntervalEnd = param1[i][1];
+            } else {
+                // If the current interval overlaps with the last included interval,
+                // increment the intervalsToRemove counter, because this interval
+                // cannot be part of the non-overlapping set.
+                var1++;
+            }
+        }
+        // Return the total number of intervals that need to be removed to make the rest non-overlapping.
+        return var1;
+    }
+}

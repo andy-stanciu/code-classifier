@@ -1,0 +1,35 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> stack = new Stack<>();
+        for (int asteroid : asteroids) {
+            boolean exploded = false;
+            // While the current asteroid is negative (moving left) and the top of the stack is positive (moving right)
+            while (!stack.isEmpty() && asteroid < 0 && stack.peek() > 0) {
+                if (stack.peek() < Math.abs(asteroid)) {
+                    // The top of the stack explodes because it is smaller
+                    stack.pop();
+                } else if (stack.peek() == Math.abs(asteroid)) {
+                    // Both asteroids are the same size and explode
+                    stack.pop();
+                    exploded = true;
+                    break;
+                } else {
+                    // The current asteroid explodes because it is smaller
+                    exploded = true;
+                    break;
+                }
+            }
+            // If the current asteroid did not explode, add it to the stack
+            if (!exploded) {
+                stack.push(asteroid);
+            }
+        }
+        // Convert the stack to an array
+        int[] result = new int[stack.size()];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = stack.get(i);
+        }
+        return result;
+    }
+}

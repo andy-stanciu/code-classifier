@@ -1,0 +1,35 @@
+class Solution {
+
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> paths = new ArrayList<>();
+        List<TreeNode> subpath = new ArrayList<>();
+        while (root != null) {
+            if (root.left != null) {
+                subpath.add(root);
+                root = root.left;
+                continue;
+            }
+            if (root.right != null) {
+                subpath.add(root);
+                root = root.right;
+                continue;
+            }
+            final var path = Stream.concat(subpath.stream(), Stream.of(root)).map(node -> String.valueOf(node.val)).collect(Collectors.joining("->"));
+            paths.add(path);
+            TreeNode newRoot = null;
+            while (!subpath.isEmpty()) {
+                TreeNode previous = subpath.remove(subpath.size() - 1);
+                TreeNode current = root;
+                if (previous.right != null && previous.right != current) {
+                    subpath.add(previous);
+                    newRoot = previous.right;
+                    break;
+                } else {
+                    root = previous;
+                }
+            }
+            root = newRoot;
+        }
+        return paths;
+    }
+}

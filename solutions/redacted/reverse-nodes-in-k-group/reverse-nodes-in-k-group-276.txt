@@ -1,0 +1,62 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        if (head == null || k <= 0)
+            return head;
+        //O(k)
+        ListNode tail = method2(head, k);
+        //if there is not enough nodes
+        if (tail == null)
+            //this list is over for work
+            return head;
+        //make two different list
+        ListNode var1 = tail.next;
+        tail.next = null;
+        //O(k)
+        tail = method3(head);
+        //do same for next group and attach them back, post reverse, head will be tail and vice versa in reverse list
+        head.next = method1(var1, k);
+        // post reversal, tail will be our new head; assume there are only k nodes.
+        return tail;
+    }
+
+    private ListNode method2(ListNode head, int k) {
+        //head is counted as one
+        k = k - 1;
+        while (head != null && k > 0) {
+            head = head.next;
+            k--;
+        }
+        return head;
+    }
+
+    /**
+     *  * // 1-2-3-4; n_1 = 2-3-4 ; head = 1
+     *      * //  2-3-4 ; n_1 = 3-4 ; head = 2
+     *      * // 3-4; n_1 = 4; head= 3
+     *      * // 4 -> return ; newHead = 4, 4->3
+     *      * // 4-3-2; newHead = 4
+     *      * // 4-3-2-1, newHEad = 4
+     * @param head
+     * @return
+     */
+    private ListNode method3(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        ListNode n_1_list = head.next;
+        head.next = null;
+        ListNode newHead = method3(n_1_list);
+        n_1_list.next = head;
+        return newHead;
+    }
+}

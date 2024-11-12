@@ -1,0 +1,57 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode rightt;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode rightt) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.rightt = rightt;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        // Buoc 1: Di tim node can xoa.
+        if (key < root.val) {
+            root.left = method1(root.left, key);
+        } else if (key > root.val) {
+            root.right = method1(root.right, key);
+        } else {
+            // Buoc 2: Khi da tim duoc vi tri node can xoa.
+            // TH1: key khong co node con (node la).
+            if (root.left == null && root.right == null) {
+                return null;
+            } else // TH2: key co mot node con.
+            if (root.left != null && root.right == null) {
+                return root.left;
+            } else if (root.left == null && root.right != null) {
+                return root.right;
+            }
+            // TH3: KEY co 2 node con.
+            // Su dung pp thay boi trai cung cua cay con ben phai.
+            // 1. Di tim node trai cung truoc.
+            TreeNode var1 = method2(root.right);
+            // thay the key = val cua nodeTraiCungCayConPhai.
+            root.val = var1.val;
+            // cay van luu lai nodeTraiCungCayConPhai => xoa no di.
+            // Dua ve th2.
+            root.right = method1(root.right, var1.val);
+        }
+        return root;
+    }
+
+    private TreeNode method2(TreeNode root) {
+        TreeNode var2 = root;
+        while (var2.left != null) {
+            var2 = var2.left;
+        }
+        return var2;
+    }
+}

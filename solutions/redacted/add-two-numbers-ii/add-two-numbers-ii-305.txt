@@ -1,0 +1,51 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        // Stack of first linked list
+        Stack<Integer> stackL1 = new Stack<>();
+        while (l1 != null) {
+            stackL1.push(l1.val);
+            l1 = l1.next;
+        }
+        // stack of second linked list
+        Stack<Integer> stackL2 = new Stack<>();
+        while (l2 != null) {
+            stackL2.push(l2.val);
+            l2 = l2.next;
+        }
+        // result to be returned at the end
+        ListNode result = null;
+        // carryOver value from addition
+        int carryOver = 0;
+        // while there is still numbers in either stack or there is a carry over value
+        while (!stackL1.isEmpty() || !stackL2.isEmpty() || carryOver != 0) {
+            // digit from stackL1 or 0 if stackL1 is empty
+            int digit1 = !stackL1.empty() ? stackL1.pop() : 0;
+            // digit from stackL2 or 0 if stackL2 is empty
+            int digit2 = !stackL2.empty() ? stackL2.pop() : 0;
+            // sum the digits up and add the carry over value if there is one
+            int sum = digit1 + digit2 + carryOver;
+            // if sum is over 10, it will return essentially sum - 10
+            // if it not over 10, it will not change the sum
+            int digit = sum % 10;
+            // if sum is over 10, result is 1
+            // if it is not, result is 0
+            carryOver = sum / 10;
+            // building backward
+            ListNode newNode = new ListNode(digit);
+            newNode.next = result;
+            result = newNode;
+        }
+        return result;
+    }
+}

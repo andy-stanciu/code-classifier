@@ -1,0 +1,76 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    int getLength(ListNode node) {
+        if (node == null)
+            return 0;
+        return 1 + getLength(node.next);
+    }
+
+    int addNumbers(ListNode l1, ListNode l2, ListNode node) {
+        if (l1.next == null && l2.next == null) {
+            int sum = l1.val + l2.val;
+            int carry = sum / 10;
+            node.val = sum % 10;
+            return carry;
+        }
+        ListNode temp = new ListNode(0, null);
+        node.next = temp;
+        int carry = addNumbers(l1.next, l2.next, node.next);
+        int sum = l1.val + l2.val + carry;
+        node.val = sum % 10;
+        return sum / 10;
+    }
+
+    int recursion(ListNode node, ListNode ln, ListNode prev, int diff) {
+        if (diff == 0) {
+            ListNode newNode = new ListNode(0, null);
+            int carry = addNumbers(node, ln, newNode);
+            prev.next = newNode;
+            return carry;
+        }
+        int carry = recursion(node.next, ln, node, diff - 1);
+        int value = node.val;
+        //System.out.println(value+" "+carry);
+        node.val = (value + carry) % 10;
+        return (value + carry) / 10;
+    }
+
+    ListNode greaterLengthAdd(ListNode l1, ListNode l2, int len1, int len2) {
+        ListNode prev = null;
+        int diff = len1 - len2;
+        int carry = recursion(l1, l2, prev, diff);
+        if (carry != 0) {
+            ListNode tempNode = new ListNode(carry, l1);
+            return tempNode;
+        }
+        return l1;
+    }
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        int len1 = getLength(l1);
+        int len2 = getLength(l2);
+        if (len1 > len2) {
+            return greaterLengthAdd(l1, l2, len1, len2);
+        } else if (len2 > len1) {
+            return greaterLengthAdd(l2, l1, len2, len1);
+        } else {
+            ListNode newNode = new ListNode(0, null);
+            int carry = addNumbers(l1, l2, newNode);
+            if (carry != 0) {
+                ListNode tempNode = new ListNode(carry, newNode);
+                return tempNode;
+            }
+            return newNode;
+        }
+    }
+}

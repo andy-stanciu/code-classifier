@@ -1,0 +1,35 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        // ans list
+        List<List<Integer>> ans = new ArrayList<>();
+        // sort the array
+        Arrays.sort(nums);
+        // helper method
+        helper(ans, new ArrayList<>(), nums, new boolean[nums.length]);
+        // return output
+        return ans;
+    }
+
+    private void helper(List<List<Integer>> ans, List<Integer> temp, int[] nums, boolean[] vis) {
+        if (nums.length == temp.size()) {
+            ans.add(new ArrayList<>(temp));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            // if current element is already present in the temp, skip the element
+            if (vis[i])
+                continue;
+            // if prev element and current element is equal, skip the element
+            if (i > 0 && !vis[i - 1] && nums[i] == nums[i - 1])
+                continue;
+            vis[i] = true;
+            temp.add(nums[i]);
+            // recursive call
+            helper(ans, temp, nums, vis);
+            // backtracking
+            temp.remove(temp.size() - 1);
+            vis[i] = false;
+        }
+    }
+}

@@ -1,0 +1,40 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        // Step 1: Count nodes to see if we can reverse this group
+        int c = 0;
+        ListNode temp = head;
+        while (c < k && temp != null) {
+            temp = temp.next;
+            c++;
+        }
+        // Step 2: If we have k nodes, reverse them
+        if (c == k) {
+            ListNode prev = null;
+            ListNode curr = head;
+            // Reverse the first k nodes
+            for (int i = 0; i < k; i++) {
+                ListNode nxt = curr.next;
+                curr.next = prev;
+                prev = curr;
+                curr = nxt;
+            }
+            // Step 3: Recursively reverse the remaining nodes
+            head.next = reverseKGroup(curr, k);
+            // prev is the new head of the reversed group
+            return prev;
+        }
+        // If less than k nodes remain, return the current head (no reversal)
+        return head;
+    }
+}

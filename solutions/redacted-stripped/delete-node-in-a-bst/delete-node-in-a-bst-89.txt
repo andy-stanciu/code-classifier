@@ -1,0 +1,32 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int x) {
+        if (root == null) {
+            return root;
+        }
+        if (root.val < x) {
+            root.right = method1(root.right, x);
+        } else if (root.val > x) {
+            root.left = method1(root.left, x);
+        } else {
+            if (root.left == null) {
+                return root.right;
+            }
+            if (root.right == null) {
+                return root.left;
+            }
+            TreeNode succ = getSuccessor(root);
+            root.val = succ.val;
+            root.right = method1(root.right, succ.val);
+        }
+        return root;
+    }
+
+    public TreeNode getSuccessor(TreeNode curr) {
+        curr = curr.right;
+        while (curr != null && curr.left != null) {
+            curr = curr.left;
+        }
+        return curr;
+    }
+}

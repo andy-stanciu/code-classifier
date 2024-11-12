@@ -1,0 +1,36 @@
+class Solution {
+
+    int inf = 1 << 20;
+
+    private int twoSumClosest(int[] nums, int idx, int target) {
+        int s = 0;
+        int e = idx - 1;
+        int sum = inf;
+        while (s < e) {
+            if (nums[s] + nums[e] + nums[idx] >= target) {
+                if (nums[s] + nums[e] + nums[idx] - target < Math.abs(sum + nums[idx] - target)) {
+                    sum = nums[s] + nums[e];
+                }
+                e--;
+            } else {
+                if (target - (nums[s] + nums[e] + nums[idx]) < Math.abs(sum + nums[idx] - target)) {
+                    sum = nums[s] + nums[e];
+                }
+                s++;
+            }
+        }
+        return sum + nums[idx];
+    }
+
+    public int threeSumClosest(int[] nums, int target) {
+        int sum = inf;
+        Arrays.sort(nums);
+        for (int i = nums.length - 1; i >= 0; i--) {
+            int sumTillNow = twoSumClosest(nums, i, target);
+            if (Math.abs(target - sum) > Math.abs(target - sumTillNow)) {
+                sum = sumTillNow;
+            }
+        }
+        return sum;
+    }
+}

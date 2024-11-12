@@ -1,0 +1,49 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        int counter = 1;
+        ListNode fast = head;
+        while (fast.next != null && fast.next.next != null) {
+            counter += 2;
+            fast = fast.next.next;
+        }
+        if (fast.next != null)
+            counter++;
+        int noOfLoops = counter / k;
+        ListNode dummyHead = new ListNode(-1);
+        dummyHead.next = head;
+        int counter2 = 0;
+        ListNode var1 = dummyHead;
+        ListNode var2 = head;
+        ListNode currHead = var2;
+        ListNode currTail = var2;
+        while (counter2 < noOfLoops) {
+            int tempK = 0;
+            while (tempK < k - 1) {
+                currTail = currTail.next;
+                tempK++;
+            }
+            var2 = currTail.next;
+            currTail.next = null;
+            var1.next = method2(currHead);
+            currHead.next = var2;
+            var1 = currHead;
+            currHead = currHead.next;
+            currTail = currHead;
+            counter2++;
+        }
+        return dummyHead.next;
+    }
+
+    public ListNode method2(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        return prev;
+    }
+}

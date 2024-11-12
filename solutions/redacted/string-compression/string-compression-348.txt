@@ -1,0 +1,44 @@
+class Solution {
+
+    public int compress(char[] chars) {
+        char[] tmpChars = chars.clone();
+        Character currentChar = null;
+        int currentLength = 0;
+        int writer = 0;
+        for (char c : chars) {
+            if (currentChar == null) {
+                currentChar = c;
+                currentLength++;
+                tmpChars[writer++] = c;
+                continue;
+            }
+            if (c == currentChar) {
+                currentLength++;
+                continue;
+            }
+            if (c != currentChar) {
+                writer = writeDigits(tmpChars, currentLength, writer);
+                currentChar = c;
+                tmpChars[writer++] = c;
+                currentLength = 1;
+            }
+        }
+        if (currentLength > 1)
+            writer = writeDigits(tmpChars, currentLength, writer);
+        for (int i = 0; i < tmpChars.length; i++) {
+            chars[i] = tmpChars[i];
+        }
+        return writer;
+    }
+
+    private int writeDigits(char[] toModify, int charOccurrences, int currentWriter) {
+        // returns current index after
+        // save
+        if (charOccurrences <= 1)
+            return currentWriter;
+        for (char digit : Integer.toString(charOccurrences).toCharArray()) {
+            toModify[currentWriter++] = digit;
+        }
+        return currentWriter;
+    }
+}

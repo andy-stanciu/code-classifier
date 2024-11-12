@@ -1,0 +1,95 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        if (root.val == key && root.left == null && root.right == null) {
+            return null;
+        }
+        if (root.left == null && root.right == null && root.val != key) {
+            return root;
+        }
+        if (root.val == key && root.left == null && root.right != null) {
+            TreeNode newRoot = root.right;
+            root.right = null;
+            return newRoot;
+        }
+        if (root.val == key && root.right == null && root.left != null) {
+            TreeNode newRoot = root.left;
+            root.left = null;
+            return newRoot;
+        }
+        TreeNode var1 = null;
+        TreeNode parentOfKey = null;
+        if (root.val == key) {
+            parentOfKey = root;
+            var1 = root;
+        } else {
+            parentOfKey = parentOfKey(root, key);
+        }
+        if (parentOfKey == null) {
+            return root;
+        }
+        if (parentOfKey.left != null && parentOfKey.left.val == key) {
+            var1 = parentOfKey.left;
+        } else if (parentOfKey.right != null && parentOfKey.right.val == key) {
+            var1 = parentOfKey.right;
+        }
+        if (var1.left == null && var1.right == null) {
+            if (parentOfKey.val > var1.val) {
+                parentOfKey.left = null;
+            } else {
+                parentOfKey.right = null;
+            }
+        }
+        if (var1.left == null && var1.right != null) {
+            if (parentOfKey.val > var1.val) {
+                parentOfKey.left = var1.right;
+            } else {
+                parentOfKey.right = var1.right;
+            }
+        } else if (var1.left != null && var1.right == null) {
+            if (parentOfKey.val > var1.val) {
+                parentOfKey.left = var1.left;
+            } else {
+                parentOfKey.right = var1.left;
+            }
+        }
+        if (var1.left != null && var1.right != null) {
+            TreeNode var2 = method2(var1.right);
+            var1.val = var2.val;
+            TreeNode var3 = parentOfKey(var1, var2.val);
+            if (var3.left != null && var3.left.val == var2.val && var2.right == null && var2.left == null) {
+                var3.left = null;
+            } else if (var3.right != null && var3.right.val == var2.val && var2.right == null && var2.left == null) {
+                var3.right = null;
+            } else if (var2.right != null && var3.val > var2.val) {
+                var3.left = var2.right;
+            } else {
+                var3.right = var2.right;
+            }
+        }
+        return root;
+    }
+
+    public TreeNode parentOfKey(TreeNode param1, int key) {
+        if (param1 != null && (param1.left != null && param1.left.val == key) || (param1.right != null && param1.right.val == key)) {
+            return param1;
+        }
+        TreeNode parent = null;
+        if (param1.val > key && param1.left != null) {
+            parent = parentOfKey(param1.left, key);
+        } else if (param1.right != null) {
+            parent = parentOfKey(param1.right, key);
+        }
+        return parent;
+    }
+
+    public TreeNode method2(TreeNode param1) {
+        if (param1.left == null) {
+            return param1;
+        }
+        return method2(param1.left);
+    }
+}

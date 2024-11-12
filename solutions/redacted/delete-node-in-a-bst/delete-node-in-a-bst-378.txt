@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        // found the node to delete
+        if (root.val == key) {
+            // now there are three cases
+            // degree=0,1,2
+            if (root.left == null && root.right == null) {
+                // make root null and return
+                root = null;
+                return null;
+            } else // if root has one child
+            if (root.left == null || root.right == null) {
+                TreeNode child = root.left != null ? root.left : root.right;
+                root = null;
+                return child;
+            } else // if root has both children
+            {
+                // get the minValue node in right side
+                int var1 = method2(root.right);
+                // update the value
+                root.val = var1;
+                // now delete the node with min value i.e leftmost node in right side
+                root.right = method1(root.right, var1);
+                return root;
+            }
+        }
+        // find in left and right
+        root.left = method1(root.left, key);
+        root.right = method1(root.right, key);
+        return root;
+    }
+
+    private int method2(TreeNode param1) {
+        if (param1 == null) {
+            return Integer.MIN_VALUE;
+        }
+        if (param1.left == null) {
+            return param1.val;
+        }
+        return method2(param1.left);
+    }
+}

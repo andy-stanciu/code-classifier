@@ -1,0 +1,47 @@
+class Solution {
+
+    public TreeNode func_extreme_right(TreeNode t) {
+        if (t.right == null)
+            return t;
+        else {
+            return func_extreme_right(t.right);
+        }
+    }
+
+    public TreeNode helper(TreeNode root) {
+        if (root.left == null)
+            return root.right;
+        if (root.right == null)
+            return root.left;
+        TreeNode right_subtree = root.right;
+        TreeNode extreme_right_of_left = func_extreme_right(root.left);
+        extreme_right_of_left.right = right_subtree;
+        return root.left;
+    }
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        if (root.val == key)
+            return helper(root);
+        TreeNode start = root;
+        while (root != null) {
+            if (root.val < key) {
+                if (root.right != null && root.right.val == key) {
+                    root.right = helper(root.right);
+                    break;
+                } else {
+                    root = root.right;
+                }
+            } else {
+                if (root.left != null && root.left.val == key) {
+                    root.left = helper(root.left);
+                    break;
+                } else {
+                    root = root.left;
+                }
+            }
+        }
+        return start;
+    }
+}

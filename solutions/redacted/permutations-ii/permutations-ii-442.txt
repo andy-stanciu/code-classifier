@@ -1,0 +1,39 @@
+class Solution {
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    private List<Integer> toList(int[] nums) {
+        List<Integer> li = new ArrayList<>();
+        for (int e : nums) li.add(e);
+        return li;
+    }
+
+    private void solve(Set<List<Integer>> res, int[] nums, int start) {
+        if (start == nums.length) {
+            res.add(toList(nums));
+            return;
+        }
+        for (int i = start; i < nums.length; i++) {
+            // to avoid unnecessary recursive calls.
+            if (i > start && nums[i] == nums[i - 1])
+                continue;
+            // do
+            swap(nums, i, start);
+            // recur
+            solve(res, nums, start + 1);
+            // undo
+            swap(nums, i, start);
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        Set<List<Integer>> res = new HashSet<>();
+        solve(res, nums, 0);
+        return new ArrayList<>(res);
+    }
+}

@@ -1,0 +1,29 @@
+class Solution {
+
+    public int method1(int[][] param1) {
+        if (param1.length == 1) {
+            return 0;
+        }
+        int n = param1.length;
+        Arrays.sort(param1, (a, b) -> a[0] - b[0]);
+        int[] DP = new int[n + 1];
+        for (int i = n - 1; i >= 0; i--) {
+            int nextIndex = bisectRight(i, param1[i][1], param1);
+            DP[i] = Math.max(DP[i + 1], 1 + DP[nextIndex]);
+        }
+        return n - DP[0];
+    }
+
+    public int bisectRight(int currIdx, int target, int[][] param1) {
+        int left = currIdx, right = param1.length;
+        while (left < right) {
+            int mid = left + ((right - left) / 2);
+            if (param1[mid][0] < target) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return left;
+    }
+}

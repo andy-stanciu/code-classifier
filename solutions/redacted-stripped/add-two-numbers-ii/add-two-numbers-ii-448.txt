@@ -1,0 +1,55 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        int size1 = 0;
+        ListNode one = l1;
+        while (one != null) {
+            size1++;
+            one = one.next;
+        }
+        int size2 = 0;
+        ListNode var1 = l2;
+        while (var1 != null) {
+            size2++;
+            var1 = var1.next;
+        }
+        return solve(l1, l2, size1, size2);
+    }
+
+    private ListNode solve(ListNode l1, ListNode l2, int size1, int size2) {
+        if (size2 > size1)
+            return solve(l2, l1, size2, size1);
+        ListNode head = null;
+        while (size1 > size2) {
+            ListNode node = new ListNode(l1.val);
+            node.next = head;
+            head = node;
+            l1 = l1.next;
+            size1--;
+        }
+        while (size1-- > 0) {
+            ListNode node = new ListNode(l1.val + l2.val);
+            node.next = head;
+            head = node;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        int carry = 0;
+        ListNode result = null;
+        while (head != null) {
+            int sum = head.val + carry;
+            head.val = sum % 10;
+            carry = sum / 10;
+            ListNode next = head.next;
+            head.next = result;
+            result = head;
+            head = next;
+        }
+        if (carry != 0) {
+            ListNode node = new ListNode(carry);
+            node.next = result;
+            result = node;
+        }
+        return result;
+    }
+}

@@ -1,0 +1,58 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        // Keep searching for the node in the left subtree
+        if (root.val > key) {
+            root.left = method1(root.left, key);
+            // Keep searching for the node in the right subtree
+        } else if (root.val < key) {
+            root.right = method1(root.right, key);
+            // We found the node, meaning root.val == key
+        } else {
+            // If root\'s right subtree is empty, just return its left subtree
+            // In such a way the original root will be replaced with its left child
+            if (root.right == null) {
+                return root.left;
+            }
+            // If root\'s left subtree is empty, just return its right subtree
+            // In such a way the original root will be replaced with its right child
+            if (root.left == null) {
+                return root.right;
+            }
+            // Both left and right children exist
+            // Find root\'s predecessor node (the rightmost node of the left subtree),
+            // then link predecessor\'s right child with the root\'s right child,
+            // since root.right will be greater than the successor (which in turn is the greatest node of the roots left subtree)
+            TreeNode predecessor = method2(root.left);
+            predecessor.right = root.right;
+            // Return the root\'s left child
+            // In such a way the original root will be replaced with its left child
+            return root.left;
+        }
+        return root;
+    }
+
+    private TreeNode method2(TreeNode param1) {
+        while (param1.right != null) {
+            param1 = param1.right;
+        }
+        return param1;
+    }
+}

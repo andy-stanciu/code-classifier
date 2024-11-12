@@ -1,0 +1,33 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> var1 = new ArrayList<>();
+        Set<Integer> hasIndex = new HashSet<>();
+        Arrays.sort(nums);
+        helper(nums, new ArrayList<>(), hasIndex, var1);
+        return var1;
+    }
+
+    public void helper(int[] nums, List<Integer> currPermutation, Set<Integer> hasIndex, List<List<Integer>> var1) {
+        if (currPermutation.size() == nums.length) {
+            var1.add(new ArrayList<>(currPermutation));
+            return;
+        }
+        int index = 0;
+        while (index < nums.length) {
+            if (hasIndex.contains(index)) {
+                index++;
+                continue;
+            }
+            hasIndex.add(index);
+            currPermutation.add(nums[index]);
+            helper(nums, currPermutation, hasIndex, var1);
+            hasIndex.remove(index);
+            currPermutation.remove(currPermutation.size() - 1);
+            index++;
+            while (index < nums.length && nums[index] == nums[index - 1]) {
+                index++;
+            }
+        }
+    }
+}

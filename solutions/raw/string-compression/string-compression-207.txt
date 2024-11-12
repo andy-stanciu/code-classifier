@@ -1,0 +1,33 @@
+class Solution {
+
+    public int compress(char[] chars) {
+        Character prev = chars[0];
+        int windowStart = 0;
+        int left = 0;
+        for (int i = 0; i < chars.length; i += 1) {
+            if (chars[i] != prev) {
+                char now = chars[i];
+                windowStart = compress(chars, left, i, windowStart, prev);
+                left = i;
+                prev = now;
+            }
+        }
+        return compress(chars, left, chars.length, windowStart, prev);
+    }
+
+    private static int compress(char[] chars, int left, int right, int windowStart, char prev) {
+        if (right - left > 1) {
+            char[] digits = String.valueOf(right - left).toCharArray();
+            chars[windowStart] = prev;
+            windowStart += 1;
+            for (char ch : digits) {
+                chars[windowStart] = ch;
+                windowStart += 1;
+            }
+        } else {
+            chars[windowStart] = prev;
+            windowStart += 1;
+        }
+        return windowStart;
+    }
+}

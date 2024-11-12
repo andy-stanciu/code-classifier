@@ -1,0 +1,46 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    private final static String TAG_JOINER = "->";
+
+    // DFS, preorder
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> result = new ArrayList<>();
+        Deque<String> paths = new ArrayDeque<>();
+        buildTreePath(root, result, paths);
+        return result;
+    }
+
+    public void buildTreePath(TreeNode cur, List<String> result, Deque<String> paths) {
+        paths.add(String.valueOf(cur.val));
+        if (cur.left == null && cur.right == null) {
+            // in case cur is leaf node
+            result.add(paths.stream().collect(Collectors.joining(TAG_JOINER)));
+            return;
+        }
+        if (cur.left != null) {
+            buildTreePath(cur.left, result, paths);
+            // backtrack
+            paths.removeLast();
+        }
+        if (cur.right != null) {
+            buildTreePath(cur.right, result, paths);
+            // backtrack
+            paths.removeLast();
+        }
+    }
+}

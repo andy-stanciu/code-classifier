@@ -1,0 +1,32 @@
+class Solution {
+
+    private void generatePerms(List<List<Integer>> ans, int[] nums, int[] map, List<Integer> temp) {
+        if (temp.size() == nums.length) {
+            ans.add(new LinkedList<>(temp));
+        } else {
+            for (int i = 0; i < 21; i++) {
+                if (map[i] == 0) {
+                    continue;
+                }
+                // Get the ith value from the map
+                temp.add(i - 10);
+                // Decrement the count in the map
+                map[i]--;
+                generatePerms(ans, nums, map, temp);
+                // Backtrack
+                temp.remove(temp.size() - 1);
+                map[i]++;
+            }
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans = new LinkedList<>();
+        int[] map = new int[21];
+        for (int i = 0; i < nums.length; i++) {
+            map[nums[i] + 10]++;
+        }
+        generatePerms(ans, nums, map, new LinkedList<>());
+        return ans;
+    }
+}

@@ -1,0 +1,37 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        ArrayList<List<Integer>> output = new ArrayList<List<Integer>>();
+        if (nums == null || nums.length == 0)
+            return output;
+        HashMap<Integer, Integer> HashCount = new HashMap<Integer, Integer>();
+        for (int num : nums) {
+            if (HashCount.containsKey(num))
+                HashCount.put(num, HashCount.get(num) + 1);
+            else
+                HashCount.put(num, 1);
+        }
+        DFSUtil(HashCount, output, new ArrayList<Integer>(), nums.length);
+        return output;
+    }
+
+    private void DFSUtil(HashMap<Integer, Integer> HashCount, ArrayList<List<Integer>> output, ArrayList<Integer> local_arr, int len) {
+        if (local_arr.size() == len) {
+            output.add(new ArrayList<Integer>(local_arr));
+            return;
+        }
+        for (Map.Entry<Integer, Integer> c : HashCount.entrySet()) {
+            int num = c.getKey();
+            int count = c.getValue();
+            if (count != 0) {
+                local_arr.add(num);
+                HashCount.put(num, count - 1);
+                DFSUtil(HashCount, output, local_arr, len);
+            } else
+                continue;
+            local_arr.remove(local_arr.size() - 1);
+            HashCount.put(num, count);
+        }
+        return;
+    }
+}

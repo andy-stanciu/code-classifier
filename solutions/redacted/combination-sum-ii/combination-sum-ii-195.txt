@@ -1,0 +1,35 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        // to avoid duplicates comparison
+        Arrays.sort(candidates);
+        //start from intial index
+        solve(candidates, curr, target, 0, result);
+        return result;
+    }
+
+    public void solve(int[] candidates, List<Integer> curr, int target, int idx, List<List<Integer>> result) {
+        if (target < 0)
+            return;
+        //means we found our target
+        if (target == 0) {
+            //add to the result
+            result.add(new ArrayList<>(curr));
+            return;
+        }
+        //Now run the for loop from the idx
+        for (int i = idx; i < candidates.length; i++) {
+            //if duplicate skip the iteration
+            if (i > idx && candidates[i] == candidates[i - 1])
+                continue;
+            // do
+            curr.add(candidates[i]);
+            //here minus the number from target and move ahead
+            solve(candidates, curr, target - candidates[i], i + 1, result);
+            //undo
+            curr.remove(curr.size() - 1);
+        }
+    }
+}

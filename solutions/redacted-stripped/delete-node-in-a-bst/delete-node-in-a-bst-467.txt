@@ -1,0 +1,51 @@
+class Solution {
+
+    public TreeNode RightMost(TreeNode src) {
+        TreeNode temp = src.left;
+        while (temp.right != null) temp = temp.right;
+        temp.right = src.right;
+        return src.left;
+    }
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        TreeNode src = root;
+        TreeNode parent = null;
+        while (src != null) {
+            if (src.val == key)
+                break;
+            parent = src;
+            if (src.val > key)
+                src = src.left;
+            else if (src.val < key)
+                src = src.right;
+        }
+        if (src == null)
+            return root;
+        if (parent == null) {
+            if (root.left != null && root.right != null)
+                return RightMost(root);
+            else if (root.left == null)
+                return root.right;
+            else if (root.right == null)
+                return root.left;
+            else
+                return null;
+        }
+        TreeNode var1 = null;
+        if (src.left == null && src.right == null)
+            var1 = null;
+        else if (src.left != null && src.left != null) {
+            var1 = RightMost(src);
+        } else if (src.left == null)
+            var1 = src.right;
+        else if (src.right == null)
+            var1 = src.left;
+        if (parent.val > src.val)
+            parent.left = var1;
+        else
+            parent.right = var1;
+        return root;
+    }
+}

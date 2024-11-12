@@ -1,0 +1,71 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        int n = getSize(l1), m = getSize(l2);
+        if (n < m) {
+            ListNode temp = l1;
+            // l2 is bigger node
+            l1 = l2;
+            l2 = temp;
+            int t = n;
+            n = m;
+            m = t;
+        }
+        // now l1 points to bigger linked list and l2 points to smaller linked list.
+        Deque<ListNode> deque = new ArrayDeque<>();
+        int diff = (n - m);
+        for (int i = 0; i < diff; i++) {
+            deque.addLast(l1);
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            // m number of nodes are still left, in the linked list.
+            int value = l1.val + l2.val;
+            l1 = l1.next;
+            l2 = l2.next;
+            int carry = value / 10;
+            value = value % 10;
+            ListNode newNode = new ListNode(value);
+            Iterator<ListNode> itr = deque.descendingIterator();
+            while (carry > 0 && itr.hasNext()) {
+                ListNode cn = itr.next();
+                cn.val = cn.val + carry;
+                carry = cn.val / 10;
+                cn.val = cn.val % 10;
+            }
+            if (carry > 0) {
+                ListNode carryNode = new ListNode(carry);
+                deque.addFirst(carryNode);
+            }
+            deque.addLast(newNode);
+        }
+        ListNode newHead = deque.removeFirst();
+        ListNode node = newHead;
+        while (!deque.isEmpty()) {
+            node.next = deque.peekFirst();
+            node = deque.removeFirst();
+        }
+        return newHead;
+    }
+
+    private int getSize(ListNode head) {
+        ListNode node = head;
+        int count = 0;
+        while (node != null) {
+            node = node.next;
+            count++;
+        }
+        return count;
+    }
+}
+// If we use stack, the worst case time complexity would be O(N^2)

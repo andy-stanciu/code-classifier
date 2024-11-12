@@ -1,0 +1,32 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        } else if (key < root.val) {
+            root.left = method1(root.left, key);
+        } else if (key > root.val) {
+            root.right = method1(root.right, key);
+        } else {
+            // Case 1: Node with only one child or no child
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            }
+            // Case 2: Node with two children
+            // Find the in-order successor (smallest node in the right subtree)
+            root.val = method2(root.right);
+            // Delete the in-order successor
+            root.right = method1(root.right, root.val);
+        }
+        return root;
+    }
+
+    private int method2(TreeNode root) {
+        while (root.left != null) {
+            root = root.left;
+        }
+        return root.val;
+    }
+}

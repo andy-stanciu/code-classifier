@@ -1,0 +1,40 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        // Create a stack to keep track of asteroids
+        Stack<Integer> stack = new Stack<>();
+        for (int var1 : param1) {
+            // Iterate through each asteroid in the input array
+            if (var1 > 0) {
+                // If asteroid is moving to the right (positive)
+                // Push it onto the stack
+                stack.push(var1);
+            } else {
+                // If asteroid is moving to the left (negative)
+                while (!stack.isEmpty() && stack.peek() > 0 && stack.peek() < -var1) {
+                    // Keep checking while there are right-moving asteroids in the stack,
+                    // and the current left-moving asteroid is larger than the top right-moving asteroid
+                    // Remove the top right-moving asteroid from the stack
+                    stack.pop();
+                }
+                if (stack.isEmpty() || stack.peek() < 0) {
+                    // If the stack is empty (no right-moving asteroids), or the top asteroid is moving left,
+                    // push the current left-moving asteroid onto the stack
+                    stack.push(var1);
+                } else if (stack.peek() == -var1) {
+                    // If the top asteroid is equal in size to the current left-moving asteroid,
+                    // they will collide and both explode, so remove the top asteroid from the stack
+                    stack.pop();
+                }
+            }
+        }
+        // Create an array to store the final result
+        int[] result = new int[stack.size()];
+        for (int i = stack.size() - 1; i >= 0; i--) {
+            // Pop elements from the stack and store them in the result array
+            result[i] = stack.pop();
+        }
+        // Return the array representing the state of asteroids after collisions
+        return result;
+    }
+}

@@ -1,0 +1,32 @@
+public class Solution {
+
+    private List<List<Integer>> answer = new ArrayList<>();
+
+    private List<Integer> var1 = new LinkedList<>();
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        backtracking(candidates, target, 0);
+        return answer;
+    }
+
+    private void backtracking(int[] candidates, int rest_target, int start_index) {
+        if (rest_target == 0) {
+            answer.add(new ArrayList<>(var1));
+            return;
+        }
+        for (int i = start_index; i < candidates.length; i++) {
+            // Skip duplicates
+            if (i > start_index && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+            // Prune: if current candidate exceeds target
+            if (candidates[i] > rest_target) {
+                break;
+            }
+            var1.add(candidates[i]);
+            backtracking(candidates, rest_target - candidates[i], i + 1);
+            var1.removeLast();
+        }
+    }
+}

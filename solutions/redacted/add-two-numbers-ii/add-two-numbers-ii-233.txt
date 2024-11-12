@@ -1,0 +1,60 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        String num1 = getNum(l1);
+        String num2 = getNum(l2);
+        int i = 0;
+        int j = 0;
+        int c = 0;
+        String sum = "";
+        while (i < num1.length() && j < num2.length()) {
+            int a = Integer.valueOf(num1.charAt(i++) + "");
+            int b = Integer.valueOf(num2.charAt(j++) + "");
+            sum = ((a + b + c) % 10) + sum;
+            c = (a + b + c) / 10;
+        }
+        while (i < num1.length()) {
+            int a = Integer.valueOf(num1.charAt(i++) + "");
+            sum = ((a + c) % 10) + sum;
+            c = (a + c) / 10;
+        }
+        while (j < num2.length()) {
+            int a = Integer.valueOf(num2.charAt(j++) + "");
+            sum = ((a + c) % 10) + sum;
+            c = (a + c) / 10;
+        }
+        sum = (c != 0) ? c + sum : sum;
+        ListNode result = new ListNode(Integer.valueOf(sum.charAt(0) + ""));
+        ListNode trv = result;
+        for (int k = 1; k < sum.length(); k++) {
+            ListNode node = new ListNode(Integer.valueOf(sum.charAt(k) + ""));
+            if (trv == null) {
+                trv = node;
+                result = trv;
+            } else {
+                trv.next = node;
+                trv = trv.next;
+            }
+        }
+        return result;
+    }
+
+    private String getNum(ListNode list) {
+        String num = "";
+        while (list != null) {
+            num = list.val + num;
+            list = list.next;
+        }
+        return num;
+    }
+}

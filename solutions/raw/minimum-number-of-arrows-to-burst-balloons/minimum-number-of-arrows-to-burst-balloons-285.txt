@@ -1,0 +1,35 @@
+class Solution {
+
+    public int findMinArrowShots(int[][] points) {
+        //sort the points 2d array based on end interval
+        //now for first interval shot an arrow at end point, and keep track of this end point
+        // now for the upcoming intervals if there is any overlap b/w the last point where we shot an arrow
+        // skip that intervals, whenever we are shoting an arrow increase the result.
+        int result = 0;
+        int lastArrowShot = -1;
+        Arrays.sort(points, new Comparator<int[]>() {
+
+            public int compare(int[] a, int[] b) {
+                if (a[1] == b[1]) {
+                    return Integer.compare(a[0], b[0]);
+                }
+                return Integer.compare(a[1], b[1]);
+            }
+        });
+        //  for(int[] arr: points) System.out.print(Arrays.toString(arr));
+        for (int i = 0; i < points.length; i++) {
+            if (lastArrowShot == -1) {
+                ++result;
+                lastArrowShot = points[i][1];
+            } else {
+                if (lastArrowShot >= points[i][0]) {
+                    continue;
+                } else {
+                    ++result;
+                    lastArrowShot = points[i][1];
+                }
+            }
+        }
+        return result;
+    }
+}

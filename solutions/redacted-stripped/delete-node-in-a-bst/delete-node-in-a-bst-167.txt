@@ -1,0 +1,75 @@
+class Solution {
+
+    TreeNode p;
+
+    public TreeNode method1(TreeNode root, int key) {
+        p = null;
+        TreeNode var1 = help(root, key, null);
+        if (var1 == null)
+            return root;
+        TreeNode rbt = var1.right;
+        TreeNode lbt = var1.left;
+        if (p != null) {
+            if (p.val < var1.val) {
+                if (lbt == null) {
+                    p.right = rbt;
+                    return root;
+                }
+                if (lbt.right == null) {
+                    p.right = lbt;
+                    lbt.right = rbt;
+                    return root;
+                }
+                while (lbt.right.right != null) lbt = lbt.right;
+                TreeNode repl = lbt.right;
+                lbt.right = repl.left != null ? repl.left : null;
+                var1.val = repl.val;
+                return root;
+            } else {
+                if (lbt == null) {
+                    p.left = rbt;
+                    return root;
+                }
+                if (lbt.right == null) {
+                    p.left = lbt;
+                    lbt.right = rbt;
+                    return root;
+                }
+                while (lbt.right.right != null) lbt = lbt.right;
+                TreeNode repl = lbt.right;
+                lbt.right = repl.left != null ? repl.left : null;
+                var1.val = repl.val;
+                return root;
+            }
+        } else {
+            if (lbt == null) {
+                return rbt;
+            }
+            if (lbt.right == null) {
+                lbt.right = rbt;
+                return lbt;
+            }
+            while (lbt.right.right != null) lbt = lbt.right;
+            TreeNode repl = lbt.right;
+            lbt.right = repl.left != null ? repl.left : null;
+            var1.val = repl.val;
+            return root;
+        }
+    }
+
+    public TreeNode help(TreeNode var1, int k, TreeNode parent) {
+        if (var1 == null)
+            return null;
+        if (var1.val == k) {
+            p = parent;
+            return var1;
+        }
+        if (var1.val > k) {
+            TreeNode left = help(var1.left, k, var1);
+            return left;
+        } else {
+            TreeNode right = help(var1.right, k, var1);
+            return right;
+        }
+    }
+}

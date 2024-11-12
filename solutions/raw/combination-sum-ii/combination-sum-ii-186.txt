@@ -1,0 +1,26 @@
+class Solution {
+
+    public void generate(int[] input, List<List<Integer>> ans, List<Integer> empty, int n, int target) {
+        if (target == 0) {
+            ans.add(new ArrayList<>(empty));
+            return;
+        }
+        int sz = input.length;
+        for (int i = n; i < sz; i++) {
+            if (i > n && (input[i] == input[i - 1]))
+                continue;
+            if (input[i] > target)
+                break;
+            empty.add(input[i]);
+            generate(input, ans, empty, i + 1, target - input[i]);
+            empty.remove(empty.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        Arrays.sort(candidates);
+        generate(candidates, result, new ArrayList<>(), 0, target);
+        return result;
+    }
+}

@@ -1,0 +1,64 @@
+class Solution {
+
+    public enum ExplodeStatus {
+
+        BOTH_EXPLODE, LEFT_EXPLODE, RIGHT_EXPLODE, NO_EXPLODE
+    }
+
+    public int[] method1(int[] param1) {
+        if (param1.length <= 1) {
+            return param1;
+        }
+        final Stack<Integer> stack = new Stack<>();
+        stack.push(param1[0]);
+        for (int i = 1; i < param1.length; ) {
+            if (stack.isEmpty()) {
+                stack.push(param1[i]);
+                i++;
+                continue;
+            }
+            final ExplodeStatus status = findExplode(stack.peek(), param1[i]);
+            switch(status) {
+                case BOTH_EXPLODE:
+                    stack.pop();
+                    i++;
+                    break;
+                case LEFT_EXPLODE:
+                    stack.pop();
+                    break;
+                case RIGHT_EXPLODE:
+                    i++;
+                    break;
+                case NO_EXPLODE:
+                    stack.push(param1[i]);
+                    i++;
+                    break;
+            }
+        }
+        return stack.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    private boolean isPos(int value) {
+        return value > 0;
+    }
+
+    private ExplodeStatus findExplode(int a, int b) {
+        if (isPos(a) && isPos(b)) {
+            return ExplodeStatus.NO_EXPLODE;
+        } else if (!isPos(a) && !isPos(b)) {
+            return ExplodeStatus.NO_EXPLODE;
+        } else if (!isPos(a) && isPos(b)) {
+            return ExplodeStatus.NO_EXPLODE;
+        } else if (isPos(a) && !isPos(b)) {
+            if (Math.abs(a) > Math.abs(b)) {
+                // Collide situation
+                return ExplodeStatus.RIGHT_EXPLODE;
+            } else if (Math.abs(a) < Math.abs(b)) {
+                return ExplodeStatus.LEFT_EXPLODE;
+            } else {
+                return ExplodeStatus.BOTH_EXPLODE;
+            }
+        }
+        return ExplodeStatus.NO_EXPLODE;
+    }
+}

@@ -1,0 +1,57 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<String> binaryTreePaths(TreeNode root) {
+        if (root == null)
+            return new ArrayList<String>();
+        Stack<TreeNode> stack = new Stack<>();
+        stack.add(root);
+        List<String> list = new ArrayList<String>();
+        HashMap<TreeNode, TreeNode> map = new HashMap<TreeNode, TreeNode>();
+        map.put(root, null);
+        while (!stack.isEmpty()) {
+            TreeNode current = stack.pop();
+            if (current.left == null && current.right == null) {
+                list.add(generateString(current, map));
+            }
+            if (current.right != null) {
+                stack.add(current.right);
+                map.put(current.right, current);
+            }
+            if (current.left != null) {
+                stack.add(current.left);
+                map.put(current.left, current);
+            }
+        }
+        return list;
+    }
+
+    public String generateString(TreeNode current, HashMap<TreeNode, TreeNode> map) {
+        StringBuilder sb = new StringBuilder();
+        Stack<TreeNode> stackAns = new Stack<TreeNode>();
+        while (current != null) {
+            stackAns.push(current);
+            current = map.get(current);
+        }
+        sb.append(stackAns.pop().val);
+        while (!stackAns.isEmpty()) {
+            sb.append("->");
+            sb.append(stackAns.pop().val);
+        }
+        return sb.toString();
+    }
+}

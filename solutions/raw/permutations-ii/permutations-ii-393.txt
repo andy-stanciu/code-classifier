@@ -1,0 +1,30 @@
+class Solution {
+
+    List<List<Integer>> l = new ArrayList<List<Integer>>();
+
+    Map<Integer, Integer> map = new HashMap<>();
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        for (int i : nums) {
+            map.put(i, map.getOrDefault(i, 0) + 1);
+        }
+        backtrack(nums, new ArrayList<Integer>());
+        return l;
+    }
+
+    private void backtrack(int[] nums, ArrayList<Integer> row) {
+        if (row.size() == nums.length) {
+            l.add(new ArrayList<>(row));
+            return;
+        }
+        for (Map.Entry<Integer, Integer> m : map.entrySet()) {
+            if (m.getValue() > 0) {
+                row.add(m.getKey());
+                map.put(m.getKey(), m.getValue() - 1);
+                backtrack(nums, row);
+                map.put(m.getKey(), m.getValue() + 1);
+                row.remove(row.size() - 1);
+            }
+        }
+    }
+}

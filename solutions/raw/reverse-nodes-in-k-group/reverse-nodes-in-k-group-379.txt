@@ -1,0 +1,27 @@
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null || k == 0 || k == 1)
+            return head;
+        ListNode curr = head, fwd = null, prev = null, temp = head;
+        //the tally part is to make the make sure if the last ones are less than k then they dont change
+        int count = 0, tally = 0;
+        while (temp != null) {
+            temp = temp.next;
+            tally++;
+        }
+        if (tally < k)
+            return head;
+        while (curr != null && count < k) {
+            //this is to reverse the k elements
+            fwd = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = fwd;
+            count++;
+        }
+        if (fwd != null)
+            head.next = reverseKGroup(fwd, k);
+        return prev;
+    }
+}

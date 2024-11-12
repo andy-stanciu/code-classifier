@@ -1,0 +1,29 @@
+class Solution {
+
+    public String method1(String s) {
+        HashMap<Character, Integer> charCountMap = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            char symbol = s.charAt(i);
+            charCountMap.computeIfPresent(symbol, (k, v) -> ++v);
+            charCountMap.putIfAbsent(symbol, 1);
+        }
+        TreeMap<Integer, Set<Character>> countCharListMap = new TreeMap<>(Comparator.reverseOrder());
+        charCountMap.forEach((character, count) -> {
+            Set<Character> var1 = countCharListMap.get(count);
+            if (var1 != null) {
+                var1.add(character);
+            } else {
+                Set<Character> var2 = new HashSet<>();
+                var2.add(character);
+                countCharListMap.put(count, var2);
+            }
+        });
+        StringBuilder result = new StringBuilder();
+        countCharListMap.forEach((count, var1) -> {
+            for (Character character : var1) {
+                result.append(String.valueOf(character).repeat(count));
+            }
+        });
+        return result.toString();
+    }
+}

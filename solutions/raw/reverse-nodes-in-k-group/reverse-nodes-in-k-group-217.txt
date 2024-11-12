@@ -1,0 +1,93 @@
+class ListNode {
+
+    int val;
+
+    ListNode next;
+
+    // Constructor to initialize a node with a value
+    ListNode(int x) {
+        // Set the value of the node
+        val = x;
+    }
+
+    // Static method to deserialize a comma-separated string of integers into a linked list
+    public static ListNode deserialize(String data) {
+        // If the input data is null or empty, return a null pointer
+        if (data == null || data.isEmpty()) {
+            return null;
+        }
+        // Remove square brackets and split the data by commas to get an array of values
+        String[] values = data.replace("[", "").replace("]", "").split(",");
+        // Create a dummy head node to facilitate building the linked list
+        ListNode dummy = new ListNode(0);
+        // Start from the dummy head
+        ListNode current = dummy;
+        // Iterate through the values and create new nodes
+        for (String value : values) {
+            // Create a new node with the integer value
+            current.next = new ListNode(Integer.parseInt(value.trim()));
+            // Move to the next node
+            current = current.next;
+        }
+        // Return the linked list starting from the node after the dummy head
+        // Return the actual head of the linked list
+        return dummy.next;
+    }
+}
+
+public class Solution {
+
+    // Method to reverse a linked list in groups of k nodes
+    public ListNode reverseKGroup(ListNode head, int k) {
+        // Initialize pointers
+        // Current node pointer
+        ListNode curr = head;
+        // Counter for the number of nodes traversed
+        int count = 0;
+        // Count the first k nodes
+        while (curr != null && count != k) {
+            // Move to the next node
+            curr = curr.next;
+            // Increment the counter
+            count++;
+        }
+        // If k nodes are found, reverse the current group of k nodes
+        if (count == k) {
+            // Recursively reverse the next group of k nodes
+            curr = reverseKGroup(curr, k);
+            while (count-- > 0) {
+                // Temporary pointer for swapping
+                ListNode tmp = head.next;
+                // Swap head\'s next with the reversed group
+                head.next = curr;
+                // Move the reversed group pointer
+                curr = head;
+                // Update head to the next node
+                head = tmp;
+            }
+            // Update head to the new head of the reversed group
+            head = curr;
+        }
+        // Return the new head of the modified linked list
+        return head;
+    }
+
+    // Main method for testing
+    public static void main(String[] args) {
+        // Deserialize the input linked list
+        ListNode head = ListNode.deserialize("[1,2,3,4,5]");
+        // Specify the value of k for reversing groups of nodes
+        int k = 2;
+        // Create an instance of Solution
+        Solution solution = new Solution();
+        // Reverse the linked list in groups of k nodes
+        ListNode result = solution.reverseKGroup(head, k);
+        // Print the modified linked list
+        while (result != null) {
+            // Print the value of the current node
+            System.out.print(result.val + " ");
+            // Move to the next node
+            result = result.next;
+        }
+    }
+}

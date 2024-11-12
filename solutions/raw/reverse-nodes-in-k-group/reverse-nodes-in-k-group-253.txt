@@ -1,0 +1,87 @@
+class Solution {
+
+    public int listSize(ListNode head) {
+        ListNode temp = head;
+        int n = 0;
+        while (temp != null) {
+            temp = temp.next;
+            n++;
+        }
+        return n;
+    }
+
+    public ListNode reverseList(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        ListNode pre = null;
+        ListNode curr = head;
+        ListNode post = head.next;
+        while (post != null) {
+            curr.next = pre;
+            pre = curr;
+            curr = post;
+            post = post.next;
+        }
+        curr.next = pre;
+        return curr;
+    }
+
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        if (left == right)
+            return head;
+        int n = 1;
+        ListNode temp = head;
+        ListNode t1 = head;
+        ListNode t2 = head;
+        ListNode t3 = head;
+        ListNode dH = new ListNode(-1);
+        while (n != right) {
+            if (n == left) {
+                dH.next = temp;
+                t3 = temp;
+            } else if (n == left - 1) {
+                t1 = temp;
+            }
+            temp = temp.next;
+            n++;
+        }
+        t2 = temp.next;
+        temp.next = null;
+        ListNode newHead = reverseList(dH.next);
+        if (left == 1) {
+            head = newHead;
+        }
+        t1.next = newHead;
+        t3.next = t2;
+        return head;
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null || k == 1)
+            return head;
+        int n = listSize(head);
+        int left = 0, right = 0;
+        int idx = 1;
+        ListNode h1 = null;
+        ListNode temp = head;
+        int len = 1;
+        int size = k;
+        while (temp != null) {
+            if (len == 1) {
+                h1 = temp;
+                left = idx;
+            }
+            if (len == size) {
+                right = idx;
+                temp = temp.next;
+                head = reverseBetween(head, left, right);
+                len = 1;
+            } else {
+                temp = temp.next;
+                len++;
+            }
+            idx++;
+        }
+        return head;
+    }
+}

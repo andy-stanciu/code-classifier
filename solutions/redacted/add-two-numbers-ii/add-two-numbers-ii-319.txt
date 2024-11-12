@@ -1,0 +1,58 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ListNode ans = null;
+        Stack<Integer> s1 = new Stack<>();
+        Stack<Integer> s2 = new Stack<>();
+        ListNode temp = l1;
+        while (temp != null) {
+            s1.push(temp.val);
+            temp = temp.next;
+        }
+        temp = l2;
+        while (temp != null) {
+            s2.push(temp.val);
+            temp = temp.next;
+        }
+        int carry = 0;
+        while (!s1.isEmpty() && !s2.isEmpty()) {
+            int t = s1.pop() + s2.pop() + carry;
+            //System.out.print(t+", ");
+            ans = method2(ans, t % 10);
+            carry = t / 10;
+        }
+        while (!s1.isEmpty()) {
+            int t = s1.pop() + carry;
+            ans = method2(ans, t % 10);
+            carry = t / 10;
+        }
+        while (!s2.isEmpty()) {
+            int t = s2.pop() + carry;
+            ans = method2(ans, t % 10);
+            carry = t / 10;
+        }
+        while (carry != 0) {
+            ans = method2(ans, carry % 10);
+            carry = carry / 10;
+        }
+        return ans;
+    }
+
+    public ListNode method2(ListNode l, int n) {
+        ListNode node = new ListNode(n);
+        node.next = l;
+        l = node;
+        //System.out.print(l.val);
+        return l;
+    }
+}

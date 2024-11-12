@@ -1,0 +1,41 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> stack = new Stack<>();
+        for (int var1 : param1) {
+            if (stack.isEmpty()) {
+                stack.add(var1);
+                continue;
+            }
+            int a = var1;
+            int b = stack.peek();
+            // a * b is < 0 if the two are of oposite signs
+            // We check b > a to insure that the asteroids are moving towards each other
+            while (a * b < 0 && b > a && !stack.isEmpty()) {
+                // a destroys b. Recurse
+                if (abs(a) > abs(b)) {
+                    stack.pop();
+                    if (stack.isEmpty()) {
+                        break;
+                    }
+                    b = stack.peek();
+                } else // They destroy each other.
+                if (abs(a) == abs(b)) {
+                    stack.pop();
+                    a = 0;
+                } else // a is destroyed
+                {
+                    a = 0;
+                }
+            }
+            if (a != 0) {
+                stack.add(a);
+            }
+        }
+        int[] n = new int[stack.size()];
+        for (int i = stack.size() - 1; i > -1; i--) {
+            n[i] = stack.pop();
+        }
+        return n;
+    }
+}

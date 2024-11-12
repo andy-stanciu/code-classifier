@@ -1,0 +1,54 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root != null && root.val == key) {
+            return method2(root, key);
+        }
+        return method3(root, key);
+    }
+
+    public TreeNode method2(TreeNode root, int target) {
+        if (root.left == null && root.right == null) {
+            return null;
+        } else if (root.left == null) {
+            return root.right;
+        } else if (root.right == null) {
+            return root.left;
+        }
+        TreeNode successor = method4(root);
+        root.val = successor.val;
+        root.right = method3(root.right, successor.val);
+        return root;
+    }
+
+    public TreeNode method3(TreeNode param1, int target) {
+        if (param1 == null) {
+            return param1;
+        }
+        if (param1.val > target) {
+            param1.left = method3(param1.left, target);
+        } else if (param1.val < target) {
+            param1.right = method3(param1.right, target);
+        } else {
+            if (param1.left == null && param1.right == null) {
+                return null;
+            } else if (param1.left == null) {
+                return param1.right;
+            } else if (param1.right == null) {
+                return param1.left;
+            }
+            TreeNode successor = method4(param1);
+            param1.val = successor.val;
+            param1.right = method3(param1.right, successor.val);
+        }
+        return param1;
+    }
+
+    public TreeNode method4(TreeNode param1) {
+        param1 = param1.right;
+        while (param1.left != null) {
+            param1 = param1.left;
+        }
+        return param1;
+    }
+}

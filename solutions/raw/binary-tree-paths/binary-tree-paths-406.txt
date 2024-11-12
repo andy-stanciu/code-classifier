@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> paths = new ArrayList<>();
+        populate(root, paths, new ArrayList<>());
+        return paths;
+    }
+
+    private void populate(TreeNode root, List<String> paths, List<Integer> path) {
+        // no path exist for a null root
+        // so return as is
+        if (null == root) {
+            return;
+        }
+        // otherwse, add current val to the current path
+        path.add(root.val);
+        // DFS, left and then right
+        populate(root.left, paths, path);
+        populate(root.right, paths, path);
+        // if, during DFS, we encounter a leaf node
+        // add the current path to the paths
+        if (null == root.left && null == root.right) {
+            paths.add(path.stream().map(Object::toString).collect(Collectors.joining("->")));
+        }
+        // remove the last visited node before going back
+        // to parent so that it does not participate
+        // in other branches starting from parent
+        path.remove(path.size() - 1);
+    }
+}

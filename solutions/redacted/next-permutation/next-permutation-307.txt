@@ -1,0 +1,46 @@
+class Solution {
+
+    // 1. find breakpoint
+    // 2. find a number just bigger than breakpoint in right side of array, swap the number with the breakpoint
+    // 3. reverse the numbers after breakpoint
+    // 4. EDGE CASE: when there is no breakpoint, i.e., array is sorted in descending, then we sort reverse the arrays(sort it in ascending)
+    public void reverse(int[] arr, int start, int end) {
+        while (end >= start) {
+            swap(arr, start, end);
+            end--;
+            start++;
+        }
+    }
+
+    public void swap(int[] arr, int a, int b) {
+        int temp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = temp;
+    }
+
+    public void method1(int[] nums) {
+        int len = nums.length;
+        int breakpoint = -1;
+        // 1. find breakpoint
+        for (int i = len - 2; i >= 0; i--) {
+            if (nums[i] < nums[i + 1]) {
+                breakpoint = i;
+                break;
+            }
+        }
+        // edge case:
+        if (breakpoint == -1) {
+            reverse(nums, 0, len - 1);
+            return;
+        }
+        // 2. find the just bigger number than number at breakpoint on the right side of the array
+        for (int i = len - 1; i > breakpoint; i--) {
+            if (nums[breakpoint] < nums[i]) {
+                swap(nums, breakpoint, i);
+                break;
+            }
+        }
+        // 3. sort (by reversing the array as the array on the right side of breakpoint is in descending order)
+        reverse(nums, breakpoint + 1, len - 1);
+    }
+}

@@ -1,0 +1,54 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int data;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int val) { data = val; left = null, right = null }
+ * }
+ */
+class Solution {
+
+    public static TreeNode method1(TreeNode root) {
+        while (root.left != null) {
+            root = root.left;
+        }
+        return root;
+    }
+
+    public TreeNode method2(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        if (root.val < key) {
+            // Search in the right subtree
+            root.right = method2(root.right, key);
+        } else if (root.val > key) {
+            // Search in the left subtree
+            root.left = method2(root.left, key);
+        } else {
+            // Node with the key found, now handle its deletion
+            // Case 1: Leaf node (no children)
+            if (root.left == null && root.right == null) {
+                return null;
+            }
+            // Case 2: Node with only one child
+            if (root.left == null) {
+                // Return the right child
+                return root.right;
+            }
+            if (root.right == null) {
+                // Return the left child
+                return root.left;
+            }
+            // Case 3: Node with two children
+            TreeNode var1 = method1(root.right);
+            // Replace the node\'s value with the inorder successor\'s value
+            root.val = var1.val;
+            // Delete the inorder successor from the right subtree
+            root.right = method2(root.right, var1.val);
+        }
+        // Return the root after deletion
+        return root;
+    }
+}

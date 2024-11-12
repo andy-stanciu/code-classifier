@@ -1,0 +1,32 @@
+class Solution {
+
+    List<List<Integer>> ans;
+
+    int target;
+
+    public List<List<Integer>> method1(int[] nums, int givenTarget) {
+        ans = new ArrayList<>();
+        target = givenTarget;
+        Arrays.sort(nums);
+        solve(0, 0, nums, new boolean[nums.length], new ArrayList<>());
+        return ans;
+    }
+
+    public void solve(int i, int param1, int[] nums, boolean[] visited, List<Integer> list) {
+        if (param1 == target) {
+            ans.add(new ArrayList<>(list));
+            return;
+        }
+        if (param1 > target || i >= nums.length) {
+            return;
+        }
+        solve(i + 1, param1, nums, visited, list);
+        if (!(i != 0 && nums[i - 1] == nums[i] && !(visited[i - 1]))) {
+            list.add(nums[i]);
+            visited[i] = true;
+            solve(i + 1, param1 + nums[i], nums, visited, list);
+            list.remove(list.size() - 1);
+            visited[i] = false;
+        }
+    }
+}

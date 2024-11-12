@@ -1,0 +1,48 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Deque<Integer> deque = new ArrayDeque<Integer>();
+        int index = 0;
+        while (index < asteroids.length) {
+            // current asteroid
+            int ca = asteroids[index];
+            if (deque.isEmpty() || deque.peekLast() < 0) {
+                deque.addLast(ca);
+                index++;
+                continue;
+            }
+            // stack is not empty, check for collisions.
+            // last asteroid
+            int la = deque.peekLast();
+            if (movingOpposite(la, ca)) {
+                // one of them or both of them will explode.
+                if (Math.abs(la) > Math.abs(ca)) {
+                    // current asteroid will explode
+                    index++;
+                } else if (Math.abs(la) < Math.abs(ca)) {
+                    // second last asteroid will explode
+                    deque.removeLast();
+                } else {
+                    // both of them are same, therefore both will explode
+                    index++;
+                    deque.removeLast();
+                }
+            } else {
+                // they are moving in same direction
+                deque.addLast(ca);
+                index++;
+            }
+        }
+        int[] ans = new int[deque.size()];
+        index = 0;
+        while (!deque.isEmpty()) {
+            ans[index++] = deque.removeFirst();
+        }
+        return ans;
+    }
+
+    private boolean movingOpposite(int a, int b) {
+        // returns true if asteriod a and b are moving in opposite direction
+        return (a * b < 0);
+    }
+}

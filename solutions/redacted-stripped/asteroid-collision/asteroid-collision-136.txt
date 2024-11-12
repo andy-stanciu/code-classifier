@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        for (int var1 : param1) {
+            if (stack.isEmpty()) {
+                stack.push(var1);
+                continue;
+            }
+            boolean destroyed = false;
+            while (!stack.isEmpty() && !have_same_sign(var1, stack.peek()) && stack.peek() > 0) {
+                if (Math.abs(var1) > Math.abs(stack.peek())) {
+                    stack.pop();
+                } else if (Math.abs(var1) < Math.abs(stack.peek())) {
+                    destroyed = true;
+                    break;
+                } else {
+                    stack.pop();
+                    destroyed = true;
+                    break;
+                }
+            }
+            if (!destroyed)
+                stack.push(var1);
+        }
+        int[] result = new int[stack.size()];
+        int idx = result.length - 1;
+        while (!stack.isEmpty()) {
+            result[idx] = stack.pop();
+            idx--;
+        }
+        return result;
+    }
+
+    private boolean have_same_sign(int a, int b) {
+        return (a ^ b) >= 0;
+    }
+}

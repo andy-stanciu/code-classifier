@@ -1,0 +1,34 @@
+class Solution {
+
+    private Map<Integer, Integer> numsMap = new HashMap<>();
+
+    private List<List<Integer>> finalArr = new ArrayList<>();
+
+    public void Permute(int depth, int[] finalArray) {
+        for (Map.Entry<Integer, Integer> entry : numsMap.entrySet()) {
+            Integer key = entry.getKey();
+            Integer value = entry.getValue();
+            if (value > 0) {
+                numsMap.put(key, value - 1);
+                finalArray[depth] = key;
+                Permute(depth + 1, finalArray);
+                numsMap.put(key, value);
+            }
+        }
+        if (depth == finalArray.length) {
+            List<Integer> finalList = new ArrayList<>();
+            for (int item : finalArray) {
+                finalList.add(item);
+            }
+            finalArr.add(finalList);
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        for (int num : nums) {
+            numsMap.merge(num, 1, Integer::sum);
+        }
+        Permute(0, new int[nums.length]);
+        return finalArr;
+    }
+}

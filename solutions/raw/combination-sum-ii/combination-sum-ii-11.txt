@@ -1,0 +1,38 @@
+class Solution {
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        // Sort the candidates array to make it easier to handle duplicates
+        Arrays.sort(candidates);
+        // Result list to store all the unique combinations
+        List<List<Integer>> res = new ArrayList<>();
+        // Start the backtracking process
+        backtracking(0, target, res, new ArrayList<>(), candidates);
+        return res;
+    }
+
+    private void backtracking(int index, int target, List<List<Integer>> res, List<Integer> sol, int[] nums) {
+        // If the target is 0, we found a valid combination
+        if (target == 0) {
+            // Add a copy of the current solution to the result list
+            res.add(new ArrayList<>(sol));
+            return;
+        }
+        // Iterate through the candidates starting from the given index
+        for (int i = index; i < nums.length; i++) {
+            // Skip duplicates: if the current element is the same as the previous one
+            // and it is not the first element in this loop iteration
+            if (i > index && nums[i] == nums[i - 1])
+                continue;
+            // If the current element exceeds the target, no need to proceed further
+            // because the array is sorted
+            if (nums[i] > target)
+                break;
+            // Choose the current element by adding it to the current solution
+            sol.add(nums[i]);
+            // Recur with the remaining target and next index to avoid reuse of the same element
+            backtracking(i + 1, target - nums[i], res, sol, nums);
+            // Backtrack: remove the last chosen element to try the next one
+            sol.remove(sol.size() - 1);
+        }
+    }
+}

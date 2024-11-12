@@ -1,0 +1,26 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] arr) {
+        List<List<Integer>> list = new ArrayList<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int elem : arr) map.put(elem, map.getOrDefault(elem, 0) + 1);
+        permute(map, new ArrayList<Integer>(), list, arr.length);
+        return list;
+    }
+
+    private static void permute(HashMap<Integer, Integer> map, ArrayList<Integer> temp, List<List<Integer>> list, int n) {
+        if (temp.size() == n) {
+            list.add(new ArrayList<>(temp));
+            return;
+        }
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if (entry.getValue() > 0) {
+                temp.add(entry.getKey());
+                entry.setValue(entry.getValue() - 1);
+                permute(map, temp, list, n);
+                temp.remove(temp.size() - 1);
+                entry.setValue(entry.getValue() + 1);
+            }
+        }
+    }
+}

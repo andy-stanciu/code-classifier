@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        // when moving in the array from right to left
+        // only those asteroid will collide if j>i and arr[j] is negative and arr[i] is
+        // positive.
+        // A simple stack based solution.
+        Deque<Integer> deque = new ArrayDeque<>();
+        int n = asteroids.length;
+        for (int i = n - 1; i >= 0; i--) {
+            // flag to determine if the current i asteroid survives or not
+            boolean flag = true;
+            while (!deque.isEmpty()) {
+                int r = deque.peekLast();
+                int l = asteroids[i];
+                if (r < 0 && l > 0) {
+                    // collison
+                    if (Math.abs(r) <= l) {
+                        // to avoid multiple if else
+                        deque.pollLast();
+                    }
+                    if (Math.abs(r) >= l) {
+                        // If the current is smaller or equal,
+                        // then set the flag to false,
+                        flag = false;
+                        // if current is bigger or equal remove the negative
+                        break;
+                        // from the stack
+                    }
+                } else
+                    break;
+            }
+            if (flag)
+                deque.offerLast(asteroids[i]);
+        }
+        int[] ans = new int[deque.size()];
+        int i = 0;
+        while (!deque.isEmpty()) {
+            ans[i] = deque.pollLast();
+            i++;
+        }
+        return ans;
+    }
+}

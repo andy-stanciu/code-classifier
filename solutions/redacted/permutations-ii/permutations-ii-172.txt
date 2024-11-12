@@ -1,0 +1,41 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> answer = new ArrayList<>();
+        dfs(0, nums, answer);
+        return answer;
+    }
+
+    void dfs(int i, int[] nums, List<List<Integer>> answer) {
+        if (i == nums.length) {
+            List<Integer> list = new ArrayList<>();
+            for (int num : nums) {
+                list.add(num);
+            }
+            answer.add(list);
+            return;
+        }
+        int seen = 0;
+        for (int j = i; j < nums.length; j++) {
+            //using +10 because, nums[j] can go up -10
+            int mask = 1 << (nums[j] + 10);
+            if ((seen & mask) != 0) {
+                //satifies this condition whenever we try to place the same number in the i-th place
+                continue;
+            }
+            //adding the choosen nums[j] in `seen`
+            seen |= mask;
+            //swap [j] to [i]
+            swap(i, j, nums);
+            dfs(i + 1, nums, answer);
+            //revert the above swap
+            swap(i, j, nums);
+        }
+    }
+
+    void swap(int i, int j, int[] nums) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+}

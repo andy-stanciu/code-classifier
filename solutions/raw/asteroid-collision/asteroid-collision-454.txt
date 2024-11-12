@@ -1,0 +1,32 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        int n = asteroids.length;
+        Stack<Integer> stack = new Stack<>();
+        for (int i = n - 1; i >= 0; i--) {
+            if (asteroids[i] < 0) {
+                stack.push(asteroids[i]);
+            } else {
+                while (!stack.isEmpty()) {
+                    if (stack.peek() < 0 && asteroids[i] > -(stack.peek()))
+                        stack.pop();
+                    else {
+                        break;
+                    }
+                }
+                if (stack.isEmpty() || stack.peek() > 0) {
+                    stack.push(asteroids[i]);
+                } else if (asteroids[i] == Math.abs(stack.peek())) {
+                    stack.pop();
+                }
+            }
+        }
+        int[] ans = new int[stack.size()];
+        int i = 0;
+        while (!stack.isEmpty()) {
+            ans[i] = stack.pop();
+            i++;
+        }
+        return ans;
+    }
+}

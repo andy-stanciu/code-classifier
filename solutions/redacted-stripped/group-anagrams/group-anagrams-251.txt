@@ -1,0 +1,61 @@
+public class Solution {
+
+    private static final int TOP = 123;
+
+    public List<List<String>> method1(String[] strs) {
+        Map<EntropyKey, List<String>> key = new HashMap<>();
+        for (String s : strs) {
+            EntropyKey entropy = entropy(s);
+            key.computeIfAbsent(entropy, k -> new ArrayList<>()).add(s);
+        }
+        return new ArrayList<>(key.values());
+    }
+
+    private EntropyKey entropy(String str) {
+        int sum = 0;
+        int sqSum = 0;
+        int cubeSum = 0;
+        int quadSum = 0;
+        for (char c : str.toCharArray()) {
+            int ascii = TOP - (int) c;
+            sum += ascii;
+            sqSum += ascii * ascii;
+            cubeSum += ascii * ascii * ascii;
+            quadSum += ascii * ascii * ascii * ascii;
+        }
+        return new EntropyKey(sum, sqSum, cubeSum, quadSum);
+    }
+
+    private static class EntropyKey {
+
+        private final int sum;
+
+        private final int sqSum;
+
+        private final int cubeSum;
+
+        private final int quadSum;
+
+        EntropyKey(int sum, int sqSum, int cubeSum, int quadSum) {
+            this.sum = sum;
+            this.sqSum = sqSum;
+            this.cubeSum = cubeSum;
+            this.quadSum = quadSum;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
+            EntropyKey that = (EntropyKey) o;
+            return sum == that.sum && sqSum == that.sqSum && cubeSum == that.cubeSum && quadSum == that.quadSum;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(sum, sqSum, cubeSum, quadSum);
+        }
+    }
+}

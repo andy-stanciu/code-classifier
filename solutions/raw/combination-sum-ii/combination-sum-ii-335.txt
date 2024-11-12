@@ -1,0 +1,26 @@
+class Solution {
+
+    static void find(Set<List<Integer>> result, int[] candidates, int target, int index, ArrayList<Integer> temp) {
+        if (target < 0) {
+            return;
+        }
+        if (target == 0) {
+            result.add(new ArrayList(temp));
+            return;
+        }
+        for (int i = index; i < candidates.length; i++) {
+            if (target >= candidates[i] && (i == index || candidates[i - 1] != candidates[i])) {
+                temp.add(candidates[i]);
+                find(result, candidates, target - candidates[i], i + 1, temp);
+                temp.remove(temp.size() - 1);
+            }
+        }
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        Set<List<Integer>> result = new HashSet();
+        find(result, candidates, target, 0, new ArrayList<Integer>());
+        return new ArrayList(result);
+    }
+}

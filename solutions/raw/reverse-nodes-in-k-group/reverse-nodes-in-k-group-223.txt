@@ -1,0 +1,63 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        int len = this.findLength(head);
+        int itr = len / k;
+        ListNode tail = head;
+        ListNode temp;
+        ListNode ret = null;
+        ListNode prev = null;
+        while (itr > 0) {
+            temp = this.reverseGroup(tail, prev, k);
+            if (ret == null)
+                ret = temp;
+            prev = tail;
+            tail = tail.next;
+            itr -= 1;
+        }
+        return ret;
+    }
+
+    public ListNode reverseGroup(ListNode head, ListNode prev, int k) {
+        ListNode tail = head;
+        ListNode currNode = head;
+        ListNode prevNode = null;
+        ListNode nextNode = null;
+        while (k > 0) {
+            nextNode = currNode.next;
+            currNode.next = prevNode;
+            prevNode = currNode;
+            currNode = nextNode;
+            tail.next = nextNode;
+            k -= 1;
+        }
+        if (prev != null)
+            prev.next = prevNode;
+        return prevNode;
+    }
+
+    public int findLength(ListNode head) {
+        ListNode node = head;
+        int len = 1;
+        while (node.next != null) {
+            if (node.next != null && node.next.next != null) {
+                len += 2;
+                node = node.next.next;
+                continue;
+            }
+            len += 1;
+            node = node.next;
+        }
+        return len;
+    }
+}

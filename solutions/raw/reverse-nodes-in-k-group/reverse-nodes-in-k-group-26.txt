@@ -1,0 +1,34 @@
+class Solution {
+
+    private ListNode reverseLinkedList(ListNode begin, ListNode end) {
+        ListNode prev = null, next;
+        while (begin != end) {
+            next = begin.next;
+            begin.next = prev;
+            prev = begin;
+            begin = next;
+        }
+        return prev;
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null || head.next == null || k == 1)
+            return head;
+        ListNode dummy = new ListNode(0, head);
+        ListNode back = dummy, forward = head;
+        while (back != null) {
+            int groupLen = 0;
+            while (groupLen < k && forward != null) {
+                forward = forward.next;
+                ++groupLen;
+            }
+            if (groupLen != k)
+                break;
+            ListNode last = back.next;
+            back.next = reverseLinkedList(back.next, forward);
+            last.next = forward;
+            back = last;
+        }
+        return dummy.next;
+    }
+}

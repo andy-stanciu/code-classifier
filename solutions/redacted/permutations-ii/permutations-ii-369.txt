@@ -1,0 +1,34 @@
+class Solution {
+
+    List<List<Integer>> res;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        res = new ArrayList<>();
+        backtrack(0, nums);
+        return res;
+    }
+
+    private void backtrack(int pos, int[] nums) {
+        if (pos == nums.length) {
+            List<Integer> permuation = new ArrayList<>();
+            for (int n : nums) permuation.add(n);
+            res.add(permuation);
+            return;
+        }
+        Set<Integer> seenAtThisPosition = new HashSet<>();
+        for (int i = pos; i < nums.length; i++) {
+            if (seenAtThisPosition.contains(nums[i]))
+                continue;
+            swap(i, pos, nums);
+            backtrack(pos + 1, nums);
+            swap(i, pos, nums);
+            seenAtThisPosition.add(nums[i]);
+        }
+    }
+
+    private void swap(int i, int j, int[] nums) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}

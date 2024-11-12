@@ -1,0 +1,85 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        // If the root is null, return null since there\'s no node to delete.
+        if (root == null)
+            return null;
+        // If the root value matches the key to be deleted, call the helper method to handle deletion.
+        if (root.val == key) {
+            return helper(root);
+        }
+        // Create a dummy TreeNode to keep track of the original root.
+        TreeNode dummy = root;
+        // Enter into a loop to traverse the tree until the key is found or the loop breaks.
+        while (root != null) {
+            // If the key is less than the current node\'s value, move to the left subtree.
+            if (root.val > key) {
+                // If the left child\'s value matches the key, call the helper method to delete it.
+                if (root.left != null && root.left.val == key) {
+                    root.left = helper(root.left);
+                    break;
+                } else {
+                    // Move to the left child.
+                    root = root.left;
+                }
+            } else // If the key is greater than or equal to the current node\'s value, move to the right subtree.
+            {
+                // If the right child\'s value matches the key, call the helper method to delete it.
+                if (root.right != null && root.right.val == key) {
+                    root.right = helper(root.right);
+                    break;
+                } else {
+                    // Move to the right child.
+                    root = root.right;
+                }
+            }
+        }
+        // Return the dummy TreeNode which contains the original root of the modified BST.
+        return dummy;
+    }
+
+    // Helper method to delete a node with the given root.
+    TreeNode helper(TreeNode root) {
+        // If the left child of the root is null, return its right child (or null if it\'s also null).
+        if (root.left == null)
+            return root.right;
+        else // If the right child of the root is null, return its left child.
+        if (root.right == null)
+            return root.left;
+        else // If both children are present, find the rightmost node in the left subtree.
+        {
+            // Store the right child of the root.
+            TreeNode rightChild = root.right;
+            // Find the rightmost node in the left subtree.
+            TreeNode lastRight = method2(root.left);
+            // Connect the right subtree to the rightmost node of the left subtree.
+            lastRight.right = rightChild;
+            // Return the modified left subtree as the new root.
+            return root.left;
+        }
+    }
+
+    // Method to find the rightmost node in a given subtree.
+    TreeNode method2(TreeNode root) {
+        // If the right child is null, return the current node as it is the rightmost node.
+        if (root.right == null)
+            return root;
+        // Otherwise, recursively search for the rightmost node in the right subtree.
+        return method2(root.right);
+    }
+}

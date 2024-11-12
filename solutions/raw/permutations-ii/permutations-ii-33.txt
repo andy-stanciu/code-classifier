@@ -1,0 +1,44 @@
+class Solution {
+
+    HashSet<List<Integer>> set;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        //set to store permutations so that duplicate permutations are not added.
+        set = new HashSet<>();
+        //Initially 0 is passed as the index, meaning all the elements from index 0 till n - 1
+        //will be given the chance to come at index 0, and so on.
+        findPermutations(nums, 0);
+        //Convert HashSet to ArrayList before returning.
+        List<List<Integer>> ml = new ArrayList<>(set);
+        return ml;
+    }
+
+    public void findPermutations(int[] nums, int idx) {
+        //When index is equal to length of nums array, meaning a permutation is formed,
+        //so add it in the set.
+        if (idx == nums.length) {
+            List<Integer> cl = new ArrayList<>();
+            for (int i = 0; i < nums.length; i++) {
+                cl.add(nums[i]);
+            }
+            set.add(cl);
+            return;
+        }
+        //Loop from idx till n - 1.
+        for (int i = idx; i < nums.length; i++) {
+            //Giving chance to element i to come at idx position by swapping elements at position i and idx.
+            swap(nums, i, idx);
+            //Increase the idx and call the function again.
+            findPermutations(nums, idx + 1);
+            //Backtracking : Reswap elements at position i and idx.
+            swap(nums, i, idx);
+        }
+    }
+
+    //Swapping function.
+    public void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}

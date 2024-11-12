@@ -1,0 +1,32 @@
+class Solution {
+
+    public boolean canConstruct(String ransomNote, String magazine) {
+        if (ransomNote == null && magazine != null) {
+            return true;
+        } else if (ransomNote != null && magazine == null) {
+            return false;
+        }
+        var magazineMap = buildMap(magazine);
+        var ransomNoteMap = buildMap(ransomNote);
+        return ransomNoteMap.keySet().stream().allMatch(key -> {
+            if (!magazineMap.containsKey(key)) {
+                return false;
+            }
+            return ransomNoteMap.get(key) <= magazineMap.get(key);
+        });
+    }
+
+    private Map<Character, Integer> buildMap(String stringValue) {
+        var map = new HashMap<Character, Integer>();
+        for (int index = 0; index < stringValue.length(); index++) {
+            char character = stringValue.charAt(index);
+            if (map.containsKey(character)) {
+                int value = map.get(character);
+                map.put(character, value + 1);
+            } else {
+                map.put(character, 1);
+            }
+        }
+        return map;
+    }
+}

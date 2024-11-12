@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<List<Integer>> permuteRec(Map<Integer, Integer> nums, List<Integer> prefix) {
+        List<List<Integer>> var1 = new LinkedList<>();
+        for (Integer num : nums.keySet()) {
+            if (nums.get(num) > 0) {
+                prefix.add(num);
+                nums.put(num, nums.get(num) - 1);
+                var1.addAll(permuteRec(nums, prefix));
+                prefix.remove(prefix.size() - 1);
+                nums.put(num, nums.get(num) + 1);
+            }
+        }
+        if (var1.size() == 0) {
+            var1.add(new LinkedList<>(prefix));
+        }
+        return var1;
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Map<Integer, Integer> numsMap = new HashMap<>();
+        for (int num : nums) {
+            if (!numsMap.containsKey(num)) {
+                numsMap.put(num, 0);
+            }
+            numsMap.put(num, numsMap.get(num) + 1);
+        }
+        return permuteRec(numsMap, new LinkedList<>());
+    }
+}

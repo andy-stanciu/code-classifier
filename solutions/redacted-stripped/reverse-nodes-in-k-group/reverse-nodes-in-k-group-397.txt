@@ -1,0 +1,48 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        ListNode result = null;
+        ListNode[] headTail = rotate(head, k);
+        ListNode tail = null;
+        if (headTail != null) {
+            result = headTail[0];
+            tail = headTail[1];
+        }
+        while (headTail != null) {
+            headTail = rotate(tail.next, k);
+            if (headTail != null) {
+                tail.next = headTail[0];
+                tail = headTail[1];
+            }
+        }
+        return result;
+    }
+
+    ListNode[] rotate(ListNode list, int k) {
+        ListNode[] queue = new ListNode[k];
+        ListNode next = list;
+        int i = 0;
+        while (i < k) {
+            if (next == null) {
+                return null;
+            }
+            queue[i] = next;
+            next = next.next;
+            i++;
+        }
+        ListNode head = null, tail = null;
+        if (queue.length > 0) {
+            head = queue[queue.length - 1];
+            tail = head;
+        }
+        while (i > 0) {
+            ListNode curr = queue[i - 1];
+            tail.next = curr;
+            tail = curr;
+            i--;
+        }
+        if (tail != null)
+            tail.next = next;
+        return new ListNode[] { head, tail };
+    }
+}

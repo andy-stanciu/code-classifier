@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] method1(int[] nums1, int[] nums2) {
+        return solve3(nums1, nums2);
+    }
+
+    private static int[] solve(int[] nums1, int[] nums2) {
+        List<Integer> ans = new ArrayList<>();
+        for (var item : nums1) {
+            for (int j : nums2) {
+                if (j == item && !ans.contains(item))
+                    ans.add(item);
+            }
+        }
+        int[] temp = new int[ans.size()];
+        for (int i = 0; i < temp.length; i++) temp[i] = ans.get(i);
+        return temp;
+    }
+
+    private static int[] solve2(int[] nums1, int[] nums2) {
+        var freq = new HashMap<Integer, Integer>();
+        Arrays.stream(nums1).distinct().forEach(item -> freq.put(item, freq.getOrDefault(item, 0) + 1));
+        Arrays.stream(nums2).distinct().forEach(item -> freq.put(item, freq.getOrDefault(item, 0) + 1));
+        var ansList = freq.entrySet().stream().filter(item -> item.getValue() == 2).map(Map.Entry::getKey).toList();
+        int[] ans = new int[ansList.size()];
+        for (int i = 0; i < ansList.size(); i++) ans[i] = ansList.get(i);
+        return ans;
+    }
+
+    private static int[] solve3(int[] nums1, int[] nums2) {
+        var freq = new HashMap<Integer, Integer>();
+        for (int num : nums1) {
+            freq.put(num, 1);
+        }
+        var result = new ArrayList<Integer>();
+        for (int num : nums2) {
+            if (freq.containsKey(num) && freq.get(num) == 1) {
+                result.add(num);
+                freq.put(num, 2);
+            }
+        }
+        return result.stream().mapToInt(i -> i).toArray();
+    }
+}

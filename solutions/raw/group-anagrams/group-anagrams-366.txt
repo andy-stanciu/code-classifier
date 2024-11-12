@@ -1,0 +1,55 @@
+class Solution {
+
+    public List<List<String>> groupAnagrams(String[] strs) {
+        List<List<String>> big = new ArrayList<>();
+        List<String> init = new ArrayList<>();
+        init.add(strs[0]);
+        big.add(init);
+        //Loop through list, if reach the end then add a new group
+        //Check each group with the first word, try to map all the letters
+        //As soon as there is a false, then break out and go to next in list
+        for (int i = 1; i < strs.length; i++) {
+            boolean placed = false;
+            for (List<String> l : big) {
+                boolean goodGroup = anagram(strs[i], l.get(0));
+                if (goodGroup) {
+                    l.add(strs[i]);
+                    placed = true;
+                    break;
+                }
+            }
+            //If not placed then add a new list
+            if (!placed) {
+                List<String> newList = new ArrayList<>();
+                newList.add(strs[i]);
+                big.add(newList);
+            }
+        }
+        return big;
+    }
+
+    public boolean anagram(String curr, String old) {
+        if (curr.length() != old.length())
+            return false;
+        HashMap<Character, Integer> m = new HashMap<>();
+        //Put all chars in the map
+        for (int i = 0; i < old.length(); i++) {
+            if (m.containsKey(old.charAt(i))) {
+                m.put(old.charAt(i), m.get(old.charAt(i)) + 1);
+            } else {
+                m.put(old.charAt(i), 1);
+            }
+        }
+        //Now check if new word can map all values
+        for (int i = 0; i < curr.length(); i++) {
+            if (!m.containsKey(curr.charAt(i)))
+                return false;
+            else if (m.get(curr.charAt(i)) == 0)
+                return false;
+            else {
+                m.put(curr.charAt(i), m.get(curr.charAt(i)) - 1);
+            }
+        }
+        return true;
+    }
+}

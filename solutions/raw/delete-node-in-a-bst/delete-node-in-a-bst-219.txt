@@ -1,0 +1,63 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        if (root.val == key) {
+            if (root.left == null && root.right == null)
+                return null;
+            else if (root.right != null) {
+                TreeNode inorderSuccessor = inorderSuccessor(root);
+                root.val = inorderSuccessor.val;
+                root.right = deleteNode(root.right, inorderSuccessor.val);
+                return root;
+            } else {
+                TreeNode inorderPredecessor = inorderPredecessor(root);
+                root.val = inorderPredecessor.val;
+                root.left = deleteNode(root.left, inorderPredecessor.val);
+                return root;
+            }
+        } else {
+            root.left = deleteNode(root.left, key);
+            root.right = deleteNode(root.right, key);
+            return root;
+        }
+    }
+
+    private TreeNode inorderSuccessor(TreeNode root) {
+        if (root.right != null) {
+            TreeNode node = root.right;
+            while (node.left != null) {
+                node = node.left;
+            }
+            return node;
+        }
+        return null;
+    }
+
+    private TreeNode inorderPredecessor(TreeNode root) {
+        if (root.left != null) {
+            TreeNode node = root.left;
+            while (node.right != null) {
+                node = node.right;
+            }
+            return node;
+        }
+        return null;
+    }
+}

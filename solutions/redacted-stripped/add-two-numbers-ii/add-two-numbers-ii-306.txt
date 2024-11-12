@@ -1,0 +1,49 @@
+class Solution {
+
+    public ListNode reverse(ListNode l) {
+        ListNode prev = null;
+        ListNode curr = l;
+        while (curr != null) {
+            ListNode nxt = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nxt;
+        }
+        return prev;
+    }
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        if (l1 == null || l2 == null) {
+            if (l1 == null && l2 != null)
+                return l2;
+            else if (l2 == null && l1 != null)
+                return l1;
+            return null;
+        }
+        ListNode first = reverse(l1);
+        ListNode second = reverse(l2);
+        ListNode result = new ListNode();
+        int borrow = 0;
+        ListNode temp = result;
+        while (first != null || second != null) {
+            int res = 0;
+            if (first != null) {
+                res += first.val;
+                first = first.next;
+            }
+            if (second != null) {
+                res += second.val;
+                second = second.next;
+            }
+            res += borrow;
+            borrow = res / 10;
+            temp.next = new ListNode(res % 10);
+            temp = temp.next;
+        }
+        if (borrow != 0) {
+            temp.next = new ListNode(borrow);
+            temp = temp.next;
+        }
+        return reverse(result.next);
+    }
+}

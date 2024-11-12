@@ -1,0 +1,45 @@
+class Solution {
+
+    private List<List<Integer>> ans;
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        ans = new LinkedList<>();
+        int[] freq = getFreq(candidates);
+        for (int i = 1; i <= target; i++) {
+            if (freq[i] != 0) {
+                freq[i]--;
+                List<Integer> list = new ArrayList<>();
+                list.add(i);
+                find(freq, target, i, i, list);
+            }
+        }
+        return ans;
+    }
+
+    private void find(int[] freq, int target, int candidate, int param1, List<Integer> list) {
+        if (param1 == target) {
+            ans.add(new ArrayList<>(list));
+            return;
+        }
+        for (int i = candidate; i <= target; i++) {
+            if (freq[i] == 0)
+                continue;
+            int total = param1 + i;
+            if (total > target)
+                break;
+            freq[i]--;
+            list.add(i);
+            find(freq, target, i, total, list);
+            list.remove(list.size() - 1);
+            freq[i]++;
+        }
+    }
+
+    private int[] getFreq(int[] candidates) {
+        int[] freq = new int[51];
+        for (int i : candidates) {
+            freq[i]++;
+        }
+        return freq;
+    }
+}

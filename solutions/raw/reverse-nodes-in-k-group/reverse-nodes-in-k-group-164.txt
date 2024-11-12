@@ -1,0 +1,41 @@
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null || k <= 1) {
+            return head;
+        }
+        ListNode prev = null;
+        ListNode current = head;
+        ListNode next = null;
+        while (hasKNodes(current, k)) {
+            ListNode last = prev;
+            ListNode newEnd = current;
+            // Reverse the group of k nodes
+            for (int i = 0; i < k; i++) {
+                next = current.next;
+                current.next = prev;
+                prev = current;
+                current = next;
+            }
+            // Connect the reversed part to the previous part
+            if (last != null) {
+                last.next = prev;
+            } else {
+                // Update the head if it\'s the first group
+                head = prev;
+            }
+            newEnd.next = current;
+            // Move prev to the end of the reversed group
+            prev = newEnd;
+        }
+        return head;
+    }
+
+    private boolean hasKNodes(ListNode node, int k) {
+        while (node != null && k > 0) {
+            node = node.next;
+            k--;
+        }
+        return k == 0;
+    }
+}

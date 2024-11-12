@@ -1,0 +1,69 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        // Step 1: Calculate the length of the linked list
+        int length = 0;
+        ListNode current = head;
+        while (current != null) {
+            length++;
+            current = current.next;
+        }
+        // Step 2: Create a dummy node to help with edge cases
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode var1 = dummy;
+        // Step 3: Reverse nodes in groups of k
+        while (length >= k) {
+            // Start of the current group
+            ListNode var2 = var1.next;
+            // End of the current group
+            ListNode var3 = var2;
+            // Move to the end of the current group
+            for (int i = 1; i < k; i++) {
+                var3 = var3.next;
+            }
+            // Store the next group start
+            ListNode var4 = var3.next;
+            // Reverse the current group
+            // Temporarily break the link
+            var3.next = null;
+            // Reverse and connect to the previous part
+            var1.next = method2(var2);
+            // Connect the end of the reversed group to the next group
+            var2.next = var4;
+            // Update pointers for the next iteration
+            var1 = var2;
+            // Decrease the length by k
+            length -= k;
+        }
+        // Return the head of the modified list
+        return dummy.next;
+    }
+
+    // Helper method to reverse a linked list
+    private ListNode method2(ListNode head) {
+        ListNode prev = null;
+        while (head != null) {
+            // Store next node
+            ListNode next = head.next;
+            // Reverse the link
+            head.next = prev;
+            // Move prev to current node
+            prev = head;
+            // Move to the next node
+            head = next;
+        }
+        // New head of the reversed list
+        return prev;
+    }
+}

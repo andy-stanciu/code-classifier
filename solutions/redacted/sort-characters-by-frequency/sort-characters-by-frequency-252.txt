@@ -1,0 +1,61 @@
+class Solution {
+
+    public String method1(String s) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        // Storing frequency of each character in HashMap.
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (map.get(ch) == null) {
+                map.put(ch, 1);
+            } else {
+                int val = map.get(ch);
+                map.put(ch, val + 1);
+            }
+        }
+        // Making a PriorityQueue that stores Pair.
+        // PriorityQueue sorted on the basis of freq.
+        PriorityQueue<Pair> pq = new PriorityQueue<>(new Comparator<Pair>() {
+
+            @Override
+            public int compare(Pair p1, Pair p2) {
+                return p2.freq - p1.freq;
+            }
+        });
+        // Adding all the pairs inside the PriorityQueue
+        for (char key : map.keySet()) {
+            int freq = map.get(key);
+            Pair p = new Pair(key, freq);
+            pq.add(p);
+        }
+        String ans = "";
+        // Making ans by polling pairs.
+        while (pq.size() > 0) {
+            Pair pr = pq.poll();
+            char ch = pr.ch;
+            int freq = pr.freq;
+            while (freq > 0) {
+                ans += ch;
+                freq -= 1;
+            }
+        }
+        return ans;
+    }
+}
+
+// Pair class that stores character and it\'s frequency in the string.
+class Pair {
+
+    char ch;
+
+    int freq;
+
+    public Pair(char ch, int freq) {
+        this.ch = ch;
+        this.freq = freq;
+    }
+
+    @Override
+    public String toString() {
+        return "{" + this.ch + "," + this.freq + "}";
+    }
+}

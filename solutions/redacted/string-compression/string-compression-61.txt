@@ -1,0 +1,29 @@
+class Solution {
+
+    public int compress(char[] chars) {
+        int repeatcurrentChar = 0;
+        int repeatsAllChars = 0;
+        char prev = Character.MIN_VALUE;
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i] != prev) {
+                if (repeatcurrentChar > 1) {
+                    char[] numbers = String.valueOf(repeatcurrentChar).toCharArray();
+                    System.arraycopy(numbers, 0, chars, i - repeatsAllChars, numbers.length);
+                    repeatsAllChars -= numbers.length;
+                }
+                repeatcurrentChar = 1;
+                chars[i - repeatsAllChars] = chars[i];
+                prev = chars[i];
+            } else {
+                repeatcurrentChar++;
+                repeatsAllChars++;
+            }
+        }
+        if (repeatcurrentChar > 1) {
+            char[] numbers = String.valueOf(repeatcurrentChar).toCharArray();
+            System.arraycopy(numbers, 0, chars, chars.length - repeatsAllChars, numbers.length);
+            repeatsAllChars -= numbers.length;
+        }
+        return chars.length - repeatsAllChars;
+    }
+}

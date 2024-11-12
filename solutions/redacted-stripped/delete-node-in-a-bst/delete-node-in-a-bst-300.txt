@@ -1,0 +1,40 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        if (root.val == key)
+            return helper(root);
+        TreeNode curr = root;
+        while (curr != null) {
+            if (curr.val > key) {
+                if (curr.left != null && curr.left.val == key) {
+                    curr.left = helper(curr.left);
+                } else
+                    curr = curr.left;
+            } else {
+                if (curr.right != null && curr.right.val == key) {
+                    curr.right = helper(curr.right);
+                } else
+                    curr = curr.right;
+            }
+        }
+        return root;
+    }
+
+    public TreeNode helper(TreeNode root) {
+        if (root.left == null)
+            return root.right;
+        if (root.right == null)
+            return root.left;
+        TreeNode rightChild = root.right;
+        TreeNode lastRight = method2(root.left);
+        lastRight.right = root.right;
+        return root.left;
+    }
+
+    public TreeNode method2(TreeNode root) {
+        while (root.right != null) root = root.right;
+        return root;
+    }
+}

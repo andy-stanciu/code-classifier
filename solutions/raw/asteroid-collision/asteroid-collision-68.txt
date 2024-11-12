@@ -1,0 +1,31 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] arr) {
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] > 0) {
+                // Positive asteroids always move right
+                stack.push(arr[i]);
+            } else {
+                // Handle collision with asteroids moving left
+                while (!stack.isEmpty() && stack.peek() > 0 && stack.peek() < Math.abs(arr[i])) {
+                    // Destroy smaller positive asteroids
+                    stack.pop();
+                }
+                if (!stack.isEmpty() && stack.peek() == Math.abs(arr[i])) {
+                    // Both asteroids destroy each other
+                    stack.pop();
+                } else if (stack.isEmpty() || stack.peek() < 0) {
+                    // No collision or only negative asteroids
+                    stack.push(arr[i]);
+                }
+            }
+        }
+        // Convert the stack to an int[] array to match the method\'s return type
+        int[] result = new int[stack.size()];
+        for (int i = result.length - 1; i >= 0; i--) {
+            result[i] = stack.pop();
+        }
+        return result;
+    }
+}

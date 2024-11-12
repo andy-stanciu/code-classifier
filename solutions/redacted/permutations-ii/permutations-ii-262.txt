@@ -1,0 +1,37 @@
+class Solution {
+
+    Set<String> set = new HashSet<>();
+
+    public List<List<Integer>> result = new ArrayList<>();
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        var list = Arrays.stream(nums).boxed().collect(Collectors.toList());
+        compute(list, new ArrayList<>(), "");
+        return result;
+    }
+
+    public void compute(List<Integer> nums, List<Integer> asf, String sasf) {
+        if (nums.size() == 0) {
+            if (!set.contains(sasf)) {
+                List<Integer> interim = new ArrayList<>();
+                interim.addAll(asf);
+                result.add(interim);
+                set.add(sasf);
+            }
+            return;
+        }
+        //for each element choose the number and send rest of number for recursion
+        for (int i = 0; i < nums.size(); i++) {
+            //number chosen at ith location
+            var val = nums.remove(i);
+            //answerSoFar(asf) list is added with the current value
+            asf.add(val);
+            //recursion called
+            compute(nums, asf, sasf + val);
+            //back tracking so reverting
+            asf.remove(asf.size() - 1);
+            //adding back removed number
+            nums.add(i, val);
+        }
+    }
+}

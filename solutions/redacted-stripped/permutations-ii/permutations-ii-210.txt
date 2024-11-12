@@ -1,0 +1,40 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        Arrays.sort(nums);
+        do {
+            ans.add(Arrays.stream(nums).boxed().collect(Collectors.toList()));
+        } while (nextPermutation(nums));
+        return ans;
+    }
+
+    public boolean nextPermutation(int[] nums) {
+        int p = Math.max(0, nums.length - 2);
+        int i = nums.length - 1;
+        boolean found = false;
+        for (; p >= 0; p--) {
+            for (i = nums.length - 1; i > p; i--) {
+                if (nums[p] < nums[i]) {
+                    found = true;
+                    break;
+                }
+            }
+            if (found) {
+                break;
+            }
+        }
+        if (p >= 0) {
+            int tmp = nums[p];
+            nums[p] = nums[i];
+            nums[i] = tmp;
+            for (int x = p + 1, y = nums.length - 1; x < y; x++, y--) {
+                tmp = nums[x];
+                nums[x] = nums[y];
+                nums[y] = tmp;
+            }
+            return true;
+        }
+        return false;
+    }
+}

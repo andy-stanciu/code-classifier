@@ -1,0 +1,33 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        helper(nums, result, new ArrayList<>(), new boolean[nums.length]);
+        return result;
+    }
+
+    private void helper(int[] nums, List<List<Integer>> result, List<Integer> current, boolean[] used) {
+        if (current.size() == nums.length) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (used[i]) {
+                continue;
+            }
+            // Add new number
+            used[i] = true;
+            current.add(nums[i]);
+            // Go back pick another number
+            helper(nums, result, current, used);
+            // Backtrack (remove the number that we added)
+            current.remove(current.size() - 1);
+            used[i] = false;
+            // Skip the duplicates
+            while (i + 1 < nums.length && nums[i] == nums[i + 1]) {
+                i++;
+            }
+        }
+    }
+}

@@ -1,0 +1,78 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+
+    public static void method1(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        method1(root.left);
+        System.out.println(root.val);
+        method1(root.right);
+    }
+
+    public static //passes root\'s right
+    //passes root\'s right
+    //passes root\'s right
+    TreeNode method2(TreeNode root) {
+        if (root == null) {
+            return root;
+        }
+        TreeNode temp = root;
+        while (temp.left != null) {
+            temp = temp.left;
+        }
+        return temp;
+    }
+
+    public TreeNode method3(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        if (root.val > key) {
+            root.left = method3(root.left, key);
+        } else if (root.val < key) {
+            root.right = method3(root.right, key);
+        } else {
+            //root to be deleted
+            if (root.left == null && root.right == null) {
+                return null;
+            } else if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            } else {
+                //root has two child
+                TreeNode succ = method2(root.right);
+                root.val = succ.val;
+                root.right = method3(root.right, succ.val);
+                return root;
+            }
+        }
+        return root;
+    }
+
+    public static void method4(String[] args) {
+        Solution sol = new Solution();
+        TreeNode root = new TreeNode(5);
+        root.left = new TreeNode(3);
+        root.right = new TreeNode(6);
+        root.left.left = new TreeNode(2);
+        root.left.right = new TreeNode(4);
+        root.right.right = new TreeNode(7);
+        method1(sol.method3(root, 3));
+    }
+}

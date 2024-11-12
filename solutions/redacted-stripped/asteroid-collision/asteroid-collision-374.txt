@@ -1,0 +1,64 @@
+class Solution {
+
+    public static int[] method1(int[] param1) {
+        Stack<Integer> stack = new Stack<>();
+        Stack<Integer> alternate = new Stack<>();
+        for (int var1 : param1) {
+            stack.push(var1);
+        }
+        boolean var2 = true;
+        while (var2) {
+            var2 = false;
+            while (stack.size() > 1) {
+                int num1 = stack.pop();
+                int num2 = stack.pop();
+                if (num1 <= 0 && num2 >= 0) {
+                    if (diffsign(num1, num2)) {
+                        var2 = true;
+                        if (absolute(num1) == absolute(num2)) {
+                            continue;
+                        } else {
+                            if (absolute(num1) > absolute(num2)) {
+                                stack.push(num1);
+                            } else {
+                                stack.push(num2);
+                            }
+                        }
+                    } else {
+                        stack.push(num2);
+                        alternate.push(num1);
+                    }
+                } else {
+                    stack.push(num2);
+                    alternate.push(num1);
+                }
+            }
+            while (!alternate.isEmpty()) {
+                stack.push(alternate.pop());
+            }
+        }
+        while (!stack.isEmpty()) {
+            alternate.push(stack.pop());
+        }
+        int[] res = new int[alternate.size()];
+        int counter = 0;
+        while (!alternate.isEmpty()) {
+            res[counter++] = alternate.pop();
+        }
+        return res;
+    }
+
+    private static boolean diffsign(int num1, int num2) {
+        if ((num1 > 0 && num2 < 0) || (num1 < 0 && num2 > 0)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static int absolute(int num) {
+        if (num < 0) {
+            num = -1 * num;
+        }
+        return num;
+    }
+}

@@ -1,0 +1,31 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> stack = new Stack<>();
+        int n = asteroids.length;
+        for (int i = 0; i < n; i++) {
+            if (asteroids[i] > 0)
+                stack.push(asteroids[i]);
+            else {
+                // here we\'re firstly checking if the direction of top element is in right and the top element top element\'s value is less than the absolute value of current asteroid, means it\'ll get destroyed, hence popping out.
+                // simulate it using pen/paper, you\'ll understand why it is written
+                while (!stack.isEmpty() && stack.peek() > 0 && stack.peek() < -asteroids[i]) stack.pop();
+                // if the top element is in left direction, i.e. negative, we\'ll push the new element.
+                if (stack.isEmpty() || stack.peek() < 0)
+                    stack.push(asteroids[i]);
+                // if the element at top is equal to the negative of element inserting, i.e. asteroid\'s size, then we\'ll destroy that asteroid as well
+                if (stack.peek() == -asteroids[i])
+                    stack.pop();
+            }
+        }
+        // initializing an array for answer
+        int[] ans = new int[stack.size()];
+        int k = stack.size() - 1;
+        // copying elements from stack to array
+        while (!stack.isEmpty()) {
+            ans[k] = stack.pop();
+            k--;
+        }
+        return ans;
+    }
+}

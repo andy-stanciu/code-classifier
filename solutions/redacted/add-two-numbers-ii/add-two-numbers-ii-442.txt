@@ -1,0 +1,70 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        if (l1 == null && l2 != null) {
+            return l2;
+        } else if (l1 != null && l2 == null) {
+            return l1;
+        } else if (l1 == null && l2 == null) {
+            return new ListNode();
+        }
+        l1 = reverse(l1);
+        l2 = reverse(l2);
+        ListNode res = new ListNode();
+        ListNode temp = res;
+        int carry = 0;
+        while (l1 != null || l2 != null) {
+            int v1 = 0;
+            int v2 = 0;
+            if (l1 != null) {
+                v1 = l1.val;
+                l1 = l1.next;
+            }
+            if (l2 != null) {
+                v2 = l2.val;
+                l2 = l2.next;
+            }
+            int sum = v1 + v2 + carry;
+            temp.val = sum % 10;
+            System.out.println(temp.val);
+            if (l1 != null || l2 != null) {
+                temp.next = new ListNode();
+                temp = temp.next;
+            }
+            if (sum > 9) {
+                carry = 1;
+            } else {
+                carry = 0;
+            }
+        }
+        if (carry == 1) {
+            temp.next = new ListNode(1);
+        }
+        res = reverse(res);
+        return res;
+    }
+
+    private ListNode reverse(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = slow.next;
+        slow.next = null;
+        while (fast != null) {
+            ListNode temp = fast.next;
+            fast.next = slow;
+            slow = fast;
+            fast = temp;
+        }
+        head = slow;
+        return head;
+    }
+}

@@ -1,0 +1,49 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        Queue<Integer> q1 = new LinkedList<>();
+        Queue<Integer> q2 = new LinkedList<>();
+        ListNode temp1 = l1;
+        ListNode temp2 = l2;
+        while (temp1 != null) {
+            q1.add(temp1.val);
+            temp1 = temp1.next;
+        }
+        while (temp2 != null) {
+            q2.add(temp2.val);
+            temp2 = temp2.next;
+        }
+        BigInteger num1 = BigInteger.ZERO;
+        BigInteger num2 = BigInteger.ZERO;
+        while (!q1.isEmpty()) {
+            num1 = num1.multiply(BigInteger.TEN).add(BigInteger.valueOf(q1.poll()));
+        }
+        while (!q2.isEmpty()) {
+            num2 = num2.multiply(BigInteger.TEN).add(BigInteger.valueOf(q2.poll()));
+        }
+        BigInteger sum = num1.add(num2);
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        if (sum.equals(BigInteger.ZERO)) {
+            return new ListNode(0);
+        }
+        while (!sum.equals(BigInteger.ZERO)) {
+            current.next = new ListNode(sum.mod(BigInteger.TEN).intValue());
+            current = current.next;
+            sum = sum.divide(BigInteger.TEN);
+        }
+        return reverseList(dummy.next);
+    }
+
+    private ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode current = head;
+        while (current != null) {
+            ListNode next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+        return prev;
+    }
+}

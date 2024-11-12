@@ -1,0 +1,37 @@
+class Solution {
+
+    public String method1(String s) {
+        Map<Character, Integer> charToCount = new HashMap<Character, Integer>();
+        Map<Integer, List<Character>> countToFreq = new TreeMap<Integer, List<Character>>();
+        char[] arr = s.toCharArray();
+        String res = "";
+        for (char c : arr) {
+            if (!charToCount.containsKey(c)) {
+                charToCount.put(c, 1);
+            } else {
+                charToCount.put(c, charToCount.get(c) + 1);
+            }
+        }
+        for (Map.Entry<Character, Integer> entry : charToCount.entrySet()) {
+            Character key = entry.getKey();
+            Integer value = entry.getValue();
+            if (!countToFreq.containsKey(value)) {
+                List<Character> list = new ArrayList<Character>();
+                list.add(key);
+                countToFreq.put(value, list);
+            } else {
+                List<Character> lst = countToFreq.get(value);
+                lst.add(key);
+                countToFreq.put(value, lst);
+            }
+        }
+        List<Integer> decOrderFreqKeylist = new ArrayList<Integer>(countToFreq.keySet());
+        Collections.sort(decOrderFreqKeylist, Collections.reverseOrder());
+        for (int n : decOrderFreqKeylist) {
+            for (Character c : countToFreq.get(n)) {
+                res = res + IntStream.range(0, n).mapToObj(i -> c.toString()).collect(Collectors.joining(""));
+            }
+        }
+        return res;
+    }
+}

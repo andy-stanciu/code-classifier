@@ -1,0 +1,70 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        TreeNode var1 = search(root, key);
+        TreeNode parent = parent(root, key);
+        if (var1 == null)
+            return root;
+        if (var1.left == null && var1.right == null) {
+            if (parent == null)
+                return null;
+            if (parent.left == var1)
+                parent.left = null;
+            else if (parent.right == var1)
+                parent.right = null;
+        }
+        if (var1.left == null || var1.right == null) {
+            if (var1.left == null) {
+                if (parent == null)
+                    return var1.right;
+                if (parent.left == var1)
+                    parent.left = var1.right;
+                else if (parent.right == var1)
+                    parent.right = var1.right;
+            } else if (var1.right == null) {
+                if (parent == null)
+                    return var1.left;
+                if (parent.left == var1)
+                    parent.left = var1.left;
+                else if (parent.right == var1)
+                    parent.right = var1.left;
+            }
+        } else {
+            TreeNode succ = succ(var1.right);
+            var1.val = succ.val;
+            var1.right = method1(var1.right, succ.val);
+        }
+        return root;
+    }
+
+    public static TreeNode succ(TreeNode root) {
+        TreeNode temp = root;
+        while (temp.left != null) temp = temp.left;
+        return temp;
+    }
+
+    public static TreeNode search(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        if (root.val == key)
+            return root;
+        if (root.val < key)
+            return search(root.right, key);
+        else if (root.val > key)
+            return search(root.left, key);
+        return null;
+    }
+
+    public static TreeNode parent(TreeNode root, int key) {
+        TreeNode parent = null;
+        TreeNode temp = root;
+        while (temp != null && temp.val != key) {
+            parent = temp;
+            if (key < temp.val)
+                temp = temp.left;
+            else if (key > temp.val)
+                temp = temp.right;
+        }
+        return parent;
+    }
+}

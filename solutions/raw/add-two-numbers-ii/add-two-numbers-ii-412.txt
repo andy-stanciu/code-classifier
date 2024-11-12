@@ -1,0 +1,83 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        Map<ListNode, ListNode> prevs = new HashMap<>();
+        ListNode head = l1;
+        ListNode digitL1 = null;
+        ListNode digitL2 = null;
+        ListNode prev = null;
+        int over = 0;
+        while (head != null) {
+            prevs.put(head, prev);
+            prev = head;
+            head = head.next;
+        }
+        digitL1 = prev;
+        head = l2;
+        prev = null;
+        while (head != null) {
+            prevs.put(head, prev);
+            prev = head;
+            head = head.next;
+        }
+        digitL2 = prev;
+        while (digitL1 != null && digitL2 != null) {
+            int total = digitL1.val + digitL2.val + over;
+            over = 0;
+            if (total >= 10) {
+                total -= 10;
+                over = 1;
+            }
+            digitL1.val = total;
+            digitL2.val = total;
+            digitL1 = prevs.get(digitL1);
+            digitL2 = prevs.get(digitL2);
+        }
+        if (digitL1 != null) {
+            while (digitL1 != null) {
+                int total = digitL1.val + over;
+                over = 0;
+                if (total >= 10) {
+                    total -= 10;
+                    over = 1;
+                }
+                digitL1.val = total;
+                digitL1 = prevs.get(digitL1);
+            }
+            if (over == 1) {
+                return new ListNode(1, l1);
+            }
+            return l1;
+        } else if (digitL2 != null) {
+            while (digitL2 != null) {
+                int total = digitL2.val + over;
+                over = 0;
+                if (total >= 10) {
+                    total -= 10;
+                    over = 1;
+                }
+                digitL2.val = total;
+                digitL2 = prevs.get(digitL2);
+            }
+            if (over == 1) {
+                return new ListNode(1, l2);
+            }
+            return l2;
+        } else {
+            if (over == 1) {
+                return new ListNode(1, l1);
+            }
+            return l1;
+        }
+    }
+}

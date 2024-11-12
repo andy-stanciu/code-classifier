@@ -1,0 +1,75 @@
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        TreeNode parent = root;
+        TreeNode current = root;
+        boolean isLeftNode = true;
+        if (root == null) {
+            return null;
+        }
+        while (current.val != key) {
+            parent = current;
+            if (key < current.val) {
+                current = current.left;
+                isLeftNode = true;
+            } else {
+                current = current.right;
+                isLeftNode = false;
+            }
+            if (current == null) {
+                return root;
+            }
+        }
+        if (current.left == null && current.right == null) {
+            if (current == root) {
+                root = null;
+            } else if (isLeftNode) {
+                parent.left = null;
+            } else {
+                parent.right = null;
+            }
+        } else if (current.right == null) {
+            if (current == root) {
+                root = current.left;
+            } else if (isLeftNode) {
+                parent.left = current.left;
+            } else {
+                parent.right = current.left;
+            }
+        } else if (current.left == null) {
+            if (current == root) {
+                root = current.right;
+            } else if (isLeftNode) {
+                parent.left = current.right;
+            } else {
+                parent.right = current.right;
+            }
+        } else {
+            TreeNode successor = getSuccessor(current);
+            if (current == root)
+                root = successor;
+            else if (isLeftNode)
+                parent.left = successor;
+            else
+                parent.right = successor;
+            successor.left = current.left;
+        }
+        return root;
+    }
+
+    public static TreeNode getSuccessor(TreeNode delNode) {
+        TreeNode successorParent = delNode;
+        TreeNode successor = delNode;
+        TreeNode curr = delNode.right;
+        while (curr != null) {
+            successorParent = successor;
+            successor = curr;
+            curr = curr.left;
+        }
+        if (successor != delNode.right) {
+            successorParent.left = successor.right;
+            successor.right = delNode.right;
+        }
+        return successor;
+    }
+}

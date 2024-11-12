@@ -1,0 +1,32 @@
+class Solution {
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        ArrayList<Integer> list = new ArrayList<>();
+        ArrayList<List<Integer>> result = new ArrayList<>();
+        return sum(candidates, 0, 0, target, list, result);
+    }
+
+    static List<List<Integer>> sum(int[] candidates, int index, int sum, int target, List<Integer> list, List<List<Integer>> result) {
+        if (sum == target) {
+            result.add(new ArrayList<>(list));
+            return result;
+        }
+        for (int i = index; i < candidates.length; i++) {
+            //checking for duplicates(exit from current iteratio)
+            if (i > index && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+            //stop further checking
+            if (sum > target) {
+                return result;
+            }
+            list.add(candidates[i]);
+            sum(candidates, i + 1, sum + candidates[i], target, list, result);
+            //backtracking if the above recursion function wont work we\'ll perform backtracking
+            int num = list.size() - 1;
+            list.remove(num);
+        }
+        return result;
+    }
+}

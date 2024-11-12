@@ -1,0 +1,76 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    TreeNode method1(TreeNode param1, int key) {
+        // If the tree is empty, return a new node
+        if (param1 == null) {
+            return new TreeNode(key);
+        }
+        // Otherwise, recur down the tree
+        if (key < param1.val) {
+            param1.left = method1(param1.left, key);
+        } else if (key > param1.val) {
+            param1.right = method1(param1.right, key);
+        }
+        // return the (unchanged) node pointer
+        return param1;
+    }
+
+    int method2(TreeNode root) {
+        int var1 = root.val;
+        while (root.left != null) {
+            var1 = root.left.val;
+            root = root.left;
+        }
+        return var1;
+    }
+
+    // A utility function to do inorder traversal of BST
+    void method3(TreeNode root) {
+        if (root != null) {
+            method3(root.left);
+            System.out.print(root.val + " ");
+            method3(root.right);
+        }
+    }
+
+    public TreeNode method4(TreeNode root, int X) {
+        if (root == null) {
+            return root;
+        }
+        // If the key to be deleted is smaller than the root\'s key, then it lies in the left subtree
+        if (X < root.val) {
+            root.left = method4(root.left, X);
+        } else // If the key to be deleted is greater than the root\'s key, then it lies in the right subtree
+        if (X > root.val) {
+            root.right = method4(root.right, X);
+        } else // If key is same as root\'s key, then this is the node to be deleted
+        {
+            // Node with only one child or no child
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            }
+            // Node with two children: Get the inorder successor (smallest in the right subtree)
+            root.val = method2(root.right);
+            // Delete the inorder successor
+            root.right = method4(root.right, root.val);
+        }
+        return root;
+    }
+}

@@ -1,0 +1,52 @@
+class pair {
+
+    int x;
+
+    String y;
+
+    pair(int x, String y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<pair> st = new Stack<>();
+        int n = asteroids.length, f;
+        for (int i = n - 1; i >= 0; i--) {
+            f = 0;
+            String dir = (asteroids[i] >= 0) ? "right" : "left";
+            if (st.isEmpty() || st.peek().y == "right")
+                st.push(new pair(asteroids[i], dir));
+            else {
+                if (dir == "left")
+                    st.push(new pair(asteroids[i], dir));
+                else {
+                    while (Math.abs(st.peek().x) <= asteroids[i]) {
+                        if (Math.abs(st.peek().x) == asteroids[i]) {
+                            st.pop();
+                            break;
+                        } else {
+                            st.pop();
+                            if (st.isEmpty() || st.peek().y == "right") {
+                                f = 1;
+                                break;
+                            }
+                        }
+                    }
+                    if (f == 1)
+                        st.push(new pair(asteroids[i], dir));
+                }
+            }
+        }
+        int[] res = new int[st.size()];
+        int i = 0;
+        while (!st.isEmpty()) {
+            res[i++] = st.peek().x;
+            st.pop();
+        }
+        return res;
+    }
+}

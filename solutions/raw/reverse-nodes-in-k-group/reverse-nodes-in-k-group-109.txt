@@ -1,0 +1,62 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    // there are a few "hard points" in this solution, notably this line (both its place, its role and the proof that groupTail shall not be null there, ever)
+    //     ListNode nextGroup = groupTail.next
+    // and the final lists weaving and result management, and a few
+    // corner cases like an early return.
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode result = new ListNode();
+        ListNode prevGroup = result;
+        if (head == null || k < 2)
+            return head;
+        ListNode current = head;
+        while (current != null) {
+            ListNode groupHead = current;
+            ListNode groupTail = current;
+            // it took me HOURS to find out to start at ONE.
+            int groupCount = 1;
+            while (groupCount < k) {
+                groupTail = groupTail.next;
+                // it took me HOURS to find out this guard against taking the final NULL node
+                if (groupTail == null)
+                    break;
+                ++groupCount;
+            }
+            if (groupCount < k) {
+                // not enough items, return the rest as-is.
+                return result.next;
+            }
+            // guard item (groupTail is NEVER null -but- difficult to prove)
+            ListNode nextGroup = groupTail.next;
+            // inverse that
+            ListNode prev = null;
+            ListNode item = groupHead;
+            while (item != nextGroup) {
+                ListNode interim = item.next;
+                item.next = prev;
+                prev = item;
+                item = interim;
+            }
+            // not to forget advancing the loop
+            current = nextGroup;
+            // these are basics of sublists interweaving, don\'t forget (or items shall be lost):
+            // the final item of our group shall point to the next group
+            groupHead.next = nextGroup;
+            // list contingency
+            prevGroup.next = prev;
+            // advance the group for the next iteration, too
+            prevGroup = groupHead;
+        }
+        return result.next;
+    }
+}

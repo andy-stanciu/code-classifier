@@ -1,0 +1,54 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        // First find the node with the given value
+        if (key < root.val)
+            root.left = method1(root.left, key);
+        else if (key > root.val)
+            root.right = method1(root.right, key);
+        else {
+            // if we are on else condition means we found the node
+            if (root.left == null)
+                // if right is also null then return null i.e. case 1 else return right subtree case 2
+                return root.right;
+            else if (root.right == null)
+                // return left subtree case 2
+                return root.left;
+            else {
+                // This is case 3
+                // Find minvalue from right subtree to replace it with the node
+                root.val = method2(root.right);
+                // Delete that node we are going to replace in the right subtree also this time it will be easy to delete as it is a leaf node always.
+                root.right = method1(root.right, root.val);
+            }
+        }
+        return root;
+    }
+
+    public int method2(TreeNode root) {
+        // get minimum value in right subtree.
+        int var1 = root.val;
+        while (root.left != null) {
+            var1 = root.left.val;
+            root = root.left;
+        }
+        return var1;
+    }
+}

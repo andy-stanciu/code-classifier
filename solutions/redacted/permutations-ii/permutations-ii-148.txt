@@ -1,0 +1,35 @@
+class Solution {
+
+    List<List<Integer>> result = new ArrayList<>();
+
+    public void permute(int[] nums, int i, List<Integer> curr) {
+        if (i >= nums.length) {
+            result.add(new ArrayList<>(curr));
+            return;
+        }
+        boolean[] ans = new boolean[21];
+        for (int j = i; j < nums.length; j++) {
+            if (!ans[nums[j] + 10]) {
+                ans[nums[j] + 10] = true;
+            } else {
+                continue;
+            }
+            swap(nums, i, j);
+            curr.add(nums[i]);
+            permute(nums, i + 1, curr);
+            curr.remove(curr.size() - 1);
+            swap(nums, i, j);
+        }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int l = nums[i];
+        nums[i] = nums[j];
+        nums[j] = l;
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        permute(nums, 0, new ArrayList<>());
+        return result;
+    }
+}

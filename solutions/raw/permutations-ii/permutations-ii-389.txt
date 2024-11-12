@@ -1,0 +1,38 @@
+class Solution {
+
+    boolean[] used;
+
+    List<List<Integer>> res = new LinkedList<>();
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        if (nums == null || nums.length == 0)
+            return res;
+        //to prevent pick multiple times
+        used = new boolean[nums.length];
+        //to make sure the pick sequence for dup element. if i and i + 1 are same, to pick i + 1, have to make sure i already picked. Otherwise it will result in dup result
+        Arrays.sort(nums);
+        backtrack(nums, new LinkedList<>());
+        return res;
+    }
+
+    private void backtrack(int[] nums, LinkedList<Integer> list) {
+        //base case
+        if (list.size() == nums.length) {
+            res.add(new LinkedList<>(list));
+            return;
+        }
+        // i = 0 since every time need to scan from beginning to pick the available one
+        for (int i = 0; i < nums.length; i++) {
+            //if ever picked skip
+            //if i = i + 1, and i is not ever picked, then skip
+            //if i and i + 1 are same, to pick i + 1, have to make sure i already picked. Otherwise it will result in dup result
+            if (used[i] || (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]))
+                continue;
+            list.add(nums[i]);
+            used[i] = true;
+            backtrack(nums, list);
+            list.removeLast();
+            used[i] = false;
+        }
+    }
+}

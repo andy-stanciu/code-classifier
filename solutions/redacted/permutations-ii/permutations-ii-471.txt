@@ -1,0 +1,29 @@
+class Solution {
+
+    void solve(int[] a, Set<List<Integer>> ans, int i, boolean[] ds, List<Integer> output) {
+        if (output.size() >= a.length) {
+            ans.add(new ArrayList<Integer>(output));
+            return;
+        }
+        for (int j = 0; j < a.length; j++) {
+            if (!ds[j]) {
+                ds[j] = true;
+                output.add(a[j]);
+                solve(a, ans, i + 1, ds, output);
+                // backtrack
+                output.remove(output.size() - 1);
+                ds[j] = false;
+            }
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] a) {
+        // using HashSet for storing permutations
+        Set<List<Integer>> ans = new HashSet<>();
+        boolean[] ds = new boolean[a.length];
+        List<Integer> output = new ArrayList();
+        solve(a, ans, 0, ds, output);
+        // returning Set as ArrayList
+        return new ArrayList(ans);
+    }
+}

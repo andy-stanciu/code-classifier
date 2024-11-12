@@ -1,0 +1,41 @@
+class Solution {
+
+    public int compress(char[] chars) {
+        if (chars.length == 1)
+            return 1;
+        int count = 1;
+        int ans = 0;
+        int a = 0;
+        char current = chars[0];
+        for (int i = 1; i < chars.length; i++) {
+            if (chars[i] != current) {
+                chars[a++] = current;
+                ans++;
+                if (count > 1) {
+                    int digits = findDigitsInCount(count, chars, a);
+                    ans += digits;
+                    a += digits;
+                }
+                count = 1;
+                current = chars[i];
+            } else {
+                count++;
+            }
+        }
+        chars[a++] = current;
+        ans++;
+        if (count > 1) {
+            int lastdigits = findDigitsInCount(count, chars, a);
+            ans += lastdigits;
+        }
+        return ans;
+    }
+
+    private static int findDigitsInCount(int count, char[] chars, int a) {
+        String b = Integer.toString(count);
+        for (int i = 0; i < b.length(); i++) {
+            chars[a + i] = b.charAt(i);
+        }
+        return b.length();
+    }
+}

@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target, int index, List<Integer> inner, List<List<Integer>> outer) {
+        if (target == 0) {
+            outer.add(new ArrayList<>(inner));
+            return outer;
+        }
+        if (target < 0) {
+            return new ArrayList<>();
+        }
+        if (index >= candidates.length) {
+            return new ArrayList<>();
+        }
+        Integer prev = null;
+        for (int i = index; i < candidates.length; i++) {
+            if (prev == null || prev != candidates[i]) {
+                prev = candidates[i];
+                inner.add(candidates[i]);
+                method1(candidates, target - candidates[i], i + 1, inner, outer);
+                inner.remove(inner.size() - 1);
+            }
+        }
+        return outer;
+    }
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        return method1(candidates, target, 0, new ArrayList<>(), new ArrayList<>());
+    }
+}

@@ -1,0 +1,27 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        boolean[] picked = new boolean[nums.length];
+        Arrays.sort(nums);
+        rec(nums, ans, curr, picked);
+        return ans;
+    }
+
+    private void rec(int[] nums, List<List<Integer>> ans, List<Integer> curr, boolean[] picked) {
+        if (curr.size() == nums.length) {
+            ans.add(new ArrayList<>(curr));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (!picked[i] && (i == 0 || nums[i] != nums[i - 1] || picked[i - 1])) {
+                picked[i] = true;
+                curr.add(nums[i]);
+                rec(nums, ans, curr, picked);
+                curr.remove(curr.size() - 1);
+                picked[i] = false;
+            }
+        }
+    }
+}

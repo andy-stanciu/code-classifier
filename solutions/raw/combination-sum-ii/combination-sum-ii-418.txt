@@ -1,0 +1,32 @@
+class Solution {
+
+    List<List<Integer>> ans;
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        ans = new ArrayList<>();
+        int[] candidateFreq = new int[51];
+        for (int candidate : candidates) {
+            candidateFreq[candidate]++;
+        }
+        combSumHelper(candidateFreq, target, new ArrayList<>(), 1);
+        return ans;
+    }
+
+    private void combSumHelper(int[] cf, int target, List<Integer> curList, int startInd) {
+        if (target == 0) {
+            ans.add(curList.stream().toList());
+            return;
+        }
+        for (int i = startInd; i < cf.length; i++) {
+            if (target < i)
+                break;
+            if (cf[i] == 0)
+                continue;
+            curList.add(i);
+            cf[i]--;
+            combSumHelper(cf, target - i, curList, cf[i] == 0 ? i + 1 : i);
+            cf[i]++;
+            curList.removeLast();
+        }
+    }
+}

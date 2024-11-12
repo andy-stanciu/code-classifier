@@ -1,0 +1,83 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode head1 = reverse(l1);
+        ListNode head2 = reverse(l2);
+        ListNode node1 = head1;
+        ListNode node2 = head2;
+        ListNode pre1 = null;
+        ListNode pre2 = null;
+        int pre = 0;
+        while (node1 != null && node2 != null) {
+            int curSum = node1.val + node2.val + pre;
+            if (curSum >= 10) {
+                pre = 1;
+                curSum -= 10;
+            } else
+                pre = 0;
+            node1.val = curSum;
+            node2.val = curSum;
+            pre1 = node1;
+            pre2 = node2;
+            node1 = node1.next;
+            node2 = node2.next;
+        }
+        ListNode node = null;
+        if (node1 == null && node2 == null) {
+            if (pre > 0) {
+                pre1.next = new ListNode(1);
+            }
+            ListNode next = pre1.next;
+            reverse(head1);
+            return next == null ? l1 : next;
+        } else if (node1 == null) {
+            // use node2
+            node = node2;
+            l1 = l2;
+            head1 = head2;
+        } else {
+            // use node 1
+            node = node1;
+        }
+        pre1 = null;
+        while (node != null) {
+            int curSum = node.val + pre;
+            if (curSum >= 10) {
+                pre = 1;
+                curSum -= 10;
+            } else
+                pre = 0;
+            pre1 = node;
+            node.val = curSum;
+            node = node.next;
+        }
+        if (pre > 0) {
+            pre1.next = new ListNode(1);
+        }
+        ListNode next = pre1.next;
+        reverse(head1);
+        return next == null ? l1 : next;
+    }
+
+    private ListNode reverse(ListNode head) {
+        ListNode node = head;
+        ListNode pre = null;
+        while (node != null) {
+            ListNode next = node.next;
+            node.next = pre;
+            pre = node;
+            node = next;
+        }
+        return pre;
+    }
+}

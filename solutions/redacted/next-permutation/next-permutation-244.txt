@@ -1,0 +1,44 @@
+class Solution {
+
+    public void method1(int[] nums) {
+        //step 1 : find peak diff index(arr[prev]<arr[curr]) from reverse
+        //if no peak => reverse the arr
+        //step 2 : find smallest> than diff index and swap
+        //step 3: reverse from index
+        int pidx = -1;
+        for (int i = nums.length - 1; i >= 1; i--) {
+            //prev<curr
+            if (nums[i - 1] < nums[i]) {
+                pidx = i - 1;
+                break;
+            }
+        }
+        //decreasing order [3,2,1] case, answer is reverse [1,2,3]
+        if (pidx == -1) {
+            reverse(nums, 0, nums.length - 1);
+            return;
+        }
+        //from pidx- n, in reverse, find > pidx and swap
+        for (int i = nums.length - 1; i > pidx; i--) {
+            if (nums[i] > nums[pidx]) {
+                int temp = nums[i];
+                nums[i] = nums[pidx];
+                nums[pidx] = temp;
+                break;
+            }
+        }
+        //reverse from pidx
+        reverse(nums, pidx + 1, nums.length - 1);
+        return;
+    }
+
+    public void reverse(int[] arr, int s, int e) {
+        while (s < e) {
+            int temp = arr[s];
+            arr[s] = arr[e];
+            arr[e] = temp;
+            s++;
+            e--;
+        }
+    }
+}

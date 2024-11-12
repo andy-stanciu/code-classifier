@@ -1,0 +1,39 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null) {
+            // Base case: empty tree
+            return null;
+        }
+        if (root.val > key) {
+            root.left = method1(root.left, key);
+        } else if (root.val < key) {
+            root.right = method1(root.right, key);
+        } else {
+            // root.val == key
+            // case 1: delete leaf node
+            if (root.left == null && root.right == null) {
+                return null;
+            }
+            // case 2: one child is null
+            if (root.left == null) {
+                return root.right;
+            }
+            if (root.right == null) {
+                return root.left;
+            }
+            // case 3: node has two children
+            TreeNode IS = method2(root.right);
+            root.val = IS.val;
+            root.right = method1(root.right, IS.val);
+        }
+        return root;
+    }
+
+    public static TreeNode method2(TreeNode root) {
+        while (root.left != null) {
+            root = root.left;
+        }
+        return root;
+    }
+}

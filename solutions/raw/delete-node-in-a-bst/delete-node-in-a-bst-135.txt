@@ -1,0 +1,91 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        //searching root to delet
+        //finding that nodes parent
+        //finding succ value
+        //no child
+        //one child
+        //two child
+        TreeNode node = search(root, key);
+        TreeNode parent = parent(root, key);
+        if (node == null)
+            return root;
+        if (node.left == null && node.right == null) {
+            if (parent == null)
+                return null;
+            if (parent.left == node)
+                parent.left = null;
+            else if (parent.right == node)
+                parent.right = null;
+        }
+        if (node.left == null || node.right == null) {
+            if (node.left == null) {
+                if (parent == null)
+                    return node.right;
+                if (parent.left == node)
+                    parent.left = node.right;
+                else if (parent.right == node)
+                    parent.right = node.right;
+            } else if (node.right == null) {
+                if (parent == null)
+                    return node.left;
+                if (parent.left == node)
+                    parent.left = node.left;
+                else if (parent.right == node)
+                    parent.right = node.left;
+            }
+        } else {
+            TreeNode succ = succ(node.right);
+            node.val = succ.val;
+            node.right = deleteNode(node.right, succ.val);
+        }
+        return root;
+    }
+
+    public static TreeNode succ(TreeNode root) {
+        TreeNode temp = root;
+        while (temp.left != null) temp = temp.left;
+        return temp;
+    }
+
+    public static TreeNode search(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        if (root.val == key)
+            return root;
+        if (root.val < key)
+            return search(root.right, key);
+        else if (root.val > key)
+            return search(root.left, key);
+        return null;
+    }
+
+    public static TreeNode parent(TreeNode root, int key) {
+        TreeNode parent = null;
+        TreeNode temp = root;
+        while (temp != null && temp.val != key) {
+            parent = temp;
+            if (key < temp.val)
+                temp = temp.left;
+            else if (key > temp.val)
+                temp = temp.right;
+        }
+        return parent;
+    }
+}

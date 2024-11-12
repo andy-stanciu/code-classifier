@@ -1,0 +1,55 @@
+public class Solution {
+
+    // Method to reverse an array
+    public static int[] reverseArray(int[] array) {
+        int left = 0;
+        int right = array.length - 1;
+        while (left < right) {
+            // Swap elements
+            int temp = array[left];
+            array[left] = array[right];
+            array[right] = temp;
+            // Move towards the middle
+            left++;
+            right--;
+        }
+        return array;
+    }
+
+    // Method to handle asteroid collision
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> stack = new Stack<>();
+        boolean isEqual = false;
+        for (int asteroid : asteroids) {
+            if (asteroid < 0) {
+                if (stack.isEmpty()) {
+                    stack.push(asteroid);
+                } else {
+                    while (!stack.isEmpty() && stack.peek() > 0 && stack.peek() <= Math.abs(asteroid)) {
+                        if (stack.peek() == Math.abs(asteroid)) {
+                            isEqual = true;
+                            stack.pop();
+                            break;
+                        }
+                        stack.pop();
+                    }
+                    if ((stack.isEmpty() && !isEqual) || (!stack.isEmpty() && stack.peek() < 0 && !isEqual)) {
+                        stack.push(asteroid);
+                    }
+                    if (isEqual) {
+                        isEqual = false;
+                    }
+                }
+            } else {
+                stack.push(asteroid);
+            }
+        }
+        int[] result = new int[stack.size()];
+        int index = 0;
+        while (!stack.isEmpty()) {
+            result[index++] = stack.pop();
+        }
+        // Reverse the result array before returning
+        return reverseArray(result);
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        //Draw every piece to understand this.
+        // if root is null or root is key
+        if (root == null || (root.left == null && root.right == null && root.val == key))
+            return null;
+        return dfs(root, key);
+    }
+
+    TreeNode dfs(TreeNode param1, int key) {
+        if (param1 == null) {
+            // put this for all tree quesitons without thinking  :P
+            return null;
+        }
+        if (key < param1.val) {
+            //if key is smaller go to left to find key
+            param1.left = dfs(param1.left, key);
+        } else if (key > param1.val) {
+            //if key is bigger go to right to find key
+            param1.right = dfs(param1.right, key);
+        } else {
+            //once key is find
+            if (param1.left == null) {
+                //if its left side is null return right side
+                return param1.right;
+            } else if (param1.right == null) {
+                //if right side is null return left side
+                return param1.left;
+            } else {
+                //left iterate to the left most node in the right side of keynode
+                TreeNode temp = param1.right;
+                while (temp.left != null) {
+                    temp = temp.left;
+                }
+                //make that left most left pointer to node.left pointer
+                temp.left = param1.left;
+                //return node\'s right pointer because now it can serve as the root node,
+                return param1.right;
+            }
+        }
+        return param1;
+    }
+}

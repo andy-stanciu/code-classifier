@@ -1,0 +1,28 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        int n = asteroids.length;
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && (stack.peek() > 0 && asteroids[i] < 0)) {
+                int popped = stack.pop();
+                // If both are equal in size just skip and move to next
+                // asteroid[i] is set to 0 to denote that we have to skip this element
+                // It is set to 0 because in constarints its mentioned that asteroid[i] can never be 0 so we are safe to use 0.
+                if (Math.abs(popped) == Math.abs(asteroids[i])) {
+                    asteroids[i] = 0;
+                    break;
+                }
+                asteroids[i] = Math.abs(popped) > Math.abs(asteroids[i]) ? popped : asteroids[i];
+            }
+            if (asteroids[i] != 0)
+                stack.push(asteroids[i]);
+        }
+        int len = stack.size();
+        int[] ans = new int[len];
+        for (int i = len - 1; i >= 0; i--) {
+            ans[i] = stack.pop();
+        }
+        return ans;
+    }
+}

@@ -1,0 +1,37 @@
+class Solution {
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        // sort by asc
+        Arrays.sort(candidates);
+        List<List<Integer>> res = new ArrayList<>();
+        find(0, candidates, target, new ArrayList<Integer>(), res, new boolean[candidates.length]);
+        return res;
+    }
+
+    // use a bool array to indicate whehter the element is duplcated
+    private void find(int start, int[] candidates, int target, List<Integer> ls, List<List<Integer>> res, boolean[] used) {
+        if (target == 0) {
+            res.add(new ArrayList<>(ls));
+            return;
+        }
+        for (int i = start; i < candidates.length; i++) {
+            if (candidates[i] > target) {
+                // As the array is sorted by asc
+                break;
+            }
+            if (i > 0 && candidates[i - 1] == candidates[i] && !used[i - 1]) {
+                // dedup
+                continue;
+            }
+            if (candidates[i] <= target) {
+                ls.add(candidates[i]);
+                // backtrace
+                used[i] = true;
+                find(i + 1, candidates, target - candidates[i], ls, res, used);
+                // backtrace
+                used[i] = false;
+                ls.remove(ls.size() - 1);
+            }
+        }
+    }
+}

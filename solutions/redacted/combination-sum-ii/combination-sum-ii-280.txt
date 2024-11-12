@@ -1,0 +1,35 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        // Sort the array to handle duplicates
+        Arrays.sort(candidates);
+        List<List<Integer>> ans = new ArrayList<>();
+        // Start the backtracking process
+        backTrack(candidates, target, ans, new ArrayList<>(), 0);
+        // Return the final list of combinations
+        return ans;
+    }
+
+    private void backTrack(int[] candidates, int target, List<List<Integer>> ans, List<Integer> list, int start) {
+        // If the target becomes negative, no valid combination
+        if (target < 0)
+            return;
+        if (target == 0) {
+            // If the target is zero, we found a valid combination
+            // Add the current combination to the answer
+            ans.add(new ArrayList<>(list));
+            return;
+        }
+        for (int i = start; i < candidates.length; i++) {
+            // Skip duplicates
+            if (i > start && candidates[i] == candidates[i - 1])
+                continue;
+            // Include candidates[i] in the combination
+            list.add(candidates[i]);
+            // Recur with the remaining target
+            backTrack(candidates, target - candidates[i], ans, list, i + 1);
+            // Backtrack by removing the last element
+            list.remove(list.size() - 1);
+        }
+    }
+}

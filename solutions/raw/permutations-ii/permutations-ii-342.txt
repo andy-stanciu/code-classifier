@@ -1,0 +1,41 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        final List<List<Integer>> sol = new ArrayList<>();
+        Arrays.sort(nums);
+        generateUniquePermutations(nums, sol, 0);
+        return sol;
+    }
+
+    private void generateUniquePermutations(final int[] nums, final List<List<Integer>> sol, final int start) {
+        if (start == nums.length)
+            sol.add(toList(nums));
+        for (int index = start; index < nums.length; index++) {
+            if (isDuplicate(nums, start, index))
+                continue;
+            else {
+                swap(nums, start, index);
+                generateUniquePermutations(nums, sol, start + 1);
+                swap(nums, start, index);
+            }
+        }
+    }
+
+    private List<Integer> toList(final int[] nums) {
+        final List<Integer> list = new ArrayList<>();
+        for (int num : nums) list.add(num);
+        return list;
+    }
+
+    private boolean isDuplicate(final int[] nums, int start, int index) {
+        for (int current = start; current < index; current++) if (nums[current] == nums[index])
+            return true;
+        return false;
+    }
+
+    private void swap(final int[] nums, final int i, final int j) {
+        final int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}

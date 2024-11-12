@@ -1,0 +1,79 @@
+class Solution {
+
+    private static class UniqueCombination_Subset {
+
+        Set<List<Integer>> subsets;
+
+        public UniqueCombination_Subset() {
+        }
+
+        public Set<List<Integer>> getSubsets() {
+            return subsets;
+        }
+
+        public void setSubsets(Set<List<Integer>> subsets) {
+            this.subsets = subsets;
+        }
+    }
+
+    boolean[][] visited;
+
+    UniqueCombination_Subset[][] memoization_dp;
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        if (candidates == null || candidates.length == 0) {
+            return new ArrayList<>();
+        }
+        // Its key - so that ArrayList.equals work - as equals method not only checks for
+        // the elements and size, but also the order. So, sorting ensures Hashset can
+        // remove duplicates.
+        Arrays.sort(candidates);
+        visited = new boolean[candidates.length][target + 1];
+        memoization_dp = new UniqueCombination_Subset[candidates.length][target + 1];
+        combinationSum2_dp(candidates, candidates.length - 1, target);
+        UniqueCombination_Subset uniqueCombinationSubset = memoization_dp[candidates.length - 1][target];
+        return uniqueCombinationSubset != null ? new ArrayList<>(uniqueCombinationSubset.getSubsets()) : new ArrayList<>();
+    }
+
+    private void combinationSum2_dp(int[] candidates, int index, int target) {
+        if (index < 0) {
+            return;
+        }
+        if (visited[index][target]) {
+            return;
+        }
+        visited[index][target] = true;
+        Set<List<Integer>> subsets = new HashSet<>();
+        if (target == candidates[index]) {
+            List<Integer> subset = new ArrayList<>();
+            subset.add(candidates[index]);
+            subsets.add(subset);
+        }
+        if (target > candidates[index] && index > 0) {
+            combinationSum2_dp(candidates, index - 1, target - candidates[index]);
+            UniqueCombination_Subset uniqueCombinationSubset = memoization_dp[index - 1][target - candidates[index]];
+            if (uniqueCombinationSubset != null) {
+                uniqueCombinationSubset.getSubsets().forEach(set -> {
+                    List<Integer> newSet = new ArrayList<>(set);
+                    newSet.add(candidates[index]);
+                    subsets.add(newSet);
+                });
+            }
+        }
+        if (index > 0) {
+            combinationSum2_dp(candidates, index - 1, target);
+            UniqueCombination_Subset uniqueCombinationSubset = memoization_dp[index - 1][target];
+            if (uniqueCombinationSubset != null) {
+                uniqueCombinationSubset.getSubsets().forEach(set -> {
+                    List<Integer> newSet = new ArrayList<>(set);
+                    subsets.add(newSet);
+                });
+            }
+        }
+        if (subsets.size() > 0) {
+            UniqueCombination_Subset uniqueCombinationSubset = new UniqueCombination_Subset();
+            uniqueCombinationSubset.setSubsets(subsets);
+            memoization_dp[index][target] = uniqueCombinationSubset;
+        }
+    }
+}

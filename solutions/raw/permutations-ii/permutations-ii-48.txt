@@ -1,0 +1,35 @@
+class Solution {
+
+    HashSet<List<Integer>> set = new HashSet<List<Integer>>();
+
+    public void solve(int[] nums, int index, List<List<Integer>> ans) {
+        if (index >= nums.length) {
+            List<Integer> current = new ArrayList<>();
+            for (int num : nums) {
+                current.add(num);
+            }
+            if (!set.contains(current)) {
+                set.add(current);
+                ans.add(current);
+            }
+            return;
+        }
+        for (int i = index; i < nums.length; i++) {
+            int temp = nums[i];
+            nums[i] = nums[index];
+            nums[index] = temp;
+            // Recurse with the next index
+            solve(nums, index + 1, ans);
+            // Backtrack by swapping back
+            temp = nums[i];
+            nums[i] = nums[index];
+            nums[index] = temp;
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        solve(nums, 0, ans);
+        return ans;
+    }
+}

@@ -1,0 +1,28 @@
+class Solution {
+
+    public int eraseOverlapIntervals(int[][] intervals) {
+        //First sort the intervals array from their ending time.
+        Arrays.sort(intervals, (a, b) -> a[1] - b[1]);
+        //Now consider the 0th element as base for the start and end.
+        //since this is a greedy algo.
+        int start = intervals[0][0];
+        int end = intervals[0][1];
+        int count = 0;
+        for (int i = 1; i < intervals.length; i++) {
+            //At any time, if start of the next array is greater than or equals
+            // to the current end.
+            // it means we can club the 2 intervals
+            //if it is less than end, we simply can remove the whole interval.
+            if (intervals[i][0] >= end) {
+                //once we find the end intervals to be greater than or equals to curr
+                // start, we update the end to have the maximum
+                //between the new interval or existing end.
+                end = Math.max(end, intervals[i][1]);
+            } else {
+                //The count is a track of the intervals that can be removed.
+                count++;
+            }
+        }
+        return count;
+    }
+}

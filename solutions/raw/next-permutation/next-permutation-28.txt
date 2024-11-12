@@ -1,0 +1,50 @@
+class Solution {
+
+    public void nextPermutation(int[] nums) {
+        // finding index of pivot element
+        int pivot_index = -1;
+        for (int i = nums.length - 2; i >= 0; i--) {
+            if (nums[i] < nums[i + 1]) {
+                pivot_index = i;
+                break;
+            }
+        }
+        if (pivot_index == -1) {
+            nums = reverse_array(nums, 0, nums.length - 1);
+        } else {
+            // finding index of right most element which is greater than pivot
+            int right_most_index = 0;
+            for (int i = nums.length - 1; i > pivot_index; i--) {
+                if (nums[i] > nums[pivot_index]) {
+                    right_most_index = i;
+                    break;
+                }
+            }
+            // swapping right most and pivot element
+            int temp = nums[pivot_index];
+            nums[pivot_index] = nums[right_most_index];
+            nums[right_most_index] = temp;
+            // reversing the order of array from pivot_index + 1 till nums.length
+            int end = nums.length - 1;
+            int start = pivot_index + 1;
+            nums = reverse_array(nums, start, end);
+        }
+        // final next lexicographically greater permutation of given array
+        for (int i = 0; i < nums.length; i++) {
+            System.out.print(nums[i] + " ");
+        }
+    }
+
+    public int[] reverse_array(int[] nums, int start, int end) {
+        while (start < end) {
+            // Swap elements at pivot_index+1 and end
+            int temp1 = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp1;
+            // Move towards the middle
+            start++;
+            end--;
+        }
+        return nums;
+    }
+}

@@ -1,0 +1,48 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+/*steps;
+1. get the total number of the linkedlist
+2. reverse k nodes traversely, n - k for each time
+
+ */
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        //1. get n
+        int n = 0;
+        ListNode c = head;
+        while (c != null) {
+            c = c.next;
+            n++;
+        }
+        /*
+       dummy: to keep track of the begining of the list
+       preHead: the node before that each k group
+       curr: current node
+       prev: previous node of current node
+        */
+        ListNode dummy = new ListNode(0, head), preHead = dummy, curr = head, prev = dummy;
+        while (n >= k) {
+            for (int i = 0; i < k; i++) {
+                ListNode next = curr.next;
+                curr.next = prev;
+                prev = curr;
+                curr = next;
+            }
+            ListNode tail = preHead.next;
+            tail.next = curr;
+            preHead.next = prev;
+            preHead = tail;
+            n -= k;
+        }
+        return dummy.next;
+    }
+}

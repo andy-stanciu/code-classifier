@@ -1,0 +1,31 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        List<List<Integer>> results = new ArrayList<>();
+        // Sort to handle duplicates easily
+        Arrays.sort(candidates);
+        backtrack(results, new ArrayList<>(), candidates, target, 0);
+        return results;
+    }
+
+    private void backtrack(List<List<Integer>> results, List<Integer> tempList, int[] candidates, int remain, int start) {
+        if (remain < 0) {
+            // If remaining sum is negative, no need to proceed
+            return;
+        } else if (remain == 0) {
+            // Found a combination
+            results.add(new ArrayList<>(tempList));
+        } else {
+            for (int i = start; i < candidates.length; i++) {
+                // Skip duplicates
+                if (i > start && candidates[i] == candidates[i - 1])
+                    continue;
+                tempList.add(candidates[i]);
+                // i + 1 because each element can only be used once
+                backtrack(results, tempList, candidates, remain - candidates[i], i + 1);
+                // Backtrack
+                tempList.remove(tempList.size() - 1);
+            }
+        }
+    }
+}

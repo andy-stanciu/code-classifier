@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        // we sort the array so that the numbers would be adjacent
+        // we can find the duplicate numbers
+        Arrays.sort(candidates);
+        method2(candidates, target, 0, ans, new ArrayList<>());
+        return ans;
+    }
+
+    public void method2(int[] candidates, int target, int index, List<List<Integer>> ans, List<Integer> temp) {
+        if (target == 0) {
+            ans.add(new ArrayList<>(temp));
+            return;
+        }
+        for (int i = index; i < candidates.length; i++) {
+            // if number is repeating do not pick
+            if (i > index && candidates[i] == candidates[i - 1])
+                continue;
+            // if the value is greater than target break
+            if (candidates[i] > target)
+                break;
+            //else pick
+            temp.add(candidates[i]);
+            method2(candidates, target - candidates[i], i + 1, ans, temp);
+            temp.remove(temp.size() - 1);
+        }
+    }
+}

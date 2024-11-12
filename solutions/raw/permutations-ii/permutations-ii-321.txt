@@ -1,0 +1,35 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Set visited = new HashSet<Integer>();
+        List<List<Integer>> sol = new ArrayList<List<Integer>>();
+        if (nums.length == 1) {
+            List<Integer> l = new ArrayList<Integer>();
+            l.add(nums[0]);
+            sol.add(l);
+            return sol;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            int first = nums[i];
+            if (!visited.add(first))
+                continue;
+            int[] cpyRm = (cpyRemove(nums, i));
+            for (List<Integer> l : permuteUnique(cpyRm)) {
+                l.add(first);
+                sol.add(l);
+            }
+        }
+        return sol;
+    }
+
+    public int[] cpyRemove(int[] nums, int index) {
+        int[] newNums = new int[nums.length - 1];
+        boolean flag = false;
+        for (int i = 0; i < nums.length - 1; i++) {
+            if (i == index)
+                flag = true;
+            newNums[i] = (flag) ? nums[i + 1] : nums[i];
+        }
+        return newNums;
+    }
+}

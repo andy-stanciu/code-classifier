@@ -1,0 +1,38 @@
+class Solution {
+
+    public TreeNode MinimumNode(TreeNode root) {
+        if (root.left == null) {
+            return root;
+        } else {
+            return MinimumNode(root.left);
+        }
+    }
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        if (root.val > key) {
+            root.left = deleteNode(root.left, key);
+        } else if (key > root.val) {
+            root.right = deleteNode(root.right, key);
+        } else {
+            if (root.left != null && root.right != null) {
+                // Deleting node which have 2 children
+                TreeNode MinRight = MinimumNode(root.right);
+                root.val = MinRight.val;
+                root.right = deleteNode(root.right, MinRight.val);
+            } else if (root.left != null) {
+                // have only left child
+                root = root.left;
+            } else if (root.right != null) {
+                // have only right child
+                root = root.right;
+            } else {
+                // deleting leaf node
+                root = null;
+            }
+        }
+        return root;
+    }
+}

@@ -1,0 +1,49 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        return permute(nums, 0);
+    }
+
+    public List<List<Integer>> permute(int[] nums, int index) {
+        if (index == nums.length - 1) {
+            List<List<Integer>> singleEl = new ArrayList<>();
+            List<Integer> list = Arrays.asList(nums[index]);
+            singleEl.add(list);
+            return singleEl;
+        }
+        List<List<Integer>> var1 = permute(nums, index + 1);
+        List<List<Integer>> res = new ArrayList<>();
+        Set<Integer> used = new HashSet<>();
+        int element = nums[index];
+        for (List<Integer> list : var1) {
+            for (int i = 0; i <= list.size(); i++) {
+                List<Integer> clone = new ArrayList<>(list);
+                clone.add(i, element);
+                if (!used.contains(getChecksum(clone))) {
+                    used.add(getChecksum(clone));
+                    res.add(clone);
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
+     * generates the "hashcode" for the list of integers
+     * for this particular task\'s restrictions
+     */
+    public int getChecksum(List<Integer> list) {
+        // tried to make it prime number
+        int multiplier = 1000301;
+        // just too keep us positive, for no reason
+        int divider = 1390037211;
+        // numbers are taken from [-10;10]
+        int zeroAvoidance = 25;
+        int checksum = 0;
+        for (Integer element : list) {
+            element += zeroAvoidance;
+            checksum = (checksum * multiplier + element) % divider;
+        }
+        return checksum;
+    }
+}

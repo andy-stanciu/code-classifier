@@ -1,0 +1,39 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        int n = asteroids.length;
+        int[] stack = new int[n];
+        int top = -1;
+        boolean add = true, isTopPositive = false;
+        for (int i = 0; i < n; i++) {
+            add = true;
+            boolean isNumPositive = asteroids[i] > 0 ? true : false;
+            if (top != -1) {
+                isTopPositive = asteroids[stack[top]] > 0 ? true : false;
+            }
+            while (top != -1 && isNumPositive != isTopPositive && isTopPositive) {
+                if (Math.abs(asteroids[stack[top]]) > Math.abs(asteroids[i])) {
+                    add = false;
+                    break;
+                } else if (Math.abs(asteroids[stack[top]]) == Math.abs(asteroids[i])) {
+                    add = false;
+                    top--;
+                    break;
+                } else {
+                    top--;
+                    //  add = true;
+                }
+                if (top != -1) {
+                    isTopPositive = asteroids[stack[top]] > 0 ? true : false;
+                }
+            }
+            if (add == true)
+                stack[++top] = i;
+        }
+        int[] result = new int[top + 1];
+        for (int i = 0; i <= top; i++) {
+            result[i] = asteroids[stack[i]];
+        }
+        return result;
+    }
+}

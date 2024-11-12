@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        // Sort to handle duplicates efficiently
+        Arrays.sort(candidates);
+        backtrack(candidates, 0, target, new ArrayList<>(), result);
+        return result;
+    }
+
+    private static void backtrack(int[] nums, int start, int target, List<Integer> current, List<List<Integer>> result) {
+        if (target == 0) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+        for (int i = start; i < nums.length; i++) {
+            if (nums[i] > target) {
+                // Early termination if the number exceeds the target
+                break;
+            }
+            if (i > start && nums[i] == nums[i - 1]) {
+                // Skip duplicates
+                continue;
+            }
+            current.add(nums[i]);
+            backtrack(nums, i + 1, target - nums[i], current, result);
+            current.remove(current.size() - 1);
+        }
+    }
+}

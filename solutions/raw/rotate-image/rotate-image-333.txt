@@ -1,0 +1,47 @@
+class Solution {
+
+    public void rotate(int[][] matrix) {
+        // Calculate the last row and last column indices
+        int row = matrix.length - 1;
+        int col = matrix[0].length - 1;
+        // Step 1: Transpose the matrix
+        // Transpose means swapping matrix[i][j] with matrix[j][i] for i < j
+        // This turns rows into columns and columns into rows
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = i + 1; j < matrix[0].length; j++) {
+                // Swap elements across the diagonal
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+        // Step 2: Reverse each column to achieve a 90-degree clockwise rotation
+        // Initialize pointers for the leftmost and rightmost columns
+        int left = 0;
+        int right = matrix.length - 1;
+        // leftTop and rightTop are row pointers for the current left and right columns
+        int leftTop = 0;
+        int rightTop = 0;
+        // Continue swapping columns until all columns have been reversed
+        while (left <= right) {
+            // Swap the corresponding elements in the left and right columns row by row
+            while (leftTop <= row && rightTop <= row) {
+                // Store the left column element
+                int temp = matrix[leftTop][left];
+                // Replace with the right column element
+                matrix[leftTop][left] = matrix[rightTop][right];
+                // Swap elements
+                matrix[rightTop][right] = temp;
+                // Move to the next row in both left and right columns
+                leftTop++;
+                rightTop++;
+            }
+            // Reset the row pointers after finishing the current column swap
+            leftTop = 0;
+            rightTop = 0;
+            // Move to the next column for swapping
+            left++;
+            right--;
+        }
+    }
+}

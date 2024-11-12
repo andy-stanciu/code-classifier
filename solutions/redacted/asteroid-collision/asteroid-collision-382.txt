@@ -1,0 +1,45 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < param1.length; i++) {
+            //blind insertion if stack is empty of if asteroids[i] >0
+            if (st.isEmpty() || param1[i] > 0) {
+                st.push(param1[i]);
+            } else {
+                while (!st.isEmpty()) {
+                    int top = st.peek();
+                    if (top < 0) {
+                        st.push(param1[i]);
+                        //if the peek value of stack is also negative with the upcoming array number also negative
+                        break;
+                    }
+                    int Magnitude = Math.abs(param1[i]);
+                    if (Magnitude == top) {
+                        st.pop();
+                        // if it is equal pop the existing and dont allow the upcoming
+                        break;
+                    } else if (Magnitude < top) {
+                        // if the upcoming value is less than the existing top dont allow it to enter
+                        break;
+                    } else {
+                        st.pop();
+                        if (st.isEmpty()) {
+                            st.push(param1[i]);
+                            break;
+                        }
+                        // if the upcoming value is more than exisiting top pop the exisiting top if stack is empty enter the upcoming value
+                    }
+                }
+            }
+        }
+        //spill into array
+        int[] var1 = new int[st.size()];
+        int index = var1.length - 1;
+        while (!st.isEmpty()) {
+            var1[index--] = st.pop();
+        }
+        //spilled all the values of asteroid after collision
+        return var1;
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = helperPermuteUnique(nums, new ArrayList<>());
+        return res;
+    }
+
+    public List<List<Integer>> helperPermuteUnique(int[] nums, ArrayList<Integer> combination) {
+        if (nums.length == 0) {
+            List<List<Integer>> bc = new ArrayList<>();
+            List<Integer> r = new ArrayList<>();
+            bc.add(r);
+            return bc;
+        }
+        List<List<Integer>> result = new ArrayList<>();
+        int current = nums[0];
+        int[] remArr = Arrays.copyOfRange(nums, 1, nums.length);
+        List<List<Integer>> comb = helperPermuteUnique(remArr, combination);
+        for (List<Integer> list : comb) {
+            for (int i = 0; i <= list.size(); i++) {
+                List<Integer> a = new ArrayList<>(list);
+                a.add(i, current);
+                boolean isPresent = false;
+                for (List<Integer> r : result) {
+                    int count = 0;
+                    for (int k = 0; k < r.size(); k++) {
+                        if (a.get(k) == r.get(k)) {
+                            ++count;
+                        } else {
+                            break;
+                        }
+                    }
+                    if (count == r.size()) {
+                        isPresent = true;
+                        break;
+                    }
+                }
+                if (!isPresent)
+                    result.add(a);
+            }
+        }
+        return result;
+    }
+}

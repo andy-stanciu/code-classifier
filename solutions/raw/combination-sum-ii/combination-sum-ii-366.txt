@@ -1,0 +1,42 @@
+class Solution {
+
+    public List<List<Integer>> combinationSum2(int[] arr, int target) {
+        // so now here we have to to check for the combination whethere we got the sum equal to that  number or not
+        // so here we will subtract from the target and if the target is equal to zero than we have got our condition
+        Arrays.sort(arr);
+        List<Integer> curr = new ArrayList<>();
+        List<List<Integer>> res = new ArrayList<>();
+        helper(0, arr, target, curr, res);
+        return res;
+    }
+
+    void helper(int index, int[] arr, int target, List<Integer> curr, List<List<Integer>> res) {
+        // so now here if at the any point if the target is equal to zero than we have to add it and if it become
+        // negaitve then we have to subtract is from the sum here
+        if (0 == target) {
+            res.add(new ArrayList<>(curr));
+            return;
+        }
+        if (target < 0) {
+            return;
+        }
+        // so now here othewise we have to chek for it
+        for (int i = index; i < arr.length; i++) {
+            // so now here we have to add the elmetn
+            if (i > index && arr[i] == arr[i - 1]) {
+                continue;
+            }
+            // so now if any of the elment is greater than the target so it means that we we can \'t  take it
+            // and as it is sorted the other value will be greater than it
+            if (arr[i] > target) {
+                break;
+            }
+            curr.add(arr[i]);
+            // so now here we have to subtract  this number in the target also
+            // so now here we have to call the recursion function here
+            helper(i + 1, arr, target - arr[i], curr, res);
+            // so now here we have to remove for the backtrack here so now we have to also remove the value
+            curr.remove(curr.size() - 1);
+        }
+    }
+}

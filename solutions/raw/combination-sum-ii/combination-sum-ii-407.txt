@@ -1,0 +1,26 @@
+class Solution {
+
+    public static void func(int idx, int[] arr, int target, List<List<Integer>> result, List<Integer> ds) {
+        if (target == 0) {
+            result.add(new ArrayList<>(ds));
+        }
+        for (int i = idx; i < arr.length; i++) {
+            // Skip duplicates to avoid redundant combinations
+            if (i > idx && arr[i] == arr[i - 1])
+                continue;
+            if (arr[i] > target)
+                break;
+            ds.add(arr[i]);
+            func(i + 1, arr, target - arr[i], result, ds);
+            ds.remove(ds.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        // Sorting for optimization
+        Arrays.sort(candidates);
+        func(0, candidates, target, result, new ArrayList<>());
+        return result;
+    }
+}

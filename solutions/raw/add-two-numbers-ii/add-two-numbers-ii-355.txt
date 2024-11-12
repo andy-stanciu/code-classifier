@@ -1,0 +1,74 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        //make both the lists reverse
+        l1 = reverse(l1);
+        l2 = reverse(l2);
+        ListNode temp1 = l1;
+        ListNode temp2 = l2;
+        ListNode node = new ListNode(-1);
+        ListNode temp = node;
+        int carr = 0;
+        while (temp1 != null && temp2 != null) {
+            int val1 = temp1.val;
+            int val2 = temp2.val;
+            int val = (val1 + val2 + carr) % 10;
+            carr = (val1 + val2 + carr) / 10;
+            ListNode n = new ListNode(val);
+            temp.next = n;
+            temp = temp.next;
+            temp1 = temp1.next;
+            temp2 = temp2.next;
+        }
+        while (temp1 != null) {
+            int val1 = temp1.val;
+            int val = (val1 + carr) % 10;
+            carr = (val1 + carr) / 10;
+            ListNode n = new ListNode(val);
+            temp.next = n;
+            temp = temp.next;
+            temp1 = temp1.next;
+        }
+        while (temp2 != null) {
+            int val2 = temp2.val;
+            int val = (val2 + carr) % 10;
+            carr = (val2 + carr) / 10;
+            ListNode n = new ListNode(val);
+            temp.next = n;
+            temp = temp.next;
+            temp2 = temp2.next;
+        }
+        if (carr != 0) {
+            ListNode n = new ListNode(carr);
+            temp.next = n;
+            temp = temp.next;
+        }
+        node = node.next;
+        node = reverse(node);
+        return node;
+    }
+
+    ListNode reverse(ListNode node) {
+        ListNode prev = null;
+        ListNode curr = node;
+        while (curr != null) {
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            if (temp == null)
+                return curr;
+            curr = temp;
+        }
+        return curr;
+    }
+}

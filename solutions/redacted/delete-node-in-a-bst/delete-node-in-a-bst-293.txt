@@ -1,0 +1,59 @@
+//CASES
+// Reference : https://www.youtube.com/watch?v=5_AZcOOc-kM
+/**
+ * 1. Root is null --base case
+ * 2. node to be deleted is a left leaf -- no child
+ * 3. node to be deleted is a right leaf -- no child
+ *
+ * 4. node to be deleted has 2 children ( most difficult case )
+ * in this case, we have to find the max element in the leftmost subtree.
+ * That max element will become the root after deletion .
+ *
+ * Then remove that max by calling this function
+ *
+ * 5. node to be deleted has only 1 left child
+ * 6. node to be deleted has only 1 right child
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        //CASE 1
+        if (root == null)
+            return root;
+        //CASE 2 - leaf left
+        if (root.val < key) {
+            //right side
+            root.right = method1(root.right, key);
+            return root;
+        } else //CASE 3 - leaf right
+        if (root.val > key) {
+            root.left = method1(root.left, key);
+            return root;
+        } else //CASE 4 - both children
+        {
+            if (root.left != null && root.right != null) {
+                int leftMax = max(root.left);
+                root.val = leftMax;
+                root.left = method1(root.left, leftMax);
+                return root;
+            } else //CASE 5- only left child
+            if (root.left != null) {
+                // directly return because remove toh upar case 2 pe hojayega.
+                return root.left;
+            } else //CASE 6 - only right child
+            if (root.right != null) {
+                //directly return.. case 1
+                return root.right;
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private int max(TreeNode param1) {
+        if (param1.right != null)
+            return max(param1.right);
+        else
+            return param1.val;
+    }
+}

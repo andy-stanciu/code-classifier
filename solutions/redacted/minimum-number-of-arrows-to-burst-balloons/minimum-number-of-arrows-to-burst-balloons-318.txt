@@ -1,0 +1,27 @@
+class Solution {
+
+    public int method1(int[][] points) {
+        List<int[]> intervalList = new ArrayList<>();
+        for (int[] p : points) {
+            intervalList.add(p);
+        }
+        Collections.sort(intervalList, (a, b) -> a[0] - b[0]);
+        List<int[]> mergedList = new ArrayList<>();
+        mergedList.add(intervalList.get(0));
+        for (int i = 1; i < intervalList.size(); i++) {
+            int[] prev = mergedList.get(mergedList.size() - 1);
+            if (isOverlap(prev, intervalList.get(i))) {
+                // the end interval is the minimum of the two intervals.
+                // this is the only difference from merging interval problem
+                prev[1] = Math.min(prev[1], intervalList.get(i)[1]);
+            } else {
+                mergedList.add(intervalList.get(i));
+            }
+        }
+        return mergedList.size();
+    }
+
+    private boolean isOverlap(int[] x, int[] y) {
+        return !(x[1] < y[0] || y[1] < x[0]);
+    }
+}

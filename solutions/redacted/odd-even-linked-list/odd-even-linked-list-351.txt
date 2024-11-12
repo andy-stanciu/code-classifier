@@ -1,0 +1,60 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    /**
+     * The idea is simple, for all even index node, we need to add them at the end of list,
+     * while skipping all the odd index node.
+     * How to add at the end ? -> get the tail node pointing to tail of list. add odd node after tail and updated tail
+     * How to skip odd -> move to next index and pointer
+     * @param head
+     * @return
+     */
+    public ListNode method1(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        //1-based index list
+        int index = 1;
+        // to capture length of list; if we don\'t use it then it will become endless
+        int length = 1;
+        //get tail of list
+        ListNode tail = head;
+        while (tail.next != null) {
+            length++;
+            tail = tail.next;
+        }
+        //Current point the current node under investigation at ith index
+        //prev points to the previous of current node
+        ListNode current = head;
+        ListNode prev = null;
+        //index <= length ; = to consider the last node as well. When list is even length
+        //then last node also need to shift
+        while (current != null && index <= length) {
+            //if this is even index node.
+            //current!=tail; if the list of 2 size, then tail will be same as current when i=2
+            if (index % 2 == 0 && current != tail) {
+                //even index node; detach and attach at last of list
+                ListNode next = current.next;
+                current.next = null;
+                tail.next = current;
+                tail = current;
+                prev.next = next;
+                //next must be an odd node, no need to update prev, as this node going to be skip
+                current = next;
+            } else {
+                prev = current;
+                current = current.next;
+            }
+            index++;
+        }
+        return head;
+    }
+}

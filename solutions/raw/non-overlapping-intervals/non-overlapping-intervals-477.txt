@@ -1,0 +1,39 @@
+class Solution {
+
+    class bridge implements Comparable<bridge> {
+
+        int lo;
+
+        int hi;
+
+        bridge(int lo, int hi) {
+            this.lo = lo;
+            this.hi = hi;
+        }
+
+        public int compareTo(bridge other) {
+            return this.lo - other.lo;
+        }
+    }
+
+    public int eraseOverlapIntervals(int[][] intervals) {
+        int len = intervals.length;
+        bridge[] bridges = new bridge[len];
+        for (int i = 0; i < len; i++) {
+            bridge b = new bridge(intervals[i][0], intervals[i][1]);
+            bridges[i] = b;
+        }
+        Arrays.sort(bridges);
+        int removal = 0;
+        int prevEnd = bridges[0].hi;
+        for (int i = 1; i < len; i++) {
+            if (bridges[i].lo < prevEnd) {
+                removal++;
+                if (prevEnd > bridges[i].hi)
+                    prevEnd = bridges[i].hi;
+            } else
+                prevEnd = bridges[i].hi;
+        }
+        return removal;
+    }
+}

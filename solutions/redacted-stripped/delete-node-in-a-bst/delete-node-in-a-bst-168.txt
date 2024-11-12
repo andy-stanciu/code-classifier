@@ -1,0 +1,48 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int k) {
+        if (root == null)
+            return null;
+        if (root.val == k) {
+            return helper(root);
+        }
+        TreeNode dummy = root;
+        while (root != null) {
+            if (root.val > k) {
+                if (root.left != null && root.left.val == k) {
+                    root.left = helper(root.left);
+                    break;
+                } else {
+                    root = root.left;
+                }
+            } else {
+                if (root.right != null && root.right.val == k) {
+                    root.right = helper(root.right);
+                    break;
+                } else {
+                    root = root.right;
+                }
+            }
+        }
+        return dummy;
+    }
+
+    private TreeNode helper(TreeNode root) {
+        if (root.right == null) {
+            return root.left;
+        } else if (root.left == null) {
+            return root.right;
+        }
+        TreeNode rightChilds = root.right;
+        TreeNode extreamRight = method2(root.left);
+        extreamRight.right = rightChilds;
+        return root.left;
+    }
+
+    private TreeNode method2(TreeNode root) {
+        if (root.right == null) {
+            return root;
+        }
+        return method2(root.right);
+    }
+}

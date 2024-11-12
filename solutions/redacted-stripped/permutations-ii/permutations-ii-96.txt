@@ -1,0 +1,35 @@
+class Solution {
+
+    static void swap(int x, int y, int[] a) {
+        int t = a[x];
+        a[x] = a[y];
+        a[y] = t;
+    }
+
+    static void permute(int ind, int[] a, List<List<Integer>> ans) {
+        if (ind == a.length) {
+            List<Integer> ds = new ArrayList<>();
+            for (int i = 0; i < a.length; i++) {
+                ds.add(a[i]);
+            }
+            ans.add(new ArrayList<>(ds));
+            return;
+        }
+        HashSet<Integer> x = new HashSet<>();
+        for (int i = ind; i < a.length; i++) {
+            if (x.contains(a[i]))
+                continue;
+            x.add(a[i]);
+            swap(i, ind, a);
+            permute(ind + 1, a, ans);
+            swap(i, ind, a);
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> ans = new ArrayList<>();
+        permute(0, nums, ans);
+        return ans;
+    }
+}

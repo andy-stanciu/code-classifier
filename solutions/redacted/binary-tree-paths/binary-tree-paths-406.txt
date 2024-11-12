@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<String> method1(TreeNode root) {
+        List<String> var1 = new ArrayList<>();
+        populate(root, var1, new ArrayList<>());
+        return var1;
+    }
+
+    private void populate(TreeNode root, List<String> var1, List<Integer> path) {
+        // no path exist for a null root
+        // so return as is
+        if (null == root) {
+            return;
+        }
+        // otherwse, add current val to the current path
+        path.add(root.val);
+        // DFS, left and then right
+        populate(root.left, var1, path);
+        populate(root.right, var1, path);
+        // if, during DFS, we encounter a leaf node
+        // add the current path to the paths
+        if (null == root.left && null == root.right) {
+            var1.add(path.stream().map(Object::toString).collect(Collectors.joining("->")));
+        }
+        // remove the last visited node before going back
+        // to parent so that it does not participate
+        // in other branches starting from parent
+        path.remove(path.size() - 1);
+    }
+}

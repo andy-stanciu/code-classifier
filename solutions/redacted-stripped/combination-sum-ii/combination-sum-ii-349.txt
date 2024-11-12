@@ -1,0 +1,50 @@
+class Solution {
+
+    public List<List<Integer>> method1(List<List<Integer>> candidates, int target, int candidateLength) {
+        if (target == 0) {
+            var result = new ArrayList<List<Integer>>();
+            result.add(new ArrayList<>());
+            return result;
+        } else if (candidateLength == 0 || target < 0) {
+            return new ArrayList<List<Integer>>();
+        }
+        var result = new ArrayList<List<Integer>>();
+        var x = candidates.get(candidateLength - 1);
+        var xValue = x.get(0);
+        var xCount = x.get(1);
+        var var1 = 0;
+        var i = 0;
+        while (var1 <= target && i <= xCount) {
+            var currResult = method1(candidates, target - var1, candidateLength - 1);
+            for (var list : currResult) {
+                for (var j = 0; j < i; j++) {
+                    list.add(xValue);
+                }
+            }
+            result.addAll(currResult);
+            var1 += xValue;
+            i++;
+        }
+        return result;
+    }
+
+    public List<List<Integer>> method2(int[] candidates, int target) {
+        var candidatesConverted = convertCandidates(candidates);
+        return method1(candidatesConverted, target, candidatesConverted.size());
+    }
+
+    public List<List<Integer>> convertCandidates(int[] candidates) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i : candidates) {
+            map.put(i, map.getOrDefault(i, 0) + 1);
+        }
+        List<List<Integer>> result = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            List<Integer> l = new ArrayList<>();
+            l.add(entry.getKey());
+            l.add(entry.getValue());
+            result.add(l);
+        }
+        return result;
+    }
+}

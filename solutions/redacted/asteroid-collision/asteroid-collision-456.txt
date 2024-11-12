@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        int n = param1.length;
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            int ele = param1[i];
+            if (ele > 0) {
+                //positive asteroids
+                st.push(ele);
+            } else {
+                //negative asteroids
+                //check wether it is geeater or smaller
+                while (st.size() > 0 && st.peek() > 0 && st.peek() < -(ele)) {
+                    //positive asteroid will be distroid
+                    st.pop();
+                }
+                if (st.size() > 0 && st.peek() > -(ele)) {
+                    //negative astroid will be distroid
+                    continue;
+                } else if (st.size() > 0 && st.peek() == -(ele)) {
+                    //both will be distroid
+                    st.pop();
+                } else {
+                    //only negative astroids are in the stack
+                    //and coming +ve astroid will never collide with it
+                    st.push(ele);
+                }
+            }
+        }
+        //all remaining astroids in stack will never be distroid
+        int[] ans = new int[st.size()];
+        for (int i = ans.length - 1; i >= 0; i--) {
+            ans[i] = st.pop();
+        }
+        return ans;
+    }
+}

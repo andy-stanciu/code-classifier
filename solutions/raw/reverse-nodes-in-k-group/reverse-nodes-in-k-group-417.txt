@@ -1,0 +1,59 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    ListNode[] reverse(ListNode head, int k) {
+        ListNode last = head;
+        ListNode curr = head;
+        ListNode prev = null;
+        ListNode nextNode = null;
+        while (k > 0) {
+            nextNode = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextNode;
+            k--;
+        }
+        ListNode part = prev;
+        ListNode next = nextNode;
+        return new ListNode[] { part, next, last };
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode dummy = head;
+        int nodes = 0;
+        while (dummy != null) {
+            dummy = dummy.next;
+            nodes++;
+        }
+        int times = nodes / k;
+        ArrayList<ListNode[]> parts = new ArrayList<>();
+        while (times > 0) {
+            ListNode[] info = reverse(head, k);
+            parts.add(info);
+            times--;
+            head = info[1];
+            if (times == 0) {
+                parts.add(new ListNode[] { info[1], null, null });
+            }
+        }
+        ListNode newHead = null;
+        if (parts.size() > 0) {
+            newHead = parts.get(0)[0];
+        }
+        for (int i = 0; i < parts.size() - 1; i++) {
+            ListNode curr = parts.get(i)[0];
+            ListNode last = parts.get(i)[2];
+            last.next = parts.get(i + 1)[0];
+        }
+        return parts.size() == 0 ? head : newHead;
+    }
+}

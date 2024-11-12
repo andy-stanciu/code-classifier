@@ -1,0 +1,33 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        HashSet<Integer> visited = new HashSet<>();
+        HashSet<List<Integer>> permutations = new HashSet<>();
+        getPermutations(nums, new ArrayList<Integer>(), permutations, visited);
+        List<List<Integer>> result = new ArrayList<>();
+        for (List<Integer> temp : permutations) {
+            result.add(temp);
+        }
+        return result;
+    }
+
+    public HashSet<List<Integer>> getPermutations(int[] nums, List<Integer> temp, HashSet<List<Integer>> permutations, HashSet<Integer> visited) {
+        if (temp.size() == nums.length) {
+            permutations.add(new ArrayList<>(temp));
+            temp = new ArrayList<>();
+            return getPermutations(nums, temp, permutations, visited);
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (visited.contains(i)) {
+                continue;
+            }
+            temp.add(nums[i]);
+            visited.add(i);
+            getPermutations(nums, temp, permutations, visited);
+            //  Backtracking
+            temp.remove(temp.size() - 1);
+            visited.remove(i);
+        }
+        return permutations;
+    }
+}

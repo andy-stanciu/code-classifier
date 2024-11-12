@@ -1,0 +1,58 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ListNode list1 = new ListNode(l1.val);
+        l1 = l1.next;
+        while (l1 != null) {
+            ListNode temp = new ListNode(l1.val);
+            temp.next = list1;
+            list1 = temp;
+            l1 = l1.next;
+        }
+        ListNode list2 = new ListNode(l2.val);
+        l2 = l2.next;
+        while (l2 != null) {
+            ListNode temp = new ListNode(l2.val);
+            temp.next = list2;
+            list2 = temp;
+            l2 = l2.next;
+        }
+        ListNode start = new ListNode();
+        int carry = 0;
+        int a = 0, b = 0;
+        while (list1 != null || list2 != null) {
+            if (list1 != null)
+                a = list1.val;
+            else
+                a = 0;
+            if (list2 != null)
+                b = list2.val;
+            else
+                b = 0;
+            ListNode temp = new ListNode();
+            temp.val = (a + b + carry) % 10;
+            carry = (a + b + carry) / 10;
+            temp.next = start;
+            start = temp;
+            if (list1 != null)
+                list1 = list1.next;
+            if (list2 != null)
+                list2 = list2.next;
+        }
+        if (carry != 0) {
+            ListNode temp = new ListNode(carry);
+            temp.next = start;
+            start = temp;
+        }
+        ListNode result = new ListNode();
+        ListNode begin = result;
+        while (start.next != null) {
+            ListNode temp = new ListNode(start.val);
+            begin.next = temp;
+            begin = begin.next;
+            start = start.next;
+        }
+        start.next = null;
+        return result.next;
+    }
+}

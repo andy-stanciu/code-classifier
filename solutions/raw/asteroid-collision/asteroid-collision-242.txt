@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> as = new Stack<>();
+        int n = asteroids.length;
+        for (int i = 0; i < n; i++) {
+            int cur = asteroids[i];
+            // same direction or opposite won\'t collide, only -> <- will collide
+            if (as.isEmpty() || cur > 0 && as.peek() > 0 || cur < 0 && as.peek() < 0 || cur > 0 && as.peek() < 0) {
+                as.push(cur);
+                continue;
+            }
+            // opposite direction, start canceling
+            boolean add = false;
+            while (!as.isEmpty() && as.peek() > 0) {
+                int prev = Math.abs(as.peek());
+                int curr = Math.abs(cur);
+                if (curr > prev) {
+                    as.pop();
+                    add = true;
+                } else if (curr == prev) {
+                    as.pop();
+                    add = false;
+                    break;
+                } else {
+                    add = false;
+                    break;
+                }
+            }
+            // if we keep the current asteroid
+            if (add) {
+                as.push(cur);
+            }
+        }
+        // create the answer list based of stack
+        int idx = as.size() - 1;
+        int[] ans = new int[idx + 1];
+        while (!as.isEmpty()) {
+            ans[idx] = as.pop();
+            idx--;
+        }
+        return ans;
+    }
+}

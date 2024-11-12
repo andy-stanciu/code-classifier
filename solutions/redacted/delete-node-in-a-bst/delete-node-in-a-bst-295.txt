@@ -1,0 +1,68 @@
+class Solution {
+
+    private TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        if ((root.left != null && root.left.val == key) || (root.right != null && root.right.val == key)) {
+            return root;
+        } else {
+            TreeNode left = method1(root.left, key);
+            TreeNode right = method1(root.right, key);
+            if (left == null)
+                return right;
+            if (right == null)
+                return left;
+        }
+        return null;
+    }
+
+    private void method2(TreeNode parent, int key) {
+        TreeNode var1 = new TreeNode(0);
+        boolean direction = true;
+        if (parent.left != null && parent.left.val == key) {
+            var1 = parent.left;
+            direction = false;
+        }
+        if (parent.right != null && parent.right.val == key) {
+            var1 = parent.right;
+            direction = true;
+        }
+        TreeNode var2 = var1.left;
+        TreeNode var3 = var1.right;
+        method3(parent, var2, var3, direction);
+    }
+
+    private void method3(TreeNode parent, TreeNode var2, TreeNode var3, boolean direction) {
+        if (direction) {
+            if (var2 == null)
+                parent.right = var3;
+            else if (var3 == null)
+                parent.right = var2;
+            else {
+                parent.right = var2;
+                var2 = var2.right;
+                method3(parent.right, var2, var3, direction);
+            }
+        } else {
+            if (var2 == null)
+                parent.left = var3;
+            else if (var3 == null)
+                parent.left = var2;
+            else {
+                parent.left = var3;
+                var3 = var3.left;
+                method3(parent.left, var2, var3, direction);
+            }
+        }
+    }
+
+    public TreeNode method4(TreeNode root, int key) {
+        TreeNode dummy = new TreeNode(0);
+        dummy.left = root;
+        TreeNode parent = method1(dummy, key);
+        if (parent == null)
+            return dummy.left;
+        method2(parent, key);
+        return dummy.left;
+    }
+}

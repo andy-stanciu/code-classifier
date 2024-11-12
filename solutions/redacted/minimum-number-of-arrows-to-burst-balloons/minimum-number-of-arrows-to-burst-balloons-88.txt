@@ -1,0 +1,46 @@
+class Solution {
+
+    public int method1(int[][] points) {
+        int var1 = points.length;
+        if (var1 == 0)
+            return 0;
+        helper(0, var1 - 1, points);
+        int pointer = 0;
+        int counter = 0;
+        int length = points.length;
+        while (pointer < length) {
+            int cur_end = points[pointer][1];
+            while (pointer < length && cur_end >= points[pointer][0]) {
+                cur_end = Math.min(cur_end, points[pointer][1]);
+                pointer++;
+            }
+            counter++;
+        }
+        return counter;
+    }
+
+    public void helper(int low, int high, int[][] points) {
+        int mid = points[(low + high) / 2][0];
+        int start = low, end = high;
+        do {
+            while (points[start][0] < mid) start++;
+            while (points[end][0] > mid) end--;
+            if (end >= start) {
+                int temp = points[start][0];
+                points[start][0] = points[end][0];
+                points[end][0] = temp;
+                temp = points[start][1];
+                points[start][1] = points[end][1];
+                points[end][1] = temp;
+                end--;
+                start++;
+            }
+        } while (start <= end);
+        if (low < end) {
+            helper(low, end, points);
+        }
+        if (start < high) {
+            helper(start, high, points);
+        }
+    }
+}

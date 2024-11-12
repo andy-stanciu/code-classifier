@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        //Use a stack to maintain asteroids.
+        Stack<Integer> stack = new Stack();
+        for (int var1 : param1) {
+            //Figure out whether to push this asteroid into stack or not.
+            boolean shouldPush = true;
+            while (!stack.isEmpty()) {
+                int top = stack.peek();
+                //Only possible way to collide if top travels towards right and current towards left.
+                if (top > 0 && var1 < 0) {
+                    if (top < Math.abs(var1)) {
+                        //top has lower power and hence should be removed.
+                        //continue scanning for next top
+                        stack.pop();
+                    } else if (top == Math.abs(var1)) {
+                        //top has equal and hence should be removed.
+                        stack.pop();
+                        shouldPush = false;
+                        break;
+                    } else {
+                        //top has higher power and hence should not be removed.
+                        //we don\'t intend to push current asteroid or continue scanning.
+                        shouldPush = false;
+                        break;
+                    }
+                } else {
+                    //No possibility of collision.
+                    break;
+                }
+            }
+            if (shouldPush) {
+                stack.push(var1);
+            }
+        }
+        int[] result = new int[stack.size()];
+        for (int i = 0; i < result.length; i++) {
+            result[result.length - i - 1] = stack.pop();
+        }
+        return result;
+    }
+}

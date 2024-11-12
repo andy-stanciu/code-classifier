@@ -1,0 +1,38 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        ListNode start = new ListNode(-1);
+        start.next = head;
+        ListNode curr = head;
+        ListNode prev = start;
+        while (curr != null) {
+            int count = 1;
+            while (count < k) {
+                if (curr.next == null)
+                    return start.next;
+                curr = curr.next;
+                count++;
+            }
+            ListNode temp = curr.next;
+            curr.next = null;
+            ListNode[] ans = new ListNode[1];
+            ListNode lastNode = method2(prev.next, ans);
+            prev.next = ans[0];
+            lastNode.next = temp;
+            prev = lastNode;
+            curr = temp;
+        }
+        return start.next;
+    }
+
+    ListNode method2(ListNode start, ListNode[] ans) {
+        if (start.next == null) {
+            ans[0] = start;
+            return start;
+        }
+        ListNode prev = method2(start.next, ans);
+        start.next = null;
+        prev.next = start;
+        return start;
+    }
+}

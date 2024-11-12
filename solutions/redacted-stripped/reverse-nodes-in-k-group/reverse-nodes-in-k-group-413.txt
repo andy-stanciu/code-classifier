@@ -1,0 +1,36 @@
+class Solution {
+
+    public static int flength(ListNode head) {
+        ListNode temp = head;
+        int length = 0;
+        while (temp != null) {
+            temp = temp.next;
+            length++;
+        }
+        return length;
+    }
+
+    public static ListNode method1(ListNode head, int k, int length) {
+        if (length < k)
+            return head;
+        ListNode bef = null;
+        ListNode curr = head;
+        ListNode after = head;
+        int count = 0;
+        while (count < k && curr != null) {
+            after = curr.next;
+            curr.next = bef;
+            bef = curr;
+            curr = after;
+            count++;
+        }
+        if (after != null)
+            head.next = method1(after, k, length - k);
+        return bef;
+    }
+
+    public ListNode method2(ListNode head, int k) {
+        int length = flength(head);
+        return method1(head, k, length);
+    }
+}

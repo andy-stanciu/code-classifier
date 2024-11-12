@@ -1,0 +1,37 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        HashSet<Integer> visitedIndex = new HashSet<>();
+        HashSet<List<Integer>> res = new HashSet<>();
+        List<Integer> list = new LinkedList<>();
+        for (int i = 0; i < nums.length; i++) {
+            visitedIndex.add(i);
+            list.add(nums[i]);
+            helper(nums, res, list, visitedIndex);
+            visitedIndex.remove(i);
+            list.remove(list.size() - 1);
+        }
+        Iterator<List<Integer>> itr = res.iterator();
+        LinkedList<List<Integer>> r = new LinkedList<>();
+        while (itr.hasNext()) {
+            r.add(itr.next());
+        }
+        return r;
+    }
+
+    private void helper(int[] nums, HashSet<List<Integer>> res, List<Integer> list, HashSet<Integer> visitedIndex) {
+        if (list.size() == nums.length) {
+            res.add(new ArrayList<Integer>(list));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (!visitedIndex.contains(i)) {
+                list.add(nums[i]);
+                visitedIndex.add(i);
+                helper(nums, res, list, visitedIndex);
+                list.remove(list.size() - 1);
+                visitedIndex.remove(i);
+            }
+        }
+    }
+}

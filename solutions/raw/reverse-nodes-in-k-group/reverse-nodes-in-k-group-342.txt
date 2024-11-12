@@ -1,0 +1,62 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head.next == null)
+            return head;
+        ListNode ans = null;
+        ListNode curr = new ListNode(0);
+        while (head != null) {
+            ListNode first = head;
+            ListNode last = getKthNode(head, k - 1);
+            if (last == null)
+                break;
+            head = last.next;
+            last.next = null;
+            curr.next = reverse(first);
+            if (ans == null)
+                ans = curr;
+            int c = k;
+            while (c-- > 0) curr = curr.next;
+        }
+        curr.next = head;
+        return ans.next;
+    }
+
+    ListNode getKthNode(ListNode node, int k) {
+        while (k-- > 0 && node != null) {
+            node = node.next;
+        }
+        return node;
+    }
+
+    ListNode reverse(ListNode node) {
+        ListNode curr = node;
+        ListNode prev = null;
+        while (curr != null) {
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+
+    void print(ListNode node) {
+        StringBuilder sb = new StringBuilder();
+        while (node != null) {
+            sb.append(node.val).append(", ");
+            node = node.next;
+        }
+        System.out.println(sb);
+    }
+}

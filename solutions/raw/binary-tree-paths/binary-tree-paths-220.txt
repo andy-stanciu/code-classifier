@@ -1,0 +1,48 @@
+class Solution {
+
+    public List<String> binaryTreePaths(TreeNode root) {
+        if (root == null)
+            return new ArrayList<String>();
+        Stack<TreeNode> path = new Stack<>();
+        Stack<TreeNode> stack = new Stack<>();
+        ArrayList<TreeNode> traveler = new ArrayList<>();
+        List<String> paths = new ArrayList<String>();
+        TreeNode target = null;
+        int index = 0;
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.pop();
+            if (node.right != null)
+                stack.push(node.right);
+            if (node.left != null)
+                stack.push(node.left);
+            if (node.right == null && node.left == null)
+                target = node;
+            else
+                traveler.add(0, node);
+            // If found target, find the path and print it
+            if (target == null)
+                continue;
+            path.push(target);
+            for (TreeNode parent : traveler) {
+                if (parent.right == target || parent.left == target) {
+                    target = parent;
+                    path.push(target);
+                }
+                if (parent == root)
+                    break;
+            }
+            target = null;
+            // Adding the path to the string arrayList and empty path stack
+            StringBuilder s = new StringBuilder();
+            while (!path.isEmpty()) {
+                int temp = path.pop().val;
+                s.append(temp);
+                if (!path.empty())
+                    s.append("->");
+            }
+            paths.add(index++, s.toString());
+        }
+        return paths;
+    }
+}

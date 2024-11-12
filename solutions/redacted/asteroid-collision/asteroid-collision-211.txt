@@ -1,0 +1,32 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        int[] result = new int[param1.length];
+        // Index to track the top of the stack in result array
+        int index = -1;
+        for (int var1 : param1) {
+            if (index == -1 || var1 > 0 || result[index] < 0) {
+                // If result array is empty, or current asteroid is positive,
+                // or top of stack is negative, just push the asteroid onto the stack
+                result[++index] = var1;
+            } else {
+                // Handle collision with negative asteroid
+                while (index >= 0 && result[index] > 0 && result[index] < -var1) {
+                    // Pop asteroids that are destroyed by current negative asteroid
+                    index--;
+                }
+                if (index >= 0 && result[index] == -var1) {
+                    // If current negative asteroid destroys asteroid at top of stack
+                    index--;
+                } else if (index < 0 || result[index] < 0) {
+                    // If result array is empty or top of stack is negative,
+                    // push current negative asteroid onto the stack
+                    result[++index] = var1;
+                }
+            }
+        }
+        int[] finalResult = new int[index + 1];
+        System.arraycopy(result, 0, finalResult, 0, index + 1);
+        return finalResult;
+    }
+}

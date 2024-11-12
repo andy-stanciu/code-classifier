@@ -1,0 +1,68 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ *
+ * }
+ */
+class Solution {
+
+    int min(TreeNode root) {
+        // return minimum element
+        while (root.left != null) {
+            root = root.left;
+        }
+        return root.val;
+    }
+
+    TreeNode delete(TreeNode root, int val) {
+        if (root == null)
+            return null;
+        if (root.val == val) {
+            if (root.left == null && root.right == null) {
+                // if that root has - 0 child
+                root = null;
+                return root;
+            }
+            if (root.left != null && root.right == null) {
+                // if that root has - 1 child (left child)
+                TreeNode temp = root.left;
+                root = null;
+                return temp;
+            }
+            if (root.right != null && root.left == null) {
+                // if that root has - 1 child (right child )
+                TreeNode temp = root.right;
+                root = null;
+                return temp;
+            }
+            if (root.left != null && root.right != null) {
+                // if that root has - 2 child (right & left child )
+                int minR = min(root.right);
+                root.val = minR;
+                root.right = delete(root.right, minR);
+                return root;
+            }
+        } else if (val > root.val) {
+            root.right = delete(root.right, val);
+            return root;
+        } else {
+            root.left = delete(root.left, val);
+            return root;
+        }
+        return root;
+    }
+
+    public TreeNode deleteNode(TreeNode root, int val) {
+        return delete(root, val);
+    }
+}

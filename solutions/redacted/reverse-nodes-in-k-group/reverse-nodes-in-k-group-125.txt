@@ -1,0 +1,56 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        if (k == 1 || head.next == null)
+            return head;
+        ListNode curr = head;
+        //Calculate the length of the linked list
+        int len = 0;
+        while (curr != null) {
+            len++;
+            curr = curr.next;
+        }
+        ListNode prev = null;
+        curr = head;
+        int j = 0;
+        while ((len - j) >= k) {
+            //Traking the window of processing
+            // Ending node of the previous list
+            ListNode prevEnd = prev;
+            // End node of the current sub-list being processed
+            ListNode subListEnd = curr;
+            ListNode next = null;
+            //Reversing the sublist
+            for (int i = 0; i < k && curr != null; i++) {
+                next = curr.next;
+                curr.next = prev;
+                prev = curr;
+                curr = next;
+            }
+            j += k;
+            //Adjusting the start and end pointers of the sublist
+            if (prevEnd != null) {
+                prevEnd.next = prev;
+            } else {
+                head = prev;
+            }
+            subListEnd.next = curr;
+            //if we\'ve reached the end of the sub-list then break, handles the boundary condition
+            if (curr == null)
+                break;
+            //setting the previous for the next window of processing
+            prev = subListEnd;
+        }
+        return head;
+    }
+}

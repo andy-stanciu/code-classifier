@@ -1,0 +1,29 @@
+class Solution {
+
+    List<List<Integer>> ans = null;
+
+    public void combinationSum2Util(int[] candidates, int l, int sum, int target, List<Integer> list) {
+        if (sum == target) {
+            ans.add(new ArrayList<>(list));
+            return;
+        }
+        for (int i = l; i < candidates.length; i++) {
+            if (sum + candidates[i] > target)
+                continue;
+            if (i != 0 && candidates[i] == candidates[i - 1] && i > l) {
+                continue;
+            }
+            list.add(candidates[i]);
+            combinationSum2Util(candidates, i + 1, sum + candidates[i], target, list);
+            list.remove(list.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        ans = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        Arrays.sort(candidates);
+        combinationSum2Util(candidates, 0, 0, target, list);
+        return ans;
+    }
+}

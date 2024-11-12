@@ -1,0 +1,51 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        if (head == null || head.next == null || k == 1)
+            return head;
+        ListNode list1Tail = null;
+        ListNode list2Head = null;
+        if (method2(head, k)) {
+            ListNode previous = null;
+            ListNode current = head;
+            for (int i = 1; i <= k; i++) {
+                ListNode next = current.next;
+                current.next = previous;
+                previous = current;
+                current = next;
+            }
+            list1Tail = head;
+            head = previous;
+            list2Head = current;
+        }
+        while (method2(list2Head, k)) {
+            ListNode previous = null;
+            ListNode current = list2Head;
+            for (int i = 1; i <= k; i++) {
+                ListNode next = current.next;
+                current.next = previous;
+                previous = current;
+                current = next;
+            }
+            list1Tail.next = previous;
+            list1Tail = list2Head;
+            list2Head = current;
+        }
+        if (list2Head != null) {
+            list1Tail.next = list2Head;
+        }
+        return head;
+    }
+
+    public boolean method2(ListNode head, int k) {
+        int count = 0;
+        ListNode tempNode = head;
+        while (tempNode != null) {
+            count++;
+            tempNode = tempNode.next;
+            if (count == k)
+                return true;
+        }
+        return false;
+    }
+}

@@ -1,0 +1,66 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public int getLen(ListNode node) {
+        int count = 0;
+        while (node != null) {
+            node = node.next;
+            count++;
+        }
+        return count;
+    }
+
+    public class pair {
+
+        ListNode node = null;
+
+        int carry = 0;
+
+        pair(ListNode node, int carry) {
+            this.node = node;
+            this.carry = carry;
+        }
+    }
+
+    public pair cal(pair recAns, int sum1, int sum2) {
+        int sum = sum1 + sum2 + recAns.carry;
+        ListNode node = new ListNode(sum % 10);
+        node.next = recAns.node;
+        return new pair(node, sum / 10);
+    }
+
+    public pair add(ListNode c1, ListNode c2, int s1, int s2) {
+        if (s1 == 0) {
+            return new pair(null, 0);
+        }
+        if (s1 > s2) {
+            pair recAns = add(c1.next, c2, s1 - 1, s2);
+            return cal(recAns, c1.val, 0);
+        } else if (s2 > s1) {
+            pair recAns = add(c1, c2.next, s1, s2 - 1);
+            return cal(recAns, 0, c2.val);
+        } else {
+            pair recAns = add(c1.next, c2.next, s1 - 1, s2 - 1);
+            return cal(recAns, c1.val, c2.val);
+        }
+    }
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        pair ans = add(l1, l2, getLen(l1), getLen(l2));
+        if (ans.carry != 0) {
+            ListNode head = new ListNode(ans.carry);
+            head.next = ans.node;
+            return head;
+        }
+        return ans.node;
+    }
+}

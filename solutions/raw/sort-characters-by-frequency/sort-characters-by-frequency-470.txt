@@ -1,0 +1,52 @@
+class Solution {
+
+    public String frequencySort(String s) {
+        //collect count in map with signature
+        //Character -> Integer
+        //the key will be the char, the value will be the frequency of the char
+        //loop through map and create instances of Letter and add them to priorityqueue
+        //use priorityqueu to get desired string
+        Map<Character, Integer> map = new HashMap<>();
+        for (char letter : s.toCharArray()) {
+            map.put(letter, map.getOrDefault(letter, 0) + 1);
+        }
+        PriorityQueue<Letter> qu = new PriorityQueue<>();
+        for (char key : map.keySet()) {
+            qu.add(new Letter(map.get(key), createString(key, map.get(key))));
+        }
+        String result = "";
+        while (!qu.isEmpty()) {
+            result += qu.poll().str;
+        }
+        return result;
+    }
+
+    private String createString(char letter, int frequency) {
+        String result = "";
+        for (int i = 0; i < frequency; i++) {
+            result += String.valueOf(letter);
+        }
+        return result;
+    }
+
+    private class Letter implements Comparable<Letter> {
+
+        int frequency;
+
+        String str;
+
+        public Letter(int frequency, String str) {
+            this.frequency = frequency;
+            this.str = str;
+        }
+
+        @Override
+        public String toString() {
+            return "{" + this.str + ", " + this.frequency + "}";
+        }
+
+        public int compareTo(Letter other) {
+            return other.frequency - this.frequency;
+        }
+    }
+}

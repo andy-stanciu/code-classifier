@@ -1,0 +1,33 @@
+class Solution {
+
+    public int compress(char[] chars) {
+        if (chars == null || chars.length == 0)
+            return 0;
+        char prev = chars[0];
+        int count = 1;
+        int idx = 0;
+        for (int i = 1; i < chars.length; i++) {
+            char curr = chars[i];
+            if (curr == prev) {
+                count++;
+                continue;
+            }
+            idx = flush(chars, prev, count, idx);
+            prev = curr;
+            count = 1;
+        }
+        idx = flush(chars, prev, count, idx);
+        return idx;
+    }
+
+    private int flush(char[] chars, char prev, int count, int idx) {
+        chars[idx++] = prev;
+        if (count > 1) {
+            String countStr = String.valueOf(count);
+            for (char c : countStr.toCharArray()) {
+                chars[idx++] = c;
+            }
+        }
+        return idx;
+    }
+}

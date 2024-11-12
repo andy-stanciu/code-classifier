@@ -1,0 +1,71 @@
+/*
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    // Create a helper function \'reverseLL\' to reverse a linked list
+    // This function takes the \'head\' of a linked list as input and returns the \'head\' of the reversed linked list
+    public ListNode reverseLL(ListNode head) {
+        ListNode currNode = head;
+        ListNode prevNode = null;
+        ListNode nextNode = null;
+        while (currNode != null) {
+            nextNode = currNode.next;
+            currNode.next = prevNode;
+            prevNode = currNode;
+            currNode = nextNode;
+        }
+        return prevNode;
+    }
+
+    // TC : O(max(N, M)) & SC : O(1)
+    // N -> Lengths of the input linked lists \'l1\'
+    // M -> Lengths of the input linked lists \'l2\'
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        // Write your code here
+        // Initialize pointers \'node1\' to the head nodes of reverse linked list of \'l1\'
+        ListNode node1 = reverseLL(l1);
+        // Initialize pointers \'node2\' to the head nodes of reverse linked list of \'l2\'
+        ListNode node2 = reverseLL(l2);
+        // Create a dummy node \'dummyNode\' to simplify the code
+        ListNode dummyNode = new ListNode(-1);
+        // Initialize a current node \'node\' to the dummy node \'dummyNode\'
+        ListNode node = dummyNode;
+        // Initialize a \'carry\' variable to \'0\'
+        int carry = 0;
+        // Iterate through the linked lists while either \'node1\' or \'node2\' is not null, or there is a \'carry\'
+        while (node1 != null || node2 != null || carry != 0) {
+            // Calculate the \'sum\' of the current digits (\'node1.val\', \'node2.val\', and \'carry\')
+            int sum = carry;
+            if (node1 != null) {
+                sum = sum + node1.val;
+                node1 = node1.next;
+            }
+            if (node2 != null) {
+                sum = sum + node2.val;
+                node2 = node2.next;
+            }
+            // Create a new node \'newNode\' with the value of the \'sum % 10\' and add it to the result linked list
+            int valueOfNewNode = sum % 10;
+            ListNode newNode = new ListNode(valueOfNewNode);
+            node.next = newNode;
+            // Move to the next node in the result linked list
+            node = node.next;
+            // Update the \'carry\' for the next iteration
+            carry = sum / 10;
+        }
+        // The \'head\' of the result linked list is \'dummyNode.next\'
+        ListNode head = dummyNode.next;
+        // Reverse the final result linked list using the \'reverseLL\' function
+        head = reverseLL(head);
+        // Return the \'head\' of the reversed result linked list
+        return head;
+    }
+}

@@ -1,0 +1,53 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        // passing it to left for deletion and attached the result to left of root after deletion
+        if (root.val > key) {
+            root.left = deleteNode(root.left, key);
+        } else // passing it to right for deletion and attached the result to left of root after deletion
+        if (root.val < key) {
+            root.right = deleteNode(root.right, key);
+        } else {
+            // case 1: leaf node
+            if (root.left == null && root.right == null) {
+                return null;
+            } else // case 2: only have left child
+            if (root.left != null && root.right == null) {
+                return root.left;
+            } else // case 3: only have right child
+            if (root.left == null && root.right != null) {
+                return root.right;
+            } else // case 4: having both childs, so we replace the value of node to be deleted with either max value child at left side or min value child at right. Now for deletion of left max or right min Node , we call deleteNode function for
+            if (root.left != null && root.right != null) {
+                // here we took left max
+                root.val = findMax(root.left);
+                root.left = deleteNode(root.left, root.val);
+            }
+        }
+        return root;
+    }
+
+    public int findMax(TreeNode root) {
+        while (root.right != null) {
+            root = root.right;
+        }
+        return root.val;
+    }
+}

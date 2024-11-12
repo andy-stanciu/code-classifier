@@ -1,0 +1,62 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        if (root.val == key) {
+            if (root.left == null)
+                return root.right;
+            else if (root.right == null)
+                return root.left;
+            else {
+                leftMost(root.right).left = root.left;
+                return root.right;
+            }
+        }
+        if (root.left == null && root.right == null)
+            return root;
+        method2(root, key, null, -1);
+        return root;
+    }
+
+    public TreeNode leftMost(TreeNode param1) {
+        TreeNode root = param1;
+        while (root.left != null) root = root.left;
+        return root;
+    }
+
+    public void method2(TreeNode root, int key, TreeNode parent, int dir) {
+        if (root == null)
+            return;
+        if (root.val == key) {
+            if (root.left == null && root.right == null) {
+                if (dir == 0)
+                    parent.left = null;
+                else
+                    parent.right = null;
+            } else if (root.left == null) {
+                if (dir == 0)
+                    parent.left = root.right;
+                else
+                    parent.right = root.right;
+            } else if (root.right == null) {
+                if (dir == 0)
+                    parent.left = root.left;
+                else
+                    parent.right = root.left;
+            } else {
+                leftMost(root.right).left = root.left;
+                if (dir == 0)
+                    parent.left = root.right;
+                else
+                    parent.right = root.right;
+            }
+            return;
+        }
+        if (root.val > key) {
+            method2(root.left, key, root, 0);
+        } else {
+            method2(root.right, key, root, 1);
+        }
+    }
+}

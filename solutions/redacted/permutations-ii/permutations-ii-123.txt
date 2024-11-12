@@ -1,0 +1,34 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        // Sort the array to handle duplicates
+        Arrays.sort(nums);
+        backtrack(nums, new boolean[nums.length], new ArrayList<>(), res);
+        return res;
+    }
+
+    private void backtrack(int[] nums, boolean[] used, List<Integer> tempList, List<List<Integer>> res) {
+        if (tempList.size() == nums.length) {
+            // Add the permutation to the result list
+            res.add(new ArrayList<>(tempList));
+        } else {
+            for (int i = 0; i < nums.length; i++) {
+                if (used[i] || (i > 0 && nums[i] == nums[i - 1] && !used[i - 1])) {
+                    // Skip duplicates
+                    continue;
+                }
+                // Mark the number as used
+                used[i] = true;
+                // Add the number to the current permutation
+                tempList.add(nums[i]);
+                // Recursive call
+                backtrack(nums, used, tempList, res);
+                // Backtrack
+                tempList.remove(tempList.size() - 1);
+                // Mark the number as unused for the next iteration
+                used[i] = false;
+            }
+        }
+    }
+}

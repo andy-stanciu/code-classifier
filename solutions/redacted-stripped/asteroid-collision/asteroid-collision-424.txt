@@ -1,0 +1,39 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Deque<Integer> deque = new ArrayDeque<Integer>();
+        int index = 0;
+        while (index < param1.length) {
+            int ca = param1[index];
+            if (deque.isEmpty() || deque.peekLast() < 0) {
+                deque.addLast(ca);
+                index++;
+                continue;
+            }
+            int la = deque.peekLast();
+            if (movingOpposite(la, ca)) {
+                if (Math.abs(la) > Math.abs(ca)) {
+                    index++;
+                } else if (Math.abs(la) < Math.abs(ca)) {
+                    deque.removeLast();
+                } else {
+                    index++;
+                    deque.removeLast();
+                }
+            } else {
+                deque.addLast(ca);
+                index++;
+            }
+        }
+        int[] ans = new int[deque.size()];
+        index = 0;
+        while (!deque.isEmpty()) {
+            ans[index++] = deque.removeFirst();
+        }
+        return ans;
+    }
+
+    private boolean movingOpposite(int a, int b) {
+        return (a * b < 0);
+    }
+}

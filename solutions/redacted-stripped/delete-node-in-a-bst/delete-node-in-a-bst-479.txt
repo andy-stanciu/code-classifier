@@ -1,0 +1,34 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        if (key < root.val) {
+            root.left = method1(root.left, key);
+        }
+        if (key > root.val) {
+            root.right = method1(root.right, key);
+        }
+        if (key == root.val) {
+            if (root.left == null) {
+                root = root.right;
+            } else if (root.left.right == null) {
+                TreeNode right = root.right;
+                root = root.left;
+                root.right = right;
+            } else {
+                root.val = method2(root.left, root).val;
+            }
+        }
+        return root;
+    }
+
+    private TreeNode method2(TreeNode root, TreeNode pred) {
+        if (root.right == null) {
+            pred.right = root.left;
+            return root;
+        }
+        pred = root;
+        return method2(root.right, pred);
+    }
+}

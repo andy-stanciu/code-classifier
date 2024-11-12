@@ -1,0 +1,49 @@
+class Solution {
+
+    private void swap(int[] nums, int idx1, int idx2) {
+        int temp = nums[idx1];
+        nums[idx1] = nums[idx2];
+        nums[idx2] = temp;
+    }
+
+    private void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            swap(nums, start, end);
+            start++;
+            end--;
+        }
+    }
+
+    public void nextPermutation(int[] nums) {
+        int n = nums.length;
+        if (n == 1)
+            return;
+        if (n == 2) {
+            swap(nums, 0, 1);
+            return;
+        }
+        int dec = n - 2;
+        while (dec >= 0 && nums[dec] >= nums[dec + 1]) {
+            dec--;
+        }
+        // If the whole array is non-increasing, reverse it
+        if (dec == -1) {
+            reverse(nums, 0, n - 1);
+            return;
+        }
+        int nextNum = dec + 1;
+        while (nextNum < n && nums[nextNum] <= nums[dec]) {
+            nextNum++;
+        }
+        swap(nums, nextNum, dec);
+        reverse(nums, dec + 1, n - 1);
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        int[] nums = { 1, 2, 7, 9, 6, 4, 1 };
+        solution.nextPermutation(nums);
+        // Expected output: [1, 2, 9, 1, 4, 6, 7]
+        System.out.println(Arrays.toString(nums));
+    }
+}

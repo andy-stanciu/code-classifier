@@ -1,0 +1,53 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> stack = new Stack<Integer>();
+        int n = asteroids.length;
+        for (int asteroid : asteroids) {
+            // Initial check
+            if (stack.isEmpty()) {
+                stack.push(asteroid);
+            } else // +ve Asteroid
+            if (asteroid > 0) {
+                stack.push(asteroid);
+            } else // -ve Asteroid
+            {
+                //Iterate till stack is empty or
+                //we\'ll break if we meet the conditions inside the loop
+                while (!stack.isEmpty()) {
+                    // asteroids array that starts with negative
+                    // since all move in same direction leave it as it is
+                    //Eg 4 & 5
+                    if (stack.peek() < 0) {
+                        stack.push(asteroid);
+                        break;
+                    } else // equal elements
+                    if (stack.peek() == Math.abs(asteroid)) {
+                        // both equals collide
+                        stack.pop();
+                        break;
+                    } else // Greater +ve before
+                    if (stack.peek() > Math.abs(asteroid)) {
+                        // only negative destroys so no pop
+                        break;
+                    } else {
+                        //last element is lesser than -ve
+                        stack.pop();
+                        if (stack.isEmpty()) {
+                            // this it to handle that -ve asteroid collides with
+                            //all +ve and no other option to left out Eg :1
+                            stack.push(asteroid);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        int[] ans = new int[stack.size()];
+        int i = stack.size() - 1;
+        while (!stack.isEmpty()) {
+            ans[i--] = stack.pop();
+        }
+        return ans;
+    }
+}

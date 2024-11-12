@@ -1,0 +1,45 @@
+class Solution {
+
+    // binary search of element in descending order elements
+    public static int search(List<Integer> arr, int l, int r, int tar) {
+        int mid;
+        while (l <= r) {
+            mid = (l + r) / 2;
+            if (arr.get(mid) > tar)
+                l = mid + 1;
+            else
+                r = mid - 1;
+        }
+        return r;
+    }
+
+    // reversing the arr from \'from\' to \'to\'
+    public static void reverse(ArrayList<Integer> arr, int from, int to) {
+        while (from < to) Collections.swap(arr, from++, to--);
+    }
+
+    // performing the next permutation of arr
+    public static boolean nextPermute(ArrayList<Integer> arr) {
+        int idx = arr.size() - 2;
+        while (idx >= 0 && arr.get(idx) >= arr.get(idx + 1)) idx--;
+        if (idx == -1)
+            return false;
+        int pos = search(arr, idx + 1, arr.size() - 1, arr.get(idx));
+        Collections.swap(arr, pos, idx);
+        reverse(arr, idx + 1, arr.size() - 1);
+        return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> rs = new ArrayList<>();
+        ArrayList<Integer> arr = new ArrayList<>();
+        for (int x : nums) arr.add(x);
+        // initial permutation is sorted nums
+        Collections.sort(arr);
+        rs.add((List<Integer>) arr.clone());
+        // adding to result until higher or last permutation order
+        while (nextPermute(arr)) rs.add((List<Integer>) arr.clone());
+        return rs;
+    }
+}

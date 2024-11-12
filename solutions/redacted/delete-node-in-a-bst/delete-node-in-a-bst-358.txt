@@ -1,0 +1,64 @@
+class Class1 {
+
+    int val;
+
+    Class1 left;
+
+    Class1 right;
+
+    Class1(int x) {
+        val = x;
+    }
+}
+
+public class Solution {
+
+    public Class1 method1(Class1 root, int key) {
+        if (root == null) {
+            return root;
+        }
+        // Search for the node to remove
+        if (root.val > key) {
+            root.left = method1(root.left, key);
+        } else if (root.val < key) {
+            root.right = method1(root.right, key);
+        } else {
+            // Node found, handle deletion cases
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            } else {
+                // Node has both children
+                Class1 succParent = root;
+                Class1 succ = root.right;
+                while (succ.left != null) {
+                    succParent = succ;
+                    succ = succ.left;
+                }
+                if (succParent != root) {
+                    succParent.left = succ.right;
+                } else {
+                    succParent.right = succ.right;
+                }
+                root.val = succ.val;
+                succ = null;
+            }
+        }
+        return root;
+    }
+
+    // Example usage
+    public static void method2(String[] args) {
+        // Construct the BST
+        Class1 root = new Class1(5);
+        root.left = new Class1(3);
+        root.right = new Class1(6);
+        root.left.left = new Class1(2);
+        root.left.right = new Class1(4);
+        root.right.right = new Class1(7);
+        // Delete node with key 3
+        Solution solution = new Solution();
+        Class1 updatedRoot = solution.method1(root, 3);
+    }
+}

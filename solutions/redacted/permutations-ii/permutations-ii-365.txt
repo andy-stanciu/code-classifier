@@ -1,0 +1,32 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        if (nums == null || nums.length == 0)
+            return Collections.emptyList();
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> tmp = new ArrayList<>();
+        tmp.add(nums[0]);
+        result.add(tmp);
+        for (int i = 1; i < nums.length; i++) {
+            this.fillWithUnique(result, nums, i);
+        }
+        return result;
+    }
+
+    private void fillWithUnique(List<List<Integer>> result, int[] nums, int index) {
+        List<List<Integer>> nextResult = new ArrayList<>();
+        for (List<Integer> one : result) {
+            // size 2 list -> next list is size 3
+            for (int i = 0; i <= one.size(); i++) {
+                // do NOT need to clone
+                List<Integer> next = new ArrayList<>(one);
+                next.add(i, nums[index]);
+                nextResult.add(next);
+                if ((i + 1) < next.size() && next.get(i + 1) == nums[index])
+                    break;
+            }
+        }
+        result.clear();
+        result.addAll(nextResult);
+    }
+}

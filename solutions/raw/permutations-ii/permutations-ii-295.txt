@@ -1,0 +1,42 @@
+class Solution {
+
+    public static void backTrack(List<List<Integer>> result, boolean[] used, int[] nums, List<Integer> temp) {
+        //base case
+        if (temp.size() == nums.length) {
+            result.add(new ArrayList<>(temp));
+            return;
+        }
+        //iterate over each element
+        for (int i = 0; i < nums.length; i++) {
+            //skip used element or handle duplicates
+            if (used[i] || (i > 0 && nums[i] == nums[i - 1] && !used[i - 1])) {
+                continue;
+            }
+            //to add new element
+            temp.add(nums[i]);
+            //marked it used
+            used[i] = true;
+            //go back try others
+            backTrack(result, used, nums, temp);
+            //remove last element
+            temp.remove(temp.size() - 1);
+            //marked it unused
+            used[i] = false;
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        //to check whether an element has been used in nums[] or not
+        boolean[] used = new boolean[nums.length];
+        //sort the array to handle duplicates
+        //time complexity: O(n log n)
+        Arrays.sort(nums);
+        backTrack(result, used, nums, temp);
+        return result;
+    }
+}
+//time complexity: O(n!*n logn)
+//space complexity: O(n!*n)
+//Approach--BackTracking

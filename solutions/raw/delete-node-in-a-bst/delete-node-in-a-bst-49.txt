@@ -1,0 +1,51 @@
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        // If the root is null
+        if (root == null)
+            return null;
+        if (root.val == key) {
+            // IF our key value is the value of root node
+            return helper(root);
+        }
+        TreeNode curr = root;
+        while (curr != null) {
+            if (curr.val > key) {
+                // the value of key is less the  curr node value
+                if (curr.left != null && curr.left.val == key) {
+                    // If left node is not null and its value matches to the key value
+                    TreeNode left = helper(curr.left);
+                    curr.left = left;
+                    break;
+                }
+                curr = curr.left;
+            } else {
+                if (curr.right != null && curr.right.val == key) {
+                    TreeNode right = helper(curr.right);
+                    curr.right = right;
+                    break;
+                }
+                curr = curr.right;
+            }
+        }
+        return root;
+    }
+
+    private TreeNode helper(TreeNode node) {
+        if (node.left == null)
+            return node.right;
+        else if (node.right == null)
+            return node.left;
+        else {
+            TreeNode RightMost = findRightMost(node.left);
+            RightMost.right = node.right;
+        }
+        return node.left;
+    }
+
+    private TreeNode findRightMost(TreeNode node) {
+        if (node.right == null)
+            return node;
+        return findRightMost(node.right);
+    }
+}

@@ -1,0 +1,54 @@
+// +A -b ==> +A  survies
+// +a -B ==> -B  survies
+// +X -X ==> remove both
+class Solution {
+
+    public int[] method1(int[] param1) {
+        int i = 0;
+        List<Integer> var1 = new ArrayList<Integer>();
+        for (int var2 : param1) var1.add(var2);
+        while (allCollided(var1) == false) {
+            i = 0;
+            while (i + 1 < var1.size()) {
+                // first element -ve or both element +ve no collision happens
+                if (var1.get(i) < 0 || var1.get(i + 1) > 0) {
+                    i++;
+                    continue;
+                } else {
+                    // first element +ve and second -ve
+                    int x = collide(var1.get(i), var1.get(i + 1));
+                    if (x == 0) {
+                        var1.remove(i + 1);
+                        var1.remove(i);
+                    } else {
+                        //set(int index, E element)
+                        var1.set(i, x);
+                        var1.remove(i + 1);
+                    }
+                    i++;
+                }
+            }
+        }
+        int[] res = new int[var1.size()];
+        for (i = 0; i < var1.size(); i++) res[i] = var1.get(i);
+        return res;
+    }
+
+    /* function to check if stability has reached: returns false if any two asteroids can explode */
+    public boolean allCollided(List<Integer> var1) {
+        int prevSign = -1;
+        for (int i = 0; i < var1.size(); i++) {
+            if (prevSign == 1 && var1.get(i) < 0)
+                return false;
+            prevSign = var1.get(i) > 0 ? 1 : -1;
+        }
+        return true;
+    }
+
+    /* function to simulate collision: returns heavier asteroid or 0 if both equal */
+    public int collide(int a, int b) {
+        if (Math.abs(a) == Math.abs(b))
+            return 0;
+        return (Math.abs(a) > Math.abs(b)) ? a : b;
+    }
+}

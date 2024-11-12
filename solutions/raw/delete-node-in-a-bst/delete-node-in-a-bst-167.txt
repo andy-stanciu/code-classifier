@@ -1,0 +1,90 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    TreeNode p;
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        p = null;
+        TreeNode node = help(root, key, null);
+        if (node == null)
+            return root;
+        TreeNode rbt = node.right;
+        TreeNode lbt = node.left;
+        if (p != null) {
+            if (p.val < node.val) {
+                if (lbt == null) {
+                    p.right = rbt;
+                    return root;
+                }
+                if (lbt.right == null) {
+                    p.right = lbt;
+                    lbt.right = rbt;
+                    return root;
+                }
+                while (lbt.right.right != null) lbt = lbt.right;
+                TreeNode repl = lbt.right;
+                lbt.right = repl.left != null ? repl.left : null;
+                node.val = repl.val;
+                return root;
+            } else {
+                if (lbt == null) {
+                    p.left = rbt;
+                    return root;
+                }
+                if (lbt.right == null) {
+                    p.left = lbt;
+                    lbt.right = rbt;
+                    return root;
+                }
+                while (lbt.right.right != null) lbt = lbt.right;
+                TreeNode repl = lbt.right;
+                lbt.right = repl.left != null ? repl.left : null;
+                node.val = repl.val;
+                return root;
+            }
+        } else {
+            if (lbt == null) {
+                return rbt;
+            }
+            if (lbt.right == null) {
+                lbt.right = rbt;
+                return lbt;
+            }
+            while (lbt.right.right != null) lbt = lbt.right;
+            TreeNode repl = lbt.right;
+            lbt.right = repl.left != null ? repl.left : null;
+            node.val = repl.val;
+            return root;
+        }
+    }
+
+    public TreeNode help(TreeNode node, int k, TreeNode parent) {
+        if (node == null)
+            return null;
+        if (node.val == k) {
+            p = parent;
+            return node;
+        }
+        if (node.val > k) {
+            TreeNode left = help(node.left, k, node);
+            return left;
+        } else {
+            TreeNode right = help(node.right, k, node);
+            return right;
+        }
+    }
+}

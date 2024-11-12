@@ -1,0 +1,54 @@
+// +A -b ==> +A  survies
+// +a -B ==> -B  survies
+// +X -X ==> remove both
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        int i = 0;
+        List<Integer> asteroidsLS = new ArrayList<Integer>();
+        for (int asteroid : asteroids) asteroidsLS.add(asteroid);
+        while (allCollided(asteroidsLS) == false) {
+            i = 0;
+            while (i + 1 < asteroidsLS.size()) {
+                // first element -ve or both element +ve no collision happens
+                if (asteroidsLS.get(i) < 0 || asteroidsLS.get(i + 1) > 0) {
+                    i++;
+                    continue;
+                } else {
+                    // first element +ve and second -ve
+                    int x = collide(asteroidsLS.get(i), asteroidsLS.get(i + 1));
+                    if (x == 0) {
+                        asteroidsLS.remove(i + 1);
+                        asteroidsLS.remove(i);
+                    } else {
+                        //set(int index, E element)
+                        asteroidsLS.set(i, x);
+                        asteroidsLS.remove(i + 1);
+                    }
+                    i++;
+                }
+            }
+        }
+        int[] res = new int[asteroidsLS.size()];
+        for (i = 0; i < asteroidsLS.size(); i++) res[i] = asteroidsLS.get(i);
+        return res;
+    }
+
+    /* function to check if stability has reached: returns false if any two asteroids can explode */
+    public boolean allCollided(List<Integer> asteroidsLS) {
+        int prevSign = -1;
+        for (int i = 0; i < asteroidsLS.size(); i++) {
+            if (prevSign == 1 && asteroidsLS.get(i) < 0)
+                return false;
+            prevSign = asteroidsLS.get(i) > 0 ? 1 : -1;
+        }
+        return true;
+    }
+
+    /* function to simulate collision: returns heavier asteroid or 0 if both equal */
+    public int collide(int a, int b) {
+        if (Math.abs(a) == Math.abs(b))
+            return 0;
+        return (Math.abs(a) > Math.abs(b)) ? a : b;
+    }
+}

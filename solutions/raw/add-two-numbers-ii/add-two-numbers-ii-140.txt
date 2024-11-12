@@ -1,0 +1,62 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseList(ListNode l3) {
+        ListNode curNode = null;
+        while (l3 != null) {
+            ListNode prev = l3.next;
+            l3.next = curNode;
+            curNode = l3;
+            l3 = prev;
+        }
+        return curNode;
+    }
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode reverseL1 = reverseList(l1);
+        ListNode reverseL2 = reverseList(l2);
+        ListNode sumList3 = null;
+        int carry = 0;
+        while (reverseL2 != null && reverseL1 != null) {
+            int sum = reverseL2.val + reverseL1.val + carry;
+            int value = sum % 10;
+            carry = sum / 10;
+            ListNode newSum = new ListNode(value);
+            newSum.next = sumList3;
+            sumList3 = newSum;
+            reverseL2 = reverseL2.next;
+            reverseL1 = reverseL1.next;
+        }
+        ListNode remainingNode = null;
+        if (reverseL1 != null) {
+            remainingNode = reverseL1;
+        } else {
+            remainingNode = reverseL2;
+        }
+        while (remainingNode != null) {
+            int sum = remainingNode.val + carry;
+            carry = sum / 10;
+            int value = sum % 10;
+            ListNode newSum = new ListNode(value);
+            newSum.next = sumList3;
+            sumList3 = newSum;
+            remainingNode = remainingNode.next;
+        }
+        if (remainingNode == null && carry > 0) {
+            int value = carry;
+            ListNode newSum = new ListNode(value);
+            newSum.next = sumList3;
+            sumList3 = newSum;
+        }
+        return sumList3;
+    }
+}

@@ -1,0 +1,76 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        TreeNode current = root;
+        TreeNode previous = root;
+        //find node to delete in the tree
+        while (current != null && current.val != key) {
+            previous = current;
+            if (key < current.val) {
+                current = current.left;
+            } else {
+                current = current.right;
+            }
+        }
+        // if key\'s not found or tree\'s empty return without any change
+        if (current == null || current.val != key)
+            return root;
+        // if node to delete has two children
+        if (current.left != null & current.right != null) {
+            //find and replace using inorder successor in right subtree
+            if (current.right.left == null) {
+                //if right child is inorder successor
+                current.val = current.right.val;
+                current.right = current.right.right;
+                return root;
+            }
+            TreeNode nodeToDelete = current;
+            previous = current.right;
+            current = current.right.left;
+            //switch to left node until smallest (inorder successor) node is found
+            while (current.left != null) {
+                previous = current;
+                current = current.left;
+            }
+            nodeToDelete.val = current.val;
+            previous.left = current.right;
+            return root;
+        } else if (current.left != null) {
+            //if node to delete has only left child
+            if (current == root) {
+                return current.left;
+            }
+            if (current.val < previous.val) {
+                previous.left = current.left;
+            } else {
+                previous.right = current.left;
+            }
+        } else {
+            //if node to delete has only right child
+            if (current == root) {
+                return current.right;
+            }
+            if (current.val < previous.val) {
+                previous.left = current.right;
+            } else {
+                previous.right = current.right;
+            }
+        }
+        return root;
+    }
+}

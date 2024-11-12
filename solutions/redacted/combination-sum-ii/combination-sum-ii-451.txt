@@ -1,0 +1,48 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        // -------------Solution with space
+        //     Arrays.sort(candidates);
+        //     Set<List<Integer>> ans=new HashSet<>();
+        //     int idx=0;
+        //     recurFunc(idx,target,candidates,ans,new ArrayList<>());
+        //     return new ArrayList<>(ans);
+        // }
+        // public void recurFunc(int idx,int target,int[] candidates,Set<List<Integer>>ans,ArrayList<Integer> ds){
+        //     if(idx==candidates.length){
+        //         if(target==0){
+        //             ans.add(new ArrayList<>(ds));
+        //         }
+        //         return;
+        //     }
+        //     if(candidates[idx]<=target){
+        //         ds.add(candidates[idx]);
+        //         recurFunc(idx+1,target-candidates[idx],candidates,ans,ds);
+        //         ds.remove(ds.size()-1);
+        //     }
+        //     recurFunc(idx+1,target,candidates,ans,ds);
+        //---------------optimized solution
+        // [1,1,2,5,6,7,10]
+        Arrays.sort(candidates);
+        ArrayList<List<Integer>> ans = new ArrayList<>();
+        recurFunction(0, target, candidates, ans, new ArrayList<Integer>());
+        return ans;
+    }
+
+    public void recurFunction(int idx, int target, int[] candidates, ArrayList<List<Integer>> ans, ArrayList<Integer> ds) {
+        if (target == 0) {
+            ans.add(new ArrayList<>(ds));
+            return;
+        }
+        for (int i = idx; i < candidates.length; i++) {
+            if (i > idx && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+            if (candidates[i] > target)
+                break;
+            ds.add(candidates[i]);
+            recurFunction(i + 1, target - candidates[i], candidates, ans, ds);
+            ds.remove(ds.size() - 1);
+        }
+    }
+}

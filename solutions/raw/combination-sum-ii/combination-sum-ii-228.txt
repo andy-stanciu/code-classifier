@@ -1,0 +1,32 @@
+class Solution {
+
+    Set<List<Integer>> set;
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        set = new HashSet();
+        Arrays.sort(candidates);
+        List<List<Integer>> ans = new ArrayList();
+        rec(ans, target, candidates, new ArrayList(), 0);
+        return ans;
+    }
+
+    public void rec(List<List<Integer>> list, int target, int[] nums, List<Integer> cur, int j) {
+        if (target == 0) {
+            if (!set.contains(cur)) {
+                set.add(cur);
+                list.add(new ArrayList(cur));
+            }
+            return;
+        }
+        for (int i = j; i < nums.length; i++) {
+            if (i > j && nums[i] == nums[i - 1])
+                continue;
+            if (nums[i] <= target) {
+                cur.add(nums[i]);
+                rec(list, target - nums[i], nums, cur, i + 1);
+                cur.remove(cur.size() - 1);
+            } else
+                break;
+        }
+    }
+}

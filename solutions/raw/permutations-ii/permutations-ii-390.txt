@@ -1,0 +1,41 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        int[] next = new int[nums.length + 1];
+        // 1-based indexes in order to have a sentinel
+        next[0] = 1;
+        for (int i = 0; i < nums.length; ) {
+            int j = i + 1;
+            while (j < nums.length && nums[j] == nums[i]) {
+                ++j;
+            }
+            next[i + 1] = j + 1;
+            i = j;
+        }
+        List<List<Integer>> permutations = new ArrayList<>();
+        permute(nums, next, new ArrayList<>(), permutations);
+        return new ArrayList<>(permutations);
+    }
+
+    private static void permute(int[] nums, int[] next, List<Integer> permutation, List<List<Integer>> permutations) {
+        if (permutation.size() == nums.length) {
+            permutations.add(new ArrayList<>(permutation));
+        } else {
+            for (int i = next[0], ip = 0; i <= nums.length; i = next[ip = i]) {
+                permutation.add(nums[i - 1]);
+                if (i < nums.length && nums[i] == nums[i - 1]) {
+                    // not the last instance of this digit
+                    next[++next[ip]] = next[i];
+                } else {
+                    // the last, skip this group entirely
+                    next[ip] = next[i];
+                }
+                permute(nums, next, permutation, permutations);
+                // backtrack
+                next[ip] = i;
+                permutation.remove(permutation.size() - 1);
+            }
+        }
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    public int findMinArrowShots(int[][] points) {
+        sortPoints(points, 0, points.length - 1);
+        int minArrows = 1;
+        int[] bestPoint = points[0];
+        for (int i = 1; i < points.length; i++) {
+            int[] currPoint = points[i];
+            bestPoint[0] = Math.max(bestPoint[0], currPoint[0]);
+            bestPoint[1] = Math.min(bestPoint[1], currPoint[1]);
+            if (bestPoint[0] > bestPoint[1]) {
+                minArrows++;
+                bestPoint = currPoint;
+            }
+        }
+        return minArrows;
+    }
+
+    private void sortPoints(int[][] points, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+        int pivot = points[left + (right - left) / 2][0];
+        int s = left;
+        int e = right;
+        while (s < e) {
+            while (points[s][0] < pivot) {
+                s++;
+            }
+            while (points[e][0] > pivot) {
+                e--;
+            }
+            if (s <= e) {
+                int[] temp = points[s];
+                points[s] = points[e];
+                points[e] = temp;
+                s++;
+                e--;
+            }
+        }
+        sortPoints(points, s, right);
+        sortPoints(points, left, e);
+    }
+}

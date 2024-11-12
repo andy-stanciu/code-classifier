@@ -1,0 +1,42 @@
+class Solution {
+
+    public int[] method1(int[] arr) {
+        Stack<Integer> s = new Stack<>();
+        for (int i = 0; i < arr.length; i++) {
+            if (s.isEmpty()) {
+                //stack empty push current element
+                s.push(arr[i]);
+            } else if (s.peek() < 0 && arr[i] < 0) {
+                //both going in left(<- <-)
+                s.push(arr[i]);
+            } else if (s.peek() > 0 && arr[i] > 0) {
+                //both going in right(-> ->)
+                s.push(arr[i]);
+            } else if (s.peek() < 0 && arr[i] > 0) {
+                //one left and other right-no collision(<- ->)
+                s.push(arr[i]);
+            } else if (s.peek() > 0 && arr[i] < 0) {
+                //collison occurs here(-> <-)
+                if (s.peek() == Math.abs(arr[i])) {
+                    //if both have same value, pop
+                    s.pop();
+                } else if (s.peek() < Math.abs(arr[i])) {
+                    //if current right one has more value than left,pop
+                    if (!s.isEmpty() && s.peek() > 0 && s.peek() <= Math.abs(arr[i])) {
+                        s.pop();
+                        //decrement i so that current one will be considered again for push
+                        i--;
+                        continue;
+                    }
+                }
+            }
+        }
+        int[] ans = new int[s.size()];
+        int i = s.size() - 1;
+        while (!s.isEmpty()) {
+            ans[i] = s.pop();
+            i--;
+        }
+        return ans;
+    }
+}

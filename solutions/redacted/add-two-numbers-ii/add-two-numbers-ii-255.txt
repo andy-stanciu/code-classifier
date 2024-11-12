@@ -1,0 +1,89 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        return reverseList(method2(reverseList(l1), reverseList(l2)));
+    }
+
+    public ListNode method2(ListNode l1, ListNode l2) {
+        ListNode p1 = l1, p2 = l2;
+        int s1 = 0, s2 = 0;
+        //s1 and s2 are sizes of linked lists so that we can know which one is bigger
+        //than other (we can send heads in further function call for \'solve\' as per size)
+        while (p1 != null) {
+            s1++;
+            p1 = p1.next;
+        }
+        while (p2 != null) {
+            s2++;
+            p2 = p2.next;
+        }
+        if (s1 > s2)
+            return solve(l1, l2);
+        else
+            return solve(l2, l1);
+    }
+
+    public ListNode reverseList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode prev = head;
+        ListNode mid = head.next;
+        ListNode ahead = head.next.next;
+        do {
+            if (prev == head) {
+                prev.next = null;
+            }
+            mid.next = prev;
+            prev = mid;
+            mid = ahead;
+            if (ahead != null)
+                ahead = ahead.next;
+        } while (mid != null);
+        return prev;
+    }
+
+    private ListNode solve(ListNode big, ListNode small) {
+        ListNode last = new ListNode(1);
+        int carry = 0;
+        ListNode p1 = big, p2 = small;
+        while (p1 != null) {
+            //add till smaller does not gets empty
+            if (p2 != null) {
+                int sum = p1.val + p2.val + carry;
+                p1.val = sum % 10;
+                carry = sum / 10;
+                if (p1.next == null && sum >= 10) {
+                    p1.val = sum % 10;
+                    p1.next = last;
+                    break;
+                }
+                p1 = p1.next;
+                p2 = p2.next;
+            } else {
+                //after smaller gets empty just add carry and number of bigger one
+                int sum = p1.val + carry;
+                if (p1.next == null && sum >= 10) {
+                    //if last number in bigger list becomes 10 then add a new node with value 1
+                    p1.val = sum % 10;
+                    p1.next = last;
+                    break;
+                }
+                p1.val = sum % 10;
+                carry = sum / 10;
+                p1 = p1.next;
+            }
+        }
+        return big;
+    }
+}

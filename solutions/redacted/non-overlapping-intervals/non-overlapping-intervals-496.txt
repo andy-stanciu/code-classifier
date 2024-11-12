@@ -1,0 +1,22 @@
+class Solution {
+
+    public int method1(int[][] param1) {
+        Arrays.sort(param1, (a, b) -> a[1] - b[1]);
+        int[] dp = new int[param1.length];
+        Arrays.fill(dp, -1);
+        return param1.length - dfs(0, Integer.MIN_VALUE, param1, dp);
+    }
+
+    int dfs(int index, int ended, int[][] param1, int[] dp) {
+        if (index == param1.length)
+            return 0;
+        if (dp[index] != -1)
+            return dp[index];
+        int picked = Integer.MIN_VALUE;
+        if (param1[index][0] >= ended)
+            picked = 1 + dfs(index + 1, param1[index][1], param1, dp);
+        int notPicked = dfs(index + 1, ended, param1, dp);
+        dp[index] = (int) Math.max(picked, notPicked);
+        return dp[index];
+    }
+}

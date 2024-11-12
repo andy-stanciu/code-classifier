@@ -1,0 +1,50 @@
+class Solution {
+
+    private HashMap<Integer, Integer> counterMap;
+
+    private List<int[]> counterList;
+
+    private List<List<Integer>> result;
+
+    private int n;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        this.n = nums.length;
+        this.result = new LinkedList<>();
+        this.counterMap = new HashMap<>();
+        for (int num : nums) {
+            if (!counterMap.containsKey(num)) {
+                counterMap.put(num, 1);
+            } else {
+                counterMap.put(num, counterMap.get(num) + 1);
+            }
+        }
+        this.counterList = new LinkedList<>();
+        for (int key : counterMap.keySet()) {
+            int[] pair = new int[] { key, counterMap.get(key) };
+            counterList.add(pair);
+        }
+        List<Integer> path = new LinkedList<>();
+        backtrack(path);
+        return result;
+    }
+
+    private void backtrack(List<Integer> path) {
+        if (path.size() == n) {
+            result.add(new LinkedList<>(path));
+            return;
+        }
+        for (int i = 0; i < counterList.size(); i++) {
+            int[] eachDigit = counterList.get(i);
+            int digit = eachDigit[0];
+            int count = eachDigit[1];
+            if (count > 0) {
+                counterList.set(i, new int[] { digit, count - 1 });
+                path.add(digit);
+                backtrack(path);
+                path.remove(path.size() - 1);
+                counterList.set(i, new int[] { digit, count });
+            }
+        }
+    }
+}

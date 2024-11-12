@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean isFacing(int a, int b) {
+        return a > 0 && b < 0;
+    }
+
+    public int[] asteroidCollision(int[] asteroids) {
+        int stkPtr = -1;
+        for (int i = 0; i < asteroids.length; i++) {
+            if (stkPtr == -1 || !isFacing(asteroids[stkPtr], asteroids[i])) {
+                asteroids[++stkPtr] = asteroids[i];
+            } else {
+                boolean iDestroyed = false;
+                while (stkPtr > -1 && isFacing(asteroids[stkPtr], asteroids[i])) {
+                    int left = Math.abs(asteroids[stkPtr]);
+                    int right = Math.abs(asteroids[i]);
+                    if (left > right) {
+                        iDestroyed = true;
+                        break;
+                    }
+                    stkPtr--;
+                    if (left == right) {
+                        iDestroyed = true;
+                        break;
+                    }
+                }
+                if (!iDestroyed) {
+                    asteroids[++stkPtr] = asteroids[i];
+                }
+            }
+        }
+        int[] ans = new int[stkPtr + 1];
+        for (int i = 0; i <= stkPtr; i++) {
+            ans[i] = asteroids[i];
+        }
+        return ans;
+    }
+}

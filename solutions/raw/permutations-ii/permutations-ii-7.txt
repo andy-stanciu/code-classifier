@@ -1,0 +1,39 @@
+class Solution {
+
+    private List<List<Integer>> uniquePermutations = new ArrayList<>();
+
+    public List<List<Integer>> permuteUnique(int[] numbers) {
+        // Sort for efficient duplicate handling
+        Arrays.sort(numbers);
+        recursivePermutation(numbers, 0, new ArrayList<>());
+        return uniquePermutations;
+    }
+
+    private void recursivePermutation(int[] nums, int startIndex, List<Integer> currentPermutation) {
+        if (currentPermutation.size() == nums.length) {
+            // Add a copy
+            uniquePermutations.add(new ArrayList<>(currentPermutation));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            int currentNumber = nums[i];
+            if ((i > 0 && currentNumber != nums[i - 1]) || i == 0) {
+                // Check for uniqueness
+                if (nums[i] != VISITED_ELEMENT_MARKER) {
+                    // Check if not visited
+                    currentPermutation.add(currentNumber);
+                    int temp = nums[i];
+                    // Mark visited
+                    nums[i] = VISITED_ELEMENT_MARKER;
+                    recursivePermutation(nums, startIndex, currentPermutation);
+                    // Backtrack by restoring element
+                    nums[i] = temp;
+                    currentPermutation.remove(currentPermutation.size() - 1);
+                }
+            }
+        }
+    }
+
+    // Marker for visited elements
+    private static final int VISITED_ELEMENT_MARKER = -999;
+}

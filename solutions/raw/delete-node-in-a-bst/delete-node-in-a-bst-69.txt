@@ -1,0 +1,59 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        //empty BST
+        if (root == null)
+            return null;
+        if (// curr val is small so go to right
+        root.val < key)
+            // curr val is small so go to right
+            root.right = deleteNode(root.right, key);
+        else if (//curr val is big so go to left
+        root.val > key)
+            //curr val is big so go to left
+            root.left = deleteNode(root.left, key);
+        else {
+            if (//no further nodes condition
+            root.left == null && root.right == null)
+                //no further nodes condition
+                return null;
+            else if (//only right child is present
+            root.left == null)
+                //only right child is present
+                return root.right;
+            else //only left child is present
+            if (root.right == null)
+                return root.left;
+            //inorder successor means one right and then all left
+            TreeNode successor = inorderSuccessor(root.right);
+            //storing successor val in root val
+            root.val = successor.val;
+            //delete the successor val
+            root.right = deleteNode(root.right, successor.val);
+        }
+        return root;
+    }
+
+    private TreeNode inorderSuccessor(TreeNode root) {
+        while (root.left != null) {
+            //traversing through the left node until the last node is achieved
+            root = root.left;
+        }
+        return root;
+    }
+}

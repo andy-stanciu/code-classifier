@@ -1,0 +1,26 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> stack = new Stack<>();
+        for (int a : asteroids) {
+            // Collision happened only when Stack.peek is +ve and coming number is -ve, otherwise keep
+            if (!stack.isEmpty() && stack.peek() > 0 && a < 0) {
+                // if incoming new number is negative but its absulate is lesser that +ve number, then we should not add -ve number
+                while (!(stack.peek() > Math.abs(a))) {
+                    int val = stack.pop();
+                    if (val == Math.abs(a)) {
+                        break;
+                    }
+                    // if -ve number big enough it got collieted with all other positive number . if stack is empty then add -ve number it self.
+                    if (stack.isEmpty() || (stack.peek() < 0 && a < 0)) {
+                        stack.push(a);
+                        break;
+                    }
+                }
+            } else {
+                stack.push(a);
+            }
+        }
+        return stack.stream().mapToInt(Integer::intValue).toArray();
+    }
+}

@@ -1,0 +1,42 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        l1 = reverse(l1);
+        l2 = reverse(l2);
+        return reverse(method2(l1, l2, 0));
+    }
+
+    private ListNode method2(ListNode l1, ListNode l2, int carry) {
+        if (l1 == null && l2 == null) {
+            return carry != 0 ? new ListNode(carry) : null;
+        }
+        if (l1 == null) {
+            int sum = l2.val + carry;
+            int newCarry = sum / 10;
+            ListNode current = new ListNode(sum % 10);
+            current.next = method2(l1, l2.next, newCarry);
+            return current;
+        }
+        if (l2 == null) {
+            int sum = l1.val + carry;
+            int newCarry = sum / 10;
+            ListNode current = new ListNode(sum % 10);
+            current.next = method2(l1.next, l2, newCarry);
+            return current;
+        }
+        int sum = l1.val + l2.val + carry;
+        int newCarry = sum / 10;
+        ListNode current = new ListNode(sum % 10);
+        current.next = method2(l1.next, l2.next, newCarry);
+        return current;
+    }
+
+    private ListNode reverse(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        ListNode otherHead = reverse(head.next);
+        head.next.next = head;
+        head.next = null;
+        return otherHead;
+    }
+}

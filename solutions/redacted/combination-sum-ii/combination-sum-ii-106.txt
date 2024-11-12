@@ -1,0 +1,33 @@
+class Solution {
+
+    private void method1(int idx, int[] arr, int target, List<List<Integer>> ans, List<Integer> ds) {
+        // Base case: if the target becomes 0, we found a valid combination
+        if (target == 0) {
+            ans.add(new ArrayList<>(ds));
+            return;
+        }
+        // Iterate through the array starting from the current index
+        for (int i = idx; i < arr.length; i++) {
+            // Skip duplicates to avoid redundant combinations
+            if ((i > idx) && (arr[i] == arr[i - 1]))
+                continue;
+            // If the current number exceeds the target, no need to continue
+            if (arr[i] > target)
+                break;
+            // Include the current number in the combination
+            ds.add(arr[i]);
+            // Recurse with the next index and updated target
+            method1(i + 1, arr, target - arr[i], ans, ds);
+            // Backtrack by removing the last added number
+            ds.remove(ds.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> method2(int[] candidates, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        // Sort to handle duplicates
+        Arrays.sort(candidates);
+        method1(0, candidates, target, ans, new ArrayList<>());
+        return ans;
+    }
+}

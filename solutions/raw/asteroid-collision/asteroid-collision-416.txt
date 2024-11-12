@@ -1,0 +1,53 @@
+class Solution {
+
+    /**
+     * @return the state of the asteroids after all collisions.
+     */
+    public int[] asteroidCollision(int[] asteroids) {
+        // index where the next asteroid will go.
+        int j = 0;
+        for (int asteroid : asteroids) {
+            // Destroy smaller asteroids.
+            while (j > 0 && collidesAndDestroys(asteroids[j - 1], asteroid)) {
+                j--;
+            }
+            if (j == 0 || !collides(asteroids[j - 1], asteroid)) {
+                asteroids[j++] = asteroid;
+            } else if (mutuallyDestroys(asteroids[j - 1], asteroid)) {
+                j--;
+            } else if (destroys(asteroids[j - 1], asteroid)) {
+                asteroids[j - 1] = asteroid;
+            }
+            // Else the current asteroid is destroyed.
+        }
+        return Arrays.copyOfRange(asteroids, 0, j);
+    }
+
+    /**
+     * @return {@code true} if {@code b} collides with {@code a}, {@code false} otherwise.
+     */
+    private boolean collides(int a, int b) {
+        return a > 0 && b < 0;
+    }
+
+    /**
+     * @return {@code true} if {@code b} colides with and destroys {@code a}, {@code false} otherwise.
+     */
+    private boolean collidesAndDestroys(int a, int b) {
+        return collides(a, b) && destroys(a, b);
+    }
+
+    /**
+     * @return {@code true} if {@code b} destroys {@code a}, {@code false} otherwise.
+     */
+    private boolean destroys(int a, int b) {
+        return a < -1 * b;
+    }
+
+    /**
+     * @return {@code true} if {@code b} mutually destroys {@code a}, {@code false} otherwise.
+     */
+    private boolean mutuallyDestroys(int a, int b) {
+        return a == -1 * b;
+    }
+}

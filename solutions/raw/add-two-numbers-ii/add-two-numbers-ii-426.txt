@@ -1,0 +1,97 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    int carry = 0;
+
+    ListNode tempList = new ListNode();
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        } else if (l2 == null) {
+            return l1;
+        }
+        int l1Len = listLength(l1);
+        int l2Len = listLength(l2);
+        int difference = Math.abs(l1Len - l2Len);
+        ListNode dummy = new ListNode();
+        ListNode largerList = dummy;
+        if (l1Len > l2Len) {
+            while (difference-- != 0) {
+                dummy.next = l1;
+                l1 = l1.next;
+                dummy = dummy.next;
+            }
+        } else {
+            while (difference-- != 0) {
+                dummy.next = l2;
+                l2 = l2.next;
+                dummy = dummy.next;
+            }
+        }
+        dummy.next = null;
+        ListNode summation = tempList;
+        addUp(l1, l2);
+        addUpSingleListWithCarry(largerList.next);
+        if (carry > 0) {
+            ListNode newNode = new ListNode(carry);
+            tempList.next = newNode;
+        }
+        return reverse(summation.next);
+    }
+
+    public void addUpSingleListWithCarry(ListNode largerList) {
+        if (largerList == null) {
+            return;
+        }
+        addUpSingleListWithCarry(largerList.next);
+        int sum = largerList.val + carry;
+        ListNode newNode = new ListNode(sum % 10);
+        carry = sum / 10;
+        tempList.next = newNode;
+        tempList = tempList.next;
+    }
+
+    public void addUp(ListNode head1, ListNode head2) {
+        if (head1 == null && head2 == null) {
+            return;
+        }
+        addUp(head1.next, head2.next);
+        int sum = head1.val + head2.val + carry;
+        ListNode newNode = new ListNode(sum % 10);
+        carry = sum / 10;
+        tempList.next = newNode;
+        tempList = tempList.next;
+    }
+
+    public int listLength(ListNode head) {
+        int count = 0;
+        while (head != null) {
+            count++;
+            head = head.next;
+        }
+        return count;
+    }
+
+    public ListNode reverse(ListNode summation) {
+        ListNode prev = null;
+        ListNode curr = summation;
+        ListNode next = null;
+        while (curr != null) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+}

@@ -1,0 +1,23 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        int n = asteroids.length;
+        int ptr = -1;
+        for (int asteroid : asteroids) {
+            if (asteroid > 0) {
+                asteroids[++ptr] = asteroid;
+            } else {
+                // explode smaller positive
+                for (; ptr >= 0 && asteroids[ptr] > 0 && asteroids[ptr] < -asteroid; ptr--) ;
+                if (ptr >= 0 && asteroids[ptr] == -asteroid) {
+                    // both explode
+                    ptr--;
+                } else if (ptr == -1 || asteroids[ptr] < 0) {
+                    // all positive exploded, the negative one survive
+                    asteroids[++ptr] = asteroid;
+                }
+            }
+        }
+        return Arrays.copyOf(asteroids, ptr + 1);
+    }
+}

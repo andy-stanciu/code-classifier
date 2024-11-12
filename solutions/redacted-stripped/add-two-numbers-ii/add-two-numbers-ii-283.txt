@@ -1,0 +1,76 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        int length1 = 0;
+        int length2 = 0;
+        ListNode temp1 = l1;
+        ListNode temp2 = l2;
+        while (temp1 != null) {
+            length1++;
+            temp1 = temp1.next;
+        }
+        while (temp2 != null) {
+            length2++;
+            temp2 = temp2.next;
+        }
+        ListNode ans = new ListNode(0);
+        ListNode curr = ans;
+        if (length1 > length2) {
+            int diff = length1 - length2;
+            for (int i = 0; i < diff; i++) {
+                curr.next = l1;
+                curr = curr.next;
+                l1 = l1.next;
+            }
+        } else if (length2 > length1) {
+            int diff = length2 - length1;
+            for (int i = 0; i < diff; i++) {
+                curr.next = l2;
+                curr = curr.next;
+                l2 = l2.next;
+            }
+        }
+        ListNode t = curr;
+        while (l1 != null) {
+            curr.next = new ListNode(l1.val + l2.val + carry(l1.next, l2.next));
+            if (curr.next.val > 9 && curr.next != t.next) {
+                curr.next.val = curr.next.val % 10;
+            }
+            curr = curr.next;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        carry(ans);
+        if (ans.val == 1) {
+            return ans;
+        } else {
+            return ans.next;
+        }
+    }
+
+    public int carry(ListNode l1, ListNode l2) {
+        if (l1 == null || l2 == null) {
+            return 0;
+        }
+        int sum = l1.val + l2.val + carry(l1.next, l2.next);
+        if (sum > 9)
+            return 1;
+        else
+            return 0;
+    }
+
+    public int carry(ListNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int var = root.val + carry(root.next);
+        if (var > 9) {
+            root.val = var % 10;
+            return 1;
+        }
+        if (var != root.val) {
+            root.val = var;
+        }
+        return 0;
+    }
+}

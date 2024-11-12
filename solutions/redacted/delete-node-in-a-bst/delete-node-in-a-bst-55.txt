@@ -1,0 +1,76 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    private static TreeNode method1(TreeNode curr) {
+        while (curr.left != null) {
+            curr = curr.left;
+        }
+        return curr;
+    }
+
+    public TreeNode method2(TreeNode root, int key) {
+        // search the node to be deleted
+        TreeNode parent = null;
+        TreeNode curr = root;
+        // doesn\'t exit or found
+        while (curr != null && curr.val != key) {
+            parent = curr;
+            if (key < curr.val) {
+                curr = curr.left;
+            } else {
+                curr = curr.right;
+            }
+        }
+        // not found
+        if (curr == null)
+            return root;
+        // case 1 : node has 0 children -> leaf node
+        if (curr.left == null && curr.right == null) {
+            if (curr == root) {
+                root = null;
+            } else {
+                if (parent.left == curr)
+                    parent.left = null;
+                else
+                    parent.right = null;
+            }
+        } else // case 2 : node has 1 child node
+        if (curr.left == null || curr.right == null) {
+            TreeNode child;
+            if (curr.left != null) {
+                child = curr.left;
+            } else {
+                child = curr.right;
+            }
+            if (curr == root) {
+                root = child;
+            } else {
+                if (curr == parent.left)
+                    parent.left = child;
+                else
+                    parent.right = child;
+            }
+        } else // case 3 : node has 2 children
+        {
+            TreeNode var1 = method1(curr.right);
+            int var2 = var1.val;
+            method2(root, var2);
+            curr.val = var2;
+        }
+        return root;
+    }
+}

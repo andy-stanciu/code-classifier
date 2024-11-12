@@ -1,0 +1,44 @@
+class Solution {
+
+    class Pair implements Comparable<Pair> {
+
+        int start, end;
+
+        Pair(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        public int method1(Pair x) {
+            if (this.start == x.start)
+                return this.end > x.end ? 1 : -1;
+            return this.start > x.start ? 1 : -1;
+        }
+    }
+
+    public int method2(int[][] points) {
+        int ans, start, end;
+        ArrayList<Pair> arr = new ArrayList<>();
+        for (int[] a : points) {
+            arr.add(new Pair(a[0], a[1]));
+        }
+        Collections.sort(arr);
+        start = arr.get(0).start;
+        end = arr.get(0).end;
+        ans = 1;
+        Iterator<Pair> it = arr.iterator();
+        Pair x;
+        while (it.hasNext()) {
+            x = it.next();
+            if (end < x.start) {
+                ans++;
+                start = x.start;
+                end = x.end;
+            } else {
+                start = Math.max(start, x.start);
+                end = Math.min(end, x.end);
+            }
+        }
+        return ans;
+    }
+}

@@ -1,0 +1,32 @@
+class Solution {
+
+    public int method1(int[][] param1) {
+        Arrays.sort(param1, (a, b) -> a[0] - b[0]);
+        int[] dp = new int[param1.length + 1];
+        Arrays.fill(dp, -1);
+        int max = Recu(param1, 0, dp);
+        return param1.length - max;
+    }
+
+    public static int Recu(int[][] param1, int i, int[] dp) {
+        if (i == param1.length)
+            return 0;
+        if (dp[i] != -1)
+            return dp[i];
+        int nextIndex = Binary(param1, i, param1[i][1]);
+        return dp[i] = Math.max(Recu(param1, i + 1, dp), 1 + Recu(param1, nextIndex, dp));
+    }
+
+    public static int Binary(int[][] param1, int curr, int target) {
+        int left = curr, right = param1.length;
+        while (left < right) {
+            int mid = (left + right) / 2;
+            if (param1[mid][0] < target) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return left;
+    }
+}

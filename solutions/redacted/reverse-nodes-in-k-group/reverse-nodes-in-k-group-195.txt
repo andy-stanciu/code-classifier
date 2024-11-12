@@ -1,0 +1,71 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        int s = 0;
+        ListNode temp = head;
+        while (temp != null) {
+            temp = temp.next;
+            s += 1;
+        }
+        if (s < k)
+            return head;
+        s = 1;
+        temp = head;
+        while (s++ < k && temp != null) {
+            temp = temp.next;
+        }
+        ListNode newNext = getNextHeadNode(head, k).next;
+        method3(head, k);
+        head.next = newNext;
+        method2(head, k);
+        return temp;
+    }
+
+    //get called from 1 node back..from where it needs to reverse to maintain pointers
+    public void method2(ListNode prevNode, int k) {
+        ListNode var1 = prevNode.next;
+        ListNode var2 = getNextHeadNode(var1, k);
+        if (var2 == null)
+            return;
+        ListNode newEndNode = var2.next;
+        method3(var1, k);
+        var1.next = newEndNode;
+        prevNode.next = var2;
+        method2(var1, k);
+    }
+
+    public void method3(ListNode head, int k) {
+        if (k == 1)
+            return;
+        else {
+            k -= 1;
+            ListNode next = head.next, curr = head;
+            while (k-- > 0) {
+                head = next;
+                next = next.next;
+                head.next = curr;
+                curr = head;
+            }
+        }
+    }
+
+    //takes start node and return end node till it needs to reverse
+    public ListNode getNextHeadNode(ListNode node, int k) {
+        int s = 1;
+        ListNode tempNode = node;
+        while (s++ < k && tempNode != null) {
+            tempNode = tempNode.next;
+        }
+        return tempNode;
+    }
+}

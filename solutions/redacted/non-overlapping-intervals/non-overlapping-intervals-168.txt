@@ -1,0 +1,66 @@
+class Solution {
+
+    public int method1(int[][] param1) {
+        // sort intervals
+        mergeSort(param1, 0, param1.length - 1);
+        int inCompatibles = 0;
+        int lastFinishedIntervalEnd = Integer.MIN_VALUE;
+        for (int[] interval : param1) {
+            int start = interval[0];
+            int end = interval[1];
+            if (start >= lastFinishedIntervalEnd) {
+                lastFinishedIntervalEnd = end;
+            } else {
+                inCompatibles++;
+            }
+        }
+        return inCompatibles;
+    }
+
+    public void mergeSort(int[][] param1, int left, int right) {
+        if (left < right) {
+            int mid = (left + right) / 2;
+            mergeSort(param1, left, mid);
+            mergeSort(param1, mid + 1, right);
+            merge(param1, left, mid, right);
+        }
+    }
+
+    public void merge(int[][] param1, int low, int mid, int high) {
+        int[][] left = new int[mid - low + 1][2];
+        int[][] right = new int[high - (mid + 1) + 1][2];
+        // copy left array
+        for (int i = 0; i < (mid - low + 1); i++) {
+            left[i][0] = param1[low + i][0];
+            left[i][1] = param1[low + i][1];
+        }
+        // copy right array
+        for (int j = 0; j < (high - mid); j++) {
+            right[j][0] = param1[mid + 1 + j][0];
+            right[j][1] = param1[mid + 1 + j][1];
+        }
+        // merge
+        int k = low;
+        int i = 0;
+        int j = 0;
+        while (i < left.length || j < right.length) {
+            if (i < left.length && j < right.length) {
+                int toBeComparedLeft = left[i][1];
+                int toBeComparedRight = right[j][1];
+                if (toBeComparedLeft < toBeComparedRight) {
+                    param1[k][0] = left[i][0];
+                    param1[k++][1] = left[i++][1];
+                } else {
+                    param1[k][0] = right[j][0];
+                    param1[k++][1] = right[j++][1];
+                }
+            } else if (i < left.length) {
+                param1[k][0] = left[i][0];
+                param1[k++][1] = left[i++][1];
+            } else {
+                param1[k][0] = right[j][0];
+                param1[k++][1] = right[j++][1];
+            }
+        }
+    }
+}

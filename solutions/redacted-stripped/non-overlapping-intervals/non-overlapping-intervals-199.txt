@@ -1,0 +1,45 @@
+class Interval {
+
+    int start, end;
+
+    Interval(int s, int e) {
+        this.start = s;
+        this.end = e;
+    }
+}
+
+class SortByEnd implements Comparator<Interval> {
+
+    @Override
+    public int compare(Interval a, Interval b) {
+        if (a.end == b.end) {
+            return a.start - b.start;
+        }
+        return a.end - b.end;
+    }
+}
+
+class Solution {
+
+    public int method1(int[][] param1) {
+        int n = param1.length;
+        if (n == 1) {
+            return 0;
+        }
+        ArrayList<Interval> dataList = new ArrayList<>();
+        for (int[] k : param1) {
+            dataList.add(new Interval(k[0], k[1]));
+        }
+        dataList.sort(new SortByEnd());
+        int correctionCount = 0;
+        Interval prev = dataList.get(0);
+        for (int i = 1; i < n; i++) {
+            if (dataList.get(i).start < prev.end) {
+                correctionCount++;
+            } else {
+                prev = dataList.get(i);
+            }
+        }
+        return correctionCount;
+    }
+}

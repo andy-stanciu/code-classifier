@@ -1,0 +1,99 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        if (root.val == key) {
+            if (root.left == null)
+                return root.right;
+            else if (root.right == null)
+                return root.left;
+            else {
+                leftMost(root.right).left = root.left;
+                return root.right;
+            }
+        }
+        if (root.left == null && root.right == null)
+            return root;
+        findNode(root, key, null, -1);
+        // TreeNode keyParentNode = findNode(root,key,null);
+        // if(keyParentNode==null)return root;
+        // TreeNode keyNode = null;
+        // if(keyParentNode.left!=null && keyParentNode.left.val==key){
+        //     keyNode = keyParentNode.left;
+        //     if(keyNode.left==null && keyNode.right==null)keyParentNode.left = null;
+        //     else if(keyNode.left==null) keyParentNode.left = keyNode.right;
+        //     else if(keyNode.right==null)keyParentNode.left = keyNode.left;
+        //     else{
+        //         leftMost(keyNode.right).left = keyNode.left;
+        //         keyParentNode.left = keyNode.right;
+        //     }
+        // }else{
+        //     keyNode = keyParentNode.right;
+        //     if(keyNode.left==null && keyNode.right==null)keyParentNode.right = null;
+        //     else if(keyNode.left==null) keyParentNode.right = keyNode.right;
+        //     else if(keyNode.right==null)keyParentNode.right = keyNode.left;
+        //     else{
+        //         leftMost(keyNode.right).left = keyNode.left;
+        //         keyParentNode.right = keyNode.right;
+        //     }
+        // }
+        return root;
+    }
+
+    public TreeNode leftMost(TreeNode node) {
+        TreeNode root = node;
+        while (root.left != null) root = root.left;
+        return root;
+    }
+
+    public void findNode(TreeNode root, int key, TreeNode parent, int dir) {
+        if (root == null)
+            return;
+        if (root.val == key) {
+            if (root.left == null && root.right == null) {
+                if (dir == 0)
+                    parent.left = null;
+                else
+                    parent.right = null;
+            } else if (root.left == null) {
+                if (dir == 0)
+                    parent.left = root.right;
+                else
+                    parent.right = root.right;
+            } else if (root.right == null) {
+                if (dir == 0)
+                    parent.left = root.left;
+                else
+                    parent.right = root.left;
+            } else {
+                leftMost(root.right).left = root.left;
+                if (dir == 0)
+                    parent.left = root.right;
+                else
+                    parent.right = root.right;
+            }
+            return;
+        }
+        if (root.val > key) {
+            findNode(root.left, key, root, 0);
+        } else {
+            findNode(root.right, key, root, 1);
+        }
+    }
+}

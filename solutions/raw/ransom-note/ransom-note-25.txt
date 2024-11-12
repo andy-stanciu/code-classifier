@@ -1,0 +1,20 @@
+class Solution {
+
+    public boolean canConstruct(String ransomNote, String magazine) {
+        List<Character> ransomNoteList = ransomNote.chars().mapToObj(e -> (char) e).collect(Collectors.toList());
+        List<Character> magazineList = magazine.chars().mapToObj(e -> (char) e).collect(Collectors.toList());
+        boolean flag = false;
+        HashMap<Character, Integer> countRansomNote = ransomNoteList.stream().collect(HashMap::new, (m, c) -> {
+            m.put(c, m.containsKey(c) ? (m.get(c) + 1) : 1);
+        }, HashMap::putAll);
+        HashMap<Character, Integer> countMagazine = magazineList.stream().collect(HashMap::new, (m, c) -> {
+            m.put(c, m.containsKey(c) ? (m.get(c) + 1) : 1);
+        }, HashMap::putAll);
+        for (Character key : countRansomNote.keySet()) {
+            flag = countMagazine.containsKey(key) && countMagazine.get(key) >= (countRansomNote.get(key));
+            if (!flag)
+                return flag;
+        }
+        return flag;
+    }
+}

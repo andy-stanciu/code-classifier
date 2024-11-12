@@ -1,0 +1,25 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        for (int i = 0; i < asteroids.length; i++) {
+            boolean willNotCollided = stack.isEmpty() || stack.peekFirst() < 0 || asteroids[i] > 0;
+            if (willNotCollided) {
+                stack.offerFirst(asteroids[i]);
+            } else {
+                int last = stack.peekFirst();
+                if (Math.abs(last) == Math.abs(asteroids[i])) {
+                    stack.pollFirst();
+                } else if (Math.abs(last) < Math.abs(asteroids[i])) {
+                    stack.pollFirst();
+                    i--;
+                }
+            }
+        }
+        int[] res = new int[stack.size()];
+        for (int j = 0; !stack.isEmpty(); j++) {
+            res[j] = stack.pollLast();
+        }
+        return res;
+    }
+}

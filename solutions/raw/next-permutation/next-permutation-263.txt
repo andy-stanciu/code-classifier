@@ -1,0 +1,51 @@
+class Solution {
+
+    public void nextPermutation(int[] nums) {
+        // counts[i] gives how many i\'s are there left to be handled
+        int[] counts = new int[101];
+        int target = -1;
+        // O(n)
+        // Find target (Position of the first decreasing element from right)
+        // Example: Target index would be 1 in array [1,2,6,4,1], since num[1] < num[2]
+        for (int i = nums.length - 1; i >= 0; i--) {
+            // Target is not found yet
+            if (target == -1) {
+                // Tracks digits not being allocated yet
+                counts[nums[i]]++;
+                // Finding target
+                if (i < nums.length - 1) {
+                    // Target is the position of the first decreasing number from right
+                    if (nums[i] < nums[i + 1]) {
+                        target = i;
+                        break;
+                    }
+                }
+            }
+        }
+        // O(1)
+        // If target found, swap it with next larger number before allocation
+        if (target != -1) {
+            // Find min using our frequency array
+            // Start trying using next integer since nums[target]
+            int min = nums[target] + 1;
+            while (counts[min] == 0 && min < 101) {
+                min++;
+            }
+            nums[target] = min;
+            counts[min]--;
+        }
+        // No target means we are on the largest number, needs to reverse all numbers
+        target++;
+        // O(1)
+        // Allocate numbers after target in asc order
+        for (int i = 0; i < 101; i++) {
+            // Fill rest of the nums using freq array, starting from the smallest integer unallocated
+            while (counts[i] != 0) {
+                nums[target] = i;
+                counts[i]--;
+                target++;
+            }
+        }
+        return;
+    }
+}

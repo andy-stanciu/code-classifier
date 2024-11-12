@@ -1,0 +1,37 @@
+class Solution {
+
+    List<List<Integer>> ans;
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        ans = new ArrayList<>();
+        Arrays.sort(candidates);
+        helper(0, 0, candidates, target, new ArrayList<>());
+        return ans;
+    }
+
+    public void helper(int ind, int param1, int[] candidates, int target, List<Integer> list) {
+        if (param1 > target) {
+            return;
+        }
+        if (param1 == target) {
+            ans.add(new ArrayList<>(list));
+            return;
+        }
+        if (ind >= candidates.length) {
+            return;
+        }
+        // Include the current element
+        param1 += candidates[ind];
+        list.add(candidates[ind]);
+        helper(ind + 1, param1, candidates, target, list);
+        // Backtrack
+        param1 -= candidates[ind];
+        list.remove(list.size() - 1);
+        // Skip duplicates
+        while (ind + 1 < candidates.length && candidates[ind] == candidates[ind + 1]) {
+            ind++;
+        }
+        // Do not include the current element
+        helper(ind + 1, param1, candidates, target, list);
+    }
+}

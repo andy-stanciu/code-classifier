@@ -1,0 +1,55 @@
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode prev = null;
+        ListNode curr = head;
+        ListNode first = prev;
+        ListNode last = null;
+        ListNode from = curr;
+        ListNode to = null;
+        int counter = 1;
+        while (curr != null && counter < k) {
+            curr = curr.next;
+            counter++;
+            if (counter == k || curr == null) {
+                to = curr;
+                if (curr == null) {
+                    break;
+                }
+                if (to != null) {
+                    last = to.next;
+                    to.next = null;
+                }
+                if (first == null) {
+                    head = reverse(from);
+                } else {
+                    first.next = reverse(from);
+                }
+                first = from;
+                from.next = last;
+                curr = last;
+                from = curr;
+                counter = 1;
+            }
+        }
+        return head;
+    }
+
+    static ListNode reverse(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+        if (head.next == null) {
+            return head;
+        }
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+}

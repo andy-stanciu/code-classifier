@@ -1,0 +1,46 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Deque<Integer> remainingAsterioids = new ArrayDeque<>();
+        for (int i = 0; i < param1.length; i++) {
+            int var1 = param1[i];
+            if (remainingAsterioids.isEmpty()) {
+                remainingAsterioids.add(var1);
+                continue;
+            }
+            int var2 = remainingAsterioids.peekLast();
+            remainingAsterioids.add(var1);
+            if (method3(var2, var1))
+                method2(remainingAsterioids);
+        }
+        return fromDequeToArray(remainingAsterioids);
+    }
+
+    private int[] fromDequeToArray(Deque<Integer> nums) {
+        int[] arr = new int[nums.size()];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = nums.pollFirst();
+        }
+        return arr;
+    }
+
+    private void method2(Deque<Integer> param1) {
+        while (param1.size() > 1) {
+            int last = param1.pollLast();
+            int secondLast = param1.pollLast();
+            if (!method3(secondLast, last)) {
+                param1.add(secondLast);
+                param1.add(last);
+                break;
+            }
+            if (Math.abs(last) > Math.abs(secondLast))
+                param1.add(last);
+            else if (Math.abs(secondLast) > Math.abs(last))
+                param1.add(secondLast);
+        }
+    }
+
+    private boolean method3(int before, int after) {
+        return before > 0 && after < 0;
+    }
+}

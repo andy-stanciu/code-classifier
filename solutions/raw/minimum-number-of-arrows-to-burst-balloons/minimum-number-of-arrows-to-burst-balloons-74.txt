@@ -1,0 +1,28 @@
+class Solution {
+
+    public int findMinArrowShots(int[][] points) {
+        // get the total number of balloons given.
+        int noOfBalloons = points.length;
+        // Sort the given array positions along the X coordinate.
+        Arrays.sort(points, (b1, b2) -> Integer.compare(b1[1], b2[1]));
+        // first of all the arrow required to burst the first balloon is 1,
+        // as however we need to burst first balloon.
+        int minArrowsRequired = 1;
+        // keep the track of previously burst balloon.
+        int prevBurstBalloonInd = 0;
+        // from the second balloon that is from the first balloon.
+        // if the balloon exceeds the overlapping range of the previously bursted
+        // balloon then we need another arrow to burst the next overlapping balloons.
+        for (int currBalloonInd = 1; currBalloonInd < noOfBalloons; currBalloonInd++) {
+            int prevBalloonBurstEndPos = points[prevBurstBalloonInd][1];
+            int currBalloonBurstStartPos = points[currBalloonInd][0];
+            // if current balloon exceeds the range of previously burst balloon,
+            // then new arrow is required, and update the position.
+            if (prevBalloonBurstEndPos < currBalloonBurstStartPos) {
+                ++minArrowsRequired;
+                prevBurstBalloonInd = currBalloonInd;
+            }
+        }
+        return minArrowsRequired;
+    }
+}

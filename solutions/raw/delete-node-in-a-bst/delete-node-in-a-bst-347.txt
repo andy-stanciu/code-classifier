@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        // nothing to delete
+        if (root == null) {
+            return root;
+        }
+        if (key > root.val) {
+            root.right = deleteNode(root.right, key);
+        } else if (key < root.val) {
+            root.left = deleteNode(root.left, key);
+        } else {
+            // we found our value.
+            if (root.left == null) {
+                // single child case
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            } else {
+                // double child case
+                TreeNode minNode = findMinNode(root.right);
+                // at the parent node, we want to replace this the min-value
+                // This way, our new parent satisfies the order restriction of the BST
+                root.val = minNode.val;
+                root.right = deleteNode(root.right, minNode.val);
+            }
+        }
+        return root;
+    }
+
+    public TreeNode findMinNode(TreeNode root) {
+        // just want to go down left subtree to iterate like a normal linked list
+        TreeNode curr = root;
+        while (curr != null && curr.left != null) {
+            curr = curr.left;
+        }
+        // Once curr.left is null we are at the left-most leaf node(the min value)
+        return curr;
+    }
+}

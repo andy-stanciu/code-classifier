@@ -1,0 +1,39 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> st = new Stack<>();
+        for (int i : asteroids) {
+            if (st.isEmpty() || i > 0) {
+                //collision is not possible if peek is +/- when + is added next.
+                st.push(i);
+            } else {
+                // i is negative
+                while (true) {
+                    int peek = st.peek();
+                    if (peek < 0) {
+                        // means i is negative so adding it won\'t impact
+                        st.push(i);
+                        break;
+                    } else if (peek > -i) {
+                        //here i is negative and peek is higher value so peek will remain when collision will occur.
+                        break;
+                    } else if (peek == -i) {
+                        //peak and i are of same value so both will explode
+                        st.pop();
+                        break;
+                    } else {
+                        //i is negative and has higher value than peek so peek will explode
+                        st.pop();
+                        if (st.isEmpty()) {
+                            st.push(i);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        int[] output_arr = new int[st.size()];
+        for (int i = st.size() - 1; i >= 0; i--) output_arr[i] = st.pop();
+        return output_arr;
+    }
+}

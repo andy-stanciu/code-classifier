@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        // Stack storing the asteroids in the continuous manner
+        Stack<Integer> stack = new Stack<>();
+        for (int asteroid : asteroids) {
+            boolean canPush = true;
+            while (!stack.isEmpty() && (stack.peek() * asteroid) < 0) {
+                // If the top asteroid has negative value and upcoming asteroid has positive value then no collision will happen, as direction of both asteroids is opposite
+                if (stack.peek() < 0 && asteroid > 0)
+                    break;
+                int absAsteroid = Math.abs(asteroid);
+                int absTop = Math.abs(stack.peek());
+                // If the upcoming asteroid is bigger than the top asteroid
+                // then explode the top asteroid
+                if (absAsteroid > absTop)
+                    stack.pop();
+                else // If both asteroid have same sizes then both asteroids will explode
+                if (absAsteroid == absTop) {
+                    stack.pop();
+                    canPush = false;
+                    break;
+                } else // If the upcoming asteroid is smaller than the top asteroid
+                {
+                    canPush = false;
+                    break;
+                }
+            }
+            if (canPush)
+                stack.push(asteroid);
+        }
+        // Put the remaining asteroids in array to return the result
+        int size = stack.size();
+        int[] result = new int[size];
+        for (int i = size - 1; i >= 0; i--) result[i] = stack.pop();
+        return result;
+    }
+}

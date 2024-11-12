@@ -1,0 +1,46 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        if (root.val == key)
+            root = balance(root, key);
+        if (root == null)
+            return null;
+        root.left = method1(root.left, key);
+        root.right = method1(root.right, key);
+        return root;
+    }
+
+    TreeNode balance(TreeNode param1, int key) {
+        List<Integer> a = new ArrayList<>();
+        method2(param1, a);
+        for (int i = 0; i < a.size(); i++) {
+            if (a.get(i) == key) {
+                a.remove(i);
+                i--;
+            }
+        }
+        if (a.size() == 0)
+            return null;
+        return construct(a, 0, a.size() - 1);
+    }
+
+    TreeNode construct(List<Integer> a, int l, int h) {
+        if (l > h)
+            return null;
+        int mid = (l + h) / 2;
+        TreeNode param1 = new TreeNode(a.get(mid));
+        param1.left = construct(a, l, mid - 1);
+        param1.right = construct(a, mid + 1, h);
+        return param1;
+    }
+
+    void method2(TreeNode param1, List<Integer> a) {
+        if (param1 == null)
+            return;
+        method2(param1.left, a);
+        a.add(param1.val);
+        method2(param1.right, a);
+    }
+}

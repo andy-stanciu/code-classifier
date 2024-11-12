@@ -1,0 +1,43 @@
+//Problem: Swap Adjacent Nodes
+//Constraint: Do not modify values of the nodes
+//Input: swapPairs([1,2,3,4])
+//Output: [2,1,4,3]
+// head -> 1 -> 2 -> 3 -> 4 -> null
+//Step 0: ptr = head, first_node = ptr, second_node = ptr.next
+//Step 1: first.next(1) = second.next(3) {This reassigns 1 ->3}
+//Step 2: second.next(next pointer of 2) = first{Assigns 2 -> 1}
+//Step 3: ptr = ptr.next
+//Step 4(Imp): Observe that first will be assigned to first.next.next in final result
+//Step 5: first.next(next of 1) = first.next.next(4){1->4}
+class Solution {
+
+    public ListNode swapPairs(ListNode head) {
+        ListNode curr;
+        if (head == null || head.next == null) {
+            return head;
+        } else {
+            // Start from 1st node
+            ListNode ptr = head;
+            curr = head.next;
+            ListNode prev = head;
+            while (ptr != null && ptr.next != null) {
+                //first -> 1
+                ListNode first = ptr;
+                //second -> 2
+                ListNode second = ptr.next;
+                // 1 -> 3
+                first.next = second.next;
+                // 2 -> 1
+                second.next = first;
+                //Move to adjacent node
+                // ptr -> 3 (curr ->2 ->1(ptr) -> 3 -> 4 -> null)
+                ptr = ptr.next;
+                if (first.next != null && first.next.next != null) {
+                    //1 -> 4
+                    first.next = first.next.next;
+                }
+            }
+        }
+        return curr;
+    }
+}

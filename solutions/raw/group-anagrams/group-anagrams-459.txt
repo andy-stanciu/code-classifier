@@ -1,0 +1,47 @@
+class Solution {
+
+    public List<List<String>> groupAnagrams(String[] strs) {
+        List output = new ArrayList<>();
+        ArrayList inner = new ArrayList();
+        //Edge cases
+        if (strs.length == 0) {
+            inner.add("");
+            output.add(inner);
+            return output;
+        }
+        if (strs.length == 1) {
+            inner.add(strs[0]);
+            output.add(inner);
+            return output;
+        }
+        char[] charArray;
+        String sortedString;
+        String[] sortedStr = new String[strs.length];
+        // sort characters in a new array to use them later as keys in the hash table, so the sortedStr = {"aet", "aet", "ant", "aet", "ant", "abt"}
+        for (int i = 0; i < strs.length; i++) {
+            charArray = strs[i].toCharArray();
+            Arrays.sort(charArray);
+            sortedStr[i] = new String(charArray);
+        }
+        //loop on sortedStr, and add the sortedStr[j] as key, value will be strs[j], so the output of the Hashmap will be:
+        /*"aet" -> "eat","tea","ate"
+          "ant" -> "tan", "nat"
+          "bat" -> "bat"
+        */
+        HashMap<String, List> hashMap = new HashMap();
+        for (int j = 0; j < sortedStr.length; j++) {
+            if (hashMap.get(sortedStr[j]) == null) {
+                ArrayList temp = new ArrayList();
+                temp.add(strs[j]);
+                hashMap.put(sortedStr[j], temp);
+            } else {
+                ((ArrayList) (hashMap.get(sortedStr[j]))).add(strs[j]);
+            }
+        }
+        //loop on the hashmap to return entrylist
+        for (Map.Entry<String, List> entry : hashMap.entrySet()) {
+            output.add(entry.getValue());
+        }
+        return output;
+    }
+}

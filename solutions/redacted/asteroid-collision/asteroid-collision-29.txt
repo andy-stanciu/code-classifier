@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] method1(int[] ast) {
+        Stack<Integer> stack = new Stack<>();
+        int i = 0;
+        while (i < ast.length) {
+            if (!stack.isEmpty() && ast[i] < 0 && stack.peek() > 0) {
+                // collision has happened
+                int peeked = stack.peek();
+                int curr = ast[i];
+                if (peeked == Math.abs(curr)) {
+                    // both will explode so remove pos num from stack and dont add current
+                    stack.pop();
+                    i++;
+                } else if (peeked > Math.abs(curr)) {
+                    // negative num will explode so don\'t add current and keep pos in stack
+                    i++;
+                } else if (peeked < Math.abs(curr)) {
+                    // pos will explode so remove from stack
+                    // do not increment so that we can check for additional collisions
+                    stack.pop();
+                }
+            } else {
+                // if no collision, add to stack
+                stack.add(ast[i]);
+                i++;
+            }
+        }
+        // add stack to array in reverse order
+        int[] res = new int[stack.size()];
+        int x = stack.size() - 1;
+        while (!stack.isEmpty()) {
+            res[x] = stack.pop();
+            x--;
+        }
+        return res;
+    }
+}

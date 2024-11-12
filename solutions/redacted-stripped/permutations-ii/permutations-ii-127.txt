@@ -1,0 +1,39 @@
+class Solution {
+
+    public static List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        Map<Integer, Boolean> flag = new HashMap<>();
+        recursivePermute(nums, result, 0);
+        return result;
+    }
+
+    public static void recursivePermute(int[] nums, List<List<Integer>> result, int index) {
+        if (index >= nums.length) {
+            result.add(new ArrayList(Arrays.stream(nums).boxed().collect(Collectors.toList())));
+            return;
+        }
+        for (int i = index; i < nums.length; i++) {
+            if (shouldAdd(nums, index, i)) {
+                swap(nums, i, index);
+                recursivePermute(nums, result, index + 1);
+                swap(nums, i, index);
+            }
+        }
+    }
+
+    public static void swap(int[] nums, int i, int index) {
+        int temp = nums[i];
+        nums[i] = nums[index];
+        nums[index] = temp;
+    }
+
+    public static boolean shouldAdd(int[] nums, int index, int i) {
+        if (i > index) {
+            for (int k = index; k <= i - 1; k++) {
+                if (nums[i] == nums[k])
+                    return false;
+            }
+        }
+        return true;
+    }
+}

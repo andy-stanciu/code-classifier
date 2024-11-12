@@ -1,0 +1,84 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        //if head is null return null
+        //if k == 1 then no change is required.
+        if (head == null || k < 2)
+            return head;
+        // Cut the chain in 3 parts.
+        // 1. prevChain: this node contains the last value of previous chain. Previous chain is the already processed chain.
+        // 2. current chain: The chain that will be reversed in current iteration.
+        //       at first - currentChainStart will contain the starting node of current chain and currentChainEnd will
+        //                   contain the last node of current chain.
+        //       after processing - currentChainStart will become the last node of current chain and currentChainEnd will
+        //                   become the first node of current chain.
+        // 3. remainingChain: this node will contain the first node of remaining chain to be processed.
+        //
+        ListNode var1 = null, var2, var3 = null, var4 = head;
+        //we will assign this value after first processing is done.
+        head = null;
+        //until all nodes are processed.
+        while (var4 != null) {
+            var2 = var4;
+            //cut the chain and take current chain with length k. Will process this chain in this iteration.
+            int count = 0;
+            while (count < k && var4 != null) {
+                var3 = var4;
+                var4 = var4.next;
+                count++;
+            }
+            //if we found enough node only then we reverse them.
+            if (count == k) {
+                method2(var2, k);
+                if (head == null)
+                    //remember this node has become the first node of reversed chain.
+                    head = var3;
+                if (var1 != null) {
+                    //must link the last node of previous chain with first node of current processed chain.
+                    var1.next = var3;
+                }
+                //remember this node has become the last node of reversed chain.
+                var1 = var2;
+            } else //this case only happen if k > total node count of the list.
+            if (head == null) {
+                // as no reverse happened so start node remains start of the chain.
+                head = var2;
+            } else //this case only happens if last < k nodes remains unchanged.
+            if (var1 != null)
+                var1.next = var2;
+        }
+        return head;
+    }
+
+    /**
+     * Recursively reverse the linked list starting from the given node. And return the last node of the linked list
+     * after processing.
+     *
+     * For example - before calling this method if list looks like 1 --> 2 --> 3 -- [any value] will reverse it
+     * like 3 --> 2 --> 1 --> null
+     *
+     * After processing this method will return node with value 1
+     *
+     * @param node current node of the linked list. This node will be appended at the last of result from recursive call.
+     * @param nodeCount remaining node count for this list.
+     * @return the last node of the processed linked list.
+     */
+    private ListNode method2(ListNode node, int nodeCount) {
+        if (nodeCount < 2)
+            return node;
+        ListNode result = method2(node.next, nodeCount - 1);
+        result.next = node;
+        node.next = null;
+        return node;
+    }
+}

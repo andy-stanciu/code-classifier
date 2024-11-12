@@ -1,0 +1,53 @@
+class Solution {
+
+    public void nextPermutation(int[] nums) {
+        int last;
+        int next;
+        int len = nums.length;
+        if (len == 0 || len == 1) {
+            //nothing
+        } else {
+            boolean shouldReverse = false;
+            for (int i = len - 1; i > 0; i--) {
+                last = nums[i];
+                next = nums[i - 1];
+                if (last > next) {
+                    if (i == len - 1) {
+                        //  i-1<i  >>>>>>
+                        nums[i] = next;
+                        //  3 6 5 4 2 1
+                        nums[i - 1] = last;
+                        break;
+                    }
+                    int minMax = last;
+                    int repR = i - 1;
+                    while (i + 1 < len && nums[i + 1] > next) {
+                        i++;
+                        minMax = nums[i];
+                    }
+                    nums[i] = next;
+                    nums[repR] = minMax;
+                    reverse(nums, repR + 1, len, len);
+                    break;
+                }
+                if (i == 1) {
+                    shouldReverse = true;
+                }
+            }
+            if (shouldReverse) {
+                reverse(nums, 0, len, len);
+            }
+        }
+    }
+
+    public static void reverse(int[] nums, int right, int left, int len) {
+        int revRight;
+        int revLeft;
+        for (int i = 0; i < (left - right) / 2; i++) {
+            revRight = nums[right + i];
+            revLeft = nums[left - 1 - i];
+            nums[right + i] = revLeft;
+            nums[left - 1 - i] = revRight;
+        }
+    }
+}

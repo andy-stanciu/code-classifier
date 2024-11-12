@@ -1,0 +1,46 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode dummy = new ListNode(0);
+        // this dummy\'s next will finally point to output head
+        dummy.next = head;
+        // we will have 3 pointers to work on swapping nodes
+        ListNode prev = dummy, curr = dummy, next = dummy;
+        // count the size of the linked list
+        int count = 0;
+        while (curr.next != null) {
+            count++;
+            curr = curr.next;
+        }
+        // possible groups = count/k
+        // we will have a while loop which runs till count >= k and decrement the count each time a group was done with the operation.
+        while (count >= k) {
+            curr = prev.next;
+            next = curr.next;
+            // each group will have k-1 operations to perform
+            for (int i = 1; i < k; i++) {
+                // work this logic out with a pen and paper for below input
+                // 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> null             k = 3
+                // 3 -> 2 -> 1 -> 6 -> 5 -> 4 -> 7 -> 8 -> null
+                curr.next = next.next;
+                next.next = prev.next;
+                prev.next = next;
+                next = curr.next;
+            }
+            // For the first group after the above for loop dummy\'s next will point to 3 (output head)
+            prev = curr;
+            count -= k;
+        }
+        return dummy.next;
+    }
+}

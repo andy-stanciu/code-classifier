@@ -1,0 +1,85 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    TreeNode par;
+
+    public TreeNode f(TreeNode root, TreeNode add) {
+        if (add == null)
+            return root;
+        TreeNode cur = root;
+        while (cur != null) {
+            if (add.val > cur.val) {
+                if (cur.right == null) {
+                    cur.right = add;
+                    return root;
+                }
+                cur = cur.right;
+            } else {
+                if (cur.left == null) {
+                    cur.left = add;
+                    return root;
+                }
+                cur = cur.left;
+            }
+        }
+        return add;
+    }
+
+    public TreeNode method1(TreeNode root, int k) {
+        par = null;
+        TreeNode cur = root;
+        while (cur != null) {
+            if (cur.val == k)
+                return cur;
+            if (k > cur.val) {
+                par = cur;
+                cur = cur.right;
+            } else {
+                par = cur;
+                cur = cur.left;
+            }
+        }
+        return cur;
+    }
+
+    public TreeNode method2(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        TreeNode tar = method1(root, key);
+        if (tar == null)
+            return root;
+        TreeNode l = null;
+        TreeNode r = null;
+        if (tar.left != null)
+            l = tar.left;
+        tar.left = null;
+        if (tar.right != null)
+            r = tar.right;
+        tar.right = null;
+        if (par != null && par.right == tar)
+            par.right = null;
+        else if (par != null && par.left == tar)
+            par.left = null;
+        if (par == null) {
+            root = f(l, r);
+            return root;
+        }
+        root = f(root, l);
+        root = f(root, r);
+        return root;
+    }
+}

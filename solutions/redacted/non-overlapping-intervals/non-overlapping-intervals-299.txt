@@ -1,0 +1,42 @@
+class Solution {
+
+    public int method1(int[][] arr) {
+        int n = arr.length;
+        Arrays.sort(arr, new Comparator<int[]>() {
+
+            public int compare(int[] a, int[] b) {
+                //major mistake was here itself.
+                /* 
+                firstly, i did, a[0]-b[0], which is sorting based on the first element of the 
+                of the arrays of this 2-d arr. this was wrong because we already used Arrays.sort
+                so that the arrays of arr are already arranged in increasing order based on their 
+                first element. But, we also have to check the second element too, when the first 
+                element is same. so, for that purpose, we use a[1]-b[1]
+                */
+                return a[1] - b[1];
+            }
+        });
+        int count = 0;
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i][0] < arr[i - 1][1]) {
+                //the above condition is for if the intervals are merging.
+                //for intervals to merge, the curr arr[i]\'s first element should be
+                //lesser than prev arr[i]\'s second element.
+                //if the condition got satisfied, we simply just update the curr arr[i] as
+                //the prev arr[i] and increase the count.
+                arr[i][0] = arr[i - 1][0];
+                arr[i][1] = arr[i - 1][1];
+                count++;
+            } else {
+                continue;
+            }
+        }
+        //System.out.println(count);
+        return count;
+        //[1,11],[1,100],[2,12],[11,22]
+        //c=1
+        //[1,11],[2,12],[11,22]
+        //c=2
+        //[1,11][11,22]
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        // Stack to simulate asteroid movements
+        Stack<Integer> st = new Stack<>();
+        // Index to iterate through the asteroids array
+        int i = 0;
+        while (i < asteroids.length) {
+            if (asteroids[i] > 0) {
+                // If the current asteroid is moving to the right, push it onto the stack
+                st.push(asteroids[i]);
+                i++;
+            } else {
+                // Current asteroid is moving to the left (negative)
+                if (st.size() == 0 || st.peek() < 0) {
+                    // If the stack is empty or the top of the stack is also a left-moving asteroid, push this one
+                    st.push(asteroids[i]);
+                    i++;
+                } else if (st.peek() > Math.abs(asteroids[i])) {
+                    // If the top of the stack is a larger right-moving asteroid, the current one explodes
+                    i++;
+                } else if (st.peek() < Math.abs(asteroids[i])) {
+                    // If the top of the stack is a smaller right-moving asteroid, it pops (explodes)
+                    st.pop();
+                } else {
+                    // If both are the same size, both explode, so pop the stack and move to the next asteroid
+                    st.pop();
+                    i++;
+                }
+            }
+        }
+        // Convert stack to result array
+        int[] result = new int[st.size()];
+        for (int k = result.length - 1; k >= 0; k--) {
+            result[k] = st.pop();
+        }
+        // Return the final state of the asteroids
+        return result;
+    }
+}

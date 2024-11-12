@@ -1,0 +1,72 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode current = head;
+        while (current != null) {
+            ListNode next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+        return prev;
+    }
+
+    static ListNode removeLastNode(ListNode head) {
+        if (head == null)
+            return null;
+        if (head.next == null) {
+            return null;
+        }
+        // Find the second last node
+        ListNode second_last = head;
+        while (second_last.next.next != null) second_last = second_last.next;
+        // Change next of second last
+        second_last.next = null;
+        return head;
+    }
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode a = reverseList(l1);
+        ListNode b = reverseList(l2);
+        ListNode x = new ListNode();
+        ListNode ans = x;
+        int carry = 0, sum = 0;
+        int flaga, flagb;
+        flaga = flagb = 0;
+        while (flaga + flagb <= 1) {
+            sum = a.val + b.val + carry;
+            carry = sum / 10;
+            sum %= 10;
+            x.next = new ListNode(sum, null);
+            x = x.next;
+            if (a.next != null)
+                a = a.next;
+            else {
+                flaga = 1;
+                a.val = 0;
+            }
+            if (b.next != null)
+                b = b.next;
+            else {
+                flagb = 1;
+                b.val = 0;
+            }
+        }
+        if (carry != 0)
+            x.next = new ListNode(carry, null);
+        ans = reverseList(ans);
+        ans = removeLastNode(ans);
+        return ans;
+    }
+}

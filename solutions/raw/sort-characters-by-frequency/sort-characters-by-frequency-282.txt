@@ -1,0 +1,39 @@
+class Solution {
+
+    public String frequencySort(String A) {
+        //first, we will create a hashmap to find the elements and their occurences
+        Map<Character, Integer> freqMap = new HashMap<>();
+        //iterate over the string
+        for (char c : A.toCharArray()) {
+            //find the elements and their occurances and then increment their frequencies accordingly
+            int currentFreq = freqMap.getOrDefault(c, 0);
+            //incremented the frequency by one to show their occurance in the freq map
+            int updatedFreq = currentFreq + 1;
+            //added all those elements and frequencies to the freq map
+            freqMap.put(c, updatedFreq);
+        }
+        //now, let\'s create a priority queue and compare each element\'s frequency and sort them accordingly
+        PriorityQueue<Character> heap = new PriorityQueue<>((a, b) -> freqMap.get(b) - freqMap.get(a));
+        //from the above lambda funtion, we will see the difference in their frequencies. If it\'s negative
+        //then, the element\'s freq is less than the other compared element and it won\'t be considered as a priority
+        //if it\'s positive, then it is prioritized, if it is 0, then both the frequencies are equal and it\'s okay
+        //place them without sorting them with each other
+        //we will add the sorted characters to the heap
+        heap.addAll(freqMap.keySet());
+        //now, let\'s build a string builder to store the characters accordingly
+        StringBuilder S = new StringBuilder();
+        //we will iterate till the heap becomes empty
+        while (!heap.isEmpty()) {
+            //initiate a char c to assign the removed values from heap
+            char c = heap.poll();
+            //this line gives the frequencies of the characters
+            int freq = freqMap.get(c);
+            //iterate through the characters
+            for (int i = 0; i < freq; i++) {
+                //add all the characters \'frequency\' times
+                S.append(c);
+            }
+        }
+        return S.toString();
+    }
+}

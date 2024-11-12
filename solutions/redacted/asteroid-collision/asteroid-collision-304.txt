@@ -1,0 +1,30 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        int sp = -1;
+        for (int i = 0; i < param1.length; i++) {
+            param1[++sp] = param1[i];
+            while (sp >= 1 && param1[sp] < 0) {
+                if (param1[sp - 1] < 0 && param1[sp] < 0) {
+                    // Both can be negative - moving in same direction
+                    break;
+                }
+                int positiveCurrent = -1 * param1[sp];
+                if (param1[sp - 1] == positiveCurrent) {
+                    // Both collide and destroy each other
+                    sp = sp - 2;
+                    break;
+                } else if (param1[sp - 1] > positiveCurrent) {
+                    // current is destroyed
+                    sp--;
+                    break;
+                } else {
+                    param1[sp - 1] = param1[sp];
+                    // previous is destroyed
+                    sp--;
+                }
+            }
+        }
+        return Arrays.copyOf(param1, sp + 1);
+    }
+}

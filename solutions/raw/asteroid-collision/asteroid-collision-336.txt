@@ -1,0 +1,33 @@
+class Solution {
+
+    boolean canPush(int a, Stack<Integer> stk) {
+        return stk.isEmpty() || a > 0 && stk.peek() > 0 || a < 0 && stk.peek() < 0 || a > 0 && stk.peek() < 0;
+    }
+
+    public int[] asteroidCollision(int[] arr) {
+        Stack<Integer> stk = new Stack<>();
+        int i = 0, n = arr.length;
+        while (i < n) {
+            if (canPush(arr[i], stk)) {
+                stk.push(arr[i++]);
+            } else {
+                if (!stk.isEmpty() && Math.abs(stk.peek()) == Math.abs(arr[i])) {
+                    stk.pop();
+                    i++;
+                } else {
+                    if (Math.abs(stk.peek()) < Math.abs(arr[i])) {
+                        stk.pop();
+                    } else {
+                        i++;
+                    }
+                }
+            }
+        }
+        int nn = stk.size();
+        int[] res = new int[nn];
+        while (--nn >= 0) {
+            res[nn] = stk.pop();
+        }
+        return res;
+    }
+}

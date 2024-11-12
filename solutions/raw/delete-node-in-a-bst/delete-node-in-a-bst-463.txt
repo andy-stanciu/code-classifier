@@ -1,0 +1,75 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        TreeNode del = root;
+        TreeNode parent = null;
+        while (del != null && del.val != key) {
+            parent = del;
+            if (del.val > key) {
+                parent = del;
+                del = del.left;
+            } else {
+                parent = del;
+                del = del.right;
+            }
+        }
+        if (del == null)
+            return root;
+        while (true) {
+            if (del.left == null && del.right == null) {
+                if (root == del) {
+                    root = null;
+                    return root;
+                }
+                if (parent.left == del) {
+                    parent.left = null;
+                    return root;
+                } else {
+                    parent.right = null;
+                    return root;
+                }
+            } else {
+                if (del.left != null) {
+                    TreeNode max = del.left;
+                    parent = del;
+                    while (max.right != null) {
+                        parent = max;
+                        max = max.right;
+                    }
+                    int swa = max.val;
+                    max.val = del.val;
+                    del.val = swa;
+                    del = max;
+                } else {
+                    parent = del;
+                    TreeNode min = del.right;
+                    while (min.left != null) {
+                        parent = min;
+                        min = min.left;
+                    }
+                    int swa = min.val;
+                    min.val = del.val;
+                    del.val = swa;
+                    del = min;
+                }
+            }
+        }
+    }
+}

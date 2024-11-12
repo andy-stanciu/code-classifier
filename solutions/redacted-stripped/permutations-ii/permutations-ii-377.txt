@@ -1,0 +1,31 @@
+class Solution {
+
+    public void dfs(HashSet<List<Integer>> result, int[] nums, int index, List<Integer> path, boolean[] vis) {
+        if (path.size() == nums.length) {
+            List<Integer> row = new ArrayList<>();
+            for (Integer p : path) row.add(p);
+            result.add(row);
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (i == index || vis[i])
+                continue;
+            vis[i] = true;
+            path.add(nums[i]);
+            dfs(result, nums, i, path, vis);
+            vis[i] = false;
+            path.remove(path.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        HashSet<List<Integer>> result = new HashSet<>();
+        boolean[] vis = new boolean[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            dfs(result, nums, i, new ArrayList<>(), vis);
+        }
+        List<List<Integer>> res = new ArrayList<>(result);
+        if (nums.length == 1)
+            res.add(new ArrayList<Integer>(Arrays.asList(nums[0])));
+        return res;
+    }
+}

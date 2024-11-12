@@ -1,0 +1,27 @@
+class Solution {
+
+    public void generateSubset(int[] nums, int target, int idx, List<List<Integer>> combination, List<Integer> current) {
+        if (target == 0) {
+            combination.add(new ArrayList(current));
+            return;
+        }
+        for (int i = idx; i < nums.length; i++) {
+            if (i > idx && nums[i] == nums[i - 1])
+                continue;
+            if (nums[i] > target)
+                break;
+            current.add(nums[i]);
+            generateSubset(nums, target - nums[i], i + 1, combination, current);
+            current.remove(current.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> combination = new ArrayList<>();
+        //Step 1 : Apply Counting Sort.
+        Arrays.sort(candidates);
+        //Step 2 : Generate all Subsets.
+        generateSubset(candidates, target, 0, combination, new ArrayList());
+        return combination;
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        // simulation begins
+        for (int asteroid : asteroids) {
+            // if nothing to collides
+            if (stack.isEmpty()) {
+                stack.push(asteroid);
+                continue;
+            }
+            // handle collisions
+            boolean destroyed = false;
+            // if (p,n) then handle collisions
+            while (!stack.isEmpty() && !have_same_sign(asteroid, stack.peek()) && stack.peek() > 0) {
+                if (Math.abs(asteroid) > Math.abs(stack.peek())) {
+                    stack.pop();
+                } else if (Math.abs(asteroid) < Math.abs(stack.peek())) {
+                    destroyed = true;
+                    break;
+                } else {
+                    stack.pop();
+                    destroyed = true;
+                    break;
+                }
+            }
+            if (!destroyed)
+                stack.push(asteroid);
+        }
+        // construct result
+        int[] result = new int[stack.size()];
+        int idx = result.length - 1;
+        while (!stack.isEmpty()) {
+            result[idx] = stack.pop();
+            idx--;
+        }
+        return result;
+    }
+
+    private boolean have_same_sign(int a, int b) {
+        return (a ^ b) >= 0;
+    }
+}

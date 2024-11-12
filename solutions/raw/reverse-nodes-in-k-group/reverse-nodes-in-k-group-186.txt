@@ -1,0 +1,70 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        int counter = 1;
+        ListNode fast = head;
+        while (fast.next != null && fast.next.next != null) {
+            counter += 2;
+            fast = fast.next.next;
+        }
+        if (fast.next != null)
+            counter++;
+        int noOfLoops = counter / k;
+        ListNode dummyHead = new ListNode(-1);
+        dummyHead.next = head;
+        int counter2 = 0;
+        ListNode mainHead = dummyHead;
+        ListNode mainTail = head;
+        ListNode currHead = mainTail;
+        ListNode currTail = mainTail;
+        while (counter2 < noOfLoops) {
+            //  mainHead.next=null;
+            int tempK = 0;
+            while (tempK < k - 1) {
+                currTail = currTail.next;
+                tempK++;
+            }
+            mainTail = currTail.next;
+            currTail.next = null;
+            mainHead.next = reverseLinkedList(currHead);
+            currHead.next = mainTail;
+            mainHead = currHead;
+            currHead = currHead.next;
+            currTail = currHead;
+            counter2++;
+        }
+        return dummyHead.next;
+    }
+
+    public ListNode reverseLinkedList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        return prev;
+    }
+}

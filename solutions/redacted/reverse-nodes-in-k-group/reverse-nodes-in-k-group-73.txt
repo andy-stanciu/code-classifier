@@ -1,0 +1,29 @@
+class Solution {
+
+    public ListNode getKThNode(ListNode curr, int k) {
+        while (curr != null && k-- > 1) curr = curr.next;
+        return curr;
+    }
+
+    public ListNode method1(ListNode head, int k) {
+        ListNode dummy = new ListNode(-1, head);
+        ListNode var1 = dummy, prev = var1, curr = head, forw;
+        while (curr != null) {
+            ListNode kthNode = getKThNode(curr, k);
+            if (kthNode == null)
+                return dummy.next;
+            ListNode var2 = kthNode.next;
+            while (curr != var2) {
+                forw = curr.next;
+                curr.next = prev;
+                prev = curr;
+                curr = forw;
+            }
+            ListNode currTail = var1.next;
+            var1.next = prev;
+            currTail.next = var2;
+            var1 = currTail;
+        }
+        return dummy.next;
+    }
+}

@@ -1,0 +1,59 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode();
+        ListNode result = dummy;
+        l1 = reverse(l1);
+        l2 = reverse(l2);
+        // reverse both l1 and l2, reverse is an user defined method
+        int sum = 0, carry = 0;
+        //now add the numbers from l1 and l2
+        while (l1 != null || l2 != null) {
+            sum = 0;
+            sum += carry;
+            carry = 0;
+            if (l1 != null) {
+                sum += l1.val;
+                l1 = l1.next;
+            }
+            if (l2 != null) {
+                sum += l2.val;
+                l2 = l2.next;
+            }
+            if (sum > 9) {
+                carry = sum / 10;
+                sum = sum % 10;
+            }
+            result.next = new ListNode(sum);
+            result = result.next;
+        }
+        //if carry have 1 then we will add it at last node
+        if (carry != 0) {
+            result.next = new ListNode(carry);
+        }
+        //finally reverse the results and return it
+        return reverse(dummy.next);
+    }
+
+    public ListNode reverse(ListNode head) {
+        //this is the reverse method, that will reverse the LinkedList and return the head of the list after reversing
+        ListNode prev = null, cur = head, temp = head;
+        while (temp != null) {
+            temp = temp.next;
+            cur.next = prev;
+            prev = cur;
+            cur = temp;
+        }
+        return prev;
+    }
+}

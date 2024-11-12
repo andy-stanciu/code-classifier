@@ -1,0 +1,51 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        // Check if the input linked list has at least \'k\' nodes; if not, return the original list.
+        if (!checkvalid(head, k)) {
+            return head;
+        }
+        // \'curr\' points to the current node during iteration
+        ListNode curr = head;
+        // \'prev\' points to the previous node of \'curr\' during iteration
+        ListNode prev = null;
+        // \'next\' points to the next node of \'curr\' during iteration
+        ListNode next = null;
+        // Initialize a count to keep track of the nodes processed
+        int count = 0;
+        // Reverse every \'k\' nodes in the linked list
+        while (count < k && curr != null) {
+            // Store the next node of \'curr\' to avoid losing the reference
+            next = curr.next;
+            // Reverse the pointer to the previous node
+            curr.next = prev;
+            // Move \'prev\' to the current node for the next iteration
+            prev = curr;
+            // Move \'curr\' to the next node for the next iteration
+            curr = next;
+            // Increment the count of nodes processed
+            count += 1;
+        }
+        // After reversing \'k\' nodes, \'prev\' points to the new head of the reversed portion.
+        // \'head\' should now point to the last node of the reversed portion to connect with the next reversed group.
+        // Recursively call \'reverseKGroup\' on the remaining part of the linked list and set it as the next node of the current reversed group.
+        head.next = method1(next, k);
+        // Return \'prev\' as it is now the head of the reversed group.
+        return prev;
+    }
+
+    // A helper function to check if the linked list has at least \'k\' nodes.
+    public Boolean checkvalid(ListNode head, int k) {
+        if (head == null) {
+            return false;
+        }
+        int count = 0;
+        ListNode temp = head;
+        while (count < k && temp != null) {
+            temp = temp.next;
+            count += 1;
+        }
+        // If \'count\' is less than \'k\', it means there are fewer than \'k\' nodes in the linked list.
+        return count >= k;
+    }
+}

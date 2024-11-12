@@ -1,0 +1,65 @@
+class Solution {
+
+    // Function to check if two integers have same sign or not.
+    public boolean sameSign(int x, int y) {
+        if ((x > 0 && y > 0) || (x < 0 && y < 0)) {
+            return true;
+        }
+        return false;
+    }
+
+    public int[] method1(int[] param1) {
+        // Length of asteroids array.
+        int len = param1.length;
+        // Stack to store the final asteroids.
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < len; i++) {
+            // Case 1 (When either stack is empty or two consecutive asteroids have same sign.)
+            if (stack.empty() || sameSign(param1[i], stack.peek())) {
+                stack.push(param1[i]);
+            } else {
+                if (stack.peek() > 0 && param1[i] < 0) {
+                    // Case 2 (When 2 and -5 collide.)
+                    if (stack.peek() + param1[i] < 0) {
+                        boolean var1 = false;
+                        while (stack.peek() > 0 && param1[i] < 0 && (stack.peek() + param1[i]) <= 0) {
+                            // When both asteroids explode
+                            if (stack.peek() + param1[i] == 0) {
+                                stack.pop();
+                                var1 = true;
+                                break;
+                            } else // Otherwise
+                            {
+                                stack.pop();
+                                if (stack.empty()) {
+                                    break;
+                                }
+                            }
+                        }
+                        if (var1 == false) {
+                            if (stack.empty() || (stack.peek() < 0 && param1[i] < 0)) {
+                                stack.push(param1[i]);
+                            }
+                        }
+                    } else // Case 3 (When 8 and -8 collide.)
+                    if (stack.peek() + param1[i] == 0) {
+                        stack.pop();
+                    } else // Case 4 (When 10 and -2 collide.)
+                    {
+                        continue;
+                    }
+                } else // Case 5 (For asteroids -2 and 10, which never collide with each other. )
+                {
+                    stack.push(param1[i]);
+                }
+            }
+        }
+        int size = stack.size();
+        // Final array of asteroids.
+        int[] var2 = new int[size];
+        for (int i = 0; i < size; i++) {
+            var2[i] = stack.get(i);
+        }
+        return var2;
+    }
+}

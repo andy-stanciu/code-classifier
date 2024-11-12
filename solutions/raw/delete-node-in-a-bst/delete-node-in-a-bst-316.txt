@@ -1,0 +1,84 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        TreeNode newPivot = deleteAndMaintainBST(root, null, key);
+        if (root != null && key == root.val) {
+            return newPivot;
+        }
+        return root;
+    }
+
+    private TreeNode deleteAndMaintainBST(TreeNode currNode, TreeNode parentNode, int key) {
+        if (currNode == null)
+            return null;
+        if (currNode.val == key) {
+            TreeNode pivotNode = null;
+            if (currNode.right != null) {
+                // Find rightmost node of left subtree
+                if (currNode.left != null) {
+                    TreeNode rightMostNodeinLSBT = findRightMostNodeInLeftSubTree(currNode.left);
+                    rightMostNodeinLSBT.right = currNode.right.left;
+                    currNode.right.left = currNode.left;
+                    currNode.left = null;
+                }
+                pivotNode = currNode.right;
+                currNode.right = null;
+            } else if (currNode.left != null) {
+                // Find rightmost node of left subtree
+                TreeNode rightMostNodeinLSBT = findRightMostNodeInLeftSubTreeWithParent(currNode.left, currNode.left);
+                rightMostNodeinLSBT.right = currNode.right;
+                if (rightMostNodeinLSBT != currNode.left)
+                    rightMostNodeinLSBT.left = currNode.left;
+                pivotNode = rightMostNodeinLSBT;
+                currNode.left = null;
+            }
+            if (parentNode != null) {
+                if (key < parentNode.val) {
+                    parentNode.left = pivotNode;
+                } else if (key > parentNode.val) {
+                    parentNode.right = pivotNode;
+                }
+                return null;
+            }
+            return pivotNode;
+        }
+        if (currNode.val > key)
+            return deleteAndMaintainBST(currNode.left, currNode, key);
+        if (currNode.val < key)
+            return deleteAndMaintainBST(currNode.right, currNode, key);
+        return null;
+    }
+
+    private TreeNode findRightMostNodeInLeftSubTree(TreeNode node) {
+        if (node.right == null) {
+            return node;
+        }
+        return findRightMostNodeInLeftSubTree(node.right);
+    }
+
+    private TreeNode findRightMostNodeInLeftSubTreeWithParent(TreeNode node, TreeNode parent) {
+        if (node.right == null) {
+            if (parent != node) {
+                parent.right = node.left;
+                node.left = null;
+            }
+            return node;
+        }
+        return findRightMostNodeInLeftSubTreeWithParent(node.right, node);
+    }
+}

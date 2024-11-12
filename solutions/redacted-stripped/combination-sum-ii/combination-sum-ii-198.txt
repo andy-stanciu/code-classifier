@@ -1,0 +1,32 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        int[] freq = new int[target + 1];
+        for (int candidate : candidates) {
+            if (candidate <= target)
+                freq[candidate]++;
+        }
+        List<List<Integer>> ans = new ArrayList<>();
+        dfs(freq, 0, target, target, new ArrayList<>(), ans);
+        return ans;
+    }
+
+    public void dfs(int[] freq, int number, int remaining, int limit, List<Integer> list, List<List<Integer>> ans) {
+        if (remaining == 0) {
+            ans.add(new ArrayList<>(list));
+            return;
+        }
+        if (number > limit)
+            return;
+        int times = 0;
+        while (times <= freq[number] && times * number <= remaining) {
+            if (times > 0)
+                list.add(number);
+            dfs(freq, number + 1, remaining - times * number, limit, list, ans);
+            times++;
+        }
+        while (--times > 0) {
+            list.remove(list.size() - 1);
+        }
+    }
+}

@@ -1,0 +1,70 @@
+/**
+ * Definition for a binary tree node.
+ */
+// public class TreeNode {
+//     int val;
+//     TreeNode left;
+//     TreeNode right;
+//     TreeNode() {}
+//     TreeNode(int val) { this.val = val; }
+//     TreeNode(int val, TreeNode left, TreeNode right) {
+//         this.val = val;
+//         this.left = left;
+//         this.right = right;
+//     }
+// }
+class Solution {
+
+    /**
+     * Finds all paths from root to leaf nodes in a binary tree and returns them as a list of strings.
+     * Each path is represented by a string of node values separated by "->".
+     *
+     * @param root The root node of the binary tree.
+     * @return A list of strings, each representing a unique root-to-leaf path.
+     */
+    public List<String> method1(TreeNode root) {
+        // Handle edge case where the tree is empty
+        if (root == null) {
+            return new ArrayList<>();
+        }
+        List<String> var1 = new ArrayList<>();
+        // Use StringBuilder for efficient string manipulation
+        StringBuilder path = new StringBuilder();
+        // Start recursive path finding
+        method2(root, var1, path);
+        return var1;
+    }
+
+    /**
+     * Helper method to recursively find all paths from the current node to leaf nodes.
+     *
+     * @param root The current node being visited.
+     * @param paths The list of paths found so far.
+     * @param path The current path represented as a StringBuilder for efficient modification.
+     */
+    private void method2(TreeNode root, List<String> var1, StringBuilder path) {
+        // Base case: if the current node is null, return immediately
+        if (root == null) {
+            return;
+        }
+        // Record the current length of path to allow for backtracking later
+        int length = path.length();
+        // Leaf node condition: if both left and right children are null
+        if (root.left == null && root.right == null) {
+            // Append the leaf node\'s value
+            path.append(root.val);
+            // Add the completed path to the list
+            var1.add(path.toString());
+            // Backtrack to remove the leaf node\'s value before returning
+            path.setLength(length);
+            return;
+        }
+        // Non-leaf node: append the current node\'s value and "->"
+        path.append(root.val).append("->");
+        // Recurse down the left and right children (if present)
+        method2(root.left, var1, path);
+        method2(root.right, var1, path);
+        // Backtrack: revert the StringBuilder to its state before exploring children
+        path.setLength(length);
+    }
+}

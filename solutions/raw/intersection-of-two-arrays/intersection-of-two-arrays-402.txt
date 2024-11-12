@@ -1,0 +1,57 @@
+class Solution {
+
+    private Map<Integer, Boolean> buildMap(int[] nums) {
+        Map<Integer, Boolean> map = new HashMap<>();
+        for (int number : nums) {
+            if (!map.containsKey(number)) {
+                map.put(number, true);
+            }
+        }
+        return map;
+    }
+
+    private List<Integer> findIntersection(int[] nums, Map<Integer, Boolean> map) {
+        List<Integer> result = new ArrayList<>();
+        for (int number : nums) {
+            if (map.containsKey(number)) {
+                result.add(number);
+                //remove the key from Map so that we don\'t add the same number into the result
+                //We can use a set here. If we use Set, we don\'t need to delete numbers from Map
+                map.remove(number);
+            }
+        }
+        return result;
+    }
+
+    public int[] intersection(int[] nums1, int[] nums2) {
+        //base cases
+        if (nums1 == null && nums2 == null) {
+            //null is the intersection
+            return nums1;
+        }
+        if (nums1 == null || nums2 == null) {
+            //no intersection, return null
+            return null;
+        }
+        List<Integer> result = null;
+        Map<Integer, Boolean> map = null;
+        int n = nums1.length;
+        int m = nums2.length;
+        if (n <= m) {
+            //build map using nums1 and findIntersection while processing elements of nums2
+            map = buildMap(nums1);
+            result = findIntersection(nums2, map);
+        } else {
+            //build map using nums2 and findIntersection while processing elements of nums1
+            map = buildMap(nums2);
+            result = findIntersection(nums1, map);
+        }
+        //build array from a List
+        int[] resultArray = new int[result.size()];
+        int index = 0;
+        for (int number : result) {
+            resultArray[index++] = number;
+        }
+        return resultArray;
+    }
+}

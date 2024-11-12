@@ -1,0 +1,56 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        if (key < root.val) {
+            root.left = method1(root.left, key);
+            return root;
+        } else if (key > root.val) {
+            root.right = method1(root.right, key);
+            return root;
+        }
+        // root.val == key, case 1, 2, 3
+        if (root.left == null || root.right == null) {
+            return root.left == null ? root.right : root.left;
+        }
+        // case 4
+        if (root.right.left == null) {
+            root.right.left = root.left;
+            root.left = null;
+            return root.right;
+        }
+        //find smallest node larget than the target
+        TreeNode small = method2(root.right);
+        small.left = root.left;
+        small.right = root.right;
+        return small;
+    }
+
+    private TreeNode method2(TreeNode param1) {
+        TreeNode pre = param1;
+        TreeNode cur = param1.left;
+        while (cur.left != null) {
+            pre = cur;
+            cur = cur.left;
+        }
+        pre.left = cur.right;
+        return cur;
+    }
+}

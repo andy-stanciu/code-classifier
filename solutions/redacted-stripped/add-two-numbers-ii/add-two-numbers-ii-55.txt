@@ -1,0 +1,42 @@
+class Solution {
+
+    public ListNode rev(ListNode head) {
+        ListNode curr = head;
+        ListNode prev = null;
+        while (curr != null) {
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        return prev;
+    }
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        l1 = rev(l1);
+        l2 = rev(l2);
+        int carry = 0;
+        ListNode dummy = new ListNode(0);
+        ListNode temp = dummy;
+        while (l1 != null || l2 != null) {
+            int val1 = l1 != null ? l1.val : 0;
+            int val2 = l2 != null ? l2.val : 0;
+            int sum = val1 + val2 + carry;
+            carry = sum / 10;
+            int current_sum = sum % 10;
+            ListNode res = new ListNode(current_sum);
+            temp.next = res;
+            if (l1 != null)
+                l1 = l1.next;
+            if (l2 != null)
+                l2 = l2.next;
+            temp = temp.next;
+        }
+        if (carry != 0) {
+            ListNode res = new ListNode(carry);
+            temp.next = res;
+        }
+        dummy = rev(dummy.next);
+        return dummy;
+    }
+}

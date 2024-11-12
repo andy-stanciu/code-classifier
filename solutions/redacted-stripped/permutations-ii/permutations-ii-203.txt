@@ -1,0 +1,29 @@
+class Solution {
+
+    private void recursePermute(List<Integer> ds, boolean[] map, int[] nums, List<List<Integer>> ans) {
+        if (ds.size() == nums.length) {
+            ans.add(new ArrayList<Integer>(ds));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (i != 0 && nums[i] == nums[i - 1] && !map[i - 1])
+                continue;
+            if (!map[i]) {
+                map[i] = true;
+                ds.add(nums[i]);
+                recursePermute(ds, map, nums, ans);
+                ds.remove(ds.size() - 1);
+                map[i] = false;
+            }
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> ds = new ArrayList<>();
+        boolean[] map = new boolean[nums.length];
+        recursePermute(ds, map, nums, ans);
+        return ans;
+    }
+}

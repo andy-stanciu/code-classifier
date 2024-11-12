@@ -1,0 +1,64 @@
+class Solution {
+
+    public void nextPermutation(int[] nums) {
+        int len = nums.length - 1;
+        boolean breakpoint = true;
+        // Step 1: Find the first decreasing element from right to left
+        for (int i = len; i > 0; i--) {
+            if (nums[i] > nums[i - 1]) {
+                // Step 2: Call setNextArray to find the next permutation
+                setNextArray(i - 1, nums);
+                breakpoint = false;
+                break;
+            }
+        }
+        // Step 3: If no such increasing pair is found, reverse the array
+        if (breakpoint) {
+            reverse(nums);
+        }
+    }
+
+    // Method to reverse the array
+    public static void reverse(int[] arr) {
+        int start = 0;
+        int end = arr.length - 1;
+        while (start < end) {
+            // Swap elements at start and end indices
+            int temp = arr[start];
+            arr[start] = arr[end];
+            arr[end] = temp;
+            // Move indices towards the center
+            start++;
+            end--;
+        }
+    }
+
+    // Method to find the next permutation starting from the given breakpoint
+    public static void setNextArray(int breakpoint, int[] arr) {
+        int min = arr[breakpoint + 1];
+        int index = breakpoint + 1;
+        // Step 1: Find the smallest element on the right of arr[breakpoint] that is greater than arr[breakpoint]
+        for (int i = breakpoint + 1; i < arr.length; i++) {
+            if (arr[i] > arr[breakpoint] && arr[i] <= min) {
+                min = arr[i];
+                index = i;
+            }
+        }
+        // Step 2: Swap arr[breakpoint] and the smallest element found
+        int temp = arr[index];
+        arr[index] = arr[breakpoint];
+        arr[breakpoint] = temp;
+        // Step 3: Reverse the elements after the breakpoint to get the next permutation
+        int start = breakpoint + 1;
+        int end = arr.length - 1;
+        while (start < end) {
+            if (arr[start] >= arr[end]) {
+                int tempSwap = arr[start];
+                arr[start] = arr[end];
+                arr[end] = tempSwap;
+                start++;
+                end--;
+            }
+        }
+    }
+}

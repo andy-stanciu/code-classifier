@@ -1,0 +1,29 @@
+class Solution {
+
+    public boolean canConstruct(String param1, String magazine) {
+        //Our hashmap lettersInMagazine has the key-value pair of "character-frequencyOfCharacterInMagazine"
+        //A hashmap to contain all letters in magazine and their frequency
+        HashMap<Character, Integer> lettersInMagazine = new HashMap<Character, Integer>();
+        //fill lettersInMagazineHashmap using the magazine string
+        for (int i = 0; i < magazine.length(); i++) {
+            char letterInMagazine = magazine.charAt(i);
+            //check if character is already in
+            int currentCountOfLetterInMagazine = lettersInMagazine.getOrDefault(letterInMagazine, 0);
+            //puts the key in (if not already present) and updates the value
+            lettersInMagazine.put(letterInMagazine, currentCountOfLetterInMagazine + 1);
+        }
+        //now that we\'ve set up the magazine hashmap we can go through ransomNote and determine if the magazine has enough chars to make the note
+        for (int i = 0; i < param1.length(); i++) {
+            //checks that there are still letters of this type in magazine (defaults to 0 if none are found)
+            int numberOfCharsLeftInMagazineOfThisType = lettersInMagazine.getOrDefault(param1.charAt(i), 0);
+            //if there are no letters left of this type or a letter was never found, return false. Otherwise just deduct one letter from the lettersInMagazine
+            if (numberOfCharsLeftInMagazineOfThisType == 0) {
+                return false;
+            } else {
+                lettersInMagazine.put(param1.charAt(i), numberOfCharsLeftInMagazineOfThisType - 1);
+            }
+        }
+        //if we get through the whole ransomNote without running out of letters then we have enough and we can return true
+        return true;
+    }
+}

@@ -1,0 +1,27 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        permute(nums, new ArrayList<>(), result);
+        return result;
+    }
+
+    private void permute(int[] nums, List<Integer> perm, List<List<Integer>> result) {
+        if (perm.size() == nums.length) {
+            result.add(new ArrayList<>(perm));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == Integer.MAX_VALUE || (i > 0 && nums[i] == nums[i - 1])) {
+                continue;
+            }
+            int val = nums[i];
+            perm.add(val);
+            nums[i] = Integer.MAX_VALUE;
+            permute(nums, perm, result);
+            perm.remove(perm.size() - 1);
+            nums[i] = val;
+        }
+    }
+}

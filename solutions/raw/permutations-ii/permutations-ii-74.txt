@@ -1,0 +1,40 @@
+class Solution {
+
+    class Node {
+
+        List<Integer> list;
+
+        boolean[] vis;
+
+        Node(List<Integer> list, boolean[] vis) {
+            this.list = new ArrayList<>(list);
+            this.vis = vis.clone();
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        int n = nums.length;
+        Queue<Node> que = new LinkedList<>();
+        que.add(new Node(new ArrayList<>(), new boolean[n]));
+        while (!que.isEmpty()) {
+            Node node = que.poll();
+            if (node.list.size() == n) {
+                ans.add(node.list);
+                continue;
+            }
+            HashSet<Integer> set = new HashSet<>();
+            for (int i = 0; i < n; i++) {
+                if (set.contains(nums[i]) || node.vis[i])
+                    continue;
+                node.list.add(nums[i]);
+                node.vis[i] = true;
+                set.add(nums[i]);
+                que.add(new Node(node.list, node.vis));
+                node.list.remove(node.list.size() - 1);
+                node.vis[i] = false;
+            }
+        }
+        return ans;
+    }
+}

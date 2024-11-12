@@ -1,0 +1,35 @@
+class Solution {
+
+    List<List<Integer>> res;
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        res = new ArrayList<>();
+        Arrays.sort(candidates);
+        fun(candidates, 0, target, new ArrayList<>());
+        return new ArrayList<>(res);
+    }
+
+    public void fun(int[] a, int i, int param1, List<Integer> list) {
+        if (param1 == 0) {
+            res.add(new ArrayList<>(list));
+            return;
+        }
+        if (i >= a.length || param1 < 0) {
+            return;
+        }
+        if (a[i] <= param1) {
+            list.add(a[i]);
+            fun(a, i + 1, param1 - a[i], list);
+            list.remove(list.size() - 1);
+        }
+        // In this resursive step we do not want to include the current element
+        // But if there are duplicate elements present,
+        // then merely moving index by 1 step ahead will not solve the problem
+        // Hence we need to ensure that we skip the duplicates as well
+        int j = i + 1;
+        while (j < a.length && a[j] == a[j - 1]) {
+            j++;
+        }
+        fun(a, j, param1, list);
+    }
+}

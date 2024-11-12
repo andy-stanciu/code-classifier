@@ -1,0 +1,85 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    private enum Direction {
+
+        LEFT, RIGHT
+    }
+
+    public TreeNode helpDeleteNode(TreeNode node, int key, TreeNode parent, Direction direction) {
+        if (node == null)
+            return null;
+        if (node.val == key) {
+            if (node.left == null && node.right == null) {
+                if (parent == null)
+                    return null;
+                if (direction == Direction.LEFT)
+                    parent.left = null;
+                if (direction == Direction.RIGHT)
+                    parent.right = null;
+                return node;
+            }
+            if (node.left == null && node.right != null) {
+                if (parent == null) {
+                    node = node.right;
+                    return node;
+                }
+                if (direction == Direction.LEFT)
+                    parent.left = node.right;
+                if (direction == Direction.RIGHT)
+                    parent.right = node.right;
+                return node;
+            }
+            if (node.left != null && node.right == null) {
+                if (parent == null) {
+                    node = node.left;
+                    return node;
+                }
+                if (direction == Direction.LEFT)
+                    parent.left = node.left;
+                if (direction == Direction.RIGHT)
+                    parent.right = node.left;
+                return node;
+            }
+            if (node.left != null && node.right != null) {
+                TreeNode newNode = node.right;
+                TreeNode rightNode = node.right;
+                if (newNode.left != null) {
+                    while (newNode.left.left != null) {
+                        newNode = newNode.left;
+                    }
+                }
+                if (newNode != rightNode || (newNode == rightNode && newNode.left != null)) {
+                    node.val = newNode.left.val;
+                    newNode.left = newNode.left.right;
+                } else {
+                    node.val = newNode.val;
+                    node.right = newNode.right;
+                }
+                return node;
+            }
+        }
+        parent = node;
+        helpDeleteNode(node.left, key, parent, Direction.LEFT);
+        helpDeleteNode(node.right, key, parent, Direction.RIGHT);
+        return node;
+    }
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        return helpDeleteNode(root, key, null, Direction.RIGHT);
+    }
+}

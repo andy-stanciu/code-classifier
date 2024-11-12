@@ -1,0 +1,46 @@
+public class Solution {
+
+    public List<List<String>> groupAnagrams(String[] strs) {
+        if (strs == null || strs.length == 0)
+            return new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        // Iterate through each string in the input array
+        for (int i = 0; i < strs.length; i++) {
+            String s = strs[i];
+            // Convert the string to a character array
+            char[] charArray = new char[s.length()];
+            for (int j = 0; j < s.length(); j++) {
+                charArray[j] = s.charAt(j);
+            }
+            // Sort the character array
+            for (int k = 0; k < charArray.length - 1; k++) {
+                for (int l = k + 1; l < charArray.length; l++) {
+                    if (charArray[k] > charArray[l]) {
+                        char temp = charArray[k];
+                        charArray[k] = charArray[l];
+                        charArray[l] = temp;
+                    }
+                }
+            }
+            // Convert the sorted character array back to a string
+            StringBuilder sortedStr = new StringBuilder();
+            for (int m = 0; m < charArray.length; m++) {
+                sortedStr.append(charArray[m]);
+            }
+            // Check if the sorted string is already in the map
+            if (!map.containsKey(sortedStr.toString())) {
+                map.put(sortedStr.toString(), new ArrayList<>());
+            }
+            // Add the original string to the list in the map
+            map.get(sortedStr.toString()).add(s);
+        }
+        // Convert the map values (which are lists of anagrams) into a list of lists
+        List<List<String>> result = new ArrayList<>();
+        List<List<String>> mapValuesList = new ArrayList<>(map.values());
+        for (int i = 0; i < mapValuesList.size(); i++) {
+            List<String> group = mapValuesList.get(i);
+            result.add(group);
+        }
+        return result;
+    }
+}

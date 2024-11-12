@@ -1,0 +1,31 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        Map<Integer, Integer> count = new HashMap<>();
+        for (int x : nums) {
+            count.putIfAbsent(x, 0);
+            count.put(x, count.get(x) + 1);
+        }
+        backtracking(nums, new ArrayList<Integer>(), ans, count);
+        return ans;
+    }
+
+    public void backtracking(int[] nums, List<Integer> l, List<List<Integer>> ans, Map<Integer, Integer> m) {
+        if (l.size() == nums.length) {
+            ans.add(new ArrayList<>(l));
+            return;
+        }
+        for (int x : m.keySet()) {
+            if (m.get(x) == 0) {
+                continue;
+            }
+            l.add(x);
+            m.put(x, m.get(x) - 1);
+            backtracking(nums, l, ans, m);
+            l.remove(l.size() - 1);
+            m.put(x, m.get(x) + 1);
+        }
+        return;
+    }
+}

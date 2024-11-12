@@ -1,0 +1,37 @@
+class Solution {
+
+    private int findMaxInLeft(TreeNode node) {
+        while (node.right != null) {
+            node = node.right;
+        }
+        return node.val;
+    }
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return root;
+        }
+        if (root.val < key) {
+            root.right = deleteNode(root.right, key);
+        } else if (root.val > key) {
+            root.left = deleteNode(root.left, key);
+        } else {
+            //we found the key on root, now we have 4 cases
+            if (root.left == null && root.right == null) {
+                return null;
+            } else if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            } else {
+                //both children are not null,
+                //so now find the max element in left side (or inorder predecessor of the key)
+                //and replace the value of the node to this max value and further delete max value in left side
+                int max = findMaxInLeft(root.left);
+                root.val = max;
+                root.left = deleteNode(root.left, max);
+            }
+        }
+        return root;
+    }
+}

@@ -1,0 +1,43 @@
+//TC : O(n)
+//SC : O(n) worst case : when all the asteroids will have the same direction, either right or left
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Deque<Integer> dq = new ArrayDeque<>();
+        for (int i = 0; i < param1.length; ++i) {
+            int currAst = param1[i];
+            if (dq.size() > 0 && dq.getLast() > 0 && currAst < 0) {
+                //opposite direction(o ---->  <---- o) //Collision will happen
+                boolean flag = true;
+                while (dq.size() > 0 && dq.getLast() > 0 && currAst < 0) {
+                    if (dq.getLast() == Math.abs(currAst)) {
+                        dq.removeLast();
+                        flag = false;
+                        //as both asteroid will get distroyed, so stop here
+                        break;
+                    } else if (dq.getLast() < Math.abs(currAst)) {
+                        //[10, 10, 6, 7, 8, 9, -10(currAst)] = [10]
+                        dq.removeLast();
+                    } else {
+                        //dq.getLast() > Math.abs(currAst) [10, -3(currAst)]
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag == true)
+                    dq.addLast(currAst);
+                // System.out.println(dq);
+            } else {
+                //same direction or opposite direction(No collision) or dq is empty
+                dq.addLast(currAst);
+            }
+            // System.out.println(dq);
+        }
+        int[] res = new int[dq.size()];
+        int idx = 0;
+        while (dq.size() > 0) {
+            res[idx++] = dq.removeFirst();
+        }
+        return res;
+    }
+}

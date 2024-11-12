@@ -1,0 +1,21 @@
+class Solution {
+
+    private int canAttendMeet(int idx, int prevEnd, int totalMeets, int[][] intervals) {
+        if (idx == totalMeets)
+            return 0;
+        int currStart = intervals[idx][0];
+        int currEnd = intervals[idx][1];
+        if (currStart >= prevEnd) {
+            return 1 + canAttendMeet(idx + 1, currEnd, totalMeets, intervals);
+        } else {
+            return canAttendMeet(idx + 1, prevEnd, totalMeets, intervals);
+        }
+    }
+
+    public int eraseOverlapIntervals(int[][] intervals) {
+        int len = intervals.length;
+        Arrays.sort(intervals, (a, b) -> a[1] - b[1]);
+        // sorting on basis of end time
+        return len - (1 + canAttendMeet(1, intervals[0][1], len, intervals));
+    }
+}

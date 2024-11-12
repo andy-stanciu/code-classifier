@@ -1,0 +1,47 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        if (root.val == key) {
+            return helper(root);
+        }
+        TreeNode var1 = root;
+        while (var1 != null) {
+            if (var1.val < key) {
+                if (var1.right != null && var1.right.val == key) {
+                    var1.right = helper(var1.right);
+                    break;
+                } else {
+                    var1 = var1.right;
+                }
+            } else {
+                if (var1.left != null && var1.left.val == key) {
+                    var1.left = helper(var1.left);
+                    break;
+                } else {
+                    var1 = var1.left;
+                }
+            }
+        }
+        return root;
+    }
+
+    public TreeNode helper(TreeNode root) {
+        if (root.left == null) {
+            return root.right;
+        } else if (root.right == null) {
+            return root.left;
+        }
+        TreeNode rightChild = root.right;
+        TreeNode lastRight = method2(root.left);
+        lastRight.right = rightChild;
+        return root.left;
+    }
+
+    private TreeNode method2(TreeNode root) {
+        if (root.right == null)
+            return root;
+        return method2(root.right);
+    }
+}

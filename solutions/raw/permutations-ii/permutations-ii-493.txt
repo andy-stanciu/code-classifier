@@ -1,0 +1,30 @@
+class Solution {
+
+    List<List<Integer>> result = new ArrayList<>();
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        HashMap<Integer, Integer> hmap = new HashMap<>();
+        for (int num : nums) {
+            hmap.put(num, hmap.getOrDefault(num, 0) + 1);
+        }
+        dfs(new ArrayList<>(), hmap);
+        return result;
+    }
+
+    private void dfs(List<Integer> permutation, HashMap<Integer, Integer> hmap) {
+        if (hmap.isEmpty()) {
+            result.add(permutation);
+            return;
+        }
+        for (int num : hmap.keySet()) {
+            List<Integer> tempP = new ArrayList<>(permutation);
+            HashMap<Integer, Integer> tempM = new HashMap<>(hmap);
+            tempP.add(num);
+            tempM.put(num, tempM.get(num) - 1);
+            if (tempM.get(num) == 0) {
+                tempM.remove(num);
+            }
+            dfs(tempP, tempM);
+        }
+    }
+}

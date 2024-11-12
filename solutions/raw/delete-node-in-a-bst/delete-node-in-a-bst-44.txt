@@ -1,0 +1,43 @@
+class Solution {
+
+    public TreeNode deleteNode(TreeNode node, int key) {
+        if (// base case
+        node == null)
+            return null;
+        if (node.val > key)
+            // left call bst condition
+            node.left = deleteNode(node.left, key);
+        else if (node.val < key)
+            // right call bst condition
+            node.right = deleteNode(node.right, key);
+        else {
+            if (node.left != null && node.right != null) {
+                // both child present
+                // find max from left
+                int lmax = max(node.left);
+                // replace data of node with max
+                node.val = lmax;
+                // remove max
+                node.left = deleteNode(node.left, lmax);
+                return node;
+            } else if (// remove when only left child present
+            node.left != null)
+                return node.left;
+            else if (// remove when only right child present
+            node.right != null)
+                return node.right;
+            else
+                // leaf remove
+                return null;
+        }
+        return node;
+    }
+
+    public int max(TreeNode node) {
+        // returns max
+        if (node.right != null)
+            return max(node.right);
+        else
+            return node.val;
+    }
+}

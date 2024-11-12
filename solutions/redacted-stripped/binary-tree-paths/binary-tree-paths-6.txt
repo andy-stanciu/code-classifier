@@ -1,0 +1,63 @@
+class Pair {
+
+    TreeNode node;
+
+    List<Integer> list;
+
+    public Pair(TreeNode node, List<Integer> list) {
+        this.node = node;
+        this.list = list;
+    }
+}
+
+class Solution {
+
+    private void method1(TreeNode node, List<Integer> path, List<List<Integer>> param1) {
+        if (node.left == null && node.right == null) {
+            path.add(node.val);
+            param1.add(new ArrayList<>(path));
+            path.remove(path.size() - 1);
+            return;
+        }
+        path.add(node.val);
+        if (node.left != null)
+            method1(node.left, path, param1);
+        if (node.right != null)
+            method1(node.right, path, param1);
+        path.remove(path.size() - 1);
+    }
+
+    private void lvlOrder(TreeNode node, List<List<Integer>> param1) {
+        Queue<Pair> q = new LinkedList<>();
+        q.add(new Pair(node, new ArrayList<>()));
+        while (!q.isEmpty()) {
+            Pair ele = q.peek();
+            q.remove();
+            node = ele.node;
+            if (node.left == null && node.right == null) {
+                ele.list.add(node.val);
+                param1.add(new ArrayList<>(ele.list));
+            }
+            ele.list.add(node.val);
+            if (node.left != null)
+                q.add(new Pair(node.left, new ArrayList<>(ele.list)));
+            if (node.right != null)
+                q.add(new Pair(node.right, new ArrayList<>(ele.list)));
+        }
+    }
+
+    public List<String> method2(TreeNode root) {
+        List<List<Integer>> param1 = new ArrayList<>();
+        List<String> ans = new ArrayList<>();
+        lvlOrder(root, param1);
+        for (List<Integer> arr : param1) {
+            StringBuffer str = new StringBuffer();
+            for (int i = 0; i < arr.size() - 1; i++) {
+                str.append(String.valueOf(arr.get(i)) + "->");
+            }
+            str.append(String.valueOf(arr.get(arr.size() - 1)));
+            ans.add(str.toString());
+        }
+        return ans;
+    }
+}

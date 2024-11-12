@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        for (int i = 0; i < param1.length; i++) {
+            if (stack.isEmpty() || stack.peek() < 0) {
+                stack.push(param1[i]);
+                continue;
+            }
+            if (stack.size() > 0 && param1[i] < 0) {
+                while (!stack.isEmpty() && stack.peek() > 0 && stack.peek() < Math.abs(param1[i])) {
+                    stack.pop();
+                }
+                if (!stack.isEmpty() && stack.peek() < 0) {
+                    stack.push(stack.peek());
+                }
+                if (!stack.isEmpty() && stack.peek() == Math.abs(param1[i])) {
+                    stack.pop();
+                    continue;
+                } else if (!stack.isEmpty() && stack.peek() > Math.abs(param1[i])) {
+                    continue;
+                } else if (!stack.isEmpty() && stack.peek() < Math.abs(param1[i])) {
+                    stack.pop();
+                    stack.push(param1[i]);
+                } else if (stack.isEmpty()) {
+                    stack.push(param1[i]);
+                }
+            } else if (stack.size() > 0 && param1[i] > 0) {
+                stack.push(param1[i]);
+            }
+        }
+        int[] remaining = new int[stack.size()];
+        for (int i = remaining.length - 1; i >= 0; i--) {
+            remaining[i] = stack.pop();
+        }
+        return remaining;
+    }
+}

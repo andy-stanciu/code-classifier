@@ -1,0 +1,27 @@
+class Solution {
+
+    public int[] intersect(int[] a, int[] b) {
+        List<Integer> list = new ArrayList<>();
+        // Value and its count map.
+        Map<Integer, Integer> map = new HashMap<>();
+        // Iterate through first array (a) and update count in the map by adding 1.
+        // O(N)
+        for (int i : a) {
+            map.merge(i, 1, Integer::sum);
+        }
+        // Iterate through second array (b) and if element found in map and count/occurrence is greater than zero
+        // then add it to the list and reduce count from map by 1.
+        // This will make sure we are adding only intersection to the list.
+        // O(M)
+        for (int i : b) {
+            Integer v = map.get(i);
+            if (v != null && v > 0) {
+                map.put(i, v - 1);
+                list.add(i);
+            }
+        }
+        // convert list to array using stream and mapping Integer to int.
+        // O(K) - where k is size of intersection.
+        return list.stream().mapToInt(i -> i).toArray();
+    }
+}

@@ -1,0 +1,41 @@
+public class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        if (head == null || k == 1) {
+            return head;
+        }
+        // Dummy node to handle the head of the list
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        // Initialize pointers
+        ListNode curr = dummy, nxt = dummy, pre = dummy;
+        // Count the number of nodes in the list
+        int count = 0;
+        while (curr.next != null) {
+            curr = curr.next;
+            count++;
+        }
+        // Loop through the list and reverse each k-group
+        while (count >= k) {
+            // The current node is the first node of the k-group
+            curr = pre.next;
+            // The next node is the second node of the k-group
+            nxt = curr.next;
+            // Reverse the nodes in the k-group
+            for (int i = 1; i < k; i++) {
+                // Point current node to the node after the next node
+                curr.next = nxt.next;
+                // Move next node to the front of the group
+                nxt.next = pre.next;
+                // Update the previous node\'s next to the new front
+                pre.next = nxt;
+                // Move to the next node in the group
+                nxt = curr.next;
+            }
+            // Move the pre pointer k nodes forward
+            pre = curr;
+            count -= k;
+        }
+        return dummy.next;
+    }
+}

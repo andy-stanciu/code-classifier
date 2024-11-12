@@ -1,0 +1,51 @@
+class Solution {
+
+    public ListNode findkth(ListNode temp, int k) {
+        k -= 1;
+        while (temp != null && k > 0) {
+            k--;
+            temp = temp.next;
+        }
+        return temp;
+    }
+
+    public ListNode reverse(ListNode head) {
+        if (head.next == null) {
+            return head;
+        }
+        ListNode prev = null;
+        ListNode temp = head;
+        while (temp != null) {
+            ListNode nextNode = temp.next;
+            temp.next = prev;
+            prev = temp;
+            temp = nextNode;
+        }
+        return prev;
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode temp = head;
+        ListNode prevLast = null;
+        while (temp != null) {
+            ListNode kth = findkth(temp, k);
+            if (kth == null) {
+                if (prevLast != null) {
+                    prevLast.next = temp;
+                }
+                break;
+            }
+            ListNode nextNode = kth.next;
+            kth.next = null;
+            reverse(temp);
+            if (temp == head) {
+                head = kth;
+            } else {
+                prevLast.next = kth;
+            }
+            prevLast = temp;
+            temp = nextNode;
+        }
+        return head;
+    }
+}

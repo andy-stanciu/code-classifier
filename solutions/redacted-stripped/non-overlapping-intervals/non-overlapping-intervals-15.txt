@@ -1,0 +1,56 @@
+class Solution {
+
+    public int method1(int[][] param1) {
+        List<Interval> intervalList = Arrays.stream(param1).map(interval -> new Interval(interval[0], interval[1])).collect(Collectors.<Interval>toList());
+        Interval interval = new Interval(Integer.MIN_VALUE, Integer.MIN_VALUE);
+        while (interval != null) {
+            interval = findSmallestInterval(interval, intervalList);
+            intervalList.remove(interval);
+        }
+        return intervalList.size();
+    }
+
+    private Interval findSmallestInterval(Interval prevInterval, List<Interval> param1) {
+        return param1.stream().filter(interval -> {
+            if (prevInterval != null)
+                return prevInterval.getEnd() <= interval.getStart();
+            else
+                return true;
+        }).min(Comparator.comparingInt(Interval::getEnd)).orElse(null);
+    }
+
+    private class Interval {
+
+        private final Integer start;
+
+        private final Integer end;
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
+            Interval interval = (Interval) o;
+            return start.equals(interval.start) && end.equals(interval.end);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(start, end);
+        }
+
+        public Interval(Integer start, Integer end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        public Integer getStart() {
+            return start;
+        }
+
+        public Integer getEnd() {
+            return end;
+        }
+    }
+}

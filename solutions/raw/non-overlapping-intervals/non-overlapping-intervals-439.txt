@@ -1,0 +1,31 @@
+class Solution {
+
+    public int eraseOverlapIntervals(int[][] intervals) {
+        int n = intervals.length;
+        int max = intervals[n - 1][1];
+        int min = max;
+        for (int i = n - 2; i >= 0; i--) {
+            max = Math.max(max, intervals[i][1]);
+            min = Math.min(min, intervals[i][1]);
+        }
+        int diff = 1 - min;
+        int size = max - min + 2;
+        int[] offset = new int[size];
+        for (int[] interval : intervals) {
+            int lo = interval[0] + diff;
+            int hi = interval[1] + diff;
+            if (lo > offset[hi]) {
+                offset[hi] = lo;
+            }
+        }
+        int count = 1;
+        int prior = 1;
+        for (int i = 1; i < size; i++) {
+            if (offset[i] >= prior) {
+                prior = i;
+                count++;
+            }
+        }
+        return n - count;
+    }
+}

@@ -1,0 +1,84 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        TreeNode newPivot = method2(root, null, key);
+        if (root != null && key == root.val) {
+            return newPivot;
+        }
+        return root;
+    }
+
+    private TreeNode method2(TreeNode param1, TreeNode param2, int key) {
+        if (param1 == null)
+            return null;
+        if (param1.val == key) {
+            TreeNode var1 = null;
+            if (param1.right != null) {
+                // Find rightmost node of left subtree
+                if (param1.left != null) {
+                    TreeNode var2 = method3(param1.left);
+                    var2.right = param1.right.left;
+                    param1.right.left = param1.left;
+                    param1.left = null;
+                }
+                var1 = param1.right;
+                param1.right = null;
+            } else if (param1.left != null) {
+                // Find rightmost node of left subtree
+                TreeNode var2 = method4(param1.left, param1.left);
+                var2.right = param1.right;
+                if (var2 != param1.left)
+                    var2.left = param1.left;
+                var1 = var2;
+                param1.left = null;
+            }
+            if (param2 != null) {
+                if (key < param2.val) {
+                    param2.left = var1;
+                } else if (key > param2.val) {
+                    param2.right = var1;
+                }
+                return null;
+            }
+            return var1;
+        }
+        if (param1.val > key)
+            return method2(param1.left, param1, key);
+        if (param1.val < key)
+            return method2(param1.right, param1, key);
+        return null;
+    }
+
+    private TreeNode method3(TreeNode param3) {
+        if (param3.right == null) {
+            return param3;
+        }
+        return method3(param3.right);
+    }
+
+    private TreeNode method4(TreeNode param3, TreeNode parent) {
+        if (param3.right == null) {
+            if (parent != param3) {
+                parent.right = param3.left;
+                param3.left = null;
+            }
+            return param3;
+        }
+        return method4(param3.right, param3);
+    }
+}

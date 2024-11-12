@@ -1,0 +1,49 @@
+class Solution {
+
+    public boolean canConstruct(String ransomNote, String magazine) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        char c;
+        int n = magazine.length();
+        int j = 0;
+        for (int i = 0; i <= n / 2; i++) {
+            c = magazine.charAt(i);
+            if (map.containsKey(c)) {
+                map.put(c, map.get(c) + 1);
+            } else {
+                map.put(c, 1);
+            }
+            if (i == n / 2) {
+                break;
+            }
+            c = magazine.charAt(n - i - 1);
+            if (map.containsKey(c)) {
+                map.put(c, map.get(c) + 1);
+            } else {
+                map.put(c, 1);
+            }
+        }
+        n = ransomNote.length();
+        for (j = 0; j <= n / 2; j++) {
+            c = ransomNote.charAt(j);
+            if (map.containsKey(c) && map.get(c) > 0) {
+                map.put(c, map.get(c) - 1);
+            } else {
+                if (!map.containsKey(c)) {
+                    return false;
+                } else if (j == n / 2) {
+                    break;
+                }
+            }
+            c = ransomNote.charAt(n - j - 1);
+            if (map.containsKey(c) && map.get(c) > 0) {
+                map.put(c, map.get(c) - 1);
+            } else {
+                if (j == n / 2) {
+                    break;
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+}

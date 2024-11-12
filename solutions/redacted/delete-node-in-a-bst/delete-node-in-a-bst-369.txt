@@ -1,0 +1,49 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        /*check untill found key while 
+        comparing bst node value go left and right accordingly*/
+        if (key < root.val) {
+            root.left = method1(root.left, key);
+        } else if (key > root.val) {
+            root.right = method1(root.right, key);
+        } else {
+            /* Once key Matched we have 3 choices:
+            1.) if left and right of node is null the no need to return any thing i.e null
+            2.) if left==null then retun right and visa versa
+            3.) IMP : if left and right both not null so now do delete key-> utake min from
+            right subtree(go extreme left of right sub tree) and replace with key node, now since 
+            min in right subtree will be leaft node so delte it recursively -> Why we have done this 
+            because taking min from left tree and replacing it with key still left of key will
+            smaller than rightMin and all right will be > ringhtMin -> still its BST
+            Step 3 can be done visa vers also like take max from left 
+            
+            */
+            if (root.left == null && root.right == null)
+                return null;
+            else if (root.left == null)
+                return root.right;
+            else if (root.right == null)
+                return root.left;
+            else {
+                int var1 = method2(root.right);
+                root.val = var1;
+                root.right = method1(root.right, var1);
+            }
+        }
+        return root;
+    }
+
+    public int method2(TreeNode param1) {
+        while (param1.left != null) {
+            param1 = param1.left;
+        }
+        return param1.val;
+    }
+    /* 
+Complexity : Time: O(hight of tree): BST so going either left or right
+ max is key==leaf node.
+*/
+}

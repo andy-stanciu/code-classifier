@@ -1,0 +1,50 @@
+class Solution {
+
+    public int findMinArrowShots(int[][] points) {
+        if (points.length == 1)
+            return 1;
+        //Sorting the intervals
+        Arrays.sort(points, new Comparator<int[]>() {
+
+            @Override
+            public int compare(final int[] entry1, final int[] entry2) {
+                if (entry1[0] > entry2[0])
+                    return 1;
+                else if (entry1[0] == entry2[0]) {
+                    if (entry1[1] > entry2[1])
+                        return 1;
+                    else
+                        return -1;
+                } else
+                    return -1;
+            }
+        });
+        //To keep count of arrows
+        int count = 0;
+        int end = 1;
+        //The overlap between the successive intervals will
+        //help us to determine our answer.
+        //In each step we will update our overlap
+        int[] overlap = new int[2];
+        overlap[0] = points[0][0];
+        overlap[1] = points[0][1];
+        while (end < points.length) {
+            //If the next interval has overlapping with our current overlap;
+            //We will update the overlap
+            if (points[end][0] <= overlap[1]) {
+                overlap[0] = points[end][0];
+                overlap[1] = Math.min(points[end][1], overlap[1]);
+                end++;
+            } else //If there is no overlap
+            //We will increase the count of arrows and update the overlap to
+            //the next interval
+            {
+                count++;
+                overlap[0] = points[end][0];
+                overlap[1] = points[end][1];
+                end++;
+            }
+        }
+        return count + 1;
+    }
+}

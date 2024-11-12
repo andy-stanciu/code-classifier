@@ -1,0 +1,46 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        if (head.next == null || head == null)
+            return head;
+        ListNode var1 = head;
+        ListNode var2 = new ListNode(-10000);
+        ListNode nodeBeforeSeries = null;
+        while (var1 != null) {
+            nodeBeforeSeries = method2(var1, nodeBeforeSeries, k, var2);
+            if (nodeBeforeSeries == null)
+                break;
+            var1 = nodeBeforeSeries.next;
+        }
+        return var2.next;
+    }
+
+    private ListNode method2(ListNode head, ListNode prevNode, int k, ListNode var2) {
+        ListNode firstCurr = head;
+        for (int i = 1; i <= k; i++) {
+            firstCurr = firstCurr.next;
+            if (firstCurr == null && i != k) {
+                if (prevNode != null) {
+                    prevNode.next = head;
+                }
+                return null;
+            }
+        }
+        ListNode realCurr = head;
+        ListNode tail = head;
+        ListNode con = prevNode;
+        for (int i = 0; i < k; i++) {
+            ListNode temp = realCurr.next;
+            realCurr.next = prevNode;
+            prevNode = realCurr;
+            realCurr = temp;
+        }
+        if (con != null) {
+            con.next = prevNode;
+        } else {
+            var2.next = prevNode;
+        }
+        tail.next = realCurr;
+        return tail;
+    }
+}

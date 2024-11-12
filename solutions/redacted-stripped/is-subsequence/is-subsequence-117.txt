@@ -1,0 +1,25 @@
+class Solution {
+
+    public boolean method1(String s, String t) {
+        int len1 = s.length(), len2 = t.length();
+        int[][] dp = new int[len1][len2];
+        Arrays.stream(dp).forEach(a -> Arrays.fill(a, -1));
+        return check(s, len1 - 1, t, len2 - 1, dp);
+    }
+
+    private static boolean check(String s, int index1, String t, int index2, int[][] dp) {
+        if (index1 < 0)
+            return true;
+        if (index2 < 0)
+            return false;
+        if (dp[index1][index2] != -1)
+            return (dp[index1][index2] == 1) ? true : false;
+        if (s.charAt(index1) == t.charAt(index2)) {
+            dp[index1][index2] = check(s, index1 - 1, t, index2 - 1, dp) || check(s, index1, t, index2 - 1, dp) ? 1 : 0;
+            return check(s, index1 - 1, t, index2 - 1, dp) || check(s, index1, t, index2 - 1, dp);
+        } else {
+            dp[index1][index2] = check(s, index1, t, index2 - 1, dp) ? 1 : 0;
+            return check(s, index1, t, index2 - 1, dp);
+        }
+    }
+}

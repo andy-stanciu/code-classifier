@@ -1,0 +1,57 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head) {
+        // Edge cases: Empty list, 1 node
+        if (head == null || head.next == null) {
+            return head;
+        }
+        // Initial thought - wouldn\'t it be nice to just create two LinkedLists - one for the even-indexed nodes, and one for the odd-indexed nodes, and then concatenate them at the end
+        // But as the description suggests, simply _keeping track_ of the first odd-indexed node, last odd-indexed node and last even-indexed node is sufficient
+        // When all of the nodes have been assessed, setting the last even-indexed node ptr.next to the first odd-indexed node value concatenates them
+        // Also update lastOdd.next = null
+        // Note: Indexes are 0-indexed
+        // I explicitly handled the size 1 LL above.
+        // At this point I\'m handling LL sizes >= 2
+        // We need to initialize starting at the second node in the list
+        // Initialize a value to keep track of the index - i = 1
+        // Initialize three pointers - firstOdd, lastOdd, lastEven
+        int i = 1;
+        ListNode var1 = null;
+        ListNode var2 = null;
+        ListNode var3 = head;
+        // Move through the LL
+        ListNode curr = head.next;
+        while (curr != null) {
+            // Special case to account for initializing lastOdd and firstOdd - i == 1
+            if (i == 1) {
+                var1 = curr;
+                var2 = curr;
+            } else {
+                // Determine if the index is even or odd by taking the mod of 2. 0 % 2 is 0.
+                boolean var4 = i % 2 == 0;
+                if (var4) {
+                    var3.next = curr;
+                    var3 = curr;
+                } else {
+                    var2.next = curr;
+                    var2 = curr;
+                }
+            }
+            curr = curr.next;
+            i++;
+        }
+        var3.next = var1;
+        var2.next = null;
+        return head;
+    }
+}

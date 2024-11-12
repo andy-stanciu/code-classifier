@@ -1,0 +1,60 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        Arrays.sort(nums);
+        int closesum = nums[1] + nums[0] + nums[2];
+        for (int i = 0; i < nums.length - 2; i++) {
+            int j = i + 1, k = nums.length - 1;
+            while (k > j) {
+                int total = nums[i] + nums[j] + nums[k];
+                if (Math.abs(target - total) < Math.abs(target - closesum)) {
+                    closesum = total;
+                }
+                if (total < target) {
+                    j++;
+                } else {
+                    k--;
+                }
+            }
+        }
+        return closesum;
+    }
+}
+
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        Arrays.sort(nums);
+        int var1 = nums[0] + nums[1] + nums[2];
+        for (int i = 0; i < nums.length - 2; i++) {
+            for (int j = i + 1; j < nums.length - 1; j++) {
+                int partialSum = nums[i] + nums[j];
+                int remainingTarget = target - partialSum;
+                int var2 = method2(nums, remainingTarget, j + 1, nums.length - 1);
+                int currentSum = partialSum + var2;
+                if (Math.abs(target - currentSum) < Math.abs(target - var1)) {
+                    var1 = currentSum;
+                }
+            }
+        }
+        return var1;
+    }
+
+    private int method2(int[] nums, int target, int start, int end) {
+        int var3 = nums[start];
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (Math.abs(nums[mid] - target) < Math.abs(var3 - target)) {
+                var3 = nums[mid];
+            }
+            if (nums[mid] == target) {
+                return nums[mid];
+            } else if (nums[mid] < target) {
+                start = mid + 1;
+            } else {
+                end = mid - 1;
+            }
+        }
+        return var3;
+    }
+}

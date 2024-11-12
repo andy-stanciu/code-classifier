@@ -1,0 +1,68 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        List<Integer> pre = new ArrayList<>();
+        helper(root, pre);
+        List<Integer> var1 = new ArrayList<>();
+        helper1(root, var1);
+        if (!pre.contains(key))
+            return root;
+        System.out.println(pre);
+        System.out.println(var1);
+        int[] pree = new int[pre.size() - 1];
+        int k = 0;
+        for (int i = 0; i < pre.size(); i++) {
+            if (pre.get(i) == key)
+                continue;
+            pree[k] = pre.get(i);
+            k++;
+        }
+        int[] var2 = new int[var1.size() - 1];
+        int q = 0;
+        for (int i = 0; i < var1.size(); i++) {
+            if (var1.get(i) == key)
+                continue;
+            var2[q] = var1.get(i);
+            q++;
+        }
+        System.out.println(Arrays.toString(pree));
+        System.out.println(Arrays.toString(var2));
+        return buildTree(pree, var2);
+    }
+
+    public TreeNode helper(TreeNode root, List<Integer> pre) {
+        if (root == null) {
+            return null;
+        }
+        pre.add(root.val);
+        root.left = helper(root.left, pre);
+        root.right = helper(root.right, pre);
+        return root;
+    }
+
+    public TreeNode helper1(TreeNode root, List<Integer> pre) {
+        if (root == null) {
+            return null;
+        }
+        root.left = helper1(root.left, pre);
+        pre.add(root.val);
+        root.right = helper1(root.right, pre);
+        return root;
+    }
+
+    public TreeNode buildTree(int[] pre, int[] param1) {
+        if (pre.length == 0 || param1.length == 0)
+            return null;
+        int var3 = 0;
+        for (int i = 0; i < param1.length; i++) {
+            if (pre[0] == param1[i]) {
+                var3 = i;
+                break;
+            }
+        }
+        TreeNode head = new TreeNode(pre[0]);
+        head.left = buildTree(Arrays.copyOfRange(pre, 1, var3 + 1), Arrays.copyOfRange(param1, 0, var3));
+        head.right = buildTree(Arrays.copyOfRange(pre, var3 + 1, pre.length), Arrays.copyOfRange(param1, var3 + 1, param1.length));
+        return head;
+    }
+}

@@ -1,0 +1,48 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        // very much similar to permutations 1,just 1 change that we will sort the array nums to make sure we can skip the same value;
+        // recursion used
+        // steps-
+        // 1. make result list
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        // 2. if nums is null or have zero length, return the empty res
+        if (nums == null || nums.length == 0)
+            return res;
+        // 3. make a boolean array used to check if this digit is already used or not
+        boolean[] used = new boolean[nums.length];
+        // 4. make a list to be added to res
+        List<Integer> list = new ArrayList<Integer>();
+        // 5. sort the array
+        Arrays.sort(nums);
+        // 6. call the dfs function which will fill the result list
+        dfs(nums, used, list, res);
+        // 7. return the result
+        return res;
+    }
+
+    // dfs function
+    public void dfs(int[] nums, boolean[] used, List<Integer> list, List<List<Integer>> res) {
+        // basecase
+        if (list.size() == nums.length) {
+            res.add(new ArrayList<Integer>(list));
+            return;
+        }
+        // iterate over the nums
+        for (int i = 0; i < nums.length; i++) {
+            // skip if already used
+            if (used[i])
+                continue;
+            // skip if same element is not already used
+            if (i > 0 && nums[i - 1] == nums[i] && !used[i - 1])
+                continue;
+            // different orders of duplicates should be considered as one permutation.you should make sure that when these duplicates are selected,there has to be one fixed order. so out of multiple duplicates,first one is used always.
+            used[i] = true;
+            list.add(nums[i]);
+            dfs(nums, used, list, res);
+            // while backtracking make the element not used and remove the last element from the list
+            used[i] = false;
+            list.remove(list.size() - 1);
+        }
+    }
+}

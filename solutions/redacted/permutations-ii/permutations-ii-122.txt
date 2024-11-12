@@ -1,0 +1,46 @@
+class Solution {
+
+    // Recursive helper function to generate unique permutations
+    public void helper(List<List<Integer>> ls, List<Integer> temp, int[] nums, boolean[] used) {
+        // Base case: if the current permutation is complete, add it to the result list
+        if (temp.size() == nums.length) {
+            // Add a copy of the current permutation to the result list
+            ls.add(new ArrayList<>(temp));
+            // Exit the function call
+            return;
+        }
+        // Iterate through the elements of the input array
+        for (int i = 0; i < nums.length; i++) {
+            // Check if the current element has already been used in the current permutation
+            // Skip to the next element if it has already been used
+            if (used[i])
+                continue;
+            // Check for duplicates and skip them to avoid generating duplicate permutations
+            if (i >= 1 && nums[i] == nums[i - 1] && !used[i - 1])
+                continue;
+            // Mark the current element as used
+            used[i] = true;
+            // Add the current element to the temporary permutation list
+            temp.add(nums[i]);
+            // Recursively call the helper function to generate permutations with the current element added
+            helper(ls, temp, nums, used);
+            // Backtrack: unmark the current element as used and remove it from the temporary permutation list
+            used[i] = false;
+            temp.remove(temp.size() - 1);
+        }
+    }
+
+    // Main function to generate unique permutations of the input array
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        // Initialize the result list
+        List<List<Integer>> ls = new ArrayList<>();
+        // Array to track which elements have been used
+        boolean[] used = new boolean[nums.length];
+        // Sort the input array to handle duplicates
+        Arrays.sort(nums);
+        // Call the helper function to generate permutations
+        helper(ls, new ArrayList<>(), nums, used);
+        // Return the list of unique permutations
+        return ls;
+    }
+}

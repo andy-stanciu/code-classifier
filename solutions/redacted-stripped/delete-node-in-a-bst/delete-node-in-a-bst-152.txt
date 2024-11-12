@@ -1,0 +1,41 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        TreeNode var1 = root;
+        TreeNode parent = null;
+        while (var1 != null && key != var1.val) {
+            parent = var1;
+            var1 = key < var1.val ? var1.left : var1.right;
+        }
+        if (var1 == null) {
+            return root;
+        }
+        if (var1.right == null && var1.left == null && var1 == root) {
+            System.gc();
+            return parent;
+        } else if (var1.right == null && var1.left == null) {
+            if (parent.left != null && parent.left.val == key)
+                parent.left = null;
+            if (parent.right != null && parent.right.val == key)
+                parent.right = null;
+        } else if (var1.left == null) {
+            var1.val = var1.right.val;
+            var1.left = var1.right.left;
+            var1.right = var1.right.right;
+        } else if (var1.right == null) {
+            var1.val = var1.left.val;
+            var1.right = var1.left.right;
+            var1.left = var1.left.left;
+        } else {
+            var1.val = var1.right.val;
+            TreeNode left = var1.left;
+            while (left.right != null) {
+                left = left.right;
+            }
+            left.right = var1.right.left;
+            var1.right = var1.right.right;
+        }
+        System.gc();
+        return root;
+    }
+}

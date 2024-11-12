@@ -1,0 +1,31 @@
+class Solution {
+
+    public int method1(int[][] points) {
+        List<int[]> list = new ArrayList<>();
+        int n = points.length;
+        Arrays.sort(points, (a, b) -> {
+            if (a[0] == b[0]) {
+                return Integer.compare(a[1], b[1]);
+            }
+            return Integer.compare(a[0], b[0]);
+        });
+        for (int i = 0; i < n; i++) {
+            if (list.isEmpty()) {
+                list.add(points[i]);
+            } else {
+                int min = points[i][0];
+                int max = points[i][1];
+                if (list.get(list.size() - 1)[1] >= min) {
+                    // there must be intersection of ballons
+                    min = Math.max(list.get(list.size() - 1)[0], min);
+                    max = Math.min(list.get(list.size() - 1)[1], max);
+                    list.remove(list.size() - 1);
+                    list.add(new int[] { min, max });
+                } else {
+                    list.add(points[i]);
+                }
+            }
+        }
+        return list.size();
+    }
+}

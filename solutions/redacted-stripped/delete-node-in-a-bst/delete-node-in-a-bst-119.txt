@@ -1,0 +1,49 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root != null && root.val == key)
+            return method2(root);
+        TreeNode cur = root;
+        while (cur != null) {
+            if (cur.val < key) {
+                if (cur.right != null && cur.right.val == key) {
+                    cur.right = method2(cur.right);
+                } else {
+                    cur = cur.right;
+                }
+            } else {
+                if (cur.left != null && cur.left.val == key) {
+                    cur.left = method2(cur.left);
+                } else {
+                    cur = cur.left;
+                }
+            }
+        }
+        return root;
+    }
+
+    public TreeNode method2(TreeNode root) {
+        if (root == null)
+            return root;
+        if (root.left == null) {
+            return root.right;
+        }
+        if (root.right == null) {
+            return root.left;
+        }
+        TreeNode right = root.right;
+        TreeNode left = root.left;
+        TreeNode largestOfLeft = method3(root.left);
+        largestOfLeft.right = right;
+        return left;
+    }
+
+    public TreeNode method3(TreeNode root) {
+        if (root == null)
+            return root;
+        while (root.right != null) {
+            root = root.right;
+        }
+        return root;
+    }
+}

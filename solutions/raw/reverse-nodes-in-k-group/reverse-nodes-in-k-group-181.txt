@@ -1,0 +1,39 @@
+class Solution {
+
+    // reverse part
+    public ListNode reverse(ListNode head) {
+        ListNode prev = null;
+        ListNode nxt = null;
+        ListNode curr = head;
+        while (curr != null) {
+            nxt = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nxt;
+        }
+        return prev;
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null)
+            return head;
+        ListNode temp1 = head;
+        ListNode temp2 = head;
+        int ctr = k;
+        // Accessing the first k nodes
+        while (ctr != 1 && temp2 != null) {
+            temp2 = temp2.next;
+            ctr--;
+        }
+        if (temp2 == null)
+            return temp1;
+        // Making the list seperate
+        ListNode connect = temp2.next;
+        temp2.next = null;
+        ListNode newHead = reverse(temp1);
+        ListNode node = reverseKGroup(connect, k);
+        // After recursion connect part
+        temp1.next = node;
+        return newHead;
+    }
+}

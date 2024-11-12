@@ -1,0 +1,36 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Map<Integer, Integer> freqs = new HashMap<>();
+        for (int i : nums) {
+            if (!freqs.containsKey(i)) {
+                freqs.put(i, 1);
+            } else {
+                freqs.put(i, freqs.get(i) + 1);
+            }
+        }
+        List<List<Integer>> ans = new ArrayList<>();
+        backtrack(freqs, new ArrayList<>(), ans);
+        return ans;
+    }
+
+    public void backtrack(Map<Integer, Integer> freqs, List<Integer> curr, List<List<Integer>> ans) {
+        int total = 0;
+        for (Map.Entry<Integer, Integer> entry : freqs.entrySet()) {
+            total += entry.getValue();
+        }
+        if (total == 0) {
+            ans.add(curr);
+            return;
+        }
+        for (Map.Entry<Integer, Integer> entry : freqs.entrySet()) {
+            if (entry.getValue() > 0) {
+                List<Integer> temp = new ArrayList<>(curr);
+                temp.add(entry.getKey());
+                freqs.put(entry.getKey(), entry.getValue() - 1);
+                backtrack(freqs, temp, ans);
+                freqs.put(entry.getKey(), entry.getValue() + 1);
+            }
+        }
+    }
+}

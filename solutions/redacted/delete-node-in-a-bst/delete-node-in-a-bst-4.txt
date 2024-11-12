@@ -1,0 +1,66 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        return f(root, key);
+    }
+
+    private TreeNode f(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        // System.out.println("key to delete: " + key);
+        if (root.val == key) {
+            if (root.left == null && root.right == null) {
+                System.out.println("found: " + root.val);
+                root = null;
+                return root;
+            }
+            if (root.left == null && root.right != null) {
+                TreeNode temp = root.right;
+                root = null;
+                return temp;
+            }
+            if (root.left != null && root.right == null) {
+                TreeNode temp = root.left;
+                root = null;
+                return temp;
+            }
+            if (root.left != null && root.right != null) {
+                TreeNode var1 = method2(root.right);
+                root.val = var1.val;
+                root.right = f(root.right, var1.val);
+                return root;
+            }
+        } else if (root.val > key) {
+            root.left = f(root.left, key);
+        } else {
+            root.right = f(root.right, key);
+        }
+        return root;
+    }
+
+    private TreeNode method2(TreeNode root) {
+        while (root.left != null) {
+            root = root.left;
+        }
+        return root;
+    }
+}

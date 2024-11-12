@@ -1,0 +1,69 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        // reversing list l1
+        ListNode prev1 = null;
+        ListNode curr1 = l1;
+        while (curr1 != null) {
+            ListNode next = curr1.next;
+            curr1.next = prev1;
+            prev1 = curr1;
+            curr1 = next;
+        }
+        // reversing list l2
+        ListNode prev2 = null;
+        ListNode curr2 = l2;
+        while (curr2 != null) {
+            ListNode next = curr2.next;
+            curr2.next = prev2;
+            prev2 = curr2;
+            curr2 = next;
+        }
+        int carry = 0;
+        ListNode resHead = null;
+        while (prev1 != null || prev2 != null) {
+            int val1, val2;
+            if (prev1 != null) {
+                val1 = prev1.val;
+            } else {
+                val1 = 0;
+            }
+            if (prev2 != null) {
+                val2 = prev2.val;
+            } else {
+                val2 = 0;
+            }
+            int result = val1 + val2 + carry;
+            carry = 0;
+            if (result > 9) {
+                carry = result / 10;
+                result = result % 10;
+            }
+            ListNode temp = new ListNode(result);
+            temp.next = resHead;
+            resHead = temp;
+            if (prev1 != null) {
+                prev1 = prev1.next;
+            }
+            if (prev2 != null) {
+                prev2 = prev2.next;
+            }
+        }
+        if (carry != 0) {
+            ListNode temp = new ListNode(carry);
+            temp.next = resHead;
+            return temp;
+        }
+        return resHead;
+    }
+}

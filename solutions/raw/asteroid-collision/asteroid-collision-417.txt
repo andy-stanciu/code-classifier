@@ -1,0 +1,37 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        // Initialize a stack to keep track of asteroids after collisions.
+        Stack<Integer> stack = new Stack<>();
+        // Iterate through the array of asteroids.
+        for (int i : asteroids) {
+            boolean flag = true;
+            // Check for possible collisions with existing asteroids in the stack.
+            while (!stack.isEmpty() && (stack.peek() > 0 && i < 0)) {
+                if (Math.abs(stack.peek()) < Math.abs(i)) {
+                    // Current asteroid destroys the asteroid on top of the stack.
+                    stack.pop();
+                    continue;
+                } else if (Math.abs(stack.peek()) == Math.abs(i)) {
+                    // Both asteroids annihilate each other.
+                    stack.pop();
+                }
+                // Set flag to false to indicate that the current asteroid is destroyed.
+                flag = false;
+                break;
+            }
+            // If flag is true, the current asteroid survived the collisions and is added to the stack.
+            if (flag)
+                stack.push(i);
+        }
+        // Create an array to store the remaining asteroids in the stack.
+        int[] res = new int[stack.size()];
+        // Populate the result array by popping elements from the stack.
+        for (int i = res.length - 1; i >= 0; i--) {
+            res[i] = stack.peek();
+            stack.pop();
+        }
+        // Return the result array containing surviving asteroids.
+        return res;
+    }
+}

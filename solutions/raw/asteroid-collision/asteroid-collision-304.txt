@@ -1,0 +1,30 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        int sp = -1;
+        for (int i = 0; i < asteroids.length; i++) {
+            asteroids[++sp] = asteroids[i];
+            while (sp >= 1 && asteroids[sp] < 0) {
+                if (asteroids[sp - 1] < 0 && asteroids[sp] < 0) {
+                    // Both can be negative - moving in same direction
+                    break;
+                }
+                int positiveCurrent = -1 * asteroids[sp];
+                if (asteroids[sp - 1] == positiveCurrent) {
+                    // Both collide and destroy each other
+                    sp = sp - 2;
+                    break;
+                } else if (asteroids[sp - 1] > positiveCurrent) {
+                    // current is destroyed
+                    sp--;
+                    break;
+                } else {
+                    asteroids[sp - 1] = asteroids[sp];
+                    // previous is destroyed
+                    sp--;
+                }
+            }
+        }
+        return Arrays.copyOf(asteroids, sp + 1);
+    }
+}

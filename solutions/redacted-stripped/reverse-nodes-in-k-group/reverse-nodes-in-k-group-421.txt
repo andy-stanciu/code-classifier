@@ -1,0 +1,46 @@
+class Solution {
+
+    public ListNode getKthNode(ListNode start, int k) {
+        k = k - 1;
+        while (start != null && k > 0) {
+            start = start.next;
+            k--;
+        }
+        return start;
+    }
+
+    public ListNode method1(ListNode start) {
+        ListNode prev = null;
+        ListNode temp = start;
+        while (temp != null) {
+            ListNode curr = temp.next;
+            temp.next = prev;
+            prev = temp;
+            temp = curr;
+        }
+        return temp;
+    }
+
+    public ListNode method2(ListNode head, int k) {
+        ListNode start = head;
+        ListNode prev = null;
+        while (start != null) {
+            ListNode end = getKthNode(start, k);
+            if (end == null) {
+                prev.next = start;
+                break;
+            }
+            ListNode newNode = end.next;
+            end.next = null;
+            method1(start);
+            if (start == head) {
+                head = end;
+            } else {
+                prev.next = end;
+            }
+            prev = start;
+            start = newNode;
+        }
+        return head;
+    }
+}

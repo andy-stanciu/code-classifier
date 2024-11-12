@@ -1,0 +1,64 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        int length = length(head);
+        // created this dummy so that we dont need to track head.
+        // dummy -> head
+        ListNode dummy = new ListNode(0, head);
+        int count = 0;
+        // head of current subList before reversal
+        ListNode currTailAfterReversal = head;
+        // tail of main list
+        ListNode mainListTail = dummy;
+        // currTailAfterReversal and mainListTail are important to link the subList to the main list
+        ListNode curr = head, prev = null, next = null;
+        while (curr != null) {
+            /*
+            After reversal we have 
+            prev = tail of subList before reversal = head of subList after reversal
+            To reach to tail of subList after reversal, we have currTailAfterReversal variable.
+            */
+            currTailAfterReversal = curr;
+            prev = null;
+            next = null;
+            for (int i = 0; i < k; i++) {
+                // reverse the sublist
+                next = curr.next;
+                curr.next = prev;
+                prev = curr;
+                curr = next;
+            }
+            count += k;
+            // connect this subList first element after reversal that is prev to the main list
+            mainListTail.next = prev;
+            // set currSubListLastAfterReversal(which is at the end after reversal) as previous subList last
+            mainListTail = currTailAfterReversal;
+            // check if remaining list length is less than k
+            if (length - count < k) {
+                mainListTail.next = curr;
+                break;
+            }
+        }
+        return dummy.next;
+    }
+
+    private int length(ListNode head) {
+        ListNode ptr = head;
+        int count = 0;
+        while (ptr != null) {
+            count++;
+            ptr = ptr.next;
+        }
+        return count;
+    }
+}

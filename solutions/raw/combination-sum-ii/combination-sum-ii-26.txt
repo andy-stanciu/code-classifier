@@ -1,0 +1,53 @@
+class Solution {
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> lists = new ArrayList<>();
+        List<Integer> combo = new ArrayList<>();
+        int index = 0;
+        combinationSumHelper(candidates, target, index, combo, lists);
+        return lists;
+    }
+
+    static void combinationSumHelper(int[] candidates, int target, int index, List<Integer> combo, List<List<Integer>> lists) {
+        //Base case :
+        //If target becomes 0 then that means we have found a valid combination,
+        //hence we add it to our list and backtrack.
+        if (target == 0) {
+            List<Integer> newCombo = new ArrayList<>();
+            newCombo.addAll(combo);
+            lists.add(newCombo);
+            return;
+        }
+        //If we surpass the end of the array or the target then that means
+        //we have not found a valid combination and hence we do not add it to our list and
+        //we simply backtrack.
+        if (index >= candidates.length || target < 0) {
+            return;
+        }
+        //We have two choices :
+        //1 . Either we add current element to our list
+        //2 . We ignore the current element.
+        //Choice 1 :
+        //We add the current element to our combination
+        //Update the target and index
+        //Move forward with recursion.
+        combo.add(candidates[index]);
+        combinationSumHelper(candidates, target - candidates[index], index + 1, combo, lists);
+        //Choice 2 :
+        //Not include the current element.
+        //We remove the last added element.
+        //Take care of duplicate elements.
+        //Move forward with recursion.
+        combo.remove(combo.size() - 1);
+        //In this resursive step we do not want to include the current element
+        //But if there are duplicate elements present,
+        //then merely moving index by 1 step ahead will not solve the problem
+        //Hence we need to ensure that we skip the duplicates as well
+        int j = index + 1;
+        while (j < candidates.length && candidates[j] == candidates[j - 1]) {
+            j++;
+        }
+        combinationSumHelper(candidates, target, j, combo, lists);
+    }
+}

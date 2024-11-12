@@ -1,0 +1,60 @@
+public class Solution {
+
+    // find first asending element (not including last one)
+    // find the first element on its right greater than it
+    // swap two element the reverse the first element right position
+    // case 1: all asending swap last two
+    // case 2 : all desending swap all
+    // case 3: asending then desending, swap first element desending
+    // with element bigger than swap them, reverse firstt desending + 1 till end of array
+    public void method1(int[] nums) {
+        if (nums == null || nums.length <= 1) {
+            return;
+        }
+        // step 1 find first element that is desending (first element while desending)
+        // 1 (2) 3
+        // (1) 3 2
+        // () 3 2 1
+        // should not worries indexOutOfBound nums.length <= 1
+        int firstDesending = nums.length - 2;
+        while (firstDesending >= 0 && nums[firstDesending] >= nums[firstDesending + 1]) {
+            // >= is important to [1,1]
+            firstDesending--;
+        }
+        int firstBigger = nums.length - 1;
+        //step 2 find first element on the right that is greater than firstDesending
+        // if firstDesending = -1; dont execute return the whole array
+        if (firstDesending == -1) {
+            reverse(nums, firstDesending + 1, firstBigger);
+            return;
+        }
+        // 1 (2) [3]
+        // (1) 3 [2]
+        // () 3 2 1 -> should not be the case will return on if (firstDesending == -1)
+        while (nums[firstBigger] <= nums[firstDesending]) {
+            // <= is important to avoid swaping same element forever
+            firstBigger--;
+        }
+        swap(nums, firstDesending, firstBigger);
+        // 1 (2) [3] -> 1 3 2
+        // (1) 3 [2] -> 2 3 1
+        // reverse firstDesending + 1 till end of Array
+        reverse(nums, firstDesending + 1, nums.length - 1);
+        // 1 (2) [3] -> 1 (3) 2 - > 1 3 2
+        // (1) 3 [2] -> (2) 3 1 -> 2 1 3
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    private void reverse(int[] nums, int start, int end) {
+        while (end > start) {
+            swap(nums, start, end);
+            start++;
+            end--;
+        }
+    }
+}

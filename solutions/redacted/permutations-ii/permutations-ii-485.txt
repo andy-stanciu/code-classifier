@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ret = new ArrayList<>();
+        dfs(0, nums, ret);
+        return ret;
+    }
+
+    private void dfs(int level, int[] nums, List<List<Integer>> ret) {
+        if (level == nums.length) {
+            ret.add(Arrays.stream(nums).boxed().toList());
+            return;
+        }
+        Set<Integer> set = new HashSet<>();
+        for (int i = level; i < nums.length; i++) {
+            if (!set.contains(nums[i])) {
+                swap(nums, level, i);
+                dfs(level + 1, nums, ret);
+                swap(nums, level, i);
+                set.add(nums[i]);
+            }
+        }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}

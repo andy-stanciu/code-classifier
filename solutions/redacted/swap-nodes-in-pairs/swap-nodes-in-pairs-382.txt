@@ -1,0 +1,50 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+        ArrayList<ListNode> var1 = new ArrayList<>();
+        decomposeListNode(head, var1);
+        var1.forEach(n -> n.next = null);
+        for (int i = 0; i < var1.size(); i++) {
+            if (i + 1 < var1.size()) {
+                ListNode temp = var1.get(i);
+                var1.set(i, var1.get(i + 1));
+                var1.set(i + 1, temp);
+                i++;
+            }
+        }
+        ListNode listNode = var1.get(0);
+        var1.remove(0);
+        composeListNode(listNode, var1);
+        return listNode;
+    }
+
+    private void composeListNode(ListNode head, List<ListNode> var1) {
+        if (var1.isEmpty()) {
+            return;
+        }
+        head.next = var1.get(0);
+        var1.remove(0);
+        composeListNode(head.next, var1);
+    }
+
+    private void decomposeListNode(ListNode head, List<ListNode> var1) {
+        if (head == null) {
+            return;
+        }
+        var1.add(head);
+        decomposeListNode(head.next, var1);
+    }
+}

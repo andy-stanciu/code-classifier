@@ -1,0 +1,31 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        int index = 0;
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> container = new ArrayList<>();
+        helper(index, target, ans, container, candidates);
+        return ans;
+    }
+
+    public void helper(int index, int target, List<List<Integer>> ans, List<Integer> container, int[] nums) {
+        if (target == 0) {
+            ans.add(new ArrayList<>(container));
+            return;
+        }
+        if (target < 0 || index == nums.length) {
+            return;
+        }
+        container.add(nums[index]);
+        helper(index + 1, target - nums[index], ans, container, nums);
+        container.remove(container.size() - 1);
+        int check = nums[index];
+        for (int i = index + 1; i < nums.length; i++) {
+            if (check != nums[i]) {
+                helper(i, target, ans, container, nums);
+                break;
+            }
+        }
+    }
+}

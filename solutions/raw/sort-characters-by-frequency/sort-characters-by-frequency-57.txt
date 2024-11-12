@@ -1,0 +1,23 @@
+class Solution {
+
+    public String frequencySort(String s) {
+        int count;
+        StringBuilder sortedString = new StringBuilder();
+        HashMap<Character, Integer> hm = new HashMap<>();
+        //to map frequency against each character in the input string
+        for (int i = 0; i < s.length(); i++) {
+            hm.put(s.charAt(i), hm.getOrDefault(s.charAt(i), 0) + 1);
+        }
+        //using comparingByValue() \'a java8 feature\' to sort the map
+        hm = hm.entrySet().stream().sorted(Map.Entry.comparingByValue((e1, e2) -> e2 - e1)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        //appending every key of sorted map for its values times
+        for (Character c : hm.keySet()) {
+            count = hm.get(c);
+            while (count > 0) {
+                sortedString.append(c);
+                count--;
+            }
+        }
+        return sortedString.toString();
+    }
+}

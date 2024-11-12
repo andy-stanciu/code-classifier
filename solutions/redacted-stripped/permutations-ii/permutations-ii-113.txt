@@ -1,0 +1,28 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        Arrays.sort(nums);
+        backtrack(nums, ans, list, new boolean[nums.length]);
+        return ans;
+    }
+
+    public void backtrack(int[] nums, List<List<Integer>> ans, List<Integer> list, boolean[] vis) {
+        if (list.size() == nums.length) {
+            ans.add(new ArrayList<>(list));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (vis[i])
+                continue;
+            if (i > 0 && !vis[i - 1] && nums[i] == nums[i - 1])
+                continue;
+            vis[i] = true;
+            list.add(nums[i]);
+            backtrack(nums, ans, list, vis);
+            list.remove(list.size() - 1);
+            vis[i] = false;
+        }
+    }
+}

@@ -1,0 +1,87 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        // Create a stack to simulate asteroid collisions
+        Stack<Integer> stack = new Stack<>();
+        // Loop through each asteroid in the input array
+        for (int i = 0; i < param1.length; i++) {
+            // Check if there\'s a possibility of collision between the current asteroid and the top asteroid in the stack
+            if (!stack.isEmpty() && stack.peek() > 0 && param1[i] < 0) {
+                // Collision is possible, handle collision scenarios
+                if (Math.abs(param1[i]) == Math.abs(stack.peek())) {
+                    // If the absolute sizes of the current asteroid and the top asteroid in the stack are equal,
+                    // both asteroids get destroyed, so pop the top asteroid from the stack
+                    stack.pop();
+                } else if (Math.abs(param1[i]) > Math.abs(stack.peek())) {
+                    // If the absolute size of the current asteroid is larger than the absolute size of the top asteroid
+                    // in the stack, the top asteroid gets destroyed, so pop it from the stack and re-check the current
+                    // asteroid with the next one in the stack (by decrementing index i)
+                    stack.pop();
+                    //to avoide the loop
+                    i--;
+                }
+            } else {
+                // No collision, push the current asteroid onto the stack
+                stack.push(param1[i]);
+            }
+        }
+        // Convert the stack to an array for the final result
+        int[] ans = new int[stack.size()];
+        for (int i = ans.length - 1; i >= 0; i--) {
+            ans[i] = stack.pop();
+        }
+        return ans;
+    }
+}
+/* //Easy to understand code but has a long solution
+class Solution {
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> stack = new Stack<>(); // Create a stack to simulate asteroid collisions
+        for (int i = 0; i < asteroids.length; i++) {
+
+            if (stack.isEmpty()) {
+                // If the stack is empty, push the current asteroid onto the stack
+                stack.push(asteroids[i]);
+            } 
+            else if (stack.peek() < 0) {
+                // If the top asteroid in the stack is moving to the left (negative direction),
+                // push the current asteroid onto the stack, as it\'s moving in the opposite direction
+                stack.push(asteroids[i]);
+            } 
+            else if (stack.peek() > 0) {
+    
+                if (asteroids[i] > 0) {
+                    // If the current asteroid is also moving to the right (positive direction),
+                    // push it onto the stack, as no collision occurs
+                    stack.push(asteroids[i]);
+                } 
+                else {
+                    if (Math.abs(asteroids[i]) == Math.abs(stack.peek())) {
+                        // If the current asteroid and the top asteroid in the stack have equal absolute sizes,
+                        // they will collide and get destroyed, so pop the top asteroid from the stack
+                        stack.pop();
+                    } 
+                    else if (Math.abs(asteroids[i]) < Math.abs(stack.peek())) {
+                        // If the current asteroid has a smaller absolute size than the top asteroid in the stack,
+                        // the current asteroid gets destroyed, but we do nothing (skip the current asteroid)
+                    } 
+                    else if (Math.abs(asteroids[i]) > Math.abs(stack.peek())) {
+                        // If the current asteroid has a larger absolute size than the top asteroid in the stack,
+                        // the top asteroid in the stack gets destroyed, so pop it from the stack and re-check
+                        // the current asteroid with the next one in the stack (by decrementing index i)
+                        stack.pop();
+                        i--; // to avoide while loop
+                    }
+                }
+            }
+        }
+
+        // Convert the stack to an array for the final result
+        int[] ans = new int[stack.size()];
+        for (int i = ans.length - 1; i >= 0; i--) {
+            ans[i] = stack.pop();
+        }
+        return ans;
+    }
+}
+*/

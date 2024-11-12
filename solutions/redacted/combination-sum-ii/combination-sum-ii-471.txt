@@ -1,0 +1,29 @@
+class Solution {
+
+    private void solve(List<List<Integer>> ans, List<Integer> temp, int[] can, int target, int param1, int idx, int n) {
+        if (idx >= n || param1 >= target) {
+            if (param1 == target) {
+                ans.add(new ArrayList<>(temp));
+            }
+            return;
+        }
+        temp.add(can[idx]);
+        param1 += can[idx];
+        solve(ans, temp, can, target, param1, idx + 1, n);
+        temp.remove(temp.size() - 1);
+        param1 -= can[idx];
+        while (idx + 1 < n && can[idx] == can[idx + 1]) idx++;
+        solve(ans, temp, can, target, param1, idx + 1, n);
+    }
+
+    public List<List<Integer>> method1(int[] can, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        Arrays.sort(can);
+        int n = can.length;
+        int param1 = 0;
+        int idx = 0;
+        List<Integer> temp = new ArrayList<>();
+        solve(ans, temp, can, target, param1, idx, n);
+        return ans;
+    }
+}

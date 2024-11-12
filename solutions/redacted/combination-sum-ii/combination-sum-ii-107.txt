@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        Arrays.sort(candidates);
+        helper(candidates, target, 0, result, list);
+        return result;
+    }
+
+    public void helper(int[] candidates, int target, int ind, List<List<Integer>> result, List<Integer> list) {
+        if (target < 0) {
+            return;
+        }
+        if (target == 0) {
+            // Add a copy of the current list
+            result.add(new ArrayList<>(list));
+            return;
+        }
+        for (int i = ind; i < candidates.length; i++) {
+            // Skip duplicates
+            if (i > ind && candidates[i] == candidates[i - 1])
+                continue;
+            list.add(candidates[i]);
+            // Move to the next index
+            helper(candidates, target - candidates[i], i + 1, result, list);
+            list.remove(list.size() - 1);
+        }
+    }
+}

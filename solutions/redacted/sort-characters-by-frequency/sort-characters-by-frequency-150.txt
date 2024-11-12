@@ -1,0 +1,68 @@
+class Solution {
+
+    public String method1(String s) {
+        // Step 1: Frequency count
+        // Array to count frequency of ASCII characters
+        int[] fre = new int[128];
+        for (char ch : s.toCharArray()) {
+            // Iterate over each character in the string
+            // Map character to index
+            int idx = 127 - ch;
+            // Increment frequency count
+            fre[idx]++;
+        }
+        // Step 2: Populate priority queue
+        // Max-heap to sort characters by frequency
+        PriorityQueue<Pair> pq = new PriorityQueue<>();
+        for (int i = 0; i < fre.length; i++) {
+            // Iterate over frequency array
+            if (fre[i] > 0) {
+                // Only consider characters with non-zero frequency
+                // Create Pair with frequency and index
+                Pair p = new Pair(fre[i], i);
+                // Add Pair to the priority queue
+                pq.offer(p);
+            }
+        }
+        // Step 3: Build the result string
+        // To construct the result string
+        StringBuilder sb = new StringBuilder();
+        while (!pq.isEmpty()) {
+            // Process all characters in priority queue
+            // Get the highest frequency character
+            Pair p = pq.poll();
+            // Frequency of the character
+            int freq = p.freq;
+            // Index in frequency array
+            int indx = p.indx;
+            // Map index back to character
+            char ch = (char) (127 - indx);
+            // Convert character to string
+            String res = ch + "";
+            // Repeat character by its frequency
+            res = res.repeat(freq);
+            // Append repeated characters to result
+            sb.append(res);
+        }
+        // Return the final sorted string
+        return sb.toString();
+    }
+
+    // Helper class to store character and its frequency
+    class Pair implements Comparable<Pair> {
+
+        // Frequency and index in frequency array
+        int freq, indx;
+
+        Pair(int freq, int indx) {
+            this.freq = freq;
+            this.indx = indx;
+        }
+
+        @Override
+        public int compareTo(Pair p) {
+            // Compare pairs by frequency (max-heap behavior)
+            return p.freq - this.freq;
+        }
+    }
+}

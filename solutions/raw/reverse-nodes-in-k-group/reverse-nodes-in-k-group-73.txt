@@ -1,0 +1,29 @@
+class Solution {
+
+    public ListNode getKThNode(ListNode curr, int k) {
+        while (curr != null && k-- > 1) curr = curr.next;
+        return curr;
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode dummy = new ListNode(-1, head);
+        ListNode beforeGroup = dummy, prev = beforeGroup, curr = head, forw;
+        while (curr != null) {
+            ListNode kthNode = getKThNode(curr, k);
+            if (kthNode == null)
+                return dummy.next;
+            ListNode nextGroup = kthNode.next;
+            while (curr != nextGroup) {
+                forw = curr.next;
+                curr.next = prev;
+                prev = curr;
+                curr = forw;
+            }
+            ListNode currTail = beforeGroup.next;
+            beforeGroup.next = prev;
+            currTail.next = nextGroup;
+            beforeGroup = currTail;
+        }
+        return dummy.next;
+    }
+}

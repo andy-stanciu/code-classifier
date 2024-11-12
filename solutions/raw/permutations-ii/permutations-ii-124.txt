@@ -1,0 +1,33 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ret = new ArrayList<>();
+        List<Integer> buf = new ArrayList<>();
+        // build frequency counter
+        int[] freq = new int[21];
+        for (int i = 0; i < nums.length; ++i) {
+            freq[nums[i] + 10]++;
+        }
+        recur(nums.length, freq, buf, ret);
+        return ret;
+    }
+
+    void recur(int n, int[] freq, List<Integer> buf, List<List<Integer>> ret) {
+        // our buffer has enough elements, add it to the return
+        if (buf.size() == n) {
+            ret.add(new ArrayList<>(buf));
+            return;
+        }
+        // iterate through all possible num values
+        for (int i = 0; i < freq.length; ++i) {
+            if (freq[i] == 0) {
+                continue;
+            }
+            freq[i]--;
+            buf.add(i - 10);
+            recur(n, freq, buf, ret);
+            freq[i]++;
+            buf.remove(buf.size() - 1);
+        }
+    }
+}

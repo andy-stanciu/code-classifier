@@ -1,0 +1,35 @@
+class Solution {
+
+    //remove duplicates
+    Set<List<Integer>> result = new HashSet<>();
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        //track a path
+        List<Integer> track = new ArrayList<>();
+        backtrack(nums, track);
+        return new ArrayList<>(result);
+    }
+
+    void backtrack(int[] nums, List<Integer> track) {
+        if (0 == nums.length) {
+            result.add(new ArrayList(track));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            //if(!isSafe(nums[i],track)) continue; //exclude illigal selections
+            //select
+            track.add(nums[i]);
+            backtrack(newArray(nums, i), track);
+            //deselect
+            track.remove(track.size() - 1);
+        }
+    }
+
+    int[] newArray(int[] nums, int index) {
+        int[] arr = new int[nums.length - 1];
+        System.arraycopy(nums, 0, arr, 0, index);
+        //important nums.length-index-1
+        System.arraycopy(nums, index + 1, arr, index, nums.length - index - 1);
+        return arr;
+    }
+}

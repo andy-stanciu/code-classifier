@@ -1,0 +1,36 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> answer = new ArrayList<>();
+        dfs(0, nums, answer);
+        return answer;
+    }
+
+    void dfs(int i, int[] nums, List<List<Integer>> answer) {
+        if (i == nums.length) {
+            List<Integer> list = new ArrayList<>();
+            for (int num : nums) {
+                list.add(num);
+            }
+            answer.add(list);
+            return;
+        }
+        int seen = 0;
+        for (int j = i; j < nums.length; j++) {
+            int mask = 1 << (nums[j] + 10);
+            if ((seen & mask) != 0) {
+                continue;
+            }
+            seen |= mask;
+            swap(i, j, nums);
+            dfs(i + 1, nums, answer);
+            swap(i, j, nums);
+        }
+    }
+
+    void swap(int i, int j, int[] nums) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+}

@@ -1,0 +1,35 @@
+class Solution {
+
+    List<List<Integer>> ans;
+
+    List<Integer> temp;
+
+    boolean[] visited;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        ans = new ArrayList<>();
+        temp = new ArrayList<>();
+        visited = new boolean[nums.length];
+        genPermutation(nums, 0, visited);
+        return ans;
+    }
+
+    public void genPermutation(int[] arr, int idx, boolean[] visited) {
+        if (idx == arr.length) {
+            ans.add(new ArrayList<>(temp));
+            return;
+        }
+        for (int i = 0; i < arr.length; i++) {
+            if (i > 0 && !visited[i - 1] && arr[i] == arr[i - 1])
+                continue;
+            if (!visited[i]) {
+                temp.add(arr[i]);
+                visited[i] = true;
+                genPermutation(arr, idx + 1, visited);
+                temp.remove(temp.size() - 1);
+                visited[i] = false;
+            }
+        }
+    }
+}

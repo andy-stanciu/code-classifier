@@ -1,0 +1,29 @@
+class Solution {
+
+    private boolean doesMerge(int[] param1, int[] param2) {
+        return param1[1] >= param2[0] && param2[1] >= param1[0];
+    }
+
+    private int[] merge(int[] param1, int[] param2) {
+        int[] merged = { Math.max(param1[0], param2[0]), Math.min(param1[1], param2[1]) };
+        return merged;
+    }
+
+    public int method1(int[][] points) {
+        PriorityQueue<int[]> minYFirst = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        int len = points.length;
+        for (int[] point : points) minYFirst.add(point);
+        int var1 = 0;
+        while (!minYFirst.isEmpty() && minYFirst.size() > 1) {
+            int[] param1 = minYFirst.poll();
+            if (doesMerge(param1, minYFirst.peek())) {
+                int[] param2 = minYFirst.poll();
+                System.out.println("F");
+                minYFirst.add(merge(param1, param2));
+            } else {
+                var1++;
+            }
+        }
+        return var1 + minYFirst.size();
+    }
+}

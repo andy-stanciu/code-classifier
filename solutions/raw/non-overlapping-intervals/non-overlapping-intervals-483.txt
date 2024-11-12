@@ -1,0 +1,48 @@
+class Interval {
+
+    int i;
+
+    int j;
+
+    public Interval(int i, int j) {
+        this.i = i;
+        this.j = j;
+    }
+
+    public String toString() {
+        return "[" + this.i + "," + this.j + "]";
+    }
+}
+
+class IntervalComparator implements Comparator<Interval> {
+
+    public int compare(Interval s1, Interval s2) {
+        if (s1.i == s2.i)
+            return s1.j - s2.j;
+        return s1.i - s2.i;
+    }
+}
+
+class Solution {
+
+    public int eraseOverlapIntervals(int[][] intervals) {
+        List<Interval> list = new ArrayList<>();
+        for (int[] arr : intervals) {
+            list.add(new Interval(arr[0], arr[1]));
+        }
+        Collections.sort(list, new IntervalComparator());
+        int cnt = 0;
+        Interval prev = new Interval(Integer.MIN_VALUE, Integer.MIN_VALUE);
+        for (Interval curr : list) {
+            if (curr.i >= prev.i && curr.i < prev.j) {
+                if (prev.j - prev.i > curr.j - prev.i) {
+                    prev = curr;
+                }
+                cnt++;
+            } else {
+                prev = curr;
+            }
+        }
+        return cnt;
+    }
+}

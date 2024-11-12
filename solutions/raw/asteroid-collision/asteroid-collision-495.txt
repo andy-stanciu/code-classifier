@@ -1,0 +1,37 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> stack = new Stack<>();
+        int i = 1;
+        stack.push(asteroids[0]);
+        while (i < asteroids.length) {
+            // <- ->, <- <-, -> ->
+            if (stack.isEmpty() || i < asteroids.length && !(stack.peek() > 0 && asteroids[i] < 0)) {
+                stack.push(asteroids[i++]);
+                continue;
+            } else // -> <- and 2nd one is heavy
+            if (-asteroids[i] > stack.peek()) {
+                stack.pop();
+                continue;
+            } else // -> <- both are equal
+            if (asteroids[i] + stack.peek() == 0) {
+                stack.pop();
+                i++;
+                continue;
+            } else // -> <- and 1st one is heavy
+            {
+                i++;
+            }
+        }
+        int[] ans = new int[stack.size()];
+        int p = 0;
+        Stack<Integer> stack2 = new Stack<>();
+        while (!stack.isEmpty()) {
+            stack2.push(stack.pop());
+        }
+        while (!stack2.isEmpty()) {
+            ans[p++] = stack2.pop();
+        }
+        return ans;
+    }
+}

@@ -1,0 +1,75 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        Triplet p = new Triplet(null, null, head);
+        int count = 0;
+        ListNode temp = head;
+        while (temp != null) {
+            count++;
+            temp = temp.next;
+        }
+        // Number of groups
+        count = count / k;
+        ListNode nhead = null;
+        // Reverse all the groups
+        while (count-- > 0) {
+            Triplet nP = method2(p.next, k);
+            if (p.tail != null) {
+                p.tail.next = nP.head;
+            } else {
+                nhead = nP.head;
+            }
+            p = nP;
+            // System.out.println("p ===>>> head: "+ p.head.val+" tail: "+p.tail.val);
+            // System.out.println("nP ===>>> head: "+ p.head.val+" tail: "+p.tail.val);
+        }
+        p.tail.next = p.next;
+        return nhead;
+    }
+
+    private Triplet method2(ListNode head, int k) {
+        ListNode prev = null;
+        ListNode curr = head;
+        ListNode next = null;
+        while (k-- > 0) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return new Triplet(prev, head, next);
+    }
+
+    private void method3(ListNode nhead) {
+        ListNode temp = nhead;
+        while (temp != null) {
+            // System.out.println(temp.val+" ");
+            temp = temp.next;
+        }
+    }
+}
+
+class Triplet {
+
+    ListNode head;
+
+    ListNode tail;
+
+    ListNode next;
+
+    Triplet(ListNode head, ListNode tail, ListNode next) {
+        this.head = head;
+        this.tail = tail;
+        this.next = next;
+    }
+}

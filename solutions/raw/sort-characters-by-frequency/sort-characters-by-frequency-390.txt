@@ -1,0 +1,64 @@
+class Pair {
+
+    private String key;
+
+    private int value;
+
+    public Pair(String key, int value) {
+        this.key = key;
+        this.value = value;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public int getValue() {
+        return value;
+    }
+}
+
+class Solution {
+
+    public String frequencySort(String s) {
+        Pair[] arr = new Pair[123];
+        for (int i = 0; i < 123; i++) {
+            arr[i] = new Pair("", 0);
+        }
+        int len = s.length();
+        StringBuilder ans = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            char ch = s.charAt(i);
+            Pair pair = arr[ch];
+            String str = pair.getKey() + ch;
+            int val = pair.getValue() + 1;
+            pair.setValue(val);
+            pair.setKey(str);
+        }
+        Arrays.sort(arr, (o1, o2) -> {
+            if (o1.getValue() == o2.getValue()) {
+                return 0;
+            } else if (o1.getValue() > o2.getValue()) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
+        for (int i = arr.length - 1; i >= 0; i--) {
+            if (!arr[i].getKey().isEmpty()) {
+                ans.append(arr[i].getKey());
+            } else {
+                break;
+            }
+        }
+        return ans.toString();
+    }
+}

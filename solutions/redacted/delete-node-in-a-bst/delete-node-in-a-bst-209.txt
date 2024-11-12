@@ -1,0 +1,84 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    boolean mx, mn, b;
+
+    int method1(TreeNode root, TreeNode prev) {
+        if (root.right == null) {
+            if (mx) {
+                prev.left = root.left;
+                return root.val;
+            }
+            prev.right = root.left;
+            return root.val;
+        }
+        mx = false;
+        return method1(root.right, root);
+    }
+
+    int method2(TreeNode root, TreeNode prev) {
+        if (root.left == null) {
+            if (mn) {
+                prev.right = root.right;
+                return root.val;
+            }
+            prev.left = root.right;
+            return root.val;
+        }
+        mn = false;
+        return method2(root.left, root);
+    }
+
+    void method3(TreeNode root, int key) {
+        if (root == null)
+            return;
+        if (root.val == key) {
+            if (root.left != null) {
+                mx = true;
+                root.val = method1(root.left, root);
+            } else if (root.right != null) {
+                mn = true;
+                root.val = method2(root.right, root);
+            } else if (root.left == null && root.right == null) {
+                b = true;
+            }
+            return;
+        }
+        if (root.val > key) {
+            method3(root.left, key);
+            if (b) {
+                root.left = null;
+                b = false;
+            }
+        } else if (root.val < key) {
+            method3(root.right, key);
+            if (b) {
+                root.right = null;
+                b = false;
+            }
+        } else
+            return;
+    }
+
+    public TreeNode method4(TreeNode root, int key) {
+        method3(root, key);
+        if (b) {
+            return null;
+        }
+        return root;
+    }
+}

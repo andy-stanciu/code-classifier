@@ -1,0 +1,33 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] arr) {
+        // curr index refers to peek() element of in place stack
+        int curr = -1;
+        for (int i = 0; i < arr.length; ++i) {
+            curr = modify(arr[i], curr, arr);
+        }
+        // Copy to answer array and return
+        int[] answer = new int[curr + 1];
+        for (int i = 0; i < curr + 1; ++i) {
+            answer[i] = arr[i];
+        }
+        return answer;
+    }
+
+    // modify function can be called recursively
+    public int modify(int x, int curr, int[] arr) {
+        if (curr != -1 && (arr[curr] > 0 && x < 0)) {
+            // Collision is not going to happen
+            if (Math.abs(arr[curr]) == Math.abs(x)) {
+                --curr;
+            } else if (Math.abs(arr[curr]) < Math.abs(x)) {
+                --curr;
+                curr = modify(x, curr, arr);
+            }
+        } else {
+            // Collision is going to happen
+            arr[++curr] = x;
+        }
+        return curr;
+    }
+}

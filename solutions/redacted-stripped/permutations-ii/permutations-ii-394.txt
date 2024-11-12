@@ -1,0 +1,44 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        helper(ans, nums, 0);
+        return ans;
+    }
+
+    static void helper(List<List<Integer>> ans, int[] nums, int ind) {
+        if (ind == nums.length) {
+            ans.add(display(nums));
+        } else {
+            for (int i = ind; i < nums.length; i++) {
+                if (i != ind && !isSafe(nums, ind, i))
+                    continue;
+                swap(nums, ind, i);
+                helper(ans, nums, ind + 1);
+                swap(nums, ind, i);
+            }
+        }
+    }
+
+    static List<Integer> display(int[] nums) {
+        List<Integer> ans = new ArrayList<>();
+        for (int i : nums) {
+            ans.add(i);
+        }
+        return ans;
+    }
+
+    static void swap(int[] nums, int s, int e) {
+        int temp = nums[s];
+        nums[s] = nums[e];
+        nums[e] = temp;
+    }
+
+    static boolean isSafe(int[] nums, int s, int cur) {
+        for (int i = s; i < cur; i++) {
+            if (nums[i] == nums[cur])
+                return false;
+        }
+        return true;
+    }
+}

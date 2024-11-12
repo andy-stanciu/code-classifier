@@ -1,0 +1,40 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        ListNode temp = new ListNode();
+        ListNode prev = temp;
+        while (head != null) {
+            ListNode[] cur = method2(head, k);
+            if (cur == null) {
+                prev.next = head;
+                break;
+            }
+            prev.next = cur[0];
+            cur[1].next = cur[2];
+            head = cur[2];
+            prev = cur[1];
+        }
+        return temp.next;
+    }
+
+    public ListNode[] method2(ListNode head, int k) {
+        ListNode root = head;
+        for (int i = 0; i < k; i++) {
+            if (head == null) {
+                return null;
+            }
+            head = head.next;
+        }
+        ListNode next = root;
+        ListNode current = null;
+        ListNode prev = null;
+        while (k > 0) {
+            current = next;
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            k--;
+        }
+        return new ListNode[] { prev, root, next };
+    }
+}

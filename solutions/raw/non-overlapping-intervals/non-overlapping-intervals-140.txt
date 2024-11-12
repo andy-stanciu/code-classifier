@@ -1,0 +1,37 @@
+class Solution {
+
+    public int eraseOverlapIntervals(int[][] intervals) {
+        /*
+            Sort the intervals by end time since we want to minimize the overlaps and allow more intervals, hence the need for less removals
+            Initialize counter and a pointer for the first interval to start with (prev)
+            Now iterate over sorted intervals and if there is an overlap:
+                If yes, increment the counter AND
+                    Now, we have to pick which interval to consider going forward for traversal
+                    The logic to pick the interval with smaller end time to minimize the chances of overlap: Pick the interval with smaller end time as the prev pointer
+                Else
+                    make the current interval as the prev interval for comparing against the next one
+                    
+
+            Test cases:
+            Same intervals through the list -> N-1 removals
+            No overlapping -> 0
+            Some overlapping
+
+            Time: O(NlogN) + O(N) where N is number of sub-lists in the list
+            Space: O(N) - needed for sorting recursion stack
+        */
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[1], b[1]));
+        int counter = 0;
+        int[] prev = intervals[0];
+        for (int i = 1; i < intervals.length; i++) {
+            int[] curr = intervals[i];
+            if (prev[1] > curr[0]) {
+                counter++;
+                prev = Math.min(prev[1], curr[1]) == prev[1] ? prev : curr;
+            } else {
+                prev = curr;
+            }
+        }
+        return counter;
+    }
+}

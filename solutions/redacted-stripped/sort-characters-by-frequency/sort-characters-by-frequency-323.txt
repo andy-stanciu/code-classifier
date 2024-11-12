@@ -1,0 +1,60 @@
+class Solution {
+
+    String method1(String s) {
+        int size = s.length();
+        char[] visited = new char[size];
+        int[] frequencies = new int[size];
+        int rear = -1;
+        for (int i = 0; i < size; i++) {
+            char currentChar = s.charAt(i);
+            if (!isVisited(currentChar, visited, rear)) {
+                int freq = 1;
+                for (int j = i + 1; j < size; j++) {
+                    if (currentChar == s.charAt(j)) {
+                        freq++;
+                    }
+                }
+                rear++;
+                visited[rear] = currentChar;
+                frequencies[rear] = freq;
+            }
+        }
+        method2(visited, frequencies, rear);
+        String result = "";
+        for (int i = 0; i <= rear; i++) {
+            for (int j = 0; j < frequencies[i]; j++) {
+                result += visited[i];
+            }
+        }
+        return result;
+    }
+
+    boolean isVisited(char currentChar, char[] visited, int rear) {
+        for (int i = 0; i <= rear; i++) {
+            if (visited[i] == currentChar) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void method2(char[] visited, int[] frequencies, int rear) {
+        boolean isSwapped = true;
+        while (isSwapped) {
+            isSwapped = false;
+            for (int i = 0; i < rear; i++) {
+                for (int j = i + 1; j <= rear; j++) {
+                    if (frequencies[i] < frequencies[j]) {
+                        char temp = visited[i];
+                        visited[i] = visited[j];
+                        visited[j] = temp;
+                        frequencies[i] = frequencies[i] + frequencies[j];
+                        frequencies[j] = frequencies[i] - frequencies[j];
+                        frequencies[i] = frequencies[i] - frequencies[j];
+                        isSwapped = true;
+                    }
+                }
+            }
+        }
+    }
+}

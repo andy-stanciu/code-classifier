@@ -1,0 +1,53 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        TreeNode par = null, child = root;
+        while (child != null) {
+            if (child.val == key) {
+                break;
+            }
+            par = child;
+            if (child.val > key)
+                child = child.left;
+            else
+                child = child.right;
+        }
+        if (child == null)
+            return root;
+        if (child.left != null && child.right != null) {
+            TreeNode temp = child.right;
+            par = child;
+            while (temp.left != null) {
+                par = temp;
+                temp = temp.left;
+            }
+            child.val = temp.val;
+            child = temp;
+        }
+        if (child.left == null && child.right == null) {
+            if (par == null)
+                root = null;
+            else if (par.left == child)
+                par.left = null;
+            else
+                par.right = null;
+        } else if (child.left != null && child.right == null) {
+            if (par == null)
+                root = child.left;
+            else if (par.left == child)
+                par.left = child.left;
+            else
+                par.right = child.left;
+        } else if (child.left == null && child.right != null) {
+            if (par == null)
+                root = child.right;
+            else if (par.left == child)
+                par.left = child.right;
+            else
+                par.right = child.right;
+        }
+        return root;
+    }
+}

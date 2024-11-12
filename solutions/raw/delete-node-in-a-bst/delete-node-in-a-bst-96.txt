@@ -1,0 +1,91 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        if (root.val == key) {
+            TreeNode left = root.left;
+            TreeNode right = root.right;
+            if (left == null) {
+                return right;
+            }
+            TreeNode leftright = rightt(left);
+            leftright.right = right;
+            return left;
+        }
+        TreeNode prev = null;
+        TreeNode temp = root;
+        int flag = -1;
+        while (temp != null) {
+            if (temp.val == key) {
+                break;
+            } else if (temp.val < key) {
+                prev = temp;
+                temp = temp.right;
+                flag = 1;
+            } else {
+                prev = temp;
+                temp = temp.left;
+                flag = 0;
+            }
+        }
+        if (temp == null) {
+            return root;
+        }
+        if (temp.left == null && temp.right == null) {
+            if (flag == 1) {
+                prev.right = null;
+            } else {
+                prev.left = null;
+            }
+            return root;
+        }
+        if (temp.left == null) {
+            if (flag == 1) {
+                prev.right = temp.right;
+            } else {
+                prev.left = temp.right;
+            }
+            return root;
+        }
+        if (temp.right == null) {
+            if (flag == 1) {
+                prev.right = temp.left;
+            } else {
+                prev.left = temp.left;
+            }
+            return root;
+        }
+        TreeNode leftright = rightt(temp.left);
+        leftright.right = temp.right;
+        if (flag == 1) {
+            prev.right = temp.left;
+        } else {
+            prev.left = temp.left;
+        }
+        return root;
+    }
+
+    public TreeNode rightt(TreeNode root) {
+        while (root.right != null) {
+            root = root.right;
+        }
+        return root;
+    }
+}

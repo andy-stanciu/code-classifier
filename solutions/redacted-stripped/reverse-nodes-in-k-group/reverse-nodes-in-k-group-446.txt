@@ -1,0 +1,31 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        if (head == null || k <= 1) {
+            return head;
+        }
+        ListNode start = head;
+        for (int i = 1; i < k; i++) {
+            head = head.next;
+            if (head == null) {
+                return start;
+            }
+        }
+        ListNode nextChunk = head.next;
+        head.next = null;
+        ListNode output = method2(start);
+        start.next = method1(nextChunk, k);
+        return output;
+    }
+
+    public ListNode method2(ListNode head) {
+        ListNode prevNode = null;
+        while (head != null) {
+            ListNode nextNode = head.next;
+            head.next = prevNode;
+            prevNode = head;
+            head = nextNode;
+        }
+        return prevNode;
+    }
+}

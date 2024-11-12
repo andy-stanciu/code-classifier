@@ -1,0 +1,63 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        if (head == null || head.next == null || k == 1)
+            return head;
+        // STEP-1 : check if we have k nodes available in the remaining linked list
+        ListNode list1Tail = null;
+        ListNode list2Head = null;
+        if (method2(head, k)) {
+            // STEP-2 : if yes, then reverse k nodes
+            ListNode previous = null;
+            ListNode current = head;
+            for (int i = 1; i <= k; i++) {
+                ListNode next = current.next;
+                current.next = previous;
+                previous = current;
+                current = next;
+            }
+            // after above code:-
+            // the old head is pointing to list1 tail
+            list1Tail = head;
+            // the previous is pointing to new Head of our output list
+            head = previous;
+            // the current is pointing to list2 head
+            list2Head = current;
+        }
+        // STEP-3 : Repeat above steps for remaining linked list
+        while (method2(list2Head, k)) {
+            ListNode previous = null;
+            ListNode current = list2Head;
+            for (int i = 1; i <= k; i++) {
+                ListNode next = current.next;
+                current.next = previous;
+                previous = current;
+                current = next;
+            }
+            // after above code:-
+            // the old head is pointing to list1 tail
+            list1Tail.next = previous;
+            // the old head is pointing to list1 tail
+            list1Tail = list2Head;
+            // the current is pointing to list2 head
+            list2Head = current;
+        }
+        // STEP-4 : After finish attach the remaining list (if available)
+        if (list2Head != null) {
+            list1Tail.next = list2Head;
+        }
+        return head;
+    }
+
+    public boolean method2(ListNode head, int k) {
+        int count = 0;
+        ListNode tempNode = head;
+        while (tempNode != null) {
+            count++;
+            tempNode = tempNode.next;
+            if (count == k)
+                return true;
+        }
+        return false;
+    }
+}

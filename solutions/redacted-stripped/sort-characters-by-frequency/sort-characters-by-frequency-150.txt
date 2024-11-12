@@ -1,0 +1,43 @@
+class Solution {
+
+    public String method1(String s) {
+        int[] fre = new int[128];
+        for (char ch : s.toCharArray()) {
+            int idx = 127 - ch;
+            fre[idx]++;
+        }
+        PriorityQueue<Pair> pq = new PriorityQueue<>();
+        for (int i = 0; i < fre.length; i++) {
+            if (fre[i] > 0) {
+                Pair p = new Pair(fre[i], i);
+                pq.offer(p);
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        while (!pq.isEmpty()) {
+            Pair p = pq.poll();
+            int freq = p.freq;
+            int indx = p.indx;
+            char ch = (char) (127 - indx);
+            String res = ch + "";
+            res = res.repeat(freq);
+            sb.append(res);
+        }
+        return sb.toString();
+    }
+
+    class Pair implements Comparable<Pair> {
+
+        int freq, indx;
+
+        Pair(int freq, int indx) {
+            this.freq = freq;
+            this.indx = indx;
+        }
+
+        @Override
+        public int compareTo(Pair p) {
+            return p.freq - this.freq;
+        }
+    }
+}

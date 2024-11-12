@@ -1,0 +1,35 @@
+class Solution {
+
+    List<List<Integer>> ans;
+
+    int[] nums;
+
+    HashMap<Integer, Integer> map;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        this.nums = nums;
+        ans = new ArrayList<>();
+        map = new HashMap<>();
+        for (int x : nums) {
+            map.put(x, map.getOrDefault(x, 0) + 1);
+        }
+        helper(new ArrayList<>());
+        return ans;
+    }
+
+    void helper(List<Integer> list) {
+        if (list.size() == nums.length) {
+            ans.add(new ArrayList<>(list));
+            return;
+        }
+        for (int num : map.keySet()) {
+            if (map.get(num) > 0) {
+                list.add(num);
+                map.put(num, map.get(num) - 1);
+                helper(list);
+                map.put(num, map.get(num) + 1);
+                list.remove(list.size() - 1);
+            }
+        }
+    }
+}

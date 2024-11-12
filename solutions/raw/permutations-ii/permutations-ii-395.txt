@@ -1,0 +1,38 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        boolean[] visited = new boolean[nums.length];
+        Arrays.sort(nums);
+        findans(nums, res, visited, new ArrayList());
+        return res;
+    }
+
+    public void findans(int[] nums, List<List<Integer>> res, boolean[] visited, List<Integer> curr) {
+        if (curr.size() == nums.length) {
+            //one answer found so add in result
+            res.add(new ArrayList(curr));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (visited[i] == true) {
+                //if element is already visited continue
+                continue;
+            }
+            if (i > 0 && nums[i] == nums[i - 1] && !visited[i - 1]) {
+                continue;
+            }
+            //add the present number
+            curr.add(nums[i]);
+            // mark the element is true
+            visited[i] = true;
+            //find next number
+            findans(nums, res, visited, curr);
+            //backtrack
+            //remove last element from curr list
+            curr.remove(curr.size() - 1);
+            //makae present element false
+            visited[i] = false;
+        }
+    }
+}

@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new LinkedList<>();
+        List<Integer> ans = new LinkedList<>();
+        boolean[] used = new boolean[nums.length];
+        HashMap<List<Integer>, Integer> mp = new HashMap<>();
+        permute(nums, used, ans, res, mp);
+        return res;
+    }
+
+    public void permute(int[] nums, boolean[] used, List<Integer> cur, List<List<Integer>> res, HashMap<List<Integer>, Integer> mp) {
+        if (cur.size() == nums.length) {
+            if (!mp.containsKey(new ArrayList<>(cur))) {
+                mp.put(new ArrayList<>(cur), 1);
+                res.add(new ArrayList<>(cur));
+            }
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (!used[i]) {
+                cur.add(nums[i]);
+                used[i] = true;
+                permute(nums, used, cur, res, mp);
+                cur.remove(cur.size() - 1);
+                used[i] = false;
+            }
+        }
+    }
+}

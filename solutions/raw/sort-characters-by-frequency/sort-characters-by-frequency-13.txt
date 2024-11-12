@@ -1,0 +1,50 @@
+class Pair implements Comparable<Pair> {
+
+    char c;
+
+    int value;
+
+    public Pair(char c, int value) {
+        this.c = c;
+        this.value = value;
+    }
+
+    @Override
+    public int compareTo(Pair p) {
+        // Compare by frequency (descending)
+        int x = p.value - this.value;
+        if (x == 0) {
+            // If frequencies are equal, compare by character (ascending)
+            return this.c - p.c;
+        }
+        return x;
+    }
+}
+
+class Solution {
+
+    public String frequencySort(String s) {
+        // Step 1: Create a frequency map
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0) + 1);
+        }
+        // Step 2: Create a priority queue (max heap) with custom comparator
+        PriorityQueue<Pair> pq = new PriorityQueue<>();
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+            pq.add(new Pair(entry.getKey(), entry.getValue()));
+        }
+        // Step 3: Build the result string based on character frequency
+        StringBuilder result = new StringBuilder();
+        while (!pq.isEmpty()) {
+            // Poll the highest frequency pair
+            Pair pair = pq.poll();
+            for (int i = 0; i < pair.value; i++) {
+                // Append character \'value\' number of times
+                result.append(pair.c);
+            }
+        }
+        // Return the frequency sorted string
+        return result.toString();
+    }
+}

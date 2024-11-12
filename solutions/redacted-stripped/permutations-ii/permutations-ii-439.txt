@@ -1,0 +1,27 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        int n = nums.length;
+        List<List<Integer>> res = new ArrayList<>();
+        int[] count = new int[21];
+        for (int num : nums) count[num + 10]++;
+        createPermutation(res, new ArrayList<>(), count, n);
+        return res;
+    }
+
+    void createPermutation(List<List<Integer>> res, List<Integer> cur, int[] count, int n) {
+        if (cur.size() == n) {
+            res.add(new ArrayList<>(cur));
+            return;
+        }
+        for (int i = -10; i <= 10; i++) {
+            if (count[i + 10] > 0) {
+                cur.add(i);
+                count[i + 10]--;
+                createPermutation(res, cur, count, n);
+                count[i + 10]++;
+                cur.remove(cur.size() - 1);
+            }
+        }
+    }
+}

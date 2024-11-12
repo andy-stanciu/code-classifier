@@ -1,0 +1,59 @@
+class Class1 {
+
+    int val;
+
+    Class1 left;
+
+    Class1 right;
+
+    Class1() {
+    }
+
+    Class1(int val) {
+        this.val = val;
+    }
+
+    Class1(int val, Class1 left, Class1 right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
+
+class Solution {
+
+    public Class1 method1(Class1 root, int key) {
+        Class1 parent = new Class1(-1, root, null);
+        Class1 cursor = root;
+        if (cursor == null) {
+            return cursor;
+        }
+        while (cursor.val != key) {
+            parent = cursor;
+            if (cursor.val > key) {
+                cursor = cursor.left;
+            } else {
+                cursor = cursor.right;
+            }
+            if (cursor == null) {
+                return root;
+            }
+        }
+        Class1 rightLeftMost = cursor.right;
+        while (rightLeftMost != null && rightLeftMost.left != null) {
+            rightLeftMost = rightLeftMost.left;
+        }
+        if (rightLeftMost != null) {
+            rightLeftMost.left = cursor.left;
+        }
+        if (cursor == root) {
+            return cursor.right != null ? cursor.right : cursor.left;
+        }
+        if (cursor.val < parent.val) {
+            parent.left = cursor.right != null ? cursor.right : cursor.left;
+        } else {
+            parent.right = cursor.right != null ? cursor.right : cursor.left;
+        }
+        return root;
+    }
+}

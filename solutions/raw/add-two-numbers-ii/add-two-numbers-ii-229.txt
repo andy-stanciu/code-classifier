@@ -1,0 +1,35 @@
+class Solution {
+
+    static ListNode funcReverse(ListNode node) {
+        // reverse the list
+        if (node.next != null) {
+            ListNode nodeNext = node.next;
+            ListNode head = funcReverse(node.next);
+            node.next = null;
+            nodeNext.next = node;
+            return head;
+        }
+        return node;
+    }
+
+    static ListNode func(ListNode l1, ListNode l2, int carr) {
+        // calculate sum of two lists and return final list
+        if (l1 == null && l2 == null && carr == 0) {
+            return null;
+        } else {
+            int sum = carr;
+            sum += (l1 != null) ? l1.val : 0;
+            sum += (l2 != null) ? l2.val : 0;
+            ListNode ret = new ListNode(sum % 10);
+            l1 = (l1 != null) ? l1.next : null;
+            l2 = (l2 != null) ? l2.next : null;
+            ret.next = func(l1, l2, sum / 10);
+            return ret;
+        }
+    }
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode ret = func(funcReverse(l1), funcReverse(l2), 0);
+        return funcReverse(ret);
+    }
+}

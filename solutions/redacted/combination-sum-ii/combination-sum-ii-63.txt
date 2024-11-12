@@ -1,0 +1,31 @@
+// solution using exclusion/inclusion principle
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        // To ensure duplicate elements are clustered
+        Arrays.sort(candidates);
+        List<List<Integer>> res = new ArrayList<>();
+        helper(res, new ArrayList<>(), candidates, 0, target);
+        return res;
+    }
+
+    private void helper(List<List<Integer>> res, List<Integer> path, int[] a, int start, int target) {
+        if (target == 0) {
+            res.add(List.copyOf(path));
+            return;
+        }
+        if (start == a.length)
+            return;
+        // As the elements are sorted in increasing order; we  need to process only if the condition holds
+        if (a[start] <= target) {
+            // include
+            path.add(a[start]);
+            helper(res, path, a, start + 1, target - a[start]);
+            // exclude
+            path.remove(path.size() - 1);
+            // Skip all duplicate entries
+            while (start + 1 < a.length && a[start] == a[start + 1]) start += 1;
+            helper(res, path, a, start + 1, target);
+        }
+    }
+}

@@ -1,0 +1,37 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        findUniquePermutations(nums, 0, ans);
+        return ans;
+    }
+
+    public void findUniquePermutations(int[] nums, int pos, List<List<Integer>> ans) {
+        if (pos == nums.length - 1) {
+            // when pos is at the max length of the array = found one permutation
+            List<Integer> onePermutation = new ArrayList<>();
+            for (int element : nums) {
+                onePermutation.add(element);
+            }
+            ans.add(onePermutation);
+            return;
+        }
+        // to check if a permutation branch already exists for the number to avoid duplicates
+        HashSet<Integer> checkDuplicates = new HashSet<>();
+        for (int i = pos; i < nums.length; i++) {
+            if (!checkDuplicates.contains(nums[i])) {
+                // if no branch exists, go down this path and add the number to the HashSet for future calls
+                checkDuplicates.add(nums[i]);
+                swap(nums, pos, i);
+                findUniquePermutations(nums, pos + 1, ans);
+                swap(nums, pos, i);
+            }
+        }
+    }
+
+    public void swap(int[] nums, int indexOne, int indexTwo) {
+        int temp = nums[indexOne];
+        nums[indexOne] = nums[indexTwo];
+        nums[indexTwo] = temp;
+    }
+}

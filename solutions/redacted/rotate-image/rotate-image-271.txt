@@ -1,0 +1,76 @@
+//BRUTE APPROACH
+// class Solution {
+//     public void rotate(int[][] matrix) {
+//         int n = matrix.length;
+//         int[][] rotatedMatrix = new int[n][n];
+//         // Step 1: Populate the rotated matrix
+//         for (int i = 0; i < n; i++) {
+//             for (int j = 0; j < n; j++) {
+//                 rotatedMatrix[j][n - 1 - i] = matrix[i][j];
+//             }
+//         }
+//         // Step 2: Copy the rotatedMatrix back into the original matrix (if needed)
+//         for (int i = 0; i < n; i++) {
+//             for (int j = 0; j < n; j++) {
+//                 matrix[i][j] = rotatedMatrix[i][j];
+//             }
+//         }
+//     }
+// }
+//OPTIMIZED APPROACH : 1
+// class Solution {
+//     public void rotate(int[][] matrix) {
+//         int n = matrix.length;
+//         // Step 1: Transpose the matrix
+//         for (int i = 0; i < n; i++) {
+//             for (int j = i; j < n; j++) {
+//                 // Swap matrix[i][j] with matrix[j][i]
+//                 int temp = matrix[i][j];
+//                 matrix[i][j] = matrix[j][i];
+//                 matrix[j][i] = temp;
+//             }
+//         }
+//         // Step 2: Reverse each row
+//         for (int i = 0; i < n; i++) {
+//             reverseRow(matrix[i]);
+//         }
+//     }
+//     // Helper function to reverse an array (row)
+//     private void reverseRow(int[] row) {
+//         int start = 0;
+//         int end = row.length - 1;
+//         while (start < end) {
+//             // Swap row[start] with row[end]
+//             int temp = row[start];
+//             row[start] = row[end];
+//             row[end] = temp;
+//             start++;
+//             end--;
+//         }
+//     }
+// }
+//OPTIMIZED APPROACH : 2
+class Solution {
+
+    public void method1(int[][] matrix) {
+        int n = matrix.length;
+        // Rotate the matrix layer by layer, from outer to inner
+        for (int layer = 0; layer < n / 2; layer++) {
+            int first = layer;
+            int last = n - 1 - layer;
+            for (int i = first; i < last; i++) {
+                int offset = i - first;
+                // Save the top element
+                int top = matrix[first][i];
+                // Move left element to top
+                matrix[first][i] = matrix[last - offset][first];
+                // Move bottom element to left
+                matrix[last - offset][first] = matrix[last][last - offset];
+                // Move right element to bottom
+                matrix[last][last - offset] = matrix[i][last];
+                // Move top element to right
+                matrix[i][last] = top;
+            }
+        }
+    }
+}

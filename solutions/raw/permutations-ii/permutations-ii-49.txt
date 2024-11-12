@@ -1,0 +1,35 @@
+class Solution {
+
+    public static List<List<Integer>> permutations(int[] nums, List<Integer> list, List<List<Integer>> mainList) {
+        if (nums.length == 0) {
+            mainList.add(new ArrayList<>(list));
+            return mainList;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (i > 0) {
+                if (nums[i] == nums[i - 1]) {
+                    continue;
+                }
+            }
+            list.add(nums[i]);
+            int[] arr = new int[nums.length - 1];
+            int idx = 0;
+            for (int j = 0; j < nums.length; j++) {
+                if (i != j) {
+                    arr[idx] = nums[j];
+                    idx++;
+                }
+            }
+            mainList = permutations(arr, list, mainList);
+            list.remove(list.size() - 1);
+        }
+        return mainList;
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> mainList = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        Arrays.sort(nums);
+        return permutations(nums, list, mainList);
+    }
+}

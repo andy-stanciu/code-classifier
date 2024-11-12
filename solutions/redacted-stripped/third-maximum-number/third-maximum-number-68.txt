@@ -1,0 +1,38 @@
+class Solution {
+
+    public int method1(int[] nums) {
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        Set<Integer> set = new HashSet<>();
+        int length = nums.length;
+        int n = 0;
+        int count = 0;
+        while (n < length) {
+            if (set.contains(nums[n])) {
+                n++;
+                continue;
+            }
+            set.add(nums[n]);
+            minHeap.offer(nums[n++]);
+            if (++count == 3) {
+                break;
+            }
+        }
+        if (count != 3) {
+            int prev = minHeap.poll();
+            while (minHeap.peek() != null) {
+                prev = minHeap.poll();
+            }
+            return prev;
+        }
+        for (int i = 3; i < length; i++) {
+            if (set.contains(nums[i]))
+                continue;
+            if (nums[i] > minHeap.peek()) {
+                minHeap.poll();
+                minHeap.offer(nums[i]);
+                set.add(nums[i]);
+            }
+        }
+        return minHeap.peek();
+    }
+}

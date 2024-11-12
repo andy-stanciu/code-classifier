@@ -1,0 +1,32 @@
+class Solution {
+
+    void driver(int index, List<Integer> arr, int[] a, List<List<Integer>> ans) {
+        if (index == a.length - 1) {
+            for (int x : a) {
+                arr.add(x);
+            }
+            ans.add(new ArrayList<>(arr));
+            arr.clear();
+            return;
+        }
+        Set<Integer> ms = new HashSet<>();
+        for (int i = index; i < a.length; ++i) {
+            if (ms.contains(a[i]) == false) {
+                ms.add(a[i]);
+                int t = a[i];
+                a[i] = a[index];
+                a[index] = t;
+                driver(index + 1, arr, a, ans);
+                t = a[i];
+                a[i] = a[index];
+                a[index] = t;
+            }
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] a) {
+        List<List<Integer>> ans = new ArrayList<>();
+        driver(0, new ArrayList<>(), a, ans);
+        return ans;
+    }
+}

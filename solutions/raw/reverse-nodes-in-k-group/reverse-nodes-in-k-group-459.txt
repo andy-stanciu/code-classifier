@@ -1,0 +1,58 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode prevGroupTail = new ListNode(-1);
+        ListNode dummy = prevGroupTail;
+        prevGroupTail.next = head;
+        while (prevGroupTail.next != null) {
+            //find curr group head -> prev group tail.next
+            ListNode currGroupHead = prevGroupTail.next;
+            //find curr group tail
+            int count = k;
+            ListNode currGroupTail = currGroupHead;
+            while (count > 1) {
+                if (currGroupTail.next == null)
+                    break;
+                currGroupTail = currGroupTail.next;
+                count--;
+            }
+            if (count > 1)
+                break;
+            //find next group head
+            ListNode nextGroupHead = currGroupTail.next;
+            //break curr tail head with next group head
+            currGroupTail.next = null;
+            //reverse curr group
+            reverseList(currGroupHead);
+            //link curr group tail with prev group tail
+            prevGroupTail.next = currGroupTail;
+            //link curr group head to next group head
+            currGroupHead.next = nextGroupHead;
+            //assign curr group head as prev group tail
+            prevGroupTail = currGroupHead;
+        }
+        return dummy.next;
+    }
+
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+}

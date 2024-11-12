@@ -1,0 +1,57 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode rL1 = reverse(l1);
+        ListNode rL2 = reverse(l2);
+        ListNode result = new ListNode(-1);
+        ListNode tmp = result;
+        int overflow = 0;
+        while (rL1 != null && rL2 != null) {
+            int sum = rL1.val + rL2.val + overflow;
+            overflow = sum / 10;
+            tmp.next = new ListNode(sum % 10);
+            tmp = tmp.next;
+            rL1 = rL1.next;
+            rL2 = rL2.next;
+        }
+        while (rL1 != null) {
+            int sum = rL1.val + overflow;
+            overflow = sum / 10;
+            tmp.next = new ListNode(sum % 10);
+            tmp = tmp.next;
+            rL1 = rL1.next;
+        }
+        while (rL2 != null) {
+            int sum = rL2.val + overflow;
+            overflow = sum / 10;
+            tmp.next = new ListNode(sum % 10);
+            tmp = tmp.next;
+            rL2 = rL2.next;
+        }
+        if (overflow == 1) {
+            tmp.next = new ListNode(1);
+        }
+        return reverse(result.next);
+    }
+
+    private ListNode reverse(ListNode head) {
+        ListNode prev = null;
+        while (head != null) {
+            ListNode tmp = head.next;
+            head.next = prev;
+            prev = head;
+            head = tmp;
+        }
+        return prev;
+    }
+}

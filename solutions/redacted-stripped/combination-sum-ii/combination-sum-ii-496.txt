@@ -1,0 +1,29 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        if (candidates == null || target < 1)
+            return Collections.emptyList();
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(candidates);
+        backtrack(candidates, target, res, new ArrayList<>(), 0);
+        return res;
+    }
+
+    public void backtrack(int[] candidates, int target, List<List<Integer>> res, List<Integer> ans, int index) {
+        if (target == 0) {
+            res.add(new ArrayList<>(ans));
+        }
+        if (target < 0)
+            return;
+        for (int i = index; i < candidates.length; i++) {
+            if (i > index && candidates[i] == candidates[i - 1])
+                continue;
+            int candidate = candidates[i];
+            if (candidate > target)
+                continue;
+            ans.add(candidate);
+            backtrack(candidates, target - candidate, res, ans, i + 1);
+            ans.remove(ans.size() - 1);
+        }
+    }
+}

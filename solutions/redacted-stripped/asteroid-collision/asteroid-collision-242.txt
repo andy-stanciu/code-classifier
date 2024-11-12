@@ -1,0 +1,40 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> as = new Stack<>();
+        int n = param1.length;
+        for (int i = 0; i < n; i++) {
+            int cur = param1[i];
+            if (as.isEmpty() || cur > 0 && as.peek() > 0 || cur < 0 && as.peek() < 0 || cur > 0 && as.peek() < 0) {
+                as.push(cur);
+                continue;
+            }
+            boolean add = false;
+            while (!as.isEmpty() && as.peek() > 0) {
+                int prev = Math.abs(as.peek());
+                int curr = Math.abs(cur);
+                if (curr > prev) {
+                    as.pop();
+                    add = true;
+                } else if (curr == prev) {
+                    as.pop();
+                    add = false;
+                    break;
+                } else {
+                    add = false;
+                    break;
+                }
+            }
+            if (add) {
+                as.push(cur);
+            }
+        }
+        int idx = as.size() - 1;
+        int[] ans = new int[idx + 1];
+        while (!as.isEmpty()) {
+            ans[idx] = as.pop();
+            idx--;
+        }
+        return ans;
+    }
+}

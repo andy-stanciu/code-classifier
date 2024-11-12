@@ -1,0 +1,66 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        l1 = reverse(l1);
+        l2 = reverse(l2);
+        ListNode p1 = l1, p2 = l2;
+        ListNode res = new ListNode(-1);
+        ListNode it = res;
+        int div = 0;
+        while (p1 != null && p2 != null) {
+            int num1 = p1.val;
+            int num2 = p2.val;
+            p1 = p1.next;
+            p2 = p2.next;
+            if ((div + num1 + num2 < 10)) {
+                ListNode var1 = new ListNode((div + num1 + num2) % 10);
+                it.next = var1;
+                it = it.next;
+                div = (div + num1 + num2) / 10;
+            } else if ((div + num1 + num2) > 9) {
+                ListNode var1 = new ListNode((div + num1 + num2) % 10);
+                div = (div + num1 + num2) / 10;
+                it.next = var1;
+                it = it.next;
+            }
+        }
+        if (p1 != null) {
+            while (p1 != null) {
+                int num1 = p1.val;
+                ListNode var1 = new ListNode((div + num1) % 10);
+                div = (div + num1) / 10;
+                it.next = var1;
+                it = it.next;
+                p1 = p1.next;
+            }
+        } else {
+            while (p2 != null) {
+                int num2 = p2.val;
+                ListNode var1 = new ListNode((div + num2) % 10);
+                div = (div + num2) / 10;
+                it.next = var1;
+                it = it.next;
+                p2 = p2.next;
+            }
+        }
+        if (div != 0) {
+            ListNode var1 = new ListNode(div);
+            it.next = var1;
+            it = it.next;
+        }
+        it.next = null;
+        return reverse(res.next);
+    }
+
+    public ListNode reverse(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        return prev;
+    }
+}

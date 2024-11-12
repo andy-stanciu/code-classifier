@@ -1,0 +1,37 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        ListNode temp = head;
+        if (head == null) {
+            return head;
+        }
+        ListNode prev = null;
+        for (int i = 1; i <= k; i++) {
+            if (temp != null) {
+                prev = temp;
+                temp = temp.next;
+            } else {
+                return head;
+            }
+        }
+        prev.next = null;
+        ListNode[] rev = method2(head);
+        ListNode small = method1(temp, k);
+        rev[1].next = small;
+        return rev[0];
+    }
+
+    public ListNode[] method2(ListNode node) {
+        ListNode[] ans = new ListNode[2];
+        if (node.next == null) {
+            ans[0] = ans[1] = node;
+            return ans;
+        }
+        ListNode[] smallRev = method2(node.next);
+        smallRev[1].next = node;
+        node.next = null;
+        ans[0] = smallRev[0];
+        ans[1] = node;
+        return ans;
+    }
+}

@@ -1,0 +1,62 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        // Set ponters
+        ListNode previousTail = null;
+        ListNode currentHead = head;
+        ListNode currentTail = head;
+        ListNode nextHead = null;
+        while (currentHead != null) {
+            // Find a group tail
+            int count = 1;
+            while (count < k && currentTail.next != null) {
+                currentTail = currentTail.next;
+                count++;
+            }
+            // If group is too short, go to return
+            if (count < k) {
+                break;
+            }
+            // Detach group
+            nextHead = currentTail.next;
+            currentTail.next = null;
+            // Reverse group
+            currentTail = method2(currentHead);
+            // Attach the group back
+            if (previousTail != null) {
+                previousTail.next = currentTail;
+            } else {
+                head = currentTail;
+            }
+            currentHead.next = nextHead;
+            // Update pointers
+            previousTail = currentHead;
+            currentHead = nextHead;
+            currentTail = nextHead;
+        }
+        return head;
+    }
+
+    public ListNode method2(ListNode head) {
+        ListNode previous = null;
+        ListNode current = head;
+        ListNode next = null;
+        while (current != null) {
+            next = current.next;
+            current.next = previous;
+            previous = current;
+            current = next;
+        }
+        return previous;
+    }
+}

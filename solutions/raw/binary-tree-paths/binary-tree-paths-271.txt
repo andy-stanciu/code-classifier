@@ -1,0 +1,48 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        List<String> result = new ArrayList<>();
+        inOrderTraversal(root, list, result);
+        return result;
+    }
+
+    public void inOrderTraversal(TreeNode node, List<Integer> list, List<String> result) {
+        if (node == null)
+            return;
+        // If it is leaf node, we are creating the string from the list.
+        // Note: the leaf node will not be on list since we are currently at the leaf node
+        if (node.left == null && node.right == null) {
+            StringBuilder sb = new StringBuilder();
+            for (int num : list) {
+                sb.append(num);
+                sb.append("->");
+            }
+            sb.append(node.val);
+            result.add(sb.toString());
+        }
+        //Adding the lead value since it will not be on list.
+        list.add(node.val);
+        //Checking the left and right sub tree
+        inOrderTraversal(node.left, list, result);
+        inOrderTraversal(node.right, list, result);
+        //Removing the node from the list when we are going back
+        //backtracking
+        list.remove(list.size() - 1);
+    }
+}

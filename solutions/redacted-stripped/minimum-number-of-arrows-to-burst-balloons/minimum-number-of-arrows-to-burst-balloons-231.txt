@@ -1,0 +1,48 @@
+class Solution {
+
+    private boolean isOverlap(int[] p1, int[] p2) {
+        if (p2[0] > p1[1] || p1[0] > p2[1])
+            return false;
+        return true;
+    }
+
+    private int endTimeSort(int[][] points) {
+        int n = points.length;
+        int prevIndex, currIndex, min;
+        Arrays.sort(points, (a, b) -> a[1] - b[1]);
+        prevIndex = 0;
+        currIndex = 1;
+        min = 1;
+        while (currIndex < n) {
+            if (!isOverlap(points[prevIndex], points[currIndex])) {
+                prevIndex = currIndex;
+                min++;
+            }
+            currIndex = currIndex + 1;
+        }
+        return min;
+    }
+
+    private int startTimeSort(int[][] points) {
+        int n = points.length;
+        int prevIndex, currIndex, min;
+        Arrays.sort(points, (a, b) -> a[0] - b[0]);
+        prevIndex = 0;
+        currIndex = 1;
+        min = 1;
+        while (currIndex < n) {
+            if (!isOverlap(points[prevIndex], points[currIndex])) {
+                prevIndex = currIndex;
+                min++;
+            } else {
+                points[prevIndex][1] = Math.min(points[prevIndex][1], points[currIndex][1]);
+            }
+            currIndex = currIndex + 1;
+        }
+        return min;
+    }
+
+    public int method1(int[][] points) {
+        return startTimeSort(points);
+    }
+}

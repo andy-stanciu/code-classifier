@@ -1,0 +1,42 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        stack.offer(param1[0]);
+        boolean flag = false;
+        for (int i = 1; i < param1.length; i++) {
+            if (stack.peek() == null)
+                stack.offer(param1[i]);
+            else if (param1[i] > 0 && stack.getLast() > 0)
+                stack.offer(param1[i]);
+            else if (param1[i] < 0 && stack.getLast() < 0)
+                stack.offer(param1[i]);
+            else if (param1[i] < 0 && stack.getLast() > 0) {
+                while (stack.peek() != null && param1[i] < 0 && stack.getLast() > 0) {
+                    if (Math.abs(param1[i]) > Math.abs(stack.getLast())) {
+                        stack.removeLast();
+                        flag = true;
+                    } else if (Math.abs(param1[i]) == Math.abs(stack.getLast())) {
+                        stack.removeLast();
+                        flag = false;
+                        break;
+                    } else if (Math.abs(param1[i]) < Math.abs(stack.getLast())) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag)
+                    stack.offer(param1[i]);
+            } else if (param1[i] > 0 && stack.getLast() < 0)
+                stack.offer(param1[i]);
+            else
+                stack.removeLast();
+        }
+        ArrayList<Integer> list = new ArrayList<>(stack);
+        int[] res = new int[stack.size()];
+        for (int i = 0; i < list.size(); i++) {
+            res[i] = list.get(i);
+        }
+        return res;
+    }
+}

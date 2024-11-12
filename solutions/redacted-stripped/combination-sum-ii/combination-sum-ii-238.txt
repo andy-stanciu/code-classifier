@@ -1,0 +1,29 @@
+class Solution {
+
+    List<List<Integer>> result;
+
+    public void helper(int[] candidates, int target, int index, int param1, List<Integer> subSeq) {
+        if (param1 == target) {
+            result.add(new ArrayList<>(subSeq));
+            return;
+        }
+        if (index >= candidates.length)
+            return;
+        if (param1 + candidates[index] > target)
+            return;
+        subSeq.add(candidates[index]);
+        param1 += candidates[index];
+        helper(candidates, target, index + 1, param1, subSeq);
+        subSeq.remove(subSeq.size() - 1);
+        param1 -= candidates[index];
+        while (index < candidates.length - 1 && (candidates[index] == candidates[index + 1])) index++;
+        helper(candidates, target, index + 1, param1, subSeq);
+    }
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        result = new ArrayList<>();
+        helper(candidates, target, 0, 0, new ArrayList<>());
+        return result;
+    }
+}

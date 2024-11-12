@@ -1,0 +1,33 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> st = new Stack<>();
+        for (int curr : asteroids) {
+            if (st.empty() || curr > 0) {
+                st.push(curr);
+            } else {
+                // Pop asteroids from the stack if they are smaller than the current asteroid.
+                while (!st.empty() && st.peek() > 0 && st.peek() < Math.abs(curr)) {
+                    st.pop();
+                }
+                if (st.empty() || st.peek() < 0) {
+                    // If the stack is empty or
+                    // the top asteroid is also moving to the left,
+                    // push the current asteroid onto the stack.
+                    st.push(curr);
+                } else if (st.peek() == Math.abs(curr)) {
+                    // If the top asteroid is of the same size as the current asteroid,
+                    // both will destroy each other
+                    // and we don\'t add the current asteroid to the stack.
+                    st.pop();
+                }
+            }
+        }
+        int m = st.size();
+        int[] ans = new int[m];
+        for (int i = m - 1; i >= 0; --i) {
+            ans[i] = st.pop();
+        }
+        return ans;
+    }
+}

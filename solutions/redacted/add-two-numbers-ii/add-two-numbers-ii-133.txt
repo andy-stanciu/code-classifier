@@ -1,0 +1,75 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ListNode temp1 = reverse(l1), temp2 = reverse(l2), head = null, tail = null;
+        int carry = 0;
+        while (temp1 != null && temp2 != null) {
+            ListNode newNode = new ListNode((carry + temp1.val + temp2.val) % 10);
+            carry = (carry + temp1.val + temp2.val) / 10;
+            if (head == null) {
+                head = newNode;
+                tail = newNode;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
+            }
+            temp1 = temp1.next;
+            temp2 = temp2.next;
+        }
+        if (temp1 == null) {
+            while (temp2 != null) {
+                ListNode newNode = new ListNode((carry + temp2.val) % 10);
+                carry = (carry + temp2.val) / 10;
+                if (head == null) {
+                    head = newNode;
+                    tail = newNode;
+                } else {
+                    tail.next = newNode;
+                    tail = newNode;
+                }
+                temp2 = temp2.next;
+            }
+        } else {
+            while (temp1 != null) {
+                ListNode newNode = new ListNode((carry + temp1.val) % 10);
+                carry = (carry + temp1.val) / 10;
+                if (head == null) {
+                    head = newNode;
+                    tail = newNode;
+                } else {
+                    tail.next = newNode;
+                    tail = newNode;
+                }
+                temp1 = temp1.next;
+            }
+        }
+        if (carry == 1) {
+            ListNode newNode = new ListNode(1);
+            tail.next = newNode;
+        }
+        return reverse(head);
+    }
+
+    public static ListNode reverse(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        ListNode Nhead = reverse(head.next);
+        ListNode temp = Nhead;
+        while (temp.next != null) {
+            temp = temp.next;
+        }
+        temp.next = head;
+        head.next = null;
+        return Nhead;
+    }
+}

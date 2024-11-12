@@ -1,0 +1,32 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        HashMap<Integer, Integer> counter = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            counter.put(nums[i], counter.getOrDefault(nums[i], 0) + 1);
+        }
+        return permute(nums.length, counter, new LinkedList<Integer>());
+    }
+
+    private List<List<Integer>> permute(int len, Map<Integer, Integer> counter, LinkedList<Integer> curr) {
+        if (curr.size() == len) {
+            List<List<Integer>> r = new ArrayList<>();
+            r.add(new LinkedList<Integer>(curr));
+            return r;
+        }
+        List<List<Integer>> res = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> entry : counter.entrySet()) {
+            Integer num = entry.getKey();
+            Integer count = entry.getValue();
+            if (count == 0) {
+                continue;
+            }
+            curr.addLast(num);
+            counter.put(num, count - 1);
+            res.addAll(permute(len, counter, curr));
+            curr.removeLast();
+            counter.put(num, count);
+        }
+        return res;
+    }
+}

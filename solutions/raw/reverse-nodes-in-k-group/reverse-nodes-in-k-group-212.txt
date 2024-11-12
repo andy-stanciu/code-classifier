@@ -1,0 +1,49 @@
+class Solution {
+
+    public ListNode findKth(ListNode head, int k) {
+        while (k > 1 && head != null) {
+            k--;
+            head = head.next;
+        }
+        return head;
+    }
+
+    public void rotateK(ListNode head, int k) {
+        if (k < 2)
+            return;
+        ListNode currHead = head;
+        ListNode currNode = head.next;
+        for (int i = 1; i < k; i++) {
+            var nxt = currNode.next;
+            currNode.next = currHead;
+            currHead = currNode;
+            currNode = nxt;
+        }
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null)
+            return null;
+        if (k < 2)
+            return head;
+        var kth = findKth(head, k);
+        if (kth == null)
+            return head;
+        else {
+            var newHead = kth;
+            while (kth != null) {
+                var next = kth.next;
+                rotateK(head, k);
+                kth = findKth(next, k);
+                if (kth != null) {
+                    head.next = kth;
+                    head = next;
+                } else {
+                    head.next = next;
+                    return newHead;
+                }
+            }
+            return newHead;
+        }
+    }
+}

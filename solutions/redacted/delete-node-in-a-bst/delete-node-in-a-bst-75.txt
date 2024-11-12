@@ -1,0 +1,56 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        // Traverse the tree to find the node to delete
+        if (root.val > key) {
+            root.left = method1(root.left, key);
+        } else if (root.val < key) {
+            root.right = method1(root.right, key);
+        } else {
+            // Node with the key found, now handle the three cases
+            // Case 1: Node with no children (leaf node)
+            if (root.left == null && root.right == null) {
+                return null;
+            }
+            // Case 2: Node with only one child
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            }
+            // Case 3: Node with two children
+            // Find the inorder successor (smallest in the right subtree)
+            TreeNode successor = method2(root.right);
+            root.val = successor.val;
+            // Delete the inorder successor
+            root.right = method1(root.right, successor.val);
+        }
+        return root;
+    }
+
+    // Function to find the inorder successor
+    private TreeNode method2(TreeNode param1) {
+        while (param1.left != null) {
+            param1 = param1.left;
+        }
+        return param1;
+    }
+}

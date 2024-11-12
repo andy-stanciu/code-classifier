@@ -1,0 +1,57 @@
+class Solution {
+
+    int carry = 0;
+
+    ListNode result = new ListNode(0);
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        int len1 = length(l1);
+        int len2 = length(l2);
+        if (len1 > len2) {
+            l2 = addzero(l2, len1 - len2);
+        }
+        if (len2 > len1) {
+            l1 = addzero(l1, len2 - len1);
+        }
+        rec(l1, l2);
+        if (carry != 0) {
+            ListNode dummy = new ListNode(carry);
+            dummy.next = result.next;
+            result.next = dummy;
+        }
+        return result.next;
+    }
+
+    public void rec(ListNode l1, ListNode l2) {
+        if (l1 == null && l2 == null) {
+            return;
+        }
+        rec(l1.next, l2.next);
+        int sum = l1.val + l2.val + carry;
+        int num = sum % 10;
+        carry = sum / 10;
+        ListNode dummy = new ListNode(num);
+        dummy.next = result.next;
+        result.next = dummy;
+    }
+
+    public int length(ListNode l) {
+        int len = 0;
+        while (l != null) {
+            len++;
+            l = l.next;
+        }
+        return len;
+    }
+
+    public ListNode addzero(ListNode h, int x) {
+        ListNode dummy = new ListNode(0);
+        ListNode res = dummy;
+        for (int i = 0; i < x; i++) {
+            dummy.next = new ListNode(0);
+            dummy = dummy.next;
+        }
+        dummy.next = h;
+        return res.next;
+    }
+}

@@ -1,0 +1,46 @@
+class Solution {
+
+    private ListNode reverse(ListNode l, ListNode r) {
+        ListNode left = null, curr = l, right = l.next;
+        while (curr != null && curr != r) {
+            curr.next = left;
+            left = curr;
+            curr = right;
+            if (right != null) {
+                right = right.next;
+            }
+        }
+        return left;
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (k == 1 || head == null || head.next == null)
+            return head;
+        ListNode left = head, right = head, pr = null, p = null;
+        while (right != null) {
+            int val = k;
+            while (right != null && val-- > 0) {
+                right = right.next;
+            }
+            if (right == null && val == 0 && pr == null) {
+                return reverse(left, null);
+            } else if (val > 0)
+                break;
+            p = reverse(left, right);
+            if (pr != null) {
+                pr.next = p;
+            } else {
+                head = p;
+            }
+            while (p.next != null) {
+                p = p.next;
+            }
+            pr = p;
+            left = right;
+        }
+        if (pr != null) {
+            pr.next = left;
+        }
+        return head;
+    }
+}

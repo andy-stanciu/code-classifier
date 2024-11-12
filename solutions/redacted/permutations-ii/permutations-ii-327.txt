@@ -1,0 +1,36 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        // boolean[] is used to check the num weather is used before
+        backtrack(new ArrayList<>(), nums, new boolean[nums.length], result);
+        return result;
+    }
+
+    private void backtrack(List<Integer> curr, int[] nums, boolean[] used, List<List<Integer>> result) {
+        if (curr.size() == nums.length) {
+            result.add(new ArrayList<>(curr));
+            return;
+        }
+        // optional list
+        for (int i = 0; i < nums.length; i++) {
+            // if current num was used ,or current num equals previous num
+            // and previous nums was not used
+            // it indicates that is duplicate
+            // 1 2 2 3 3 3 4
+            // this is the key of this problem
+            if (used[i] || (i > 0 && nums[i] == nums[i - 1] && !used[i - 1])) {
+                continue;
+            }
+            // set current num is used
+            used[i] = true;
+            // add to path
+            curr.add(nums[i]);
+            backtrack(curr, nums, used, result);
+            // back
+            curr.remove(curr.size() - 1);
+            used[i] = false;
+        }
+    }
+}

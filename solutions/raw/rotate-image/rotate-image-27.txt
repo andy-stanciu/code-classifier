@@ -1,0 +1,53 @@
+class Solution {
+
+    public void rotate(int[][] matrix) {
+        int N = matrix[0].length;
+        int n = N - 1;
+        int temp = 0;
+        for (int i = 0; i < N; i++) {
+            for (int j = i; j < N - i - 1; j++) {
+                int x = i, y = j;
+                int previousPixel = matrix[x][y];
+                for (int k = 0; k < 4; k++) {
+                    int[] nextIndices = findNext(x, y, n, i);
+                    int x2 = nextIndices[0];
+                    int y2 = nextIndices[1];
+                    temp = matrix[x2][y2];
+                    matrix[x2][y2] = previousPixel;
+                    previousPixel = temp;
+                    x = x2;
+                    y = y2;
+                }
+            }
+        }
+    }
+
+    public static int[] findNext(int x, int y, int n, int tier) {
+        int start = tier;
+        int end = n - tier;
+        int jumps = n - 2 * tier;
+        while (jumps > 0) {
+            jumps--;
+            if (x == start && y < end) {
+                y++;
+                continue;
+            }
+            if (x < end && y == end) {
+                x++;
+                continue;
+            }
+            if (x == end && y > start) {
+                y--;
+                continue;
+            }
+            if (x > start && y == start) {
+                x--;
+                continue;
+            }
+            if (x > start && y == end) {
+                x--;
+            }
+        }
+        return new int[] { x, y };
+    }
+}

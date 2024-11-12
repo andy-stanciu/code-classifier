@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        if (root.val == key)
+            root = balance(root, key);
+        if (root == null)
+            return null;
+        root.left = deleteNode(root.left, key);
+        root.right = deleteNode(root.right, key);
+        return root;
+    }
+
+    TreeNode balance(TreeNode node, int key) {
+        List<Integer> a = new ArrayList<>();
+        inorder(node, a);
+        for (int i = 0; i < a.size(); i++) {
+            if (a.get(i) == key) {
+                a.remove(i);
+                i--;
+            }
+        }
+        if (a.size() == 0)
+            return null;
+        return construct(a, 0, a.size() - 1);
+    }
+
+    TreeNode construct(List<Integer> a, int l, int h) {
+        if (l > h)
+            return null;
+        int mid = (l + h) / 2;
+        TreeNode node = new TreeNode(a.get(mid));
+        node.left = construct(a, l, mid - 1);
+        node.right = construct(a, mid + 1, h);
+        return node;
+    }
+
+    void inorder(TreeNode node, List<Integer> a) {
+        if (node == null)
+            return;
+        inorder(node.left, a);
+        a.add(node.val);
+        inorder(node.right, a);
+    }
+}

@@ -1,0 +1,52 @@
+class Solution {
+
+    class Info {
+
+        ListNode node;
+
+        int carry;
+
+        public Info(ListNode n, int c) {
+            node = n;
+            carry = c;
+        }
+    }
+
+    public int getLength(ListNode ll) {
+        if (ll == null)
+            return 0;
+        return getLength(ll.next) + 1;
+    }
+
+    public Info getSum(ListNode l1, ListNode l2, int i, int j, ListNode l3) {
+        //Base Case
+        if (l1 == null || l2 == null)
+            return new Info(null, 0);
+        //Unequal Case
+        if (i > j) {
+            Info nextInfo = getSum(l1.next, l2, i - 1, j, l3);
+            l3 = new ListNode((l1.val + nextInfo.carry) % 10, nextInfo.node);
+            return new Info(l3, (l1.val + nextInfo.carry) / 10);
+        }
+        //Unequal Case
+        if (i < j) {
+            Info nextInfo = getSum(l1, l2.next, i, j - 1, l3);
+            l3 = new ListNode((l2.val + nextInfo.carry) % 10, nextInfo.node);
+            return new Info(l3, (l2.val + nextInfo.carry) / 10);
+        }
+        //Equal Case
+        Info nextInfo = getSum(l1.next, l2.next, i - 1, j - 1, l3);
+        l3 = new ListNode((l1.val + l2.val + nextInfo.carry) % 10, nextInfo.node);
+        return new Info(l3, (l1.val + l2.val + nextInfo.carry) / 10);
+    }
+
+    public ListNode insertAtHead(int val, ListNode head) {
+        return new ListNode(val, head);
+    }
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        int i = getLength(l1), j = getLength(l2);
+        Info ans = getSum(l1, l2, i, j, null);
+        return ans.carry > 0 ? insertAtHead(ans.carry, ans.node) : ans.node;
+    }
+}

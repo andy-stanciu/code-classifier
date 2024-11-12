@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> stack = new Stack<>();
+        for (int right : param1) {
+            if (stack.isEmpty() || right > 0) {
+                stack.push(right);
+                continue;
+            }
+            if (right < 0) {
+                int left = stack.peek();
+                while (!stack.isEmpty() && left > 0 && abs(left) < abs(right)) {
+                    stack.pop();
+                    if (!stack.isEmpty()) {
+                        left = stack.peek();
+                    }
+                }
+                if (stack.isEmpty()) {
+                    stack.push(right);
+                    continue;
+                }
+                if (left > 0 && abs(left) >= abs(right)) {
+                    if (abs(left) == abs(right)) {
+                        stack.pop();
+                    }
+                    continue;
+                }
+                stack.push(right);
+                continue;
+            }
+        }
+        int count = stack.size();
+        int[] res = new int[count];
+        while (count > 0) {
+            res[count - 1] = stack.pop();
+            count--;
+        }
+        return res;
+    }
+
+    int abs(int num) {
+        return Math.abs(num);
+    }
+}

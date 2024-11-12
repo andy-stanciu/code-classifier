@@ -1,0 +1,30 @@
+class Solution {
+
+    private List<List<Integer>> ans;
+
+    private int MASK;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        ans = new LinkedList<>();
+        MASK = (1 << nums.length) - 1;
+        permutation(nums, 0, new LinkedList<Integer>());
+        return ans;
+    }
+
+    private void permutation(int[] nums, int mask, List<Integer> list) {
+        if (mask == MASK) {
+            ans.add(new LinkedList<>(list));
+            return;
+        }
+        Set<Integer> used = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            if ((mask & (1 << i)) > 0 || used.contains(nums[i])) {
+                continue;
+            }
+            used.add(nums[i]);
+            list.add(nums[i]);
+            permutation(nums, mask | (1 << i), list);
+            list.remove(list.size() - 1);
+        }
+    }
+}

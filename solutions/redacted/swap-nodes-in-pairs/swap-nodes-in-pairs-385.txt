@@ -1,0 +1,66 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head) {
+        //corner cases
+        if (head == null || head.next == null) {
+            return head;
+        }
+        //creating three consecutive nodes and naming them a, b, c to
+        //keep a sense of continuity
+        ListNode a = head;
+        ListNode b = head.next;
+        ListNode c = head.next.next;
+        //this line is there because after first swapping, the head
+        //moves to the second index and b becomes the new head which
+        //would lead to a loss of data
+        head = b;
+        //if only two nodes are present then we will not have to go
+        //to the loop at all
+        if (c == null) {
+            a.next = c;
+            b.next = a;
+            return head;
+        }
+        //this condition here makes the loop repeat to infinity
+        //because \'a\' node will never be null and i have not put
+        //"true" simply because the compiler was giving an error
+        //message of "unreachable statement"
+        while (a != null) {
+            //swapping the nodes
+            b.next = a;
+            a.next = c;
+            //if \'c\' gets to null that means that \'a\' and \'b\' are at
+            //the last two indices and the swapping has been done
+            //above
+            if (c == null) {
+                return head;
+            }
+            //if c.next is null, then it means that the total number
+            //of nodes was odd and the last two pairs have been
+            //swapped already
+            if (c.next == null) {
+                return head;
+            }
+            //linking a to next of c then moving a to c and b to next
+            //of c and now c to next of new b nodes
+            //this is done to maintain the continuous nature of a, b
+            //and c nodes so that there is no exception in swapping
+            a.next = c.next;
+            a = c;
+            b = c.next;
+            c = c.next.next;
+        }
+        //unreachable statement
+        return head;
+    }
+}

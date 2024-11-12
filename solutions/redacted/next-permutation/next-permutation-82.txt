@@ -1,0 +1,49 @@
+class Solution {
+
+    private void reverseArray(int left, int right, int[] arr) {
+        while (left < right) {
+            swap(left, right, arr);
+            left++;
+            right--;
+        }
+    }
+
+    private void swap(int a, int b, int[] arr) {
+        arr[a] = arr[a] ^ arr[b];
+        arr[b] = arr[a] ^ arr[b];
+        arr[a] = arr[a] ^ arr[b];
+    }
+
+    public void method1(int[] nums) {
+        int len = nums.length;
+        int breakPointIdx = -1;
+        // Step 1: Find the first pair where nums[i] < nums[i + 1] (from the right)
+        // This marks the breakpoint where the permutation can be changed
+        for (int i = len - 2; i >= 0; i--) {
+            if (nums[i] < nums[i + 1]) {
+                breakPointIdx = i;
+                break;
+            }
+        }
+        // Step 2: Check the breakpoint
+        // If no break point is found, reverse the entire array to get the smallest permutation
+        if (breakPointIdx == -1) {
+            reverseArray(0, len - 1, nums);
+        } else {
+            // Step 3: If a break point is found
+            int breakPoint = nums[breakPointIdx];
+            int var1 = -1;
+            // Find the smallest number greater than the break point
+            for (int j = len - 1; j > breakPointIdx; j--) {
+                if (nums[j] > breakPoint) {
+                    var1 = j;
+                    break;
+                }
+            }
+            // Swap the break point with this next larger number
+            swap(var1, breakPointIdx, nums);
+            // Reverse the part of the array to the right of the break point to get the next permutation
+            reverseArray(breakPointIdx + 1, len - 1, nums);
+        }
+    }
+}

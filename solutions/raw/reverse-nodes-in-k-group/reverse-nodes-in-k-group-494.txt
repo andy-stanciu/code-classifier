@@ -1,0 +1,68 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        // If the list is empty or has only one node, return the head
+        if (head == null || head.next == null) {
+            return head;
+        }
+        // Reverse the first k nodes and update the head
+        head = reverseHelper(head, k);
+        // Iterate through the list
+        ListNode currentNode = head;
+        while (currentNode != null && currentNode.next != null) {
+            // Move to the end of the current k-group
+            for (int i = 1; currentNode != null && i < k; i++) {
+                currentNode = currentNode.next;
+            }
+            // If there\'s another k-group, reverse it and update the next pointer
+            if (currentNode != null && currentNode.next != null) {
+                currentNode.next = reverseHelper(currentNode.next, k);
+                currentNode = currentNode.next;
+            }
+        }
+        // Return the updated head
+        return head;
+    }
+
+    // Helper method to reverse a group of k nodes
+    public ListNode reverseHelper(ListNode head, int k) {
+        // If the list has only one node, return the head
+        if (head.next == null) {
+            return head;
+        }
+        ListNode endOfGroup = head;
+        // check given  list is lessthan k or Equal or Greaterthat
+        // if lessthan k return head
+        for (int i = 0; i < k; i++) {
+            if (endOfGroup == null) {
+                return head;
+            }
+            endOfGroup = endOfGroup.next;
+        }
+        // if list Greater than or Equal k reverse the list
+        ListNode previousNode = null;
+        ListNode currentNode = head;
+        // save the starting point of the list because end of reverse this node become last.
+        endOfGroup = head;
+        ListNode nextNode = currentNode.next;
+        for (int i = 1; i <= k; i++) {
+            nextNode = currentNode.next;
+            currentNode.next = previousNode;
+            previousNode = currentNode;
+            currentNode = nextNode;
+        }
+        // Update the next pointer of the last node in the reversed group
+        endOfGroup.next = nextNode;
+        return previousNode;
+    }
+}

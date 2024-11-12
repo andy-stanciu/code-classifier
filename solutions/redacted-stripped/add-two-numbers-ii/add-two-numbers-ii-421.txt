@@ -1,0 +1,73 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        if (l1 == null && l2 == null) {
+            return null;
+        }
+        int l1Length = getLength(l1);
+        int l2Length = getLength(l2);
+        ListNode l1Head = l1;
+        ListNode l2Head = l2;
+        int diff = Math.abs(l1Length - l2Length);
+        while (diff > 0) {
+            ListNode zero = new ListNode(0);
+            if (l1Length > l2Length) {
+                zero.next = l2Head;
+                l2Head = zero;
+            } else {
+                zero.next = l1Head;
+                l1Head = zero;
+            }
+            diff--;
+        }
+        ListNode resultHead = method2(l1Head, l2Head);
+        if (resultHead.val >= 10) {
+            ListNode remainderNode = new ListNode(resultHead.val / 10);
+            resultHead.val = resultHead.val % 10;
+            remainderNode.next = resultHead;
+            resultHead = remainderNode;
+        }
+        return resultHead;
+    }
+
+    private ListNode method2(ListNode l1, ListNode l2) {
+        if (l1 == null || l2 == null) {
+            return null;
+        }
+        if (l1.next == null && l2.next == null) {
+            int var1 = method3(l1, l2);
+            return new ListNode(var1);
+        }
+        ListNode result = method2(l1.next, l2.next);
+        int remainderFromPreviousResult = 0;
+        if (result != null) {
+            remainderFromPreviousResult = result.val / 10;
+            result.val = result.val % 10;
+        }
+        int var1 = method3(l1, l2);
+        int valueAtThisDigit = var1 + remainderFromPreviousResult;
+        ListNode resultForThisNode = new ListNode(valueAtThisDigit);
+        resultForThisNode.next = result;
+        return resultForThisNode;
+    }
+
+    private int getLength(ListNode listNode) {
+        int length = 0;
+        ListNode temp = listNode;
+        while (temp != null) {
+            temp = temp.next;
+            length++;
+        }
+        return length;
+    }
+
+    private int method3(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2.val;
+        }
+        if (l2 == null) {
+            return l1.val;
+        }
+        return l1.val + l2.val;
+    }
+}

@@ -1,0 +1,31 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] cand, int target) {
+        Arrays.sort(cand);
+        List<List<Integer>> ans = new ArrayList<>();
+        combine(cand, 0, target, new ArrayList<>(), ans);
+        return ans;
+    }
+
+    public void combine(int[] arr, int idx, int tar, List<Integer> li, List<List<Integer>> ans) {
+        if (tar == 0) {
+            //whenever our target == 0 will we add the \'list\' to our \'answer list\'
+            ans.add(new ArrayList<>(li));
+            return;
+        }
+        for (int i = idx; i < arr.length; i++) {
+            //if duplicates are found in the array
+            if (i > idx && arr[i] == arr[i - 1])
+                continue;
+            //when our target element is smaller than the current element of the array , we will break the loop
+            if (tar < arr[i])
+                break;
+            // adding the element to list
+            li.add(arr[i]);
+            //moving ahead and decreasing our target
+            combine(arr, i + 1, tar - arr[i], li, ans);
+            //when recursive calls are done we have to remove the element from our list \'li\'
+            li.remove(li.size() - 1);
+        }
+    }
+}

@@ -1,0 +1,34 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        Arrays.sort(candidates);
+        int[] var1 = new int[1];
+        backtrack(new ArrayList<>(), 0, candidates, target, var1, result);
+        return result;
+    }
+
+    public void backtrack(List<Integer> current, int start, int[] candidates, int target, int[] param1, List<List<Integer>> result) {
+        if (param1[0] >= target) {
+            if (param1[0] == target)
+                result.add(new ArrayList<>(current));
+            return;
+        }
+        for (int i = start; i < candidates.length; i++) {
+            if (i > start && candidates[i] == candidates[i - 1])
+                continue;
+            current.add(candidates[i]);
+            param1[0] += current.get(current.size() - 1);
+            backtrack(current, i + 1, candidates, target, param1, result);
+            param1[0] -= current.get(current.size() - 1);
+            if (param1[0] >= target) {
+                param1[0] -= current.get(current.size() - 1);
+                current.remove(current.size() - 1);
+                param1[0] -= current.get(current.size() - 1);
+                current.remove(current.size() - 1);
+                return;
+            }
+            current.remove(current.size() - 1);
+        }
+    }
+}

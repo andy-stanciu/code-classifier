@@ -1,0 +1,29 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> asteroidStateStack = new Stack<>();
+        asteroidStateStack.push(asteroids[0]);
+        int n = asteroids.length;
+        for (int i = 1; i < n; i++) {
+            if (!asteroidStateStack.isEmpty() && asteroidStateStack.peek() >= 0 && asteroids[i] < 0) {
+                boolean asteroidBlasted = false;
+                while (!asteroidStateStack.isEmpty() && asteroidStateStack.peek() >= 0 && !asteroidBlasted) {
+                    if (Math.abs(asteroidStateStack.peek()) < Math.abs(asteroids[i]))
+                        asteroidStateStack.pop();
+                    else if (Math.abs(asteroidStateStack.peek()) == Math.abs(asteroids[i])) {
+                        asteroidStateStack.pop();
+                        asteroidBlasted = true;
+                    } else
+                        asteroidBlasted = true;
+                }
+                if (!asteroidBlasted)
+                    asteroidStateStack.push(asteroids[i]);
+            } else
+                asteroidStateStack.push(asteroids[i]);
+        }
+        int i = 0;
+        int[] asteroidsAfterCollision = new int[asteroidStateStack.size()];
+        for (Integer asteroidState : asteroidStateStack) asteroidsAfterCollision[i++] = asteroidState;
+        return asteroidsAfterCollision;
+    }
+}

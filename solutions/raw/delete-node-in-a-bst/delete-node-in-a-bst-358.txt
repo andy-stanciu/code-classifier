@@ -1,0 +1,64 @@
+class TreeNode {
+
+    int val;
+
+    TreeNode left;
+
+    TreeNode right;
+
+    TreeNode(int x) {
+        val = x;
+    }
+}
+
+public class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return root;
+        }
+        // Search for the node to remove
+        if (root.val > key) {
+            root.left = deleteNode(root.left, key);
+        } else if (root.val < key) {
+            root.right = deleteNode(root.right, key);
+        } else {
+            // Node found, handle deletion cases
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            } else {
+                // Node has both children
+                TreeNode succParent = root;
+                TreeNode succ = root.right;
+                while (succ.left != null) {
+                    succParent = succ;
+                    succ = succ.left;
+                }
+                if (succParent != root) {
+                    succParent.left = succ.right;
+                } else {
+                    succParent.right = succ.right;
+                }
+                root.val = succ.val;
+                succ = null;
+            }
+        }
+        return root;
+    }
+
+    // Example usage
+    public static void main(String[] args) {
+        // Construct the BST
+        TreeNode root = new TreeNode(5);
+        root.left = new TreeNode(3);
+        root.right = new TreeNode(6);
+        root.left.left = new TreeNode(2);
+        root.left.right = new TreeNode(4);
+        root.right.right = new TreeNode(7);
+        // Delete node with key 3
+        Solution solution = new Solution();
+        TreeNode updatedRoot = solution.deleteNode(root, 3);
+    }
+}

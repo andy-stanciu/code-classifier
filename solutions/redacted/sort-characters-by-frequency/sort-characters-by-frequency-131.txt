@@ -1,0 +1,45 @@
+class Solution {
+
+    static class PQ implements Comparable<PQ> {
+
+        Character ch;
+
+        int z;
+
+        public PQ(Character ch, int z) {
+            this.ch = ch;
+            this.z = z;
+        }
+
+        public int compareTo(PQ p1) {
+            return this.z - p1.z;
+        }
+    }
+
+    public String method1(String s) {
+        HashMap<Character, Integer> hm = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (!hm.containsKey(s.charAt(i))) {
+                hm.put(s.charAt(i), 1);
+            } else {
+                hm.put(s.charAt(i), hm.get(s.charAt(i)) + 1);
+            }
+        }
+        PriorityQueue<PQ> pq = new PriorityQueue<>(Comparator.reverseOrder());
+        for (Map.Entry<Character, Integer> mapElement : hm.entrySet()) {
+            Character key = mapElement.getKey();
+            int value = mapElement.getValue();
+            pq.add(new PQ(key, value));
+        }
+        String st = "";
+        while (!pq.isEmpty()) {
+            int z1 = pq.peek().z;
+            while (z1 != 0) {
+                st += pq.peek().ch;
+                z1--;
+            }
+            pq.remove();
+        }
+        return st;
+    }
+}

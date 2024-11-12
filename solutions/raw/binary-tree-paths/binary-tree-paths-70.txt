@@ -1,0 +1,53 @@
+class Solution {
+
+    // Helper function to find all paths from root to leaf nodes
+    public void solve(TreeNode root, ArrayList<Integer> ls, ArrayList<ArrayList<Integer>> ans) {
+        // Base case: If the node is null, return
+        if (root == null) {
+            return;
+        }
+        // If it\'s a leaf node, add the current path to the result
+        if (root.left == null && root.right == null) {
+            ls.add(root.val);
+            // Add a copy of the current path to the result
+            ans.add(new ArrayList<>(ls));
+            // Backtrack
+            ls.remove(ls.size() - 1);
+            return;
+        }
+        // Add the current node value to the path
+        ls.add(root.val);
+        // Recursively solve for the left and right subtrees
+        solve(root.left, ls, ans);
+        solve(root.right, ls, ans);
+        // Backtrack by removing the last node from the path
+        ls.remove(ls.size() - 1);
+    }
+
+    // Main function to return all root-to-leaf paths as a list of strings
+    public List<String> binaryTreePaths(TreeNode root) {
+        // List to store all paths as lists of integers
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        // List to store the current path
+        ArrayList<Integer> ls = new ArrayList<>();
+        // Solve the problem by collecting all root-to-leaf paths
+        solve(root, ls, ans);
+        // Convert the paths from integer lists to strings
+        ArrayList<String> str = new ArrayList<>();
+        for (ArrayList<Integer> list : ans) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < list.size(); i++) {
+                // Append \'->\' between the node values, except for the last node in the path
+                if (i == list.size() - 1) {
+                    sb.append(list.get(i));
+                } else {
+                    sb.append(list.get(i)).append("->");
+                }
+            }
+            // Add the constructed path string to the result list
+            str.add(sb.toString());
+        }
+        // Return the list of root-to-leaf paths in string format
+        return str;
+    }
+}

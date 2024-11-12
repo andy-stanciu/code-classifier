@@ -1,0 +1,35 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] stone) {
+        Stack<Integer> st = new Stack<>();
+        st.push(stone[0]);
+        for (int i = 1; i < stone.length; i++) {
+            if (stone[i] < 0) {
+                if (!st.isEmpty() && Math.abs(stone[i]) < st.peek()) {
+                    continue;
+                } else if (!st.isEmpty() && Math.abs(stone[i]) == st.peek()) {
+                    st.pop();
+                } else {
+                    while (!st.isEmpty() && st.peek() < Math.abs(stone[i]) && st.peek() > 0) {
+                        st.pop();
+                    }
+                    if (!st.isEmpty() && st.peek() > 0 && Math.abs(stone[i]) == st.peek()) {
+                        st.pop();
+                    } else if (st.size() == 0) {
+                        st.push(stone[i]);
+                    } else if (!st.isEmpty() && st.peek() < Math.abs(stone[i]) && st.peek() < 0) {
+                        st.push(stone[i]);
+                    }
+                }
+            } else {
+                st.push(stone[i]);
+            }
+        }
+        int n = st.size();
+        int[] res = new int[n];
+        while (!st.isEmpty()) {
+            res[--n] = st.pop();
+        }
+        return res;
+    }
+}

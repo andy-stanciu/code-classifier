@@ -1,0 +1,28 @@
+class Solution {
+
+    Map<Integer, Integer> frequencies = new HashMap<>();
+
+    Set<List<Integer>> set = new HashSet<List<Integer>>();
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        for (int num : nums) frequencies.put(num, frequencies.getOrDefault(num, 0) + 1);
+        permutations(nums.length - 1, new ArrayList<Integer>(nums.length));
+        return new ArrayList<List<Integer>>(set);
+    }
+
+    void permutations(int index, List<Integer> list) {
+        if (index >= 0) {
+            for (Integer key : frequencies.keySet()) {
+                int value = frequencies.get(key);
+                if (value > 0) {
+                    frequencies.put(key, value - 1);
+                    list.add(key);
+                    permutations(index - 1, list);
+                    list.remove(list.size() - 1);
+                    frequencies.put(key, value);
+                }
+            }
+        } else
+            set.add(new ArrayList<Integer>(list));
+    }
+}

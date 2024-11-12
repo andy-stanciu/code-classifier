@@ -1,0 +1,69 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        TreeNode curNode = root;
+        TreeNode parent = null;
+        while (curNode != null && curNode.val != key) {
+            parent = curNode;
+            if (curNode.val > key)
+                curNode = curNode.left;
+            else if (curNode.val < key)
+                curNode = curNode.right;
+        }
+        if (curNode == null)
+            return root;
+        if (curNode != null) {
+            if (curNode.left == null && curNode.right == null) {
+                if (root == curNode) {
+                    root = null;
+                } else {
+                    if (parent.left == curNode) {
+                        parent.left = null;
+                    } else {
+                        parent.right = null;
+                    }
+                }
+            } else if (curNode.left == null || curNode.right == null) {
+                TreeNode child = curNode.left == null ? curNode.right : curNode.left;
+                if (curNode == root) {
+                    root = child;
+                } else {
+                    if (parent.left == curNode) {
+                        parent.left = child;
+                    } else {
+                        parent.right = child;
+                    }
+                }
+            } else {
+                TreeNode successor = findMin(curNode.right);
+                int data = successor.val;
+                deleteNode(root, data);
+                curNode.val = data;
+            }
+        }
+        return root;
+    }
+
+    public TreeNode findMin(TreeNode root) {
+        TreeNode curNode = root;
+        while (curNode.left != null) {
+            curNode = curNode.left;
+        }
+        return curNode;
+    }
+}

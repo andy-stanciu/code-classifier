@@ -1,0 +1,34 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        int[] stack = new int[asteroids.length];
+        int top = -1;
+        int i = 0;
+        while (i < asteroids.length) {
+            if (top == -1) {
+                if (stack[top + 1] + asteroids[i] == 0)
+                    i++;
+                else {
+                    top++;
+                    stack[top] = asteroids[i];
+                    i++;
+                }
+            } else if (asteroids[i] > 0 || (asteroids[i] * stack[top] > 0)) {
+                top++;
+                stack[top] = asteroids[i];
+                i++;
+            } else {
+                if (Math.abs(stack[top]) < Math.abs(asteroids[i])) {
+                    stack[top] = 0;
+                    top--;
+                } else if (stack[top] + asteroids[i] == 0) {
+                    stack[top] = 0;
+                    top--;
+                    i++;
+                } else
+                    i++;
+            }
+        }
+        return Arrays.copyOf(stack, top + 1);
+    }
+}

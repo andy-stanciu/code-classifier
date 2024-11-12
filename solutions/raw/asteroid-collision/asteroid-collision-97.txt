@@ -1,0 +1,53 @@
+class Solution {
+
+    public static int[] asteroidCollision(int[] asteroids) {
+        LinkedList<Integer> stack = new LinkedList<>();
+        for (int asteroid : asteroids) {
+            if (!stack.isEmpty()) {
+                int peeked = stack.peek();
+                if (peeked > 0 && asteroid < 0) {
+                    if (Math.abs(peeked) > Math.abs(asteroid)) {
+                    } else {
+                        removeAsteroid(stack, asteroid);
+                    }
+                } else {
+                    stack.push(asteroid);
+                }
+            } else {
+                stack.push(asteroid);
+            }
+        }
+        int[] remainingAsteroids = new int[stack.size()];
+        int index = stack.size() - 1;
+        for (int i = stack.size() - 1; i >= 0; i--) {
+            remainingAsteroids[index] = stack.pop();
+            index--;
+        }
+        return remainingAsteroids;
+    }
+
+    private static void removeAsteroid(LinkedList<Integer> stack, Integer incomingAsteroid) {
+        boolean conguer = false;
+        while (!conguer && !stack.isEmpty()) {
+            int peeked = stack.peek();
+            if (peeked < 0 && incomingAsteroid < 0) {
+                stack.push(incomingAsteroid);
+                conguer = true;
+            } else {
+                if (Math.abs(peeked) < Math.abs(incomingAsteroid)) {
+                    stack.pop();
+                    if (stack.isEmpty()) {
+                        stack.push(incomingAsteroid);
+                        conguer = true;
+                    } else {
+                    }
+                } else if (Math.abs(peeked) == Math.abs(incomingAsteroid)) {
+                    stack.pop();
+                    conguer = true;
+                } else if (Math.abs(peeked) > Math.abs(incomingAsteroid)) {
+                    conguer = true;
+                }
+            }
+        }
+    }
+}

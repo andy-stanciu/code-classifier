@@ -1,0 +1,71 @@
+// 1) Find the longest prefix match
+// 2) Replace the longest prefix match last number with the smallest number greater than this last number
+// 3) swap those two numbers.
+// 4) arrange all the numbers in descending order in sub array from the next index of swapped number till end.
+// 5) if no longest prefix match found, then reverse the number
+class Solution {
+
+    public void method1(int[] nums) {
+        int n = nums.length - 1;
+        // check for longest prefix
+        int index = findLongestPrefix(nums);
+        // if last permutation is present
+        if (index == -1) {
+            int start = 0;
+            int end = nums.length - 1;
+            while (start < end) {
+                swap(nums, start, end);
+                start++;
+                end--;
+            }
+            return;
+        }
+        // if longest prefix found then find smallest number larger than this number in subarray
+        int maxIndex = method2(nums, index);
+        swap(nums, index, maxIndex);
+        sort(nums, index + 1);
+    }
+
+    public int findLongestPrefix(int[] nums) {
+        int index = -1;
+        int n = nums.length - 1;
+        for (int i = n - 1; i >= 0; ) {
+            if (nums[i] < nums[i + 1]) {
+                index = i;
+                break;
+            }
+            i--;
+        }
+        return index;
+    }
+
+    public int method2(int[] nums, int index) {
+        int maxIndex = -1;
+        int max = Integer.MAX_VALUE;
+        int target = nums[index];
+        for (int i = index + 1; i < nums.length; i++) {
+            if (nums[i] > target && nums[i] < max) {
+                maxIndex = i;
+            }
+        }
+        return maxIndex;
+    }
+
+    public void swap(int[] nums, int index, int maxIndex) {
+        int temp = nums[index];
+        nums[index] = nums[maxIndex];
+        nums[maxIndex] = temp;
+    }
+
+    public void sort(int[] nums, int index) {
+        int start = index;
+        int end = nums.length - 1;
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start++;
+            end--;
+        }
+    }
+}

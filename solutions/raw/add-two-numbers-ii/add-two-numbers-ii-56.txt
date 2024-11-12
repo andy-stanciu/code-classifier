@@ -1,0 +1,60 @@
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        if (l1 == null && l2 == null) {
+            return null;
+        }
+        if (l1 == null && l2 != null) {
+            return l2;
+        }
+        if (l1 != null && l2 == null) {
+            return l1;
+        }
+        Stack<Integer> st1 = new Stack<>();
+        Stack<Integer> st2 = new Stack<>();
+        ListNode dummy = new ListNode(0);
+        while (l1 != null) {
+            st1.push(l1.val);
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            st2.push(l2.val);
+            l2 = l2.next;
+        }
+        int carry = 0;
+        while (!st1.isEmpty() && !st2.isEmpty()) {
+            int x = st1.pop();
+            int y = st2.pop();
+            int sum = x + y + carry;
+            carry = sum / 10;
+            sum %= 10;
+            ListNode newNode = new ListNode(sum);
+            newNode.next = dummy.next;
+            dummy.next = newNode;
+        }
+        while (!st1.isEmpty()) {
+            int x = st1.pop();
+            int sum = x + carry;
+            carry = sum / 10;
+            sum %= 10;
+            ListNode newNode = new ListNode(sum);
+            newNode.next = dummy.next;
+            dummy.next = newNode;
+        }
+        while (!st2.isEmpty()) {
+            int x = st2.pop();
+            int sum = x + carry;
+            carry = sum / 10;
+            sum %= 10;
+            ListNode newNode = new ListNode(sum);
+            newNode.next = dummy.next;
+            dummy.next = newNode;
+        }
+        if (carry != 0) {
+            ListNode newNode = new ListNode(carry);
+            newNode.next = dummy.next;
+            dummy.next = newNode;
+        }
+        return dummy.next;
+    }
+}

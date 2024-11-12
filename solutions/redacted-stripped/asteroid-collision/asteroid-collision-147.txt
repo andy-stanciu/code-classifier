@@ -1,0 +1,42 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> st = new Stack<Integer>();
+        for (int i = 0; i < param1.length; i++) {
+            int curSize = param1[i];
+            if (!st.isEmpty()) {
+                int peek = st.peek();
+                int peekAbs = Math.abs(peek);
+                int absCur = Math.abs(param1[i]);
+                boolean eq = false;
+                while (!st.isEmpty() && absCur >= peekAbs && (curSize < 0 && peek > 0)) {
+                    if (absCur == Math.abs(st.pop()) && (curSize < 0 && peek > 0)) {
+                        eq = true;
+                        break;
+                    }
+                    if (!st.isEmpty()) {
+                        peek = st.peek();
+                        peekAbs = Math.abs(peek);
+                    }
+                }
+                if (eq) {
+                    continue;
+                }
+                if (absCur > peekAbs || (curSize > 0 && peek > 0) || (curSize < 0 && peek < 0) || (curSize > 0 && peek < 0)) {
+                    st.push(param1[i]);
+                }
+            } else {
+                st.push(param1[i]);
+            }
+        }
+        if (st.isEmpty()) {
+            return new int[] {};
+        }
+        int[] rt = new int[st.size()];
+        int i = st.size() - 1;
+        while (!st.isEmpty()) {
+            rt[i--] = st.pop();
+        }
+        return rt;
+    }
+}

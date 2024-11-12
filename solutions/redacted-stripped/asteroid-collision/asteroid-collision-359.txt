@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> st = new Stack<>();
+        int n = param1.length;
+        for (int i = 0; i < n; i++) {
+            if (!st.isEmpty() && (st.peek() > 0 && param1[i] < 0)) {
+                if (Math.abs(param1[i]) == st.peek()) {
+                    st.pop();
+                } else {
+                    boolean isBothDestroyed = false;
+                    while (!st.isEmpty() && Math.abs(param1[i]) >= st.peek() && st.peek() > 0) {
+                        if (Math.abs(param1[i]) == st.peek()) {
+                            st.pop();
+                            isBothDestroyed = true;
+                            break;
+                        } else {
+                            st.pop();
+                        }
+                    }
+                    if (!isBothDestroyed) {
+                        if (!st.isEmpty() && st.peek() > 0 && param1[i] < 0 && st.peek() >= Math.abs(param1[i])) {
+                            continue;
+                        } else if (!st.isEmpty() && st.peek() < 0 && param1[i] < 0) {
+                            if (!isBothDestroyed) {
+                                st.push(param1[i]);
+                            }
+                        } else {
+                            st.push(param1[i]);
+                        }
+                    }
+                }
+            } else {
+                st.push(param1[i]);
+            }
+        }
+        int[] arr = new int[st.size()];
+        for (int i = arr.length - 1; i >= 0; i--) {
+            arr[i] = st.pop();
+        }
+        return arr;
+    }
+}

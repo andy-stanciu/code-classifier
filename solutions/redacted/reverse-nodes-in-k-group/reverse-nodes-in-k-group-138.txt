@@ -1,0 +1,80 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    class Class1 {
+
+        ListNode head;
+
+        ListNode tail;
+    }
+
+    public int getsize(ListNode head) {
+        int cnt = 0;
+        while (head != null) {
+            cnt++;
+            head = head.next;
+        }
+        return cnt;
+    }
+
+    public Class1 method1(ListNode left, ListNode right) {
+        ListNode prev = null;
+        ListNode curr = left;
+        ListNode next;
+        while (curr != null) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        Class1 res = new Class1();
+        res.head = prev;
+        while (prev.next != null) {
+            prev = prev.next;
+        }
+        res.tail = prev;
+        return res;
+    }
+
+    public ListNode method2(ListNode head, int k) {
+        int size = getsize(head);
+        ListNode left = head;
+        ListNode right = head;
+        ListNode nextleft = null;
+        ListNode reshead = null;
+        ListNode restail = null;
+        while (size >= k) {
+            for (int i = 1; i < k; i++) {
+                right = right.next;
+            }
+            nextleft = right.next;
+            right.next = null;
+            Class1 var1 = method1(left, right);
+            if (reshead == null) {
+                reshead = var1.head;
+                restail = var1.tail;
+            } else {
+                restail.next = var1.head;
+                restail = var1.tail;
+            }
+            size -= k;
+            left = nextleft;
+            right = left;
+        }
+        while (nextleft != null) {
+            restail.next = nextleft;
+            restail = nextleft;
+            nextleft = nextleft.next;
+        }
+        return reshead;
+    }
+}

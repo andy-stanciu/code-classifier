@@ -1,0 +1,33 @@
+class Solution {
+
+    public int getRightMax(TreeNode root) {
+        while (root.right != null) {
+            root = root.right;
+        }
+        return root.val;
+    }
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        if (root.val < key) {
+            root.right = method1(root.right, key);
+        } else if (root.val > key) {
+            root.left = method1(root.left, key);
+        } else {
+            if (root.left == null && root.right == null) {
+                return null;
+            } else if (root.left == null && root.right != null) {
+                return root.right;
+            } else if (root.left != null && root.right == null) {
+                return root.left;
+            } else {
+                int rightMax = getRightMax(root.left);
+                root.val = rightMax;
+                root.left = method1(root.left, rightMax);
+            }
+        }
+        return root;
+    }
+}

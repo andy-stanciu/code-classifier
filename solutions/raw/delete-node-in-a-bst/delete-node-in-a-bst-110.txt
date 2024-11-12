@@ -1,0 +1,76 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Helper function to find the leftmost (smallest) node in the right subtree
+    private TreeNode findLeft(TreeNode root) {
+        while (root.left != null) root = root.left;
+        return root;
+    }
+
+    // Helper function to delete the node and restructure the tree accordingly
+    private TreeNode helper(TreeNode root) {
+        // Case 1: Node is a leaf node, simply remove it by returning null
+        if (root.left == null && root.right == null)
+            return null;
+        // Case 2: Node only has a right child, bypass this node by returning its right child
+        if (root.left == null)
+            return root.right;
+        // Case 3: Node only has a left child, bypass this node by returning its left child
+        if (root.right == null)
+            return root.left;
+        // Case 4: Node has two children, find the smallest node in the right subtree
+        TreeNode dummy = root.right;
+        TreeNode leftOfDummy = findLeft(dummy);
+        // Connect the left subtree of the current node to the smallest node in the right subtree
+        leftOfDummy.left = root.left;
+        // Return the right subtree to replace the current node
+        return dummy;
+    }
+
+    // Main function to delete the node with the given key
+    public TreeNode deleteNode(TreeNode root, int key) {
+        // Base case: If the tree is empty, return null
+        if (root == null)
+            return null;
+        // Case when the node to delete is the root node
+        if (root.val == key) {
+            return helper(root);
+        }
+        // Use a dummy node to traverse the tree while maintaining a reference to the root
+        TreeNode dummy = root;
+        while (root != null) {
+            // If the key is greater than the current node value, search in the right subtree
+            if (key > root.val) {
+                // If the key is found in the right subtree, delete the node
+                if (root.right != null && root.right.val == key) {
+                    root.right = helper(root.right);
+                    break;
+                }
+                root = root.right;
+            } else {
+                // If the key is less than the current node value, search in the left subtree
+                if (root.left != null && root.left.val == key) {
+                    root.left = helper(root.left);
+                    break;
+                }
+                root = root.left;
+            }
+        }
+        // Return the original root, which may have been modified during the process
+        return dummy;
+    }
+}

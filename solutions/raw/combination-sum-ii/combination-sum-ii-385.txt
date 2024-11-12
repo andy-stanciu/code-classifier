@@ -1,0 +1,28 @@
+class Solution {
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> resultList = new ArrayList<>();
+        return combinationSumHelper2(candidates, target, resultList, new ArrayList<>(), 0, 0);
+    }
+
+    private List<List<Integer>> combinationSumHelper2(int[] candidates, int target, List<List<Integer>> resultList, ArrayList<Integer> tempList, int first, int sum) {
+        Arrays.sort(candidates);
+        if (sum == target) {
+            resultList.add(new ArrayList<>(tempList));
+        }
+        int prev = -1;
+        for (int i = first; i < candidates.length; i++) {
+            if (sum + candidates[i] > target) {
+                break;
+            }
+            if (prev == candidates[i]) {
+                continue;
+            }
+            tempList.add(candidates[i]);
+            combinationSumHelper2(candidates, target, resultList, tempList, i + 1, sum + candidates[i]);
+            tempList.remove(tempList.size() - 1);
+            prev = candidates[i];
+        }
+        return resultList;
+    }
+}

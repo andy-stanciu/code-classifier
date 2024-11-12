@@ -1,0 +1,39 @@
+class Solution {
+
+    public int pivotIndex(int[] nums) {
+        if (nums.length == 1)
+            return 0;
+        int[] leftSum = new int[nums.length];
+        int[] rightSum = new int[nums.length];
+        leftSum[0] = nums[0];
+        rightSum[nums.length - 1] = nums[nums.length - 1];
+        for (int left = 1, right = nums.length - 2; left < nums.length && right >= 0; left++, right--) {
+            leftSum[left] = nums[left] + leftSum[left - 1];
+            rightSum[right] = nums[right] + rightSum[right + 1];
+        }
+        int pivotIndex = -1;
+        for (int start = 0; start < nums.length; start++) {
+            if (start == 0) {
+                if (rightSum[start + 1] == 0) {
+                    pivotIndex = start;
+                    break;
+                }
+                continue;
+            }
+            if (start == nums.length - 1) {
+                if (leftSum[start - 1] == 0) {
+                    pivotIndex = start;
+                    break;
+                }
+                continue;
+            }
+            int left = leftSum[start - 1];
+            int right = rightSum[start + 1];
+            if (left == right) {
+                pivotIndex = start;
+                break;
+            }
+        }
+        return pivotIndex;
+    }
+}

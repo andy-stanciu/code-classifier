@@ -1,0 +1,69 @@
+class Solution {
+
+    public void rotate(int[][] matrix) {
+        /*
+            If we could store another table, we could just do a vertical to horizontal conversion, but since we need to do it in place, we can use the spiral method to iterate through the matrix.
+
+            we can go one at a time, each time moving the current index the width of the block forward in a spiral
+
+            ex outer block where n = 4, move three forward. ex inner block where n = 2, move 1 forward.
+
+            at each step, save the next value into a temporary and then overwrite it. then use the temp value to overwrite the next and so on.
+
+            n can be 1. if so, just return.
+
+        */
+        int spiralIterations = matrix.length / 2;
+        for (int i = 0; i < spiralIterations; i++) {
+            int n = matrix.length - (2 * i);
+            rotateBlock(i, n, matrix);
+        }
+    }
+
+    void rotateBlock(int i, int n, int[][] matrix) {
+        int numBoxes = (n * 2) + (2 * (n - 2));
+        int[] startingIndex = new int[] { i, i };
+        int startingValue = matrix[startingIndex[0]][startingIndex[1]];
+        int nextValue = 0;
+        for (int j = 0; j < numBoxes; j++) {
+            if (j != 0 && j % 4 == 0) {
+                startingIndex = new int[] { startingIndex[0], startingIndex[1] + 1 };
+                startingValue = matrix[startingIndex[0]][startingIndex[1]];
+            }
+            int[] nextIndex = findNextIndex(i, n, startingIndex, j);
+            nextValue = matrix[nextIndex[0]][nextIndex[1]];
+            matrix[nextIndex[0]][nextIndex[1]] = startingValue;
+            startingIndex = nextIndex;
+            startingValue = nextValue;
+        }
+    }
+
+    int[] findNextIndex(int i, int n, int[] currentIndex, int j) {
+        //find distance to end of columns
+        int xDiff = 0;
+        int yDiff = 0;
+        int x = 0;
+        int y = 0;
+        int direction = (j + 1) % 4;
+        if (direction == 1) {
+            // go right
+            xDiff = ((n - 1) + i) - currentIndex[1];
+            yDiff = (n - 1) - xDiff;
+        } else if (direction == 2) {
+            //go down
+            yDiff = ((n - 1) + i) - currentIndex[0];
+            xDiff = yDiff - (n - 1);
+        } else if (direction == 3) {
+            //go left
+            xDiff = (0 + i) - currentIndex[1];
+            yDiff = -1 * ((n - 1) + xDiff);
+        } else {
+            //go up
+            yDiff = (0 + i) - currentIndex[0];
+            xDiff = (n - 1) + yDiff;
+        }
+        x = currentIndex[1] + xDiff;
+        y = currentIndex[0] + yDiff;
+        return new int[] { y, x };
+    }
+}

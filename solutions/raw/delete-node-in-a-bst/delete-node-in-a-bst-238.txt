@@ -1,0 +1,90 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    void del(TreeNode c, TreeNode p, boolean left) {
+        if (c.left == null && c.right == null) {
+            if (left)
+                p.left = null;
+            else
+                p.right = null;
+        } else if (c.left == null) {
+            if (left) {
+                p.left = c.right;
+            } else
+                p.right = c.right;
+        } else if (c.right == null) {
+            if (left) {
+                p.left = c.left;
+            } else
+                p.right = c.left;
+        } else {
+            if (left) {
+                p.left = c.right;
+            } else {
+                p.right = c.right;
+            }
+            TreeNode l = c.left;
+            c = c.right;
+            while (c.left != null) {
+                c = c.left;
+            }
+            c.left = l;
+        }
+    }
+
+    public TreeNode deleteNode(TreeNode r, int k) {
+        TreeNode c = r, p = r;
+        if (r == null)
+            return r;
+        if (r.val == k) {
+            TreeNode l = c.left;
+            c = c.right;
+            if (c == null && l != null)
+                return l;
+            TreeNode right = c;
+            while (c != null && c.left != null) {
+                p = c;
+                c = c.left;
+            }
+            p.left = null;
+            if (c != null) {
+                // System.out.println(c.val+" "+l.val+" "+right.val);
+                if (c != l)
+                    c.left = l;
+                if (c != right)
+                    c.right = right;
+            }
+            return c;
+        }
+        while (c != null) {
+            if (c.val == k) {
+                boolean left = false;
+                if (p.val > c.val)
+                    left = true;
+                del(c, p, left);
+                return r;
+            } else if (c.val > k) {
+                p = c;
+                c = c.left;
+            } else {
+                p = c;
+                c = c.right;
+            }
+        }
+        return r;
+    }
+}

@@ -1,0 +1,52 @@
+class Solution {
+
+    public void nextPermutation(int[] nums) {
+        int n = nums.length;
+        // We need longest prefix Match to obtain the next grearer permutation
+        // Find the break point where a[i] < a[i+1] where there is a scope to find next greater permutation
+        // ex : 2 1 5 4 3 0 0
+        // here breakpoint is 1
+        // next step is to replace the 1 with next greater number which is 3 in this case
+        // now the array becomes 2 3 5 4 1 0 0
+        // third step : to obtain the smallest number which is next to given permutation we need the ramining
+        // part to be sorted
+        // 2 3 0 0 1 4 5 - Next permutation
+        int breakPoint = -1;
+        // Traverse from right to left to find the break point
+        // first index where we can find break point is n-2
+        for (int i = n - 2; i >= 0; i--) {
+            if (nums[i] < nums[i + 1]) {
+                breakPoint = i;
+                break;
+            }
+        }
+        // if break Point is -1 then that is last permutation ans the next one would be the first permutation
+        // rev of array is gives first permutation possible
+        if (breakPoint == -1) {
+            reverse(nums, 0, n - 1);
+            return;
+        }
+        // Else Find the next Smaller element ans swap with curr Element at breakPoint
+        for (int i = n - 1; i > breakPoint; i--) {
+            if (nums[i] > nums[breakPoint]) {
+                int temp = nums[breakPoint];
+                nums[breakPoint] = nums[i];
+                nums[i] = temp;
+                break;
+            }
+        }
+        //Now reverse the remaining part after break points that sorts the ramiaing elements to give next smallest
+        // permutation
+        reverse(nums, breakPoint + 1, n - 1);
+    }
+
+    public void reverse(int[] nums, int i, int j) {
+        while (i < j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+            i++;
+            j--;
+        }
+    }
+}

@@ -1,0 +1,54 @@
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root != null && root.val == key) {
+            return deleteRoot(root, key);
+        }
+        return delete(root, key);
+    }
+
+    public TreeNode deleteRoot(TreeNode root, int target) {
+        if (root.left == null && root.right == null) {
+            return null;
+        } else if (root.left == null) {
+            return root.right;
+        } else if (root.right == null) {
+            return root.left;
+        }
+        TreeNode successor = findSuccessor(root);
+        root.val = successor.val;
+        root.right = delete(root.right, successor.val);
+        return root;
+    }
+
+    public TreeNode delete(TreeNode node, int target) {
+        if (node == null) {
+            return node;
+        }
+        if (node.val > target) {
+            node.left = delete(node.left, target);
+        } else if (node.val < target) {
+            node.right = delete(node.right, target);
+        } else {
+            if (node.left == null && node.right == null) {
+                return null;
+            } else if (node.left == null) {
+                return node.right;
+            } else if (node.right == null) {
+                return node.left;
+            }
+            TreeNode successor = findSuccessor(node);
+            node.val = successor.val;
+            node.right = delete(node.right, successor.val);
+        }
+        return node;
+    }
+
+    public TreeNode findSuccessor(TreeNode node) {
+        node = node.right;
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+}

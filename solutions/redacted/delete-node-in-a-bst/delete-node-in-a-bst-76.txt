@@ -1,0 +1,60 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        // Base case: If root is null
+        if (root == null)
+            return null;
+        // Search for the node to be deleted
+        if (key < root.val) {
+            // If the key is smaller, move to the left subtree
+            root.left = method1(root.left, key);
+        } else if (key > root.val) {
+            // If the key is larger, move to the right subtree
+            root.right = method1(root.right, key);
+        } else {
+            // Node to be deleted is found
+            // Case 1: Node has no children (Leaf node)
+            if (root.left == null && root.right == null) {
+                return null;
+            }
+            // Case 2: Node has one child
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            }
+            // Case 3: Node has two children
+            // Find the inorder successor (smallest in the right subtree)
+            TreeNode successor = method2(root.right);
+            // Copy the successor\'s value
+            root.val = successor.val;
+            // Delete the inorder successor
+            root.right = method1(root.right, successor.val);
+        }
+        return root;
+    }
+
+    // Function to find the minimum value node in the tree
+    private TreeNode method2(TreeNode param1) {
+        TreeNode current = param1;
+        while (current.left != null) {
+            current = current.left;
+        }
+        return current;
+    }
+}

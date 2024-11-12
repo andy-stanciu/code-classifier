@@ -1,0 +1,34 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<Integer> num = new ArrayList<>();
+        for (int n : nums) {
+            num.add(n);
+        }
+        HashSet<List<Integer>> set = new HashSet();
+        permutation(num, new ArrayList<>(), set);
+        return new ArrayList<>(set);
+    }
+
+    public void permutation(List<Integer> num, List<Integer> current, HashSet<List<Integer>> set) {
+        if (num.isEmpty()) {
+            // Add a copy of the current permutation to the result
+            set.add(new ArrayList<>(current));
+            return;
+        }
+        HashSet<Integer> used = new HashSet();
+        for (int i = 0; i < num.size(); i++) {
+            int chosen = num.get(i);
+            if (!used.contains(chosen)) {
+                current.add(chosen);
+                used.add(chosen);
+                num.remove(i);
+                // Recursively generate permutations
+                permutation(num, current, set);
+                // Backtrack: Remove the chosen element and restore num
+                current.remove(current.size() - 1);
+                num.add(i, chosen);
+            }
+        }
+    }
+}

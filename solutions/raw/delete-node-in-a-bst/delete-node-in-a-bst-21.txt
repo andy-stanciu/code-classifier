@@ -1,0 +1,35 @@
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        // searching for th e key node
+        if (// if key node is at left
+        key < root.val)
+            root.left = deleteNode(root.left, key);
+        else if (// if key node is at right
+        key > root.val)
+            root.right = deleteNode(root.right, key);
+        else {
+            // we found the key node
+            if (// if key node has only its right
+            root.left == null)
+                return root.right;
+            else if (// if key node has only its left
+            root.right == null)
+                return root.left;
+            else {
+                // if key node has both its left and right, get the minValue from its right and put at its root.val and do this recursive to delete that minValue from its right subtree
+                int rightMin = getMin(root.right);
+                root.val = rightMin;
+                root.right = deleteNode(root.right, rightMin);
+            }
+        }
+        return root;
+    }
+
+    public static int getMin(TreeNode root) {
+        while (root.left != null) root = root.left;
+        return root.val;
+    }
+}

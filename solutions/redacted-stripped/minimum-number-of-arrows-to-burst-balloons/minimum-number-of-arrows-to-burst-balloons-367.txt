@@ -1,0 +1,46 @@
+class Solution {
+
+    public int method1(int[][] points) {
+        if (points.length == 1) {
+            return 1;
+        }
+        List<Bln> list = new ArrayList<>();
+        for (int i = 0; i < points.length; i++) {
+            list.add(new Bln(points[i][0], points[i][1]));
+        }
+        Collections.sort(list, (b1, b2) -> b1.st - b2.st);
+        int indx = 0;
+        Bln groupedBy = null;
+        int res = 0;
+        while (indx != list.size()) {
+            Bln next = list.get(indx);
+            if (groupedBy == null) {
+                groupedBy = next;
+                res++;
+                indx++;
+            } else {
+                if (next.st >= groupedBy.st && next.st <= groupedBy.end) {
+                    groupedBy = new Bln(next.st, Math.min(next.end, groupedBy.end));
+                    indx++;
+                } else {
+                    groupedBy = next;
+                    res++;
+                    indx++;
+                }
+            }
+        }
+        return res;
+    }
+
+    private class Bln {
+
+        public int st;
+
+        public int end;
+
+        public Bln(int st, int end) {
+            this.st = st;
+            this.end = end;
+        }
+    }
+}

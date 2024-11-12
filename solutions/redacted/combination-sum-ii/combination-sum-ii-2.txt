@@ -1,0 +1,27 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        List<List<Integer>> results = new ArrayList<>();
+        // Sort to handle duplicates easily
+        Arrays.sort(candidates);
+        backtrack(candidates, target, 0, new ArrayList<>(), results);
+        return results;
+    }
+
+    private void backtrack(int[] candidates, int target, int start, List<Integer> param1, List<List<Integer>> results) {
+        if (target == 0) {
+            results.add(new ArrayList<>(param1));
+            return;
+        }
+        for (int i = start; i < candidates.length && candidates[i] <= target; i++) {
+            if (i > start && candidates[i] == candidates[i - 1]) {
+                // Skip duplicates
+                continue;
+            }
+            param1.add(candidates[i]);
+            backtrack(candidates, target - candidates[i], i + 1, param1, results);
+            // Backtrack
+            param1.remove(param1.size() - 1);
+        }
+    }
+}

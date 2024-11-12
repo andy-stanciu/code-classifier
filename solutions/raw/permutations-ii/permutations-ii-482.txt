@@ -1,0 +1,47 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        /* 
+        * This is our base case.
+        * If nums has only one element, there is only one arrangement possible. 
+        */
+        if (nums.length == 1)
+            return new ArrayList<>() {
+
+                {
+                    add(Arrays.stream(nums).boxed().collect(Collectors.toList()));
+                }
+            };
+        /*
+        *  In case, nums has more than one element, we need to reduce the size of the elements until we have only one left.
+        *  We are using a HashSet here because we want to remove duplicate arrangements from the list of permutations.
+        */
+        Set<List<Integer>> permutations = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            /*
+            * The approach here is that we are going to iterate over the array and swap the element on each index (except 0) 
+            * with the element on index 0. The reason why we are doing this, is because for each element, the remaining elements 
+            * can be arranged in (nums.length - 1)! ways, which is where the recursion comes in. Also, it doesn\'t make sense to swap the
+            * element on index 0 with index 0. So...
+            */
+            if (i != 0) {
+                nums[0] ^= nums[i];
+                nums[i] ^= nums[0];
+                nums[0] ^= nums[i];
+            }
+            /*
+            * As I said previously, we are doing the recursion for (nums.length - 1) elements. For each permutation of 
+            * those elements, the element at index 0 needs to be prepended to the list, which is what we are doing below. 
+            */
+            for (List<Integer> permutation : permuteUnique(Arrays.copyOfRange(nums, 1, nums.length))) {
+                permutation.add(0, nums[0]);
+                permutations.add(permutation);
+            }
+        }
+        /*
+        * Since the return type is List<List<Integer>> we need to convert the HashSet to an ArrayList. 
+        * Hence, the following line.
+        */
+        return permutations.stream().toList();
+    }
+}

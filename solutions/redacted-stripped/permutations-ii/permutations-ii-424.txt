@@ -1,0 +1,25 @@
+class Solution {
+
+    public List<List<Integer>> permuteRec(int[] nums, boolean[] taken, List<Integer> prefix) {
+        List<List<Integer>> var1 = new LinkedList<>();
+        HashSet<Integer> visited = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (!taken[i] && !visited.contains(nums[i])) {
+                visited.add(nums[i]);
+                taken[i] = true;
+                prefix.add(nums[i]);
+                var1.addAll(permuteRec(nums, taken, prefix));
+                prefix.remove(prefix.size() - 1);
+                taken[i] = false;
+            }
+        }
+        if (var1.size() == 0) {
+            var1.add(new LinkedList(prefix));
+        }
+        return var1;
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        return permuteRec(nums, new boolean[nums.length], new LinkedList<Integer>());
+    }
+}

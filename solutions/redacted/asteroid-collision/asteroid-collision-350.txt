@@ -1,0 +1,46 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> stk = new Stack<>();
+        for (int i = 0; i < param1.length; i++) {
+            // for empty stack and +ve direction moving asteroid case
+            if (stk.isEmpty() || param1[i] >= 0) {
+                stk.push(param1[i]);
+            } else {
+                // if current asteroid moving in -ve direction
+                while (true) {
+                    int peek = stk.peek();
+                    //case1: if peek is also -ve, then both asteroid move in same -ve direction
+                    if (peek < 0) {
+                        stk.push(param1[i]);
+                        break;
+                    } else if (peek == -param1[i]) {
+                        //case2: if peek is of same size, then both of them gets destroyed
+                        stk.pop();
+                        break;
+                    } else if (peek > -param1[i]) {
+                        /*
+                        case3: if peek is of bigger size, then current asteriod will be destroyed
+                         */
+                        break;
+                    } else {
+                        /*
+                    case4: if current asteroid moving in -ve direction is of bigger size, 
+                           then all asteriod smaller then this will be destroyed
+                     */
+                        stk.pop();
+                        if (stk.isEmpty()) {
+                            stk.push(param1[i]);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        int[] output = new int[stk.size()];
+        for (int i = stk.size() - 1; i >= 0; i--) {
+            output[i] = stk.pop();
+        }
+        return output;
+    }
+}

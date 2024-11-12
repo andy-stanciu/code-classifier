@@ -1,0 +1,46 @@
+/**
+ * Optimized Backtracking by using a Count Map and Unique Num List
+ *
+ * Time & Space Complexity explanation is same as above. We will only need to
+ * add time & space required for creating the count map and a sorted list of
+ * unique candidates.
+ */
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (candidates == null || candidates.length == 0) {
+            return result;
+        }
+        HashMap<Integer, Integer> countMap = new HashMap<>();
+        for (int c : candidates) {
+            countMap.put(c, countMap.getOrDefault(c, 0) + 1);
+        }
+        List<Integer> uniqueNumList = new ArrayList<>(countMap.keySet());
+        Collections.sort(uniqueNumList);
+        method2(countMap, uniqueNumList, 0, target, new ArrayList<>(), result);
+        return result;
+    }
+
+    private void method2(HashMap<Integer, Integer> countMap, List<Integer> uniqueNumList, int start, int target, List<Integer> tempList, List<List<Integer>> result) {
+        if (target == 0) {
+            result.add(new ArrayList<>(tempList));
+            return;
+        }
+        for (int i = start; i < uniqueNumList.size(); i++) {
+            int num = uniqueNumList.get(i);
+            int count = countMap.get(num);
+            if (count == 0) {
+                continue;
+            }
+            if (num > target) {
+                break;
+            }
+            tempList.add(num);
+            countMap.put(num, count - 1);
+            method2(countMap, uniqueNumList, i, target - num, tempList, result);
+            tempList.remove(tempList.size() - 1);
+            countMap.put(num, count);
+        }
+    }
+}

@@ -1,0 +1,39 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] a) {
+        Arrays.sort(a);
+        List<List<Integer>> result = new ArrayList<>(1 << 16);
+        while (true) {
+            result.add(toList(a));
+            if (!nextPerm(a)) {
+                break;
+            }
+        }
+        return result;
+    }
+
+    boolean nextPerm(int[] p) {
+        int n = p.length;
+        int k = n - 2;
+        while (k >= 0 && p[k] >= p[k + 1]) k--;
+        if (k < 0)
+            return false;
+        int l = k;
+        while (l < n - 1 && p[k] < p[l + 1]) l++;
+        swap(k, l, p);
+        for (int i = k + 1, j = n - 1; i < j; i++, j--) swap(i, j, p);
+        return true;
+    }
+
+    void swap(int i, int j, int[] p) {
+        int t = p[i];
+        p[i] = p[j];
+        p[j] = t;
+    }
+
+    List<Integer> toList(int[] x) {
+        ArrayList<Integer> result = new ArrayList<>(x.length);
+        for (int val : x) result.add(val);
+        return result;
+    }
+}

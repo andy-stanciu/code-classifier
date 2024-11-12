@@ -1,0 +1,41 @@
+class Solution {
+
+    List<List<Integer>> res = new ArrayList<>();
+
+    int n;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        // Backtracking - HashMap - Neetcode solution
+        HashMap<Integer, Integer> counter = new HashMap<>();
+        n = nums.length;
+        for (int n : nums) {
+            counter.put(n, counter.getOrDefault(n, 0) + 1);
+        }
+        backtrackDFS(new ArrayList<>(), counter);
+        return res;
+    }
+
+    private void backtrackDFS(List<Integer> curList, HashMap<Integer, Integer> counter) {
+        if (curList.size() == n) {
+            // base case
+            res.add(new ArrayList<>(curList));
+            return;
+        }
+        for (int val : counter.keySet()) {
+            // At each level, consider only the unique values to choose from => this helps to remove duplicates
+            if (counter.get(val) > 0) {
+                curList.add(val);
+                // update counter
+                counter.put(val, counter.get(val) - 1);
+                backtrackDFS(curList, counter);
+                // reset
+                curList.remove(curList.size() - 1);
+                counter.put(val, counter.get(val) + 1);
+            }
+        }
+    }
+}
+/**
+ * TC: O(n*n!) - n! permutations, O(n) time to copy each perm to result
+ * Space: O(n) - HashMap
+ */

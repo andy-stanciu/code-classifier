@@ -1,0 +1,52 @@
+class Solution {
+
+    public void method1(int[] nums) {
+        int n = nums.length;
+        // 1) Traverse the array from right to left to find the first decreasing element
+        int p = -1;
+        for (int i = n - 2; i >= 0; i--) {
+            if (nums[i] < nums[i + 1]) {
+                p = i;
+                break;
+            }
+        }
+        // If no such element is found, reverse the whole array to get the smallest permutation
+        if (p == -1) {
+            reverse(nums, 0, n - 1);
+            return;
+        }
+        // 2) Find the element just larger than nums[p] from the right
+        int k = findJustGreater(nums, p, n);
+        // 3) Swap nums[p] and nums[k]
+        swap(nums, p, k);
+        // 4) Reverse the part after p to get the next smallest lexicographic permutation
+        reverse(nums, p + 1, n - 1);
+    }
+
+    // Helper function to find the element just larger than nums[p]
+    private int findJustGreater(int[] nums, int p, int n) {
+        int justGreater = p + 1;
+        for (int i = p + 1; i < n; i++) {
+            if (nums[i] > nums[p] && nums[i] <= nums[justGreater]) {
+                justGreater = i;
+            }
+        }
+        return justGreater;
+    }
+
+    // Helper function to swap elements at index i and j
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    // Helper function to reverse the array from index start to end
+    private void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            swap(nums, start, end);
+            start++;
+            end--;
+        }
+    }
+}

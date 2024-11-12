@@ -1,0 +1,68 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        int m = length(l1), n = length(l2);
+        if (m < n) {
+            return addTwoNumbers(l2, l1);
+        }
+        ListNode l1Rev = reverse(l1);
+        ListNode l2Rev = reverse(l2);
+        ListNode node = new ListNode(), l1temp = l1Rev, l2temp = l2Rev;
+        ListNode head = node;
+        int carry = 0;
+        while (l1temp != null && l2temp != null) {
+            int value = l1temp.val + l2temp.val + carry;
+            int digit = value % 10;
+            carry = value / 10;
+            node.next = new ListNode(digit);
+            node = node.next;
+            l1temp = l1temp.next;
+            l2temp = l2temp.next;
+        }
+        while (l1temp != null) {
+            int value = l1temp.val + carry;
+            int digit = value % 10;
+            carry = value / 10;
+            node.next = new ListNode(digit);
+            node = node.next;
+            l1temp = l1temp.next;
+        }
+        if (carry > 0)
+            node.next = new ListNode(carry);
+        return reverse(head.next);
+    }
+
+    private int length(ListNode l) {
+        ListNode t = l;
+        int count = 0;
+        while (t != null) {
+            t = t.next;
+            count++;
+        }
+        return count;
+    }
+
+    private ListNode reverse(ListNode l) {
+        if (l == null || l.next == null)
+            return l;
+        ListNode temp = l;
+        ListNode prev = null;
+        while (temp != null) {
+            ListNode next = temp.next;
+            temp.next = prev;
+            prev = temp;
+            temp = next;
+        }
+        return prev;
+    }
+}

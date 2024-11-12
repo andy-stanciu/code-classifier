@@ -1,0 +1,67 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        // create 2 separate lists each of which stores the altenative elements of the list
+        ListNode dummy1 = new ListNode(-1);
+        // for odd positions
+        ListNode temp1 = dummy1;
+        ListNode dummy2 = new ListNode(-1);
+        // for even positions
+        ListNode temp2 = dummy2;
+        ListNode temp = head;
+        // index
+        int idx = 1;
+        while (temp != null) {
+            if (idx % 2 == 1) {
+                // at odd positions
+                temp1.next = temp;
+                temp1 = temp1.next;
+            } else {
+                temp2.next = temp;
+                temp2 = temp2.next;
+            }
+            temp = temp.next;
+            idx++;
+        }
+        // to make both as separate lists make end nodes null
+        temp1.next = null;
+        temp2.next = null;
+        // create a new dummy node to store final ans
+        ListNode var1 = new ListNode(-1);
+        ListNode fhead = var1;
+        // re-initialise the temp1,2 pointers and index
+        temp1 = dummy1.next;
+        temp2 = dummy2.next;
+        idx = 1;
+        while (temp1 != null && temp2 != null) {
+            if (idx % 2 == 1) {
+                fhead.next = temp2;
+                temp2 = temp2.next;
+            } else {
+                fhead.next = temp1;
+                temp1 = temp1.next;
+            }
+            fhead = fhead.next;
+            idx++;
+        }
+        // add the remaining part of any of the list to the final list
+        if (temp1 == null)
+            fhead.next = temp2;
+        else
+            fhead.next = temp1;
+        fhead = var1.next;
+        return fhead;
+    }
+}

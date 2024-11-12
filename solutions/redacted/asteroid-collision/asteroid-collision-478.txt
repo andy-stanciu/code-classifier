@@ -1,0 +1,63 @@
+class Solution {
+
+    public int[] method1(int[] A) {
+        // simulate left and right
+        Stack<Integer> left = new Stack<>();
+        Stack<Integer> right = new Stack<>();
+        // for every aste
+        for (int i : A) {
+            // trying to checking only when left side one is comming if right side comming directly add up not gonna collide because left wer gone to left
+            if (i > 0) {
+                right.push(i);
+            } else {
+                // if right side not have any left order will follow
+                if (right.isEmpty()) {
+                    left.push(i);
+                } else {
+                    int a = Math.abs(i);
+                    // flag to check are they equal
+                    boolean areEqual = false;
+                    // till comming left not gonna make it empty or get destroyed
+                    while (!right.isEmpty() && a >= right.peek()) {
+                        if (a == right.peek()) {
+                            right.pop();
+                            areEqual = true;
+                            break;
+                        }
+                        right.pop();
+                    }
+                    // if not equal and destroyed all right side
+                    // it will start the trend of left and will present in state
+                    if (!areEqual && right.isEmpty()) {
+                        left.push(i);
+                    }
+                }
+            }
+        }
+        // get out values because they will get reverse order
+        List<Integer> ll = new ArrayList<>();
+        List<Integer> rr = new ArrayList<>();
+        while (!left.isEmpty()) {
+            ll.add(left.pop());
+        }
+        while (!right.isEmpty()) {
+            rr.add(right.pop());
+        }
+        // reverse them
+        // can optimise here by taking single array and index can store directyly in res array
+        // but it is more clear
+        Collections.reverse(ll);
+        Collections.reverse(rr);
+        // here res will have len of + of both left and right left state
+        int[] res = new int[ll.size() + rr.size()];
+        int idx = 0;
+        for (Integer il : ll) {
+            res[idx++] = il;
+        }
+        for (Integer il : rr) {
+            res[idx++] = il;
+        }
+        // store and return
+        return res;
+    }
+}

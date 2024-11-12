@@ -1,0 +1,64 @@
+class Solution {
+
+    public static ListNode reverse(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            //preserve
+            ListNode next = curr.next;
+            //link
+            curr.next = prev;
+            //move
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode h1 = reverse(l1);
+        ListNode h2 = reverse(l2);
+        ListNode dummy = new ListNode(-1);
+        ListNode ansH = dummy;
+        ListNode p1 = h1;
+        ListNode p2 = h2;
+        int c = 0;
+        while (p1 != null && p2 != null) {
+            int val = p1.val + p2.val + c;
+            ListNode node = new ListNode(val % 10);
+            c = val / 10;
+            dummy.next = node;
+            dummy = dummy.next;
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+        if (p1 != null) {
+            while (p1 != null) {
+                int val = p1.val + c;
+                ListNode node = new ListNode(val % 10);
+                c = val / 10;
+                dummy.next = node;
+                dummy = dummy.next;
+                p1 = p1.next;
+            }
+        }
+        if (p2 != null) {
+            while (p2 != null) {
+                int val = p2.val + c;
+                ListNode node = new ListNode(val % 10);
+                c = val / 10;
+                dummy.next = node;
+                dummy = dummy.next;
+                p2 = p2.next;
+            }
+        }
+        if (c > 0) {
+            ListNode node = new ListNode(c);
+            dummy.next = node;
+            dummy = dummy.next;
+        }
+        reverse(h1);
+        reverse(h2);
+        return reverse(ansH.next);
+    }
+}

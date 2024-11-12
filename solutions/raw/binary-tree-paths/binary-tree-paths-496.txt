@@ -1,0 +1,43 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> paths = new ArrayList<String>();
+        getPaths(root, paths, "");
+        return paths;
+    }
+
+    private void getPaths(TreeNode node, List<String> list, String currentPath) {
+        //we hit this case if the parent node has other children, so we are not at a valid root-leaf path anymore, thus we don\'t have to do anything
+        if (node == null)
+            return;
+        //update the current path string
+        StringBuilder sb = new StringBuilder();
+        if (!currentPath.isEmpty())
+            sb.append(currentPath + "->");
+        sb.append(node.val);
+        String updatedPath = sb.toString();
+        //if node has no children, we are at the end of a root-to-leaf path
+        if (node.left == null && node.right == null) {
+            list.add(updatedPath);
+            return;
+        }
+        //get the rest of the paths by making recursive calls to the children
+        getPaths(node.left, list, updatedPath);
+        getPaths(node.right, list, updatedPath);
+    }
+}

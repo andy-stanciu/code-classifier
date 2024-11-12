@@ -1,0 +1,27 @@
+class Solution {
+
+    Set<List<Integer>> ans;
+
+    public void help(int[] nums, int indx) {
+        int n = nums.length;
+        if (indx == n)
+            return;
+        List<Integer> pres = Arrays.stream(nums).boxed().collect(Collectors.toList());
+        ans.add(pres);
+        for (int i = indx; i < n; i++) {
+            int temp = nums[i];
+            nums[i] = nums[indx];
+            nums[indx] = temp;
+            help(nums, indx + 1);
+            temp = nums[i];
+            nums[i] = nums[indx];
+            nums[indx] = temp;
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        ans = new HashSet<>();
+        help(nums, 0);
+        return new ArrayList<>(ans);
+    }
+}

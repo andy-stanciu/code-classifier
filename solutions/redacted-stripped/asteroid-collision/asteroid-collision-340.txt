@@ -1,0 +1,41 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> stk = new Stack<>();
+        for (int i = 0; i < param1.length; i++) {
+            if (stk.isEmpty() || param1[i] > 0) {
+                stk.push(param1[i]);
+            } else if (param1[i] < 0) {
+                int temp = stk.pop();
+                if (temp > 0 && Math.abs(temp) > Math.abs(param1[i])) {
+                    stk.push(temp);
+                } else if (temp > 0 && Math.abs(temp) == Math.abs(param1[i])) {
+                    continue;
+                } else if (temp < 0 && param1[i] < 0) {
+                    stk.push(temp);
+                    stk.push(param1[i]);
+                } else {
+                    while (!stk.isEmpty() && Math.abs(temp) < Math.abs(param1[i]) && temp > 0) {
+                        temp = stk.pop();
+                    }
+                    if (temp < 0 && param1[i] < 0) {
+                        stk.push(temp);
+                        stk.push(param1[i]);
+                    } else if (temp > 0 && Math.abs(temp) > Math.abs(param1[i])) {
+                        stk.push(temp);
+                    } else if (temp > 0 && Math.abs(temp) == Math.abs(param1[i])) {
+                        continue;
+                    } else {
+                        stk.push(param1[i]);
+                    }
+                }
+            }
+        }
+        int k = stk.size();
+        int[] ans = new int[k];
+        for (int i = k - 1; i >= 0; i--) {
+            ans[i] = stk.pop();
+        }
+        return ans;
+    }
+}

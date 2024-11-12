@@ -1,0 +1,97 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        // because of binary search tree
+        // if key is less than root value then we can surely say that
+        // the key should be at the left subtree of the root
+        // so we are traversing recursively to apply this logic
+        // to all nodes present in the left subtree
+        if (key < root.val) {
+            root.left = deleteNode(root.left, key);
+        } else // because of binary search tree
+        // if key is greater than root value then we can surely say that
+        // the key should be at the right subtree of the root
+        // so we are traversing recursively to apply this logic
+        // to all nodes present in the right subtree
+        if (key > root.val) {
+            root.right = deleteNode(root.right, key);
+        } else // if above both conditions are not met then
+        // we can say that the key is found
+        {
+            // if both left and right childs of the node is NULL then
+            // we can say that the node is a leaf node
+            // because it is leaf node we no need to rearrange the tree
+            // so we can simply make this leaf node as NULL
+            if (root.left == null && root.right == null) {
+                root = null;
+            } else // in case if the right child of the node contains key is not equals NULL then
+            // we have to rearrange the tree without violating
+            // the order rule of binary search tree
+            if (root.right != null) {
+                // here this function will find the node value
+                // which is used to rearrange binary search tree in valid order
+                root.val = successor(root);
+                // this recursive call will delete the node
+                // by assigning NULL to the right of the root node
+                // because the node has to be deleted is replaced with its
+                // valid successor nodes value
+                // so here, the leaf node can contain the same value which the
+                // node has to be deleted contains
+                // so here that duplicate leaf node is get deleted
+                root.right = deleteNode(root.right, root.val);
+            } else {
+                // here this function will find the node value
+                // which is used to rearrange binary search tree in valid order
+                root.val = predecessor(root);
+                // same logic which is applyed in the previous case
+                root.left = deleteNode(root.left, root.val);
+            }
+        }
+        // in final recursion call the root (after deletion) is returned
+        return root;
+    }
+
+    // here the successor function will return
+    // the minimum value which is greater than the value of current node
+    // by taking the right child of the root node and
+    // traversing through all left childs of the right node of the root
+    // until the left child becomes NULL
+    int successor(TreeNode root) {
+        root = root.right;
+        while (root.left != null) {
+            root = root.left;
+        }
+        return root.val;
+    }
+
+    // here the successor function will return
+    // the maximum value which is lesser than the value of current node
+    // by taking the left child of the root node and
+    // traversing through all right childs of the left node of the root
+    // until the right child becomes NULL
+    int predecessor(TreeNode root) {
+        root = root.left;
+        while (root.right != null) {
+            root = root.right;
+        }
+        return root.val;
+    }
+}

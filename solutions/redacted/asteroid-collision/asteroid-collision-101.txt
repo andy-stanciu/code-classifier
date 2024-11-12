@@ -1,0 +1,45 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < param1.length; i++) {
+            int current = param1[i];
+            // Case 1: If stack is empty or current asteroid is moving to the right (> 0), push to stack.
+            if (stack.isEmpty() || current > 0) {
+                stack.push(current);
+            } else {
+                // Case 2: Handle collision when current asteroid is moving left (< 0).
+                while (!stack.isEmpty() && stack.peek() > 0) {
+                    // Asteroid on the stack\'s top
+                    int top = stack.peek();
+                    // Collision cases: Compare the magnitude of top and current
+                    if (Math.abs(current) == top) {
+                        // Both asteroids destroy each other
+                        stack.pop();
+                        // Mark current as destroyed, stop further comparisons
+                        current = 0;
+                        break;
+                    } else if (Math.abs(current) < top) {
+                        // Current asteroid is destroyed
+                        current = 0;
+                        break;
+                    } else {
+                        // Top asteroid is destroyed
+                        stack.pop();
+                    }
+                }
+                // If current asteroid survived the collisions, add it to the stack
+                if (current != 0) {
+                    stack.push(current);
+                }
+            }
+        }
+        // Convert stack to the result array
+        int len = stack.size();
+        int[] ans = new int[len];
+        for (int i = len - 1; i >= 0; i--) {
+            ans[i] = stack.pop();
+        }
+        return ans;
+    }
+}

@@ -1,0 +1,46 @@
+class Solution {
+
+    public boolean samesign(int a, int b) {
+        if (a < 0 && b < 0)
+            return true;
+        if (a > 0 && b > 0)
+            return true;
+        if (a < 0 && b > 0)
+            return true;
+        return false;
+    }
+
+    public int[] asteroidCollision(int[] arr) {
+        int n = arr.length;
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            if (stack.size() == 0)
+                stack.push(arr[i]);
+            else if (samesign(stack.peek(), arr[i]))
+                stack.push(arr[i]);
+            else {
+                int num = arr[i];
+                boolean flag = true;
+                while (stack.size() > 0 && !samesign(stack.peek(), num)) {
+                    if (Math.abs(stack.peek()) == Math.abs(num)) {
+                        stack.pop();
+                        flag = false;
+                        break;
+                    } else if (Math.abs(stack.peek()) > Math.abs(num)) {
+                        flag = false;
+                        break;
+                    } else
+                        stack.pop();
+                }
+                if (flag)
+                    stack.push(num);
+            }
+        }
+        if (stack.size() == 0)
+            return new int[0];
+        int[] result = new int[stack.size()];
+        int k = stack.size() - 1;
+        while (stack.size() > 0) result[k--] = stack.pop();
+        return result;
+    }
+}

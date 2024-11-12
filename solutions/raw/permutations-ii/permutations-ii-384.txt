@@ -1,0 +1,60 @@
+class Solution {
+
+    private HashMap<Integer, HashMap<String, List<Integer>>> output;
+
+    private String ListJoin(List<Integer> list, String delimiter) {
+        String output = "";
+        for (int num : list) output = (output != "") ? output + delimiter + String.valueOf(num) : String.valueOf(num);
+        return output;
+    }
+
+    private void insertion(int num, int key) {
+        // create key
+        output.put(key, new HashMap<>());
+        // this.key - 1 values
+        List<List<Integer>> list = new ArrayList(output.get(key - 1).values());
+        for (List<Integer> item : list) {
+            // insert at index position
+            int at = -1;
+            // will insert num in every index of item
+            // then will add to the key of HashTable
+            while (at <= item.size() - 1) {
+                // increase next position
+                at++;
+                // copy of current item
+                List<Integer> copy = new ArrayList(item);
+                // insert num at position
+                copy.add(at, num);
+                // duplication check => insert or skip if exists
+                String insertion_key = ListJoin(copy, ",");
+                if (// skip duplication
+                output.get(key).containsKey(insertion_key))
+                    // skip duplication
+                    continue;
+                else
+                    // continue insertion of unique
+                    output.get(key).put(insertion_key, copy);
+            }
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        output = new HashMap<>();
+        for (int i = 0, key = 1; i < nums.length; i++, key++) {
+            if (i == 0) {
+                // create manually first digit
+                List<Integer> list = new ArrayList<>();
+                list.add(nums[i]);
+                HashMap<String, List<Integer>> map = new HashMap();
+                map.put(ListJoin(list, ","), list);
+                output.put(key, map);
+            } else {
+                // insert num in every position of each item in HashTable
+                insertion(nums[i], key);
+                // delete last key, no more use
+                output.remove(key - 1);
+            }
+        }
+        return new ArrayList(output.get(nums.length).values());
+    }
+}

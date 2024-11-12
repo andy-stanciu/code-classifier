@@ -1,0 +1,31 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        HashSet<List<Integer>> ans = new HashSet<>();
+        method2(0, candidates, target, 0, new ArrayList<Integer>(), ans);
+        return new ArrayList<>(ans);
+    }
+
+    public void method2(int i, int[] arr, int target, int param1, List<Integer> ds, Set<List<Integer>> res) {
+        if (param1 == target) {
+            res.add(new ArrayList<>(ds));
+            return;
+        }
+        if (i >= arr.length || param1 > target) {
+            return;
+        }
+        //adding  first element in my list
+        ds.add(arr[i]);
+        //pick
+        method2(i + 1, arr, target, param1 + arr[i], ds, res);
+        //we will first remove the last element we added then we not go to the right side of recursive tree, not pick side
+        ds.remove(ds.size() - 1);
+        while (i + 1 < arr.length && arr[i] == arr[i + 1]) {
+            //skipping duplicates
+            i++;
+        }
+        //not pick
+        method2(i + 1, arr, target, param1, ds, res);
+    }
+}

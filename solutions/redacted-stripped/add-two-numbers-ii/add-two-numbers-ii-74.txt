@@ -1,0 +1,38 @@
+class Solution {
+
+    int carry = 0;
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        int count1 = 0;
+        for (ListNode t1 = l1; t1 != null; t1 = t1.next) {
+            count1++;
+        }
+        int count2 = 0;
+        for (ListNode t1 = l2; t1 != null; t1 = t1.next) {
+            count2++;
+        }
+        return helper(null, l1, count1, l2, count2);
+    }
+
+    private ListNode helper(ListNode p, ListNode l1, int count1, ListNode l2, int count2) {
+        if (l1 == null && l2 == null)
+            return null;
+        ListNode ans = new ListNode(0);
+        if (count1 > count2) {
+            ans.next = helper(ans, l1.next, count1 - 1, l2, count2);
+            ans.val = carry + l1.val;
+        } else if (count1 < count2) {
+            ans.next = helper(ans, l1, count1, l2.next, count2 - 1);
+            ans.val = carry + l2.val;
+        } else {
+            ans.next = helper(ans, l1.next, count1, l2.next, count2);
+            ans.val = carry + l2.val + l1.val;
+        }
+        carry = ans.val / 10;
+        ans.val %= 10;
+        if (p == null && carry == 1) {
+            ans = new ListNode(carry, ans);
+        }
+        return ans;
+    }
+}

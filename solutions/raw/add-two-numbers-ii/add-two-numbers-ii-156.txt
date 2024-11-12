@@ -1,0 +1,47 @@
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        int len1 = 0, len2 = 0;
+        ListNode v1 = l1, v2 = l2;
+        while (v1 != null) {
+            v1 = v1.next;
+            len1++;
+        }
+        while (v2 != null) {
+            v2 = v2.next;
+            len2++;
+        }
+        v1 = l1;
+        v2 = l2;
+        int[] arr1 = new int[len1 + 1];
+        int[] arr2 = new int[len2 + 1];
+        int[] res = new int[Math.max(len1, len2) + 1];
+        for (int i = 1; i <= len1; i++) {
+            arr1[i] = v1.val;
+            v1 = v1.next;
+        }
+        for (int i = 1; i <= len2; i++) {
+            arr2[i] = v2.val;
+            v2 = v2.next;
+        }
+        int i = arr1.length - 1, j = arr2.length - 1, k = res.length - 1, carry = 0;
+        while (i >= 0 || j >= 0 || carry != 0) {
+            int val1 = i >= 0 ? arr1[i--] : 0;
+            int val2 = j >= 0 ? arr2[j--] : 0;
+            int sum = val1 + val2 + carry;
+            int value = sum % 10;
+            carry = sum / 10;
+            res[k--] = value;
+        }
+        ListNode dummy = new ListNode(0);
+        ListNode temp = dummy;
+        for (int l = 0; l < res.length; l++) {
+            // if the first element has no carry.
+            if (l == 0 && res[l] == 0)
+                continue;
+            temp.next = new ListNode(res[l]);
+            temp = temp.next;
+        }
+        return dummy.next;
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    // Helper function to reverse a linked list
+    public ListNode method1(ListNode head, int k) {
+        ListNode prev = null;
+        ListNode current = head;
+        ListNode next = null;
+        while (k > 0) {
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+            k--;
+        }
+        return prev;
+    }
+
+    public ListNode method2(ListNode head, int k) {
+        if (head == null) {
+            return null;
+        }
+        // Check if there are at least k nodes to reverse
+        ListNode temp = head;
+        int count = 0;
+        while (temp != null && count < k) {
+            temp = temp.next;
+            count++;
+        }
+        // If we have enough nodes, reverse the first k nodes
+        if (count == k) {
+            // Reverse the first k nodes
+            ListNode newHead = method1(head, k);
+            // Recursively reverse the rest of the list and attach it to the reversed part
+            head.next = method2(temp, k);
+            return newHead;
+        }
+        // If there are fewer than k nodes, return the head as is
+        return head;
+    }
+}

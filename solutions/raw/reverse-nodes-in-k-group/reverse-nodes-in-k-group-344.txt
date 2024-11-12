@@ -1,0 +1,67 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+// 1->2->3->4->5
+// k tk krke reverse krdo
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode originalHead = head;
+        ListNode iterator = head;
+        ListNode dummy = new ListNode(100);
+        ListNode dummyIterator = dummy;
+        // iterate from start and keep taking loops of k, if k is found reverse the list
+        while (iterator != null) {
+            // keep original head from where the batch of k started.
+            originalHead = iterator;
+            int count = 0;
+            ListNode previous = null;
+            while (iterator != null && count < k) {
+                previous = iterator;
+                iterator = iterator.next;
+                count++;
+            }
+            if (count == k) {
+                // iterator here denotes -> start of next batch of k
+                // previous denotes end of current batch of k
+                // make batch ending by setting previous.next = null
+                previous.next = null;
+                // revese the list and get the start of new linked list which would be ideally previous only
+                ListNode reversedHeadReference = reverseList(originalHead);
+                // keep the result linked list updated by adding .next = reverse head reference
+                dummyIterator.next = reversedHeadReference;
+                // end of reversed batch is head of current batch which is originalhead
+                dummyIterator = originalHead;
+            } else {
+                // if k size not seen just append the original head to dummy iterator.
+                dummyIterator.next = originalHead;
+            }
+        }
+        return dummy.next;
+    }
+
+    public ListNode reverseList(ListNode head) {
+        ListNode iterator = head;
+        ListNode prev = null;
+        while (iterator != null) {
+            ListNode next = iterator.next;
+            iterator.next = prev;
+            prev = iterator;
+            iterator = next;
+        }
+        // ListNode printing = prev;
+        // while(printing!=null){
+        //     System.out.print("printing value "  + printing.val + " ");
+        //     printing = printing.next;
+        // }
+        // System.out.println();
+        return prev;
+    }
+}

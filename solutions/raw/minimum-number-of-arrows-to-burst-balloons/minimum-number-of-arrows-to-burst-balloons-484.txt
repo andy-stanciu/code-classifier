@@ -1,0 +1,47 @@
+class Solution {
+
+    static class Activity {
+
+        int start;
+
+        int end;
+
+        Activity(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+    }
+
+    public int findMinArrowShots(int[][] points) {
+        // Intuition - Greedy Algorithm(Sorting)
+        // Choose tasks which ens early. Sort tasks based on end time.
+        // While selecting the task ensure no overlap
+        // Approach -
+        // Combine start and end time value in a Class and them to the array
+        // Sort the array based on the end time
+        // and if the end time is same then consider the larger start time among them while Sorting.
+        // check all the activities and count the task which we can perform without overlapping
+        // Time Complexity - O(NlogN)
+        // Space Complexity - O(N)
+        int N = points.length;
+        ArrayList<Activity> activities = new ArrayList<Activity>();
+        for (int i = 0; i < N; i++) {
+            activities.add(new Activity(points[i][0], points[i][1]));
+        }
+        Collections.sort(activities, (Activity a, Activity b) -> {
+            if (a.end > b.end || (a.end == b.end && a.start < b.start)) {
+                return 1;
+            }
+            return -1;
+        });
+        int ans = 1;
+        int last = activities.get(0).end;
+        for (int i = 1; i < N; i++) {
+            if (last < activities.get(i).start) {
+                last = activities.get(i).end;
+                ans++;
+            }
+        }
+        return ans;
+    }
+}

@@ -1,0 +1,39 @@
+class Solution {
+
+    private List<List<Integer>> result = new ArrayList<>();
+
+    private Map<String, List<List<Integer>>> memo = new HashMap<>();
+
+    private List<List<Integer>> recursion(int[] candidates, int index, int param1) {
+        if (param1 == 0) {
+            return new ArrayList<>(Collections.singletonList(new ArrayList<>()));
+        }
+        if (index == candidates.length || param1 < 0) {
+            return new ArrayList<>();
+        }
+        String key = index + "," + param1;
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+        List<List<Integer>> currentResults = new ArrayList<>();
+        List<List<Integer>> subResults = recursion(candidates, index + 1, param1 - candidates[index]);
+        for (List<Integer> subResult : subResults) {
+            List<Integer> newResult = new ArrayList<>(subResult);
+            newResult.add(0, candidates[index]);
+            currentResults.add(newResult);
+        }
+        int next = index + 1;
+        while (next < candidates.length && candidates[next] == candidates[index]) {
+            next++;
+        }
+        currentResults.addAll(recursion(candidates, next, param1));
+        memo.put(key, currentResults);
+        return currentResults;
+    }
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        result = recursion(candidates, 0, target);
+        return result;
+    }
+}

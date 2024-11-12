@@ -1,0 +1,49 @@
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        l1 = reverseList(l1);
+        l2 = reverseList(l2);
+        ListNode head = addTwoNumbers2(l1, l2);
+        head = reverseList(head);
+        return head;
+    }
+
+    public ListNode addTwoNumbers2(ListNode l1, ListNode l2) {
+        ListNode dum = new ListNode(-1);
+        var tmp = dum;
+        int sum = 0, carry = 0;
+        while (l1 != null || l2 != null) {
+            sum += ((l1 != null) ? l1.val : 0) + ((l2 != null) ? l2.val : 0);
+            carry = sum / 10;
+            if (carry != 0) {
+                tmp.next = new ListNode(sum % 10);
+                sum /= 10;
+            } else {
+                tmp.next = new ListNode(sum);
+                sum = 0;
+            }
+            if (l1 != null)
+                l1 = l1.next;
+            if (l2 != null)
+                l2 = l2.next;
+            tmp = tmp.next;
+        }
+        if (sum != 0)
+            tmp.next = new ListNode(sum);
+        return dum.next;
+    }
+
+    public ListNode reverseList(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        return helper(head, null);
+    }
+
+    ListNode helper(ListNode head, ListNode newHead) {
+        if (head == null)
+            return newHead;
+        var next = head.next;
+        head.next = newHead;
+        return helper(next, head);
+    }
+}

@@ -1,0 +1,51 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        // If the root is null
+        if (root == null)
+            return null;
+        if (root.val == key) {
+            // IF our key value is the value of root node
+            return helper(root);
+        }
+        TreeNode curr = root;
+        while (curr != null) {
+            if (curr.val > key) {
+                // the value of key is less the  curr node value
+                if (curr.left != null && curr.left.val == key) {
+                    // If left node is not null and its value matches to the key value
+                    TreeNode left = helper(curr.left);
+                    curr.left = left;
+                    break;
+                }
+                curr = curr.left;
+            } else {
+                if (curr.right != null && curr.right.val == key) {
+                    TreeNode right = helper(curr.right);
+                    curr.right = right;
+                    break;
+                }
+                curr = curr.right;
+            }
+        }
+        return root;
+    }
+
+    private TreeNode helper(TreeNode param1) {
+        if (param1.left == null)
+            return param1.right;
+        else if (param1.right == null)
+            return param1.left;
+        else {
+            TreeNode RightMost = method2(param1.left);
+            RightMost.right = param1.right;
+        }
+        return param1.left;
+    }
+
+    private TreeNode method2(TreeNode param1) {
+        if (param1.right == null)
+            return param1;
+        return method2(param1.right);
+    }
+}

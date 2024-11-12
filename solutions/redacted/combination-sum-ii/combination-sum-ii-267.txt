@@ -1,0 +1,54 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        List<List<Integer>> ans = new ArrayList<List<Integer>>();
+        Arrays.sort(candidates);
+        method2(0, candidates, ans, new ArrayList<Integer>(), target);
+        return ans;
+    }
+
+    public static void method2(int index, int[] candidates, List<List<Integer>> ans, List<Integer> temp, int target) {
+        if (target == 0) {
+            ans.add(new ArrayList<>(temp));
+            return;
+        }
+        for (int i = index; i < candidates.length; i++) {
+            // to avoid repetition of numbers
+            if (i > index && candidates[i] == candidates[i - 1])
+                continue;
+            // don\'t proceed if
+            if (candidates[i] > target)
+                break;
+            temp.add(candidates[i]);
+            method2(i + 1, candidates, ans, temp, target - candidates[i]);
+            temp.remove(temp.size() - 1);
+        }
+    }
+}
+//172 test cases passing, TLE error
+// class Solution {
+//     public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+//         Set<List<Integer>> ans = new HashSet<List<Integer>>();
+//         Arrays.sort(candidates);
+//         getSubsequence(candidates, 0, new ArrayList<Integer>(), 0, target, ans);
+//         return List.copyOf(ans);
+//     }
+//     public static void getSubsequence(int[] arr, int index, ArrayList<Integer> oneSubsequence, int total, int target, Set<List<Integer>> ans){
+//         if(index == arr.length) {
+//             if(total == target){
+//                 ans.add(new ArrayList(oneSubsequence));
+//                 return;
+//             }
+//         }
+//         else{
+//             oneSubsequence.add(arr[index]);
+//             total += arr[index];
+//             if(total<=target)
+//             getSubsequence(arr, index+1, oneSubsequence, total, target,ans);
+//             oneSubsequence.removeLast();
+//             total -= arr[index];
+//             if(total<=target)
+//             getSubsequence(arr, index+1, oneSubsequence, total, target,ans);
+//         }
+//     }
+// }

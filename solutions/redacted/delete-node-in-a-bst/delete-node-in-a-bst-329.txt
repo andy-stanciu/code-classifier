@@ -1,0 +1,54 @@
+class Solution {
+
+    public TreeNode method1(TreeNode param1, int target) {
+        if ((param1.left != null && param1.left.val == target) || (param1.right != null && param1.right.val == target))
+            return param1;
+        TreeNode ret = null;
+        if (param1.left != null)
+            ret = method1(param1.left, target);
+        if (ret == null && param1.right != null)
+            ret = method1(param1.right, target);
+        return ret;
+    }
+
+    public TreeNode method2(TreeNode root, int target) {
+        // find parent of target
+        if (root == null)
+            return null;
+        if (root.val == target) {
+            TreeNode temp = root.left;
+            if (temp == null)
+                return root.right;
+            while (temp.right != null) temp = temp.right;
+            temp.right = root.right;
+            return root.left;
+        }
+        TreeNode parent = method1(root, target);
+        if (parent == null || parent.val == target)
+            return root;
+        System.out.println(parent.val);
+        if (parent.left != null && parent.left.val == target) {
+            TreeNode temp = parent.left.left;
+            if (parent.left.right == null) {
+                parent.left = parent.left.left;
+                return root;
+            } else {
+                parent.left = parent.left.right;
+                while (parent.left != null) parent = parent.left;
+                parent.left = temp;
+                return root;
+            }
+        } else {
+            TreeNode temp = parent.right.right;
+            if (parent.right.left == null) {
+                parent.right = parent.right.right;
+                return root;
+            } else {
+                parent.right = parent.right.left;
+                while (parent.right != null) parent = parent.right;
+                parent.right = temp;
+                return root;
+            }
+        }
+    }
+}

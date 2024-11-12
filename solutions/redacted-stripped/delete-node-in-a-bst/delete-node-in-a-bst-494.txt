@@ -1,0 +1,75 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        TreeNode parent = root;
+        TreeNode current = root;
+        boolean var1 = true;
+        if (root == null) {
+            return null;
+        }
+        while (current.val != key) {
+            parent = current;
+            if (key < current.val) {
+                current = current.left;
+                var1 = true;
+            } else {
+                current = current.right;
+                var1 = false;
+            }
+            if (current == null) {
+                return root;
+            }
+        }
+        if (current.left == null && current.right == null) {
+            if (current == root) {
+                root = null;
+            } else if (var1) {
+                parent.left = null;
+            } else {
+                parent.right = null;
+            }
+        } else if (current.right == null) {
+            if (current == root) {
+                root = current.left;
+            } else if (var1) {
+                parent.left = current.left;
+            } else {
+                parent.right = current.left;
+            }
+        } else if (current.left == null) {
+            if (current == root) {
+                root = current.right;
+            } else if (var1) {
+                parent.left = current.right;
+            } else {
+                parent.right = current.right;
+            }
+        } else {
+            TreeNode successor = getSuccessor(current);
+            if (current == root)
+                root = successor;
+            else if (var1)
+                parent.left = successor;
+            else
+                parent.right = successor;
+            successor.left = current.left;
+        }
+        return root;
+    }
+
+    public static TreeNode getSuccessor(TreeNode param1) {
+        TreeNode successorParent = param1;
+        TreeNode successor = param1;
+        TreeNode curr = param1.right;
+        while (curr != null) {
+            successorParent = successor;
+            successor = curr;
+            curr = curr.left;
+        }
+        if (successor != param1.right) {
+            successorParent.left = successor.right;
+            successor.right = param1.right;
+        }
+        return successor;
+    }
+}

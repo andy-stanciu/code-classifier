@@ -1,0 +1,28 @@
+class Solution {
+
+    public static void check(int[] arr, int ind, int target, List<Integer> sub, List<List<Integer>> main) {
+        if (ind == arr.length || target == 0) {
+            if (target == 0) {
+                main.add(new ArrayList<>(sub));
+            }
+            return;
+        }
+        for (int i = ind; i < arr.length; i++) {
+            if (i > ind && arr[i] == arr[i - 1])
+                continue;
+            if (target < arr[i])
+                break;
+            sub.add(arr[i]);
+            check(arr, i + 1, target - arr[i], sub, main);
+            sub.remove(sub.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> main = new ArrayList<>();
+        List<Integer> sub = new ArrayList<>();
+        Arrays.sort(candidates);
+        check(candidates, 0, target, sub, main);
+        return main;
+    }
+}

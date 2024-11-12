@@ -1,0 +1,32 @@
+class Solution {
+
+    List<List<Integer>> output = new ArrayList<>();
+
+    int n;
+
+    private void backtrack(int[] candidates, int first, int target, List<Integer> curr) {
+        if (target < 0)
+            return;
+        if (target == 0) {
+            output.add(new ArrayList<>(curr));
+            return;
+        }
+        int temp = -1;
+        for (int i = first; i < n; i++) {
+            if (temp != candidates[i]) {
+                curr.add(candidates[i]);
+                target -= candidates[i];
+                backtrack(candidates, i + 1, target, curr);
+                temp = curr.remove(curr.size() - 1);
+                target += candidates[i];
+            }
+        }
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        n = candidates.length;
+        Arrays.sort(candidates);
+        backtrack(candidates, 0, target, new ArrayList<>());
+        return output;
+    }
+}

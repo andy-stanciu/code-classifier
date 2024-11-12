@@ -1,0 +1,41 @@
+class Solution {
+
+    public Node deleteNode(Node root, int key) {
+        // Base case: If the tree is empty
+        if (root == null)
+            return null;
+        // Traverse to the node with the given key
+        if (key < root.data) {
+            root.left = deleteNode(root.left, key);
+        } else if (key > root.data) {
+            root.right = deleteNode(root.right, key);
+        } else {
+            // Node with the key found
+            // Case 1: Node has no children (leaf node)
+            if (root.left == null && root.right == null) {
+                return null;
+            }
+            // Case 2: Node has only one child
+            if (root.left == null)
+                return root.right;
+            if (root.right == null)
+                return root.left;
+            // Case 3: Node has two children
+            // Find the in-order successor (smallest value in the right subtree)
+            Node successor = findMin(root.right);
+            // Replace root\'s data with successor\'s data
+            root.data = successor.data;
+            // Delete the successor
+            root.right = deleteNode(root.right, successor.data);
+        }
+        return root;
+    }
+
+    // Helper function to find the minimum value node in a BST
+    private Node findMin(Node node) {
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+}

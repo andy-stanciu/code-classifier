@@ -1,0 +1,79 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    TreeNode parent;
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        // reset parent
+        parent = null;
+        TreeNode node = findNode(root, key);
+        if (node == null)
+            return root;
+        // case 1: two children
+        if (node.left != null && node.right != null) {
+            // inorder successor
+            TreeNode minNode = findMin(node.right);
+            node.val = minNode.val;
+            node.right = deleteNode(node.right, minNode.val);
+        } else // case 2: one child
+        if (node.left != null || node.right != null) {
+            TreeNode child = (node.left != null) ? node.left : node.right;
+            if (node == root) {
+                root = child;
+            } else {
+                if (node == parent.left) {
+                    parent.left = child;
+                } else {
+                    parent.right = child;
+                }
+            }
+        } else // case 3: zero children
+        {
+            if (node == root) {
+                return null;
+            } else {
+                if (node == parent.left) {
+                    parent.left = null;
+                } else {
+                    parent.right = null;
+                }
+            }
+        }
+        return root;
+    }
+
+    private TreeNode findNode(TreeNode node, int key) {
+        if (node == null)
+            return null;
+        if (node.val < key) {
+            parent = node;
+            return findNode(node.right, key);
+        } else if (node.val > key) {
+            parent = node;
+            return findNode(node.left, key);
+        } else if (node.val == key)
+            return node;
+        return null;
+    }
+
+    private TreeNode findMin(TreeNode node) {
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+}

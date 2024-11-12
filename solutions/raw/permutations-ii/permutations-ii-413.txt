@@ -1,0 +1,33 @@
+class Solution {
+
+    private List<List<Integer>> res = new LinkedList<>();
+
+    private boolean[] visited;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        visited = new boolean[nums.length];
+        dfs(nums, new LinkedList<Integer>());
+        return res;
+    }
+
+    private void dfs(int[] nums, LinkedList<Integer> path) {
+        if (path.size() == nums.length) {
+            res.add(new LinkedList<>(path));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (visited[i]) {
+                continue;
+            }
+            if (i > 0 && nums[i] == nums[i - 1] && !visited[i - 1]) {
+                continue;
+            }
+            path.add(nums[i]);
+            visited[i] = true;
+            dfs(nums, path);
+            path.removeLast();
+            visited[i] = false;
+        }
+    }
+}

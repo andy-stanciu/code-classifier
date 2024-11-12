@@ -1,0 +1,71 @@
+class //two pointer approach
+Solution {
+
+    public int threeSumClosest(int[] nums, int target) {
+        Arrays.sort(nums);
+        //defining initial dummy closest sum
+        int closesum = nums[1] + nums[0] + nums[2];
+        for (int i = 0; i < nums.length - 2; i++) {
+            //declaring pointers
+            int j = i + 1, k = nums.length - 1;
+            while (k > j) {
+                int total = nums[i] + nums[j] + nums[k];
+                if (Math.abs(target - total) < Math.abs(target - closesum)) {
+                    //checks if the current sum is closer or previously one and change it according to it
+                    closesum = total;
+                }
+                if (total < target) {
+                    // if sum is small then we need to move towards larger values of array and vice versa in else
+                    j++;
+                } else {
+                    k--;
+                }
+            }
+        }
+        return closesum;
+    }
+}
+
+//This one is just a shitty method disguised as complicated one and worse O() bound than two pointer one
+class //binary search approach
+Solution {
+
+    public int threeSumClosest(int[] nums, int target) {
+        Arrays.sort(nums);
+        //Inittial dummy sum
+        int closestSum = nums[0] + nums[1] + nums[2];
+        for (int i = 0; i < nums.length - 2; i++) {
+            for (int j = i + 1; j < nums.length - 1; j++) {
+                int partialSum = nums[i] + nums[j];
+                int remainingTarget = target - partialSum;
+                int closestThird = binarySearchClosest(nums, remainingTarget, j + 1, nums.length - 1);
+                //updating current sum after finding the closest third element
+                int currentSum = partialSum + closestThird;
+                if (Math.abs(target - currentSum) < Math.abs(target - closestSum)) {
+                    //condition check for larger or smaller values
+                    closestSum = currentSum;
+                }
+            }
+        }
+        return closestSum;
+    }
+
+    private int binarySearchClosest(int[] nums, int target, int start, int end) {
+        // binary search to find the third element closer to target - ith +jth element
+        int closest = nums[start];
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (Math.abs(nums[mid] - target) < Math.abs(closest - target)) {
+                closest = nums[mid];
+            }
+            if (nums[mid] == target) {
+                return nums[mid];
+            } else if (nums[mid] < target) {
+                start = mid + 1;
+            } else {
+                end = mid - 1;
+            }
+        }
+        return closest;
+    }
+}

@@ -1,0 +1,31 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        List<List<Integer>> results = new ArrayList<>();
+        // Sort candidates to avoid duplicate combinations
+        Arrays.sort(candidates);
+        dfs(candidates, target, 0, new ArrayList<>(), results);
+        return results;
+    }
+
+    private void dfs(int[] candidates, int remaining, int startIndex, List<Integer> currComb, List<List<Integer>> results) {
+        if (remaining == 0) {
+            // Add a copy to avoid modifications
+            results.add(new ArrayList<>(currComb));
+            return;
+        }
+        for (int i = startIndex; i < candidates.length; i++) {
+            if (candidates[i] > remaining) {
+                break;
+            }
+            // Skip duplicates (same candidate as previous but not at the same position)
+            if (i > startIndex && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+            currComb.add(candidates[i]);
+            // Skip elements after the current one
+            dfs(candidates, remaining - candidates[i], i + 1, currComb, results);
+            currComb.remove(currComb.size() - 1);
+        }
+    }
+}

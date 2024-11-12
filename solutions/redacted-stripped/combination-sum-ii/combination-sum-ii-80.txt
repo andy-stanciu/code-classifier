@@ -1,0 +1,28 @@
+class Solution {
+
+    public void helper(List<List<Integer>> subsets, List<Integer> subset, int[] candidates, int param1, int target, int idx) {
+        if (param1 == target) {
+            subsets.add(new ArrayList<>(subset));
+            return;
+        }
+        if (idx == candidates.length || param1 > target)
+            return;
+        else {
+            subset.add(candidates[idx]);
+            helper(subsets, subset, candidates, param1 + candidates[idx], target, idx + 1);
+            subset.remove(subset.size() - 1);
+            while (idx + 1 < candidates.length && candidates[idx] == candidates[idx + 1]) {
+                idx++;
+            }
+            helper(subsets, subset, candidates, param1, target, idx + 1);
+        }
+    }
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> subset = new ArrayList<>();
+        Arrays.sort(candidates);
+        helper(ans, subset, candidates, 0, target, 0);
+        return ans;
+    }
+}

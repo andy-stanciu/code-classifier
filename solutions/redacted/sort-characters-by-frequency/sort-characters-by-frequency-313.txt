@@ -1,0 +1,30 @@
+class Solution {
+
+    public String method1(String s) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        int n = s.length();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        List<Character>[] bucketData = new ArrayList[n + 1];
+        for (char c : map.keySet()) {
+            int freq = map.get(c);
+            List<Character> temp;
+            if (bucketData[freq] == null) {
+                temp = new ArrayList<>();
+            } else {
+                temp = bucketData[freq];
+            }
+            temp.add(c);
+            bucketData[freq] = new ArrayList<>(temp);
+        }
+        StringBuilder res = new StringBuilder();
+        for (int i = n; i >= 0; i--) {
+            if (bucketData[i] == null)
+                continue;
+            for (char c : bucketData[i]) res.append(String.valueOf(c).repeat(i));
+        }
+        return res.toString();
+    }
+}

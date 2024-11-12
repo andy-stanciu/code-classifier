@@ -1,0 +1,28 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        int n = param1.length;
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && (stack.peek() > 0 && param1[i] < 0)) {
+                int popped = stack.pop();
+                // If both are equal in size just skip and move to next
+                // asteroid[i] is set to 0 to denote that we have to skip this element
+                // It is set to 0 because in constarints its mentioned that asteroid[i] can never be 0 so we are safe to use 0.
+                if (Math.abs(popped) == Math.abs(param1[i])) {
+                    param1[i] = 0;
+                    break;
+                }
+                param1[i] = Math.abs(popped) > Math.abs(param1[i]) ? popped : param1[i];
+            }
+            if (param1[i] != 0)
+                stack.push(param1[i]);
+        }
+        int len = stack.size();
+        int[] ans = new int[len];
+        for (int i = len - 1; i >= 0; i--) {
+            ans[i] = stack.pop();
+        }
+        return ans;
+    }
+}

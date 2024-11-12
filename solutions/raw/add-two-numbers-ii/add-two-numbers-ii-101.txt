@@ -1,0 +1,57 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        Stack<Integer> s1 = new Stack<>();
+        Stack<Integer> s2 = new Stack<>();
+        Stack<Integer> s3 = new Stack<>();
+        ListNode dummy = new ListNode(0);
+        ListNode dummy2 = new ListNode(0);
+        ListNode tail2 = dummy2;
+        ListNode tail = dummy;
+        int carry = 0;
+        while (l1 != null) {
+            s1.push(l1.val);
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            s2.push(l2.val);
+            l2 = l2.next;
+        }
+        while (!s1.isEmpty() || !s2.isEmpty()) {
+            int x = (!s1.isEmpty()) ? s1.peek() : 0;
+            int y = (!s2.isEmpty()) ? s2.peek() : 0;
+            int sum = carry + x + y;
+            carry = sum / 10;
+            tail.next = new ListNode(sum % 10);
+            tail = tail.next;
+            if (!s1.isEmpty())
+                s1.pop();
+            if (!s2.isEmpty())
+                s2.pop();
+        }
+        if (carry > 0) {
+            tail.next = new ListNode(carry % 10);
+        }
+        dummy = dummy.next;
+        while (dummy != null) {
+            s3.push(dummy.val);
+            dummy = dummy.next;
+        }
+        while (!s3.isEmpty()) {
+            tail2.next = new ListNode(s3.peek());
+            tail2 = tail2.next;
+            s3.pop();
+        }
+        return dummy2.next;
+    }
+}

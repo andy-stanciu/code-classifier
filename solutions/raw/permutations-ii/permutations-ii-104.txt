@@ -1,0 +1,33 @@
+class Solution {
+
+    List<List<Integer>> res = new ArrayList<>();
+
+    int n;
+
+    public void backtrack(int idx, int[] nums, ArrayList<Integer> temp, boolean[] used) {
+        if (idx == n) {
+            res.add(new ArrayList<>(temp));
+            return;
+        }
+        for (int i = 0; i < n; i++) {
+            // Skip used elements or duplicate elements that are not in order
+            if (used[i] || (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]))
+                continue;
+            used[i] = true;
+            temp.add(nums[i]);
+            backtrack(idx + 1, nums, temp, used);
+            temp.remove(temp.size() - 1);
+            used[i] = false;
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        // Sort the array to handle duplicates
+        Arrays.sort(nums);
+        n = nums.length;
+        ArrayList<Integer> temp = new ArrayList<>();
+        boolean[] used = new boolean[n];
+        backtrack(0, nums, temp, used);
+        return res;
+    }
+}

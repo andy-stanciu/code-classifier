@@ -1,0 +1,48 @@
+class Solution {
+
+    public static ListNode method1(ListNode head) {
+        ListNode curr = head;
+        ListNode forward = null;
+        ListNode prev = null;
+        while (curr != null) {
+            forward = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = forward;
+        }
+        return prev;
+    }
+
+    public static ListNode getKthNode(ListNode temp, int k) {
+        k -= 1;
+        while (temp != null && k > 0) {
+            k--;
+            temp = temp.next;
+        }
+        return temp;
+    }
+
+    public ListNode method2(ListNode head, int k) {
+        ListNode temp = head;
+        ListNode prevLast = null;
+        while (temp != null) {
+            ListNode KthNode = getKthNode(temp, k);
+            if (KthNode == null) {
+                if (prevLast != null)
+                    prevLast.next = temp;
+                break;
+            }
+            ListNode nextNode = KthNode.next;
+            KthNode.next = null;
+            method1(temp);
+            if (temp == head) {
+                head = KthNode;
+            } else {
+                prevLast.next = KthNode;
+            }
+            prevLast = temp;
+            temp = nextNode;
+        }
+        return head;
+    }
+}

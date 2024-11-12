@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<String> method1(TreeNode root) {
+        List<String> var1 = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        method1(root, sb, var1);
+        return var1;
+    }
+
+    public void method1(TreeNode node, StringBuilder sb, List<String> out) {
+        if (node == null) {
+            return;
+        }
+        /*
+         * before appending the current node val, remember the length of our string builder
+         * this will be available in the call stack.
+         */
+        int temp = sb.length();
+        sb.append(node.val);
+        /*
+         * after adding the value, we use the below line on 2 places
+         * sb.delete(temp,sb.length());
+         * 1 - when leaf node is added, we retrace
+         * 2 - when both left and right of a node is processed, we retrace
+         * This is what it implies
+         */
+        if (node.left == null && node.right == null) {
+            out.add(sb.toString());
+            sb.delete(temp, sb.length());
+            return;
+        } else {
+            sb.append("->");
+        }
+        // visit left
+        method1(node.left, sb, out);
+        // visit right
+        method1(node.right, sb, out);
+        sb.delete(temp, sb.length());
+    }
+}

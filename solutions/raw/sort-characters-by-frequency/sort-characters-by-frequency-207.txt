@@ -1,0 +1,35 @@
+class Solution {
+
+    public String frequencySort(String s) {
+        // set up an array for all the characters would appear
+        // based on the ascii table 0 to 122
+        int[] charArray = new int[123];
+        // count each character
+        for (int i = 0; i < s.length(); i++) {
+            charArray[s.charAt(i)]++;
+        }
+        // set up the priority queue where the higher frequency
+        // would appear before
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {
+            return b[1] - a[1];
+        });
+        // go through the character array
+        // add new int[] to the priority queue where the first index
+        // is the actual character in decimal and the second index
+        // is the frequency
+        for (int i = 0; i < charArray.length; i++) {
+            if (charArray[i] != 0) {
+                pq.offer(new int[] { i, charArray[i] });
+            }
+        }
+        // set up the string builder
+        StringBuilder result = new StringBuilder();
+        // start adding characters to the result
+        while (!pq.isEmpty()) {
+            int[] here = pq.remove();
+            result.append(String.valueOf((char) here[0]).repeat(here[1]));
+        }
+        // return the result
+        return result.toString();
+    }
+}

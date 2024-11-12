@@ -1,0 +1,70 @@
+class Solution {
+
+    private enum Direction {
+
+        LEFT, RIGHT
+    }
+
+    public TreeNode method1(TreeNode param1, int key, TreeNode parent, Direction direction) {
+        if (param1 == null)
+            return null;
+        if (param1.val == key) {
+            if (param1.left == null && param1.right == null) {
+                if (parent == null)
+                    return null;
+                if (direction == Direction.LEFT)
+                    parent.left = null;
+                if (direction == Direction.RIGHT)
+                    parent.right = null;
+                return param1;
+            }
+            if (param1.left == null && param1.right != null) {
+                if (parent == null) {
+                    param1 = param1.right;
+                    return param1;
+                }
+                if (direction == Direction.LEFT)
+                    parent.left = param1.right;
+                if (direction == Direction.RIGHT)
+                    parent.right = param1.right;
+                return param1;
+            }
+            if (param1.left != null && param1.right == null) {
+                if (parent == null) {
+                    param1 = param1.left;
+                    return param1;
+                }
+                if (direction == Direction.LEFT)
+                    parent.left = param1.left;
+                if (direction == Direction.RIGHT)
+                    parent.right = param1.left;
+                return param1;
+            }
+            if (param1.left != null && param1.right != null) {
+                TreeNode var1 = param1.right;
+                TreeNode var2 = param1.right;
+                if (var1.left != null) {
+                    while (var1.left.left != null) {
+                        var1 = var1.left;
+                    }
+                }
+                if (var1 != var2 || (var1 == var2 && var1.left != null)) {
+                    param1.val = var1.left.val;
+                    var1.left = var1.left.right;
+                } else {
+                    param1.val = var1.val;
+                    param1.right = var1.right;
+                }
+                return param1;
+            }
+        }
+        parent = param1;
+        method1(param1.left, key, parent, Direction.LEFT);
+        method1(param1.right, key, parent, Direction.RIGHT);
+        return param1;
+    }
+
+    public TreeNode method2(TreeNode root, int key) {
+        return method1(root, key, null, Direction.RIGHT);
+    }
+}

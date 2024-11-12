@@ -1,0 +1,36 @@
+class Solution {
+
+    public int threeSumClosest(int[] nums, int target) {
+        Arrays.sort(nums);
+        int closest = nums[0] + nums[1] + nums[2];
+        for (int left = 0; left < nums.length - 2; left++) {
+            if (left > 0 && nums[left] == nums[left - 1])
+                continue;
+            int mid = left + 1;
+            int right = nums.length - 1;
+            while (mid < right) {
+                int sum = nums[left] + nums[mid] + nums[right];
+                if (Math.abs(target - sum) < Math.abs(target - closest)) {
+                    closest = sum;
+                }
+                if (sum > target) {
+                    right--;
+                    // Skip duplicates for the right pointer
+                    while (mid < right && nums[right] == nums[right + 1]) {
+                        right--;
+                    }
+                } else if (sum < target) {
+                    mid++;
+                    // Skip duplicates for the mid pointer
+                    while (mid < right && nums[mid] == nums[mid - 1]) {
+                        mid++;
+                    }
+                } else {
+                    // Found exact match
+                    return sum;
+                }
+            }
+        }
+        return closest;
+    }
+}

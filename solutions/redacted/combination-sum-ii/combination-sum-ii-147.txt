@@ -1,0 +1,40 @@
+class Solution {
+
+    List<List<Integer>> ans;
+
+    int n;
+
+    Set<List<Integer>> st;
+
+    public List<List<Integer>> method1(int[] nums, int target) {
+        ans = new ArrayList<>();
+        n = nums.length;
+        st = new HashSet<>();
+        List<Integer> curr = new ArrayList<>();
+        Arrays.sort(nums);
+        if (target == 0)
+            return ans;
+        solve(nums, 0, target, 0, curr);
+        return ans;
+    }
+
+    public void solve(int[] nums, int idx, int target, int param1, List<Integer> curr) {
+        if (param1 == target) {
+            if (!st.contains(curr)) {
+                ans.add(new ArrayList<>(curr));
+                st.add(curr);
+            }
+            return;
+        }
+        if (param1 > target || idx >= n)
+            return;
+        // 1 2 2 2 5
+        for (int i = idx; i < n; i++) {
+            if (i > idx && nums[i] == nums[i - 1])
+                continue;
+            curr.add(nums[i]);
+            solve(nums, i + 1, target, param1 + nums[i], curr);
+            curr.remove(curr.size() - 1);
+        }
+    }
+}

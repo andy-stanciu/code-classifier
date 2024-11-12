@@ -1,0 +1,31 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        boolean[] used = new boolean[nums.length];
+        dfs(nums, result, new ArrayList<>(), used);
+        return result;
+    }
+
+    public void dfs(int[] nums, List<List<Integer>> result, List<Integer> list, boolean[] used) {
+        if (list.size() == nums.length) {
+            result.add(new ArrayList<>(list));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            // to prevent the usage of same element in a list.
+            if (used[i])
+                continue;
+            // if two duplicates elements are found , then both those elements will generate their list individually which will result in two duplicate(same) list at
+            // the end. so to escape from such situation we are taking the help of !used[i-1].
+            if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1])
+                continue;
+            used[i] = true;
+            list.add(nums[i]);
+            dfs(nums, result, list, used);
+            list.remove(list.size() - 1);
+            used[i] = false;
+        }
+    }
+}

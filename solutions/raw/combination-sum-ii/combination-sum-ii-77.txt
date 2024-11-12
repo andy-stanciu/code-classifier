@@ -1,0 +1,32 @@
+class Solution {
+
+    private void combination(int index, int[] candidates, int target, List<Integer> list, List<List<Integer>> res) {
+        if (target == 0) {
+            res.add(new ArrayList<>(list));
+            return;
+        }
+        if (index == candidates.length) {
+            return;
+        }
+        for (int i = index; i < candidates.length; i++) {
+            // If current value is same as previous value then we will skip the current iteration to avoid duplications
+            if (i > index && candidates[i - 1] == candidates[i]) {
+                continue;
+            }
+            // If value is greater than target then its invalid condition target should be zero to get perfect combination
+            if (candidates[i] > target) {
+                break;
+            }
+            list.add(candidates[i]);
+            combination(i + 1, candidates, target - candidates[i], list, res);
+            list.remove(list.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(candidates);
+        combination(0, candidates, target, new ArrayList<>(), res);
+        return res;
+    }
+}

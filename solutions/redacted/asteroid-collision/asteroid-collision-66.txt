@@ -1,0 +1,71 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        int n = param1.length;
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            /**
+             * Case when new asteroid is moving to the right(+ve)
+             *            or when -ve asteroids are at the start (stack is empty case)
+             */
+            if (st.isEmpty() || param1[i] > 0) {
+                st.push(param1[i]);
+            } else {
+                /**
+                 * new asteroid are moving in left direction
+                 */
+                while (true) {
+                    int topEl = st.peek();
+                    /**
+                     * Top element
+                     */
+                    /**
+                     * If topEl asteroid moving to the left, push the
+                     *                    new asteroid, since it won\'t collide with the topEl asteroid
+                     *                    because direction of movement is same
+                     */
+                    if (topEl < 0) {
+                        st.push(param1[i]);
+                        break;
+                    } else if (topEl == -param1[i]) {
+                        /**
+                         * Case when both asteroids are of same size ; both get destoyed
+                         *                        Hence don\'t push anything.. remove the topEl asteroid
+                         */
+                        st.pop();
+                        break;
+                    } else if (topEl > -param1[i]) {
+                        /**
+                         * When size of topEl asteroid is more, New asteroid will get
+                         *                        destroyed, Hence don\'t pop or push
+                         */
+                        break;
+                    } else {
+                        /**
+                         * New asteroid is greater in size, then it will destroy the
+                         *                        topEl asteroid.. remove topEl it
+                         */
+                        st.pop();
+                        /**
+                         * new Asteroid destroyed all the asteroids in stack :
+                         *                        Push the new asteroid to the stack
+                         */
+                        if (st.isEmpty()) {
+                            st.push(param1[i]);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        int[] var1 = new int[st.size()];
+        int index = st.size() - 1;
+        /**
+         * Copy all the remaining asteroids in the new array
+         */
+        while (!st.isEmpty()) {
+            var1[index--] = st.pop();
+        }
+        return var1;
+    }
+}

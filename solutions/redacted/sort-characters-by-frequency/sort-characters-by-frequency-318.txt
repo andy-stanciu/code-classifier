@@ -1,0 +1,44 @@
+class Hash {
+
+    char ch;
+
+    int freq;
+
+    Hash(char ch, int freq) {
+        this.ch = ch;
+        this.freq = freq;
+    }
+}
+
+class Solution {
+
+    public String method1(String s) {
+        int len = s.length();
+        int[] freq = new int[128];
+        Arrays.fill(freq, 0);
+        StringBuilder ans = new StringBuilder();
+        Hash[] hashArray = new Hash[128];
+        int hashCount = 0;
+        for (int i = 0; i < len; i++) {
+            freq[s.charAt(i)]++;
+        }
+        for (int i = 0; i < 128; i++) {
+            if (freq[i] > 0) {
+                hashArray[hashCount] = new Hash((char) i, freq[i]);
+                hashCount++;
+            }
+        }
+        Arrays.sort(hashArray, 0, hashCount, new Comparator<Hash>() {
+
+            public int compare(Hash a, Hash b) {
+                return b.freq - a.freq;
+            }
+        });
+        for (int i = 0; i < hashCount; i++) {
+            for (int j = 0; j < hashArray[i].freq; j++) {
+                ans.append(hashArray[i].ch);
+            }
+        }
+        return ans.toString();
+    }
+}

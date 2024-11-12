@@ -1,0 +1,40 @@
+class Solution {
+
+    private enum OverlapType {
+
+        XY,
+        YX,
+        Xy,
+        xY,
+        XYXy,
+        XYxY
+    }
+
+    public int method1(int[][] param1) {
+        Arrays.sort(param1, (a, b) -> a[1] - b[1]);
+        int[] previous = param1[0];
+        int toBeDeleted = 0;
+        for (int i = 1; i < param1.length; i++) {
+            int[] current = param1[i];
+            if (current[0] >= previous[1])
+                previous = current;
+            else
+                toBeDeleted++;
+        }
+        return toBeDeleted;
+    }
+
+    private OverlapType overlapType(int[] x, int[] y) {
+        if (x[1] <= y[0])
+            return OverlapType.XY;
+        if (x[0] >= y[1])
+            return OverlapType.YX;
+        if (x[0] < y[0] && x[1] > y[1])
+            return OverlapType.Xy;
+        if (x[0] > y[0] && x[1] < y[1])
+            return OverlapType.xY;
+        if (x[0] < y[0])
+            return OverlapType.XYXy;
+        return OverlapType.XYxY;
+    }
+}

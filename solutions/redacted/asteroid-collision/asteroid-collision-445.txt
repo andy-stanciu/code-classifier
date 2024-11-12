@@ -1,0 +1,39 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> var1 = new Stack<>();
+        var1.push(param1[0]);
+        for (int counter = 1; counter < param1.length; counter++) {
+            if (param1[counter] > 0) {
+                //Current asteroid is heading right
+                var1.push(param1[counter]);
+            } else {
+                //Current asteroid is heading left
+                if (var1.size() > 0) {
+                    int var2 = var1.peek();
+                    if (var2 < 0) {
+                        //Previous asteroid is heading left.
+                        var1.push(param1[counter]);
+                    } else if (var2 > 0) {
+                        //Previous asteroid is heading right.  Collision
+                        if (var2 + param1[counter] > 0) {
+                            //left wins do nothing
+                        } else if (var2 + param1[counter] < 0) {
+                            //right wins, pop stack
+                            var1.pop();
+                            //decrement counter, we need to repeat this asteroid
+                            counter--;
+                        } else {
+                            //Tie, destroy both
+                            var1.pop();
+                        }
+                    }
+                } else {
+                    //Stack was empty, just push and move on
+                    var1.push(param1[counter]);
+                }
+            }
+        }
+        return (var1.stream().mapToInt(i -> i).toArray());
+    }
+}

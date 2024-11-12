@@ -1,0 +1,36 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode swapPairs(ListNode head) {
+        ListNode result = new ListNode();
+        ListNode prev = result;
+        prev.next = head;
+        ListNode current = head;
+        while (current != null) {
+            ListNode nextNode = current.next;
+            ListNode forwardNode = nextNode == null ? null : nextNode.next;
+            // forward = swapNodes(prev, current, nextNode);
+            // current -> nextNode -> forwardNode
+            // shall be translated to:
+            // nextNode -> current -> forwardNode
+            // then prev shall be advanced to current, current shall be advanced to forwardNode.
+            if (nextNode != null)
+                nextNode.next = current;
+            current.next = forwardNode;
+            // now that\'s the trick (not to lose the current item in some degenerate cases)
+            prev.next = nextNode == null ? current : nextNode;
+            prev = current;
+            current = forwardNode;
+        }
+        return result.next;
+    }
+}

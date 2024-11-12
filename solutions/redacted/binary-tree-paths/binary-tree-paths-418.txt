@@ -1,0 +1,44 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<String> method1(TreeNode root) {
+        List<String> ans = new ArrayList<>();
+        dfs(root, new ArrayList<String>(), ans);
+        return ans;
+    }
+
+    //Pre-order traverse to solve this problem.
+    private void dfs(TreeNode root, List<String> nodes, List<String> lst) {
+        if (root == null)
+            return;
+        nodes.add(Integer.toString(root.val));
+        dfs(root.left, nodes, lst);
+        dfs(root.right, nodes, lst);
+        //if leaf node, join the nodes with `->`
+        //and add to answers list.
+        if (root.left == null && root.right == null) {
+            String path = String.join("->", nodes);
+            lst.add(path);
+        }
+        //remove node when back-tracking.
+        //this is important because when need to ensure
+        //that when we are at a leaf node and forming the
+        //path, we only have the nodes which fall in path
+        //consisting of root to current node.
+        nodes.remove(nodes.size() - 1);
+    }
+}

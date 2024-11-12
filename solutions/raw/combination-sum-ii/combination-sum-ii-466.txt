@@ -1,0 +1,31 @@
+class Solution {
+
+    public static void combi(int i, List<List<Integer>> list, List<Integer> temp, int[] candidates, int target) {
+        if (target == 0) {
+            // add temp list to main list
+            list.add(new ArrayList<>(temp));
+            return;
+        }
+        if (target < 0 || i == candidates.length) {
+            return;
+        }
+        temp.add(candidates[i]);
+        //include
+        combi(i + 1, list, temp, candidates, target - candidates[i]);
+        while (i + 1 < candidates.length && candidates[i] == candidates[i + 1]) {
+            //skip duplicates
+            i++;
+        }
+        temp.remove(temp.size() - 1);
+        //exclude
+        combi(i + 1, list, temp, candidates, target);
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> list = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        combi(0, list, temp, candidates, target);
+        return list;
+    }
+}

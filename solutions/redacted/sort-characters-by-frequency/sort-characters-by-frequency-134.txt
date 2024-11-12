@@ -1,0 +1,44 @@
+class Solution {
+
+    public String method1(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0) + 1);
+        }
+        PriorityQueue<Pair> maxHeap = new PriorityQueue<>();
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+            maxHeap.add(new Pair(entry.getKey(), entry.getValue()));
+        }
+        String res = "";
+        while (!maxHeap.isEmpty()) {
+            Pair pair = maxHeap.poll();
+            for (int i = 0; i < pair.count; i++) {
+                res = res + pair.word;
+            }
+        }
+        return res;
+    }
+}
+
+class Pair implements Comparable<Pair> {
+
+    char word;
+
+    int count;
+
+    Pair(char word, int count) {
+        this.word = word;
+        this.count = count;
+    }
+
+    @Override
+    public int compareTo(Pair p) {
+        // Compare by frequency (descending)
+        int x = p.count - this.count;
+        if (x == 0) {
+            // If frequencies are equal, compare by character (ascending)
+            return this.word - p.word;
+        }
+        return x;
+    }
+}

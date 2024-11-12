@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> stack = new Stack<>();
+        for (int a : param1) {
+            int fl = 1;
+            // If the asteroid in stack is moving to the right and the current asteroid is moving to the left, a collision will occur.
+            // Check and handle collisions.
+            while (!stack.empty() && stack.peek() > 0 && a < 0) {
+                // Both asteroids are of equal sizes; they will destroy each other.
+                if (Math.abs(a) == stack.peek()) {
+                    fl = 0;
+                    stack.pop();
+                    break;
+                } else // Current asteroid (moving left) is larger than the asteroid in the stack (moving right).
+                // The asteroid in the stack will be destroyed and keep moving.
+                if (Math.abs(a) > stack.peek()) {
+                    stack.pop();
+                } else // Current asteroid (moving left) is smaller than the asteroid in the stack (moving right).
+                // It will get destroyed.
+                {
+                    fl = 0;
+                    break;
+                }
+            }
+            // If the current asteroid is not destroyed, add it to the stack.
+            if (fl == 1) {
+                stack.push(a);
+            }
+        }
+        // Convert the stack to an array and return the result.
+        int[] result = new int[stack.size()];
+        for (int i = result.length - 1; i >= 0; i--) {
+            result[i] = stack.pop();
+        }
+        return result;
+    }
+}

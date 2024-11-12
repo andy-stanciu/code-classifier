@@ -1,0 +1,78 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    ListNode saved;
+
+    boolean found = false;
+
+    boolean change = false;
+
+    ListNode head2;
+
+    ListNode prev2;
+
+    public ListNode method1(ListNode head, int k) {
+        if (k == 1) {
+            return head;
+        }
+        helper(null, head, 1, k);
+        while (change == true) {
+            change = false;
+            helper(null, saved, 1, k);
+        }
+        if (!found) {
+            return method2(head);
+        } else {
+            if (saved != null) {
+                prev2.next = saved;
+            }
+        }
+        return head2;
+    }
+
+    public void helper(ListNode prev, ListNode curr, int c, int k) {
+        if (curr == null) {
+            return;
+        }
+        if (c == k) {
+            saved = curr.next;
+            change = true;
+            if (found == false) {
+                head2 = curr;
+                found = true;
+            } else {
+                if (prev2 != null) {
+                    prev2.next = curr;
+                }
+            }
+            curr.next = prev;
+            return;
+        }
+        helper(curr, curr.next, c + 1, k);
+        if (change == true) {
+            curr.next = prev;
+            if (prev == null) {
+                prev2 = curr;
+            }
+        }
+    }
+
+    public ListNode method2(ListNode head) {
+        if (head.next == null || head == null) {
+            return head;
+        }
+        ListNode newHead = method2(head.next);
+        head.next.next = head;
+        head.next = null;
+        return newHead;
+    }
+}

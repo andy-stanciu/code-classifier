@@ -1,0 +1,41 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        if (root.val == key) {
+            // deleation
+            // case1
+            if (root.left == null && root.right == null)
+                return null;
+            else // case 2 1 child
+            if (root.left == null || root.right == null) {
+                if (root.left == null)
+                    return root.right;
+                else
+                    return root.left;
+            } else // case 3  2 child node
+            {
+                TreeNode successor = method2(root.right);
+                // Replace the value of the current node with the successor\'s value
+                root.val = successor.val;
+                // Delete the successor
+                root.right = method1(root.right, successor.val);
+            }
+        } else if (root.val > key) {
+            // lst will change
+            root.left = method1(root.left, key);
+        } else {
+            // rst will change
+            root.right = method1(root.right, key);
+        }
+        return root;
+    }
+
+    private TreeNode method2(TreeNode param1) {
+        while (param1.left != null) {
+            param1 = param1.left;
+        }
+        return param1;
+    }
+}

@@ -1,0 +1,88 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> list = new ArrayList<>();
+        list = permute(nums);
+        HashSet<List<Integer>> h = new HashSet<>();
+        for (int i = 0; i < list.size(); i++) {
+            h.add(list.get(i));
+        }
+        list.clear();
+        for (List<Integer> l : h) {
+            list.add(l);
+        }
+        return list;
+    }
+
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> list = new ArrayList<>();
+        List<Integer> t = new ArrayList<>();
+        for (int j = 0; j < nums.length; j++) {
+            t.add(nums[j]);
+        }
+        list.add(t);
+        HashMap<Integer, Integer> h = new HashMap<>();
+        //    store all the factorials....since length is limited to 6 hence i have not calculated factorial just stored it in hashmap
+        h.put(1, 1);
+        h.put(2, 2);
+        h.put(3, 6);
+        h.put(4, 24);
+        h.put(5, 120);
+        h.put(6, 720);
+        h.put(7, 5040);
+        h.put(8, 40320);
+        int n = h.get(nums.length);
+        for (int i = 0; i < n - 1; i++) {
+            nextPermutation(nums);
+            List<Integer> temp = new ArrayList<>();
+            for (int j = 0; j < nums.length; j++) {
+                temp.add(nums[j]);
+            }
+            list.add(temp);
+        }
+        return list;
+    }
+
+    public void nextPermutation(int[] nums) {
+        int pivot = nums[nums.length - 1], index = nums.length - 1, t = 0, mark = nums[nums.length - 1], index2 = nums.length - 1;
+        for (int i = nums.length - 1; i >= 1; i--) {
+            if (nums[i] > nums[i - 1]) {
+                pivot = nums[i - 1];
+                index = i - 1;
+                t = 1;
+                break;
+            }
+        }
+        if (t == 0) {
+            Arrays.sort(nums);
+            return;
+        }
+        for (int i = nums.length - 1; i > index; i--) {
+            if (nums[i] > pivot) {
+                mark = nums[i];
+                index2 = i;
+                break;
+            }
+        }
+        int temp = mark;
+        nums[index2] = nums[index];
+        nums[index] = temp;
+        sort(index + 1, nums.length - 1, nums);
+        return;
+    }
+
+    public void sort(int i, int j, int[] nums) {
+        int[] temp = new int[j - i + 1];
+        int l = 0;
+        for (int k = i; k <= j; k++) {
+            temp[l] = nums[k];
+            l++;
+        }
+        l = 0;
+        Arrays.sort(temp);
+        for (int k = i; k <= j; k++) {
+            nums[k] = temp[l];
+            l++;
+        }
+    }
+}

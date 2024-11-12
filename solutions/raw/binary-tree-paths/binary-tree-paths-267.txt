@@ -1,0 +1,51 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> resultPathList = new ArrayList<>();
+        StringBuilder pathString = new StringBuilder();
+        // update resultPathList by passing it to the helper method
+        generatePaths(root, resultPathList, pathString);
+        return resultPathList;
+    }
+
+    // main idea: recurision and backtracking
+    private void generatePaths(TreeNode root, List<String> resultPathList, StringBuilder pathString) {
+        // 1. null node: termination condition for a null node
+        // not just for the initial but the ending condition of the leaf node
+        if (root == null) {
+            return;
+        }
+        // 2: leaf node termination condition: leaf node
+        if (root.left == null && root.right == null) {
+            // append the leaf node value to pathString wthout "->"
+            pathString.append(root.val);
+            resultPathList.add(pathString.toString());
+            return;
+        }
+        // 3: Node with at least one/two child
+        // if root is not null: append its value to the pathString with "->"
+        pathString.append(root.val);
+        pathString.append("->");
+        int len = pathString.length();
+        generatePaths(root.left, resultPathList, pathString);
+        // KEY: \u56DE\u6EAF\uFF0C\u64A4\u9500\u5904\u7406\u7ED3\u679C
+        pathString.setLength(len);
+        // \u8FD9\u91CC\u8981\u66F4\u65B0pathString
+        generatePaths(root.right, resultPathList, pathString);
+    }
+}

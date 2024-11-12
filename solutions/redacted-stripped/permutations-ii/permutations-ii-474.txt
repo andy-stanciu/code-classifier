@@ -1,0 +1,24 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Set<List<Integer>> result = new HashSet<>();
+        generate(nums, new LinkedList<>(), result, new boolean[nums.length]);
+        return result.stream().toList();
+    }
+
+    private void generate(int[] nums, LinkedList<Integer> chosen, Set<List<Integer>> result, boolean[] used) {
+        if (chosen.size() == nums.length)
+            result.add((List<Integer>) chosen.clone());
+        else {
+            for (int i = 0; i < nums.length; i++) {
+                if (!used[i]) {
+                    chosen.add(nums[i]);
+                    used[i] = true;
+                    generate(nums, chosen, result, used);
+                    used[i] = false;
+                    chosen.removeLast();
+                }
+            }
+        }
+    }
+}

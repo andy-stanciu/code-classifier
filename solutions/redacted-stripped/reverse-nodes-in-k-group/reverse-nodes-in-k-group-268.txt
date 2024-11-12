@@ -1,0 +1,44 @@
+class Solution {
+
+    private static ListNode method1(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        ListNode newHead = method1(head.next);
+        ListNode front = head.next;
+        front.next = head;
+        head.next = null;
+        return newHead;
+    }
+
+    public static ListNode method2(ListNode head, int k) {
+        if (head == null || head.next == null || k == 1)
+            return head;
+        ListNode temp = head;
+        int cnt = 1;
+        ListNode ptr = head;
+        ListNode rem = head;
+        int noOfReversals = 0;
+        while (temp != null) {
+            if (cnt == k) {
+                ListNode temp1 = temp.next;
+                temp.next = null;
+                cnt = 1;
+                temp = method1(ptr);
+                ptr.next = temp1;
+                noOfReversals++;
+                if (noOfReversals == 1)
+                    head = temp;
+                else {
+                    rem.next = temp;
+                    rem = ptr;
+                }
+                temp = temp1;
+                ptr = temp1;
+            } else {
+                cnt++;
+                temp = temp.next;
+            }
+        }
+        return head;
+    }
+}

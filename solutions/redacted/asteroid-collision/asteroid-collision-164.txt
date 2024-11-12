@@ -1,0 +1,29 @@
+class Solution {
+
+    public int[] method1(int[] a) {
+        Stack<Integer> pos = new Stack<>();
+        int len = a.length;
+        for (int i = 0; i < len; i++) {
+            if (a[i] > 0) {
+                pos.push(a[i]);
+            } else {
+                while (!pos.empty() && pos.peek() > 0 && pos.peek() < Math.abs(a[i])) {
+                    pos.pop();
+                }
+                if (!pos.empty() && pos.peek() == Math.abs(a[i])) {
+                    // Both asteroids destroy each other
+                    pos.pop();
+                } else if (pos.empty() || pos.peek() < 0) {
+                    // No more collisions, push the negative asteroid
+                    pos.push(a[i]);
+                }
+            }
+        }
+        int stlen = pos.size();
+        int[] ans = new int[stlen];
+        for (int i = 0; i < stlen; i++) {
+            ans[stlen - 1 - i] = pos.pop();
+        }
+        return ans;
+    }
+}

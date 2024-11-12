@@ -1,0 +1,37 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> st = new Stack<>();
+        for (int i : param1) {
+            if (st.isEmpty()) {
+                st.push(i);
+            } else if (i > 0) {
+                st.push(i);
+            } else {
+                while (!st.isEmpty() && Math.abs(i) > st.peek() && st.peek() > 0) {
+                    //2,-10  or small +ve,large -ve
+                    st.pop();
+                }
+                //diff sign but same value
+                if (!st.isEmpty() && st.peek() > 0 && st.peek() == Math.abs(i)) {
+                    //10,-10
+                    st.pop();
+                } else //positive value greater > negative value
+                if (!st.isEmpty() && st.peek() > 0 && st.peek() > Math.abs(i)) {
+                    //10,-5
+                    continue;
+                } else {
+                    //-5,-5 or empty,-5 or -10,-5
+                    st.push(i);
+                }
+            }
+        }
+        List<Integer> ans = new ArrayList<>(st);
+        // Convert list to array
+        int[] result = new int[ans.size()];
+        for (int k = 0; k < ans.size(); k++) {
+            result[k] = ans.get(k);
+        }
+        return result;
+    }
+}

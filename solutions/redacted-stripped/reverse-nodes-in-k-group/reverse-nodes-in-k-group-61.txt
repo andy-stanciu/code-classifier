@@ -1,0 +1,27 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        int count = 0;
+        ListNode lazy = head, itr = head;
+        while (itr != null && count < k) {
+            lazy = itr;
+            itr = itr.next;
+            count++;
+        }
+        if (count != k)
+            return head;
+        lazy.next = null;
+        ListNode nexthead = method1(itr, k);
+        ListNode currhead = method2(head);
+        head.next = nexthead;
+        return currhead;
+    }
+
+    public ListNode method2(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        ListNode revhead = method2(head.next);
+        head.next.next = head;
+        return revhead;
+    }
+}

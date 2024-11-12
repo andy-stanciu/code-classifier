@@ -1,0 +1,50 @@
+class Solution {
+
+    public TreeNode helper(TreeNode root) {
+        if (root == null)
+            return null;
+        if (root.left == null) {
+            return root.right;
+        } else if (root.right == null) {
+            return root.left;
+        } else {
+            TreeNode rightChild = root.right;
+            TreeNode lastRight = method1(root.left);
+            lastRight.right = rightChild;
+            return root.left;
+        }
+    }
+
+    public TreeNode method1(TreeNode root) {
+        if (root.right == null) {
+            return root;
+        }
+        return method1(root.right);
+    }
+
+    public TreeNode method2(TreeNode root, int val) {
+        if (root == null)
+            return null;
+        if (root.val == val)
+            return helper(root);
+        TreeNode temp = root;
+        while (temp != null) {
+            if (temp.val > val) {
+                if (temp.left != null && temp.left.val == val) {
+                    temp.left = helper(temp.left);
+                    break;
+                } else {
+                    temp = temp.left;
+                }
+            } else {
+                if (temp.right != null && temp.right.val == val) {
+                    temp.right = helper(temp.right);
+                    break;
+                } else {
+                    temp = temp.right;
+                }
+            }
+        }
+        return root;
+    }
+}

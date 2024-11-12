@@ -1,0 +1,47 @@
+//Brute Force
+//TC - O(n) where n is the total number of nodes in tree.
+//SC - O(n) where n number of nodes in each level.
+class Solution {
+
+    public int sumOfLeftLeaves(TreeNode root) {
+        int sum = helper(root);
+        return sum;
+    }
+
+    public int helper(TreeNode node) {
+        //Breadth First Traversal
+        //To store each level
+        Queue<TreeNode> q = new LinkedList<>();
+        //pushing the left and right nodes of the root node.
+        q.offer(node.left);
+        q.offer(node.right);
+        int sum = 0;
+        //Iteration till the queue becomes empty.
+        while (!q.isEmpty()) {
+            TreeNode leftN = q.poll();
+            TreeNode rightN = q.poll();
+            //If both the nodes are null, then skip the iteration.
+            if (leftN == null && rightN == null) {
+                // System.out.println("continue");
+                continue;
+            }
+            // System.out.println("leftN " + leftN.val + " RightN " + rightN.val);
+            //Check if the left node if the leaf node. If yes, then add it into the sum variable.
+            if (leftN != null && leftN.left == null && leftN.right == null) {
+                sum += leftN.val;
+                // System.out.println("sum " + sum);
+            }
+            //Pushing nodes into the queue in the below order.
+            if (leftN != null) {
+                q.offer(leftN.left);
+                q.offer(leftN.right);
+            }
+            if (rightN != null) {
+                q.offer(rightN.left);
+                q.offer(rightN.right);
+            }
+            // System.out.println(q.toString());
+        }
+        return sum;
+    }
+}

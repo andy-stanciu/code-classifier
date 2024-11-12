@@ -1,0 +1,55 @@
+class Solution {
+
+    public void method1(int[] nums) {
+        /**
+         *            Step 1:
+         *            Traverse the array in reverse order
+         *            and find the first index i1 such that arr[i] < arr[i + 1]
+         *
+         *            Step 2:
+         *            Traverse the array from reverse again and find index i2
+         *            such that arr[i2] > arr[i1] (i2 > i1)
+         *
+         *            Step 3:
+         *            Now, swap the elements at i1 and i2
+         *            and reverse the array from i1 + 1 till the last
+         *
+         *            Edge case:
+         *            If the i1 isn\'t found in the step 1 then simply just reverse the array
+         */
+        int len = nums.length;
+        int i1 = -1;
+        int i2 = -1;
+        // finding the index i1
+        for (int i = len - 2; i >= 0; i--) {
+            if (nums[i] < nums[i + 1]) {
+                i1 = i;
+                break;
+            }
+        }
+        // this is where we handle the edge case mentioned above
+        if (i1 == -1) {
+            reverse(nums, 0, len - 1);
+        } else {
+            // finding the index i2
+            for (int i = len - 1; i >= 0; i--) {
+                if (nums[i] > nums[i1]) {
+                    i2 = i;
+                    break;
+                }
+            }
+            swap(nums, i1, i2);
+            reverse(nums, i1 + 1, len - 1);
+        }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    private void reverse(int[] A, int i, int j) {
+        while (i < j) swap(A, i++, j--);
+    }
+}

@@ -1,0 +1,57 @@
+// start 1:31pm
+// solve 2:14pm
+// time 43 minutes
+class Solution {
+
+    private void swapChildNodeAndGrandchildNode(ListNode X) {
+        // now:
+        // X -> A -> B -> C/null
+        // goal:
+        // X -> B -> A -> C/null
+        // create a temporary place to store the
+        ListNode Z = new ListNode();
+        //   grandchild node\'s `next`, which
+        //   could be a node or null.
+        Z.next = X.next.next.next;
+        // now:
+        // X -> A -> B -> C/null
+        // Z -> C/null
+        // make A the child of B
+        X.next.next.next = X.next;
+        // now:
+        // X -> A -> B [-> A -> B...] (cycle)
+        // Z -> C/null
+        // make B the child of X
+        X.next = X.next.next;
+        // now:
+        // X -> B -> A [-> B -> A...] (cycle)
+        // Z -> C/null
+        // make C the child of A
+        X.next.next.next = Z.next;
+        // now:
+        // X -> B -> A -> C/null
+        // Z -> C/null
+        return;
+    }
+
+    public ListNode swapPairs(ListNode head) {
+        ListNode dummy = new ListNode();
+        dummy.next = head;
+        // perform swaps on every adjacent pair of nodes
+        ListNode curNode = dummy;
+        while (true) {
+            // we\'ll return from within loop
+            // check for exit condition
+            if (curNode == null || curNode.next == null || curNode.next.next == null) {
+                return dummy.next;
+            } else // invariant now: curNode has both child and grandchild nodes
+            {
+                // curNode.next.next != null
+                // swap child and grandchild nodes
+                swapChildNodeAndGrandchildNode(curNode);
+                // then advance to grandchild node
+                curNode = curNode.next.next;
+            }
+        }
+    }
+}

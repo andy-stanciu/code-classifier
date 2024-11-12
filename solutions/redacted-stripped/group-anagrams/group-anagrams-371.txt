@@ -1,0 +1,51 @@
+class Solution {
+
+    public List<List<String>> method1(String[] strs) {
+        List<List<String>> matrix = new LinkedList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        Map<Integer, String> memo = new HashMap<>();
+        for (int i = 0; i < strs.length; i++) {
+            if (memo.containsKey(i))
+                continue;
+            String str = strs[i];
+            List<String> list = map.get(str);
+            if (list == null) {
+                list = new LinkedList<>();
+            }
+            list.add(str);
+            map.put(str, list);
+            for (int j = i + 1; j < strs.length; j++) {
+                String _str = strs[j];
+                if (memo.containsKey(j) || !isAnagram(str, _str)) {
+                    continue;
+                }
+                list.add(_str);
+                memo.put(j, _str);
+            }
+            matrix.add(list);
+        }
+        return matrix;
+    }
+
+    private static boolean isAnagram(String s1, String s2) {
+        if (s1.length() != s2.length())
+            return false;
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s1.length(); i++) {
+            char c = s1.charAt(i);
+            Integer value = map.get(c);
+            if (value == null) {
+                value = 0;
+            }
+            map.put(c, ++value);
+        }
+        for (int i = 0; i < s2.length(); i++) {
+            char c = s2.charAt(i);
+            Integer value = map.get(c);
+            if (value == null || value == 0)
+                return false;
+            map.put(c, --value);
+        }
+        return true;
+    }
+}

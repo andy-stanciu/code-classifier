@@ -1,0 +1,40 @@
+class Solution {
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        return findSum(candidates, target, 0);
+    }
+
+    public List<List<Integer>> findSum(int[] candidates, int target, int start) {
+        List<List<Integer>> ans = new LinkedList<>();
+        int n = candidates.length;
+        // find a match number
+        if (target == 0) {
+            ans.add(new LinkedList<>());
+            return ans;
+        }
+        // match part should be the first base case.
+        // Because if the "out-of-range" part come first, it will miss one case ->
+        // when start == n and target == 0.
+        // out of range
+        if (start >= n || target < 0) {
+            return ans;
+        }
+        for (int i = start; i < n; i++) {
+            // Skip duplicates
+            if (i > start && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+            // find the new target (new target = old target - current value) in the next range
+            // if new target == 0, means the current value == old target, which we want.
+            // so we need save the current value. just return new list when target == 0,
+            // so that we can jump into the for-loop to add the current value.
+            List<List<Integer>> res = findSum(candidates, target - candidates[i], i + 1);
+            for (List<Integer> an : res) {
+                an.add(candidates[i]);
+                ans.add(an);
+            }
+        }
+        return ans;
+    }
+}

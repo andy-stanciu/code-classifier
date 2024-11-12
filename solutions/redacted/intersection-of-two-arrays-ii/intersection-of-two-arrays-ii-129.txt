@@ -1,0 +1,49 @@
+public class Solution {
+
+    public int[] intersect(int[] nums1, int[] nums2) {
+        // Sort both arrays
+        Arrays.sort(nums1);
+        Arrays.sort(nums2);
+        List<Integer> resultList = new ArrayList<>();
+        int start = 0;
+        // Iterate through the smaller array
+        for (int num : nums1) {
+            // Perform binary search on the larger array for each element in nums1
+            int index = binarySearch(nums2, num, start);
+            if (index != -1) {
+                resultList.add(num);
+                // Move start to index + 1 to prevent duplicate counts
+                start = index + 1;
+            }
+        }
+        // Convert the result list to an array
+        int[] result = new int[resultList.size()];
+        for (int i = 0; i < resultList.size(); i++) {
+            result[i] = resultList.get(i);
+        }
+        return result;
+    }
+
+    // Binary search helper method
+    private int binarySearch(int[] nums, int target, int start) {
+        int left = start;
+        int right = nums.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) {
+                // Check if this is the first occurrence of the target after the start index
+                if (mid == start || nums[mid - 1] != target) {
+                    return mid;
+                }
+                // Continue searching in the left half
+                right = mid - 1;
+            } else if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        // Element not found
+        return -1;
+    }
+}

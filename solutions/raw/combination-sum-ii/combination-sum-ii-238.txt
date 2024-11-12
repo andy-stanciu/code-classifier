@@ -1,0 +1,32 @@
+class Solution {
+
+    List<List<Integer>> result;
+
+    public void helper(int[] candidates, int target, int index, int sum, List<Integer> subSeq) {
+        if (sum == target) {
+            result.add(new ArrayList<>(subSeq));
+            return;
+        }
+        if (index >= candidates.length)
+            return;
+        if (sum + candidates[index] > target)
+            return;
+        // Iterative case
+        // pick
+        subSeq.add(candidates[index]);
+        sum += candidates[index];
+        helper(candidates, target, index + 1, sum, subSeq);
+        // don\'t pick
+        subSeq.remove(subSeq.size() - 1);
+        sum -= candidates[index];
+        while (index < candidates.length - 1 && (candidates[index] == candidates[index + 1])) index++;
+        helper(candidates, target, index + 1, sum, subSeq);
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        result = new ArrayList<>();
+        helper(candidates, target, 0, 0, new ArrayList<>());
+        return result;
+    }
+}

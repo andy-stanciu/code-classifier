@@ -1,0 +1,27 @@
+class Solution {
+
+    List<List<Integer>> res = new ArrayList<>();
+
+    private void helper(int[] nums, boolean[] vis, List<Integer> list) {
+        if (list.size() == nums.length) {
+            res.add(new ArrayList<>(list));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (vis[i] || i > 0 && nums[i] == nums[i - 1] && !vis[i - 1]) {
+                continue;
+            }
+            vis[i] = true;
+            list.add(nums[i]);
+            helper(nums, vis, list);
+            vis[i] = false;
+            list.remove(list.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        helper(nums, new boolean[nums.length], new ArrayList<>());
+        return res;
+    }
+}

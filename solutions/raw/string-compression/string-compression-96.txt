@@ -1,0 +1,39 @@
+class Solution {
+
+    public int compress(char[] chars) {
+        // Pointer to the start of each group of consecutive characters
+        int left = 0;
+        // Pointer used to find the end of the current group of characters
+        int right = 0;
+        // Pointer to the position in \'chars\' where the next compressed character or count will be written
+        int index = 0;
+        // Total number of characters in the input array
+        int size = chars.length;
+        while (right < size) {
+            // Iterate through the array until \'right\' reaches the end
+            while (right < size && chars[right] == chars[left]) {
+                // Find the end of the current group of characters
+                // Move \'right\' to the next character
+                right++;
+            }
+            // Write the current character at \'left\' to \'index\' in \'chars\' and then increment \'index\'
+            chars[index++] = chars[left];
+            // Calculate the count of consecutive characters in the current group
+            int num = right - left;
+            if (num > 1) {
+                // If the count is more than 1, we need to write the count after the character
+                // Convert the count to a string for easier handling of multi-digit numbers
+                String count = Integer.toString(num);
+                for (char c : count.toCharArray()) {
+                    // Loop over each digit in the count string
+                    // Write each digit of the count to \'chars\' and increment \'index\'
+                    chars[index++] = c;
+                }
+            }
+            // Move \'left\' to \'right\' to begin processing the next group of characters
+            left = right;
+        }
+        // Return the length of the compressed array, which is now stored in the first \'index\' elements of \'chars\'
+        return index;
+    }
+}

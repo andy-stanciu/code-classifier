@@ -1,0 +1,64 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        TreeNode par = null, trav = root, res = root;
+        boolean isLeft = false;
+        while (trav != null) {
+            // when key is found
+            if (trav.val == key) {
+                // if left is empty, right becomes the solution
+                if (trav.left == null)
+                    res = trav.right;
+                else // if right is empty, left becomes the solution
+                if (trav.right == null)
+                    res = trav.left;
+                else {
+                    // if both are not empty, make leftmost of right node point to left
+                    TreeNode left = trav.left, right = trav.right;
+                    TreeNode rightLeft = right;
+                    while (rightLeft.left != null) rightLeft = rightLeft.left;
+                    rightLeft.left = left;
+                    res = right;
+                }
+                // check if root is the key node
+                if (par == null)
+                    break;
+                //to track did we traverse left ot right
+                // and change pointer accordingly
+                if (isLeft)
+                    par.left = res;
+                else
+                    par.right = res;
+                res = root;
+                break;
+            }
+            par = trav;
+            // decide to travel left or right
+            if (key < trav.val) {
+                trav = trav.left;
+                isLeft = true;
+            } else {
+                trav = trav.right;
+                isLeft = false;
+            }
+        }
+        return res;
+    }
+}

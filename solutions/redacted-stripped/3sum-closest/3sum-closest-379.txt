@@ -1,0 +1,35 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        Arrays.sort(nums);
+        int n = nums.length, res = 0, smallestDiff = Integer.MAX_VALUE;
+        for (int i = 0; i < n - 2; ++i) {
+            int left = i + 1, right = n - 1, curr = nums[i];
+            int localNearest = 0, localSmallestDiff = Integer.MAX_VALUE;
+            while (left < right) {
+                int localSum = curr + nums[left] + nums[right];
+                int diff = localSum - target;
+                if (diff == 0) {
+                    return target;
+                } else if (diff > 0) {
+                    if (Math.abs(diff) < localSmallestDiff) {
+                        localSmallestDiff = Math.abs(diff);
+                        localNearest = localSum;
+                    }
+                    right--;
+                } else {
+                    if (Math.abs(diff) < localSmallestDiff) {
+                        localSmallestDiff = Math.abs(diff);
+                        localNearest = localSum;
+                    }
+                    left++;
+                }
+            }
+            if (smallestDiff > localSmallestDiff) {
+                res = localNearest;
+                smallestDiff = localSmallestDiff;
+            }
+        }
+        return res;
+    }
+}

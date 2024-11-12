@@ -1,0 +1,85 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        TreeNode found = null;
+        TreeNode temp = root;
+        TreeNode pre = root;
+        while (found == null && temp != null) {
+            if (temp.val == key) {
+                found = temp;
+                break;
+            } else if (temp.val < key) {
+                pre = temp;
+                temp = temp.right;
+            } else {
+                pre = temp;
+                temp = temp.left;
+            }
+        }
+        if (found == null)
+            return root;
+        TreeNode left = found.left;
+        TreeNode right = found.right;
+        if (left == null && right == null) {
+            if (found == root)
+                return null;
+            else if (key < pre.val) {
+                pre.left = null;
+                return root;
+            } else if (key > pre.val) {
+                pre.right = null;
+                return root;
+            }
+        }
+        if (found == root) {
+            TreeNode newroot;
+            if (left == null)
+                return newroot = right;
+            else if (right == null)
+                return newroot = left;
+            else if (left != null) {
+                newroot = left;
+                while (left.right != null) {
+                    left = left.right;
+                }
+                left.right = right;
+                return newroot;
+            } else if (right != null) {
+                newroot = right;
+                while (right.left != null) {
+                    right = right.left;
+                }
+                right.left = right;
+                return newroot;
+            }
+        } else if (key < pre.val && left == null) {
+            pre.left = right;
+            return root;
+        } else if (key > pre.val && left == null) {
+            pre.right = right;
+            return root;
+        } else if (key > pre.val && right == null) {
+            pre.right = left;
+            return root;
+        } else if (key < pre.val && right == null) {
+            pre.left = left;
+            return root;
+        }
+        if (key < pre.val) {
+            pre.left = left;
+            while (left.right != null) {
+                left = left.right;
+            }
+            left.right = right;
+            return root;
+        } else if (key > pre.val) {
+            pre.right = right;
+            while (right.left != null) {
+                right = right.left;
+            }
+            right.left = left;
+            return root;
+        }
+        return root;
+    }
+}

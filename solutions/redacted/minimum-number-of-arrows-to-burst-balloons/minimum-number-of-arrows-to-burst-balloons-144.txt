@@ -1,0 +1,30 @@
+class Solution {
+
+    public int method1(int[][] points) {
+        int n = points.length;
+        // sort arrays based on end time in ascending
+        // quicker a ballon end, it will give more rooms for other
+        // non overlapped ballons
+        Arrays.sort(points, (a, b) -> Integer.compare(a[1], b[1]));
+        int count = 1;
+        // keep track of the end of previous ballon
+        int currRight = points[0][1];
+        for (int i = 1; i < n; i++) {
+            // it means theres a overlap and two ballons
+            // can be shoot down by an arrow
+            if (currRight >= points[i][0]) {
+                // keep track of min of both,
+                // since the larger end will be shoot down along with smaller end ballon
+                // but the other ballons if it overlaps with smaller end ballons, they
+                // can be also taken down with one shot
+                currRight = Math.min(currRight, points[i][1]);
+            } else {
+                // no overlap means more arrows
+                ++count;
+                // kepp track of last end found
+                currRight = points[i][1];
+            }
+        }
+        return count;
+    }
+}

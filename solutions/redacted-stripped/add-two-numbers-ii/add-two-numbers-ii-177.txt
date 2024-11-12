@@ -1,0 +1,42 @@
+class Solution {
+
+    public ListNode reverseLL(ListNode head) {
+        ListNode currNode = head;
+        ListNode prevNode = null;
+        ListNode nextNode = null;
+        while (currNode != null) {
+            nextNode = currNode.next;
+            currNode.next = prevNode;
+            prevNode = currNode;
+            currNode = nextNode;
+        }
+        return prevNode;
+    }
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ListNode node1 = reverseLL(l1);
+        ListNode node2 = reverseLL(l2);
+        ListNode dummyNode = new ListNode(-1);
+        ListNode node = dummyNode;
+        int carry = 0;
+        while (node1 != null || node2 != null || carry != 0) {
+            int sum = carry;
+            if (node1 != null) {
+                sum = sum + node1.val;
+                node1 = node1.next;
+            }
+            if (node2 != null) {
+                sum = sum + node2.val;
+                node2 = node2.next;
+            }
+            int valueOfNewNode = sum % 10;
+            ListNode newNode = new ListNode(valueOfNewNode);
+            node.next = newNode;
+            node = node.next;
+            carry = sum / 10;
+        }
+        ListNode head = dummyNode.next;
+        head = reverseLL(head);
+        return head;
+    }
+}

@@ -1,0 +1,46 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        // Intuition - Stack
+        // Consider 2 element of the array
+        // If the first element is positive and second is negative
+        // then only the elements will collide
+        // Approach -
+        // We will iterate the array and check if the element of array
+        // and top element of stack collide with each other
+        // if they collide then we will check the following conditions
+        //      if the absolute value of top element of stack is less than the absolute value of the current element then we will remove the element from stack
+        //      if absolute values are equal then we remove the element from stack and discard current element
+        //      if the absolute value of top element of stack is greater than the absolute value of the current element then we will discard current element
+        // continue to check this till there is collision
+        // if there is not collision or current element is not discarded then we will add the current element to stack
+        // After all the iteration remove all the remaining elements from stacka and add it to the answer in reverse order.
+        // Time Complexity - O(N)
+        // Space Complexity - O(N)
+        int N = asteroids.length;
+        Stack<Integer> s = new Stack<Integer>();
+        for (int i = 0; i < N; i++) {
+            boolean flag = true;
+            while (s.isEmpty() == false && s.peek() > 0 && asteroids[i] < 0) {
+                if (s.peek() < -asteroids[i]) {
+                    s.pop();
+                    continue;
+                }
+                if (s.peek() == -asteroids[i]) {
+                    s.pop();
+                }
+                flag = false;
+                break;
+            }
+            if (flag) {
+                s.push(asteroids[i]);
+            }
+        }
+        int M = s.size();
+        int[] ans = new int[M];
+        for (int i = M - 1; i >= 0; i--) {
+            ans[i] = s.pop();
+        }
+        return ans;
+    }
+}

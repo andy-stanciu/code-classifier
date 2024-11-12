@@ -1,0 +1,69 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        // Base cases: if list is empty or k is 1, return the list as is
+        if (head == null || k == 1)
+            return head;
+        // Create a dummy node that will point to the head of the list
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        // Initialize groupPrev to point to the dummy node
+        ListNode var1 = dummy;
+        // Loop until the end of the list
+        while (true) {
+            // Find the kth node from groupPrev
+            ListNode kth = getKthNode(var1, k);
+            if (kth == null) {
+                // If there are less than k nodes remaining, exit the loop
+                break;
+            }
+            // Keep a reference to the node after the kth node (groupNext)
+            ListNode var2 = kth.next;
+            // Reverse the group of k nodes
+            // Previous node for the reversal (starts at groupNext)
+            ListNode prev = var2;
+            // First node of the group
+            ListNode curr = var1.next;
+            method2(curr, var2);
+            // Connect the reversed group with the rest of the list
+            ListNode temp = var1.next;
+            // Connect groupPrev to the new head of the reversed group
+            var1.next = kth;
+            // Move groupPrev to the end of the reversed group
+            var1 = temp;
+        }
+        // Return the new head of the list (dummy.next)
+        return dummy.next;
+    }
+
+    // Function to get the kth node from the start node
+    private ListNode getKthNode(ListNode start, int k) {
+        while (start != null && k > 0) {
+            start = start.next;
+            k--;
+        }
+        return start;
+    }
+
+    // Function to reverse a group of nodes
+    private void method2(ListNode start, ListNode end) {
+        ListNode prev = end;
+        ListNode curr = start;
+        while (curr != end) {
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+    }
+}

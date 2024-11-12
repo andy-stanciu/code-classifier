@@ -1,0 +1,26 @@
+class Solution {
+
+    public boolean canConstruct(String ransomNote, String magazine) {
+        int magazineLength = magazine.length();
+        int ransomNoteLength = ransomNote.length();
+        if (ransomNoteLength > magazineLength)
+            return false;
+        Map<Character, Integer> charCount = new HashMap<>();
+        int gap = 0;
+        for (int i = 0; i < magazineLength; i++) {
+            char magazineChar = magazine.charAt(i);
+            int magazineCharCount = charCount.getOrDefault(magazineChar, 0);
+            if (magazineCharCount < 0)
+                gap--;
+            charCount.put(magazineChar, magazineCharCount + 1);
+            if (i >= ransomNoteLength)
+                continue;
+            char ransomNoteChar = ransomNote.charAt(i);
+            int ransomNoteCharCount = charCount.getOrDefault(ransomNoteChar, 0);
+            if (ransomNoteCharCount <= 0)
+                gap++;
+            charCount.put(ransomNoteChar, ransomNoteCharCount - 1);
+        }
+        return gap <= 0;
+    }
+}

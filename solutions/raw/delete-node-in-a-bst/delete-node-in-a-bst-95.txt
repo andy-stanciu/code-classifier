@@ -1,0 +1,82 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    int min = Integer.MAX_VALUE;
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return root;
+        }
+        // post-order Traversal
+        root.left = deleteNode(root.left, key);
+        root.right = deleteNode(root.right, key);
+        if (root.val == key) {
+            // save the current node (saved as Del) and make the current node as null
+            TreeNode Del = root;
+            root = null;
+            // firstcase : find the delete node of right subtree\'s smallest val node and change the delete node val as smallest val node ;
+            if (Del.right != null && Del.left != null) {
+                minval(Del.right);
+                Del.val = min;
+                Del.right = deletesmall(Del.right, min);
+                root = Del;
+            } else //secondcase: if node has left child and not right child change node as node.left
+            if (Del.left != null && Del.right == null) {
+                Del = Del.left;
+                root = Del;
+            } else //thirdcase: if node has right child and not left child change node as node.right
+            if (Del.left == null && Del.right != null) {
+                Del = Del.right;
+                root = Del;
+            }
+        }
+        return root;
+    }
+
+    private TreeNode deletesmall(TreeNode node, int min) {
+        if (node == null) {
+            return node;
+        }
+        node.left = deletesmall(node.left, min);
+        node.right = deletesmall(node.right, min);
+        // before deleting that check the node has children or not
+        //if it has just skip the node
+        if (min == node.val) {
+            if (node.right != null) {
+                return node.right;
+            }
+            if (node.left != null) {
+                return node.left;
+            }
+            node = null;
+        }
+        return node;
+    }
+
+    // this is function is used for finding the smallest node of a
+    // subtree
+    private void minval(TreeNode node) {
+        if (node == null) {
+            return;
+        }
+        if (node.val < min) {
+            min = node.val;
+        }
+        minval(node.left);
+        minval(node.right);
+    }
+}

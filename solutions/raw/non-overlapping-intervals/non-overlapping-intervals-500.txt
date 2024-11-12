@@ -1,0 +1,26 @@
+class Solution {
+
+    public int eraseOverlapIntervals(int[][] intervals) {
+        //Sorting on the basis of ending first
+        Arrays.sort(intervals, (a, b) -> a[1] - b[1]);
+        int count = 0;
+        //Define range
+        int start = intervals[0][0];
+        int end = intervals[0][1];
+        for (int i = 1; i < intervals.length; i++) {
+            //case 1: the starting time is less than our range->Overlapping interval
+            if (intervals[i][0] < start) {
+                count++;
+                start = intervals[i][0];
+            } else //case2: the interval lies in our range-> Overlapping interval
+            if (intervals[i][0] >= start && intervals[i][0] < end)
+                count++;
+            else //case3:- the interval lies to the right of our range-> Non-overlapping Interval
+            {
+                end = Math.max(end, intervals[i][1]);
+                start = Math.min(intervals[i][0], start);
+            }
+        }
+        return count;
+    }
+}

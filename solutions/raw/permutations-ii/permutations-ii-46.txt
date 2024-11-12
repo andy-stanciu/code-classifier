@@ -1,0 +1,38 @@
+class Solution {
+
+    private void permuteUnique(int[] nums, List<Integer> permutation, List<List<Integer>> permutations, HashMap<Integer, Integer> freqMap, HashSet<List<Integer>> visited) {
+        if (permutation.size() >= nums.length) {
+            if (!visited.contains(permutation)) {
+                permutations.add(new ArrayList(permutation));
+                visited.add(new ArrayList(permutation));
+            }
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (freqMap.getOrDefault(nums[i], 0) <= 0)
+                continue;
+            freqMap.put(nums[i], freqMap.getOrDefault(nums[i], 0) - 1);
+            permutation.add(nums[i]);
+            permuteUnique(nums, permutation, permutations, freqMap, visited);
+            permutation.remove(permutation.size() - 1);
+            freqMap.put(nums[i], freqMap.getOrDefault(nums[i], 0) + 1);
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        // all possible unique permutations
+        /**
+         * \\
+         *             1. current number occurs at index i.
+         *             2. current number occurs at other index
+         */
+        List<List<Integer>> uniquePermutations = new ArrayList();
+        HashMap<Integer, Integer> freqMap = new HashMap();
+        for (int i = 0; i < nums.length; i++) {
+            freqMap.put(nums[i], freqMap.getOrDefault(nums[i], 0) + 1);
+        }
+        HashSet<List<Integer>> visited = new HashSet();
+        permuteUnique(nums, new ArrayList(), uniquePermutations, freqMap, visited);
+        return uniquePermutations;
+    }
+}

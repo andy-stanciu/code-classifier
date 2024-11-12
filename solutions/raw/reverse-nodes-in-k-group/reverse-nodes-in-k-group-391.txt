@@ -1,0 +1,76 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    ListNode mergedHead = null, mergedTail = null;
+
+    public ListNode swapPairs(ListNode head) {
+        return reverseKGroup(head, 2);
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode prev = null, current = head;
+        int count = 0, kNodes = 0;
+        while (current != null) {
+            if (kNodes == 0) {
+                kNodes = kNodesAvailable(current, k);
+                if (kNodes < k) {
+                    if (mergedHead == null)
+                        return head;
+                    fixUnReversedTail(current);
+                    break;
+                }
+            }
+            if (kNodes <= k) {
+                current = head.next;
+                head.next = prev;
+                prev = head;
+                if (current != null)
+                    head = current;
+                kNodes--;
+                if (kNodes == 0) {
+                    mergeNodes(prev);
+                    count = 0;
+                    prev = null;
+                }
+            }
+        }
+        return mergedHead;
+    }
+
+    int kNodesAvailable(ListNode current, int k) {
+        ListNode localCurrent = current;
+        int count = 0;
+        while (count < k && localCurrent != null) {
+            localCurrent = localCurrent.next;
+            count++;
+        }
+        return count;
+    }
+
+    void mergeNodes(ListNode currentHead) {
+        ListNode local = currentHead;
+        if (mergedHead == null)
+            mergedHead = currentHead;
+        if (mergedTail == null) {
+            while (local.next != null) local = local.next;
+            mergedTail = local;
+        } else
+            mergedTail.next = local;
+        while (mergedTail.next != null) {
+            mergedTail = mergedTail.next;
+        }
+    }
+
+    void fixUnReversedTail(ListNode current) {
+        mergedTail.next = current;
+    }
+}

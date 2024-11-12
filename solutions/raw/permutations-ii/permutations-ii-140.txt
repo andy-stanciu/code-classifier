@@ -1,0 +1,39 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] A) {
+        //create a result list to store our lists
+        List<List<Integer>> resultList = new ArrayList<>();
+        //we will sort the array as it contains duplicates
+        Arrays.sort(A);
+        //we will then call the backtracking function that we create
+        backtracking(A, resultList, new ArrayList<>(), new boolean[A.length]);
+        return resultList;
+    }
+
+    private void backtracking(int[] A, List<List<Integer>> resultList, List<Integer> templist, boolean[] used) {
+        //as we already know that for permutations, we will always check the size of the result lists
+        //here since we are expecting duplicate arrays, we will also add one condition that
+        //if we have already added that duplicate list, we will ignore it and add the rest of the lists
+        if (templist.size() == A.length && !resultList.contains(templist)) {
+            resultList.add(new ArrayList<>(templist));
+            //once done, we will stop here and return to the main function
+            return;
+        }
+        //we will create a forloop to iterate through the array
+        for (int i = 0; i < A.length; i++) {
+            //we will set a base condition that if we have used that element, we will skip and consider the next
+            //element
+            if (used[i] == true) {
+                continue;
+            }
+            //we will add, backtrack and then remove the element
+            //when we add, we will mark that element in the used array as true(1);
+            used[i] = true;
+            templist.add(A[i]);
+            backtracking(A, resultList, templist, used);
+            //after we used it, we will generate the array and then remove it from the \'used\' array
+            used[i] = false;
+            templist.remove(templist.size() - 1);
+        }
+    }
+}

@@ -1,0 +1,55 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode node1 = l1;
+        ListNode node2 = l2;
+        Stack<Integer> st1 = new Stack<>();
+        Stack<Integer> st2 = new Stack<>();
+        while (node1 != null) {
+            st1.push(node1.val);
+            node1 = node1.next;
+        }
+        while (node2 != null) {
+            st2.push(node2.val);
+            node2 = node2.next;
+        }
+        List<Integer> ans = new ArrayList<>();
+        int carry = 0;
+        while (!st1.empty() && !st2.empty()) {
+            int sum = st1.pop() + st2.pop() + carry;
+            carry = sum / 10;
+            ans.add(sum % 10);
+        }
+        while (!st1.empty()) {
+            int sum = st1.pop() + carry;
+            carry = sum / 10;
+            ans.add(sum % 10);
+        }
+        while (!st2.empty()) {
+            int sum = st2.pop() + carry;
+            carry = sum / 10;
+            ans.add(sum % 10);
+        }
+        if (carry > 0) {
+            ans.add(carry);
+        }
+        ListNode dummy = new ListNode();
+        ListNode temp = dummy;
+        for (int i = ans.size() - 1; i >= 0; i--) {
+            ListNode newNode = new ListNode(ans.get(i));
+            temp.next = newNode;
+            temp = temp.next;
+        }
+        return dummy.next;
+    }
+}

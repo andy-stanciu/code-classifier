@@ -1,0 +1,53 @@
+class Solution {
+
+    /**
+     *    returns the root of tree/subTree after deletion of key
+     *    this will swap the node with its inorder successor/predecessor till to be deleted
+     *    node becomes a leaf node and then return null so removing the node from the tree
+     *    see how the node.left and node.right values are assigned the return value of deleteNode method
+     */
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        else // if this is a leaf node then this should be removed, so return null
+        if (root.val == key && root.left == null & root.right == null) {
+            return null;
+        } else // if this is not leaf node but this is to be deleted
+        // swap this node with its inorder successor/predecessor (this is necessary
+        // to maintain the binray tree properties)
+        if (root.val == key) {
+            TreeNode toSwap = null;
+            if (root.right != null) {
+                toSwap = root.right;
+                while (toSwap.left != null) {
+                    toSwap = toSwap.left;
+                }
+                swapVal(root, toSwap);
+                root.right = deleteNode(root.right, key);
+            } else {
+                toSwap = root.left;
+                while (toSwap.right != null) {
+                    toSwap = toSwap.right;
+                }
+                swapVal(root, toSwap);
+                root.left = deleteNode(root.left, key);
+            }
+        } else if (key > root.val) {
+            root.right = deleteNode(root.right, key);
+        } else {
+            root.left = deleteNode(root.left, key);
+        }
+        return root;
+    }
+
+    /**
+     *    Simple functio to swap value of two nodes
+     */
+    void swapVal(TreeNode a, TreeNode b) {
+        if (a == null || b == null)
+            return;
+        int temp = a.val;
+        a.val = b.val;
+        b.val = temp;
+    }
+}

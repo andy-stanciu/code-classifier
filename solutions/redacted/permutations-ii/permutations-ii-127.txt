@@ -1,0 +1,68 @@
+class Solution {
+
+    public static List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        Map<Integer, Boolean> flag = new HashMap<>();
+        recursivePermute(nums, result, 0);
+        return result;
+    }
+
+    // with inplace
+    public static void recursivePermute(int[] nums, List<List<Integer>> result, int index) {
+        if (index >= nums.length) {
+            result.add(new ArrayList(Arrays.stream(nums).boxed().collect(Collectors.toList())));
+            return;
+        }
+        for (int i = index; i < nums.length; i++) {
+            if (shouldAdd(nums, index, i)) {
+                swap(nums, i, index);
+                recursivePermute(nums, result, index + 1);
+                swap(nums, i, index);
+            }
+        }
+    }
+
+    public static void swap(int[] nums, int i, int index) {
+        int temp = nums[i];
+        nums[i] = nums[index];
+        nums[index] = temp;
+    }
+
+    public static boolean shouldAdd(int[] nums, int index, int i) {
+        if (i > index) {
+            /*check from index start to i-1*/
+            for (int k = index; k <= i - 1; k++) {
+                if (nums[i] == nums[k])
+                    return false;
+            }
+        }
+        return true;
+    }
+    // with extra space - intuitive bt
+    // public static void recursivePermute(int[] arr, List<Integer> ds, List<List<Integer>> result, Map<Integer, Boolean> flag) {
+    //     if(ds.size()==arr.length) {
+    //         result.add(new ArrayList(ds));
+    //         return;
+    //     }
+    //     for(int i=0; i< arr.length;i++) {
+    //         if((!flag.containsKey(i) || flag.get(i)==Boolean.FALSE) && shouldAdd(arr,i,flag)) {
+    //             ds.add(arr[i]);
+    //             flag.put(i, Boolean.TRUE);
+    //             recursivePermute(arr,ds,result,flag);
+    //             ds.remove(ds.size()-1);
+    //             flag.put(i, Boolean.FALSE);
+    //         }
+    //     }
+    // }
+    // public static  boolean shouldAdd(int[] nums, int i, Map<Integer, Boolean> flag)
+    // {
+    // 	if(i>0) {
+    //     /*check from index start to i-1*/
+    //         for(int k = 0; k<=i-1; k++) {
+    //             if(nums[i] == nums[k] && !flag.get(k)==Boolean.TRUE)
+    //                 return false;
+    //         }
+    // 	}
+    //     return true;
+    // }
+}

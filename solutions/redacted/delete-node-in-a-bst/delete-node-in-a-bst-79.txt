@@ -1,0 +1,106 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    private void method1(TreeNode parent, TreeNode child) {
+        if (parent == null) {
+            if (child.left != null) {
+                TreeNode curr = child.left.right, prev = child.left;
+                while (curr != null && curr.right != null) {
+                    prev = curr;
+                    curr = curr.right;
+                }
+                if (curr != null) {
+                    if (curr.left != null) {
+                        child.val = curr.val;
+                        prev.right = curr.left;
+                    } else {
+                        child.val = curr.val;
+                        prev.right = null;
+                    }
+                } else {
+                    child.val = child.left.val;
+                    child.left = child.left.left;
+                }
+            } else if (child.right != null) {
+                TreeNode curr = child.right.left, prev = child.right;
+                while (curr != null && curr.left != null) {
+                    prev = curr;
+                    curr = curr.left;
+                }
+                if (curr != null) {
+                    if (curr.right != null) {
+                        child.val = curr.val;
+                        prev.left = curr.right;
+                    } else {
+                        child.val = curr.val;
+                        prev.left = null;
+                    }
+                } else {
+                    child.val = child.right.val;
+                    child.right = child.right.right;
+                }
+            } else {
+                return;
+            }
+        } else {
+            if (parent.left != null && parent.left.val == child.val) {
+                if (child.left != null) {
+                    parent.left = child.left;
+                    TreeNode curr = parent.left;
+                    while (curr.right != null) curr = curr.right;
+                    curr.right = child.right;
+                } else if (child.right != null) {
+                    parent.left = child.right;
+                } else {
+                    parent.left = null;
+                }
+            } else {
+                if (child.left != null) {
+                    parent.right = child.left;
+                    TreeNode curr = parent.right;
+                    while (curr.right != null) curr = curr.right;
+                    curr.right = child.right;
+                } else if (child.right != null) {
+                    parent.right = child.right;
+                } else {
+                    parent.right = null;
+                }
+            }
+        }
+    }
+
+    private void searchKey(TreeNode parent, TreeNode child, int key) {
+        if (child.val == key) {
+            method1(parent, child);
+            return;
+        }
+        if (key < child.val && child.left != null) {
+            searchKey(child, child.left, key);
+        } else if (key > child.val && child.right != null) {
+            searchKey(child, child.right, key);
+        }
+    }
+
+    public TreeNode method2(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        if (root.left == null && root.right == null && root.val == key)
+            return null;
+        searchKey(null, root, key);
+        return root;
+    }
+}

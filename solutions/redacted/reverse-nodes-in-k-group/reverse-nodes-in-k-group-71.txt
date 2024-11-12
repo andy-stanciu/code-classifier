@@ -1,0 +1,66 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        ListNode current = head;
+        ListNode resultHead = null;
+        ListNode prev = null;
+        while (current != null) {
+            // get first node after k nodes
+            ListNode next = getNextAfterCount(current, k);
+            // reverse k nodes and get last (it\'s new sequence)
+            ListNode lastNode = method2(current, 0, k);
+            // if nodes count < k, we do nothing
+            if (lastNode == null)
+                break;
+            // just update new head once
+            if (resultHead == null) {
+                resultHead = lastNode;
+            }
+            // connect previous node list with new sequence
+            if (prev != null) {
+                prev.next = lastNode;
+            }
+            // and connect next nodes with new sequence
+            current.next = next;
+            prev = current;
+            current = current.next;
+        }
+        return resultHead;
+    }
+
+    public ListNode method2(ListNode node, int currentCount, int maxCount) {
+        currentCount++;
+        if (node == null) {
+            return null;
+        } else if (currentCount == maxCount) {
+            return node;
+        }
+        ListNode lastNode = method2(node.next, currentCount, maxCount);
+        if (lastNode == null) {
+            return null;
+        }
+        node.next.next = node;
+        return lastNode;
+    }
+
+    private ListNode getNextAfterCount(ListNode node, int count) {
+        while (count > 0) {
+            if (node == null) {
+                return null;
+            }
+            node = node.next;
+            count--;
+        }
+        return node;
+    }
+}

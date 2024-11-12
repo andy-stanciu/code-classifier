@@ -1,0 +1,79 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        int[] arr = new int[100];
+        int[] arr2 = new int[100];
+        ListNode temp = l1;
+        ListNode temp2 = l2;
+        int n = arr.length;
+        int i = 0;
+        int j = 0;
+        while (temp != null || temp2 != null) {
+            if (temp != null) {
+                arr[i++] = temp.val;
+                temp = temp.next;
+            }
+            if (temp2 != null) {
+                arr2[j++] = temp2.val;
+                temp2 = temp2.next;
+            }
+        }
+        i--;
+        j--;
+        ListNode ans = new ListNode(-1, null);
+        boolean flag = false;
+        while (i >= 0 && j >= 0) {
+            int num = arr[i--] + arr2[j--];
+            if (ans.val == -1)
+                ans.val = num % 10;
+            else {
+                if (flag == true) {
+                    num++;
+                    if (num <= 9)
+                        flag = false;
+                }
+                temp = new ListNode(num % 10, ans);
+                ans = temp;
+            }
+            if (num > 9) {
+                flag = true;
+            }
+        }
+        int num = -1;
+        while (i >= 0) {
+            if (flag == true) {
+                num = arr[i--] + 1;
+                if (num <= 9)
+                    flag = false;
+            } else
+                num = arr[i--];
+            temp = new ListNode(num % 10, ans);
+            ans = temp;
+        }
+        while (j >= 0) {
+            if (flag == true) {
+                num = arr2[j--] + 1;
+                if (num <= 9)
+                    flag = false;
+            } else
+                num = arr2[j--];
+            temp = new ListNode(num % 10, ans);
+            ans = temp;
+        }
+        if (flag == true) {
+            temp = new ListNode(1, ans);
+            ans = temp;
+        }
+        return ans;
+    }
+}

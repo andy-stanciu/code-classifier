@@ -1,0 +1,65 @@
+class Solution {
+
+    public static final int SAME_DIR = -1;
+
+    public static final int DESTROY = 0;
+
+    public static final int FIRST = 1;
+
+    public static final int SECOND = 2;
+
+    public int[] asteroidCollision(int[] A) {
+        Stack<Integer> stack = new Stack<>();
+        for (int i : A) {
+            boolean isAlive = true;
+            while (isAlive && !stack.isEmpty()) {
+                int peek = stack.peek();
+                int outcome = judge(peek, i);
+                switch(outcome) {
+                    case SAME_DIR:
+                        break;
+                    case DESTROY:
+                        stack.pop();
+                        isAlive = false;
+                        break;
+                    case FIRST:
+                        isAlive = false;
+                        break;
+                    case SECOND:
+                        stack.pop();
+                        break;
+                }
+                if (outcome != SECOND)
+                    break;
+            }
+            if (isAlive) {
+                stack.push(i);
+            }
+        }
+        int len = stack.size();
+        int[] res = new int[len];
+        for (int i = len - 1; i >= 0; i--) {
+            res[i] = stack.pop();
+        }
+        return res;
+    }
+
+    int judge(int a, int b) {
+        if (a * b >= 0) {
+            // same dir
+            return SAME_DIR;
+        }
+        if (a > 0 && b < 0) {
+            // \u76F8\u5411\u800C\u884C
+            // \u540C\u5F52\u4E8E\u5C3D
+            if (Math.abs(a) == Math.abs(b))
+                return DESTROY;
+            // \u6808\u9876\u884C\u661F\u5B58\u6D3B
+            if (Math.abs(a) > Math.abs(b))
+                return FIRST;
+            // \u5F53\u524D\u884C\u661F\u5B58\u6D3B
+            return SECOND;
+        }
+        return SAME_DIR;
+    }
+}

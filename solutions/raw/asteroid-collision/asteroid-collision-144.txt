@@ -1,0 +1,42 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        List<Integer> list = new ArrayList<>();
+        Stack<Integer> stack = new Stack<>();
+        for (int ast : asteroids) {
+            if (ast > 0) {
+                stack.push(ast);
+            } else {
+                //set destroyed to false at start & make sure stack not empty & peek element +ve
+                boolean dest = false;
+                while (!stack.isEmpty() && stack.peek() > 0) {
+                    //if peek element is small in value than current remove peek & not destroyed
+                    if (stack.peek() < Math.abs(ast)) {
+                        stack.pop();
+                        dest = false;
+                    } else //if both equal & peek is positive mark destroyed as true
+                    if (stack.peek() == Math.abs(ast)) {
+                        stack.pop();
+                        dest = true;
+                        break;
+                    } else //if current val is smaller than peek then current destroyed
+                    {
+                        dest = true;
+                        break;
+                    }
+                }
+                //finally when current is not destroyed add it to stack
+                if (dest == false) {
+                    stack.push(ast);
+                }
+            }
+        }
+        while (!stack.isEmpty()) list.add(stack.pop());
+        int n = list.size();
+        int[] ans = new int[n];
+        for (int i = 0; i < n; i++) {
+            ans[i] = list.get(n - i - 1);
+        }
+        return ans;
+    }
+}

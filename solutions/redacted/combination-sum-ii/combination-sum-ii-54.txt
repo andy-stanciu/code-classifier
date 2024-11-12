@@ -1,0 +1,27 @@
+class Solution {
+
+    private void method1(int[] candidates, int target, int index, List<List<Integer>> resultList, ArrayList<Integer> particularList) {
+        if (target == 0) {
+            resultList.add(new ArrayList<>(particularList));
+            return;
+        }
+        for (int i = index; i < candidates.length; i++) {
+            if (i > index && candidates[i] == candidates[i - 1])
+                continue;
+            if (candidates[i] > target)
+                break;
+            particularList.add(candidates[i]);
+            method1(candidates, target - candidates[i], i + 1, resultList, particularList);
+            particularList.remove(particularList.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> method2(int[] candidates, int target) {
+        List<List<Integer>> resultList = new ArrayList<>();
+        Arrays.sort(candidates);
+        method1(candidates, target, 0, resultList, new ArrayList<>());
+        return resultList;
+    }
+}
+//Time Complexity: O(2^n*k), Reason: Assume if all the elements in the array are unique then the no. of subsequence you will get will be O(2^n). we also add the ds to our ans when we reach the base case that will take \u201Ck\u201D//average space for the ds.
+// Space Complexity:O(k*x), Reason: if we have x combinations then space will be x*k where k is the average length of the combination.

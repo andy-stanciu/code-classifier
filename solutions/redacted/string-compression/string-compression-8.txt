@@ -1,0 +1,67 @@
+class Solution {
+
+    public int compress(char[] chars) {
+        if (chars.length == 1)
+            return 1;
+        char[] array = new char[chars.length];
+        int length = chars.length;
+        int index = 0;
+        // to initialize the first character
+        char ch = chars[0];
+        int count = 1;
+        int change = 0;
+        for (int i = 1; i < length; i++) {
+            if (ch == chars[i] && i < length - 1) {
+                // if same character adding count
+                count++;
+            } else if (count != 1 || i == length - 1) {
+                // not same with previous character
+                if (ch == chars[i])
+                    count++;
+                if (ch != chars[i] && i == length - 1) {
+                    // if array reaches last
+                    array[index++] = chars[i - 1];
+                    if (count != 1) {
+                        array[index++] = Character.forDigit(count, 16);
+                        change++;
+                    }
+                    array[index] = chars[i];
+                    change += 2;
+                    continue;
+                }
+                array[index++] = chars[i - 1];
+                if (count > 9) {
+                    index = counts(index, count, array);
+                    change += (Integer.toString(count).length() - 1);
+                } else {
+                    array[index++] = Character.forDigit(count, 16);
+                }
+                ch = chars[i];
+                count = 1;
+                change += 2;
+            } else if (ch != chars[i]) {
+                array[index++] = chars[i - 1];
+                ch = chars[i];
+                change += 1;
+            }
+        }
+        index = 0;
+        for (char c : array) {
+            //Adding to the existing array
+            chars[index++] = c;
+        }
+        // the length of the array which is modified
+        return change;
+    }
+
+    // to adding the two digits number in array
+    public int counts(int index, int count, char[] array) {
+        char[] num = Integer.toString(count).toCharArray();
+        int digits = 0;
+        for (char ch : num) {
+            array[index++] = ch;
+            digits++;
+        }
+        return index;
+    }
+}

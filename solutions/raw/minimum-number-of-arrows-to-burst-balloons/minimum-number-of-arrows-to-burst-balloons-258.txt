@@ -1,0 +1,34 @@
+class Solution {
+
+    public int findMinArrowShots(int[][] points) {
+        // Sort the balloons based on their start points
+        Arrays.sort(points, (a, b) -> Integer.compare(a[0], b[0]));
+        // Initialize the previous balloon to the first balloon in the sorted array
+        int[] prev = points[0];
+        // Initialize the count of arrows to 1, assuming we\'ll need at least one arrow
+        int count = 1;
+        // Iterate through the sorted array of balloons
+        for (int i = 1; i < points.length; i++) {
+            // Extract start and end points of the current balloon
+            int currStartPoint = points[i][0];
+            int currEndPoint = points[i][1];
+            // Extract start and end points of the previous balloon
+            int prevStartPoint = prev[0];
+            int prevEndPoint = prev[1];
+            // Check for overlap between current and previous balloons
+            if (currStartPoint > prevEndPoint) {
+                // If no overlap, increment count and update previous balloon
+                // Increment count as a new arrow is required
+                count++;
+                // Update the previous balloon to the current one
+                prev = points[i];
+            } else {
+                // If there is overlap, update the previous balloon to the overlapping part
+                prev[0] = Math.max(prevStartPoint, currStartPoint);
+                prev[1] = Math.min(prevEndPoint, currEndPoint);
+            }
+        }
+        // Return the minimum number of arrows required
+        return count;
+    }
+}

@@ -1,0 +1,49 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    List<String> l = new ArrayList<>();
+
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> paths = new ArrayList<>();
+        if (root == null) {
+            return paths;
+        }
+        StringBuilder path = new StringBuilder();
+        buildPaths(root, path, paths);
+        return paths;
+    }
+
+    private void buildPaths(TreeNode node, StringBuilder path, List<String> paths) {
+        if (node == null) {
+            return;
+        }
+        int originalLength = path.length();
+        if (originalLength > 0) {
+            path.append("->");
+        }
+        path.append(node.val);
+        if (node.left == null && node.right == null) {
+            // Leaf node, add the path to the result
+            paths.add(path.toString());
+        } else {
+            buildPaths(node.left, path, paths);
+            buildPaths(node.right, path, paths);
+        }
+        // Restore the original path (backtrack) before exiting this node
+        path.setLength(originalLength);
+    }
+}

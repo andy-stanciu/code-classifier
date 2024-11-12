@@ -1,0 +1,42 @@
+class Solution {
+
+    List<List<Integer>> result = new ArrayList<>();
+
+    List<Integer> path = new ArrayList<>();
+
+    boolean[] used;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        int len = nums.length;
+        used = new boolean[len];
+        // sort
+        /*
+            eg: [1,3,1,2,4] --> [1,1,2,3,4]
+         */
+        Arrays.sort(nums);
+        dfs(0, nums);
+        return result;
+    }
+
+    private void dfs(int u, int[] nums) {
+        // if non-element been used, we find one solution
+        if (u == nums.length) {
+            result.add(new ArrayList<>(path));
+        }
+        // loop to iterate the sorted array
+        for (int i = 0; i < nums.length; i++) {
+            if (!used[i]) {
+                if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) {
+                    continue;
+                }
+                path.add(nums[i]);
+                used[i] = true;
+                // recursion
+                dfs(u + 1, nums);
+                // backtrack
+                used[i] = false;
+                path.remove(path.size() - 1);
+            }
+        }
+    }
+}

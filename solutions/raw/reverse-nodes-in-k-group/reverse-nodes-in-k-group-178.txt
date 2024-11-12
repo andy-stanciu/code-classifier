@@ -1,0 +1,40 @@
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        // Step 1: Check if there are at least k nodes to reverse
+        ListNode node = head;
+        int count = 0;
+        // while (node != null && count < k)
+        while (node != null) {
+            node = node.next;
+            count++;
+        }
+        // If we have less than k nodes, return the head as is
+        if (count < k) {
+            return head;
+        }
+        // Step 2: Reverse the first k nodes
+        ListNode prev = null;
+        ListNode curr = head;
+        ListNode next = null;
+        count = 0;
+        // Reverse k nodes
+        while (count < k) {
+            //CURR!=NULL
+            // Store the next node
+            next = curr.next;
+            // Reverse the current node\'s pointer
+            curr.next = prev;
+            // Move prev to current node
+            prev = curr;
+            // Move to the next node
+            curr = next;
+            count++;
+        }
+        // Step 3: Recursively reverse the remaining nodes in groups of k
+        // \'head\' is now the last node of the reversed group, link it to the next part
+        head.next = reverseKGroup(next, k);
+        // Step 4: Return the new head of the reversed group
+        return prev;
+    }
+}

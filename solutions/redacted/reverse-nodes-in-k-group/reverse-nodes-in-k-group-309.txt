@@ -1,0 +1,101 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public class pair {
+
+        ListNode head;
+
+        ListNode tail;
+
+        ListNode newHead;
+
+        Boolean isComplete = true;
+
+        pair(ListNode head, ListNode tail, ListNode newHead) {
+            this.head = head;
+            this.tail = tail;
+            this.newHead = newHead;
+        }
+    }
+
+    public ListNode method1(ListNode head, int k) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        if (k == 0 || k == 1) {
+            return head;
+        }
+        ListNode ansHead = null;
+        ListNode ansTail = null;
+        ListNode penHead = null;
+        pair p = method2(head, k);
+        ansHead = p.head;
+        ansTail = p.tail;
+        penHead = p.newHead;
+        while (penHead != null) {
+            p = method2(penHead, k);
+            ansTail.next = p.head;
+            ansTail = p.tail;
+            penHead = p.newHead;
+        }
+        return ansHead;
+    }
+
+    public pair method2(ListNode head, int k) {
+        if (head.next == null) {
+            return new pair(head, head, null);
+        }
+        if (k == 2 && head.next.next == null) {
+            ListNode temp = head.next;
+            temp.next = head;
+            head.next = null;
+            return new pair(temp, temp.next, null);
+        }
+        ListNode curr = head;
+        ListNode prev = null;
+        int count = 1;
+        ListNode tail = head;
+        while (curr != null && count <= k) {
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+            count++;
+        }
+        if (count <= k) {
+            pair p = new pair(method3(prev), prev, null);
+            return p;
+        }
+        return new pair(prev, tail, curr);
+    }
+
+    public ListNode method3(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        if (head.next.next == null) {
+            ListNode temp = head.next;
+            temp.next = head;
+            head.next = null;
+            return temp;
+        }
+        ListNode curr = head;
+        ListNode prev = null;
+        while (curr != null) {
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        return prev;
+    }
+}

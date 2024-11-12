@@ -1,0 +1,43 @@
+class Solution {
+
+    private int[] candidates;
+
+    private int target;
+
+    private List<List<Integer>> results;
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        this.candidates = candidates;
+        this.target = target;
+        results = new ArrayList<List<Integer>>();
+        Arrays.sort(candidates);
+        return solve(1);
+    }
+
+    private List<List<Integer>> solve(int method) {
+        switch(method) {
+            case 1:
+                _1_combinationSum2(target, 0, new ArrayList<Integer>());
+                break;
+            default:
+                break;
+        }
+        return results;
+    }
+
+    private void _1_combinationSum2(int sum, int idx, List<Integer> result) {
+        if (sum < 0)
+            return;
+        if (sum == 0) {
+            results.add(new ArrayList<>(result));
+            return;
+        }
+        if (idx > candidates.length - 1)
+            return;
+        result.addLast(candidates[idx]);
+        _1_combinationSum2(sum - candidates[idx], idx + 1, result);
+        result.remove(result.size() - 1);
+        while (idx + 1 < candidates.length && candidates[idx + 1] == candidates[idx]) idx++;
+        _1_combinationSum2(sum, idx + 1, result);
+    }
+}

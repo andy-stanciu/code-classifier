@@ -1,0 +1,40 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Map<String, List<Integer>> map = new HashMap<>();
+        permutations(nums, map, 0, nums.length);
+        return new ArrayList<>(map.values());
+    }
+
+    public void permutations(int[] nums, Map<String, List<Integer>> map, int start, int end) {
+        if (start == end) {
+            String key = getKey(nums);
+            if (!map.containsKey(key))
+                map.put(key, getValue(nums));
+            return;
+        }
+        for (int ind = start; start < end; start++) {
+            swap(nums, start, ind);
+            permutations(nums, map, ind + 1, end);
+            swap(nums, start, ind);
+        }
+    }
+
+    public void swap(int[] nums, int s, int t) {
+        int temp = nums[s];
+        nums[s] = nums[t];
+        nums[t] = temp;
+    }
+
+    public String getKey(int[] nums) {
+        StringBuilder key = new StringBuilder();
+        for (int i = 0; i < nums.length; i++) key.append(nums[i]);
+        return key.toString();
+    }
+
+    public List<Integer> getValue(int[] nums) {
+        List<Integer> list = new ArrayList<>();
+        for (int num : nums) list.add(num);
+        return list;
+    }
+}

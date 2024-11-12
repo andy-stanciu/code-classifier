@@ -1,0 +1,27 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        Arrays.sort(nums);
+        boolean[] visited = new boolean[nums.length];
+        solve(visited, ans, nums, new ArrayList<>());
+        return ans;
+    }
+
+    static void solve(boolean[] visited, List<List<Integer>> ans, int[] nums, ArrayList<Integer> curr) {
+        if (curr.size() == nums.length) {
+            ans.add(new ArrayList<>(curr));
+            return;
+        }
+        int lastRemoved = 99;
+        for (int i = 0; i < nums.length; i++) {
+            if (visited[i] == false && nums[i] != lastRemoved) {
+                visited[i] = true;
+                curr.add(nums[i]);
+                solve(visited, ans, nums, curr);
+                lastRemoved = curr.remove(curr.size() - 1);
+                visited[i] = false;
+            }
+        }
+    }
+}

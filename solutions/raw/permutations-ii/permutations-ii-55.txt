@@ -1,0 +1,47 @@
+class Solution {
+
+    private int[] dupFinder = { 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000 };
+
+    private Set<Integer> set = new HashSet();
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        fillUniquePermutations(0, nums, result);
+        return result;
+    }
+
+    private void fillUniquePermutations(int current, int[] array, List<List<Integer>> list) {
+        if (current == array.length) {
+            List<Integer> permutation = new ArrayList();
+            int sum = 0;
+            for (int i = 0; i < array.length; i++) {
+                permutation.add(array[i]);
+                sum += array[i] * dupFinder[i];
+            }
+            if (!set.contains(sum)) {
+                list.add(permutation);
+                set.add(sum);
+            }
+            return;
+        }
+        for (int i = current; i < array.length; i++) {
+            if (i > current && array[i] == array[current])
+                continue;
+            else {
+                swap(i, current, array);
+                fillUniquePermutations(current + 1, array, list);
+                swap(i, current, array);
+            }
+            while (i < array.length - 1 && array[i] == array[i + 1]) i++;
+        }
+    }
+
+    private void swap(int i, int j, int[] nums) {
+        if (i != j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+        }
+    }
+}

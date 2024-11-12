@@ -1,0 +1,35 @@
+class Solution {
+
+    private int findMinInRight(TreeNode node) {
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node.val;
+    }
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return root;
+        }
+        if (root.val < key) {
+            root.right = deleteNode(root.right, key);
+        } else if (root.val > key) {
+            root.left = deleteNode(root.left, key);
+        } else {
+            //we found the key on root, now we have 4 cases
+            if (root.left == null && root.right == null) {
+                return null;
+            } else if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            } else {
+                //both children not null
+                int min = findMinInRight(root.right);
+                root.val = min;
+                root.right = deleteNode(root.right, min);
+            }
+        }
+        return root;
+    }
+}

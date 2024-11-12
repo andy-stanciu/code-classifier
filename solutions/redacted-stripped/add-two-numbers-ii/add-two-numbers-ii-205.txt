@@ -1,0 +1,53 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        Stack<Integer> stack1 = new Stack<>();
+        Stack<Integer> stack2 = new Stack<>();
+        ListNode dummy = null;
+        ListNode L1 = l1;
+        ListNode L2 = l2;
+        while (l1 != null) {
+            stack1.push(l1.val);
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            stack2.push(l2.val);
+            l2 = l2.next;
+        }
+        if (stack1.size() > stack2.size()) {
+            dummy = L1;
+        } else {
+            dummy = L2;
+        }
+        Stack<Integer> stack3 = new Stack<>();
+        int carry = 0;
+        while (!stack1.isEmpty() || !stack2.isEmpty()) {
+            int x = stack1.isEmpty() ? 0 : stack1.pop();
+            int y = stack2.isEmpty() ? 0 : stack2.pop();
+            int z = x + y + carry;
+            if (z > 9) {
+                stack3.push(z % 10);
+                carry = z / 10;
+            } else {
+                stack3.push(z);
+                carry = 0;
+            }
+        }
+        while (carry != 0) {
+            stack3.push(carry % 10);
+            carry = carry / 10;
+        }
+        ListNode head = dummy;
+        while (!stack3.isEmpty()) {
+            if (head != null) {
+                if (head.next == null) {
+                    ListNode temp = new ListNode();
+                    head.next = temp;
+                }
+                head.next.val = stack3.pop();
+            }
+            head = head.next;
+        }
+        return dummy.next;
+    }
+}

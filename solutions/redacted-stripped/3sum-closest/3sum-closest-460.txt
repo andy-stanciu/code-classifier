@@ -1,0 +1,44 @@
+class Solution {
+
+    private void swap(int[] nums, int l, int r) {
+        int tmp = nums[l];
+        nums[l] = nums[r];
+        nums[r] = tmp;
+    }
+
+    private void qSort(int[] nums, int l, int r) {
+        if (r <= l) {
+            return;
+        }
+        int m = l + (r - l) / 2, p = l;
+        swap(nums, m, r);
+        for (int i = l; i < r; i++) {
+            if (nums[i] < nums[r]) {
+                swap(nums, p++, i);
+            }
+        }
+        swap(nums, p, r);
+        qSort(nums, l, p - 1);
+        qSort(nums, p + 1, r);
+    }
+
+    public int method1(int[] nums, int target) {
+        qSort(nums, 0, nums.length - 1);
+        int res = Integer.MAX_VALUE;
+        for (int i = 0; i < nums.length; i++) {
+            int l = i + 1, r = nums.length - 1;
+            while (l < r) {
+                int sum = nums[i] + nums[l] + nums[r];
+                if (sum == target) {
+                    return sum;
+                } else if (sum < target) {
+                    l++;
+                } else if (sum > target) {
+                    r--;
+                }
+                res = Math.abs(target - sum) < Math.abs(target - res) ? sum : res;
+            }
+        }
+        return res;
+    }
+}

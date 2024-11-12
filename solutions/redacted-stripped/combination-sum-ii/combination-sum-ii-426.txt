@@ -1,0 +1,27 @@
+class Solution {
+
+    public void backtracking(int i, int[] candidates, List<List<Integer>> answer, List<Integer> buffer, int param1) {
+        if (param1 == 0) {
+            answer.add(new ArrayList<>(buffer));
+            return;
+        } else if (param1 > 0) {
+            for (int j = i; j < candidates.length; j++) {
+                if (candidates[j] > param1)
+                    break;
+                if (j > i && candidates[j] == candidates[j - 1])
+                    continue;
+                buffer.add(candidates[j]);
+                backtracking(j + 1, candidates, answer, buffer, param1 - candidates[j]);
+                buffer.remove(buffer.size() - 1);
+            }
+        }
+    }
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        List<Integer> buffer = new ArrayList<>();
+        List<List<Integer>> answer = new ArrayList<>();
+        Arrays.sort(candidates);
+        backtracking(0, candidates, answer, buffer, target);
+        return answer;
+    }
+}

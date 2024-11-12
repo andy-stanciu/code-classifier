@@ -1,0 +1,70 @@
+class Solution {
+
+    ListNode out = new ListNode();
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode out = new ListNode(0);
+        ListNode l1_head = l1;
+        ListNode l2_head = l2;
+        // Count lengths
+        int length_l1 = 1;
+        int length_l2 = 1;
+        while (l1_head.next != null) {
+            length_l1++;
+            l1_head = l1_head.next;
+        }
+        while (l2_head.next != null) {
+            length_l2++;
+            l2_head = l2_head.next;
+        }
+        // Stuff shorter list with zeros
+        ListNode zeroList = new ListNode(0);
+        ListNode zeroListHead = zeroList;
+        for (int i = 0; i < Math.abs(length_l1 - length_l2) - 1; i++) {
+            zeroListHead.next = new ListNode(0);
+            zeroListHead = zeroListHead.next;
+        }
+        if (length_l1 < length_l2) {
+            zeroListHead.next = l1;
+            l1 = zeroList;
+        } else if (length_l1 > length_l2) {
+            zeroListHead.next = l2;
+            l2 = zeroList;
+        }
+        // => We have two equal lists, one with leading zeros
+        // Start recursion at the start nodes of the lists
+        if (RecursiveAdd(l1, l2, out) != 0) {
+            // we have to make new node at the head
+            return new ListNode(1, out.next);
+        }
+        return out.next;
+    }
+
+    public int RecursiveAdd(ListNode left, ListNode right, ListNode out) {
+        // Technically we only need to check one of them
+        ListNode newNode = new ListNode(0);
+        out.next = newNode;
+        // end of list
+        if (left.next == null && right.next == null) {
+            int sum = left.val + right.val;
+            if (sum > 9) {
+                sum = sum - 10;
+                newNode.val = sum;
+                return 1;
+            }
+            newNode.val = sum;
+            return 0;
+        }
+        // not end of list
+        // Add recursively, i.e. only add once we know if we have overflow from the next node
+        int carry = RecursiveAdd(left.next, right.next, out.next);
+        int sum = left.val + right.val + carry;
+        if (sum > 9) {
+            sum = sum - 10;
+            newNode.val = sum;
+            return 1;
+        }
+        newNode.val = sum;
+        return 0;
+    }
+}

@@ -1,0 +1,29 @@
+class Solution {
+
+    private void c(int[] nums, List<List<Integer>> ans, List<Integer> sib, boolean[] check) {
+        if (sib.size() == nums.length) {
+            ans.add(new ArrayList<>(sib));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (check[i] || (i > 0 && nums[i] == nums[i - 1] && !check[i - 1])) {
+                continue;
+            }
+            check[i] = true;
+            sib.add(nums[i]);
+            c(nums, ans, sib, check);
+            sib.remove(sib.size() - 1);
+            check[i] = false;
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> sib = new ArrayList<>();
+        boolean[] check = new boolean[nums.length];
+        c(nums, ans, sib, check);
+        System.gc();
+        return ans;
+    }
+}

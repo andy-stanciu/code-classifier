@@ -1,0 +1,65 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        int count = 0;
+        ListNode curr = head;
+        // Head of the new list after reverse operation is performed
+        ListNode newHead = null;
+        ListNode prev = null;
+        // pointer to the last element of previous group that is already reversed
+        ListNode prevTail = null;
+        // pointer to the first element of the next group that is yet to be reversed
+        ListNode nextHead = null;
+        // pointer to the current group head element
+        ListNode groupHead = null;
+        while (curr != null) {
+            count += 1;
+            if (count == 1) {
+                // this is first element in the new group that is to be reversed
+                // after reversing previous group its head element will become the tail.
+                prevTail = groupHead;
+                groupHead = curr;
+            }
+            if (count == k) {
+                // we\'ve seen k elements so next element will be nextHead
+                nextHead = curr.next;
+                reverseGroup(groupHead, curr, prevTail, nextHead);
+                // once we reverse a group reset the count
+                count = 0;
+                if (newHead == null) {
+                    // this operation needs to be done only once as the first group we reverse will produce the head of the new LL formed.
+                    newHead = curr;
+                }
+                curr = nextHead;
+            } else {
+                curr = curr.next;
+            }
+        }
+        return newHead == null ? head : newHead;
+    }
+
+    private void reverseGroup(ListNode head, ListNode tail, ListNode prevTail, ListNode nextHead) {
+        ListNode curr = head;
+        ListNode prev = prevTail;
+        while (curr != nextHead) {
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        if (prevTail != null) {
+            prevTail.next = prev;
+        }
+        head.next = nextHead;
+    }
+}

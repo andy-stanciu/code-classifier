@@ -1,0 +1,64 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode[] extract(ListNode head) {
+        ListNode cursor = head;
+        ListNode even = new ListNode(-1);
+        ListNode odd = new ListNode(-1);
+        ListNode evenHead = even;
+        ListNode oddHead = odd;
+        int index = 1;
+        while (cursor != null) {
+            ListNode temp = cursor.next;
+            if (index % 2 == 0) {
+                even.next = cursor;
+                even = even.next;
+            } else {
+                odd.next = cursor;
+                odd = odd.next;
+            }
+            cursor.next = null;
+            cursor = temp;
+            index++;
+        }
+        return new ListNode[] { oddHead.next, evenHead.next };
+    }
+
+    ListNode swappedList(ListNode[] pair) {
+        ListNode odd = pair[0];
+        ListNode even = pair[1];
+        if (even == null) {
+            return odd;
+        }
+        ListNode ans = even;
+        boolean isFlag = true;
+        while (odd != null && even != null) {
+            if (isFlag) {
+                ListNode tempEven = even.next;
+                even.next = odd;
+                even = tempEven;
+            } else {
+                ListNode tempOdd = odd.next;
+                odd.next = even;
+                odd = tempOdd;
+            }
+            isFlag = !isFlag;
+        }
+        return ans;
+    }
+
+    public ListNode swapPairs(ListNode head) {
+        ListNode[] pair = extract(head);
+        ListNode ans = swappedList(pair);
+        return ans;
+    }
+}

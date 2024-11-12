@@ -1,0 +1,38 @@
+class Solution {
+
+    public int compress(char[] chars) {
+        if (chars == null || chars.length == 0)
+            return 0;
+        if (chars.length == 1)
+            return 1;
+        char lastChar = chars[0];
+        int count = 1;
+        int curIndex = 1;
+        int insertIndex = 1;
+        while (curIndex < chars.length) {
+            char curChar = chars[curIndex];
+            if (curChar == lastChar) {
+                count++;
+            } else {
+                insertIndex = insert(chars, count, insertIndex);
+                chars[insertIndex] = curChar;
+                lastChar = curChar;
+                insertIndex++;
+                count = 1;
+            }
+            curIndex++;
+        }
+        return insert(chars, count, insertIndex);
+    }
+
+    private int insert(char[] chars, int count, int insertIndex) {
+        if (count > 1) {
+            String countStr = String.valueOf(count);
+            for (char c : countStr.toCharArray()) {
+                chars[insertIndex] = c;
+                insertIndex++;
+            }
+        }
+        return insertIndex;
+    }
+}

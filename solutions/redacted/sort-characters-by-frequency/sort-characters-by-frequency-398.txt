@@ -1,0 +1,45 @@
+class Solution {
+
+    public String method1(String s) {
+        int[] freq = new int[256];
+        for (int idx = 0; idx < s.length(); idx++) {
+            freq[s.charAt(idx)]++;
+        }
+        Pair[] pairs = new Pair[256];
+        for (int idx = 0; idx < freq.length; idx++) {
+            pairs[idx] = new Pair(idx, freq[idx]);
+        }
+        Arrays.sort(pairs, new PairComparator().reversed());
+        StringBuilder sb = new StringBuilder();
+        for (int idx = 0; idx < pairs.length; idx++) {
+            Pair curPair = pairs[idx];
+            while (curPair.freq-- > 0) {
+                sb.append((char) curPair.ch);
+            }
+        }
+        return sb.toString();
+    }
+
+    private char getChar(int idx) {
+        return (char) idx;
+    }
+
+    private class PairComparator implements Comparator<Pair> {
+
+        public int compare(Pair one, Pair two) {
+            return Integer.compare(one.freq, two.freq);
+        }
+    }
+
+    private class Pair {
+
+        int ch;
+
+        int freq;
+
+        public Pair(int c, int f) {
+            ch = c;
+            freq = f;
+        }
+    }
+}

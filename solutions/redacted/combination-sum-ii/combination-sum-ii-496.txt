@@ -1,0 +1,33 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        if (candidates == null || target < 1)
+            return Collections.emptyList();
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(candidates);
+        backtrack(candidates, target, res, new ArrayList<>(), 0);
+        return res;
+    }
+
+    public void backtrack(int[] candidates, int target, List<List<Integer>> res, List<Integer> ans, int index) {
+        if (target == 0) {
+            // find solution
+            res.add(new ArrayList<>(ans));
+        }
+        // not right path
+        if (target < 0)
+            return;
+        for (int i = index; i < candidates.length; i++) {
+            // skip duplicate
+            if (i > index && candidates[i] == candidates[i - 1])
+                continue;
+            int candidate = candidates[i];
+            // because array is sorted, so if candidate bigger than target it will never become an answer for target
+            if (candidate > target)
+                continue;
+            ans.add(candidate);
+            backtrack(candidates, target - candidate, res, ans, i + 1);
+            ans.remove(ans.size() - 1);
+        }
+    }
+}

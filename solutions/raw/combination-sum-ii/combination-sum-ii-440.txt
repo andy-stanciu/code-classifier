@@ -1,0 +1,40 @@
+class Solution {
+
+    private List<List<Integer>> result = new ArrayList<>();
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        backtrackHelper(candidates, target, new LinkedList<>(), 0, 0);
+        return result;
+    }
+
+    public void backtrackHelper(int[] element, int target, LinkedList<Integer> solution, int currentTarget, int index) {
+        if (currentTarget > target)
+            return;
+        if (currentTarget == target)
+            processSolution(solution);
+        else {
+            for (int i = index; i < element.length; i++) {
+                if (i > index && element[i] == element[i - 1])
+                    continue;
+                if (element[i] > target)
+                    break;
+                solution.addLast(element[i]);
+                backtrackHelper(element, target, solution, currentTarget + element[i], i + 1);
+                solution.removeLast();
+            }
+        }
+    }
+
+    private void processSolution(LinkedList<Integer> solution) {
+        result.add(new LinkedList<>(solution));
+    }
+
+    private void print(List<Integer> res) {
+        System.out.print("{");
+        for (Integer element : res) {
+            System.out.print(" " + element);
+        }
+        System.out.println("}");
+    }
+}

@@ -1,0 +1,56 @@
+class Solution {
+
+    public ListNode reverse(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        ListNode next;
+        while (curr != null) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ListNode h1 = reverse(l1);
+        ListNode h2 = reverse(l2);
+        ListNode dummy = new ListNode(0);
+        ListNode d1 = dummy;
+        int carry = 0;
+        while (h1 != null && h2 != null) {
+            int sum = h1.val + h2.val + carry;
+            int rem = sum % 10;
+            carry = sum / 10;
+            ListNode node = new ListNode(rem);
+            d1.next = node;
+            d1 = node;
+            h1 = h1.next;
+            h2 = h2.next;
+        }
+        while (h2 != null) {
+            int sum = h2.val + carry;
+            int rem = sum % 10;
+            ListNode node = new ListNode(rem);
+            d1.next = node;
+            d1 = node;
+            h2 = h2.next;
+            carry = sum / 10;
+        }
+        while (h1 != null) {
+            int sum = h1.val + carry;
+            int rem = sum % 10;
+            ListNode node = new ListNode(rem);
+            d1.next = node;
+            d1 = node;
+            h1 = h1.next;
+            carry = sum / 10;
+        }
+        if (h1 == null && h2 == null && carry > 0) {
+            ListNode node = new ListNode(carry);
+            d1.next = node;
+        }
+        return reverse(dummy.next);
+    }
+}

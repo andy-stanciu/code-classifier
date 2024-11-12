@@ -1,0 +1,50 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        ListNode current = head;
+        ListNode resultHead = null;
+        ListNode prev = null;
+        while (current != null) {
+            ListNode next = getNextAfterCount(current, k);
+            ListNode lastNode = method2(current, 0, k);
+            if (lastNode == null)
+                break;
+            if (resultHead == null) {
+                resultHead = lastNode;
+            }
+            if (prev != null) {
+                prev.next = lastNode;
+            }
+            current.next = next;
+            prev = current;
+            current = current.next;
+        }
+        return resultHead;
+    }
+
+    public ListNode method2(ListNode node, int currentCount, int maxCount) {
+        currentCount++;
+        if (node == null) {
+            return null;
+        } else if (currentCount == maxCount) {
+            return node;
+        }
+        ListNode lastNode = method2(node.next, currentCount, maxCount);
+        if (lastNode == null) {
+            return null;
+        }
+        node.next.next = node;
+        return lastNode;
+    }
+
+    private ListNode getNextAfterCount(ListNode node, int count) {
+        while (count > 0) {
+            if (node == null) {
+                return null;
+            }
+            node = node.next;
+            count--;
+        }
+        return node;
+    }
+}

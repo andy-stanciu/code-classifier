@@ -1,0 +1,27 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList();
+        Arrays.sort(candidates);
+        this.recursiveCall(0, candidates, target, new Stack<>(), result);
+        return result;
+    }
+
+    public void recursiveCall(int index, int[] candidates, int target, Stack<Integer> ds, List<List<Integer>> result) {
+        // Base Condition -- either if target =0 or index==candidates.length
+        if (target == 0) {
+            result.add(new ArrayList<Integer>(ds));
+            return;
+        }
+        if (index == candidates.length) {
+            return;
+        }
+        if (candidates[index] > target)
+            return;
+        ds.push(candidates[index]);
+        recursiveCall(index + 1, candidates, target - candidates[index], ds, result);
+        ds.pop();
+        while (index + 1 < candidates.length && candidates[index] == candidates[index + 1]) index++;
+        recursiveCall(index + 1, candidates, target, ds, result);
+    }
+}

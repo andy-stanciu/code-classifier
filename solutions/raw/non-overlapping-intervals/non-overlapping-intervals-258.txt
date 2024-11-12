@@ -1,0 +1,35 @@
+class Solution {
+
+    public int eraseOverlapIntervals(int[][] intervals) {
+        List<Interval> intervalList = new ArrayList<>();
+        for (int[] inteval : intervals) {
+            intervalList.add(new Interval(inteval[0], inteval[1]));
+        }
+        Collections.sort(intervalList, (firstInterval, secondInterval) -> firstInterval.startTime - secondInterval.startTime);
+        int numberOfIntervalToBeRemoved = 0;
+        List<Interval> mergedInterval = new ArrayList<>(Arrays.asList(intervalList.get(0)));
+        for (int i = 1; i < intervalList.size(); i++) {
+            Interval currentInterval = intervalList.get(i);
+            Interval lastMergedInteval = mergedInterval.get(mergedInterval.size() - 1);
+            if (currentInterval.startTime >= lastMergedInteval.endTime) {
+                mergedInterval.add(currentInterval);
+            } else {
+                numberOfIntervalToBeRemoved = numberOfIntervalToBeRemoved + 1;
+                lastMergedInteval.endTime = Math.min(currentInterval.endTime, lastMergedInteval.endTime);
+            }
+        }
+        return numberOfIntervalToBeRemoved;
+    }
+
+    static class Interval {
+
+        int startTime;
+
+        int endTime;
+
+        public Interval(int startTime, int endTime) {
+            this.startTime = startTime;
+            this.endTime = endTime;
+        }
+    }
+}

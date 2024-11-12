@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        //if the key lies left, then delete it and return root.
+        if (key < root.val) {
+            root.left = method1(root.left, key);
+            return root;
+        } else if (key > root.val) {
+            //if the key lies left, then delete it and return root.
+            root.right = method1(root.right, key);
+            return root;
+        } else {
+            //root is the key
+            //case 1: root is a leaf node; simply return null to its parent to reset it.
+            if (root.left == null && root.right == null) {
+                return null;
+            }
+            //case 2: root is a one-child left node, Simply return the left node to its parent to get attach it.
+            //case 3: root is a one-child right node, Simply return the right node to its parent to get attach it.
+            if (root.left == null || root.right == null) {
+                return root.left == null ? root.right : root.left;
+            }
+            //case 4: root is a two-child node. we need to find the successor to delete it.
+            // since it is a BST, to replace the root node and keep the BST property intact for this subtree,
+            // this root has to be replaced by the greater value than root, precisely the minimum greater value than root
+            // which is an inorder successors, this will lie on the right side of this root, and over the left side of the right subtree.
+            TreeNode var1 = root.right;
+            while (var1.left != null) {
+                var1 = var1.left;
+            }
+            //inOrderSuccessor is now either would be right child node or none.
+            //we\'ll delete this node recursively
+            root.val = var1.val;
+            root.right = method1(root.right, var1.val);
+            return root;
+        }
+    }
+}

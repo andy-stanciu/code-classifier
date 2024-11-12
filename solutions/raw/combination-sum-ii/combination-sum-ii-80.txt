@@ -1,0 +1,36 @@
+class Solution {
+
+    public void helper(List<List<Integer>> subsets, List<Integer> subset, int[] candidates, int sum, int target, int idx) {
+        if (sum == target) {
+            subsets.add(new ArrayList<>(subset));
+            return;
+        }
+        if (idx == candidates.length || sum > target)
+            return;
+        else {
+            // add:
+            subset.add(candidates[idx]);
+            helper(subsets, subset, candidates, sum + candidates[idx], target, idx + 1);
+            // backtrack
+            subset.remove(subset.size() - 1);
+            // Case 2: Skip the current candidate and any duplicates
+            while (idx + 1 < candidates.length && candidates[idx] == candidates[idx + 1]) {
+                idx++;
+            }
+            helper(subsets, subset, candidates, sum, target, idx + 1);
+        }
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> subset = new ArrayList<>();
+        Arrays.sort(candidates);
+        helper(ans, subset, candidates, 0, target, 0);
+        return ans;
+    }
+}
+/**
+ *    [2,5,2,1,2] = [1, 2, 2, 2, 5]
+ *
+ *     [1, 2, 2, 2, 5]
+ */

@@ -1,0 +1,67 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        // Code here
+        TreeNode temp = root;
+        TreeNode prev = root;
+        while (temp != null) {
+            if (temp.val > key) {
+                prev = temp;
+                temp = temp.left;
+            } else if (temp.val < key) {
+                prev = temp;
+                temp = temp.right;
+            } else {
+                if (temp.right == null && temp.left == null) {
+                    if (temp == root)
+                        return null;
+                    if (prev.right == temp) {
+                        prev.right = null;
+                    } else {
+                        prev.left = null;
+                    }
+                } else if (temp.left != null) {
+                    if (prev.right == temp) {
+                        prev.right = temp.left;
+                    } else if (prev == temp) {
+                        root = temp.left;
+                    } else {
+                        prev.left = temp.left;
+                    }
+                    TreeNode ab = temp.left;
+                    while (ab.right != null) {
+                        ab = ab.right;
+                    }
+                    ab.right = temp.right;
+                } else {
+                    if (prev.right == temp) {
+                        prev.right = temp.right;
+                    } else if (temp == prev) {
+                        return prev.right;
+                    } else {
+                        prev.left = temp.right;
+                    }
+                }
+                return root;
+            }
+        }
+        return root;
+    }
+}

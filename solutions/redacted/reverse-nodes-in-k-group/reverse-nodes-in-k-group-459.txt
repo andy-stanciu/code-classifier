@@ -1,0 +1,58 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        ListNode var1 = new ListNode(-1);
+        ListNode dummy = var1;
+        var1.next = head;
+        while (var1.next != null) {
+            //find curr group head -> prev group tail.next
+            ListNode var2 = var1.next;
+            //find curr group tail
+            int count = k;
+            ListNode var3 = var2;
+            while (count > 1) {
+                if (var3.next == null)
+                    break;
+                var3 = var3.next;
+                count--;
+            }
+            if (count > 1)
+                break;
+            //find next group head
+            ListNode var4 = var3.next;
+            //break curr tail head with next group head
+            var3.next = null;
+            //reverse curr group
+            method2(var2);
+            //link curr group tail with prev group tail
+            var1.next = var3;
+            //link curr group head to next group head
+            var2.next = var4;
+            //assign curr group head as prev group tail
+            var1 = var2;
+        }
+        return dummy.next;
+    }
+
+    public ListNode method2(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+}

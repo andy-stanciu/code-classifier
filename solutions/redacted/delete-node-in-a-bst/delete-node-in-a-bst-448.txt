@@ -1,0 +1,35 @@
+class Solution {
+
+    private int method1(TreeNode param1) {
+        while (param1.left != null) {
+            param1 = param1.left;
+        }
+        return param1.val;
+    }
+
+    public TreeNode method2(TreeNode root, int key) {
+        if (root == null) {
+            return root;
+        }
+        if (root.val < key) {
+            root.right = method2(root.right, key);
+        } else if (root.val > key) {
+            root.left = method2(root.left, key);
+        } else {
+            //we found the key on root, now we have 4 cases
+            if (root.left == null && root.right == null) {
+                return null;
+            } else if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            } else {
+                //both children not null
+                int var1 = method1(root.right);
+                root.val = var1;
+                root.right = method2(root.right, var1);
+            }
+        }
+        return root;
+    }
+}

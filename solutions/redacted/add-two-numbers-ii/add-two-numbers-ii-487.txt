@@ -1,0 +1,135 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    ListNode node = null;
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        int sizeOfListOne = 0;
+        int var1 = 0;
+        ListNode temp3 = l1;
+        ListNode temp4 = l2;
+        if ((l1.next == null && l2.next == null) && (l1.val == 0 && l2.val == 0)) {
+            node = new ListNode(l1.val);
+            return node;
+        }
+        while (temp3 != null || temp4 != null) {
+            if (temp3 != null) {
+                sizeOfListOne++;
+                temp3 = temp3.next;
+            }
+            if (temp4 != null) {
+                var1++;
+                temp4 = temp4.next;
+            }
+        }
+        List<Integer> listOfIntegers = new ArrayList<Integer>();
+        if (sizeOfListOne > var1) {
+            int differenceBetweenSizes = sizeOfListOne - var1;
+            ListNode temp = l1;
+            ListNode temp1 = l2;
+            for (int i = 0; i < differenceBetweenSizes; i++) {
+                listOfIntegers.add(temp.val);
+                temp = temp.next;
+            }
+            calculateSumOfLists(temp, temp1, listOfIntegers);
+        } else if (var1 > sizeOfListOne) {
+            int differenceBetweenSizes = var1 - sizeOfListOne;
+            ListNode temp = l2;
+            ListNode temp1 = l1;
+            for (int i = 0; i < differenceBetweenSizes; i++) {
+                listOfIntegers.add(temp.val);
+                temp = temp.next;
+            }
+            calculateSumOfLists(temp, temp1, listOfIntegers);
+        } else if (var1 == sizeOfListOne) {
+            calculateSumListsSameLength(l1, l2, listOfIntegers);
+        }
+        return node;
+    }
+
+    private void insertNodeIntoLinkedList(List<Integer> listOfIntegers) {
+        ListNode temp = node;
+        for (int k = 0; k < listOfIntegers.size(); k++) {
+            if (node == null) {
+                int num = listOfIntegers.get(k);
+                node = new ListNode(num);
+                temp = node;
+            } else {
+                int num1 = listOfIntegers.get(k);
+                ListNode currentNode = new ListNode(num1);
+                temp.next = currentNode;
+                temp = temp.next;
+            }
+        }
+    }
+
+    private void calculateSumOfLists(ListNode temp, ListNode temp1, List<Integer> listOfIntegers) {
+        while (temp != null) {
+            int sum = temp.val + temp1.val;
+            if (sum >= 10) {
+                int carryForwardValue = sum / 10;
+                for (int j = listOfIntegers.size() - 1; j >= 0; j--) {
+                    int result = listOfIntegers.get(j) + carryForwardValue;
+                    if (result >= 10) {
+                        carryForwardValue = result / 10;
+                        listOfIntegers.set(j, result % 10);
+                        if (j == 0) {
+                            listOfIntegers.add(j, carryForwardValue);
+                        }
+                    } else {
+                        listOfIntegers.set(j, result);
+                        break;
+                    }
+                }
+                listOfIntegers.add(sum % 10);
+            } else {
+                listOfIntegers.add(sum);
+            }
+            temp = temp.next;
+            temp1 = temp1.next;
+        }
+        insertNodeIntoLinkedList(listOfIntegers);
+    }
+
+    private void calculateSumListsSameLength(ListNode l1, ListNode l2, List<Integer> listOfIntegers) {
+        while (l1 != null || l2 != null) {
+            int sum = l1.val + l2.val;
+            if (sum >= 10) {
+                if (listOfIntegers.isEmpty()) {
+                    node = new ListNode(sum / 10);
+                    listOfIntegers.add(sum % 10);
+                } else {
+                    int carryForwardValue = sum / 10;
+                    for (int j = listOfIntegers.size() - 1; j >= 0; j--) {
+                        int result = listOfIntegers.get(j) + carryForwardValue;
+                        if (result >= 10) {
+                            carryForwardValue = result / 10;
+                            listOfIntegers.set(j, result % 10);
+                            if (j == 0) {
+                                listOfIntegers.add(j, carryForwardValue);
+                            }
+                        } else {
+                            listOfIntegers.set(j, result);
+                            break;
+                        }
+                    }
+                    listOfIntegers.add(sum % 10);
+                }
+            } else {
+                listOfIntegers.add(sum);
+            }
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        insertNodeIntoLinkedList(listOfIntegers);
+    }
+}

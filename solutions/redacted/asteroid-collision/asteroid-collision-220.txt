@@ -1,0 +1,51 @@
+class Solution {
+
+    public int[] method1(int[] ast) {
+        ArrayList<Integer> list = new ArrayList();
+        for (int i = 0; i < ast.length; i++) {
+            if (list.size() == 0) {
+                list.add(ast[i]);
+            } else {
+                list = insertItem(list, ast[i]);
+            }
+        }
+        //System.out.println(list);
+        return list.stream().mapToInt(i -> i).toArray();
+    }
+
+    public ArrayList<Integer> insertItem(ArrayList<Integer> list, int item) {
+        int index = list.size() - 1;
+        int equalityFlag = 0;
+        if (checkForItemsNotColliding(list.get(index), item))
+            list.add(item);
+        else {
+            for (int i = index; i >= 0; i--) {
+                if (checkForItemsNotColliding(list.get(i), item))
+                    break;
+                if (Math.abs(list.get(i)) > Math.abs(item))
+                    return list;
+                else if (Math.abs(list.get(i)) == Math.abs(item)) {
+                    list.remove(i);
+                    equalityFlag = 1;
+                    break;
+                } else {
+                    list.remove(i);
+                }
+            }
+            if (equalityFlag != 1)
+                list.add(item);
+        }
+        //System.out.println(list);
+        return list;
+    }
+
+    public boolean checkForItemsNotColliding(int item1, int item2) {
+        if (item1 > 0 && item2 > 0)
+            return true;
+        if (item1 < 0 && item2 < 0)
+            return true;
+        if (item1 < 0 && item2 > 0)
+            return true;
+        return false;
+    }
+}

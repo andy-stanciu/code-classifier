@@ -1,0 +1,81 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        return tree(root, key);
+    }
+
+    public TreeNode tree(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        if (root.val == key) {
+            // case 1: if the root is the leaf child
+            if (root.left == null && root.right == null)
+                return null;
+            // case 2: if the left subtree is null
+            if (root.left == null && root.right != null) {
+                return root.right;
+            }
+            // case 3: if the right subtee is null
+            if (root.right == null && root.left != null) {
+                return root.left;
+            }
+            // case 4 : if non (left, right) subtee is null
+            if (root.left != null && root.right != null) {
+                // reconstruct the subtee and return the new root TreeNode
+                // find the next greater but smallest node value
+                Queue<TreeNode> queue = new LinkedList<>();
+                queue.add(root.right);
+                int newRoot = Integer.MAX_VALUE;
+                List<Integer> list = new ArrayList<>();
+                while (!queue.isEmpty()) {
+                    TreeNode var1 = queue.remove();
+                    if (newRoot > var1.val) {
+                        newRoot = var1.val;
+                    }
+                    list.add(var1.val);
+                    if (var1.left != null)
+                        queue.add(var1.left);
+                    if (var1.right != null)
+                        queue.add(var1.right);
+                }
+                // reconstruct the tree with the new node found
+                TreeNode var2 = new TreeNode(newRoot);
+                for (int i : list) {
+                    if (i == newRoot)
+                        continue;
+                    reconstruct(var2, i);
+                }
+                var2.left = root.left;
+                return var2;
+            }
+        }
+        root.left = tree(root.left, key);
+        root.right = tree(root.right, key);
+        return root;
+    }
+
+    public TreeNode reconstruct(TreeNode root, int val) {
+        if (root == null)
+            return new TreeNode(val);
+        if (root.val > val) {
+            root.left = reconstruct(root.left, val);
+        } else
+            root.right = reconstruct(root.right, val);
+        return root;
+    }
+}

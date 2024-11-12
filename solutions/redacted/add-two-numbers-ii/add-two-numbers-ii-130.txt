@@ -1,0 +1,71 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public int findlength(ListNode head) {
+        int count = 0;
+        ListNode temp = head;
+        while (temp != null) {
+            count++;
+            temp = temp.next;
+        }
+        return count;
+    }
+
+    public ListNode reversell(ListNode head) {
+        ListNode temp = head;
+        ListNode prev = null;
+        while (temp != null) {
+            ListNode front = temp.next;
+            temp.next = prev;
+            prev = temp;
+            temp = front;
+        }
+        return prev;
+    }
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ListNode temp = l1;
+        ListNode temp1 = l2;
+        int carry = 0;
+        ListNode prev = temp;
+        //assuming that l1 is larger
+        while (temp1 != null) {
+            int dummy = temp.val + temp1.val + carry;
+            carry = dummy / 10;
+            temp.val = dummy % 10;
+            prev = temp;
+            temp = temp.next;
+            temp1 = temp1.next;
+        }
+        while (prev.next != null) {
+            int dummy = temp.val + carry;
+            carry = dummy / 10;
+            temp.val = dummy % 10;
+            prev = temp;
+            temp = temp.next;
+        }
+        if (carry != 0) {
+            ListNode extra = new ListNode(carry);
+            prev.next = extra;
+        }
+        return l1;
+    }
+
+    public ListNode method2(ListNode l1, ListNode l2) {
+        int a = findlength(l1);
+        int b = findlength(l2);
+        if (b > a) {
+            return reversell(method1(reversell(l2), reversell(l1)));
+        }
+        return reversell(method1(reversell(l1), reversell(l2)));
+    }
+}

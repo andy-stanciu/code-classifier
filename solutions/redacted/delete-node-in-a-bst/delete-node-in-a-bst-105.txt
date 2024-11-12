@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        if (root.val == key) {
+            System.out.println(root.val);
+            return root;
+        }
+        if (key < root.val)
+            return method1(root.left, key);
+        else
+            return method1(root.right, key);
+    }
+
+    public TreeNode method2(TreeNode root, int key) {
+        // once a node matches key:
+        // 1. its left child becomes the left child of the left most node in the right subtree
+        // 2. its right child becomes the new root.
+        if (root == null)
+            return null;
+        if (method1(root, key) == root) {
+            if (root.right == null && root.left == null)
+                return null;
+            else if (root.right != null && root.left == null)
+                return root.right;
+            else if (root.left != null && root.right == null)
+                return root.left;
+            else {
+                TreeNode sux = root.right;
+                TreeNode orphan = root.left;
+                TreeNode adopt = root.right;
+                while (adopt.left != null) {
+                    adopt = adopt.left;
+                }
+                adopt.left = orphan;
+                root.val = sux.val;
+                root.right = sux.right;
+                root.left = sux.left;
+            }
+        }
+        root.left = method2(root.left, key);
+        root.right = method2(root.right, key);
+        return root;
+    }
+}

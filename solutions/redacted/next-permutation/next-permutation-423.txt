@@ -1,0 +1,48 @@
+class Solution {
+
+    public void method1(int[] nums) {
+        int n = nums.length;
+        int index = -1;
+        // Step 1: Find the first decreasing element from the end
+        for (int i = n - 1; i > 0; i--) {
+            if (nums[i] > nums[i - 1]) {
+                index = i - 1;
+                break;
+            }
+        }
+        if (index == -1) {
+            // The entire array is in descending order, sort it in ascending order
+            bubbleSort(nums, 0, n - 1);
+            return;
+        }
+        // Step 2: Find the smallest element larger than nums[index] to the right of it
+        int swapIndex = -1;
+        for (int i = n - 1; i > index; i--) {
+            if (nums[i] > nums[index]) {
+                swapIndex = i;
+                break;
+            }
+        }
+        // Step 3: Swap the elements at index and swapIndex
+        swap(nums, index, swapIndex);
+        // Step 4: Sort the elements to the right of the original index using bubble sort
+        bubbleSort(nums, index + 1, n - 1);
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    private void bubbleSort(int[] nums, int start, int end) {
+        for (int i = start; i <= end; i++) {
+            for (int j = start; j < end - (i - start); j++) {
+                if (nums[j] > nums[j + 1]) {
+                    // Swap nums[j] and nums[j + 1]
+                    swap(nums, j, j + 1);
+                }
+            }
+        }
+    }
+}

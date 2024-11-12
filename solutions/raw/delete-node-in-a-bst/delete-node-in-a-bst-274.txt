@@ -1,0 +1,55 @@
+class Solution {
+
+    TreeNode inOrderPred(TreeNode root) {
+        TreeNode temp = root.left;
+        while (temp.right != null) temp = temp.right;
+        return temp;
+    }
+
+    TreeNode predParent(TreeNode root, TreeNode pred) {
+        if (root.left == pred || root.right == pred)
+            return root;
+        TreeNode temp = root.left;
+        while (temp.right != pred) temp = temp.right;
+        return temp;
+    }
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        if (root.val > key)
+            root.left = deleteNode(root.left, key);
+        if (root.val < key)
+            root.right = deleteNode(root.right, key);
+        if (root.val == key) {
+            // Zero Child node
+            if (root.left == null && root.right == null)
+                return null;
+            else // 1 Child Node
+            if (root.left == null || root.right == null) {
+                if (root.right == null)
+                    return root.left;
+                else
+                    return root.right;
+            } else // 2 child Nodes
+            if (root.left != null && root.right != null) {
+                TreeNode pred = inOrderPred(root);
+                TreeNode predParent = predParent(root, pred);
+                // As root == predParent and root has right child
+                // and we have to save right child but delete root
+                // so we connect root right child to pred.right
+                // and now pred become root of tree
+                if (root == predParent) {
+                    pred.right = root.right;
+                    return pred;
+                }
+                // handles if pred has right child
+                predParent.right = pred.left;
+                pred.left = root.left;
+                pred.right = root.right;
+                return pred;
+            }
+        }
+        return root;
+    }
+}

@@ -1,0 +1,35 @@
+class Solution {
+
+    public List<List<String>> groupAnagrams(String[] strs) {
+        // Array of HashMaps to store the frequency of characters in each string
+        HashMap<Character, Integer>[] map = new HashMap[strs.length];
+        // Populate the array of HashMaps
+        for (int i = 0; i < strs.length; i++) {
+            String str = strs[i];
+            map[i] = new HashMap<>();
+            for (int j = 0; j < str.length(); j++) {
+                map[i].put(str.charAt(j), map[i].getOrDefault(str.charAt(j), 0) + 1);
+            }
+        }
+        // List to store groups of anagrams
+        List<List<String>> ans = new ArrayList<>();
+        // Iterate through the strings to group anagrams
+        for (int i = 0; i < strs.length; i++) {
+            if (strs[i].equals("-1")) {
+                continue;
+            }
+            List<String> temp = new ArrayList<>();
+            temp.add(strs[i]);
+            strs[i] = "-1";
+            for (int j = i + 1; j < strs.length; j++) {
+                // Check if the frequencies of characters are the same
+                if (map[i].equals(map[j])) {
+                    temp.add(strs[j]);
+                    strs[j] = "-1";
+                }
+            }
+            ans.add(temp);
+        }
+        return ans;
+    }
+}

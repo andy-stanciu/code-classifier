@@ -1,0 +1,56 @@
+class Solution {
+
+    public void method1(int[] nums) {
+        /*
+-> Find the first element from the right side of the array where the element is smaller than its next element. Let\'s call this element the "pivot".
+*/
+        int pivotIdx = -1;
+        for (int i = nums.length - 2; i >= 0; i--) {
+            if (nums[i] < nums[i + 1]) {
+                pivotIdx = i;
+                break;
+            }
+        }
+        /* 
+-> If no such element is found, it means the array is in descending order, and it\'s already the last permutation. In this case, we reverse the entire array to get the smallest permutation.
+*/
+        if (pivotIdx == -1) {
+            reverse(nums, 0, nums.length - 1);
+            return;
+        }
+        /* 
+-> Find the smallest element to the right of the pivot that is greater than the pivot. Let\'s call this element the "successor".
+*/
+        int successorIdx = -1;
+        for (int j = nums.length - 1; j > pivotIdx; j--) {
+            if (nums[j] > nums[pivotIdx]) {
+                successorIdx = j;
+                break;
+            }
+        }
+        /* 
+-> Swap the pivot with the successor.
+*/
+        swap(nums, pivotIdx, successorIdx);
+        /* 
+-> Reverse the portion of the array to the right of the pivot.
+*/
+        reverse(nums, pivotIdx + 1, nums.length - 1);
+    }
+
+    // Reverse Function
+    public static void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            swap(nums, start, end);
+            start++;
+            end--;
+        }
+    }
+
+    // Swap Function
+    public static void swap(int[] nums, int index1, int index2) {
+        int temp = nums[index1];
+        nums[index1] = nums[index2];
+        nums[index2] = temp;
+    }
+}

@@ -1,0 +1,66 @@
+class Solution {
+
+    public void method1(int[] arr) {
+        /**
+         * first step to find breaking point
+         */
+        // taking idx1 with the last index of array to denote breaking point
+        // learning from mistake do not initialize "-1" to the pointers since JAVA has
+        // no negative indexing.
+        int idx1 = arr.length - 1;
+        /**
+         * finding a breakpoint by iterating from reverse
+         * --> [1,2,3,2,4] --> " 3 " is the breakpoint since the numbers right to the
+         * value
+         * 3 is sorted ascendingly , and the numbers left to it also sorted ascendingly
+         * SO , The breakpoint is the one which is { if a[i] <
+         * next value of array a[i+1] }
+         * update the value idx to the "i"th index
+         */
+        for (int index = arr.length - 2; index >= 0; --index) {
+            // starting from 2nd last index because we need to check relation with
+            // first last index
+            if (arr[index] < arr[index + 1]) {
+                idx1 = index;
+                break;
+            }
+        }
+        // if the idx value is same as last index : then the array is sorted in
+        // descending order
+        // in this case , the next permutation value by the lexicographical order should
+        // be the
+        // smallest permutation value , because if [3,2,1] being largest , when sorted
+        // it is
+        // placed at end of the list of permutations , so the immediate next will be
+        // circling
+        // back to start [1,2,3] --> relating both it is the reverse of the given array.
+        if (idx1 == arr.length - 1) {
+            reverse(arr, 0, arr.length - 1);
+        } else {
+            // check for the value greater than arr[idx1] from the end then swap both
+            for (int i = arr.length - 1; i >= 0; --i) {
+                if (arr[idx1] < arr[i]) {
+                    swap(arr, idx1, i);
+                    break;
+                }
+            }
+            reverse(arr, idx1 + 1, arr.length - 1);
+        }
+    }
+
+    void reverse(int[] nums, int start, int end) {
+        // condition , start should not exceed end
+        // boundary condition
+        while (start < end) {
+            swap(nums, start, end);
+            start++;
+            end--;
+        }
+    }
+
+    void swap(int[] nums, int a, int b) {
+        nums[a] = nums[a] ^ nums[b];
+        nums[b] = nums[a] ^ nums[b];
+        nums[a] = nums[a] ^ nums[b];
+    }
+}

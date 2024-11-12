@@ -1,0 +1,52 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        if (root.val == key) {
+            return method2(root);
+        }
+        if (root.val > key) {
+            root.left = method1(root.left, key);
+        } else {
+            root.right = method1(root.right, key);
+        }
+        return root;
+    }
+
+    public TreeNode method2(TreeNode root) {
+        if (root == null || (root.left == null && root.right == null)) {
+            return null;
+        }
+        if (root.left != null) {
+            TreeNode prev = root.left, pred = root.left;
+            while (pred.right != null) {
+                prev = pred;
+                pred = pred.right;
+            }
+            if (prev == pred) {
+                pred.right = root.right;
+                return pred;
+            }
+            prev.right = method2(pred);
+            pred.left = root.left;
+            pred.right = root.right;
+            return pred;
+        } else {
+            TreeNode prev = root.right, pred = root.right;
+            while (pred.left != null) {
+                prev = pred;
+                pred = pred.left;
+            }
+            if (prev == pred) {
+                pred.left = root.left;
+                return pred;
+            } else {
+                prev.left = method2(pred);
+                pred.left = root.left;
+                pred.right = root.right;
+                return pred;
+            }
+        }
+    }
+}

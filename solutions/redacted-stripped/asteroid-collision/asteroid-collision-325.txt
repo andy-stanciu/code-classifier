@@ -1,0 +1,32 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        List<Integer> result = new ArrayList<>();
+        int start = 0;
+        while (start < param1.length && param1[start] < 0) {
+            result.add(param1[start++]);
+        }
+        Stack<Integer> stk = new Stack<>();
+        for (int i = start; i < param1.length; i++) {
+            if (param1[i] > 0) {
+                stk.push(param1[i]);
+            } else {
+                int last = Integer.MIN_VALUE;
+                while (!stk.isEmpty() && stk.peek() <= ((-1) * param1[i])) {
+                    if (stk.peek() == ((-1) * param1[i])) {
+                        last = stk.pop();
+                        break;
+                    }
+                    last = stk.pop();
+                }
+                if (stk.isEmpty() && last < ((-1) * param1[i]))
+                    result.add(param1[i]);
+            }
+        }
+        start = result.size();
+        while (!stk.isEmpty()) {
+            result.add(start, stk.pop());
+        }
+        return result.stream().mapToInt(i -> i).toArray();
+    }
+}

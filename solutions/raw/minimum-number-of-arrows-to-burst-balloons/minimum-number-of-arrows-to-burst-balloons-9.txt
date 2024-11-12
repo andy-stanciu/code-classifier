@@ -1,0 +1,43 @@
+class Solution {
+
+    class Pair implements Comparable<Pair> {
+
+        Integer x;
+
+        Integer y;
+
+        Pair(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public int compareTo(Pair obj) {
+            return this.x.compareTo(obj.x);
+        }
+    }
+
+    public int findMinArrowShots(int[][] points) {
+        ArrayList<Pair> al = new ArrayList<>();
+        for (int i = 0; i < points.length; i++) {
+            al.add(new Pair(points[i][0], points[i][1]));
+        }
+        Collections.sort(al);
+        for (int i = 0; i < points.length; i++) {
+            // System.out.println(al.get(i).x+" "+al.get(i).y);
+        }
+        Stack<Pair> st = new Stack<>();
+        st.push(al.get(0));
+        // int ans=1;
+        for (int i = 1; i < al.size(); i++) {
+            if (al.get(i).x <= st.peek().y) {
+                int x1 = Math.max(st.peek().x, al.get(i).x);
+                int y1 = Math.min(st.peek().y, al.get(i).y);
+                st.pop();
+                st.push(new Pair(x1, y1));
+            } else {
+                st.push(al.get(i));
+            }
+        }
+        return st.size();
+    }
+}

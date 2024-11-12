@@ -1,0 +1,28 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new LinkedList<>();
+        permute(nums, new LinkedHashSet<>(), result);
+        return result;
+    }
+
+    private void permute(int[] nums, Set<Integer> used, List<? super List<Integer>> result) {
+        if (used.size() == nums.length) {
+            result.add(used.stream().map(i -> nums[i]).toList());
+            return;
+        }
+        int prev = -1;
+        for (int i = 0; i < nums.length; ++i) {
+            if (used.contains(i)) {
+                continue;
+            }
+            if (prev == -1 || nums[prev] != nums[i]) {
+                used.add(i);
+                permute(nums, used, result);
+                used.remove(i);
+                prev = i;
+            }
+        }
+    }
+}

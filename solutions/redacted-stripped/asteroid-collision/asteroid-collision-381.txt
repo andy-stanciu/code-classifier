@@ -1,0 +1,42 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(param1[0]);
+        for (int i = 1; i < param1.length; i++) {
+            if (stack.isEmpty() || stack.peek() < 0) {
+                stack.push(param1[i]);
+            } else if (stack.isEmpty() || (stack.peek() > 0 && param1[i] > 0)) {
+                stack.push(param1[i]);
+            } else {
+                int currentEle = Math.abs(param1[i]);
+                if (!stack.isEmpty() && stack.peek() <= currentEle) {
+                    boolean rockDestroyed = false;
+                    while (!stack.isEmpty()) {
+                        if (stack.peek() < 0)
+                            break;
+                        if (stack.peek() < currentEle) {
+                            stack.pop();
+                        } else if (stack.peek() == currentEle) {
+                            rockDestroyed = true;
+                            stack.pop();
+                            break;
+                        } else {
+                            rockDestroyed = true;
+                            break;
+                        }
+                    }
+                    if (!rockDestroyed) {
+                        stack.push(param1[i]);
+                        rockDestroyed = false;
+                    }
+                }
+            }
+        }
+        int[] ans = new int[stack.size()];
+        for (int i = ans.length - 1; i >= 0; i--) {
+            ans[i] = stack.pop();
+        }
+        return ans;
+    }
+}

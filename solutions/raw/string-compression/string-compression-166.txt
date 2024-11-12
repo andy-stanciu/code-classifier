@@ -1,0 +1,60 @@
+class Solution {
+
+    public int compress(char[] chars) {
+        if (chars.length <= 1)
+            return chars.length;
+        Stack<String> st = new Stack<String>();
+        st.push(String.valueOf(chars[0]));
+        int c = 1;
+        int d = 0;
+        for (int i = 1; i < chars.length; i++) {
+            if (String.valueOf(chars[i]).compareTo(st.peek()) != 0) {
+                if (c > 1) {
+                    d = 0;
+                    if (c >= 100) {
+                        int temp = c;
+                        st.push(String.valueOf(temp / 100));
+                        temp = temp % 100;
+                        st.push(String.valueOf(temp / 10));
+                        st.push(String.valueOf(temp % 10));
+                    } else if (c >= 10) {
+                        st.push(String.valueOf(c / 10));
+                        st.push(String.valueOf(c % 10));
+                    } else {
+                        st.push(String.valueOf(c));
+                    }
+                }
+                st.push(String.valueOf(chars[i]));
+                c = 1;
+            } else {
+                c++;
+            }
+        }
+        if (c > 1) {
+            if (c == 1000) {
+                st.push("1");
+                st.push("0");
+                st.push("0");
+                st.push("0");
+            } else if (c >= 100) {
+                int temp = c;
+                st.push(String.valueOf(temp / 100));
+                temp = temp % 100;
+                st.push(String.valueOf(temp / 10));
+                st.push(String.valueOf(temp % 10));
+            } else if (c >= 10) {
+                st.push(String.valueOf(c / 10));
+                st.push(String.valueOf(c % 10));
+            } else {
+                st.push(String.valueOf(c));
+            }
+        }
+        int l = st.size();
+        int ans = l;
+        while (!st.isEmpty()) {
+            chars[l - 1] = st.pop().charAt(0);
+            l--;
+        }
+        return ans;
+    }
+}

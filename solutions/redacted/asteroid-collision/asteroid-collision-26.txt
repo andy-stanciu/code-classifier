@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        // LinkedList<Integer> list = new LinkedList<>();
+        // for (int a : asteroids) {
+        //     while (!list.isEmpty() && list.getLast() > 0 && list.getLast() < -a) {
+        //         list.pollLast();
+        //     }
+        //     if (list.isEmpty() || a > 0 || list.getLast() < 0) {
+        //         list.add(a);
+        //     } else if (a < 0 && list.getLast() == -a) {
+        //         list.pollLast();
+        //     }
+        // }
+        // return list.stream().mapToInt(a -> a).toArray();
+        Stack<Integer> stck = new Stack<>();
+        for (int a : param1) {
+            // postive numbers are moving in the forward direction
+            // can never collides
+            if (a > 0) {
+                stck.push(a);
+            } else // when we find the negative number
+            // They will collide the top element of the stack..
+            {
+                while (!stck.isEmpty() && stck.peek() > 0 && stck.peek() < Math.abs(a)) {
+                    stck.pop();
+                }
+                if (stck.isEmpty() || stck.peek() < 0) {
+                    stck.push(a);
+                } else if (stck.peek() + a == 0) {
+                    stck.pop();
+                }
+            }
+        }
+        int[] res = new int[stck.size()];
+        int i = stck.size() - 1;
+        while (!stck.isEmpty()) {
+            res[i--] = stck.peek();
+            stck.pop();
+        }
+        return res;
+    }
+}

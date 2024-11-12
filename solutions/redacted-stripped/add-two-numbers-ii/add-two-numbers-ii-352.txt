@@ -1,0 +1,58 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        int len1 = 0, len2 = 0;
+        ListNode h = l1;
+        while (h != null) {
+            h = h.next;
+            len1++;
+        }
+        h = l2;
+        while (h != null) {
+            h = h.next;
+            len2++;
+        }
+        ListNode h1 = new ListNode();
+        if (len1 > len2) {
+            int cy = method2(l1, l2, 0, len1 - len2);
+            if (cy != 0) {
+                h1.val = cy;
+                h1.next = l1;
+                return h1;
+            }
+            return l1;
+        } else {
+            int cy = method2(l2, l1, 0, len2 - len1);
+            if (cy != 0) {
+                h1.val = cy;
+                h1.next = l2;
+                return h1;
+            }
+            return l2;
+        }
+    }
+
+    int method2(ListNode l1, ListNode l2, int cur_pos, int dif) {
+        if (l1 == null && l2 == null)
+            return 0;
+        if (cur_pos == dif) {
+            int sum = l1.val + l2.val + method2(l1.next, l2.next, cur_pos, dif);
+            if (sum < 10) {
+                l1.val = sum;
+                return 0;
+            } else {
+                l1.val = sum % 10;
+                return sum / 10;
+            }
+        } else {
+            int sum = l1.val + method2(l1.next, l2, cur_pos + 1, dif);
+            if (sum < 10) {
+                l1.val = sum;
+                return 0;
+            } else {
+                l1.val = sum % 10;
+                return sum / 10;
+            }
+        }
+    }
+}

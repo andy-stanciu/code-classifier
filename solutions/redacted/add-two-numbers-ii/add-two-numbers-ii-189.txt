@@ -1,0 +1,110 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    static ListNode rev(ListNode head) {
+        ListNode curr = head;
+        ListNode prev = null;
+        ListNode Next;
+        while (curr != null) {
+            Next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = Next;
+        }
+        return prev;
+    }
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        // String l="0";
+        // BigInteger a=new BigInteger(l);
+        // BigInteger b=new BigInteger(l);
+        // if(l1.next==null && l2.next==null){
+        //     a=l1.val;
+        //     b=l2.val;
+        // }else{
+        // while(l1!=null || l2!=null){
+        //     if(l1!=null){
+        //         a=a*10+l1.val;
+        //     }
+        //     if(l1!=null){
+        //         l1=l1.next;
+        //     }
+        //     if(l2!=null){
+        //         b=b*10+l2.val;
+        //     }
+        //     if(l2!=null){
+        //         l2=l2.next;
+        //     }
+        // }}
+        // BigInteger sum=a.add(b);
+        // System.out.println(sum);
+        // ListNode ans=new ListNode(0);
+        // ListNode ans1=ans;
+        // while(sum!=0){
+        //     int rem=(int)(sum%10);
+        //     ans.next=new ListNode(rem);
+        //     ans=ans.next;
+        //     sum/=10;
+        // }
+        // ListNode ans2=rev(ans1.next);
+        if (l1.next == null && l1.val == 0 && l2.next == null && l2.val == 0)
+            return new ListNode(0);
+        int ss = 0;
+        if (l1.next == null && l2.next == null) {
+            ss = l1.val + l2.val;
+            if (ss <= 9) {
+                return new ListNode(ss);
+            } else {
+                ListNode f = new ListNode(ss % 10);
+                ss /= 10;
+                f.next = new ListNode(ss % 10);
+                ListNode b = rev(f);
+                return b;
+            }
+        }
+        ListNode a = rev(l1);
+        ListNode b = rev(l2);
+        ListNode c = new ListNode(0);
+        ListNode c1 = c;
+        int k = 0;
+        int sum = 0;
+        while (a != null || b != null) {
+            int s = 0;
+            int t = 0;
+            if (a != null) {
+                s = a.val;
+                a = a.next;
+            }
+            if (b != null) {
+                t = b.val;
+                b = b.next;
+            }
+            sum = t + s;
+            if (k != 0)
+                sum += k;
+            k = 0;
+            if (sum > 9) {
+                c.next = new ListNode(sum % 10);
+                sum /= 10;
+                k = sum % 10;
+                c = c.next;
+            } else {
+                c.next = new ListNode(sum % 10);
+                c = c.next;
+            }
+        }
+        if (k != 0)
+            c.next = new ListNode(k);
+        ListNode v = rev(c1.next);
+        return v;
+    }
+}

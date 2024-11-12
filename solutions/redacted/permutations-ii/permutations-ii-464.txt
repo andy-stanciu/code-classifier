@@ -1,0 +1,36 @@
+class Solution {
+
+    List<List<Integer>> res = new LinkedList<>();
+
+    LinkedList<Integer> track = new LinkedList<>();
+
+    boolean[] used;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        used = new boolean[nums.length];
+        Arrays.sort(nums);
+        backtrack(nums);
+        return res;
+    }
+
+    private void backtrack(int[] nums) {
+        if (track.size() == nums.length) {
+            res.add(new LinkedList<>(track));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (used[i])
+                continue;
+            // pruning: if there are many duplicate numbers, we make sure their relative position is fixed
+            // for current nums[i], if its previous duplicate has not been used, then we skip current nums[i]
+            // this is to ensure that for duplcates numbers, we always pick the first one, then second one, then third one....
+            if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1])
+                continue;
+            track.addLast(nums[i]);
+            used[i] = true;
+            backtrack(nums);
+            track.removeLast();
+            used[i] = false;
+        }
+    }
+}

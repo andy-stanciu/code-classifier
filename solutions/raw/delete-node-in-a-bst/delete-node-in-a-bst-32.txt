@@ -1,0 +1,41 @@
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        if (root.val == key) {
+            // Case I : No Children i.e Leaf Node
+            if (root.left == null && root.right == null) {
+                return null;
+            } else // Case II : One Children
+            if (root.left == null || root.right == null) {
+                if (root.left == null) {
+                    return root.right;
+                } else {
+                    return root.left;
+                }
+            } else // Case III : Two Children
+            {
+                // If there are two childrens then we need to replace that node with
+                // Either Minimum element of Right Subtree or Maximum element of Left Subtree
+                int min = minNode(root.right);
+                root.val = min;
+                root.right = deleteNode(root.right, min);
+                return root;
+            }
+        } else if (root.val > key) {
+            root.left = deleteNode(root.left, key);
+        } else if (root.val < key) {
+            root.right = deleteNode(root.right, key);
+        }
+        return root;
+    }
+
+    public int minNode(TreeNode root) {
+        if (root.left != null) {
+            return minNode(root.left);
+        }
+        return root.val;
+    }
+}

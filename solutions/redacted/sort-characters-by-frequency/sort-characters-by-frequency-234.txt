@@ -1,0 +1,41 @@
+class Solution {
+
+    public class MyComparator implements Comparator<Pair<Character, Integer>> {
+
+        public int compare(Pair<Character, Integer> pair1, Pair<Character, Integer> pair2) {
+            if (pair1.getValue() == pair2.getValue())
+                return 0;
+            else if (pair1.getValue() > pair2.getValue())
+                return -1;
+            else
+                return 1;
+        }
+    }
+
+    public String method1(String s) {
+        Map<Character, Integer> myMap = new HashMap<>();
+        for (char ch : s.toCharArray()) {
+            if (myMap.containsKey(ch)) {
+                myMap.put(ch, myMap.get(ch) + 1);
+            } else {
+                myMap.put(ch, 1);
+            }
+        }
+        PriorityQueue<Pair<Character, Integer>> pq = new PriorityQueue<>(new MyComparator());
+        for (char key : myMap.keySet()) {
+            int freq = myMap.get(key);
+            Pair<Character, Integer> myPair = new Pair<>(key, freq);
+            pq.add(myPair);
+        }
+        StringBuilder sb = new StringBuilder();
+        while (!pq.isEmpty()) {
+            Pair<Character, Integer> myPair = pq.poll();
+            char ch = myPair.getKey();
+            int freq = myPair.getValue();
+            for (int i = 0; i < freq; i++) {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
+    }
+}

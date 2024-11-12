@@ -1,0 +1,59 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode param1) {
+        if (param1.right == null) {
+            return param1.left;
+        }
+        if (param1.left == null) {
+            return param1.right;
+        }
+        TreeNode temp = param1.right;
+        TreeNode greatest_left_sub_tree = param1.left;
+        while (greatest_left_sub_tree.right != null) {
+            greatest_left_sub_tree = greatest_left_sub_tree.right;
+        }
+        greatest_left_sub_tree.right = temp;
+        return param1.left;
+    }
+
+    public TreeNode method2(TreeNode root, int key) {
+        // 1 ) find the node which you want to delete
+        if (root == null)
+            return null;
+        if (root.val == key) {
+            return method1(root);
+        }
+        TreeNode head = root;
+        while (root != null) {
+            if (root.val > key) {
+                if (root.left != null && root.left.val == key) {
+                    root.left = method1(root.left);
+                } else {
+                    root = root.left;
+                }
+            } else {
+                if (root.right != null && root.right.val == key) {
+                    root.right = method1(root.right);
+                } else {
+                    root = root.right;
+                }
+            }
+        }
+        return head;
+    }
+}

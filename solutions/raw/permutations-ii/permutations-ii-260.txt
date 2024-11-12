@@ -1,0 +1,55 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        //Approach 1
+        //      boolean check[]=new boolean[nums.length];
+        //     List<List<Integer>>ans=new ArrayList<>();
+        //     ArrayList<Integer>ds=new ArrayList<>();
+        //     Arrays.sort(nums);
+        //     perm(ans,nums,check,new ArrayList<>(),nums.length);
+        //     return ans;
+        // }
+        // private void perm(List<List<Integer>>ans,int[] nums,boolean check[], ArrayList<Integer>ds,int n){
+        //     if(ds.size()==n){
+        //         ans.add(new ArrayList<>(ds));
+        //         return;
+        //     }
+        //     for(int i=0;i<n;i++){
+        //         if(i>0 && nums[i-1]==nums[i] && check[i-1]==true) continue;
+        //         if(check[i]==false){
+        //             check[i]=true;
+        //             ds.add(nums[i]);
+        //             perm(ans,nums,check,ds,nums.length);
+        //             ds.remove(ds.size()-1);
+        //             check[i]=false;
+        //         }
+        //     }
+        //Approach 2
+        boolean[] check = new boolean[nums.length];
+        Set<List<Integer>> ans = new HashSet<>();
+        perm(0, nums, ans);
+        return new ArrayList(ans);
+    }
+
+    private void perm(int idx, int[] nums, Set<List<Integer>> ans) {
+        if (idx == nums.length) {
+            ArrayList<Integer> ds = new ArrayList<>();
+            for (int i = 0; i < nums.length; i++) {
+                ds.add(nums[i]);
+            }
+            ans.add(ds);
+            return;
+        }
+        for (int i = idx; i < nums.length; i++) {
+            swap(i, idx, nums);
+            perm(idx + 1, nums, ans);
+            swap(i, idx, nums);
+        }
+    }
+
+    void swap(int i, int j, int[] nums) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}

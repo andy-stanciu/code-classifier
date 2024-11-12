@@ -1,0 +1,62 @@
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int k) {
+        if (root == null)
+            return null;
+        // if we have to delete the root
+        if (root.val == k) {
+            return helper(root);
+        }
+        // store the root node to return
+        TreeNode dummy = root;
+        // now find the node to delete
+        while (root != null) {
+            // find node on the left side
+            if (root.val > k) {
+                if (root.left != null && root.left.val == k) {
+                    // delete node and add newNode to left of the root
+                    root.left = helper(root.left);
+                    break;
+                } else {
+                    // find node futher
+                    root = root.left;
+                }
+                // find node on the right side
+            } else {
+                if (root.right != null && root.right.val == k) {
+                    // delete node and add newNode to right of the root
+                    root.right = helper(root.right);
+                    break;
+                } else {
+                    // find node futher
+                    root = root.right;
+                }
+            }
+        }
+        return dummy;
+    }
+
+    private TreeNode helper(TreeNode root) {
+        // if there exist only left subtree
+        if (root.right == null) {
+            return root.left;
+        } else // if there exist only right subtree
+        if (root.left == null) {
+            return root.right;
+        }
+        // if both left subtree and right subtree exist
+        TreeNode rightChilds = root.right;
+        // find extream right of root left to add root right to it
+        TreeNode extreamRight = findExtreamRight(root.left);
+        extreamRight.right = rightChilds;
+        // now retrun the root left
+        return root.left;
+    }
+
+    private TreeNode findExtreamRight(TreeNode root) {
+        if (root.right == null) {
+            return root;
+        }
+        return findExtreamRight(root.right);
+    }
+}

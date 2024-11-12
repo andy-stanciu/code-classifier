@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean isFacing(int a, int b) {
+        return a > 0 && b < 0;
+    }
+
+    public int[] method1(int[] param1) {
+        int stkPtr = -1;
+        for (int i = 0; i < param1.length; i++) {
+            if (stkPtr == -1 || !isFacing(param1[stkPtr], param1[i])) {
+                param1[++stkPtr] = param1[i];
+            } else {
+                boolean iDestroyed = false;
+                while (stkPtr > -1 && isFacing(param1[stkPtr], param1[i])) {
+                    int left = Math.abs(param1[stkPtr]);
+                    int right = Math.abs(param1[i]);
+                    if (left > right) {
+                        iDestroyed = true;
+                        break;
+                    }
+                    stkPtr--;
+                    if (left == right) {
+                        iDestroyed = true;
+                        break;
+                    }
+                }
+                if (!iDestroyed) {
+                    param1[++stkPtr] = param1[i];
+                }
+            }
+        }
+        int[] ans = new int[stkPtr + 1];
+        for (int i = 0; i <= stkPtr; i++) {
+            ans[i] = param1[i];
+        }
+        return ans;
+    }
+}

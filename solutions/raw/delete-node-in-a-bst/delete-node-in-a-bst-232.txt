@@ -1,0 +1,50 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    private int getInorderSuccessor(TreeNode root) {
+        TreeNode current = root;
+        while (current.left != null) {
+            current = current.left;
+        }
+        return current.val;
+    }
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        if (key < root.val) {
+            // target lies in left subtree
+            root.left = deleteNode(root.left, key);
+        } else if (key > root.val) {
+            // target lies in right subtree
+            root.right = deleteNode(root.right, key);
+        } else {
+            // found target
+            // node with only one child or no child
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            }
+            // replace root\'s data with inorder successor\'s data
+            root.val = getInorderSuccessor(root.right);
+            root.right = deleteNode(root.right, root.val);
+        }
+        return root;
+    }
+}

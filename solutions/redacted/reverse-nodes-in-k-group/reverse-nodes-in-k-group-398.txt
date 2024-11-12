@@ -1,0 +1,57 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        if (head == null || head.next == null || k == 1) {
+            return head;
+        }
+        ListNode temp = head;
+        int size = 0;
+        // Count the number of nodes in the linked list
+        while (temp != null) {
+            temp = temp.next;
+            size++;
+        }
+        int var1 = size / k;
+        temp = head;
+        ListNode newHead = null, last = null;
+        Stack<ListNode> stack = new Stack<>();
+        int count = 0;
+        while (temp != null && count < var1) {
+            int i = 0;
+            // Push k nodes onto the stack
+            while (i < k && temp != null) {
+                stack.push(temp);
+                temp = temp.next;
+                i++;
+            }
+            // Pop from the stack and adjust links
+            while (!stack.isEmpty()) {
+                if (newHead == null) {
+                    newHead = stack.peek();
+                    last = stack.pop();
+                } else {
+                    last.next = stack.pop();
+                    last = last.next;
+                }
+            }
+            count++;
+        }
+        // Attach the remaining part of the list
+        if (temp != null) {
+            last.next = temp;
+        } else {
+            last.next = null;
+        }
+        return newHead;
+    }
+}

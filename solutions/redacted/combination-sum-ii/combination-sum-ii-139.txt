@@ -1,0 +1,35 @@
+class Solution {
+
+    public void backtrack(int[] candidates, int target, int index, List<Integer> temp, List<List<Integer>> ans, int param1) {
+        // check overflow condition
+        if (index > candidates.length || param1 > target)
+            return;
+        if (param1 == target) {
+            // if subset found return it
+            ans.add(new ArrayList<>(temp));
+            return;
+        }
+        for (int j = index; j < candidates.length; j++) {
+            // find subset
+            if (j > index && candidates[j] == candidates[j - 1]) {
+                // check duplicates
+                continue;
+            }
+            // keep making a subset until it meet the condition
+            temp.add(candidates[j]);
+            backtrack(candidates, target, j + 1, temp, ans, param1 + candidates[j]);
+            // remove last element becoz it would have reached end of combination
+            temp.remove(temp.size() - 1);
+        }
+        return;
+    }
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        // ans
+        List<List<Integer>> ans = new ArrayList<>();
+        // sort the array
+        Arrays.sort(candidates);
+        backtrack(candidates, target, 0, new ArrayList<>(), ans, 0);
+        return ans;
+    }
+}

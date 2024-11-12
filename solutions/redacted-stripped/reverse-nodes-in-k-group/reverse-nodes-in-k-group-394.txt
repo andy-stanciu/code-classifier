@@ -1,0 +1,51 @@
+class Solution {
+
+    public ListNode method1(ListNode temp, int k) {
+        k -= 1;
+        while (temp != null && k > 0) {
+            k--;
+            temp = temp.next;
+        }
+        return temp;
+    }
+
+    public ListNode method2(ListNode head) {
+        if (head.next == null) {
+            return head;
+        }
+        ListNode prev = null;
+        ListNode temp = head;
+        while (temp != null) {
+            ListNode nextNode = temp.next;
+            temp.next = prev;
+            prev = temp;
+            temp = nextNode;
+        }
+        return prev;
+    }
+
+    public ListNode method3(ListNode head, int k) {
+        ListNode temp = head;
+        ListNode prevLast = null;
+        while (temp != null) {
+            ListNode kth = method1(temp, k);
+            if (kth == null) {
+                if (prevLast != null) {
+                    prevLast.next = temp;
+                }
+                break;
+            }
+            ListNode nextNode = kth.next;
+            kth.next = null;
+            method2(temp);
+            if (temp == head) {
+                head = kth;
+            } else {
+                prevLast.next = kth;
+            }
+            prevLast = temp;
+            temp = nextNode;
+        }
+        return head;
+    }
+}

@@ -1,0 +1,29 @@
+class Solution {
+
+    public void recursion(int ind, int[] arr, int target, List<List<Integer>> list, List<Integer> subList) {
+        //base condition
+        if (target == 0) {
+            list.add(new ArrayList<>(subList));
+            return;
+        }
+        //subsequence pattern
+        for (int i = ind; i < arr.length; i++) {
+            //repeated element
+            if (i > ind && arr[i] == arr[i - 1])
+                continue;
+            //sorted, so anything greater on the right is of no use.
+            if (arr[i] > target)
+                break;
+            subList.add(arr[i]);
+            recursion(i + 1, arr, target - arr[i], list, subList);
+            subList.remove(subList.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        List<List<Integer>> list = new ArrayList<>();
+        Arrays.sort(candidates);
+        recursion(0, candidates, target, list, new ArrayList<>());
+        return list;
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+
+    public void rotate(int[][] matrix) {
+        // 00,01,02     20,10,00
+        // 10,11,12 =>  21,11,01
+        // 20,21,22     22,12,02
+        // Start    =>  Result
+        // Step 1 : Mirror by half by the row
+        // Step 2 : diagonal mirror
+        // 00,01,02     20,21,22    20,10,00
+        // 10,11,12 =>  10,11,12 => 21,11,01
+        // 20,21,22     00,01,02    22,12,02
+        // (Start)  =>  (step 1)    (Step 2 = Result)
+        // With each intermediary steps we just exchange the value for the solution to be in place.
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        // mirror by half.. keeping middle row constant swap top elements with bottom elements.
+        int top = 0;
+        int bottom = matrix.length - 1;
+        //int middle = (bottom - top)/2;
+        while (top < bottom) {
+            for (int i = 0; i < cols; i++) {
+                // iterate over all columns and swap top and bottom values
+                int temp = matrix[top][i];
+                matrix[top][i] = matrix[bottom][i];
+                matrix[bottom][i] = temp;
+            }
+            top++;
+            bottom--;
+        }
+        // step 2 now keeping diagonal elements in place (i.e 20,11,02) swap top half of diagonal with bottom half.
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < i; j++) {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+    }
+}

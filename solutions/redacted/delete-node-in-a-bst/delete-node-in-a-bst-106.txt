@@ -1,0 +1,79 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    TreeNode parent;
+
+    public TreeNode method1(TreeNode root, int key) {
+        // reset parent
+        parent = null;
+        TreeNode var1 = method2(root, key);
+        if (var1 == null)
+            return root;
+        // case 1: two children
+        if (var1.left != null && var1.right != null) {
+            // inorder successor
+            TreeNode var2 = method3(var1.right);
+            var1.val = var2.val;
+            var1.right = method1(var1.right, var2.val);
+        } else // case 2: one child
+        if (var1.left != null || var1.right != null) {
+            TreeNode child = (var1.left != null) ? var1.left : var1.right;
+            if (var1 == root) {
+                root = child;
+            } else {
+                if (var1 == parent.left) {
+                    parent.left = child;
+                } else {
+                    parent.right = child;
+                }
+            }
+        } else // case 3: zero children
+        {
+            if (var1 == root) {
+                return null;
+            } else {
+                if (var1 == parent.left) {
+                    parent.left = null;
+                } else {
+                    parent.right = null;
+                }
+            }
+        }
+        return root;
+    }
+
+    private TreeNode method2(TreeNode var1, int key) {
+        if (var1 == null)
+            return null;
+        if (var1.val < key) {
+            parent = var1;
+            return method2(var1.right, key);
+        } else if (var1.val > key) {
+            parent = var1;
+            return method2(var1.left, key);
+        } else if (var1.val == key)
+            return var1;
+        return null;
+    }
+
+    private TreeNode method3(TreeNode var1) {
+        while (var1.left != null) {
+            var1 = var1.left;
+        }
+        return var1;
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    public boolean findOppositeDirection(int param1, int param2) {
+        if (param1 > 0 && param2 < 0 || param1 < 0 && param2 > 0)
+            return true;
+        return false;
+    }
+
+    public int[] method1(int[] param3) {
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+        for (int i = 0; i < param3.length; i++) {
+            if (stack.isEmpty()) {
+                stack.push(param3[i]);
+                continue;
+            } else {
+                if (!findOppositeDirection(stack.peek(), param3[i]))
+                    stack.push(param3[i]);
+                else {
+                    int survival = param3[i];
+                    while (!stack.isEmpty()) {
+                        if (!findOppositeDirection(stack.peek(), survival))
+                            break;
+                        if (stack.peek() < 0)
+                            break;
+                        int var1 = stack.pop();
+                        if (Math.abs(survival) == Math.abs(var1)) {
+                            survival = 0;
+                            break;
+                        }
+                        survival = Math.abs(survival) > Math.abs(var1) ? survival : var1;
+                    }
+                    if (survival != 0)
+                        stack.push(survival);
+                }
+            }
+        }
+        int[] arr = new int[stack.size()];
+        int n = stack.size();
+        for (int i = n - 1; i >= 0; i--) {
+            arr[i] = stack.pop();
+        }
+        return arr;
+    }
+}

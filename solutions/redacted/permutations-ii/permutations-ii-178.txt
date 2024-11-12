@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        // Sort for efficient duplicate handling
+        Arrays.sort(nums);
+        List<List<Integer>> ans = new ArrayList<>();
+        boolean[] used = new boolean[nums.length];
+        backtrack(ans, new ArrayList<>(), nums, used);
+        return ans;
+    }
+
+    private void backtrack(List<List<Integer>> ans, List<Integer> tempList, int[] nums, boolean[] used) {
+        if (tempList.size() == nums.length) {
+            // Add a new copy to prevent modifications
+            ans.add(new ArrayList<>(tempList));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            // Skip duplicates at the same level:
+            if (used[i] || (i > 0 && nums[i] == nums[i - 1] && !used[i - 1])) {
+                continue;
+            }
+            used[i] = true;
+            tempList.add(nums[i]);
+            backtrack(ans, tempList, nums, used);
+            used[i] = false;
+            tempList.remove(tempList.size() - 1);
+        }
+    }
+}

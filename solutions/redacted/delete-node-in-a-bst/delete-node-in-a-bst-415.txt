@@ -1,0 +1,49 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        } else {
+            // If my root is equal to key execute the logic to remove it...
+            if (root.val == key) {
+                // if root.right is null we can directly remove the root by skipping it..
+                if (root.right == null) {
+                    return root.left;
+                }
+                // if root has right but right doen\'t have a left, replace it with root
+                if (root.right.left == null) {
+                    root.right.left = root.left;
+                    return root.right;
+                }
+                // if root.right has left find the leftmost left and replacr its value with root and mark prev.left as sucessor\'s right...
+                TreeNode prev = root.right;
+                TreeNode curr = root.right.left;
+                while (curr.left != null) {
+                    prev = curr;
+                    curr = curr.left;
+                }
+                prev.left = curr.right;
+                root.val = curr.val;
+                return root;
+            }
+            root.left = method1(root.left, key);
+            root.right = method1(root.right, key);
+            return root;
+        }
+    }
+}

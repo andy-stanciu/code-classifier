@@ -1,0 +1,28 @@
+class Solution {
+
+    public int findMinArrowShots(int[][] points) {
+        Arrays.sort(points, (a, b) -> {
+            long val1 = a[0];
+            long val2 = b[0];
+            long diff = val1 - val2;
+            return diff < 0 ? -1 : 1;
+        });
+        int result = 0;
+        int min = points[0][0], max = points[0][1];
+        for (int i = 1; i < points.length; i++) {
+            int[] curr = points[i];
+            if (curr[0] <= max) {
+                // when ranges overlap make the next range suitable for all overlaps
+                min = Math.max(min, curr[0]);
+                max = Math.min(max, curr[1]);
+            } else {
+                // when they dont, increase result and set range to width of balloon
+                ++result;
+                min = curr[0];
+                max = curr[1];
+            }
+        }
+        // added one because last balloon cannot be checked with any other
+        return result + 1;
+    }
+}

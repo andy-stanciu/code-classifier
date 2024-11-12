@@ -1,0 +1,55 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        Stack<Integer> s = new Stack<>();
+        Queue<Integer> q = new LinkedList<>();
+        ListNode temp = head;
+        ListNode LastNode = head;
+        int iter = 0;
+        int any = 0;
+        while (temp != null) {
+            if (iter == k) {
+                any = 1;
+                iter = 0;
+                while (!s.isEmpty()) {
+                    q.add(s.pop());
+                }
+                LastNode = temp;
+            } else {
+                iter++;
+                s.push(temp.val);
+                temp = temp.next;
+            }
+        }
+        // If the stack is not empty, it means there are fewer than k elements left
+        if (!s.isEmpty()) {
+            if (iter == k) {
+                while (!s.isEmpty()) {
+                    q.add(s.pop());
+                }
+            } else {
+                while (!s.isEmpty()) {
+                    // Keep the order for the remaining elements
+                    q.add(s.remove(0));
+                }
+            }
+        }
+        // Rebuild the linked list using the queue
+        temp = head;
+        while (!q.isEmpty()) {
+            temp.val = q.poll();
+            temp = temp.next;
+        }
+        return head;
+    }
+}

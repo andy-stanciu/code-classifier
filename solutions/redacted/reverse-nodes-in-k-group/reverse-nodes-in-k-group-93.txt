@@ -1,0 +1,33 @@
+class Solution {
+
+    // length is needed to compare k with length of remaining LL. If at any point k>lengthLL we won\'t reverse it.
+    int lengthLL(ListNode head) {
+        ListNode temp = head;
+        int len = 0;
+        while (temp != null) {
+            temp = temp.next;
+            len++;
+        }
+        return len;
+    }
+
+    public ListNode method1(ListNode head, int k) {
+        ListNode prev = null, curr = head, nxt = null;
+        int t = k;
+        // don\'t reverse if k>length
+        if (k > lengthLL(head)) {
+            return head;
+        }
+        // now we know that LL can be reversed. We will iterate over k nodes and reverse them for a given head. This is same as the above reverseLL function.
+        while (curr != null && k > 0) {
+            nxt = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nxt;
+            k--;
+        }
+        // now we will rely on recursion to reverse the next smaller groups.
+        head.next = method1(curr, t);
+        return prev;
+    }
+}

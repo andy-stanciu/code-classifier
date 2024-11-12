@@ -1,0 +1,85 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        } else if (root.val == key && root.left == null && root.right == null) {
+            return null;
+        }
+        TreeNode prev = null;
+        TreeNode var1 = root;
+        while (var1 != null) {
+            if (var1.val < key) {
+                prev = var1;
+                var1 = var1.right;
+            } else if (var1.val > key) {
+                prev = var1;
+                var1 = var1.left;
+            } else {
+                if (prev == null && var1.left != null) {
+                    root = var1.left;
+                } else if (prev == null && var1.right != null) {
+                    root = var1.right;
+                }
+                if (prev != null && var1.left == null && var1.right == null) {
+                    var1 = null;
+                    if (prev.val < key) {
+                        prev.right = null;
+                    } else if (key < prev.val) {
+                        prev.left = null;
+                    }
+                    return root;
+                } else if (prev != null && var1.left == null && var1.right != null) {
+                    if (prev.val < key) {
+                        prev.right = var1.right;
+                    } else {
+                        prev.left = var1.right;
+                    }
+                    return root;
+                } else if (prev != null && var1.left != null && var1.right == null) {
+                    if (prev.val < key) {
+                        prev.right = var1.left;
+                    } else {
+                        prev.left = var1.left;
+                    }
+                    return root;
+                }
+                if (prev != null && prev.val < key) {
+                    prev.right = var1.left;
+                } else if (prev != null && prev.val > key) {
+                    prev.left = var1.left;
+                }
+                TreeNode temp = null;
+                if (var1.left != null) {
+                    temp = var1.left;
+                } else if (var1.right != null) {
+                    temp = var1.right;
+                    return root;
+                }
+                while (temp.right != null) {
+                    temp = temp.right;
+                }
+                temp.right = var1.right;
+                var1.left = null;
+                var1.right = null;
+                return root;
+            }
+        }
+        return root;
+    }
+}

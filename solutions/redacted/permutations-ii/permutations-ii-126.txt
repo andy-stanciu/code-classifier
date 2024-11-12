@@ -1,0 +1,30 @@
+class Solution {
+
+    List<List<Integer>> out = null;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        out = new ArrayList<>();
+        // Sort array to check for duplicates
+        Arrays.sort(nums);
+        helper(nums, new ArrayList<>(), nums.length, new boolean[nums.length]);
+        return out;
+    }
+
+    public void helper(int[] nums, List<Integer> curr, int size, boolean[] memo) {
+        if (curr.size() == size) {
+            // whenever the size is full, add it to out array
+            out.add(new ArrayList<>(curr));
+            return;
+        }
+        for (int i = 0; i < size; i++) {
+            // Skip if this element is already in the list, or previous element is same and not used.
+            if (memo[i] || (i > 0 && nums[i] == nums[i - 1] && !memo[i - 1]))
+                continue;
+            memo[i] = true;
+            curr.add(nums[i]);
+            helper(nums, curr, size, memo);
+            memo[i] = false;
+            curr.remove(curr.size() - 1);
+        }
+    }
+}

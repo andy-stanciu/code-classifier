@@ -1,0 +1,44 @@
+class Solution {
+
+    public int method1(int[][] points) {
+        LinkedList<Point> tracker = new LinkedList<>();
+        Arrays.sort(points, (p, q) -> Integer.compare(p[0], q[0]));
+        if (points.length == 1)
+            return 1;
+        int maxStart = points[0][0];
+        int maxEnd = points[0][1];
+        // [2,6] -> [7,12]
+        tracker.add(new Point(maxStart, maxEnd));
+        int numElementsInTracker = 1;
+        for (int index = 1; index < points.length; index++) {
+            //2
+            int currentStart = points[index][0];
+            //8
+            int currentEnd = points[index][1];
+            //1
+            int prevStart = tracker.getLast().start;
+            //6
+            int prevEnd = tracker.getLast().end;
+            if (currentStart <= prevEnd) {
+                //There is overlap. So, mutate the list to show the overlap
+                tracker.set(numElementsInTracker - 1, new Point(Math.max(prevStart, currentStart), Math.min(currentEnd, prevEnd)));
+            } else {
+                tracker.add(new Point(currentStart, currentEnd));
+                numElementsInTracker++;
+            }
+        }
+        return numElementsInTracker;
+    }
+}
+
+class Point {
+
+    int start;
+
+    int end;
+
+    Point(int start, int end) {
+        this.start = start;
+        this.end = end;
+    }
+}

@@ -1,0 +1,42 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        ListNode current = head;
+        ListNode next = null;
+        ListNode prev = null;
+        int count = 0;
+        ListNode temp = head;
+        // Check if there are at least k nodes left in the list
+        while (count < k && temp != null) {
+            temp = temp.next;
+            count++;
+        }
+        // If there are fewer than k nodes left, return head as it is
+        if (count < k) {
+            return head;
+        }
+        // Reverse the first k nodes
+        count = 0;
+        while (count < k && current != null) {
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+            count++;
+        }
+        // Recursively reverse the remaining groups
+        if (next != null)
+            head.next = method1(next, k);
+        return prev;
+    }
+}

@@ -1,0 +1,28 @@
+class Solution {
+
+    List<List<Integer>> res = new ArrayList<>();
+
+    public void dfs(int i, int[] candidates, List<Integer> list, int param1, int target) {
+        if (param1 == target) {
+            List<Integer> in = new ArrayList<>();
+            for (int val : list) in.add(val);
+            if (!res.contains(in))
+                res.add(in);
+            return;
+        }
+        if (i >= candidates.length || param1 > target)
+            return;
+        list.add(candidates[i]);
+        dfs(i + 1, candidates, list, param1 + candidates[i], target);
+        list.remove(list.size() - 1);
+        int j = i + 1;
+        while (j < (candidates.length - 1) && candidates[i] == candidates[j]) j += 1;
+        dfs(j, candidates, list, param1, target);
+    }
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        dfs(0, candidates, new ArrayList<>(), 0, target);
+        return res;
+    }
+}

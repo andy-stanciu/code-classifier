@@ -1,0 +1,47 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> var1 = new ArrayList<>();
+        Set<Integer> hasIndex = new HashSet<>();
+        // We sort it, also sorting is a very weak operation here
+        // as we are playing with N! here...
+        Arrays.sort(nums);
+        helper(nums, new ArrayList<>(), hasIndex, var1);
+        return var1;
+    }
+
+    public void helper(int[] nums, List<Integer> currPermutation, Set<Integer> hasIndex, List<List<Integer>> var1) {
+        // If we have permutation with the required size, we save it and we return,
+        // as for this case we have considered all the possibilites and indices.
+        if (currPermutation.size() == nums.length) {
+            var1.add(new ArrayList<>(currPermutation));
+            return;
+        }
+        // For each loop we start from the beginning
+        int index = 0;
+        while (index < nums.length) {
+            // We already have the index?
+            // increment index by 1, else we will have infinite loop,
+            // and try for another index, since we have already that element corresponding to that value
+            if (hasIndex.contains(index)) {
+                index++;
+                continue;
+            }
+            // We don\'t have the index, include it
+            hasIndex.add(index);
+            currPermutation.add(nums[index]);
+            helper(nums, currPermutation, hasIndex, var1);
+            // If we have come here, it means we have considered all the
+            // possiblities of the required index, now remove it
+            hasIndex.remove(index);
+            currPermutation.remove(currPermutation.size() - 1);
+            // We increment our index count by 1 to check for next posistion
+            index++;
+            // As long as our index is not out of bounds, and equal to previous element, we increase our counter...
+            // As we DONT WANT duplicate cases.
+            while (index < nums.length && nums[index] == nums[index - 1]) {
+                index++;
+            }
+        }
+    }
+}

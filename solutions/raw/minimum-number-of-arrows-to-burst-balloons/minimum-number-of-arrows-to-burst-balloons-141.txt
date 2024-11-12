@@ -1,0 +1,38 @@
+class Solution {
+
+    public int findMinArrowShots(int[][] points) {
+        /*
+
+            Idea is any overlapping points can be burst by a single arrow. Find the number of overlapping points - end inclusive
+
+            Sort the points: Sorting with end is important since we need to minimize the number of arrows (similar to minimizing removals problem)
+
+            Once sorted, find overlapping by comparing end of prev point and start of curr point. If not overlapping,
+            increment the counter. Else do nothing and iterate
+
+            Test cases:
+            Null or empty input
+            One input -> 1
+            Two non-overlapping -> 2
+            Same points in the array -> 1
+            Given examples: [[1,2],[2,3],[3,4],[4,5]], [[1,2],[3,4],[5,6],[7,8]], [[1,2],[4,5],[1,5]]
+
+            Time: O(NlogN) + N where N is number of points
+            Space: O(N) needed for merge sort
+        */
+        //input validation
+        if (points == null || points.length == 0)
+            return 0;
+        Arrays.sort(points, (a, b) -> Integer.compare(a[1], b[1]));
+        int counter = 1;
+        int[] prev = points[0];
+        for (int i = 1; i < points.length; i++) {
+            int[] curr = points[i];
+            if (prev[1] < curr[0]) {
+                counter++;
+                prev = curr;
+            }
+        }
+        return counter;
+    }
+}

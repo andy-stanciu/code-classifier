@@ -1,0 +1,56 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> stack = new Stack<>();
+        // Add the first element to the stack
+        stack.push(asteroids[0]);
+        // Start the loop from i=1
+        for (int i = 1; i < asteroids.length; i++) {
+            // If the element inside the stack is negative, we can add any elements to it, whether negative or positive.
+            // In some test cases, the stack becomes empty in the code below, so we check if it\'s empty or if it contains a negative value before adding any elements.
+            if (stack.isEmpty() || stack.peek() < 0) {
+                stack.push(asteroids[i]);
+            } else // If both the elements are positive, the one inside the stack and the one in the current iteration, we add it.
+            if (stack.isEmpty() || (stack.peek() > 0 && asteroids[i] > 0)) {
+                stack.push(asteroids[i]);
+            } else // This condition will fire when a positive element in the stack encounters a negative element in the current iteration.
+            {
+                // We check the negative element against the positive elements inside the stack, so we need to change the sign to positive.
+                int currentEle = Math.abs(asteroids[i]);
+                // This condition checks if the top element of the stack is not greater than our currentEle. If it is, we just ignore it and move forward.
+                if (!stack.isEmpty() && stack.peek() <= currentEle) {
+                    // This variable checks if the currentEle (asteroid) gets destroyed in the loop.
+                    boolean rockDestroyed = false;
+                    // This loop runs until the currentEle is greater than the stack element or when the stack gets emptied.
+                    // If the currentEle encounters a greater element in the stack, we break out of the loop.
+                    // The rockDestroyed variable tells us if the currentEle is destroyed in the middle or not.
+                    // If we encounter a negative value in the stack, we also break from the loop.
+                    while (!stack.isEmpty()) {
+                        if (stack.peek() < 0)
+                            break;
+                        if (stack.peek() < currentEle) {
+                            stack.pop();
+                        } else if (stack.peek() == currentEle) {
+                            rockDestroyed = true;
+                            stack.pop();
+                            break;
+                        } else {
+                            rockDestroyed = true;
+                            break;
+                        }
+                    }
+                    // If it\'s not destroyed (i.e., if the currentEle is greater than all the elements inside the stack), just add the currentEle to the stack.
+                    if (!rockDestroyed) {
+                        stack.push(asteroids[i]);
+                        rockDestroyed = false;
+                    }
+                }
+            }
+        }
+        int[] ans = new int[stack.size()];
+        for (int i = ans.length - 1; i >= 0; i--) {
+            ans[i] = stack.pop();
+        }
+        return ans;
+    }
+}

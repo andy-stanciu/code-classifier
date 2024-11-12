@@ -1,0 +1,52 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < asteroids.length; i++) {
+            boolean asteroidDestroyed = false;
+            //            System.out.println("for loop iteration : "+i+" asteroid="+asteroids[i]);
+            //            if(!stack.isEmpty() && ((stack.peek()<0 && asteroids[i]>0) || (stack.peek()>0 && asteroids[i]<0))){
+            if (!stack.isEmpty() && (stack.peek() > 0 && asteroids[i] < 0)) {
+                //                System.out.println("stack peek="+stack.peek()+" asteroid="+asteroids[i]);//d
+                //                while(!stack.isEmpty() && ((stack.peek()<0 && asteroids[i]>0) || (stack.peek()>0 && asteroids[i]<0))){
+                while (!stack.isEmpty() && (stack.peek() > 0 && asteroids[i] < 0)) {
+                    //                    System.out.println("while");//d
+                    if (Math.abs(stack.peek()) > Math.abs(asteroids[i])) {
+                        //                        System.out.println("if");//d
+                        asteroidDestroyed = true;
+                        //                        continue;//d
+                        break;
+                    } else if (Math.abs(stack.peek()) < Math.abs(asteroids[i])) {
+                        //                        System.out.println("else if");//d
+                        stack.pop();
+                    } else if (Math.abs(stack.peek()) == Math.abs(asteroids[i])) {
+                        //                        System.out.println("else");//d
+                        stack.pop();
+                        asteroidDestroyed = true;
+                        //                        continue;//d
+                        break;
+                    }
+                }
+                //                System.out.println("while ended");//d
+            }
+            //            System.out.println("if ended"); //d
+            if (asteroidDestroyed == false)
+                stack.push(asteroids[i]);
+            //            if(!stack.isEmpty())System.out.println("pushed at peek"+stack.peek()); //d
+        }
+        ArrayList<Integer> ans = new ArrayList<>();
+        //        if(stack.isEmpty()) System.out.println("Empty stack");
+        while (!stack.isEmpty()) {
+            ans.add(stack.pop());
+        }
+        //        System.out.println("Answer list:");
+        int[] res = new int[ans.size()];
+        for (int i = 0, j = ans.size() - 1; i < ans.size(); i++) {
+            res[i] = ans.get(j--);
+        }
+        //        for(int i:res){
+        //            System.out.println(i+" ");
+        //        }
+        return res;
+    }
+}

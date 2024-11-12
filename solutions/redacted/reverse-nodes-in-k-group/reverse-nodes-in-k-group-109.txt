@@ -1,0 +1,62 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    // there are a few "hard points" in this solution, notably this line (both its place, its role and the proof that groupTail shall not be null there, ever)
+    //     ListNode nextGroup = groupTail.next
+    // and the final lists weaving and result management, and a few
+    // corner cases like an early return.
+    public ListNode method1(ListNode head, int k) {
+        ListNode result = new ListNode();
+        ListNode var1 = result;
+        if (head == null || k < 2)
+            return head;
+        ListNode current = head;
+        while (current != null) {
+            ListNode var2 = current;
+            ListNode var3 = current;
+            // it took me HOURS to find out to start at ONE.
+            int var4 = 1;
+            while (var4 < k) {
+                var3 = var3.next;
+                // it took me HOURS to find out this guard against taking the final NULL node
+                if (var3 == null)
+                    break;
+                ++var4;
+            }
+            if (var4 < k) {
+                // not enough items, return the rest as-is.
+                return result.next;
+            }
+            // guard item (groupTail is NEVER null -but- difficult to prove)
+            ListNode var5 = var3.next;
+            // inverse that
+            ListNode prev = null;
+            ListNode item = var2;
+            while (item != var5) {
+                ListNode var6 = item.next;
+                item.next = prev;
+                prev = item;
+                item = var6;
+            }
+            // not to forget advancing the loop
+            current = var5;
+            // these are basics of sublists interweaving, don\'t forget (or items shall be lost):
+            // the final item of our group shall point to the next group
+            var2.next = var5;
+            // list contingency
+            var1.next = prev;
+            // advance the group for the next iteration, too
+            var1 = var2;
+        }
+        return result.next;
+    }
+}

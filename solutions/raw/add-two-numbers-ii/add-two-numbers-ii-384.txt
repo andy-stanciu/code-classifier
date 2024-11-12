@@ -1,0 +1,61 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode cur1 = l1;
+        ListNode cur2 = l2;
+        int length1 = 0;
+        int length2 = 0;
+        while (cur1 != null) {
+            length1++;
+            cur1 = cur1.next;
+        }
+        while (cur2 != null) {
+            length2++;
+            cur2 = cur2.next;
+        }
+        int diff = Math.abs(length1 - length2);
+        if (length1 < length2) {
+            while (diff-- > 0) {
+                ListNode node = new ListNode(0);
+                node.next = l1;
+                l1 = node;
+            }
+        } else {
+            while (diff-- > 0) {
+                ListNode node = new ListNode(0);
+                node.next = l2;
+                l2 = node;
+            }
+        }
+        ListNode res = new ListNode(0);
+        int carry = adder(l1, l2, res);
+        if (carry != 0) {
+            ListNode node = new ListNode(carry);
+            node.next = res;
+            res = node;
+        }
+        return res;
+    }
+
+    int adder(ListNode node1, ListNode node2, ListNode node3) {
+        int sum = node1.val + node2.val;
+        if (node1.next != null) {
+            node3.next = new ListNode(0);
+            sum += +adder(node1.next, node2.next, node3.next);
+        }
+        int carry = sum / 10;
+        sum = sum % 10;
+        node3.val = sum;
+        return carry;
+    }
+}

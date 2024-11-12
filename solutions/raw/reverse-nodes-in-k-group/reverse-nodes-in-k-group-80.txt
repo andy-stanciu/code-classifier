@@ -1,0 +1,42 @@
+class Solution {
+
+    public ListNode reverse(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        ListNode pre = null, curr = head, nexty = head.next;
+        while (nexty != null) {
+            curr.next = pre;
+            pre = curr;
+            curr = nexty;
+            nexty = nexty.next;
+        }
+        curr.next = pre;
+        return curr;
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode cur = dummy;
+        while (cur != null) {
+            //pre list node last pointer
+            ListNode temp = cur;
+            for (int i = 0; i < k; i++) {
+                temp = temp.next;
+                if (temp == null)
+                    return dummy.next;
+            }
+            //next list node first pointer
+            ListNode nexty = temp.next;
+            //current list node last pointer
+            ListNode last = cur.next;
+            //breaking current list from last and next listnodes
+            temp.next = null;
+            cur.next = reverse(cur);
+            //connecting current reverse list with next listnode
+            last.next = nexty;
+            cur = last;
+        }
+        return dummy.next;
+    }
+}

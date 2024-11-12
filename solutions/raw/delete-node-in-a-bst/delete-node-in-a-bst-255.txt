@@ -1,0 +1,79 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        TreeNode current = root;
+        TreeNode prev = new TreeNode();
+        TreeNode temp = new TreeNode();
+        int index = 0;
+        while (current != null) {
+            if (current.val == key) {
+                if (// No child case
+                current.right == null && current.left == null) {
+                    if (index == -1)
+                        prev.left = (null);
+                    else if (index == 1)
+                        prev.right = (null);
+                    else
+                        root = null;
+                } else if (// One child case
+                current.right == null || current.left == null) {
+                    if (current.right != null)
+                        temp = current.right;
+                    else
+                        temp = current.left;
+                    if (index == -1)
+                        prev.left = (temp);
+                    else if (index == 1)
+                        prev.right = (temp);
+                    else
+                        root = temp;
+                } else // two child case
+                {
+                    prev = current;
+                    temp = current.right;
+                    index = 1;
+                    //finding in order successor
+                    while (temp.left != null) {
+                        prev = temp;
+                        index = -1;
+                        temp = temp.left;
+                    }
+                    current.val = (temp.val);
+                    if (index == 1)
+                        prev.right = temp.right;
+                    else
+                        prev.left = temp.right;
+                }
+                break;
+            } else {
+                //searching part
+                prev = current;
+                if (current.val > key) {
+                    current = current.left;
+                    index = -1;
+                } else if (current.val < key) {
+                    index = 1;
+                    current = current.right;
+                }
+            }
+        }
+        return root;
+    }
+}

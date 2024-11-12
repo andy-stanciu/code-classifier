@@ -1,0 +1,45 @@
+class Solution {
+
+    // Helper method to swap two elements in the array
+    public void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    // Helper method to reverse elements in the array from a given start index to the end
+    public void reverse(int[] arr, int start) {
+        int end = arr.length - 1;
+        while (start < end) {
+            swap(arr, start, end);
+            start++;
+            end--;
+        }
+    }
+
+    public void nextPermutation(int[] nums) {
+        int n = nums.length;
+        int index = -1;
+        // Step 1: Find the first decreasing element from the end
+        for (int i = n - 2; i >= 0; i--) {
+            if (nums[i] < nums[i + 1]) {
+                index = i;
+                break;
+            }
+        }
+        // Step 2: If no decreasing element is found, reverse the entire array
+        if (index == -1) {
+            reverse(nums, 0);
+            return;
+        }
+        // Step 3: Find the smallest element larger than nums[index] from the right side and swap
+        for (int i = n - 1; i > index; i--) {
+            if (nums[i] > nums[index]) {
+                swap(nums, index, i);
+                break;
+            }
+        }
+        // Step 4: Reverse the elements to the right of the index to get the next permutation
+        reverse(nums, index + 1);
+    }
+}

@@ -1,0 +1,36 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> st = new Stack<>();
+        int n = param1.length;
+        for (int i = 0; i < n; i++) {
+            // Traversing from the front
+            if (param1[i] > 0) {
+                // Positive directly add them to the stack
+                st.push(param1[i]);
+            } else {
+                // It is negative
+                while (!st.isEmpty() && st.peek() > 0 && st.peek() < Math.abs(param1[i])) {
+                    // Stack is not empty and the element on the top is positive and its value is smaller than the negative element at i. In this case, it will be cancelled off by the element
+                    st.pop();
+                }
+                // Second case where I popped off all the elements from the stack who are positive and whose value is lesser than arr[i]
+                if (!st.isEmpty() && st.peek() == Math.abs(param1[i])) {
+                    // Element has the same value; both cancel
+                    st.pop();
+                } else // Remaining case where the stack got empty i.e., the negative element cancelled off all the positive elements or else there was one more negative element inside the stack
+                if (st.isEmpty() || st.peek() < 0) {
+                    st.push(param1[i]);
+                }
+            }
+        }
+        int sts = st.size();
+        int[] ans = new int[sts];
+        // Populate the answer array from the stack (elements are in reverse order)
+        for (int i = sts - 1; i >= 0; i--) {
+            // Access stack elements from top to bottom
+            ans[i] = st.pop();
+        }
+        return ans;
+    }
+}

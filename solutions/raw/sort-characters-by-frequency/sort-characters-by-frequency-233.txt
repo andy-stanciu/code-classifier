@@ -1,0 +1,63 @@
+// class Solution {
+//     public String frequencySort(String s) {
+//         HashMap<Character, Integer> freq = new HashMap<>();
+//         for(int i=0; i< s.length();i++){
+//             freq.put(s.charAt(i), freq.getOrDefault(s.charAt(i), 0) + 1);
+//         }
+//         List<Map.Entry<Character, Integer>> sorted = new ArrayList<>(freq.entrySet());
+//         Collections.sort(sorted, new Comparator<Map.Entry<Character, Integer>>() {
+//             public int compare(Map.Entry<Character, Integer> o1,Map.Entry<Character, Integer> o2)
+//             {
+//                 int valCompare = o2.getValue().compareTo(o1.getValue());
+//                 int keyCompare = o1.getKey().compareTo(o2.getKey());
+//                 return (valCompare == 0) ? keyCompare : valCompare;
+//             }
+//         });
+//         String res = "";
+//         for(int i=0; i < sorted.size(); i++){
+//             for(int j=0; j<sorted.get(i).getValue();j++){
+//                 res += sorted.get(i).getKey();
+//             }
+//         }
+//         return res;
+//     }
+// }
+class Pair implements Comparable<Pair> {
+
+    int first;
+
+    char second;
+
+    Pair(int first, char second) {
+        this.first = first;
+        this.second = second;
+    }
+
+    public int compareTo(Pair a) {
+        return (a.first == this.first) ? a.second - this.second : a.first - this.first;
+    }
+}
+
+class Solution {
+
+    public String frequencySort(String s) {
+        HashMap<Character, Integer> freq = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            freq.put(s.charAt(i), freq.getOrDefault(s.charAt(i), 0) + 1);
+        }
+        PriorityQueue<Pair> sorted = new PriorityQueue<>();
+        for (char m : freq.keySet()) {
+            sorted.offer(new Pair(freq.get(m), m));
+        }
+        String res = "";
+        while (!sorted.isEmpty()) {
+            Pair p = sorted.poll();
+            int first = p.first;
+            char second = p.second;
+            for (int i = 0; i < first; i++) {
+                res += second;
+            }
+        }
+        return res;
+    }
+}

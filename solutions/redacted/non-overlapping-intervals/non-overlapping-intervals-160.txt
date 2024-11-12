@@ -1,0 +1,43 @@
+class Solution {
+
+    public int method1(int[][] param1) {
+        Arrays.sort(param1, (a1, a2) -> {
+            if (a1[0] == a2[0])
+                return a1[1] - a2[1];
+            return a1[0] - a2[0];
+        });
+        int[] memo = new int[param1.length];
+        Arrays.fill(memo, -1);
+        return slv(0, -1, param1, memo);
+    }
+
+    private int slv(int n, int prev, int[][] param1, int[] memo) {
+        if (n >= param1.length || n == -1)
+            return 0;
+        if (memo[n] != -1)
+            return memo[n];
+        int min = Integer.MAX_VALUE;
+        if (prev == -1 || (param1[n][0] >= param1[prev][1] && param1[n][1] >= param1[prev][1])) {
+            int index = binarySearch(param1, n + 1, param1.length - 1, param1[n][1]);
+            if (index == -1)
+                min = Math.min(min, (param1.length - 1 - n) + slv(index, n, param1, memo));
+            else
+                min = Math.min(min, (index - n - 1) + slv(index, n, param1, memo));
+        }
+        return memo[n] = Math.min(min, 1 + slv(n + 1, prev, param1, memo));
+    }
+
+    int binarySearch(int[][] param1, int l, int h, int end) {
+        int ans = -1;
+        while (l <= h) {
+            int mid = (l + h) / 2;
+            if (param1[mid][0] >= end) {
+                h = mid - 1;
+                ans = mid;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return ans;
+    }
+}

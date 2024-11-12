@@ -1,0 +1,68 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public int len(ListNode node) {
+        int c = 0;
+        while (node != null) {
+            node = node.next;
+            c++;
+        }
+        return c;
+    }
+
+    public ListNode[] reverse(ListNode head, int val, ListNode prevNode) {
+        ListNode prev = prevNode;
+        ListNode curr = head;
+        ListNode next = head.next;
+        int count = 0;
+        while (next != null && count < val - 1) {
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+            next = next.next;
+            count++;
+        }
+        // System.out.printf("prev %d, curr %d, next %d", prev.val, curr.val, next.next.val);
+        // System.out.printf("%d reverse %d ", head.val, curr.val);
+        head.next = next;
+        curr.next = prev;
+        // System.out.printf("%d <- %d", prev.val, curr.val);
+        ListNode[] arr = { curr, next };
+        return arr;
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        // ListNode newHead = reverse(head.next.next, 2, null);
+        int n = len(head);
+        int i = 0;
+        ListNode temp = head;
+        ListNode[] arr = reverse(temp, k, null);
+        ListNode newHead = arr[0];
+        i = i + k;
+        while (arr[1] != null && (n - i >= k)) {
+            // System.out.println(n-i);
+            temp = arr[1];
+            arr = reverse(temp, k, null);
+            temp.next = arr[1];
+            head.next = arr[0];
+            head = temp;
+            i = i + k;
+        }
+        // System.out.println(arr[1].next);
+        // System.out.println(arr[0].val+" "+arr[1].val);
+        // head = temp;
+        return newHead;
+    }
+    // public ListNode reverseKGroup(ListNode head, int k) {
+    //     return head;
+    // }
+}

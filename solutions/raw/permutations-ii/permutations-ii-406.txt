@@ -1,0 +1,32 @@
+class Solution {
+
+    List<List<Integer>> res = new LinkedList<>();
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (Integer i : nums) {
+            int occurence = map.getOrDefault(i, 0);
+            map.put(i, occurence + 1);
+        }
+        permutation(0, new LinkedList<>(), map, nums.length);
+        return res;
+    }
+
+    public void permutation(int index, LinkedList<Integer> cur, Map<Integer, Integer> map, int len) {
+        if (cur.size() == len) {
+            res.add(new LinkedList<>(cur));
+            return;
+        }
+        for (Integer key : map.keySet()) {
+            if (map.get(key) > 0) {
+                cur.add(key);
+                map.put(key, map.get(key) - 1);
+                permutation(index + 1, cur, map, len);
+                map.put(key, map.get(key) + 1);
+                cur.remove(cur.size() - 1);
+            } else {
+                continue;
+            }
+        }
+    }
+}

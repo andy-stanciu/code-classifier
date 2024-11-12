@@ -1,0 +1,46 @@
+class Solution {
+
+    private static final boolean debugTrace = false;
+
+    public int method1(int[][] points) {
+        Arrays.sort(points, (p1, p2) -> (p1[0] == p2[0] ? p1[1] - p2[1] : p1[0] - p2[0]));
+        if (debugTrace) {
+            System.out.println("Points after sorting:" + Arrays.deepToString(points));
+        }
+        int n = points.length;
+        List<int[]> arrowRanges = new ArrayList<int[]>();
+        int prevStart = points[0][0];
+        int prevEnd = points[0][1];
+        for (int i = 1; i < n; i++) {
+            if (debugTrace) {
+                System.out.println("[" + prevStart + "," + prevEnd + "], " + Arrays.toString(points[i]));
+            }
+            int currStart = points[i][0];
+            int currEnd = points[i][1];
+            if (currStart >= prevStart && currStart <= prevEnd) {
+                if (debugTrace) {
+                    System.out.println("At lesst one overlapped: " + "[" + prevStart + "," + prevEnd + "]" + ", " + Arrays.toString(points[i]));
+                }
+                prevStart = Math.max(prevStart, currStart);
+                prevEnd = Math.min(prevEnd, currEnd);
+                if (debugTrace) {
+                    System.out.println("Post merge " + "[" + prevStart + "," + prevEnd + "]");
+                }
+            } else {
+                if (debugTrace) {
+                    System.out.print("No Overlaps, Founds one Range:");
+                    System.out.println("[" + prevStart + "," + prevEnd + "]");
+                }
+                arrowRanges.add(new int[] { prevStart, prevEnd });
+                prevStart = currStart;
+                prevEnd = currEnd;
+            }
+        }
+        arrowRanges.add(new int[] { prevStart, prevEnd });
+        if (debugTrace) {
+            System.out.println("Post Merges:");
+            arrowRanges.forEach(range -> System.out.print(Arrays.toString(range)));
+        }
+        return arrowRanges.size();
+    }
+}

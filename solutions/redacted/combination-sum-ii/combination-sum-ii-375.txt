@@ -1,0 +1,34 @@
+class Solution {
+
+    public void method1(int index, int[] candidates, int target, List<List<Integer>> ans, List<Integer> ds) {
+        if (target == 0) {
+            ans.add(new ArrayList<>(ds));
+            return;
+        }
+        for (int i = index; i < candidates.length; i++) {
+            if (i > index && candidates[i] == candidates[i - 1]) {
+                // skipped, if same number found consecutively
+                continue;
+            }
+            if (candidates[i] > target) {
+                // stop picking all right side elements if target got lesser than current element
+                break;
+            }
+            //add the picked element from candidates
+            ds.add(candidates[i]);
+            // pick the next index
+            method1(i + 1, candidates, target - candidates[i], ans, ds);
+            //backtrack, so remove last element each time from ds
+            ds.remove(ds.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> method2(int[] candidates, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        // required to skip same numbers coz they will create duplicate combinations ahead
+        Arrays.sort(candidates);
+        method1(0, candidates, target, ans, new ArrayList<>());
+        return ans;
+    }
+}
+// TC = (2^(n)) * k

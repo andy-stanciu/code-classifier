@@ -1,0 +1,55 @@
+class Solution {
+
+    public void method1(ListNode node) {
+        ListNode per = null;
+        ListNode cur = node;
+        ListNode N = node;
+        while (cur != null) {
+            N = cur.next;
+            cur.next = per;
+            per = cur;
+            cur = N;
+        }
+    }
+
+    public ListNode method2(ListNode head, int k) {
+        ListNode temp = head;
+        int n = 1;
+        while (temp.next != null) {
+            n++;
+            temp = temp.next;
+        }
+        if (k > n)
+            return head;
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        if (k == n) {
+            method1(head);
+            return temp;
+        }
+        ListNode a = dummy;
+        ListNode b = head;
+        ListNode c = head;
+        ListNode d = null;
+        for (int i = 1; i <= n / k; i++) {
+            for (int j = 1; j < k; j++) {
+                if (c == null)
+                    break;
+                c = c.next;
+            }
+            if (c != null) {
+                d = c.next;
+                a.next = null;
+                c.next = null;
+                method1(b);
+                a.next = c;
+                b.next = d;
+                a = b;
+                b = a.next;
+                c = b;
+            } else
+                break;
+        }
+        return dummy.next;
+    }
+}

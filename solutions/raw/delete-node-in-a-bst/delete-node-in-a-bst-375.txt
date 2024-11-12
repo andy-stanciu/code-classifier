@@ -1,0 +1,77 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public static boolean fn(TreeNode r, int k) {
+        if (r == null)
+            return false;
+        if (r.left != null && r.left.val == k) {
+            TreeNode rt = r.left.right;
+            TreeNode lt = r.left.left;
+            if (rt == null) {
+                r.left = lt;
+                return true;
+            }
+            r.left = rt;
+            TreeNode kz = rt;
+            while (kz.left != null) kz = kz.left;
+            kz.left = lt;
+            return true;
+        }
+        if (r.right != null && r.right.val == k) {
+            TreeNode rt = r.right.right;
+            TreeNode lt = r.right.left;
+            if (rt == null) {
+                r.right = lt;
+                return true;
+            }
+            r.right = rt;
+            TreeNode kz = rt;
+            while (kz.left != null) kz = kz.left;
+            kz.left = lt;
+            return true;
+        }
+        if (fn(r.left, k))
+            return true;
+        if (fn(r.right, k))
+            return true;
+        return false;
+    }
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root != null)
+            if (root.left == null && root.right == null) {
+                if (root.val == key)
+                    return null;
+                else
+                    return root;
+            }
+        if (root != null && root.val == key) {
+            TreeNode rt = root.right;
+            TreeNode lt = root.left;
+            if (rt == null) {
+                return lt;
+            }
+            root = rt;
+            TreeNode kz = rt;
+            while (kz.left != null) kz = kz.left;
+            kz.left = lt;
+            return root;
+        }
+        fn(root, key);
+        return root;
+    }
+}

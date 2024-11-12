@@ -1,0 +1,47 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        /**
+         * [ -2, -2, 1, -2]
+         *            for i = 1 to n-1
+         *                if opp sign and i is -ve
+         *                    compare
+         *                        while(opp sign and top < i) stack.pop
+         *                        if(same sign) stack.push i
+         *                        else do nothing
+         */
+        Stack<Integer> store = new Stack<>();
+        for (int var1 : param1) {
+            if (store.isEmpty()) {
+                store.push(var1);
+                continue;
+            }
+            int top = store.peek();
+            if (sign(top) != sign(var1) && sign(var1) < 0) {
+                while (!store.isEmpty() && sign(top = store.peek()) != sign(var1) && Math.abs(top) < Math.abs(var1)) {
+                    store.pop();
+                }
+                if (!store.isEmpty()) {
+                    if (sign(top) == sign(var1)) {
+                        store.push(var1);
+                    } else if (Math.abs(top) == Math.abs(var1)) {
+                        store.pop();
+                    }
+                } else {
+                    store.push(var1);
+                }
+            } else {
+                store.push(var1);
+            }
+        }
+        int[] result = new int[store.size()];
+        for (int i = result.length - 1; i >= 0; i--) {
+            result[i] = store.pop();
+        }
+        return result;
+    }
+
+    int sign(int num) {
+        return num < 0 ? -1 : 1;
+    }
+}

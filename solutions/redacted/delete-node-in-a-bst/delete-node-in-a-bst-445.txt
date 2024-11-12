@@ -1,0 +1,74 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        TreeNode par = null, child = root;
+        // Searching Node
+        while (child != null) {
+            if (child.val == key) {
+                break;
+            }
+            par = child;
+            if (child.val > key)
+                child = child.left;
+            else
+                child = child.right;
+        }
+        //  if node to be delete not found
+        if (child == null)
+            return root;
+        // case 1. if node to be delete has both children
+        if (child.left != null && child.right != null) {
+            TreeNode temp = child.right;
+            par = child;
+            while (temp.left != null) {
+                par = temp;
+                temp = temp.left;
+            }
+            child.val = temp.val;
+            child = temp;
+        }
+        // case 2.  if node to be delete is leaf node
+        if (child.left == null && child.right == null) {
+            if (par == null)
+                root = null;
+            else if (par.left == child)
+                par.left = null;
+            else
+                par.right = null;
+        } else // case 3. if node to be delete has left child.
+        if (child.left != null && child.right == null) {
+            if (par == null)
+                root = child.left;
+            else if (par.left == child)
+                par.left = child.left;
+            else
+                par.right = child.left;
+        } else // case 4 if node to be delete has right child
+        if (child.left == null && child.right != null) {
+            if (par == null)
+                root = child.right;
+            else if (par.left == child)
+                par.left = child.right;
+            else
+                par.right = child.right;
+        }
+        return root;
+    }
+}

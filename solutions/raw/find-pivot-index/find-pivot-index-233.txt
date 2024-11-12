@@ -1,0 +1,39 @@
+class Solution {
+
+    public int pivotIndex(int[] nums) {
+        /*
+        Imagine a weighing balance, you remove an element and check if its balanced
+        If it is then thats the pivot element
+        We are asked to find the leftmost pivot element -> Need to prioritise the leftmost index
+        eg - 11000011
+        The index is 2, rather than 5
+        So we need to imagine the weighing balance, and the right side has all the weights
+        and we are removing the elements as we see from the left, and checking if removing that element
+        balances the weights, if not place that weight on the left(adding removed weights on left scale)
+        So,
+        init - 0 - 4
+        0th  - 0 - 3 -> unbalanced? -> 1 - 3
+        1st  - 1 - 2 -> unbalanced? -> 2 - 2
+        2nd  - 2 - 2 -> unbalanced?  - No => return 2 as answer
+
+        If we do it from the right - thats maintaining the entire sum as lSum, and keep removing the elements
+        from right - we will get the rightmost pivot index
+
+        */
+        int rSum = 0;
+        for (int i : nums) {
+            rSum += i;
+        }
+        int lSum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            // Remove the leftside weight from right scale
+            rSum -= nums[i];
+            // Check if that balances the scales
+            if (rSum == lSum) {
+                return i;
+            }
+            lSum += nums[i];
+        }
+        return -1;
+    }
+}

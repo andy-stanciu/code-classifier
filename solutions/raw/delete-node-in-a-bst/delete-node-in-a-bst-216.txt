@@ -1,0 +1,110 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+// class Solution {
+//     public TreeNode deleteNode(TreeNode root, int key) {
+//         // search in bst
+//         TreeNode parent = null;
+//         TreeNode curr = root;
+//         while(curr!=null&&curr.val!=key){
+//             parent = curr;
+//             if(key<curr.val){
+//                 curr = curr.left;
+//             }else{
+//                 curr = curr.right;
+//             }
+//         }
+//         if(curr==null){ // stop value doesn\'t exist
+//             return root;
+//         }
+//         // case 1: curr has 0 child -> leaf Node
+//         if(curr.left==null&&curr.right==null){
+//             if(curr==root){
+//                 curr=null;
+//             }else{
+//             if(parent.left==curr){
+//                 parent.left=null;
+//             }else{
+//                 parent.right=null;
+//             }
+//             }
+//         }
+//         // case 2: curr has 1 child -> delete current and connect parent to child
+//         else if(curr.left==null||curr.right==null){
+//             TreeNode child;
+//             if(curr.left!=null){
+//                 child = curr.left;
+//             }else{
+//                 child = curr.right;
+//             }
+//             if(curr==root){  // this is corner case if ower roort is curr it is similler to case1;
+//                 root = child;
+//             }else{
+//                 if(parent.left==curr){ // this code connect parent to child
+//                     parent.left = child;
+//                 }else{
+//                     parent.right = child;
+//                 }
+//             }
+//         }
+//         // case 3: current(Node) has 2 Child
+//         else{
+//             TreeNode min = getMin(curr.right);
+//             int minval = min.val;
+//             deleteNode(root,minval);
+//             curr.val = minval;
+//         }
+//         return root;
+//     }
+//     public TreeNode getMin(TreeNode curr){
+//         if(curr==null){
+//             return curr;
+//         }
+//         while(curr.left!=null){
+//             curr = curr.left;
+//         }
+//         return curr;
+//     }
+// }
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        else if (root.val < key)
+            root.right = deleteNode(root.right, key);
+        else if (root.val > key)
+            root.left = deleteNode(root.left, key);
+        else {
+            if (root.right == null && root.left == null) {
+                return null;
+            } else if (root.left != null && root.right == null) {
+                return root.left;
+            } else if (root.left == null && root.right != null) {
+                return root.right;
+            } else {
+                TreeNode curr = root;
+                curr = curr.right;
+                while (curr != null && curr.left != null) {
+                    curr = curr.left;
+                }
+                root.val = curr.val;
+                root.right = deleteNode(root.right, root.val);
+                return root;
+            }
+        }
+        return root;
+    }
+}

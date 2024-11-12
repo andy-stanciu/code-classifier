@@ -1,0 +1,23 @@
+class Solution {
+
+    public String method1(String s) {
+        Map<Character, Integer> lookup = new HashMap<>();
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            lookup.put(s.charAt(i), lookup.getOrDefault(s.charAt(i), 0) + 1);
+        }
+        PriorityQueue<Map.Entry<Character, Integer>> maxQue = new PriorityQueue<>((x, y) -> {
+            return Integer.compare(y.getValue(), x.getValue());
+        });
+        for (Map.Entry<Character, Integer> data : lookup.entrySet()) {
+            maxQue.add(data);
+        }
+        while (!maxQue.isEmpty()) {
+            Map.Entry<Character, Integer> pollData = maxQue.poll();
+            Character letter = pollData.getKey();
+            Integer freq = pollData.getValue();
+            str.append(IntStream.range(0, freq).mapToObj(i -> letter.toString()).collect(Collectors.joining("")));
+        }
+        return str.toString();
+    }
+}

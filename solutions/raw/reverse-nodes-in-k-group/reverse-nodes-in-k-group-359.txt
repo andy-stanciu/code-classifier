@@ -1,0 +1,71 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        int length = 0;
+        ListNode temp = head;
+        while (temp != null) {
+            temp = temp.next;
+            length++;
+        }
+        int i = 0;
+        while (i + k <= length) {
+            head = reverseSubList(head, i + 1, i + k);
+            i = i + k;
+        }
+        return head;
+    }
+
+    private void printList(ListNode head) {
+        while (head != null) {
+            System.out.println(head.val);
+            head = head.next;
+        }
+    }
+
+    private ListNode reverseSubList(ListNode head, int start, int end) {
+        if (start == end) {
+            return head;
+        }
+        //  printList(head);
+        int i = 0;
+        ListNode previous = null;
+        ListNode temp = head;
+        while (temp != null && i < (start - 1)) {
+            previous = temp;
+            temp = temp.next;
+            i++;
+        }
+        ListNode startNodeOfSubList = previous;
+        ListNode endNodeOfSubList = temp;
+        ListNode previousNode = null;
+        ListNode currentNode = temp;
+        ListNode nextNode = temp;
+        // printList(head);
+        i = 0;
+        while (nextNode != null && i < (end - start + 1)) {
+            nextNode = currentNode.next;
+            currentNode.next = previousNode;
+            previousNode = currentNode;
+            currentNode = nextNode;
+            i++;
+        }
+        if (startNodeOfSubList != null) {
+            startNodeOfSubList.next = previousNode;
+        } else {
+            head = previousNode;
+        }
+        if (endNodeOfSubList != null)
+            endNodeOfSubList.next = currentNode;
+        return head;
+    }
+}

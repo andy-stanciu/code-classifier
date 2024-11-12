@@ -1,0 +1,33 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        Arrays.sort(nums);
+        backtrack(0, nums, ans);
+        return ans;
+    }
+
+    public void swap(int i, int j, int[] nums) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    public void backtrack(int pointer, int[] nums, List<List<Integer>> ans) {
+        if (pointer == nums.length) {
+            List<Integer> ds = new ArrayList<>();
+            for (int ele : nums) {
+                ds.add(ele);
+            }
+            ans.add(new ArrayList<>(ds));
+        }
+        HashSet<Integer> set = new HashSet<>();
+        for (int i = pointer; i < nums.length; i++) {
+            if (set.add(nums[i])) {
+                swap(i, pointer, nums);
+                backtrack(pointer + 1, nums, ans);
+                swap(i, pointer, nums);
+            }
+        }
+    }
+}

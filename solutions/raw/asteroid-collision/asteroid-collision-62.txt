@@ -1,0 +1,33 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> stack = new Stack<>();
+        for (int astro : asteroids) {
+            // Process collisions while stack has asteroids and current asteroid is moving left
+            while (!stack.isEmpty() && astro < 0 && stack.peek() > 0) {
+                int prevAstro = stack.peek();
+                // The incoming left-moving asteroid is larger, so pop the stack
+                if (Math.abs(astro) > Math.abs(prevAstro))
+                    stack.pop();
+                else // Both asteroids are equal in size, destroy both
+                if (Math.abs(astro) == Math.abs(prevAstro)) {
+                    stack.pop();
+                    // mark current asteroid as destroyed
+                    astro = 0;
+                    break;
+                } else // Stack asteroid is larger, so current one is destroyed
+                {
+                    // mark current asteroid as destroyed
+                    astro = 0;
+                    break;
+                }
+            }
+            // Only add the current asteroid if it hasn\'t been destroyed in a collision
+            if (astro != 0)
+                stack.push(astro);
+        }
+        int[] result = new int[stack.size()];
+        for (int i = stack.size() - 1; i >= 0; i--) result[i] = stack.pop();
+        return result;
+    }
+}

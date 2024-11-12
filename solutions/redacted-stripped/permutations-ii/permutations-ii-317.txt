@@ -1,0 +1,32 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        ArrayList<Integer> list = new ArrayList<>();
+        List<List<Integer>> ans = new ArrayList<>();
+        int n = nums.length;
+        Arrays.sort(nums);
+        helper(nums, list, ans, n, new boolean[n]);
+        return ans;
+    }
+
+    public void helper(int[] nums, ArrayList<Integer> list, List<List<Integer>> ans, int n, boolean[] used) {
+        if (list.size() == n) {
+            ans.add(new ArrayList<Integer>(list));
+            return;
+        } else {
+            for (int i = 0; i < n; i++) {
+                if (used[i]) {
+                    continue;
+                }
+                if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) {
+                    continue;
+                }
+                used[i] = true;
+                list.add(nums[i]);
+                helper(nums, list, ans, n, used);
+                used[i] = false;
+                list.remove(list.size() - 1);
+            }
+        }
+    }
+}

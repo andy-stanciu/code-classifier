@@ -1,0 +1,63 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    private ListNode method1(ListNode head) {
+        ListNode curr = head;
+        ListNode prev = null;
+        ListNode temp = null;
+        while (curr != null) {
+            temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        // Return the new head after reversing the list
+        return prev;
+    }
+
+    private ListNode method2(ListNode head, int k) {
+        ListNode curr = head;
+        for (int i = 0; i < k - 1 && curr != null; i++) {
+            curr = curr.next;
+        }
+        return curr;
+    }
+
+    public ListNode method3(ListNode head, int k) {
+        if (head == null || k == 1)
+            return head;
+        ListNode dummy = new ListNode(0);
+        // Initialize dummy to point to the head
+        dummy.next = head;
+        ListNode temp = head;
+        ListNode prevTail = dummy;
+        while (temp != null) {
+            ListNode kNode = method2(temp, k);
+            // If fewer than k nodes remain, exit the loop
+            if (kNode == null)
+                break;
+            ListNode nextNode = kNode.next;
+            // Disconnect the k-th node from the next group
+            kNode.next = null;
+            // Connect the previous group\'s tail to the new head
+            prevTail.next = method1(temp);
+            // Move prevTail to the last node of the reversed group
+            prevTail = temp;
+            // Move temp to the head of the next group
+            temp = nextNode;
+        }
+        // Connect the last group\'s tail to the remaining nodes
+        prevTail.next = temp;
+        // Return the new head of the list
+        return dummy.next;
+    }
+}

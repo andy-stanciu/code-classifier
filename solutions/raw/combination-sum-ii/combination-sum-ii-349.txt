@@ -1,0 +1,73 @@
+class Solution {
+
+    // - recursion on the candidates list
+    // - on each recursive call, remove last item (let\'s call it X) from the candidates list
+    // - make recursive calls by having X appear 1 time, then 2 times, ..., then merge the result of all
+    //   the recursive calls
+    //
+    // the argument `candidateLength` is to tell the function to use it as the length of the candidates array, instead
+    // of checking the actual length. This is to avoid creating new copies of candidates array on each recursive call.
+    public List<List<Integer>> combinationSumHelper(List<List<Integer>> candidates, int target, int candidateLength) {
+        if (target == 0) {
+            // note that this is [[]], not []
+            // this indicates that a solution has been found!
+            var result = new ArrayList<List<Integer>>();
+            result.add(new ArrayList<>());
+            return result;
+        } else if (candidateLength == 0 || target < 0) {
+            // no solution found
+            return new ArrayList<List<Integer>>();
+        }
+        var result = new ArrayList<List<Integer>>();
+        // try adding the last element (let\'s call it X) of the array
+        var x = candidates.get(candidateLength - 1);
+        // value of x
+        var xValue = x.get(0);
+        // number of times we can use x
+        var xCount = x.get(1);
+        // try adding the last element (let\'s call it X) of the array
+        var sum = 0;
+        var i = 0;
+        // we try adding X 1 time, then 2 times, ..., until (whichever comes first):
+        // - x_count times,
+        // - OR until X * n > target
+        // then merge the result
+        while (sum <= target && i <= xCount) {
+            var currResult = combinationSumHelper(candidates, target - sum, candidateLength - 1);
+            // for each result in currResult, add the last element (X), i times
+            for (var list : currResult) {
+                for (var j = 0; j < i; j++) {
+                    list.add(xValue);
+                }
+            }
+            result.addAll(currResult);
+            sum += xValue;
+            i++;
+        }
+        return result;
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        var candidatesConverted = convertCandidates(candidates);
+        return combinationSumHelper(candidatesConverted, target, candidatesConverted.size());
+    }
+
+    // convert candidates list into a list of lists, where all inner lists have 2 elements.
+    // first element is the number. second element is the number of times the number appears in input
+    public List<List<Integer>> convertCandidates(int[] candidates) {
+        // count how many times each item appears
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i : candidates) {
+            map.put(i, map.getOrDefault(i, 0) + 1);
+        }
+        // convert map to list<list<integer>>
+        List<List<Integer>> result = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            List<Integer> l = new ArrayList<>();
+            l.add(entry.getKey());
+            l.add(entry.getValue());
+            result.add(l);
+        }
+        return result;
+    }
+}

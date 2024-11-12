@@ -1,0 +1,41 @@
+class Solution {
+
+    public void nextPermutation(int[] nums) {
+        int n = nums.length;
+        int idx = -1;
+        // step 1: find the breakpoint, by traversing the array from end
+        for (int i = n - 2; i >= 0; i--) {
+            if (nums[i] < nums[i + 1]) {
+                idx = i;
+                break;
+            }
+        }
+        // for the kind of arrays where no breakpoint exists eg..[3,2,1] next permutation would be reverse of such an array
+        if (idx == -1) {
+            reverse(nums, 0, n - 1);
+            return;
+        }
+        // step 2: in right half search for smallest element greater than nums[i] and swap the two
+        for (int i = n - 1; i > idx; i--) {
+            if (nums[i] > nums[idx]) {
+                int temp = nums[i];
+                nums[i] = nums[idx];
+                nums[idx] = temp;
+                break;
+            }
+        }
+        // reverse right half to make it ascending
+        reverse(nums, idx + 1, n - 1);
+    }
+
+    // function for reversing the array
+    public static void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start++;
+            end--;
+        }
+    }
+}

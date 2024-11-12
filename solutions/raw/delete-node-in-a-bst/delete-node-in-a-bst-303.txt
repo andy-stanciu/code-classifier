@@ -1,0 +1,59 @@
+class TreeNode {
+
+    int val;
+
+    TreeNode left;
+
+    TreeNode right;
+
+    TreeNode() {
+    }
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+
+    TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
+
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        TreeNode parent = new TreeNode(-1, root, null);
+        TreeNode cursor = root;
+        if (cursor == null) {
+            return cursor;
+        }
+        while (cursor.val != key) {
+            parent = cursor;
+            if (cursor.val > key) {
+                cursor = cursor.left;
+            } else {
+                cursor = cursor.right;
+            }
+            if (cursor == null) {
+                return root;
+            }
+        }
+        TreeNode rightLeftMost = cursor.right;
+        while (rightLeftMost != null && rightLeftMost.left != null) {
+            rightLeftMost = rightLeftMost.left;
+        }
+        if (rightLeftMost != null) {
+            rightLeftMost.left = cursor.left;
+        }
+        if (cursor == root) {
+            return cursor.right != null ? cursor.right : cursor.left;
+        }
+        if (cursor.val < parent.val) {
+            parent.left = cursor.right != null ? cursor.right : cursor.left;
+        } else {
+            parent.right = cursor.right != null ? cursor.right : cursor.left;
+        }
+        return root;
+    }
+}

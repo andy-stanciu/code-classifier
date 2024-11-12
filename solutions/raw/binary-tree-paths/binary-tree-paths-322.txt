@@ -1,0 +1,49 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> strList = new ArrayList<>();
+        List<List<Integer>> list = new ArrayList<>();
+        List<Integer> sublist = new ArrayList<>();
+        getAllPath(root, list, sublist);
+        //convert list of list to list of string
+        for (List<Integer> l : list) {
+            String str = "";
+            for (int i = 0; i < l.size(); i++) {
+                str = str + l.get(i);
+                if (i != l.size() - 1) {
+                    str += "->";
+                }
+            }
+            strList.add(str);
+        }
+        return strList;
+    }
+
+    boolean getAllPath(TreeNode root, List<List<Integer>> list, List<Integer> sublist) {
+        if (root == null)
+            return false;
+        sublist.add(root.val);
+        boolean left = getAllPath(root.left, list, sublist);
+        boolean right = getAllPath(root.right, list, sublist);
+        if (left == false && right == false) {
+            list.add(new ArrayList(sublist));
+        }
+        sublist.remove(sublist.size() - 1);
+        return true;
+    }
+}

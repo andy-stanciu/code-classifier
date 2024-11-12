@@ -1,0 +1,61 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        head = split(head, k);
+        return head;
+    }
+
+    private ListNode split(ListNode head, int k) {
+        ListNode temp = head;
+        int start = 0, end = k - 1, counter = 0;
+        ListNode prev = null, next = null, tempHead = head;
+        while (temp != null) {
+            if (counter == start) {
+                tempHead = temp;
+                counter++;
+                temp = temp.next;
+            } else if (counter == end) {
+                next = temp.next;
+                temp.next = null;
+                ListNode var1 = method2(tempHead);
+                if (prev != null) {
+                    prev.next = var1;
+                } else {
+                    head = var1;
+                }
+                ListNode var2 = var1;
+                while (true) {
+                    if (var2.next == null) {
+                        var2.next = next;
+                        temp = var2;
+                        break;
+                    }
+                    var2 = var2.next;
+                }
+                prev = var2;
+                start = end + 1;
+                end = end + k;
+            } else {
+                counter++;
+                temp = temp.next;
+            }
+        }
+        return head;
+    }
+
+    private ListNode method2(ListNode head) {
+        if (head == null)
+            return null;
+        ListNode prev = null;
+        while (true) {
+            ListNode next = head.next;
+            head.next = prev;
+            prev = head;
+            if (next == null) {
+                break;
+            }
+            head = next;
+        }
+        return head;
+    }
+}

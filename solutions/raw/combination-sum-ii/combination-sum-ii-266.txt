@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> ans = new ArrayList();
+        List<Integer> list = new ArrayList();
+        Arrays.sort(candidates);
+        backtrack(candidates, ans, list, 0, target);
+        return ans;
+    }
+
+    void backtrack(int[] candidates, List<List<Integer>> ans, List<Integer> list, int pos, int target) {
+        if (target == 0) {
+            ans.add(new ArrayList(list));
+            return;
+        }
+        for (int i = pos; i < candidates.length; i++) {
+            if (candidates[i] > target)
+                break;
+            //all subsets  containing candidates[i] we can take all duplicates here
+            list.add(candidates[i]);
+            backtrack(candidates, ans, list, i + 1, target - candidates[i]);
+            list.remove(list.size() - 1);
+            //as we already taken candidates[i] all future subset will contain that so we skip all duplicate now
+            //all subsets not containing candidates[i]
+            while (i + 1 < candidates.length && candidates[i] == candidates[i + 1]) {
+                i++;
+            }
+        }
+    }
+}

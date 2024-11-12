@@ -1,0 +1,36 @@
+class Solution {
+
+    public int compress(char[] chars) {
+        return rec(chars, 1, 1, 0);
+    }
+
+    public int rec(char[] chars, int index, int lastCount, int charPosition) {
+        if (index == chars.length) {
+            if (lastCount > 1) {
+                charPosition = getCharPosition(chars, index, lastCount, charPosition);
+            } else {
+                chars[charPosition++] = chars[index - 1];
+            }
+            return charPosition;
+        }
+        if (chars[index] == chars[index - 1]) {
+            return rec(chars, index + 1, lastCount + 1, charPosition);
+        } else {
+            if (lastCount > 1) {
+                charPosition = getCharPosition(chars, index, lastCount, charPosition);
+            } else {
+                chars[charPosition++] = chars[index - 1];
+            }
+            return rec(chars, index + 1, 1, charPosition);
+        }
+    }
+
+    private int getCharPosition(char[] chars, int index, int lastCount, int charCount) {
+        String count = String.valueOf(lastCount);
+        chars[charCount++] = chars[index - 1];
+        for (int i = 0; i < count.length(); i++) {
+            chars[charCount++] = count.charAt(i);
+        }
+        return charCount;
+    }
+}

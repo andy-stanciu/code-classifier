@@ -1,0 +1,47 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        List<Integer> list = new ArrayList<>();
+        for (int aster : param1) {
+            list.add(aster);
+        }
+        List<Integer> result = method1(list, list.size());
+        int[] arr = list.stream().mapToInt(Integer::intValue).toArray();
+        return arr;
+    }
+
+    public List<Integer> method1(List<Integer> list, int prev_size) {
+        boolean isNegative = false;
+        for (int i = 0; i < list.size(); i++) {
+            int value1 = list.get(i);
+            if (value1 < 0) {
+                isNegative = true;
+                if (i - 1 >= 0) {
+                    int value2 = list.get(i - 1);
+                    if (value2 > 0) {
+                        int mod1 = Math.abs(value1);
+                        int mod2 = Math.abs(value2);
+                        if (mod1 == mod2) {
+                            list.remove(i);
+                            list.remove(i - 1);
+                        } else if (mod2 > mod1) {
+                            list.remove(i);
+                        } else {
+                            list.remove(i - 1);
+                        }
+                    }
+                }
+            }
+        }
+        if (prev_size == list.size()) {
+            return list;
+        } else {
+            prev_size = list.size();
+        }
+        if (!isNegative) {
+            return list;
+        }
+        method1(list, prev_size);
+        return list;
+    }
+}

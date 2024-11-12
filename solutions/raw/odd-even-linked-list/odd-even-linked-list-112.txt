@@ -1,0 +1,37 @@
+class Solution {
+
+    public ListNode oddEvenList(ListNode head) {
+        if (head == null || head.next == null || head.next.next == null) {
+            return head;
+        }
+        ListNode oddHead = head;
+        ListNode evenHead = head.next;
+        solve(head.next.next, oddHead, evenHead, true);
+        //adding evenHead at end of all odd positioned elements
+        ListNode curr = oddHead;
+        while (curr.next != null) {
+            curr = curr.next;
+        }
+        curr.next = evenHead;
+        //return
+        return oddHead;
+    }
+
+    //Recursive approach to solve
+    void solve(ListNode head, ListNode oddHead, ListNode evenHead, boolean odd) {
+        if (head == null) {
+            if (odd)
+                oddHead.next = null;
+            else
+                evenHead.next = null;
+            return;
+        }
+        if (odd) {
+            oddHead.next = head;
+            solve(head.next, head, evenHead, !odd);
+        } else {
+            evenHead.next = head;
+            solve(head.next, oddHead, head, !odd);
+        }
+    }
+}

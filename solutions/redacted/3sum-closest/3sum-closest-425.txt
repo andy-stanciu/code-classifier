@@ -1,0 +1,42 @@
+class Solution {
+
+    public int tS(int[] nums, int f, int t, int num) {
+        int ABS = Integer.MAX_VALUE, res = 0;
+        // rough use
+        t -= num;
+        int r = nums.length - 1;
+        while (f < r) {
+            int sum = nums[f] + nums[r];
+            int abs = Math.abs(t - sum);
+            if (abs < ABS) {
+                ABS = abs;
+                res = num + nums[f] + nums[r];
+            }
+            if (sum < t)
+                f++;
+            else if (sum > t)
+                r--;
+            else
+                return res;
+        }
+        return res;
+    }
+
+    public int method1(int[] nums, int t) {
+        Arrays.sort(nums);
+        int n = nums.length - 2;
+        int res = tS(nums, 1, t, nums[0]);
+        int abs = Math.abs(t - res);
+        for (int i = 1; i < n; i++) {
+            if (nums[i] != nums[i - 1]) {
+                int temp = tS(nums, i + 1, t, nums[i]);
+                if (Math.abs(t - temp) < abs) {
+                    if ((res = temp) == t)
+                        return t;
+                    abs = Math.abs(t - res);
+                }
+            }
+        }
+        return res;
+    }
+}

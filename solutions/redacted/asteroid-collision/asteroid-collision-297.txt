@@ -1,0 +1,44 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        List<Integer> ast = new ArrayList<>();
+        ast.add(param1[0]);
+        for (int i = 1; i < param1.length; i++) {
+            int k = param1[i];
+            int lastElmnt = ast.get(ast.size() - 1);
+            if (k > 0 && lastElmnt > 0 || k > 0 && lastElmnt < 0) {
+                ast.add(k);
+            } else if (k < 0 && lastElmnt < 0) {
+                ast.add(k);
+            } else if (k == -lastElmnt) {
+                ast.remove(ast.size() - 1);
+                if (ast.size() == 0 && i + 1 < param1.length) {
+                    ast.add(param1[i + 1]);
+                    i++;
+                }
+            } else {
+                int kp = -k;
+                while (lastElmnt > 0 && lastElmnt < kp && ast.size() > 0) {
+                    ast.remove(ast.size() - 1);
+                    if (ast.size() > 0)
+                        lastElmnt = ast.get(ast.size() - 1);
+                }
+                if (k == -lastElmnt) {
+                    ast.remove(ast.size() - 1);
+                    if (ast.size() == 0 && i + 1 < param1.length) {
+                        ast.add(param1[i + 1]);
+                        i++;
+                    }
+                }
+                if (lastElmnt < -k) {
+                    ast.add(k);
+                }
+            }
+        }
+        int[] result = new int[ast.size()];
+        for (int i = 0; i < ast.size(); i++) {
+            result[i] = ast.get(i);
+        }
+        return result;
+    }
+}

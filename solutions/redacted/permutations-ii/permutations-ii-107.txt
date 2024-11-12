@@ -1,0 +1,49 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> finalResult = new ArrayList<>();
+        List<Integer> result = new ArrayList<>();
+        Arrays.sort(nums);
+        finalResult.add(toList(nums));
+        if (nums.length == 1) {
+            return finalResult;
+        }
+        int firstLargestRight = -1;
+        while (true) {
+            int breakpoint = -1;
+            for (int i = nums.length - 2; i >= 0; i--) {
+                if (nums[i] < nums[i + 1]) {
+                    breakpoint = i;
+                    break;
+                }
+            }
+            if (breakpoint == -1) {
+                break;
+            }
+            for (int i = nums.length - 1; i > breakpoint; i--) {
+                if (nums[i] > nums[breakpoint]) {
+                    firstLargestRight = i;
+                    break;
+                }
+            }
+            swap(nums, breakpoint, firstLargestRight);
+            Arrays.sort(nums, breakpoint + 1, nums.length);
+            finalResult.add(toList(nums));
+        }
+        return finalResult;
+    }
+
+    public void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    private List<Integer> toList(int[] nums) {
+        List<Integer> list = new ArrayList<>();
+        for (int num : nums) {
+            list.add(num);
+        }
+        return list;
+    }
+}

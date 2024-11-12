@@ -1,0 +1,50 @@
+class Solution {
+
+    static int nearestPower(int n) {
+        int power = 1;
+        while (power < n) {
+            power *= 2;
+        }
+        return power / 2;
+    }
+
+    static boolean isPowerOfTwo(int n) {
+        return n != 0 && (n & (n - 1)) == 0;
+    }
+
+    static int count(int n) {
+        return count(n, new HashMap<>());
+    }
+
+    static int count(int n, HashMap<Integer, Integer> map) {
+        if (map.containsKey(n)) {
+            Integer a = map.get(n);
+            return a;
+        }
+        if (n == 0) {
+            map.put(n, 0);
+            return 0;
+        }
+        if (n == 1) {
+            map.put(n, 1);
+            return 1;
+        }
+        if (isPowerOfTwo(n)) {
+            map.put(n, 1);
+            return 1;
+        } else {
+            int a = nearestPower(n);
+            int k = count(a) + count(n - a);
+            map.put(n, k);
+            return k;
+        }
+    }
+
+    public int[] method1(int n) {
+        int[] arr = new int[n + 1];
+        for (int t = 0; t <= n; t++) {
+            arr[t] = count(t);
+        }
+        return arr;
+    }
+}

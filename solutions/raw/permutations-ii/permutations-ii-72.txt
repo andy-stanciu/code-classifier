@@ -1,0 +1,30 @@
+class Solution {
+
+    public static void add_in_list(List<Integer> sub, List<List<Integer>> list) {
+        if (!list.contains(sub)) {
+            list.add(new ArrayList<>(sub));
+        }
+    }
+
+    public static void find(int[] nums, List<Integer> sub, List<List<Integer>> list, boolean[] used) {
+        if (sub.size() == nums.length) {
+            add_in_list(sub, list);
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (used[i])
+                continue;
+            used[i] = true;
+            sub.add(nums[i]);
+            find(nums, sub, list, used);
+            sub.remove(sub.size() - 1);
+            used[i] = false;
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> list = new ArrayList<>();
+        find(nums, new ArrayList<Integer>(), list, new boolean[nums.length]);
+        return list;
+    }
+}

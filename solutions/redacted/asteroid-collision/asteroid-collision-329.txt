@@ -1,0 +1,40 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> stck = new Stack<Integer>();
+        int i;
+        for (i = 0; i < param1.length; i++) {
+            if (stck.isEmpty()) {
+                stck.push(param1[i]);
+            } else {
+                // If the current asteroid is -ve and the previous is +ve such that size/magnuitude of current > previous, then keep popping/removing asteroids from the stack until this condition satisfies.
+                if (param1[i] < 0 && stck.peek() > 0 && Math.abs(param1[i]) > stck.peek()) {
+                    while (!stck.isEmpty() && param1[i] < 0 && stck.peek() > 0 && Math.abs(param1[i]) > stck.peek()) {
+                        stck.pop();
+                    }
+                    // If stack is empty, simply push astroids[i]
+                    if (stck.isEmpty()) {
+                        stck.push(param1[i]);
+                    } else {
+                        // We do i-- because i++ will happen in the next iteration. And before pushing asteroids[i] we should check if the below last else-if condition satisfies or not. If it does, only then we can push asteroids[i] on the stack.
+                        i--;
+                    }
+                } else if (param1[i] < 0 && stck.peek() > 0 && Math.abs(param1[i]) == stck.peek()) {
+                    // If new is -ve and previous +ve and both have same magnitude then pop the previous and don\'t push current, because both will cancel each other.
+                    stck.pop();
+                } else if (param1[i] > 0 || param1[i] < 0 && stck.peek() < 0) {
+                    // If new asteroid is +ve OR it is -ve as well as previous is -ve then push the current
+                    stck.push(param1[i]);
+                }
+            }
+        }
+        // In the reverse order, get the final asteroids that weren\'t destroyed
+        int[] ans = new int[stck.size()];
+        int k = stck.size() - 1;
+        while (!stck.isEmpty()) {
+            ans[k--] = stck.peek();
+            stck.pop();
+        }
+        return ans;
+    }
+}

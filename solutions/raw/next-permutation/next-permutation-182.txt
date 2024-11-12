@@ -1,0 +1,43 @@
+class Solution {
+
+    public void nextPermutation(int[] nums) {
+        //start from right and find the breakpoint to get the decrease in slope
+        int Bindex = -1;
+        int n = nums.length;
+        for (int i = n - 2; i >= 0; i--) {
+            if (nums[i] < nums[i + 1]) {
+                Bindex = i;
+                break;
+            }
+        }
+        if (Bindex == -1) {
+            reverse(0, n - 1, nums);
+            return;
+        }
+        //swap the Bindex with the immediate larger number from the right
+        for (int i = n - 1; i > Bindex; i--) {
+            if (nums[i] > nums[Bindex]) {
+                swap(i, Bindex, nums);
+                break;
+            }
+        }
+        //the above steps should now give you a larger number.
+        //But, after the Bindex, everythin is in increase order. So reverse everything after the
+        //breaking point to give you the smallest minimal increase.
+        reverse(Bindex + 1, n - 1, nums);
+    }
+
+    public void reverse(int first, int last, int[] nums) {
+        while (first < last) {
+            swap(first, last, nums);
+            first++;
+            last--;
+        }
+    }
+
+    public void swap(int i, int Bindex, int[] nums) {
+        int temp = nums[i];
+        nums[i] = nums[Bindex];
+        nums[Bindex] = temp;
+    }
+}

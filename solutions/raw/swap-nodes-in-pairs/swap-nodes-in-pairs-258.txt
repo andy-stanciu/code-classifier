@@ -1,0 +1,85 @@
+class ListNode {
+
+    int val;
+
+    ListNode next;
+
+    // Constructor to initialize a node with a value
+    ListNode(int x) {
+        // Set the value of the node
+        val = x;
+    }
+
+    // Static method to deserialize a comma-separated string of integers into a linked list
+    public static ListNode deserialize(String data) {
+        // If the input data is null or empty, return a null pointer
+        if (data == null || data.isEmpty()) {
+            return null;
+        }
+        // Remove square brackets and split the data by commas to get an array of values
+        String[] values = data.replace("[", "").replace("]", "").split(",");
+        // Create a dummy head node to facilitate building the linked list
+        ListNode dummy = new ListNode(0);
+        // Start from the dummy head
+        ListNode current = dummy;
+        // Iterate through the values and create new nodes, ignoring empty values
+        for (String value : values) {
+            if (!value.trim().isEmpty()) {
+                // Check if the value is not empty
+                // Create a new node with the integer value
+                current.next = new ListNode(Integer.parseInt(value.trim()));
+                // Move to the next node
+                current = current.next;
+            }
+        }
+        // Return the linked list starting from the node after the dummy head
+        // Return the actual head of the linked list
+        return dummy.next;
+    }
+}
+
+public class Solution {
+
+    // Method to swap adjacent pairs of nodes in a linked list
+    public ListNode swapPairs(ListNode head) {
+        // Base case: if the head is null or there\'s only one node, return the head
+        if (head == null || head.next == null) {
+            return head;
+        }
+        // Initialize pointers for the first and second nodes of the pair
+        ListNode firstNode = head;
+        ListNode secondNode = head.next;
+        // Recursively swap the next pair of nodes
+        firstNode.next = swapPairs(secondNode.next);
+        // Swap the current pair
+        secondNode.next = firstNode;
+        // Return the new head of the modified list
+        return secondNode;
+    }
+
+    // Main method for testing
+    public static void main(String[] args) {
+        // Deserialize an empty linked list
+        ListNode head = ListNode.deserialize("[]");
+        // Create an instance of Solution
+        Solution solution = new Solution();
+        // Swap adjacent pairs of nodes in the linked list
+        ListNode result = solution.swapPairs(head);
+        // Print the modified linked list
+        printList(result);
+    }
+
+    // Method to print a linked list
+    public static void printList(ListNode head) {
+        // Start from the head of the list
+        ListNode current = head;
+        while (current != null) {
+            // Print the value of the current node
+            System.out.print(current.val + " ");
+            // Move to the next node
+            current = current.next;
+        }
+        // Print a newline character after printing all nodes
+        System.out.println();
+    }
+}

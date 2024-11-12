@@ -1,0 +1,35 @@
+class Solution {
+
+    public ListNode revList(ListNode head) {
+        ListNode prev = null, temp;
+        while (head != null) {
+            temp = head.next;
+            head.next = prev;
+            prev = head;
+            head = temp;
+        }
+        return prev;
+    }
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ListNode revListOne = revList(l1);
+        ListNode var1 = revList(l2);
+        int totSum = 0, carry = 0;
+        ListNode ans = new ListNode();
+        while (revListOne != null || var1 != null) {
+            if (revListOne != null)
+                totSum += revListOne.val;
+            if (var1 != null)
+                totSum += var1.val;
+            ans.val = totSum % 10;
+            carry = totSum / 10;
+            ListNode head = new ListNode(carry);
+            head.next = ans;
+            ans = head;
+            totSum = carry;
+            revListOne = revListOne != null ? revListOne.next : null;
+            var1 = var1 != null ? var1.next : null;
+        }
+        return carry == 0 ? ans.next : ans;
+    }
+}

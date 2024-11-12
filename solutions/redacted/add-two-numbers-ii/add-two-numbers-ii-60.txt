@@ -1,0 +1,73 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        int len1 = 0;
+        int len2 = 0;
+        ListNode tl1 = l1;
+        ListNode tl2 = l2;
+        while (tl1 != null) {
+            tl1 = tl1.next;
+            len1++;
+        }
+        while (tl2 != null) {
+            tl2 = tl2.next;
+            len2++;
+        }
+        // to make l2 the smaller list
+        if (len1 < len2) {
+            ListNode temp = l1;
+            l1 = l2;
+            l2 = temp;
+        }
+        int diff = Math.abs(len1 - len2);
+        ListNode head = null;
+        ListNode thead = null;
+        while (diff-- > 0) {
+            if (head == null) {
+                head = new ListNode(0);
+                thead = head;
+            } else {
+                thead.next = new ListNode(0);
+                thead = thead.next;
+            }
+        }
+        if (head != null) {
+            thead.next = l2;
+            l2 = head;
+        }
+        Pair p = rec(l1, l2);
+        ListNode res = p.node;
+        int carry = p.carry;
+        if (carry == 0) {
+            return res;
+        }
+        ListNode te = new ListNode(carry);
+        te.next = res;
+        return te;
+    }
+
+    static Pair rec(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return new Pair(null, 0);
+        }
+        Pair p = rec(l1.next, l2.next);
+        int carry = p.carry;
+        ListNode head = p.node;
+        ListNode temp = new ListNode((l1.val + l2.val + carry) % 10);
+        temp.next = head;
+        head = temp;
+        return new Pair(head, (l1.val + l2.val + carry) / 10);
+    }
+}
+
+class Pair {
+
+    ListNode node;
+
+    int carry;
+
+    Pair(ListNode node, int carry) {
+        this.node = node;
+        this.carry = carry;
+    }
+}

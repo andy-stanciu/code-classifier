@@ -1,0 +1,46 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> stk = new Stack<>();
+        for (int i = 0; i < asteroids.length; i++) {
+            // for empty stack and +ve direction moving asteroid case
+            if (stk.isEmpty() || asteroids[i] >= 0) {
+                stk.push(asteroids[i]);
+            } else {
+                // if current asteroid moving in -ve direction
+                while (true) {
+                    int peek = stk.peek();
+                    //case1: if peek is also -ve, then both asteroid move in same -ve direction
+                    if (peek < 0) {
+                        stk.push(asteroids[i]);
+                        break;
+                    } else if (peek == -asteroids[i]) {
+                        //case2: if peek is of same size, then both of them gets destroyed
+                        stk.pop();
+                        break;
+                    } else if (peek > -asteroids[i]) {
+                        /*
+                        case3: if peek is of bigger size, then current asteriod will be destroyed
+                         */
+                        break;
+                    } else {
+                        /*
+                    case4: if current asteroid moving in -ve direction is of bigger size, 
+                           then all asteriod smaller then this will be destroyed
+                     */
+                        stk.pop();
+                        if (stk.isEmpty()) {
+                            stk.push(asteroids[i]);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        int[] output = new int[stk.size()];
+        for (int i = stk.size() - 1; i >= 0; i--) {
+            output[i] = stk.pop();
+        }
+        return output;
+    }
+}

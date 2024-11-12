@@ -1,0 +1,51 @@
+class Solution {
+
+    public void method1(int[] nums) {
+        if (nums == null || nums.length == 1)
+            return;
+        int pivot = getPivot(nums);
+        if (pivot == -1) {
+            reverse(nums, pivot + 1);
+            return;
+        }
+        int lastgreater = getLastGreater(nums, nums[pivot]);
+        //swap number at nums[pivot] and nums[lastGreater]
+        if (lastgreater != -1) {
+            int temp = nums[pivot];
+            nums[pivot] = nums[lastgreater];
+            nums[lastgreater] = temp;
+        }
+        reverse(nums, pivot + 1);
+    }
+
+    //index from last where increasing seq is broken.
+    public int getPivot(int[] nums) {
+        for (int i = nums.length - 1; i > 0; i--) {
+            if (nums[i] > nums[i - 1]) {
+                return i - 1;
+            }
+        }
+        return -1;
+    }
+
+    public void reverse(int[] nums, int start) {
+        int end = nums.length - 1;
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start++;
+            end--;
+        }
+    }
+
+    //get first element from last, which is greater than nums[pivot]
+    public int getLastGreater(int[] nums, int k) {
+        for (int i = nums.length - 1; i >= 0; i--) {
+            if (nums[i] > k) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}

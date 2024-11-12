@@ -1,0 +1,51 @@
+class Solution {
+
+    public ListNode method1(ListNode node) {
+        ListNode current = node;
+        ListNode prev = null;
+        while (current != null) {
+            ListNode tempNext = current.next;
+            current.next = prev;
+            prev = current;
+            current = tempNext;
+        }
+        return prev;
+    }
+
+    public ListNode method2(ListNode node, int k) {
+        k--;
+        while (k > 0) {
+            k--;
+            if (node == null) {
+                return null;
+            }
+            node = node.next;
+        }
+        return node;
+    }
+
+    public ListNode method3(ListNode head, int k) {
+        ListNode dummy = new ListNode(-1, head);
+        ListNode current = head;
+        ListNode var1 = dummy;
+        while (current != null) {
+            ListNode var2 = method2(current, k);
+            if (var2 == null) {
+                break;
+            }
+            ListNode var3 = var2.next;
+            var2.next = null;
+            var1.next = null;
+            ListNode newCurrentList = method1(current);
+            var1.next = newCurrentList;
+            ListNode var4 = var1;
+            while (var4.next != null) {
+                var4 = var4.next;
+            }
+            var4.next = var3;
+            current = var3;
+            var1 = var4;
+        }
+        return dummy.next;
+    }
+}

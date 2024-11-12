@@ -1,0 +1,32 @@
+class Solution {
+
+    private Map<Character, Integer> count;
+
+    private TreeSet<Pair<Character, Integer>> set;
+
+    public String frequencySort(String s) {
+        StringBuilder result = new StringBuilder();
+        count = new HashMap<>();
+        set = new TreeSet<>((a, b) -> {
+            int keyComparison = b.getValue().compareTo(a.getValue());
+            if (keyComparison != 0)
+                return keyComparison;
+            return a.getKey().compareTo(b.getKey());
+        });
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            int n = count.getOrDefault(ch, 0);
+            count.put(ch, n + 1);
+            set.remove(new Pair<>(ch, n));
+            set.add(new Pair<>(ch, n + 1));
+        }
+        for (Pair<Character, Integer> pair : set) {
+            char character = pair.getKey();
+            int frequency = pair.getValue();
+            for (int i = 0; i < frequency; i++) {
+                result.append(character);
+            }
+        }
+        return result.toString();
+    }
+}

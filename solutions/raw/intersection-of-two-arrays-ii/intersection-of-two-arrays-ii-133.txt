@@ -1,0 +1,52 @@
+class Solution {
+
+    public int[] intersect(int[] nums1, int[] nums2) {
+        HashMap<Integer, Integer> occNums1 = findOccurrence(nums1);
+        HashMap<Integer, Integer> occNums2 = findOccurrence(nums2);
+        ArrayList<Integer> answer = new ArrayList<>();
+        if (nums1.length > nums2.length) {
+            answer = findAnswer(occNums2, occNums1);
+        } else {
+            answer = findAnswer(occNums1, occNums2);
+        }
+        int[] result = new int[answer.size()];
+        for (int i = 0; i < answer.size(); i++) {
+            result[i] = answer.get(i);
+        }
+        return result;
+    }
+
+    HashMap<Integer, Integer> findOccurrence(int[] nums) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int n : nums) {
+            if (map.containsKey(n)) {
+                int x = map.get(n);
+                x++;
+                map.put(n, x);
+            } else {
+                map.put(n, 1);
+            }
+        }
+        return map;
+    }
+
+    ArrayList<Integer> findAnswer(HashMap<Integer, Integer> map1, HashMap<Integer, Integer> map2) {
+        ArrayList<Integer> result = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> entry : map1.entrySet()) {
+            int key = entry.getKey();
+            if (map2.containsKey(key)) {
+                int val = entry.getValue();
+                int val2 = map2.get(key);
+                int occ = 0;
+                if (val > 0 && val2 > 0) {
+                    occ = Math.min(val, val2);
+                }
+                while (occ > 0) {
+                    result.add(key);
+                    occ--;
+                }
+            }
+        }
+        return result;
+    }
+}

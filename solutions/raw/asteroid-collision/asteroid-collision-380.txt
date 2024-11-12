@@ -1,0 +1,49 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        // Create a stack to keep track of asteroids
+        Stack<Integer> stack = new Stack();
+        for (int asteroid : asteroids) {
+            if (stack.isEmpty() || asteroid > 0) {
+                // If stack is empty or asteroid is moving right (positive), push it to the stack
+                stack.push(asteroid);
+            } else {
+                // If asteroid is moving left (negative)
+                while (true) {
+                    // Get the top element of the stack
+                    int peek = stack.peek();
+                    if (peek < 0) {
+                        // If top element is also negative, push the current asteroid and break the loop
+                        stack.push(asteroid);
+                        break;
+                    } else if (peek == Math.abs(asteroid)) {
+                        // If absolute value of top element is equal to current asteroid, destroy both and break the loop
+                        stack.pop();
+                        break;
+                    } else if (peek > Math.abs(asteroid)) {
+                        // If top element is larger in magnitude, current asteroid gets destroyed
+                        // Break the loop
+                        break;
+                    } else {
+                        // If top element is smaller in magnitude
+                        // Destroy the top element
+                        stack.pop();
+                        if (stack.isEmpty()) {
+                            // If stack is empty, push the current asteroid and break the loop
+                            stack.push(asteroid);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        // Create an array to store the result
+        int[] output = new int[stack.size()];
+        for (int i = stack.size() - 1; i >= 0; i--) {
+            // Iterate through the stack to fill the result array
+            output[i] = stack.pop();
+        }
+        // Return the result array
+        return output;
+    }
+}

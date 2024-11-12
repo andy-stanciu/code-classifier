@@ -1,0 +1,33 @@
+class Solution {
+
+    // SC O(n * n!) TC O(n * n!)  => because we use set for every single possible result
+    List<List<Integer>> res = new LinkedList<>();
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        dfs(nums, nums.length - 1);
+        return res;
+    }
+
+    public void dfs(int[] nums, int start) {
+        if (start == 0) {
+            List<Integer> element = new LinkedList<>();
+            for (int num : nums) element.add(num);
+            res.add(element);
+        }
+        Set<Integer> set = new HashSet<>();
+        for (int i = start; i >= 0; i--) {
+            if (!set.add(nums[i]))
+                continue;
+            swap(nums, i, start);
+            dfs(nums, start - 1);
+            swap(nums, i, start);
+        }
+    }
+
+    public void swap(int[] nums, int a, int b) {
+        int temp = nums[a];
+        nums[a] = nums[b];
+        nums[b] = temp;
+    }
+}

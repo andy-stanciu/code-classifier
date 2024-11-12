@@ -1,0 +1,59 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode reversedL1, ListNode reversedL2) {
+        reversedL1 = reverseList(reversedL1);
+        reversedL2 = reverseList(reversedL2);
+        ListNode dummy = new ListNode(0);
+        // Pointer to traverse the result list
+        ListNode current = dummy;
+        int carry = 0;
+        // Iterate until both lists are exhausted and there\'s no carry left
+        while (reversedL1 != null || reversedL2 != null || carry > 0) {
+            int sum = 0;
+            // Add digits from both lists and the carry
+            if (reversedL1 != null) {
+                sum += reversedL1.val;
+                reversedL1 = reversedL1.next;
+            }
+            if (reversedL2 != null) {
+                sum += reversedL2.val;
+                reversedL2 = reversedL2.next;
+            }
+            // Add carry from the previous iteration
+            sum += carry;
+            // Update carry and calculate the current digit
+            carry = sum / 10;
+            // Create a new node with the current digit
+            ListNode newNode = new ListNode(sum % 10);
+            // Append the new node to the result list
+            current.next = newNode;
+            // Move the result pointer to the next node
+            current = current.next;
+        }
+        // Reverse the result list to get the final result
+        return reverseList(dummy.next);
+    }
+
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode current = head;
+        // Traverse the list and reverse pointers
+        while (current != null) {
+            ListNode next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+        return prev;
+    }
+}

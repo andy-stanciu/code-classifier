@@ -1,0 +1,57 @@
+class Solution {
+
+    public int[] method1(int n) {
+        return bottomupdp(n);
+    }
+
+    private int[] bottomupdp(int n) {
+        int[] ans = new int[n + 1];
+        ans[0] = 0;
+        if (n == 0)
+            return ans;
+        ans[1] = 1;
+        for (int i = 2; i <= n; i++) {
+            if (i % 2 == 0)
+                ans[i] = ans[i / 2];
+            else
+                ans[i] = 1 + ans[(i - 1) / 2];
+        }
+        return ans;
+    }
+
+    private int[] topdowndp(int n) {
+        if (n == 0)
+            return new int[] { 0 };
+        int[] ans = new int[n + 1];
+        ans[0] = 0;
+        ans[1] = 1;
+        Map<Integer, Integer> cache = new HashMap<>();
+        cache.put(0, ans[0]);
+        cache.put(1, ans[1]);
+        for (int i = n; i >= 0; i--) recursion(i, ans, cache);
+        return ans;
+    }
+
+    private int recursion(int n, int[] ans, Map<Integer, Integer> cache) {
+        if (n == 0)
+            return 0;
+        if (n == 1)
+            return 1;
+        if (cache.containsKey(n))
+            return cache.get(n);
+        if (n % 2 == 0)
+            ans[n] = recursion(n / 2, ans, cache);
+        else
+            ans[n] = 1 + recursion((n - 1) / 2, ans, cache);
+        cache.put(n, ans[n]);
+        return ans[n];
+    }
+
+    private int[] brute(int n) {
+        int[] ans = new int[n + 1];
+        for (int i = 0; i <= n; i++) {
+            ans[i] = Integer.bitCount(i);
+        }
+        return ans;
+    }
+}

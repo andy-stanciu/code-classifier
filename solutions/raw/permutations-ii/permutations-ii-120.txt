@@ -1,0 +1,28 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        boolean[] flag = new boolean[nums.length];
+        List<List<Integer>> list = new ArrayList<>();
+        help(flag, nums, list, new ArrayList<>());
+        return list;
+    }
+
+    void help(boolean[] flag, int[] nums, List<List<Integer>> list, List<Integer> current) {
+        if (current.size() == nums.length) {
+            list.add(new ArrayList<>(current));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (!flag[i]) {
+                if (i > 0 && !flag[i - 1] && nums[i] == nums[i - 1])
+                    continue;
+                flag[i] = true;
+                current.add(nums[i]);
+                help(flag, nums, list, current);
+                flag[i] = false;
+                current.remove(current.size() - 1);
+            }
+        }
+    }
+}

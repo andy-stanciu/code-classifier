@@ -1,0 +1,28 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Set<List<Integer>> out = new HashSet<>();
+        boolean[] visited = new boolean[nums.length];
+        List<Integer> tmpList = new LinkedList<>();
+        addOneMore(tmpList, visited, nums, out);
+        return new ArrayList(out);
+    }
+
+    private void addOneMore(List<Integer> list, boolean[] visited, int[] nums, Set<List<Integer>> out) {
+        if (list.size() == nums.length) {
+            out.add(new LinkedList(list));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (visited[i]) {
+                continue;
+            }
+            list.add(nums[i]);
+            visited[i] = true;
+            addOneMore(list, visited, nums, out);
+            // as far as we send list and visited as a reference we have to restore state
+            visited[i] = false;
+            list.remove(list.size() - 1);
+        }
+    }
+}

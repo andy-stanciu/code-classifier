@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> stack = new Stack<>();
+        for (int a : asteroids) {
+            if (stack.isEmpty()) {
+                stack.push(a);
+                continue;
+            }
+            int top = stack.peek();
+            if (isSameDirection(top, a) || isOpposite(top, a))
+                stack.push(a);
+            else {
+                if (Math.abs(top) < Math.abs(a)) {
+                    while (!stack.isEmpty() && Math.abs(stack.peek()) < Math.abs(a) && isFacing(stack.peek(), a)) stack.pop();
+                    if (!stack.isEmpty() && Math.abs(stack.peek()) > Math.abs(a) && isFacing(stack.peek(), a))
+                        continue;
+                    else if (!stack.isEmpty() && Math.abs(stack.peek()) == Math.abs(a) && isFacing(stack.peek(), a))
+                        stack.pop();
+                    else
+                        stack.push(a);
+                }
+                if (Math.abs(top) == Math.abs(a))
+                    stack.pop();
+            }
+        }
+        int[] result = new int[stack.size()];
+        for (int i = result.length - 1; i >= 0; i--) result[i] = stack.pop();
+        return result;
+    }
+
+    private boolean isFacing(int left, int right) {
+        return left > 0 && right < 0;
+    }
+
+    private boolean isOpposite(int left, int right) {
+        return left < 0 && right > 0;
+    }
+
+    private boolean isSameDirection(int left, int right) {
+        return left * right > 0;
+    }
+}

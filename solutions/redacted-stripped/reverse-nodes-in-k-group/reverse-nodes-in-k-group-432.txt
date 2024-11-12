@@ -1,0 +1,37 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        if (head == null || head.next == null || k == 1) {
+            return head;
+        }
+        return method2(head, head, k, k);
+    }
+
+    public ListNode method2(ListNode slow, ListNode fast, int k, int a) {
+        if (fast == null || slow == null) {
+            return slow;
+        }
+        if (k > 1) {
+            return method2(slow, fast.next, k - 1, a);
+        } else {
+            ListNode temp = method2(fast.next, fast.next, a, a);
+            ListNode s1 = slow;
+            slow = method3(slow, fast.next);
+            fast = s1;
+            fast.next = temp;
+        }
+        return slow;
+    }
+
+    public ListNode method3(ListNode slow, ListNode fast) {
+        ListNode prev = null;
+        ListNode curr = slow;
+        while (curr != null && curr != fast) {
+            ListNode nextNode = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextNode;
+        }
+        return prev;
+    }
+}

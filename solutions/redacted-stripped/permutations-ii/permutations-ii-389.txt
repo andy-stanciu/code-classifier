@@ -1,0 +1,31 @@
+class Solution {
+
+    boolean[] used;
+
+    List<List<Integer>> res = new LinkedList<>();
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        if (nums == null || nums.length == 0)
+            return res;
+        used = new boolean[nums.length];
+        Arrays.sort(nums);
+        backtrack(nums, new LinkedList<>());
+        return res;
+    }
+
+    private void backtrack(int[] nums, LinkedList<Integer> list) {
+        if (list.size() == nums.length) {
+            res.add(new LinkedList<>(list));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (used[i] || (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]))
+                continue;
+            list.add(nums[i]);
+            used[i] = true;
+            backtrack(nums, list);
+            list.removeLast();
+            used[i] = false;
+        }
+    }
+}

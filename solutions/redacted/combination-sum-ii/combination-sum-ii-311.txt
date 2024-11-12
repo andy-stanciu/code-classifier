@@ -1,0 +1,34 @@
+class Solution {
+
+    // This function recursively finds combinations of integers from the given array \'candidates\' that sum up to the \'target\'.
+    // It avoids duplicates by skipping over elements that are identical to the previous one.
+    public void fun(List<List<Integer>> ls, List<Integer> temp, int[] candidates, int target, int idx, int param1) {
+        // Base case: If the sum of elements in \'temp\' equals \'target\', add \'temp\' to the result list \'ls\'.
+        if (param1 == target) {
+            ls.add(new ArrayList<>(temp));
+            return;
+        }
+        // If the sum exceeds \'target\', stop further exploration of this path.
+        if (param1 > target)
+            return;
+        // Iterate through the remaining elements in \'candidates\' starting from index \'idx\'.
+        for (int i = idx; i < candidates.length; i++) {
+            // Skip duplicates by checking if the current element is the same as the previous one and not the first element.
+            if (i > idx && candidates[i] == candidates[i - 1])
+                continue;
+            // Include the current candidate in the combination.
+            temp.add(candidates[i]);
+            // Recur with the updated sum and index, and the current candidate added to \'temp\'.
+            fun(ls, temp, candidates, target, i + 1, param1 + candidates[i]);
+            // Backtrack: Remove the last added element to explore other combinations.
+            temp.remove(temp.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> ls = new ArrayList<>();
+        fun(ls, new ArrayList<>(), candidates, target, 0, 0);
+        return ls;
+    }
+}

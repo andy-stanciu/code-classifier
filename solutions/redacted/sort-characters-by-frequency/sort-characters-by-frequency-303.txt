@@ -1,0 +1,57 @@
+class Solution {
+
+    public String method1(String s) {
+        StringBuilder sb = new StringBuilder();
+        PriorityQueue<Pair> freqToChar = new PriorityQueue<>(Comparator.comparingInt(Pair::getFreq).reversed());
+        //Making Char To Freq
+        Map<Character, Integer> charToFreq = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            charToFreq.put(s.charAt(i), charToFreq.getOrDefault(s.charAt(i), 0) + 1);
+        }
+        // Making Freq To Char for Sorting by Freq (using priority queue so that its sorted by Freq HIGH to LOW
+        for (Character c : charToFreq.keySet()) {
+            freqToChar.add(new Pair(charToFreq.get(c), c));
+        }
+        while (!freqToChar.isEmpty()) {
+            //Getting Chars one by one from Highest Freq to Lowest
+            Pair pair = freqToChar.poll();
+            // To track how many char to print by its freq
+            int counter = 0;
+            int timesToPrint = pair.getFreq();
+            char letter = pair.getLetter();
+            while (counter < timesToPrint) {
+                sb.append(letter);
+                counter++;
+            }
+        }
+        return sb.toString();
+    }
+
+    public static class Pair {
+
+        int freq;
+
+        char letter;
+
+        public Pair(int freq, char letter) {
+            this.freq = freq;
+            this.letter = letter;
+        }
+
+        public int getFreq() {
+            return freq;
+        }
+
+        public void setFreq(int freq) {
+            this.freq = freq;
+        }
+
+        public char getLetter() {
+            return letter;
+        }
+
+        public void setLetter(char letter) {
+            this.letter = letter;
+        }
+    }
+}

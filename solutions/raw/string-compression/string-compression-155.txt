@@ -1,0 +1,63 @@
+class Solution {
+
+    public int compress(char[] chars) {
+        if (chars == null || chars.length == 0)
+            return 0;
+        if (chars.length == 1)
+            return 1;
+        // get the first character
+        char lastChar = chars[0];
+        // init count to 1 (the first character)
+        int count = 1;
+        // we will start evaluating from index 1
+        int curIndex = 1;
+        // any insertions will start from index 1
+        int insertIndex = 1;
+        // loop through each character
+        while (curIndex < chars.length) {
+            // get the current character
+            char curChar = chars[curIndex];
+            // if the current character is the same last, increment count
+            if (curChar == lastChar) {
+                count++;
+            } else {
+                // we have found a new character, do some processing
+                // insert the character along with count (if > 1) and return the next insertIndex
+                insertIndex = insert(chars, count, insertIndex);
+                // set the new character at the current index
+                chars[insertIndex] = curChar;
+                // update the lastChar for future loops
+                lastChar = curChar;
+                // increment the insert index for future loops
+                insertIndex++;
+                // set the count of the new character to 1 as we have seen the first instabce
+                count = 1;
+            }
+            // on each loop, increment the current index to evaluate the next character
+            curIndex++;
+        }
+        // the last insertion will take care of the count of the last character as this will not be processed
+        // in the while loop above
+        return insert(chars, count, insertIndex);
+    }
+
+    /**
+     *        If the count is > 1, we need to append the numeric value.
+     *        For simplicity, convert the int to string and then loop through
+     *        each character (each digit) and add to array. This particularly
+     *        helps when the count > 9.
+     *
+     *        If the count is 1, simply return the insertIndex as there is no need
+     *        to append the count.
+     */
+    private int insert(char[] chars, int count, int insertIndex) {
+        if (count > 1) {
+            String countStr = String.valueOf(count);
+            for (char c : countStr.toCharArray()) {
+                chars[insertIndex] = c;
+                insertIndex++;
+            }
+        }
+        return insertIndex;
+    }
+}

@@ -1,0 +1,86 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public static ListNode head;
+
+    public static ListNode tail;
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        String firststring = "";
+        String secondstring = "";
+        ListNode temp = l1;
+        while (temp != null) {
+            firststring += temp.val;
+            temp = temp.next;
+        }
+        ListNode temp2 = l2;
+        while (temp2 != null) {
+            secondstring += temp2.val;
+            temp2 = temp2.next;
+        }
+        int diffe = 0;
+        if (firststring.length() > secondstring.length()) {
+            diffe = firststring.length() - secondstring.length();
+            String con = "";
+            for (int i = 0; i < diffe; i++) {
+                con += 0;
+            }
+            secondstring = con + secondstring;
+        }
+        if (secondstring.length() > firststring.length()) {
+            diffe = secondstring.length() - firststring.length();
+            String con = "";
+            for (int i = 0; i < diffe; i++) {
+                con += 0;
+            }
+            firststring = con + firststring;
+        }
+        String NewGeneratedString = "";
+        int carry = 0;
+        for (int i = firststring.length() - 1; i >= 0; i--) {
+            int temporary1 = Integer.parseInt(String.valueOf(firststring.charAt(i)));
+            int temporary2 = Integer.parseInt(String.valueOf(secondstring.charAt(i)));
+            int sum = temporary1 + temporary2;
+            //  System.out.println(sum);
+            if ((sum + carry) <= 9) {
+                NewGeneratedString += (sum + carry);
+                carry = 0;
+                //   System.out.println(NewGeneratedString);
+            } else {
+                NewGeneratedString += ((sum + carry) % 10);
+                carry = ((sum + carry) / 10);
+                if (i == 0 && carry > 0) {
+                    NewGeneratedString += carry;
+                }
+                //   System.out.println(NewGeneratedString);
+                //   System.out.println(carry);
+            }
+        }
+        for (int i = NewGeneratedString.length() - 1; i >= 0; i--) {
+            creatLinkedList(Integer.parseInt(String.valueOf(NewGeneratedString.charAt(i))));
+        }
+        ListNode result = head;
+        head = null;
+        return result;
+    }
+
+    public static void creatLinkedList(int value) {
+        ListNode nn = new ListNode(value);
+        if (head == null) {
+            head = nn;
+            tail = nn;
+        } else {
+            tail.next = nn;
+            tail = tail.next;
+        }
+    }
+}

@@ -1,0 +1,71 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        head = split(head, k);
+        return head;
+    }
+
+    private ListNode split(ListNode head, int k) {
+        ListNode temp = head;
+        int start = 0, end = k - 1, counter = 0;
+        ListNode prev = null, next = null, tempHead = head;
+        while (temp != null) {
+            if (counter == start) {
+                tempHead = temp;
+                counter++;
+                temp = temp.next;
+            } else if (counter == end) {
+                next = temp.next;
+                temp.next = null;
+                ListNode reverseTemphead = reverse(tempHead);
+                if (prev != null) {
+                    prev.next = reverseTemphead;
+                } else {
+                    head = reverseTemphead;
+                }
+                ListNode tempReverse = reverseTemphead;
+                while (true) {
+                    if (tempReverse.next == null) {
+                        tempReverse.next = next;
+                        temp = tempReverse;
+                        break;
+                    }
+                    tempReverse = tempReverse.next;
+                }
+                prev = tempReverse;
+                start = end + 1;
+                end = end + k;
+            } else {
+                counter++;
+                temp = temp.next;
+            }
+        }
+        return head;
+    }
+
+    private ListNode reverse(ListNode head) {
+        if (head == null)
+            return null;
+        ListNode prev = null;
+        while (true) {
+            ListNode next = head.next;
+            head.next = prev;
+            prev = head;
+            if (next == null) {
+                break;
+            }
+            head = next;
+        }
+        return head;
+    }
+}

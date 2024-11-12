@@ -1,0 +1,39 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        ListNode slow = head, fast = head;
+        int idx = 0;
+        ListNode prev = null, newNode = head;
+        while (fast != null) {
+            int j = idx, limit = idx + k;
+            while (fast != null && j != limit) {
+                j++;
+                fast = fast.next;
+            }
+            if (j % k != 0)
+                return newNode;
+            ListNode curr = slow;
+            ListNode newTail = method2(curr, fast);
+            if (prev != null) {
+                prev.next = newTail;
+            } else {
+                newNode = newTail;
+            }
+            prev = slow;
+            slow.next = fast;
+            slow = fast;
+        }
+        return newNode;
+    }
+
+    public ListNode method2(ListNode head, ListNode fast) {
+        if (head.next == fast) {
+            return head;
+        }
+        ListNode newNode = method2(head.next, fast);
+        ListNode temp = head.next;
+        temp.next = head;
+        head.next = null;
+        return newNode;
+    }
+}

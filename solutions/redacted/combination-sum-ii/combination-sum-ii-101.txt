@@ -1,0 +1,27 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> result = new ArrayList<>();
+        rec(0, candidates, target, new ArrayList(), result);
+        return result;
+    }
+
+    public void rec(int index, int[] candidates, int target, ArrayList<Integer> list, List<List<Integer>> result) {
+        if (target == 0) {
+            result.add(new ArrayList(list));
+            return;
+        }
+        for (int i = index; i < candidates.length; i++) {
+            // matching same value as previous
+            if (i > index && candidates[i] == candidates[i - 1])
+                continue;
+            // if selected element is bidder that target. break, as it is sorted array and right ride elements in the array will be bigger or equal
+            if (candidates[i] > target)
+                break;
+            list.add(candidates[i]);
+            rec(i + 1, candidates, target - candidates[i], list, result);
+            list.remove(list.size() - 1);
+        }
+    }
+}

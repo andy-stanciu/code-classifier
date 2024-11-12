@@ -1,0 +1,34 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> list = new ArrayList<>();
+        List<List<Integer>> newlist = new ArrayList<>();
+        List<Integer> sublist = new ArrayList<>();
+        boolean[] freq = new boolean[nums.length];
+        helper(list, sublist, nums, freq);
+        HashSet<List<Integer>> hs = new HashSet<>();
+        for (List<Integer> ele : list) {
+            hs.add(ele);
+        }
+        for (List<Integer> ele1 : hs) {
+            newlist.add(ele1);
+        }
+        return newlist;
+    }
+
+    public void helper(List<List<Integer>> list, List<Integer> sublist, int[] nums, boolean[] freq) {
+        if (sublist.size() == nums.length) {
+            list.add(new ArrayList<>(sublist));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (!freq[i]) {
+                freq[i] = true;
+                sublist.add(nums[i]);
+                helper(list, sublist, nums, freq);
+                sublist.remove(sublist.size() - 1);
+                freq[i] = false;
+            }
+        }
+    }
+}

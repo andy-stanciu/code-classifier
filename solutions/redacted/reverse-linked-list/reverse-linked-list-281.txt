@@ -1,0 +1,80 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    /**
+     * Brute Force Approach
+     * Using a stack to store nodes and reverse their order.
+     *
+     * Time Complexity: O(n) - We iterate through the list twice.
+     * Space Complexity: O(n) - Stack storage for all nodes.
+     */
+    public ListNode method1(ListNode head) {
+        Stack<ListNode> st = new Stack<ListNode>();
+        ListNode temp = head;
+        while (temp != null) {
+            st.add(temp);
+            temp = temp.next;
+        }
+        ListNode head2 = null;
+        ListNode prev = null;
+        while (!st.isEmpty()) {
+            ListNode node = st.pop();
+            node.next = null;
+            if (head2 == null) {
+                head2 = node;
+                prev = node;
+            } else {
+                prev.next = node;
+                prev = node;
+            }
+        }
+        return head2;
+    }
+
+    /**
+     * Iterative Approach
+     * Reversing the list in place by changing pointers.
+     *
+     * Time Complexity: O(n) - Single pass through the list.
+     * Space Complexity: O(1) - In-place reversal without additional data structures.
+     */
+    public ListNode method2(ListNode head) {
+        ListNode temp = head;
+        ListNode prev = null;
+        ListNode front = null;
+        while (temp != null) {
+            front = temp.next;
+            temp.next = prev;
+            prev = temp;
+            temp = front;
+        }
+        return prev;
+    }
+
+    /**
+     * Recursive Approach
+     * Recursively reverse the list by moving to the end and backtracking.
+     *
+     * Time Complexity: O(n) - Recursive depth equal to list length.
+     * Space Complexity: O(n) - Call stack depth for recursion.
+     */
+    public ListNode method3(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode newHead = reverseList(head.next);
+        ListNode front = head.next;
+        front.next = head;
+        head.next = null;
+        return newHead;
+    }
+}

@@ -1,0 +1,79 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        Stack<Integer> s1 = new Stack();
+        Stack<Integer> s2 = new Stack();
+        ListNode node1 = l1;
+        while (node1 != null) {
+            s1.push(node1.val);
+            node1 = node1.next;
+        }
+        ListNode node2 = l2;
+        while (node2 != null) {
+            s2.push(node2.val);
+            node2 = node2.next;
+        }
+        int carry = 0;
+        Stack<Integer> s3 = new Stack();
+        while (true) {
+            if (s1.isEmpty() || s2.isEmpty())
+                break;
+            int v1 = s1.pop();
+            int v2 = s2.pop();
+            int result = v1 + v2 + carry;
+            if (result >= 10) {
+                carry = 1;
+                result = result % 10;
+            } else {
+                carry = 0;
+            }
+            s3.push(result);
+        }
+        if (!s1.isEmpty()) {
+            while (!s1.isEmpty()) {
+                int v1 = s1.pop();
+                int result = v1 + carry;
+                if (result >= 10) {
+                    carry = 1;
+                    result = result % 10;
+                } else {
+                    carry = 0;
+                }
+                s3.push(result);
+            }
+        } else if (!s2.isEmpty()) {
+            while (!s2.isEmpty()) {
+                int v2 = s2.pop();
+                int result = v2 + carry;
+                if (result >= 10) {
+                    carry = 1;
+                    result = result % 10;
+                } else {
+                    carry = 0;
+                }
+                s3.push(result);
+            }
+        }
+        if (carry == 1) {
+            s3.push(1);
+        }
+        ListNode dummyHead = new ListNode(-1);
+        ListNode temp = dummyHead;
+        while (!s3.isEmpty()) {
+            int val = s3.pop();
+            temp.next = new ListNode(val);
+            temp = temp.next;
+        }
+        return dummyHead.next;
+    }
+}

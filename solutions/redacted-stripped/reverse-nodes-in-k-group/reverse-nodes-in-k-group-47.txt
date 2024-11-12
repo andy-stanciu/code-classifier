@@ -1,0 +1,53 @@
+class Solution {
+
+    ListNode th = null, tt = null;
+
+    public ListNode method1(ListNode head, int k) {
+        if (head == null || head.next == null || k <= 1)
+            return head;
+        int len = length(head);
+        ListNode oh = null;
+        ListNode ot = null;
+        ListNode curr = head;
+        while (curr != null && len >= k) {
+            int tempK = k;
+            while (tempK-- > 0) {
+                ListNode forw = curr.next;
+                curr.next = null;
+                addFirst(curr);
+                curr = forw;
+            }
+            len -= k;
+            if (oh == null) {
+                oh = th;
+                ot = tt;
+            } else {
+                ot.next = th;
+                ot = tt;
+            }
+            th = null;
+            tt = null;
+        }
+        ot.next = curr;
+        return oh;
+    }
+
+    public void addFirst(ListNode node) {
+        if (th == null) {
+            th = node;
+            tt = node;
+        } else {
+            node.next = th;
+            th = node;
+        }
+    }
+
+    public int length(ListNode node) {
+        int len = 0;
+        while (node != null) {
+            node = node.next;
+            len++;
+        }
+        return len;
+    }
+}

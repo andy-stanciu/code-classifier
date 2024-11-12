@@ -1,0 +1,60 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null) {
+            return root;
+        }
+        if (key < root.val) {
+            // if key is smaller than root, delete it from lst and update root.left
+            root.left = method1(root.left, key);
+        } else if (key > root.val) {
+            // if key is greater than root, delete it from rst and update root.right
+            root.right = method1(root.right, key);
+        } else {
+            // root.val == key, we found the node to be deleted
+            if (root.left == null && root.right == null) {
+                // leaf node
+                return null;
+            } else if (root.right == null) {
+                // has only left child
+                return root.left;
+            } else if (root.left == null) {
+                // has only right child
+                return root.right;
+            } else {
+                // has both left and right child.
+                // Now, we need to choose an element from either left or right subtree to replace the root.
+                // We choose to replace it with the max element in the left subtree.
+                // Note, here we are not changing the root\'s parent left/right pointer, rather we are just finding the max in LST and changing the node val.
+                // Once we do that, now we just need to remove the node with max value.
+                int max = method2(root.left);
+                root.val = max;
+                root.left = method1(root.left, max);
+                return root;
+            }
+        }
+        return root;
+    }
+
+    int method2(TreeNode root) {
+        if (root.right == null) {
+            return root.val;
+        }
+        return method2(root.right);
+    }
+}

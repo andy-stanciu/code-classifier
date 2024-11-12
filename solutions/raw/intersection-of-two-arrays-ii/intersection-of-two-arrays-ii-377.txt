@@ -1,0 +1,70 @@
+class Solution {
+
+    public int[] intersect(int[] nums1, int[] nums2) {
+        mergeSort(nums1);
+        mergeSort(nums2);
+        int i = 0;
+        int j = 0;
+        ArrayList<Integer> intersection = new ArrayList<Integer>();
+        while (i < nums1.length && j < nums2.length) {
+            if (nums1[i] < nums2[j]) {
+                i++;
+            } else if (nums1[i] > nums2[j]) {
+                j++;
+            } else {
+                intersection.add(nums1[i]);
+                i++;
+                j++;
+            }
+        }
+        int[] result = new int[intersection.size()];
+        for (int k = 0; k < result.length; k++) {
+            result[k] = intersection.get(k);
+        }
+        return result;
+    }
+
+    public static void mergeSort(int[] arrayToBeSorted) {
+        if (arrayToBeSorted.length <= 1) {
+            return;
+        }
+        int lengthOfArray = arrayToBeSorted.length;
+        int[] l1 = new int[lengthOfArray / 2];
+        int[] l2 = new int[lengthOfArray - lengthOfArray / 2];
+        for (int i = 0; i < lengthOfArray / 2; i++) {
+            l1[i] = arrayToBeSorted[i];
+        }
+        for (int i = 0; i < lengthOfArray - (lengthOfArray / 2); i++) {
+            l2[i] = arrayToBeSorted[(lengthOfArray / 2) + i];
+        }
+        mergeSort(l1);
+        mergeSort(l2);
+        merge(l1, l2, arrayToBeSorted);
+    }
+
+    public static void merge(int[] a1, int[] a2, int[] arrayToMergeIn) {
+        int i1 = 0;
+        int i2 = 0;
+        int genI = 0;
+        while (i1 < a1.length && i2 < a2.length && genI < arrayToMergeIn.length) {
+            if (a1[i1] < a2[i2]) {
+                arrayToMergeIn[genI] = a1[i1];
+                i1++;
+            } else {
+                arrayToMergeIn[genI] = a2[i2];
+                i2++;
+            }
+            genI++;
+        }
+        while (i1 < a1.length) {
+            arrayToMergeIn[genI] = a1[i1];
+            i1++;
+            genI++;
+        }
+        while (i2 < a2.length) {
+            arrayToMergeIn[genI] = a2[i2];
+            i2++;
+            genI++;
+        }
+    }
+}

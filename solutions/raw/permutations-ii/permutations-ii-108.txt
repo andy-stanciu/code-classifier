@@ -1,0 +1,27 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ret = new ArrayList<>();
+        HashMap<Integer, Integer> hm = new HashMap<>();
+        for (int i : nums) {
+            hm.put(i, hm.getOrDefault(i, 0) + 1);
+        }
+        bt(ret, new ArrayList<>(), hm, 0, nums);
+        return ret;
+    }
+
+    public void bt(List<List<Integer>> ret, List<Integer> currList, HashMap<Integer, Integer> hm, int index, int[] nums) {
+        if (index == nums.length) {
+            ret.add(new ArrayList(currList));
+        }
+        for (int i : hm.keySet()) {
+            if (hm.get(i) > 0) {
+                currList.add(i);
+                hm.put(i, hm.get(i) - 1);
+                bt(ret, currList, hm, index + 1, nums);
+                hm.put(i, hm.get(i) + 1);
+                currList.remove(currList.size() - 1);
+            }
+        }
+    }
+}

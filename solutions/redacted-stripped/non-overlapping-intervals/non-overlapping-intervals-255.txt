@@ -1,0 +1,39 @@
+class Solution {
+
+    public int method1(int[][] arr) {
+        Arrays.sort(arr, (a, b) -> {
+            if (a[0] == b[0])
+                return a[1] - b[1];
+            else
+                return a[0] - b[0];
+        });
+        int n = arr.length;
+        int[] dp = new int[n];
+        Arrays.fill(dp, -1);
+        int ans = solve(0, arr, n, dp);
+        return n - ans;
+    }
+
+    public int solve(int i, int[][] arr, int n, int[] dp) {
+        if (i >= n)
+            return 0;
+        if (dp[i] != -1)
+            return dp[i];
+        int j = BinarySearch(arr, i + 1, n, arr[i][1]);
+        return dp[i] = Math.max(solve(i + 1, arr, n, dp), 1 + solve(j, arr, n, dp));
+    }
+
+    public int BinarySearch(int[][] arr, int l, int h, int key) {
+        int ans = h;
+        h--;
+        while (l <= h) {
+            int mid = l + (h - l) / 2;
+            if (arr[mid][0] >= key) {
+                ans = mid;
+                h = mid - 1;
+            } else
+                l = mid + 1;
+        }
+        return ans;
+    }
+}

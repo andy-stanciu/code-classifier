@@ -1,0 +1,36 @@
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        // base case
+        if (k == 1)
+            return head;
+        // first keep finding each group until we found last group
+        // there is no need to reverse the last group when we found it, just return start point of it
+        // even if the last group is null, it is still fine, just return it
+        ListNode curr = head;
+        for (int i = 0; i < k; i++) {
+            if (head != null) {
+                head = head.next;
+            } else {
+                // last group found
+                return curr;
+            }
+        }
+        // recursion
+        ListNode nextGroup = reverseKGroup(head, k);
+        // back tracking reverse curr group
+        ListNode finalTail = curr;
+        ListNode prev = curr;
+        ListNode tempNext = null;
+        for (int i = 0; i < k; i++) {
+            tempNext = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = tempNext;
+        }
+        // connect reversed curr to next group
+        finalTail.next = nextGroup;
+        // return new reversed first node of curr group(which the prev point to) and keep back tracking until stack is empty
+        return prev;
+    }
+}

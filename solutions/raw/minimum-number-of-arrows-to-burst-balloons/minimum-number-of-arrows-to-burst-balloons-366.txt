@@ -1,0 +1,36 @@
+class Solution {
+
+    public int findMinArrowShots(int[][] points) {
+        // Initialize the arrow count to 1 since at least one arrow is needed
+        int arrowCount = 1;
+        // Sort the points based on the ending position of each balloon
+        Arrays.sort(points, (o1, o2) -> {
+            // Compare the ending positions of two intervals
+            // If both ending positions are equal, return 0
+            if (o1[1] == o2[1])
+                return 0;
+            // If ending position of o1 is less than o2, return -1
+            if (o1[1] < o2[1])
+                return -1;
+            // Otherwise, return 1
+            return 1;
+        });
+        // Initialize the base position to the ending position of the first balloon
+        int basePos = points[0][1];
+        // Iterate through the sorted points array
+        for (int i = 1; i < points.length; i++) {
+            // If the base position is greater than or equal to the starting position of the current balloon,
+            // it means the current balloon is intersecting with the previous one, so we continue to the next balloon
+            if (basePos >= points[i][0]) {
+                continue;
+            }
+            // If the base position is less than the starting position of the current balloon,
+            // it means the current balloon is not intersecting with the previous one, so we need an additional arrow
+            arrowCount++;
+            // Update the base position to the ending position of the current balloon
+            basePos = points[i][1];
+        }
+        // Return the minimum number of arrows needed to burst all balloons
+        return arrowCount;
+    }
+}

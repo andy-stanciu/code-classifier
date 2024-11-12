@@ -1,0 +1,35 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> stack = new Stack<>();
+        for (int asteroid : asteroids) {
+            boolean isDestroyed = false;
+            // Handle collision when current asteroid is moving left
+            while (!stack.isEmpty() && asteroid < 0 && stack.peek() > 0) {
+                if (stack.peek() < -asteroid) {
+                    // Top asteroid is destroyed
+                    stack.pop();
+                } else if (stack.peek() == -asteroid) {
+                    // Both asteroids are destroyed
+                    stack.pop();
+                    isDestroyed = true;
+                    break;
+                } else {
+                    // Current asteroid is destroyed
+                    isDestroyed = true;
+                    break;
+                }
+            }
+            // Push the current asteroid to the stack if it\'s not destroyed
+            if (!isDestroyed) {
+                stack.push(asteroid);
+            }
+        }
+        // Convert stack to array
+        int[] result = new int[stack.size()];
+        for (int i = stack.size() - 1; i >= 0; i--) {
+            result[i] = stack.pop();
+        }
+        return result;
+    }
+}

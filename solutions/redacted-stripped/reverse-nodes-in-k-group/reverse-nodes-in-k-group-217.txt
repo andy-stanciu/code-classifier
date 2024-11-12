@@ -1,0 +1,58 @@
+class ListNode {
+
+    int val;
+
+    ListNode next;
+
+    ListNode(int x) {
+        val = x;
+    }
+
+    public static ListNode deserialize(String data) {
+        if (data == null || data.isEmpty()) {
+            return null;
+        }
+        String[] values = data.replace("[", "").replace("]", "").split(",");
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        for (String value : values) {
+            current.next = new ListNode(Integer.parseInt(value.trim()));
+            current = current.next;
+        }
+        return dummy.next;
+    }
+}
+
+public class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        ListNode curr = head;
+        int count = 0;
+        while (curr != null && count != k) {
+            curr = curr.next;
+            count++;
+        }
+        if (count == k) {
+            curr = method1(curr, k);
+            while (count-- > 0) {
+                ListNode tmp = head.next;
+                head.next = curr;
+                curr = head;
+                head = tmp;
+            }
+            head = curr;
+        }
+        return head;
+    }
+
+    public static void method2(String[] args) {
+        ListNode head = ListNode.deserialize("[1,2,3,4,5]");
+        int k = 2;
+        Solution solution = new Solution();
+        ListNode result = solution.method1(head, k);
+        while (result != null) {
+            System.out.print(result.val + " ");
+            result = result.next;
+        }
+    }
+}

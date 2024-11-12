@@ -1,0 +1,62 @@
+class Solution {
+
+    public TreeNode getMin(TreeNode curr) {
+        while (curr.left != null) {
+            curr = curr.left;
+        }
+        return curr;
+    }
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        //search the node to be delete
+        TreeNode parent = null;
+        TreeNode curr = root;
+        while (curr != null && curr.val != key) {
+            //either key exist or doesn\'t exist
+            parent = curr;
+            if (key < curr.val)
+                curr = curr.left;
+            else
+                curr = curr.right;
+        }
+        if (curr == null) {
+            return root;
+        }
+        //case - 1 : Delete a node having 0 children
+        if (curr.left == null && curr.right == null) {
+            if (// if root ko hi delete krna ho
+            curr == root) {
+                root = null;
+            } else // now check curr is either in parent left or right
+            {
+                if (parent.left == curr)
+                    parent.left = null;
+                else
+                    parent.right = null;
+            }
+        } else // case 2 : node has 1 child node
+        if (curr.left == null || curr.right == null) {
+            TreeNode child;
+            // here we mark the position of  child node  we are checking which is null right or left . if left side is null then right becomes child or vice versa
+            if (curr.left == null)
+                child = curr.right;
+            else
+                child = curr.left;
+            if (curr == root) {
+                root = child;
+            } else {
+                if (curr == parent.left)
+                    parent.left = child;
+                else
+                    parent.right = child;
+            }
+        } else // case-3 : deleting a node with 2 children
+        {
+            TreeNode min = getMin(curr.right);
+            int minval = min.val;
+            deleteNode(root, minval);
+            curr.val = minval;
+        }
+        return root;
+    }
+}

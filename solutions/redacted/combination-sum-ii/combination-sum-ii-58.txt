@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] nums, int n) {
+        Arrays.sort(nums);
+        Set<List<Integer>> a = new HashSet<>();
+        List<Integer> b = new ArrayList<>();
+        rec(nums, n, a, b, 0, 0);
+        return new ArrayList<>(a);
+    }
+
+    void rec(int[] nums, int n, Set<List<Integer>> a, List<Integer> b, int ind, int param1) {
+        if (param1 == n) {
+            a.add(new ArrayList<>(b));
+            return;
+        }
+        for (int i = ind; i < nums.length; i++) {
+            if (i > ind && nums[i] == nums[i - 1])
+                continue;
+            if (param1 + nums[i] > n)
+                break;
+            if (param1 + nums[i] <= n) {
+                b.add(nums[i]);
+                param1 = param1 + nums[i];
+                rec(nums, n, a, b, i + 1, param1);
+                b.remove(b.size() - 1);
+                param1 = param1 - nums[i];
+            }
+        }
+    }
+}

@@ -1,0 +1,34 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new LinkedList<>();
+        LinkedList<Integer> cur = new LinkedList<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i : nums) {
+            if (map.containsKey(i)) {
+                map.put(i, map.get(i) + 1);
+            } else {
+                map.put(i, 1);
+            }
+        }
+        find(res, nums, cur, map);
+        return res;
+    }
+
+    public void find(List<List<Integer>> res, int[] arr, LinkedList<Integer> cur, HashMap<Integer, Integer> m) {
+        if (cur.size() == arr.length) {
+            res.add(new LinkedList<>(cur));
+            return;
+        }
+        for (Map.Entry<Integer, Integer> j : m.entrySet()) {
+            int k = j.getKey(), v = j.getValue();
+            if (m.get(k) > 0) {
+                cur.add(k);
+                m.put(k, m.get(k) - 1);
+                find(res, arr, cur, m);
+                m.put(k, m.get(k) + 1);
+                cur.removeLast();
+            }
+        }
+    }
+}

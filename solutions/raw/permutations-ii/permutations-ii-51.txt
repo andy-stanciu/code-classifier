@@ -1,0 +1,44 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        // To store all unique permutations
+        ArrayList<List<Integer>> result = new ArrayList<>();
+        // To track whether an element is included in the current permutation
+        boolean[] used = new boolean[nums.length];
+        // Sort the array to help detect duplicates
+        Arrays.sort(nums);
+        // Start backtracking
+        backtrack(result, nums, new ArrayList<>(), used);
+        // Return the list of unique permutations
+        return result;
+    }
+
+    // Helper function for backtracking to generate permutations
+    private void backtrack(ArrayList<List<Integer>> result, int[] nums, List<Integer> permutation, boolean[] used) {
+        // Base case: if the current permutation is the same length as nums, add it to the result
+        if (permutation.size() == nums.length) {
+            // Add a copy of the current permutation to the result
+            result.add(new ArrayList<>(permutation));
+        } else {
+            // Loop through all elements in nums
+            for (int i = 0; i < used.length; i++) {
+                // Skip the element if it\'s already used in the current permutation
+                // Skip duplicates: if the current element is the same as the previous and the previous hasn\'t been used yet, skip this
+                if (used[i] || (i > 0 && nums[i] == nums[i - 1] && !used[i - 1])) {
+                    // Skip this element and move to the next one
+                    continue;
+                }
+                // Mark the current element as used
+                used[i] = true;
+                // Add the current element to the permutation
+                permutation.add(nums[i]);
+                // Recursively call backtrack to generate permutations with the next element
+                backtrack(result, nums, permutation, used);
+                // Backtrack: remove the last element and mark it as unused to explore other permutations
+                permutation.remove(permutation.size() - 1);
+                // Mark the current element as unused
+                used[i] = false;
+            }
+        }
+    }
+}

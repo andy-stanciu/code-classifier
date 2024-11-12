@@ -1,0 +1,45 @@
+class Solution {
+
+    private HashMap<Integer, HashMap<String, List<Integer>>> output;
+
+    private String ListJoin(List<Integer> list, String delimiter) {
+        String output = "";
+        for (int num : list) output = (output != "") ? output + delimiter + String.valueOf(num) : String.valueOf(num);
+        return output;
+    }
+
+    private void insertion(int num, int key) {
+        output.put(key, new HashMap<>());
+        List<List<Integer>> list = new ArrayList(output.get(key - 1).values());
+        for (List<Integer> item : list) {
+            int at = -1;
+            while (at <= item.size() - 1) {
+                at++;
+                List<Integer> copy = new ArrayList(item);
+                copy.add(at, num);
+                String insertion_key = ListJoin(copy, ",");
+                if (output.get(key).containsKey(insertion_key))
+                    continue;
+                else
+                    output.get(key).put(insertion_key, copy);
+            }
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        output = new HashMap<>();
+        for (int i = 0, key = 1; i < nums.length; i++, key++) {
+            if (i == 0) {
+                List<Integer> list = new ArrayList<>();
+                list.add(nums[i]);
+                HashMap<String, List<Integer>> map = new HashMap();
+                map.put(ListJoin(list, ","), list);
+                output.put(key, map);
+            } else {
+                insertion(nums[i], key);
+                output.remove(key - 1);
+            }
+        }
+        return new ArrayList(output.get(nums.length).values());
+    }
+}

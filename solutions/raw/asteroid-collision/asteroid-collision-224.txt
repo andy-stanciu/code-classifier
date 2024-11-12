@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> s = new Stack();
+        s.push(asteroids[0]);
+        for (int i = 1; i < asteroids.length; i++) {
+            int asteroid = asteroids[i];
+            boolean push = true;
+            while (!s.isEmpty()) {
+                int peek = s.peek();
+                boolean negativePeek = peek < 0;
+                boolean asteroidNegative = asteroid < 0;
+                if (!asteroidNegative) {
+                    //if current asteroid is not negative no colisions
+                    break;
+                }
+                // if both negative no colisions
+                if (asteroidNegative && negativePeek)
+                    break;
+                if (Math.abs(peek) == Math.abs(asteroid)) {
+                    //if same  as asteroid is negative and peek is positive
+                    s.pop();
+                    push = false;
+                    break;
+                } else if (Math.abs(asteroid) > Math.abs(peek)) {
+                    //both different sign
+                    s.pop();
+                } else {
+                    //asteroid is smaller with different sign
+                    push = false;
+                    break;
+                }
+            }
+            if (push)
+                s.push(asteroid);
+        }
+        int[] ans = new int[s.size()];
+        for (int i = ans.length - 1; i >= 0; i--) {
+            ans[i] = s.pop();
+        }
+        return ans;
+    }
+}

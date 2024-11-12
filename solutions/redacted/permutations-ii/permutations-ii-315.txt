@@ -1,0 +1,32 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> list = new ArrayList<List<Integer>>();
+        helper(nums, 0, new ArrayList<Integer>(), list);
+        return list;
+    }
+
+    void helper(int[] nums, int start, List<Integer> slate, List<List<Integer>> list) {
+        Set<Integer> visited = new HashSet<Integer>();
+        if (start == nums.length) {
+            list.add(new ArrayList<>(slate));
+        }
+        for (int i = start; i < nums.length; i++) {
+            if (visited.contains(nums[i]))
+                continue;
+            else
+                visited.add(nums[i]);
+            swap(nums, i, start);
+            slate.add(nums[start]);
+            helper(nums, start + 1, slate, list);
+            slate.remove(slate.size() - 1);
+            swap(nums, i, start);
+        }
+    }
+
+    void swap(int[] nums, int first, int second) {
+        int temp = nums[first];
+        nums[first] = nums[second];
+        nums[second] = temp;
+    }
+}

@@ -1,0 +1,70 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        //node to raverse the list
+        ListNode temp = head;
+        // pointer to track last node of prev group
+        ListNode prevLast = null;
+        while (temp != null) {
+            ListNode kthNode = getKthNode(temp, k);
+            // if kthNode is null , then it is not a complete group
+            if (kthNode == null) {
+                // if there was any prev group
+                // assign the prev group last elemnet to the curr node
+                if (prevLast != null) {
+                    prevLast.next = temp;
+                }
+                break;
+            }
+            ListNode nextNode = kthNode.next;
+            // disconnecting node for reversal
+            kthNode.next = null;
+            method2(temp);
+            // adjust head if reversal starts from head
+            if (temp == head) {
+                head = kthNode;
+            } else {
+                // linking last node of prev group to the reversed group
+                prevLast.next = kthNode;
+            }
+            // updating pointer to last node of prev group
+            prevLast = temp;
+            //move to next group
+            temp = nextNode;
+        }
+        return head;
+    }
+
+    public ListNode getKthNode(ListNode temp, int k) {
+        k -= 1;
+        while (temp != null && k > 0) {
+            // Decrement k as temp progresses
+            k--;
+            // Move to the next node
+            temp = temp.next;
+        }
+        return temp;
+    }
+
+    public ListNode method2(ListNode head) {
+        ListNode temp = head;
+        ListNode prev = null;
+        while (temp != null) {
+            ListNode front = temp.next;
+            temp.next = prev;
+            prev = temp;
+            temp = front;
+        }
+        return prev;
+    }
+}

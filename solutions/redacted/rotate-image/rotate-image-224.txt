@@ -1,0 +1,110 @@
+class Solution {
+
+    private enum Direction {
+
+        EAST, SOUTH, WEST, NORTH
+    }
+
+    private static class State {
+
+        private int col;
+
+        private int row;
+
+        private int increment;
+
+        private int maxcol;
+
+        private int maxrow;
+
+        private int mincol;
+
+        private int minrow;
+
+        private Direction dir;
+
+        State(int dim, int layer) {
+            dir = Direction.EAST;
+            col = layer;
+            row = layer;
+            increment = dim - 1 - layer;
+            mincol = layer;
+            minrow = layer;
+            maxcol = dim - 1;
+            maxrow = dim - 1;
+        }
+
+        private int[] computeNextPos() {
+            int colNew = col;
+            int rowNew = row;
+            if (dir == Direction.EAST) {
+                colNew += increment;
+                if (colNew > maxcol) {
+                    // round the corner
+                    rowNew = row + (colNew - maxcol);
+                    colNew = maxcol;
+                    dir = Direction.SOUTH;
+                }
+            } else if (dir == Direction.SOUTH) {
+                rowNew += increment;
+                if (rowNew > maxrow) {
+                    // round the corner
+                    colNew = col - (rowNew - maxrow);
+                    rowNew = maxrow;
+                    dir = Direction.WEST;
+                }
+            } else if (dir == Direction.WEST) {
+                colNew -= increment;
+                if (colNew < mincol) {
+                    // round the corner
+                    rowNew = row - (mincol - colNew);
+                    colNew = mincol;
+                    dir = Direction.NORTH;
+                }
+            } else if (dir == Direction.NORTH) {
+                rowNew -= increment;
+                if (rowNew < minrow) {
+                    // round the corner
+                    colNew = col - (rowNew - maxrow);
+                    rowNew = minrow;
+                    dir = Direction.EAST;
+                }
+            }
+            //System.out.println("Increment of " + increment + ". From " + row + "," + col + " to " + rowNew + "," + colNew);
+            col = colNew;
+            row = rowNew;
+            return new int[] { rowNew, colNew };
+        }
+    }
+
+    public void method1(int[][] matrix) {
+        int innerMost = matrix.length / 2;
+        for (int layer = 0; layer < innerMost; layer++) {
+            int dim = matrix.length - layer;
+            State state = new State(dim, layer);
+            wrap(matrix, dim, layer, state);
+        }
+    }
+
+    private static void wrap(int[][] matrix, int dim, int layer, State state) {
+        int startcol = layer;
+        int startrow = layer;
+        while (startcol < dim - 1) {
+            state.dir = Direction.EAST;
+            state.col = startcol;
+            state.row = startrow;
+            int oldTemp = matrix[startrow][startcol];
+            for (int i = 0; i < 3; i++) {
+                int[] nextPos = state.computeNextPos();
+                int temp = matrix[nextPos[0]][nextPos[1]];
+                matrix[nextPos[0]][nextPos[1]] = oldTemp;
+                oldTemp = temp;
+            }
+            // Start col,row is the next position. No need to recalculate it
+            matrix[startrow][startcol] = oldTemp;
+            // Done one pass.
+            // temp
+            startcol = startcol + 1;
+        }
+    }
+}

@@ -1,0 +1,109 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    TreeNode root;
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        this.root = root;
+        TreeNode toDelete = search(root, key);
+        if (toDelete != null) {
+            delete(toDelete);
+        }
+        return this.root;
+    }
+
+    private void delete(TreeNode node) {
+        if (node.left == null) {
+            // node has no left child, then replace node with it\'s right child which may or may not be null
+            transplant(node, node.right);
+        } else if (node.right == null) {
+            // node has no right child, but has one child which is the left child
+            transplant(node, node.left);
+        } else {
+            // node has both left and right child, find node\'s successor
+            TreeNode successor = minimum(node.right);
+            // if successor is further down the tree (in which case it is not directly the right child of node to be deleted)
+            if (successor != node.right) {
+                // replace successor by it\'s right child (Because it cannot have a left child)
+                transplant(successor, successor.right);
+                successor.right = node.right;
+            }
+            // replace node by it\'s successor
+            transplant(node, successor);
+            successor.left = node.left;
+        }
+    }
+
+    // find the minimum element in the subree rooted at the given node
+    private TreeNode minimum(TreeNode node) {
+        if (node.left != null) {
+            return minimum(node.left);
+        }
+        return node;
+    }
+
+    private TreeNode search(TreeNode node, int key) {
+        if (node == null || node.val == key) {
+            return node;
+        }
+        if (key > node.val) {
+            return search(node.right, key);
+        } else {
+            return search(node.left, key);
+        }
+    }
+
+    // search for the parent of a node
+    private TreeNode parentSearch(TreeNode node) {
+        if (node == root) {
+            return null;
+        }
+        TreeNode parent = root;
+        TreeNode current;
+        if (parent.val > node.val) {
+            current = parent.left;
+        } else {
+            current = parent.right;
+        }
+        return recursiveParentSearch(parent, current, node.val);
+    }
+
+    // recursive helper method to search for paren of a node
+    private TreeNode recursiveParentSearch(TreeNode parent, TreeNode current, int key) {
+        if (current.val == key) {
+            return parent;
+        }
+        parent = current;
+        if (current.val > key) {
+            return recursiveParentSearch(parent, current.left, key);
+        } else {
+            return recursiveParentSearch(parent, current.right, key);
+        }
+    }
+
+    // method replaces one subtree as a child of it\'s parent with another subtree
+    private void transplant(TreeNode u, TreeNode v) {
+        TreeNode parentOfU = parentSearch(u);
+        if (parentOfU == null) {
+            root = v;
+        } else if (u == parentOfU.left) {
+            parentOfU.left = v;
+        } else {
+            parentOfU.right = v;
+        }
+    }
+}

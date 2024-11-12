@@ -1,0 +1,43 @@
+class Solution {
+
+    public String frequencySort(String s) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (map.containsKey(c)) {
+                map.put(c, map.get(c) + 1);
+            } else {
+                map.put(c, 1);
+            }
+        }
+        TreeMap<Integer, ArrayList<Character>> c = new TreeMap<>();
+        ArrayList<Character> sortkey = new ArrayList<Character>(map.keySet());
+        ArrayList<Integer> arr = new ArrayList<>();
+        for (Character a : sortkey) {
+            if (!c.containsKey(map.get(a))) {
+                arr.add(map.get(a));
+                c.put(map.get(a), new ArrayList<Character>());
+            }
+        }
+        for (Character x : sortkey) {
+            if (c.containsKey(map.get(x))) {
+                c.computeIfAbsent(map.get(x), k -> new ArrayList<>()).add(x);
+                ;
+            }
+        }
+        Collections.sort(arr);
+        String str = "";
+        for (int i = arr.size() - 1; i >= 0; i--) {
+            if (arr.get(i) > 1) {
+                for (int j = 0; j < c.get(arr.get(i)).size(); j++) {
+                    str += String.valueOf(c.get(arr.get(i)).get(j)).repeat(arr.get(i));
+                }
+            } else {
+                for (int j = 0; j < c.get(arr.get(i)).size(); j++) {
+                    str += String.valueOf(c.get(arr.get(i)).get(j)).repeat(arr.get(i));
+                }
+            }
+        }
+        return str;
+    }
+}

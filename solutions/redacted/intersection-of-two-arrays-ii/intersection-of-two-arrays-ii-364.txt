@@ -1,0 +1,54 @@
+class Solution {
+
+    public int[] intersect(int[] nums1, int[] nums2) {
+        Arrays.sort(nums1);
+        Arrays.sort(nums2);
+        ArrayList<Integer> intersect = new ArrayList<>();
+        int i = 0, j = 0;
+        while (i < nums1.length && j < nums2.length) {
+            if (nums1[i] == nums2[j]) {
+                intersect.add(nums1[i]);
+                i++;
+                j++;
+            } else {
+                if (nums1[i] < nums2[j]) {
+                    i++;
+                } else {
+                    j++;
+                }
+            }
+        }
+        int[] result = intersect.stream().mapToInt(a -> a).toArray();
+        return result;
+    }
+
+    public int[] intersectHashMap(int[] nums1, int[] nums2) {
+        HashMap<Integer, Integer> hashMap1 = new HashMap<>();
+        HashMap<Integer, Integer> hashMap2 = new HashMap<>();
+        for (int num : nums1) {
+            if (hashMap1.containsKey(num)) {
+                hashMap1.put(num, hashMap1.get(num) + 1);
+            } else {
+                hashMap1.put(num, 1);
+            }
+        }
+        for (int num : nums2) {
+            if (hashMap2.containsKey(num)) {
+                hashMap2.put(num, hashMap2.get(num) + 1);
+            } else {
+                hashMap2.put(num, 1);
+            }
+        }
+        ArrayList<Integer> resultList = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> elem : hashMap1.entrySet()) {
+            if (hashMap2.containsKey(elem.getKey())) {
+                int count = Math.min(hashMap2.get(elem.getKey()), elem.getValue());
+                for (int i = 0; i < count; i++) {
+                    resultList.add(elem.getKey());
+                }
+            }
+        }
+        int[] result = resultList.stream().mapToInt(i -> i).toArray();
+        return result;
+    }
+}

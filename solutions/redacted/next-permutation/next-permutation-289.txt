@@ -1,0 +1,55 @@
+class Solution {
+
+    public void method1(int[] nums) {
+        // Find the first index from the end where nums[index] < nums[index + 1]
+        int index = getSmallestElementIndex(nums);
+        // If the entire array is non-increasing, reverse it to get the smallest permutation
+        if (index == -1) {
+            reverseArray(nums);
+        } else {
+            // Find the smallest element larger than nums[index] from the end
+            for (int i = nums.length - 1; i > index; i--) {
+                if (nums[i] > nums[index]) {
+                    // Swap nums[i] with nums[index]
+                    swap(nums, i, index);
+                    break;
+                }
+            }
+            // Reverse the elements after index to get the next permutation
+            reverseArray(nums, index + 1);
+        }
+    }
+
+    // Find the first decreasing element from the end of the array
+    int getSmallestElementIndex(int[] nums) {
+        for (int index = nums.length - 2; index >= 0; index--) {
+            if (nums[index] < nums[index + 1]) {
+                return index;
+            }
+        }
+        // Return -1 if the array is completely non-increasing
+        return -1;
+    }
+
+    // Reverse the entire array
+    private void reverseArray(int[] nums) {
+        reverseArray(nums, 0);
+    }
+
+    // Reverse the array starting from the specified index
+    private void reverseArray(int[] nums, int start) {
+        int left = start, right = nums.length - 1;
+        while (left < right) {
+            swap(nums, left, right);
+            left++;
+            right--;
+        }
+    }
+
+    // Swap two elements in the array
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}

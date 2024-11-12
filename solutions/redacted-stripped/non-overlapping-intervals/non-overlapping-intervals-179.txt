@@ -1,0 +1,37 @@
+class Activity {
+
+    int start, finish;
+
+    Activity(int s, int f) {
+        start = s;
+        finish = f;
+    }
+}
+
+class MyComp implements Comparator<Activity> {
+
+    public int compare(Activity a1, Activity a2) {
+        return a1.finish - a2.finish;
+    }
+}
+
+public class Solution {
+
+    static int method1(int[][] param1) {
+        if (param1.length == 0)
+            return 0;
+        Activity[] arr = new Activity[param1.length];
+        for (int i = 0; i < param1.length; i++) {
+            arr[i] = new Activity(param1[i][0], param1[i][1]);
+        }
+        Arrays.sort(arr, new MyComp());
+        int res = 1, prev = 0;
+        for (int curr = 1; curr < arr.length; curr++) {
+            if (arr[curr].start >= arr[prev].finish) {
+                res++;
+                prev = curr;
+            }
+        }
+        return param1.length - res;
+    }
+}

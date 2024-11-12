@@ -1,0 +1,62 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ListNode curr = l1, prev = null;
+        while (curr != null) {
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        ListNode curr2 = l2, prev2 = null;
+        while (curr2 != null) {
+            ListNode next = curr2.next;
+            curr2.next = prev2;
+            prev2 = curr2;
+            curr2 = next;
+        }
+        int carry = 0;
+        ListNode new_temp = new ListNode(0);
+        ListNode temp = new_temp;
+        while (prev != null || prev2 != null) {
+            int v1 = 0, v2 = 0;
+            if (prev != null) {
+                v1 = prev.val;
+                prev = prev.next;
+            }
+            if (prev2 != null) {
+                v2 = prev2.val;
+                prev2 = prev2.next;
+            }
+            int total_sum = v1 + v2 + carry;
+            carry = total_sum / 10;
+            int rem = total_sum % 10;
+            ListNode new_node = new ListNode(rem);
+            temp.next = new_node;
+            temp = temp.next;
+        }
+        if (carry > 0) {
+            ListNode new_node = new ListNode(carry);
+            temp.next = new_node;
+            temp = temp.next;
+        }
+        ListNode curr3 = new_temp.next, prev3 = null;
+        while (curr3 != null) {
+            ListNode next = curr3.next;
+            curr3.next = prev3;
+            prev3 = curr3;
+            curr3 = next;
+        }
+        return prev3;
+    }
+}

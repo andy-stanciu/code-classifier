@@ -1,0 +1,97 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    TreeNode var1 = null;
+
+    TreeNode var2 = null;
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return root;
+        if (root.val == key) {
+            var1 = root;
+        } else if (key < root.val) {
+            var2 = root;
+            method2(root.left, key);
+        } else {
+            var2 = root;
+            method2(root.right, key);
+        }
+        if (var1 == null)
+            return root;
+        if (var1.left == null && var1.right == null) {
+            if (var2 == null)
+                return null;
+            else if (var2.left != null && var2.left.val == key) {
+                var2.left = null;
+                return root;
+            } else {
+                var2.right = null;
+                return root;
+            }
+        }
+        if (var1.right == null) {
+            if (var2 == null)
+                return var1.left;
+            else if (var2.left != null && var2.left.val == key) {
+                var2.left = var1.left;
+                return root;
+            } else {
+                var2.right = var1.left;
+            }
+        } else {
+            int val;
+            TreeNode p = var1;
+            TreeNode curr = var1.right;
+            if (curr.left == null) {
+                var1.val = curr.val;
+                var1.right = curr.right;
+                return root;
+            } else {
+                p = curr;
+                curr = curr.left;
+            }
+            while (true) {
+                if (curr.left == null) {
+                    var1.val = curr.val;
+                    if (curr.right == null)
+                        p.left = null;
+                    else
+                        p.left = curr.right;
+                    return root;
+                }
+                p = curr;
+                curr = curr.left;
+            }
+        }
+        return root;
+    }
+
+    public void method2(TreeNode root, int key) {
+        if (root == null)
+            return;
+        if (root.val == key) {
+            var1 = root;
+            return;
+        }
+        var2 = root;
+        if (key < root.val)
+            method2(root.left, key);
+        else
+            method2(root.right, key);
+    }
+}

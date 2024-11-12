@@ -1,0 +1,48 @@
+class Solution {
+
+    // Resultant list to store combinations
+    private List<List<Integer>> result = new ArrayList<>();
+
+    // Recursive function to find combinations
+    public void solve(int[] nums, int target, int index, List<Integer> list) {
+        // Base case: if target is achieved
+        if (target == 0) {
+            List<Integer> temp = new ArrayList<>();
+            for (int j : list) {
+                temp.add(j);
+            }
+            // Add current combination to result
+            result.add(temp);
+            return;
+        }
+        // Base case: if index exceeds array bounds or target is less than current element
+        if (index == nums.length || target < nums[index]) {
+            return;
+        }
+        int temp = nums[index];
+        // Choose current element
+        list.add(nums[index]);
+        // Recur with reduced target and move to next index
+        solve(nums, target - nums[index], index + 1, list);
+        // Backtrack: remove last element
+        list.remove(list.size() - 1);
+        int i = 1;
+        while (index + i < nums.length && nums[index + i] == temp) {
+            // Skip duplicates
+            i++;
+        }
+        // Recur without choosing current element
+        solve(nums, target, index + i, list);
+        return;
+    }
+
+    // Main function to find combination sum
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        // Sort candidates array
+        Arrays.sort(candidates);
+        // Call recursive function
+        solve(candidates, target, 0, new ArrayList<>());
+        // Return result
+        return result;
+    }
+}

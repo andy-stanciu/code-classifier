@@ -1,0 +1,29 @@
+class Solution {
+
+    private static void backtrack(List<Integer> curSet, List<List<Integer>> ans, int startIdx, int[] nums, int target) {
+        if (target == 0) {
+            ans.add(new ArrayList<>(curSet));
+        }
+        for (int i = startIdx; i < nums.length; i++) {
+            // skip if duplicate num found
+            if (i > startIdx && nums[i - 1] == nums[i])
+                continue;
+            // add num if within remaining target
+            if (nums[i] <= target) {
+                curSet.add(nums[i]);
+                // take next num (i+1) with reduced target
+                backtrack(curSet, ans, i + 1, nums, target - nums[i]);
+                curSet.remove(curSet.size() - 1);
+            }
+        }
+    }
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> curSet = new ArrayList<>();
+        int startIdx = 0;
+        Arrays.sort(candidates);
+        backtrack(curSet, ans, startIdx, candidates, target);
+        return ans;
+    }
+}

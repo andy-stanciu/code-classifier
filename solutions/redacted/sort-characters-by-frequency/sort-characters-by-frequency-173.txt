@@ -1,0 +1,29 @@
+class Solution {
+
+    public String method1(String s) {
+        // Frequency array to count occurrences of each character
+        int[] var1 = new int[128];
+        for (char c : s.toCharArray()) {
+            var1[c]++;
+        }
+        // Use a max-heap to sort characters by frequency
+        PriorityQueue<Map.Entry<Character, Integer>> maxHeap = new PriorityQueue<>((a, b) -> b.getValue() - a.getValue());
+        // Build a map of characters and their frequencies
+        Map<Character, Integer> var2 = new HashMap<>();
+        for (char c = 0; c < 128; c++) {
+            if (var1[c] > 0) {
+                var2.put(c, var1[c]);
+                maxHeap.offer(new AbstractMap.SimpleEntry<>(c, var1[c]));
+            }
+        }
+        // Build the result string based on the frequencies
+        StringBuilder result = new StringBuilder();
+        while (!maxHeap.isEmpty()) {
+            Map.Entry<Character, Integer> entry = maxHeap.poll();
+            char c = entry.getKey();
+            int freq = entry.getValue();
+            result.append(String.valueOf(c).repeat(freq));
+        }
+        return result.toString();
+    }
+}

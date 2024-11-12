@@ -1,0 +1,37 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        /*
+        Scenarios:
+        (+, +) -> no collision
+        (+, -) -> collision
+        (-, +) -> no collision
+        (-, -) -> no collision 
+        */
+        Stack<Integer> st = new Stack<>();
+        for (int asteroid : asteroids) {
+            // no collision no matter what is on top
+            if (asteroid > 0) {
+                st.push(asteroid);
+                continue;
+            }
+            // +ve on top/ incoming -ve
+            // keep popping till st.peek() < -(asteroid)
+            while (!st.isEmpty() && st.peek() > 0 && st.peek() < -asteroid) st.pop();
+            // if peek is equal to incoming: destroy both
+            if (!st.isEmpty() && st.peek() == -asteroid) {
+                st.pop();
+            } else if (st.isEmpty() || st.peek() < 0) {
+                // if stack becomes empty or top has a -ve value: push incoming
+                st.push(asteroid);
+            } else {
+                // if incoming < peek : destroy it i.e. continue
+            }
+        }
+        int[] ans = new int[st.size()];
+        for (int i = ans.length - 1; i >= 0; i--) {
+            ans[i] = st.pop();
+        }
+        return ans;
+    }
+}

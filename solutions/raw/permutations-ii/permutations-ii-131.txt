@@ -1,0 +1,40 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> uniqueSets = new ArrayList<>();
+        recurPermute(0, nums, uniqueSets);
+        return uniqueSets;
+    }
+
+    private void recurPermute(int ind, int[] nums, List<List<Integer>> uniqueSets) {
+        if (ind == nums.length) {
+            List<Integer> subset = new ArrayList<>();
+            for (int i = 0; i < nums.length; i++) {
+                subset.add(nums[i]);
+            }
+            uniqueSets.add(new ArrayList<>(subset));
+            return;
+        }
+        for (int i = ind; i < nums.length; i++) {
+            if (isDuplicate(nums, ind, i))
+                continue;
+            swap(nums, i, ind);
+            recurPermute(ind + 1, nums, uniqueSets);
+            swap(nums, i, ind);
+        }
+    }
+
+    private void swap(int[] nums, int ind1, int ind2) {
+        int t = nums[ind1];
+        nums[ind1] = nums[ind2];
+        nums[ind2] = t;
+    }
+
+    private boolean isDuplicate(int[] nums, int i, int j) {
+        for (int k = i; k < j; k++) {
+            if (nums[k] == nums[j])
+                return true;
+        }
+        return false;
+    }
+}

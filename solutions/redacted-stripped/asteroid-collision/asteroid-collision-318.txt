@@ -1,0 +1,39 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> left = new Stack<>();
+        Stack<Integer> right = new Stack<>();
+        for (int i = 0; i < param1.length; i++) {
+            int current = param1[i];
+            if (current > 0) {
+                right.push(current);
+                continue;
+            }
+            if (right.size() == 0) {
+                left.push(current);
+                continue;
+            }
+            while (right.size() > 0) {
+                int previous = right.pop();
+                if (Math.abs(previous) == Math.abs(current)) {
+                    break;
+                }
+                if (Math.abs(previous) > Math.abs(current)) {
+                    right.push(previous);
+                    break;
+                }
+                if (right.size() == 0)
+                    left.push(current);
+            }
+        }
+        int[] result = new int[left.size() + right.size()];
+        for (int i = result.length - 1; i >= 0; i--) {
+            if (right.size() != 0) {
+                result[i] = right.pop();
+            } else {
+                result[i] = left.pop();
+            }
+        }
+        return result;
+    }
+}

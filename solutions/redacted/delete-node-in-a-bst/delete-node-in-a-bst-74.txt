@@ -1,0 +1,50 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        //If Empty tree, return null
+        if (root == null) {
+            return null;
+        }
+        if (root.val == key) {
+            //Case 1: 1 child Or 0 child
+            if (root.right == null) {
+                return root.left;
+            }
+            if (root.left == null) {
+                return root.right;
+            }
+            //Cae 2: 2 children
+            //Assign the max value of left root OR min value of right root
+            root.val = method2(root.left);
+            //Delete the duplicate value
+            root.left = method1(root.left, root.val);
+        } else if (key < root.val) {
+            root.left = method1(root.left, key);
+        } else {
+            root.right = method1(root.right, key);
+        }
+        return root;
+    }
+
+    public int method2(TreeNode root) {
+        while (root.right != null) {
+            root = root.right;
+        }
+        return root.val;
+    }
+}

@@ -1,0 +1,32 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<Integer> numList = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            numList.add(nums[i]);
+        }
+        return permuteHelper(numList);
+    }
+
+    private List<List<Integer>> permuteHelper(List<Integer> nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (nums.size() == 1) {
+            result.add(new ArrayList<>(nums));
+            return result;
+        }
+        Collections.sort(nums);
+        for (int i = 0; i < nums.size(); i++) {
+            while ((i < nums.size() - 1) && (nums.get(i) == nums.get(i + 1))) {
+                i++;
+            }
+            List<Integer> rest = new ArrayList<>(nums);
+            rest.remove(i);
+            List<List<Integer>> perms = permuteHelper(rest);
+            for (List<Integer> list : perms) {
+                list.add(0, nums.get(i));
+            }
+            result.addAll(perms);
+        }
+        return result;
+    }
+}

@@ -1,0 +1,60 @@
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        Stack<Integer> aStk = new Stack<>();
+        Stack<Integer> bStk = new Stack<>();
+        ListNode ans = new ListNode(0);
+        ListNode head1 = l1;
+        ListNode head2 = l2;
+        while (head1 != null) {
+            aStk.push(head1.val);
+            head1 = head1.next;
+        }
+        while (head2 != null) {
+            bStk.push(head2.val);
+            head2 = head2.next;
+        }
+        ListNode head = ans;
+        int rem = 0;
+        while (!aStk.isEmpty() && !bStk.isEmpty()) {
+            if (aStk.peek() + bStk.peek() + rem < 10) {
+                head.next = new ListNode(aStk.peek() + bStk.peek() + rem);
+                rem = 0;
+                aStk.pop();
+                bStk.pop();
+            } else {
+                head.next = new ListNode((aStk.peek() + bStk.peek() + rem) % 10);
+                rem = (aStk.peek() + bStk.peek() + rem) / 10;
+                aStk.pop();
+                bStk.pop();
+            }
+            head = head.next;
+        }
+        if (!aStk.isEmpty()) {
+            while (!aStk.isEmpty()) {
+                head.next = new ListNode((aStk.peek() + rem) % 10);
+                rem = (aStk.peek() + rem) / 10;
+                head = head.next;
+                aStk.pop();
+            }
+        } else {
+            while (!bStk.isEmpty()) {
+                head.next = new ListNode((bStk.peek() + rem) % 10);
+                rem = (bStk.peek() + rem) / 10;
+                head = head.next;
+                bStk.pop();
+            }
+        }
+        if (rem > 0) {
+            head.next = new ListNode(rem);
+        }
+        ListNode cur = ans.next, prev = null;
+        while (cur != null) {
+            ListNode nxt = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = nxt;
+        }
+        return prev;
+    }
+}

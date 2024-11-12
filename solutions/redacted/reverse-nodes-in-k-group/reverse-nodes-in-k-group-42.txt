@@ -1,0 +1,58 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        if (k == 1)
+            return head;
+        ListNode newHead;
+        ListNode curr = head;
+        boolean set = false;
+        int c = 1;
+        while (c < k) {
+            curr = curr.next;
+            c++;
+        }
+        ListNode next = curr.next;
+        curr.next = null;
+        newHead = curr;
+        method2(head);
+        head.next = next;
+        curr = next;
+        ListNode prev = head;
+        while (curr != null) {
+            c = 1;
+            ListNode end = curr;
+            while (c < k && curr != null) {
+                curr = curr.next;
+                c++;
+            }
+            if (c == k && curr != null) {
+                next = curr.next;
+                curr.next = null;
+                method2(end);
+                prev.next = curr;
+                end.next = next;
+                prev = end;
+                curr = next;
+            } else
+                break;
+        }
+        return newHead;
+    }
+
+    public void method2(ListNode start) {
+        ListNode p1 = start.next;
+        start.next = null;
+        if (p1.next != null) {
+            ListNode p2 = p1.next;
+            while (p2 != null) {
+                p1.next = start;
+                start = p1;
+                p1 = p2;
+                p2 = p2.next;
+            }
+            p1.next = start;
+        } else {
+            p1.next = start;
+        }
+    }
+}

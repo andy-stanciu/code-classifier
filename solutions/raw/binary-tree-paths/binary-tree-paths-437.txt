@@ -1,0 +1,46 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<String> binaryTreePaths(TreeNode root) {
+        Deque<TreeNode> path = new LinkedList<TreeNode>();
+        Deque<TreeNode> s = new LinkedList<TreeNode>();
+        List<String> res = new LinkedList<String>();
+        if (root == null)
+            return res;
+        s.push(root);
+        while (!s.isEmpty()) {
+            TreeNode node = s.peek();
+            if (node == path.peek()) {
+                if (node.left == null && node.right == null) {
+                    List<TreeNode> pathList = new LinkedList<TreeNode>(path);
+                    Collections.reverse(pathList);
+                    String resString = pathList.stream().map(n -> Integer.valueOf(n.val).toString()).collect(Collectors.joining("->"));
+                    res.add(resString);
+                }
+                s.pop();
+                path.pop();
+            } else {
+                path.push(node);
+                if (node.right != null)
+                    s.push(node.right);
+                if (node.left != null)
+                    s.push(node.left);
+            }
+        }
+        return res;
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    //The method compares the number of characters in ransomNote with the number of characters in magazine. The number of characters in ransomNote should NOT be greater.
+    public static boolean checkCounts(Set<Character> set, String rn, String m) {
+        int countRn, countM;
+        for (char c : set) {
+            countRn = counting(rn, c);
+            countM = counting(m, c);
+            if (countRn > countM)
+                return false;
+        }
+        return true;
+    }
+
+    //Method for counting the number of characters.
+    public static int counting(String ch, char c) {
+        int count = 0;
+        char[] charArray = ch.toCharArray();
+        //I don\'t make "i" equal to 0 to start with the desired element right away. And it also doesn\'t make sense to look at the entire line.
+        int first = ch.indexOf(c), last = ch.lastIndexOf(c);
+        for (int i = first; i <= last; i++) if (c == charArray[i])
+            count++;
+        return count;
+    }
+
+    public boolean canConstruct(String ransomNote, String magazine) {
+        //Create sets for unique values
+        Set<Character> setRansomNote = new HashSet(), setMagazine = new HashSet();
+        for (char c : ransomNote.toCharArray()) {
+            setRansomNote.add(c);
+        }
+        for (char c : magazine.toCharArray()) {
+            setMagazine.add(c);
+        }
+        //1) Checking that all ransomNote symbols are in magazine
+        for (char c : setRansomNote) {
+            if (!setMagazine.contains(c)) {
+                return false;
+            }
+        }
+        //2) Checking that the number of characters in ransomNote is less than or equal to the number of characters in magazine. The count will be based on unique characters.
+        return checkCounts(setRansomNote, ransomNote, magazine);
+    }
+}

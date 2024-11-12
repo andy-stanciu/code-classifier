@@ -1,0 +1,77 @@
+class Solution {
+
+    public int threeSumClosest(int[] nums, int target) {
+        int n = nums.length;
+        // base case 3 to chahiye he kmse kam element
+        if (n < 3) {
+            return 0;
+        }
+        // edhr fir element ka baat ho rha chlo sort krdete hai index ka baat hota to nhi karte
+        Arrays.sort(nums);
+        // diffenec bs yeh ha ki exact vale na hoke bhi closest possible ko bhi concider krlena ha
+        // sort krne se two pointer lgjaega yani binary search
+        // phle maan lo esse tarha ki yahi ha closest sum {kahi na khi abhi compare aaega dimg mei}
+        int closestSum = nums[0] + nums[1] + nums[2];
+        // ek ko fir fix krlo loop n-2 tak chlega kuki 3chahiye
+        for (int i = 0; i < n - 2; i++) {
+            // fix wala 0 index wala ha joki closestsum hai or yaha dupiccate ka baat nhi h
+            // left pointer
+            int left = i + 1;
+            // ryt pointer 3rd last
+            int right = n - 1;
+            // two pointer lgao whi 2 or elemnt khojne ke liye jiska sum closest ho
+            while (left < right) {
+                // Calculate the current sum
+                int currentSum = nums[i] + nums[left] + nums[right];
+                // Update the closestSum if the current sum is closer to the target
+                if (Math.abs(currentSum - target) < Math.abs(closestSum - target)) {
+                    closestSum = currentSum;
+                    // currentsum ko closestsum mein daaldo
+                }
+                // Move the pointers based on the comparison of the current sum with the target
+                if (currentSum < target) {
+                    // Move the left pointer to increase the sum
+                    left++;
+                } else {
+                    // Move the right pointer to decrease the sum
+                    right--;
+                }
+            }
+        }
+        return closestSum;
+    }
+}
+/*        3Sum Smaller targert se chota wala ko bs count badha dena ha followup smjh lo
+          locked qstn ha yeh
+
+class Solution {
+    public int threeSumSmaller(int[] nums, int target) {
+        Arrays.sort(nums); // Sort the input array to simplify the search
+        
+        int count = 0; // Initialize the count of triplets whose sum is smaller than target
+        int n = nums.length; // Get the length of the array
+        
+        // Iterate through the array, fixing one element at a time
+        for (int i = 0; i < n - 2; i++) {
+            int left = i + 1; // Initialize the left pointer
+            int right = n - 1; // Initialize the right pointer
+            
+            // Use a two-pointer approach to find the other two elements whose sum is smaller than the target sum
+            while (left < right) {
+                int currentSum = nums[i] + nums[left] + nums[right]; // Calculate the current sum
+                
+                // If the current sum is less than the target, all triplets formed with the current left and right pointers will also be smaller
+                // So, increment the count by the number of such triplets
+                if (currentSum < target) {
+                    count += right - left; // All elements between left and right (exclusive) will form a valid triplet
+                    left++; // Move the left pointer to increase the sum
+                } else {
+                    right--; // Move the right pointer to decrease the sum
+                }
+            }
+        }
+        
+        return count; // Return the count of triplets whose sum is smaller than target
+    }
+}
+ */

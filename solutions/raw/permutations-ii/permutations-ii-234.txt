@@ -1,0 +1,27 @@
+class Solution {
+
+    List<List<Integer>> res;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        res = new ArrayList<>();
+        Arrays.sort(nums);
+        generatePerm(nums, new ArrayList<>(), new boolean[nums.length]);
+        return res;
+    }
+
+    public void generatePerm(int[] nums, List<Integer> perm, boolean[] picked) {
+        if (perm.size() == nums.length) {
+            res.add(new ArrayList<>(perm));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (picked[i] || (i > 0 && nums[i] == nums[i - 1] && !picked[i - 1]))
+                continue;
+            picked[i] = true;
+            perm.add(nums[i]);
+            generatePerm(nums, perm, picked);
+            picked[i] = false;
+            perm.remove(perm.size() - 1);
+        }
+    }
+}

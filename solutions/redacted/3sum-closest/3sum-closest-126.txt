@@ -1,0 +1,48 @@
+class Solution {
+
+    public int method1(int[] nums, int target) {
+        // If there are exactly 3 elements, return their sum (no need for further calculation)
+        if (nums.length == 3)
+            return nums[0] + nums[1] + nums[2];
+        Arrays.sort(nums);
+        // Variable to store the closest sum to the target
+        int var1 = 0;
+        // Track the smallest difference between the sum and target
+        int minDiff = Integer.MAX_VALUE;
+        for (int i = 0; i < nums.length - 2; i++) {
+            // Skip duplicate numbers to avoid redundant calculations
+            if (i > 0 && (nums[i] == nums[i - 1]))
+                continue;
+            int first = i;
+            int second = i + 1;
+            int third = nums.length - 1;
+            while (second < third) {
+                // 2 sum
+                // Current sum of the triplet
+                int currSum = nums[first] + nums[second] + nums[third];
+                // Difference between current sum and target
+                int currDiff = Math.abs(currSum - target);
+                if (currDiff < minDiff) {
+                    // Update closestSum if current difference is smaller than the previously smallest difference
+                    var1 = currSum;
+                    minDiff = currDiff;
+                }
+                if (currSum < target) {
+                    // If current sum is less than the target, move the second pointer to the right to increase the sum
+                    second++;
+                    // Skip duplicate second values
+                    while (second < third && nums[second] == nums[second - 1]) second++;
+                } else if (currSum > target) {
+                    // If current sum is greater than the target, move the third pointer to the left to decrease the sum
+                    third--;
+                    // Skip duplicate third values
+                    while (second < third && nums[third] == nums[third + 1]) third--;
+                } else {
+                    // If currSum matches the target, return it immediately (as it\'s the closest possible)
+                    return currSum;
+                }
+            }
+        }
+        return var1;
+    }
+}

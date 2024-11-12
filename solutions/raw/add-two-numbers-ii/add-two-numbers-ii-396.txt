@@ -1,0 +1,77 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        int len1 = length(l1);
+        int len2 = length(l2);
+        int[] arr1 = new int[len1];
+        int[] arr2 = new int[len2];
+        ListNode curr1 = l1;
+        ListNode curr2 = l2;
+        for (int i = 0; i < len1; i++) {
+            arr1[i] = curr1.val;
+            curr1 = curr1.next;
+        }
+        for (int i = 0; i < len2; i++) {
+            arr2[i] = curr2.val;
+            curr2 = curr2.next;
+        }
+        int[] ans = new int[Math.max(len1, len2) + 1];
+        int i = len1 - 1;
+        int j = len2 - 1;
+        int carry = 0;
+        int ptr = Math.max(len1, len2);
+        while (i >= 0 && j >= 0) {
+            int sum = arr1[i] + arr2[j] + carry;
+            ans[ptr] = sum % 10;
+            carry = (sum > 9) ? 1 : 0;
+            i--;
+            j--;
+            ptr--;
+        }
+        while (i >= 0) {
+            int sum = arr1[i] + carry;
+            ans[ptr] = sum % 10;
+            carry = (sum > 9) ? 1 : 0;
+            i--;
+            ptr--;
+        }
+        while (j >= 0) {
+            int sum = arr2[j] + carry;
+            ans[ptr] = sum % 10;
+            carry = (sum > 9) ? 1 : 0;
+            j--;
+            ptr--;
+        }
+        if (carry == 1)
+            ans[ptr] = 1;
+        ListNode answer = new ListNode(0);
+        ListNode prev = answer;
+        for (i = 0; i < ans.length; i++) {
+            if (ans[i] == 0 && i == 0)
+                continue;
+            ListNode curr = new ListNode(ans[i]);
+            prev.next = curr;
+            prev = curr;
+        }
+        return answer.next;
+    }
+
+    private int length(ListNode node) {
+        int len = 1;
+        while (node.next != null) {
+            len++;
+            node = node.next;
+        }
+        return len;
+    }
+}

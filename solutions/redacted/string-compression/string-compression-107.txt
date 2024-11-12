@@ -1,0 +1,57 @@
+class Solution {
+
+    public int compress(char[] chars) {
+        //Two Pointers Algorithm
+        //boolean to record either sequence started or not to find individual elements
+        boolean seqStarted = false;
+        //the pointers
+        int top = 0;
+        int bottom = top + 1;
+        int n = chars.length;
+        //final array Length
+        int count = 0;
+        //as long as pointer are in the range
+        while (top < n && bottom < n) {
+            if (chars[top] == chars[bottom]) {
+                //start sequence
+                seqStarted = true;
+                bottom++;
+            } else {
+                //end previous sequence
+                if (seqStarted) {
+                    seqStarted = false;
+                    //add the element and its occurances in our original array
+                    chars[count++] = chars[top];
+                    String occ = "" + (bottom - top) + "";
+                    for (int j = 0; j < occ.length(); j++) {
+                        chars[count++] = occ.charAt(j);
+                    }
+                    //start searching for new sequence
+                    top = bottom;
+                    bottom = top + 1;
+                } else {
+                    //no previous sequence
+                    //just add this element as it is an individual
+                    chars[count++] = chars[top];
+                    top++;
+                    bottom++;
+                }
+            }
+        }
+        //loop end
+        //check for sequence started but hasn\'t ended
+        if (seqStarted) {
+            chars[count++] = chars[top];
+            String occ = "" + (bottom - top) + "";
+            for (int j = 0; j < occ.length(); j++) {
+                chars[count++] = occ.charAt(j);
+            }
+        } else {
+            //adding final individual element
+            if (top < n) {
+                chars[count++] = chars[top];
+            }
+        }
+        return count;
+    }
+}

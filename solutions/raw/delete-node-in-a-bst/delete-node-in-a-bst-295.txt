@@ -1,0 +1,68 @@
+class Solution {
+
+    private TreeNode findNodeParent(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        if ((root.left != null && root.left.val == key) || (root.right != null && root.right.val == key)) {
+            return root;
+        } else {
+            TreeNode left = findNodeParent(root.left, key);
+            TreeNode right = findNodeParent(root.right, key);
+            if (left == null)
+                return right;
+            if (right == null)
+                return left;
+        }
+        return null;
+    }
+
+    private void deleteTheNode(TreeNode parent, int key) {
+        TreeNode deletedNode = new TreeNode(0);
+        boolean direction = true;
+        if (parent.left != null && parent.left.val == key) {
+            deletedNode = parent.left;
+            direction = false;
+        }
+        if (parent.right != null && parent.right.val == key) {
+            deletedNode = parent.right;
+            direction = true;
+        }
+        TreeNode deletedLeft = deletedNode.left;
+        TreeNode deletedRight = deletedNode.right;
+        startSwapping(parent, deletedLeft, deletedRight, direction);
+    }
+
+    private void startSwapping(TreeNode parent, TreeNode deletedLeft, TreeNode deletedRight, boolean direction) {
+        if (direction) {
+            if (deletedLeft == null)
+                parent.right = deletedRight;
+            else if (deletedRight == null)
+                parent.right = deletedLeft;
+            else {
+                parent.right = deletedLeft;
+                deletedLeft = deletedLeft.right;
+                startSwapping(parent.right, deletedLeft, deletedRight, direction);
+            }
+        } else {
+            if (deletedLeft == null)
+                parent.left = deletedRight;
+            else if (deletedRight == null)
+                parent.left = deletedLeft;
+            else {
+                parent.left = deletedRight;
+                deletedRight = deletedRight.left;
+                startSwapping(parent.left, deletedLeft, deletedRight, direction);
+            }
+        }
+    }
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        TreeNode dummy = new TreeNode(0);
+        dummy.left = root;
+        TreeNode parent = findNodeParent(dummy, key);
+        if (parent == null)
+            return dummy.left;
+        deleteTheNode(parent, key);
+        return dummy.left;
+    }
+}

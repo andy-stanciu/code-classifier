@@ -1,0 +1,27 @@
+class Solution {
+
+    public boolean isSubsequence(String s, String t) {
+        return fun(s, t);
+    }
+
+    private static boolean fun(String s, String t) {
+        int len1 = s.length(), len2 = t.length();
+        int[] prev = new int[len2 + 1], curr = new int[len2 + 1];
+        for (int index2 = 0; index2 <= len2; index2++) prev[index2] = 1;
+        for (int index1 = 1; index1 <= len1; index1++) curr[0] = 0;
+        for (int index1 = 1; index1 <= len1; index1++) {
+            for (int index2 = 1; index2 <= len2; index2++) {
+                if (s.charAt(index1 - 1) == t.charAt(index2 - 1)) {
+                    curr[index2] = (prev[index2 - 1] + curr[index2 - 1] == 0) ? 0 : 1;
+                } else {
+                    curr[index2] = curr[index2 - 1];
+                }
+            }
+            prev = Arrays.copyOfRange(curr, 0, len2 + 2);
+        }
+        return prev[len2] == 1;
+    }
+}
+// Tabulation Code Woth Space Optimization
+// Time Complexity : O(len1*len2)
+// Space Compelxity : O(len2)

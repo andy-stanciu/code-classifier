@@ -1,0 +1,88 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        int s1 = size(l1);
+        int s2 = size(l2);
+        if (s1 > s2) {
+            int carry = helper(l1, l2, s1 - s2);
+            if (carry > 0) {
+                ListNode temp = new ListNode(carry);
+                temp.next = l1;
+                l1 = temp;
+            }
+            return l1;
+        }
+        int carry = helper(l2, l1, s2 - s1);
+        if (carry > 0) {
+            ListNode temp = new ListNode(carry);
+            temp.next = l2;
+            l2 = temp;
+        }
+        return l2;
+    }
+
+    private int helper(ListNode l1, ListNode l2, int n) {
+        // l1.size=l2.size+n
+        if (l1 == null && l2 == null)
+            return 0;
+        int carry = 0;
+        if (n > 0) {
+            carry = helper(l1.next, l2, n - 1);
+            carry += l1.val;
+            l1.val = carry % 10;
+            return carry / 10;
+        } else {
+            carry = helper(l1.next, l2.next, n);
+            carry += l1.val + l2.val;
+            l1.val = carry % 10;
+            return carry / 10;
+        }
+    }
+
+    public int size(ListNode node) {
+        if (node == null)
+            return 0;
+        return 1 + size(node.next);
+    }
+}
+// public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+//         Stack<Integer> s1 = new Stack<>();
+//         Stack<Integer> s2 = new Stack<>();
+//         ListNode temp = l1;
+//         while(temp!=null) {s1.push(temp.val); temp=temp.next;}
+//         temp=l2;
+//         while(temp!=null) {s2.push(temp.val); temp=temp.next;}
+//         if(s1.size()>s2.size()) { int carry=helper(s1,s2,l1);
+//             if(carry>0){
+//                 temp=new ListNode(carry);
+//                 temp.next=l1;l1=temp;
+//             }
+//          return l1;}
+//        int carry= helper(s1,s2,l2);
+//        if(carry>0){
+//                 temp=new ListNode(carry);
+//                 temp.next=l2;l2=temp;
+//             }
+//        return l2;
+//     }
+//     private int helper(Stack<Integer> s1 , Stack<Integer>s2,ListNode l1 ){
+//         if(l1==null) return 0;
+//        int carry= helper(s1,s2,l1.next);
+//         int temp =0;
+//         if(s1.size()>0) temp+=s1.pop();
+//         if(s2.size()>0) temp+=s2.pop();
+//         temp+=carry;
+//         carry=temp/10;
+//         l1.val=temp%10;
+//     return carry;
+//     }

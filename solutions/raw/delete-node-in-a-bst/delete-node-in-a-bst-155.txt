@@ -1,0 +1,83 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        List<Integer> pre = new ArrayList<>();
+        helper(root, pre);
+        List<Integer> in = new ArrayList<>();
+        helper1(root, in);
+        if (!pre.contains(key))
+            return root;
+        System.out.println(pre);
+        System.out.println(in);
+        int[] pree = new int[pre.size() - 1];
+        int k = 0;
+        for (int i = 0; i < pre.size(); i++) {
+            if (pre.get(i) == key)
+                continue;
+            pree[k] = pre.get(i);
+            k++;
+        }
+        int[] inn = new int[in.size() - 1];
+        int q = 0;
+        for (int i = 0; i < in.size(); i++) {
+            if (in.get(i) == key)
+                continue;
+            inn[q] = in.get(i);
+            q++;
+        }
+        System.out.println(Arrays.toString(pree));
+        System.out.println(Arrays.toString(inn));
+        return buildTree(pree, inn);
+    }
+
+    public TreeNode helper(TreeNode root, List<Integer> pre) {
+        if (root == null) {
+            return null;
+        }
+        pre.add(root.val);
+        root.left = helper(root.left, pre);
+        root.right = helper(root.right, pre);
+        return root;
+    }
+
+    public TreeNode helper1(TreeNode root, List<Integer> pre) {
+        if (root == null) {
+            return null;
+        }
+        root.left = helper1(root.left, pre);
+        pre.add(root.val);
+        root.right = helper1(root.right, pre);
+        return root;
+    }
+
+    public TreeNode buildTree(int[] pre, int[] inorder) {
+        if (pre.length == 0 || inorder.length == 0)
+            return null;
+        int midindex = 0;
+        for (int i = 0; i < inorder.length; i++) {
+            if (pre[0] == inorder[i]) {
+                midindex = i;
+                break;
+            }
+        }
+        TreeNode head = new TreeNode(pre[0]);
+        head.left = buildTree(Arrays.copyOfRange(pre, 1, midindex + 1), Arrays.copyOfRange(inorder, 0, midindex));
+        head.right = buildTree(Arrays.copyOfRange(pre, midindex + 1, pre.length), Arrays.copyOfRange(inorder, midindex + 1, inorder.length));
+        return head;
+    }
+}

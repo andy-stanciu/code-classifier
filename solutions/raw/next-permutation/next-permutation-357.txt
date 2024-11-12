@@ -1,0 +1,42 @@
+class Solution {
+
+    public void nextPermutation(int[] nums) {
+        int idx = -1;
+        // Step 1: Find the first decreasing element from the end
+        for (int i = nums.length - 2; i >= 0; i--) {
+            if (nums[i] < nums[i + 1]) {
+                idx = i;
+                break;
+            }
+        }
+        // Step 2: If no such element is found, reverse the entire array
+        if (idx == -1) {
+            reverse(nums, 0, nums.length - 1);
+            return;
+        }
+        // Step 3: Find the smallest element larger than nums[idx] to the right of idx
+        for (int i = nums.length - 1; i > idx; i--) {
+            if (nums[i] > nums[idx]) {
+                // Swap the elements
+                swap(nums, i, idx);
+                break;
+            }
+        }
+        // Step 4: Reverse the elements to the right of idx
+        reverse(nums, idx + 1, nums.length - 1);
+    }
+
+    private void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            swap(nums, start, end);
+            start++;
+            end--;
+        }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}

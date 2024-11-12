@@ -1,0 +1,78 @@
+class Solution {
+
+    public static int[] method1(int[] param1) {
+        //stacks to be used
+        Stack<Integer> stack = new Stack<>();
+        Stack<Integer> alternate = new Stack<>();
+        //pushing all items
+        for (int var1 : param1) {
+            stack.push(var1);
+        }
+        //boolean to repeat the collision process if it happened
+        boolean var2 = true;
+        while (var2) {
+            var2 = false;
+            //the asteroid collision process
+            while (stack.size() > 1) {
+                //getting both asteroids
+                int num1 = stack.pop();
+                int num2 = stack.pop();
+                //the situation where they will collide not just move far away from each other
+                if (num1 <= 0 && num2 >= 0) {
+                    if (diffsign(num1, num2)) {
+                        var2 = true;
+                        if (absolute(num1) == absolute(num2)) {
+                            continue;
+                        } else {
+                            if (absolute(num1) > absolute(num2)) {
+                                stack.push(num1);
+                            } else {
+                                stack.push(num2);
+                            }
+                        }
+                    } else //no collision situation
+                    {
+                        stack.push(num2);
+                        alternate.push(num1);
+                    }
+                } else //no collision situation too
+                {
+                    stack.push(num2);
+                    alternate.push(num1);
+                }
+            }
+            //returning the elements to stack to check if there are any possible collisions still
+            while (!alternate.isEmpty()) {
+                stack.push(alternate.pop());
+            }
+        }
+        //emptying rest of stack
+        while (!stack.isEmpty()) {
+            alternate.push(stack.pop());
+        }
+        //the array to return the data
+        int[] res = new int[alternate.size()];
+        int counter = 0;
+        //filling the array
+        while (!alternate.isEmpty()) {
+            res[counter++] = alternate.pop();
+        }
+        return res;
+    }
+
+    //helper function to check different signs
+    private static boolean diffsign(int num1, int num2) {
+        if ((num1 > 0 && num2 < 0) || (num1 < 0 && num2 > 0)) {
+            return true;
+        }
+        return false;
+    }
+
+    //helping function for absolute value
+    private static int absolute(int num) {
+        if (num < 0) {
+            num = -1 * num;
+        }
+        return num;
+    }
+}

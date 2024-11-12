@@ -1,0 +1,109 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public int var1 = -123;
+
+    public int temp = -123;
+
+    public int successorRight(TreeNode param1) {
+        if (param1.right == null && param1.left == null) {
+            var1 = param1.val;
+            return param1.val;
+        }
+        if (param1.left == null && param1.right != null) {
+            int i = param1.val;
+            param1.val = successorRight(param1.right);
+            return i;
+        }
+        return successorRight(param1.left);
+    }
+
+    public int successorLeft(TreeNode param1) {
+        if (param1.right == null && param1.left == null) {
+            var1 = param1.val;
+            return param1.val;
+        }
+        if (param1.left != null && param1.right == null) {
+            int i = param1.val;
+            param1.val = successorLeft(param1.left);
+            return i;
+        }
+        return successorLeft(param1.right);
+    }
+
+    public void method1(TreeNode root, int key, int dkey, int i) {
+        if (root == null) {
+            return;
+        }
+        if (root.val == key) {
+            i++;
+        }
+        if (root.right != null && root.right.val == dkey) {
+            root.right = null;
+            return;
+        }
+        if (root.left != null && root.left.val == dkey) {
+            root.left = null;
+            return;
+        }
+        if (root.right != null && root.right.val == key) {
+            if (i > 0) {
+                root.right = null;
+                return;
+            }
+            i++;
+        }
+        if (root.left != null && root.left.val == key) {
+            if (i > 0) {
+                root.left = null;
+                return;
+            }
+            i++;
+        }
+        method1(root.left, key, dkey, i);
+        method1(root.right, key, dkey, i);
+    }
+
+    public void method2(TreeNode root, int key) {
+        if (root == null) {
+            return;
+        }
+        if (key < root.val) {
+            method2(root.left, key);
+        } else if (key > root.val) {
+            method2(root.right, key);
+        } else {
+            if (root.right != null) {
+                root.val = successorRight(root.right);
+            } else if (root.left != null) {
+                root.val = successorLeft(root.left);
+            } else {
+                temp = root.val;
+            }
+            return;
+        }
+    }
+
+    public TreeNode method3(TreeNode root, int key) {
+        if (root == null || (root.val == key && root.left == null && root.right == null)) {
+            return null;
+        }
+        method2(root, key);
+        method1(root, var1, temp, 0);
+        return root;
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        // Stack to keep track of positive asteroids (moving to the right)
+        Stack<Integer> positive = new Stack<>();
+        // ArrayList to collect surviving negative asteroids (moving to the left)
+        ArrayList<Integer> negatives = new ArrayList<>();
+        for (int i = 0; i < param1.length; i++) {
+            if (param1[i] < 0) {
+                // If the current asteroid is moving left
+                // Resolve collisions with positive asteroids on the stack
+                while (!positive.isEmpty() && Math.abs(param1[i]) > positive.peek()) {
+                    // Pop the smaller positive asteroids
+                    positive.pop();
+                }
+                if (!positive.isEmpty() && Math.abs(param1[i]) == positive.peek()) {
+                    // Both asteroids collide and destroy each other
+                    positive.pop();
+                    // Move to the next asteroid
+                    continue;
+                }
+                // If the stack is empty, add the negative asteroid to the result
+                if (positive.isEmpty()) {
+                    negatives.add(param1[i]);
+                }
+            } else {
+                // Push positive asteroids onto the stack
+                positive.push(param1[i]);
+            }
+        }
+        // Prepare the final result array
+        int[] arr = new int[negatives.size() + positive.size()];
+        // Copy negative asteroids from ArrayList to the result array
+        for (int i = 0; i < negatives.size(); i++) {
+            arr[i] = negatives.get(i);
+        }
+        // Copy positive asteroids from the stack to the result array (reverse order)
+        for (int i = arr.length - 1; i >= negatives.size(); i--) {
+            arr[i] = positive.pop();
+        }
+        return arr;
+    }
+}

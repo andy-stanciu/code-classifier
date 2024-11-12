@@ -1,0 +1,47 @@
+class Solution {
+
+    public ListNode rev(ListNode n, ListNode curr) {
+        if (n == null) {
+            return curr;
+        }
+        ListNode x = new ListNode(n.val);
+        x.next = curr;
+        curr = x;
+        return rev(n.next, curr);
+    }
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode rev1 = rev(l1, null);
+        ListNode rev2 = rev(l2, null);
+        ListNode ans = null;
+        int carry = 0;
+        while (rev1 != null || rev2 != null) {
+            if (rev1 == null) {
+                ListNode a = new ListNode((rev2.val + carry) % 10);
+                a.next = ans;
+                ans = a;
+                carry = (rev2.val + carry) / 10;
+                rev2 = rev2.next;
+            } else if (rev2 == null) {
+                ListNode a = new ListNode((rev1.val + carry) % 10);
+                a.next = ans;
+                ans = a;
+                carry = (rev1.val + carry) / 10;
+                rev1 = rev1.next;
+            } else {
+                ListNode a = new ListNode((rev1.val + rev2.val + carry) % 10);
+                carry = (rev1.val + rev2.val + carry) / 10;
+                a.next = ans;
+                ans = a;
+                rev1 = rev1.next;
+                rev2 = rev2.next;
+            }
+        }
+        if (carry != 0) {
+            ListNode x = new ListNode(carry);
+            x.next = ans;
+            ans = x;
+        }
+        return ans;
+    }
+}

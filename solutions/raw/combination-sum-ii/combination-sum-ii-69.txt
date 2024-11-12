@@ -1,0 +1,31 @@
+class Solution {
+
+    List<List<Integer>> ans = new ArrayList<List<Integer>>();
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        backtrack(0, new ArrayList<Integer>(), candidates, target);
+        return ans;
+    }
+
+    public void backtrack(int i, List<Integer> temp, int[] candidates, int target) {
+        //base conditions
+        if (target == 0) {
+            if (!ans.contains(new ArrayList<Integer>(temp)))
+                ans.add(new ArrayList<Integer>(temp));
+            return;
+        }
+        if (target < 0)
+            return;
+        if (i >= candidates.length)
+            return;
+        //take
+        temp.add(candidates[i]);
+        backtrack(i + 1, temp, candidates, target - candidates[i]);
+        //not take
+        //For not taking duplicates, we\'ll increment i untill we can find unique element
+        while (i + 1 < candidates.length && candidates[i] == candidates[i + 1]) i++;
+        temp.remove(temp.size() - 1);
+        backtrack(i + 1, temp, candidates, target);
+    }
+}

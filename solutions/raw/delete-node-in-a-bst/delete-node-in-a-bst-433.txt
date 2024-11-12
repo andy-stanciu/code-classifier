@@ -1,0 +1,78 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    static List<Integer> inOrder;
+
+    static List<Integer> preOrder;
+
+    static Map<Integer, Integer> map;
+
+    static int preOrderIdx;
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        inOrder = new ArrayList<>();
+        preOrder = new ArrayList<>();
+        map = new HashMap<>();
+        preOrderIdx = 0;
+        calculateInorder(root, key);
+        calculatePreOrder(root, key);
+        for (int i = 0; i < inOrder.size(); i++) {
+            map.put(inOrder.get(i), i);
+        }
+        System.out.println(map);
+        System.out.println(inOrder);
+        System.out.println(preOrder);
+        return solve(0, inOrder.size() - 1);
+    }
+
+    public static TreeNode solve(int left, int right) {
+        if (left > right) {
+            return null;
+        }
+        int val = preOrder.get(preOrderIdx);
+        int inOrderIdx = map.get(val);
+        TreeNode root = new TreeNode(val);
+        preOrderIdx++;
+        TreeNode leftNode = solve(left, inOrderIdx - 1);
+        TreeNode rightNode = solve(inOrderIdx + 1, right);
+        root.left = leftNode;
+        root.right = rightNode;
+        return root;
+    }
+
+    public static void calculateInorder(TreeNode root, int key) {
+        if (root == null) {
+            return;
+        }
+        calculateInorder(root.left, key);
+        if (root.val != key) {
+            inOrder.add(root.val);
+        }
+        calculateInorder(root.right, key);
+    }
+
+    public static void calculatePreOrder(TreeNode root, int key) {
+        if (root == null) {
+            return;
+        }
+        if (root.val != key) {
+            preOrder.add(root.val);
+        }
+        calculatePreOrder(root.left, key);
+        calculatePreOrder(root.right, key);
+    }
+}

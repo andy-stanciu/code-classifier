@@ -1,0 +1,57 @@
+class Solution {
+
+    private boolean isOverlap(int[] p1, int[] p2) {
+        // non-overlapping
+        if (p2[0] > p1[1] || p1[0] > p2[1])
+            return false;
+        return true;
+    }
+
+    private int endTimeSort(int[][] points) {
+        int n = points.length;
+        int prevIndex, currIndex, min;
+        Arrays.sort(points, (a, b) -> a[1] - b[1]);
+        prevIndex = 0;
+        currIndex = 1;
+        // minimum 1 balloon is there assumption
+        min = 1;
+        while (currIndex < n) {
+            // if balloons don\'t overlap increment the answer
+            if (!isOverlap(points[prevIndex], points[currIndex])) {
+                prevIndex = currIndex;
+                min++;
+            }
+            currIndex = currIndex + 1;
+        }
+        return min;
+    }
+
+    private int startTimeSort(int[][] points) {
+        int n = points.length;
+        int prevIndex, currIndex, min;
+        Arrays.sort(points, (a, b) -> a[0] - b[0]);
+        prevIndex = 0;
+        currIndex = 1;
+        // minimum 1 balloon is there assumption
+        min = 1;
+        while (currIndex < n) {
+            // if balloons don\'t overlap increment the answer
+            if (!isOverlap(points[prevIndex], points[currIndex])) {
+                prevIndex = currIndex;
+                min++;
+            } else {
+                // here update the end of the balloon for previous Index
+                // say b1 has e1 end and b2 has e2 end
+                // to burst b3 in same it will be min(e1,e2);
+                points[prevIndex][1] = Math.min(points[prevIndex][1], points[currIndex][1]);
+            }
+            currIndex = currIndex + 1;
+        }
+        return min;
+    }
+
+    public int method1(int[][] points) {
+        // return endTimeSort(points);
+        return startTimeSort(points);
+    }
+}

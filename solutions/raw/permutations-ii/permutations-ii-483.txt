@@ -1,0 +1,53 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        // creating hashset
+        HashSet<List<Integer>> set = new HashSet<>();
+        // converting array to list using custom method ....
+        List<Integer> list = addList(nums);
+        int n = nums.length;
+        // if array is null or size is 1 we simply return array ...
+        if (nums == null && n == 1)
+            return new ArrayList<>(set);
+        //so using the concept \'next pemutation\' that the next pemutation of last permutation is always the first pemutation and so after a few iteration the pemutation repet itself..
+        // this is where set.add() comes to picture, it return false if element is already present in set and vice versa,
+        while (set.add(list)) {
+            // Inside this while loop we are simply finding next pemutation
+            int i = n - 2;
+            // to find breakingPoint or pivot what ever you called.
+            while (i >= 0 && nums[i] >= nums[i + 1]) i--;
+            if (i >= 0) {
+                int j = n - 1;
+                // to find swapPoint ...
+                while (nums[j] <= nums[i]) j--;
+                swap(nums, i, j);
+            }
+            // reverse the right part of pivot index, to sort array
+            reverse(nums, i + 1, n - 1);
+            // reinitializing list to use in while loop
+            list = addList(nums);
+        }
+        return new ArrayList<>(set);
+    }
+
+    // custom function to convert array To List, takes same time as that of inbuilt function...
+    private static List<Integer> addList(int[] nums) {
+        List<Integer> list = new ArrayList<Integer>();
+        for (int ele : nums) {
+            list.add(ele);
+        }
+        return list;
+    }
+
+    private static void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    private static void reverse(int[] nums, int i, int j) {
+        while (i < j) {
+            swap(nums, i++, j--);
+        }
+    }
+}

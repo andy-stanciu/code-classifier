@@ -1,0 +1,49 @@
+class Solution {
+
+    private ListNode goForward(ListNode start, int travel) {
+        ListNode toReturn = start;
+        for (int i = 0; i < travel; i++) {
+            toReturn = toReturn.next;
+            if (toReturn == null) {
+                break;
+            }
+        }
+        return toReturn;
+    }
+
+    public ListNode method1(ListNode head, int k) {
+        ListNode current = head;
+        ListNode prevTail = null;
+        while (current != null) {
+            ListNode nextKthNode = goForward(current, k - 1);
+            if (nextKthNode == null) {
+                break;
+            }
+            ListNode nextNode = nextKthNode.next;
+            if (prevTail == null) {
+                head = nextKthNode;
+            } else {
+                prevTail.next = nextKthNode;
+            }
+            nextKthNode.next = null;
+            method2(current);
+            prevTail = current;
+            current.next = nextNode;
+            current = nextNode;
+        }
+        return head;
+    }
+
+    private ListNode method2(ListNode head) {
+        ListNode curr = head;
+        ListNode prev = null;
+        ListNode temp = null;
+        while (curr != null) {
+            temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        return prev;
+    }
+}

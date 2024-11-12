@@ -1,0 +1,50 @@
+class Solution {
+
+    public int[] method1(int[] nums1, int[] nums2) {
+        if (nums1.length > nums2.length) {
+            int[] temp = nums1;
+            nums1 = nums2;
+            nums2 = temp;
+        }
+        int[] nums3 = new int[nums1.length];
+        int index = 0;
+        Arrays.sort(nums2);
+        for (int num : nums1) {
+            boolean alreadyFound = false;
+            for (int i = 0; i < index; i++) {
+                if (nums3[i] == num) {
+                    alreadyFound = true;
+                    break;
+                }
+            }
+            if (alreadyFound) {
+                continue;
+            }
+            if (binarySearch(nums2, num) != -1) {
+                nums3[index++] = num;
+            }
+        }
+        int[] result = new int[index];
+        for (int i = 0; i < index; i++) {
+            result[i] = nums3[i];
+        }
+        return result;
+    }
+
+    private int binarySearch(int[] arr, int target) {
+        int start = 0;
+        int end = arr.length - 1;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (arr[mid] == target) {
+                return mid;
+            }
+            if (arr[mid] < target) {
+                start = mid + 1;
+            } else {
+                end = mid - 1;
+            }
+        }
+        return -1;
+    }
+}

@@ -1,0 +1,63 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<String> method1(TreeNode root) {
+        // Function Call...
+        return method2(root, new Stack<Integer>(), new ArrayList<String>());
+    }
+
+    public List<String> method2(TreeNode root, Stack<Integer> stack, List<String> list) {
+        // If root is null...
+        if (root == null)
+            return list;
+        if (// If node is a Leaf Node...
+        root.left == null && root.right == null) {
+            // Updating the Stack according to the Operations...
+            stack.push(root.val);
+            // Filling the Path...
+            list.add(FillPath(stack));
+            // Stack Updation...
+            stack.pop();
+            return list;
+        }
+        // Stack Updation...
+        stack.push(root.val);
+        // Left Subtree...
+        method2(root.left, stack, list);
+        // Right Subtree...
+        method2(root.right, stack, list);
+        // Stack Updation...
+        stack.pop();
+        return list;
+    }
+
+    public String FillPath(Stack<Integer> stack) {
+        String path = "";
+        // Temporary Stack Used...
+        Stack<Integer> temp = new Stack<Integer>();
+        while (// Storing the values in Temporary Stack (in Queue Order)...
+        !stack.isEmpty()) temp.push(stack.pop());
+        while (!temp.isEmpty()) {
+            int value = temp.pop();
+            // Creating path in required format...
+            path += String.valueOf(value) + "->";
+            stack.push(value);
+        }
+        // Removing the last -> sign from the path...
+        return path.substring(0, path.length() - 2);
+    }
+}

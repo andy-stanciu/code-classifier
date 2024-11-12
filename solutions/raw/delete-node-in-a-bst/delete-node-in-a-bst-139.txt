@@ -1,0 +1,58 @@
+class Solution {
+
+    // Public method to initiate the deletion process
+    public TreeNode deleteNode(TreeNode root, int key) {
+        // If the tree is empty, return null
+        if (root == null)
+            return root;
+        // Call the private helper method to delete the node
+        return delete(root, key);
+    }
+
+    // Private helper method to delete the node with the given key
+    private TreeNode delete(TreeNode root, int key) {
+        // Base case: if the current node is null, return null
+        if (root == null)
+            return root;
+        // If the current node is the one to be deleted
+        if (root.val == key) {
+            // Case 1: The node is a leaf (no children)
+            if (root.left == null && root.right == null)
+                return null;
+            else // Case 2: The node has both left and right children
+            if (root.left != null && root.right != null) {
+                // Find the minimum value in the right subtree (inorder successor)
+                TreeNode temp1 = root.right;
+                TreeNode temp2 = root.left;
+                TreeNode temp3 = temp1;
+                // Disconnect the node from its children
+                root.right = null;
+                root.left = null;
+                // Find the leftmost node in the right subtree
+                while (temp3.left != null) temp3 = temp3.left;
+                // Attach the left subtree to the leftmost node of the right subtree
+                temp3.left = temp2;
+                // Return the right subtree as the new root
+                return temp1;
+            } else // Case 3: The node has only one child (right child)
+            if (root.left == null && root.right != null) {
+                TreeNode temp1 = root.right;
+                root.right = null;
+                return temp1;
+            } else // Case 4: The node has only one child (left child)
+            {
+                TreeNode temp1 = root.left;
+                root.left = null;
+                return temp1;
+            }
+        } else // If the key is smaller, move to the left subtree
+        if (root.val > key) {
+            root.left = delete(root.left, key);
+            return root;
+        } else // If the key is larger, move to the right subtree
+        {
+            root.right = delete(root.right, key);
+            return root;
+        }
+    }
+}

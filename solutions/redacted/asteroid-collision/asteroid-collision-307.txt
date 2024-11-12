@@ -1,0 +1,53 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> stack = new Stack<Integer>();
+        int n = param1.length;
+        for (int var1 : param1) {
+            // Initial check
+            if (stack.isEmpty()) {
+                stack.push(var1);
+            } else // +ve Asteroid
+            if (var1 > 0) {
+                stack.push(var1);
+            } else // -ve Asteroid
+            {
+                //Iterate till stack is empty or
+                //we\'ll break if we meet the conditions inside the loop
+                while (!stack.isEmpty()) {
+                    // asteroids array that starts with negative
+                    // since all move in same direction leave it as it is
+                    //Eg 4 & 5
+                    if (stack.peek() < 0) {
+                        stack.push(var1);
+                        break;
+                    } else // equal elements
+                    if (stack.peek() == Math.abs(var1)) {
+                        // both equals collide
+                        stack.pop();
+                        break;
+                    } else // Greater +ve before
+                    if (stack.peek() > Math.abs(var1)) {
+                        // only negative destroys so no pop
+                        break;
+                    } else {
+                        //last element is lesser than -ve
+                        stack.pop();
+                        if (stack.isEmpty()) {
+                            // this it to handle that -ve asteroid collides with
+                            //all +ve and no other option to left out Eg :1
+                            stack.push(var1);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        int[] ans = new int[stack.size()];
+        int i = stack.size() - 1;
+        while (!stack.isEmpty()) {
+            ans[i--] = stack.pop();
+        }
+        return ans;
+    }
+}

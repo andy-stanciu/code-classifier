@@ -1,0 +1,54 @@
+class Solution {
+
+    public static String addstring(String ans, String ans2) {
+        int freq2 = ans2.length();
+        char ch = ans.charAt(0);
+        int count = 0;
+        for (int i = 0; i < ans.length(); i++) {
+            if (ans.charAt(i) == ch) {
+                count++;
+            } else {
+                if (count <= freq2) {
+                    return ans.substring(0, i - count) + ans2 + ans.substring(i - count, ans.length());
+                } else {
+                    ch = ans.charAt(i);
+                    count = 1;
+                }
+            }
+        }
+        if (count >= freq2) {
+            return ans + ans2;
+        } else {
+            return ans.substring(0, ans.length() - count) + ans2 + ans.substring(ans.length() - count, ans.length());
+        }
+    }
+
+    public String frequencySort(String s) {
+        int[] freqarr = new int[256];
+        for (int i = 0; i < s.length(); i++) {
+            freqarr[s.charAt(i)] += 1;
+        }
+        String ans = "";
+        int max_len = 1;
+        for (int i = 0; i < 256; i++) {
+            if (freqarr[i] == 0) {
+                continue;
+            } else if (freqarr[i] == 1) {
+                //insert at last
+                ans += (char) i + "";
+            } else if (max_len <= freqarr[i]) {
+                // insert at first
+                // max_len= Math.max(max_len,freqarr[i]);
+                max_len = freqarr[i];
+                String ch = (char) i + "";
+                ans = ch.repeat(freqarr[i]) + ans;
+            } else {
+                //insert in middle
+                String ch = (char) i + "";
+                String ans2 = ch.repeat(freqarr[i]);
+                ans = addstring(ans, ans2);
+            }
+        }
+        return ans;
+    }
+}

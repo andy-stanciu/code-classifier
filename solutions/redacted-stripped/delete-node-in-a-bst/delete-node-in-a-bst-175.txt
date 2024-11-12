@@ -1,0 +1,76 @@
+class Solution {
+
+    public static TreeNode method1(TreeNode root, int target) {
+        if (root == null)
+            return null;
+        if (root != null && root.val == target) {
+            if (root.right == null)
+                return root.left;
+            TreeNode root1 = (root.right != null) ? root.right : root.left;
+            TreeNode dummyRoot1 = root1;
+            if (root1 != null && root1.left != null) {
+                while (true) {
+                    if (dummyRoot1.left != null) {
+                        dummyRoot1 = dummyRoot1.left;
+                        continue;
+                    }
+                    if (dummyRoot1.right != null) {
+                        dummyRoot1 = dummyRoot1.right;
+                        continue;
+                    }
+                    if (dummyRoot1.left == null && dummyRoot1.right == null) {
+                        break;
+                    }
+                }
+            }
+            if (root1 == null)
+                return root1;
+            dummyRoot1.left = (root.left != null) ? root.left : null;
+            return root1;
+        }
+        TreeNode var1 = root;
+        TreeNode nod = solve(root, target);
+        return (nod == null) ? nod : var1;
+    }
+
+    public static TreeNode solve(TreeNode root, int target) {
+        if (root == null)
+            return null;
+        if (target > root.val) {
+            TreeNode var3 = solve(root.right, target);
+            root.right = null;
+            root.right = var3;
+            return root;
+        } else if (target < root.val) {
+            TreeNode var3 = solve(root.left, target);
+            root.left = null;
+            root.left = var3;
+            return root;
+        } else if (target == root.val) {
+            TreeNode leftTreeOfTarget = root.left;
+            TreeNode rightTreeOfTarget = root.right;
+            TreeNode var2 = method2(leftTreeOfTarget, rightTreeOfTarget);
+            return var2;
+        }
+        return root;
+    }
+
+    public static TreeNode method2(TreeNode root1, TreeNode root2) {
+        if (root1 == null && root2 != null)
+            return root2;
+        if (root2 == null && root1 != null)
+            return root1;
+        if (root1 == null && root2 == null)
+            return null;
+        TreeNode temp = root2;
+        while (true) {
+            if (temp.left != null) {
+                temp = temp.left;
+                continue;
+            } else
+                break;
+        }
+        temp.left = root1;
+        return root2;
+    }
+}

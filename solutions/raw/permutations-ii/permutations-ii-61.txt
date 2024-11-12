@@ -1,0 +1,71 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        int size = factorial(nums.length);
+        List<List<Integer>> ls = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            int result = nextPermutation(nums);
+            if (result == 1) {
+                List<Integer> local = new ArrayList<>();
+                for (int j = 0; j < nums.length; j++) {
+                    local.add(nums[j]);
+                }
+                ls.add(local);
+                break;
+            }
+            List<Integer> local = new ArrayList<>();
+            for (int j = 0; j < nums.length; j++) {
+                local.add(nums[j]);
+            }
+            ls.add(local);
+        }
+        return ls;
+    }
+
+    public static int factorial(int num) {
+        if (num <= 1) {
+            return num;
+        }
+        return num * factorial(num - 1);
+    }
+
+    public int nextPermutation(int[] nums) {
+        int index = -1;
+        for (int i = nums.length - 2; i >= 0; i--) {
+            if (nums[i] < nums[i + 1]) {
+                index = i;
+                break;
+            }
+        }
+        if (index == -1) {
+            reverse(0, nums.length - 1, nums);
+            return 1;
+        }
+        for (int i = nums.length - 1; i >= 0; i--) {
+            if (nums[i] > nums[index]) {
+                swap(i, index, nums);
+                break;
+            }
+        }
+        reverse(index + 1, nums.length - 1, nums);
+        System.out.println(Arrays.toString(nums));
+        return 0;
+    }
+
+    public static void swap(int i, int index, int[] arr) {
+        int temp = arr[i];
+        arr[i] = arr[index];
+        arr[index] = temp;
+    }
+
+    public static void reverse(int i, int n, int[] arr) {
+        while (i < n) {
+            int temp = arr[i];
+            arr[i] = arr[n];
+            arr[n] = temp;
+            i++;
+            n--;
+        }
+    }
+}

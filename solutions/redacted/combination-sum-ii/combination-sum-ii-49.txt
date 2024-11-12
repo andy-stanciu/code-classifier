@@ -1,0 +1,79 @@
+class Solution {
+
+    private static class Class1 {
+
+        Set<List<Integer>> subsets;
+
+        public Class1() {
+        }
+
+        public Set<List<Integer>> getSubsets() {
+            return subsets;
+        }
+
+        public void setSubsets(Set<List<Integer>> subsets) {
+            this.subsets = subsets;
+        }
+    }
+
+    boolean[][] visited;
+
+    Class1[][] memoization_dp;
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        if (candidates == null || candidates.length == 0) {
+            return new ArrayList<>();
+        }
+        // Its key - so that ArrayList.equals work - as equals method not only checks for
+        // the elements and size, but also the order. So, sorting ensures Hashset can
+        // remove duplicates.
+        Arrays.sort(candidates);
+        visited = new boolean[candidates.length][target + 1];
+        memoization_dp = new Class1[candidates.length][target + 1];
+        method2(candidates, candidates.length - 1, target);
+        Class1 var1 = memoization_dp[candidates.length - 1][target];
+        return var1 != null ? new ArrayList<>(var1.getSubsets()) : new ArrayList<>();
+    }
+
+    private void method2(int[] candidates, int index, int target) {
+        if (index < 0) {
+            return;
+        }
+        if (visited[index][target]) {
+            return;
+        }
+        visited[index][target] = true;
+        Set<List<Integer>> subsets = new HashSet<>();
+        if (target == candidates[index]) {
+            List<Integer> subset = new ArrayList<>();
+            subset.add(candidates[index]);
+            subsets.add(subset);
+        }
+        if (target > candidates[index] && index > 0) {
+            method2(candidates, index - 1, target - candidates[index]);
+            Class1 var1 = memoization_dp[index - 1][target - candidates[index]];
+            if (var1 != null) {
+                var1.getSubsets().forEach(set -> {
+                    List<Integer> newSet = new ArrayList<>(set);
+                    newSet.add(candidates[index]);
+                    subsets.add(newSet);
+                });
+            }
+        }
+        if (index > 0) {
+            method2(candidates, index - 1, target);
+            Class1 var1 = memoization_dp[index - 1][target];
+            if (var1 != null) {
+                var1.getSubsets().forEach(set -> {
+                    List<Integer> newSet = new ArrayList<>(set);
+                    subsets.add(newSet);
+                });
+            }
+        }
+        if (subsets.size() > 0) {
+            Class1 var1 = new Class1();
+            var1.setSubsets(subsets);
+            memoization_dp[index][target] = var1;
+        }
+    }
+}

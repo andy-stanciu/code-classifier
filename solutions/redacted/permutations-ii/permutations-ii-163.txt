@@ -1,0 +1,31 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> list = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        boolean[] used = new boolean[nums.length];
+        Arrays.sort(nums);
+        backTrack(list, new ArrayList<>(), nums, used);
+        return list;
+    }
+
+    private void backTrack(List<List<Integer>> list, List<Integer> tempList, int[] nums, boolean[] used) {
+        if (nums.length == tempList.size()) {
+            list.add(new ArrayList<>(tempList));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            // element already exists, skip
+            if (used[i])
+                continue;
+            // previous value same but not used
+            if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1])
+                continue;
+            tempList.add(nums[i]);
+            used[i] = true;
+            backTrack(list, tempList, nums, used);
+            used[i] = false;
+            tempList.remove(tempList.size() - 1);
+        }
+    }
+}

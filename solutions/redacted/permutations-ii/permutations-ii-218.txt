@@ -1,0 +1,34 @@
+class Solution {
+
+    public List<List<Integer>> rec(List<Integer> newnum, List<Integer> newlist, HashSet<List<Integer>> hash) {
+        List<List<Integer>> lastlist = new ArrayList<>();
+        if (newnum.size() == 0) {
+            if (hash.contains(newlist)) {
+                return lastlist;
+            } else {
+                lastlist.add(new ArrayList<>(newlist));
+                hash.add(newlist);
+                return lastlist;
+            }
+        }
+        for (int i = 0; i < newnum.size(); i++) {
+            int current = newnum.get(i);
+            List<Integer> res = new ArrayList<>(newnum);
+            res.remove(i);
+            newlist.add(current);
+            lastlist.addAll(rec(res, newlist, hash));
+            newlist.remove(newlist.size() - 1);
+        }
+        return lastlist;
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        HashSet<List<Integer>> hash = new HashSet<>();
+        List<Integer> newlist = new ArrayList<>();
+        List<Integer> newnum = new ArrayList<>();
+        for (int num : nums) {
+            newnum.add(num);
+        }
+        return rec(newnum, newlist, hash);
+    }
+}

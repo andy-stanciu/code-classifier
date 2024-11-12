@@ -1,0 +1,56 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<String> method1(TreeNode root) {
+        List<String> result = new LinkedList<>();
+        if (root == null) {
+            return result;
+        } else if (root.left == null && root.right == null) {
+            result.add(String.valueOf(root.val));
+            return result;
+        }
+        StringBuilder str = new StringBuilder();
+        str.append(root.val);
+        helper(root.left, str, result);
+        str = new StringBuilder();
+        str.append(root.val);
+        helper(root.right, str, result);
+        return result;
+    }
+
+    private void helper(TreeNode curr, StringBuilder str, List<String> res) {
+        if (curr == null) {
+            return;
+        }
+        if (curr.left == null && curr.right == null) {
+            str.append("->" + curr.val);
+            res.add(str.toString());
+        } else if (curr.left != null && curr.right == null) {
+            str.append("->" + curr.val);
+            helper(curr.left, str, res);
+        } else if (curr.left == null && curr.right != null) {
+            str.append("->" + curr.val);
+            helper(curr.right, str, res);
+        } else if (curr.left != null && curr.right != null) {
+            str.append("->" + curr.val);
+            int oriLen = str.length();
+            helper(curr.left, str, res);
+            str = new StringBuilder(str.substring(0, oriLen));
+            helper(curr.right, str, res);
+        }
+    }
+}

@@ -1,0 +1,67 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ListNode curr1 = l1;
+        ListNode curr2 = l2;
+        int size1 = getSize(curr1);
+        int size2 = getSize(curr2);
+        curr1 = l1;
+        curr2 = l2;
+        ListNode head = null;
+        while (size1 > 0 && size2 > 0) {
+            int sumVal = 0;
+            if (size1 >= size2) {
+                sumVal += curr1.val;
+                curr1 = curr1.next;
+                size1--;
+            }
+            if (size2 > size1) {
+                sumVal += curr2.val;
+                curr2 = curr2.next;
+                size2--;
+            }
+            //Magic happens here pay attention
+            //Make sum node and always append on head
+            //For example
+            //                 newNode1 <- null
+            // nextNewNode2 <- newNode1 <- null
+            ListNode newNode = new ListNode(sumVal);
+            newNode.next = head;
+            head = newNode;
+        }
+        //curr ans     = 7 -> 10 -> 7 -> 7
+        //Expected ans = 7 <- 8 <- 0 <- 7
+        //reuse same node to traverse again
+        curr1 = head;
+        head = null;
+        int carry = 0;
+        //trim value which are greater than 9 and add carry to next node
+        while (curr1 != null) {
+            int val = (curr1.val + carry) % 10;
+            carry = (curr1.val + carry) / 10;
+            //Do same thing we did above.
+            //Create new node and add to the head;
+            ListNode newNode = new ListNode(val);
+            newNode.next = head;
+            head = newNode;
+            //move ahead
+            curr1 = curr1.next;
+        }
+        //if Carry is not zero append one extra to head
+        if (carry != 0) {
+            ListNode newNode = new ListNode(carry);
+            newNode.next = head;
+            head = newNode;
+        }
+        return head;
+    }
+
+    private int getSize(ListNode head) {
+        int size = 0;
+        while (head != null) {
+            size++;
+            head = head.next;
+        }
+        return size;
+    }
+}

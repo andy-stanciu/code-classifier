@@ -1,0 +1,31 @@
+class Solution {
+
+    List<List<Integer>> result;
+
+    Map<Integer, Integer> map;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        map = new HashMap<>();
+        result = new ArrayList<>();
+        for (//generate frequency of each integer
+        int a : nums) map.put(a, map.getOrDefault(a, 0) + 1);
+        backtrack(nums, new ArrayList<>());
+        return result;
+    }
+
+    private void backtrack(int[] nums, List<Integer> temp) {
+        if (temp.size() == nums.length) {
+            result.add(new ArrayList<>(temp));
+            return;
+        }
+        for (int key : map.keySet()) {
+            if (map.get(key) == 0)
+                continue;
+            map.put(key, map.get(key) - 1);
+            temp.add(key);
+            backtrack(nums, temp);
+            temp.remove(temp.size() - 1);
+            map.put(key, map.get(key) + 1);
+        }
+    }
+}

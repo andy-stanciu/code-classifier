@@ -1,0 +1,33 @@
+class Solution {
+
+    public static StringBuilder wordFreq(String str) {
+        int[] chars = new int[26];
+        for (char c : str.toCharArray()) {
+            int i = c - 97;
+            chars[i]++;
+        }
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i] != 0) {
+                result.append(Character.toString(97 + i));
+                result.append(chars[i]);
+            }
+        }
+        return result;
+    }
+
+    public List<List<String>> method1(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+        for (String s : strs) {
+            StringBuilder freq = wordFreq(s);
+            map.merge(freq.toString(), List.of(s), (oldVal, newVal) -> {
+                return Stream.concat(oldVal.stream(), newVal.stream()).collect(Collectors.toList());
+            });
+        }
+        List<List<String>> result = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+            result.add(entry.getValue());
+        }
+        return result;
+    }
+}

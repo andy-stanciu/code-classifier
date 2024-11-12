@@ -1,0 +1,27 @@
+//memoization
+class Solution {
+
+    int[] dp;
+
+    private int dfs(int[][] param1, int prev_end, int curr_ind) {
+        if (curr_ind >= param1.length) {
+            return 0;
+        }
+        if (dp[curr_ind] != -1)
+            return dp[curr_ind];
+        int picked = Integer.MIN_VALUE;
+        if (param1[curr_ind][0] >= prev_end) {
+            picked = 1 + dfs(param1, param1[curr_ind][1], curr_ind + 1);
+        }
+        int not_picked = dfs(param1, prev_end, curr_ind + 1);
+        return dp[curr_ind] = Math.max(picked, not_picked);
+    }
+
+    public int method1(int[][] param1) {
+        Arrays.sort(param1, (a, b) -> a[1] - b[1]);
+        int n = param1.length;
+        dp = new int[n];
+        Arrays.fill(dp, -1);
+        return n - dfs(param1, Integer.MIN_VALUE, 0);
+    }
+}

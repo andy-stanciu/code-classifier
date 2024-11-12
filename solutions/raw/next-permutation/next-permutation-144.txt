@@ -1,0 +1,39 @@
+class Solution {
+
+    public void nextPermutation(int[] nums) {
+        int n = nums.length;
+        int i = n - 2;
+        while (i >= 0 && nums[i] >= nums[i + 1]) {
+            i--;
+        }
+        if (i >= 0) {
+            int j = binarySearchDec(nums, i + 1, n - 1, nums[i]);
+            // swap i,j
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+        }
+        reverse(nums, i + 1, n - 1);
+    }
+
+    public void reverse(int[] nums, int i, int j) {
+        int swapN = (j - i + 1) / 2;
+        for (int k = i; k < i + swapN; k++) {
+            int temp = nums[k];
+            nums[k] = nums[j - (k - i)];
+            nums[j - (k - i)] = temp;
+        }
+    }
+
+    public int binarySearchDec(int[] a, int fromIndex, int toIndex, int key) {
+        while (fromIndex != toIndex) {
+            int mid = (fromIndex + toIndex + 1) / 2;
+            if (key < a[mid]) {
+                fromIndex = mid;
+            } else {
+                toIndex = mid - 1;
+            }
+        }
+        return toIndex;
+    }
+}

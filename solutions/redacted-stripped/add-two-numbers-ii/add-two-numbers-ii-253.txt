@@ -1,0 +1,54 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        int len1 = getLen(l1);
+        int len2 = getLen(l2);
+        if (len1 > len2) {
+            l1 = padZero(l1, 1);
+            l2 = padZero(l2, len1 - len2 + 1);
+        } else {
+            l1 = padZero(l1, len2 - len1 + 1);
+            l2 = padZero(l2, 1);
+        }
+        ListNode result = method2(l1, l2);
+        if (result.val == 0) {
+            return result.next;
+        }
+        return result;
+    }
+
+    ListNode method2(ListNode l1, ListNode l2) {
+        if (l1 == null && l2 == null) {
+            return null;
+        }
+        ListNode next = method2(l1.next, l2.next);
+        int sum = l1.val + l2.val;
+        if (next != null) {
+            sum += next.val / 10;
+            next.val = next.val % 10;
+        }
+        ListNode curr = new ListNode(sum);
+        curr.next = next;
+        return curr;
+    }
+
+    public int getLen(ListNode l) {
+        int len = 0;
+        while (l != null) {
+            l = l.next;
+            len++;
+        }
+        return len;
+    }
+
+    public ListNode padZero(ListNode l, int len) {
+        ListNode dummy = new ListNode(0);
+        ListNode curr = dummy;
+        for (int i = 0; i < len; i++) {
+            curr.next = new ListNode(0);
+            curr = curr.next;
+        }
+        curr.next = l;
+        return dummy.next;
+    }
+}

@@ -1,0 +1,73 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    // simple list reversal.
+    public ListNode reverse(ListNode node) {
+        ListNode current = node;
+        ListNode prev = null;
+        while (current != null) {
+            ListNode tempNext = current.next;
+            current.next = prev;
+            prev = current;
+            current = tempNext;
+        }
+        return prev;
+    }
+
+    public ListNode getGroupEnd(ListNode node, int k) {
+        // if (k == 2), need to return 0, 1, not 0, 1, 2
+        k--;
+        while (k > 0) {
+            k--;
+            if (node == null) {
+                return null;
+            }
+            node = node.next;
+        }
+        return node;
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode dummy = new ListNode(-1, head);
+        ListNode current = head;
+        ListNode prevGroupEnd = dummy;
+        while (current != null) {
+            // get end of current group
+            ListNode endGroup = getGroupEnd(current, k);
+            if (endGroup == null) {
+                break;
+            }
+            // get start of next group
+            ListNode startNextGroup = endGroup.next;
+            // break the part that needs to be reversed into a simple
+            // singly linked list.
+            endGroup.next = null;
+            prevGroupEnd.next = null;
+            // reverse the current simple singly linked list that has been broken out
+            ListNode newCurrentList = reverse(current);
+            // link the lists back up
+            prevGroupEnd.next = newCurrentList;
+            ListNode ptrCurrentGroupEnd = prevGroupEnd;
+            // find the last node of the current group
+            while (ptrCurrentGroupEnd.next != null) {
+                ptrCurrentGroupEnd = ptrCurrentGroupEnd.next;
+            }
+            ptrCurrentGroupEnd.next = startNextGroup;
+            // set current to the start of the next group
+            current = startNextGroup;
+            // set previous group end to the end of the last group.
+            prevGroupEnd = ptrCurrentGroupEnd;
+        }
+        // return the new head.
+        return dummy.next;
+    }
+}

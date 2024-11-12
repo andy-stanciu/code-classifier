@@ -1,0 +1,88 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        ListNode fwd = head.next;
+        while (curr != null) {
+            curr.next = prev;
+            prev = curr;
+            curr = fwd;
+            if (fwd != null) {
+                fwd = fwd.next;
+            }
+        }
+        return prev;
+    }
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode f = reverseList(l1);
+        ListNode s = reverseList(l2);
+        int carry = 0;
+        int sum;
+        ListNode nhead = null;
+        ListNode tail = null;
+        while (f != null && s != null) {
+            sum = f.val + s.val + carry;
+            carry = sum / 10;
+            ListNode newnode = new ListNode(sum % 10);
+            if (nhead == null) {
+                nhead = newnode;
+                tail = newnode;
+            } else {
+                tail.next = newnode;
+                tail = newnode;
+            }
+            f = f.next;
+            s = s.next;
+        }
+        while (f != null) {
+            sum = f.val + carry;
+            carry = sum / 10;
+            ListNode newnode = new ListNode(sum % 10);
+            if (nhead == null) {
+                nhead = newnode;
+                tail = newnode;
+            } else {
+                tail.next = newnode;
+                tail = newnode;
+            }
+            f = f.next;
+        }
+        while (s != null) {
+            sum = s.val + carry;
+            carry = sum / 10;
+            ListNode newnode = new ListNode(sum % 10);
+            if (nhead == null) {
+                nhead = newnode;
+                tail = newnode;
+            } else {
+                tail.next = newnode;
+                tail = newnode;
+            }
+            s = s.next;
+        }
+        if (carry != 0) {
+            ListNode newnode = new ListNode(carry);
+            if (nhead == null) {
+                nhead = newnode;
+                tail = newnode;
+            } else {
+                tail.next = newnode;
+                tail = newnode;
+            }
+        }
+        ListNode res = reverseList(nhead);
+        return res;
+    }
+}

@@ -1,0 +1,47 @@
+class Solution {
+
+    public void method1(ListNode h, ListNode tail) {
+        ListNode cur = h, prev = null, next = null;
+        while (cur != tail) {
+            next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        tail.next = prev;
+    }
+
+    public ListNode method2(ListNode head, int k) {
+        ListNode h = null, t = null, prev = null, next = head, anshead = null;
+        int count = 0;
+        ListNode cur = head;
+        while (cur != null) {
+            h = cur;
+            while (cur != null) {
+                count++;
+                if (count == k) {
+                    count = 0;
+                    t = cur;
+                    next = t.next;
+                    method1(h, t);
+                    h.next = next;
+                    cur = next;
+                    if (prev == null) {
+                        anshead = t;
+                    } else {
+                        prev.next = t;
+                    }
+                    prev = h;
+                    break;
+                }
+                cur = cur.next;
+            }
+            if (count != 0) {
+                if (prev == null)
+                    return head;
+                prev.next = h;
+            }
+        }
+        return anshead;
+    }
+}

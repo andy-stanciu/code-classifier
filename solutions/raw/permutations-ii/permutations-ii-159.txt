@@ -1,0 +1,32 @@
+class Solution {
+
+    // valid dung de lan sau lap ko lay lai so da lay
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> res = new ArrayList<>();
+        Boolean[] valid = new Boolean[nums.length];
+        Arrays.sort(nums);
+        findPermute(ans, res, nums, valid);
+        return ans;
+    }
+
+    public void findPermute(List<List<Integer>> result, List<Integer> res, int[] nums, Boolean[] valid) {
+        if (res.size() == nums.length) {
+            result.add(new ArrayList<>(res));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            // remove all number already add
+            if (valid[i] != null && valid[i] == true)
+                continue;
+            // remove all the same sequence number except the number with valid is currently false
+            if (i > 0 && nums[i] == nums[i - 1] && !valid[i - 1])
+                continue;
+            res.add(nums[i]);
+            valid[i] = true;
+            findPermute(result, res, nums, valid);
+            res.remove(res.size() - 1);
+            valid[i] = false;
+        }
+    }
+}

@@ -1,0 +1,53 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        // Stack to keep track of surviving asteroids
+        Stack<Integer> stack = new Stack<>();
+        // Loop through each asteroid in the input array
+        for (int var1 : param1) {
+            // Boolean flag to track if the current asteroid collided
+            boolean collided = false;
+            // Check for potential collisions:
+            // - There is a potential for collision if the stack is not empty
+            // - The current asteroid is moving left (i.e., asteroid < 0)
+            // - The top of the stack asteroid is moving right (i.e., stack.peek() > 0)
+            while (!stack.isEmpty() && var1 < 0 && stack.peek() > 0) {
+                // Peek at the top asteroid from the stack (the right-moving asteroid)
+                int top = stack.peek();
+                // Case 1: The absolute size of the current left-moving asteroid is greater than the size of the right-moving asteroid at the top of the stack
+                if (Math.abs(var1) > top) {
+                    // Current left-moving asteroid destroys the right-moving one (pop it from the stack)
+                    stack.pop();
+                    // Note: We do not set `collided = true` because the current asteroid is still active and might continue to destroy more right-moving asteroids
+                    // Case 2: Both asteroids have the same size
+                } else if (Math.abs(var1) == top) {
+                    // Both asteroids destroy each other
+                    // Remove the top asteroid
+                    stack.pop();
+                    // Set flag to true, as the current asteroid also gets destroyed
+                    collided = true;
+                    // Exit the loop since the current asteroid no longer exists
+                    break;
+                    // Case 3: The top asteroid is larger than the current one
+                } else {
+                    // The right-moving asteroid survives, and the current asteroid is destroyed
+                    // Mark the current asteroid as destroyed
+                    collided = true;
+                    // Exit the loop since no further checks are necessary
+                    break;
+                }
+            }
+            if (!collided) {
+                // If no collision happened (either the stack is empty or all right-moving asteroids were destroyed), we push the current asteroid onto the stack
+                // Add the surviving asteroid (either right-moving or left-moving) to the stack
+                stack.push(var1);
+            }
+        }
+        int[] result = new int[stack.size()];
+        // Pop elements from the stack (LIFO) and place them in the result array in reverse order (from last added to first added)
+        for (int i = result.length - 1; i >= 0; i--) {
+            result[i] = stack.pop();
+        }
+        return result;
+    }
+}

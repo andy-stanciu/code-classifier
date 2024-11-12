@@ -1,0 +1,44 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> result = new ArrayList<>();
+        int found = Arrays.binarySearch(candidates, target);
+        if (found >= 0 && candidates[found] == target)
+            result.add(Arrays.asList(target));
+        for (int k = 2; k <= candidates.length; k++) result.addAll(method2(candidates, target, k, 0));
+        return result;
+    }
+
+    private List<List<Integer>> method2(int[] nums, int target, int k, int start) {
+        List<List<Integer>> combos = new ArrayList<>();
+        if (start == nums.length)
+            return combos;
+        if (nums[start] > (target / k) || (target / k) > nums[nums.length - 1])
+            return combos;
+        if (k == 2)
+            return method3(nums, target, start);
+        for (int i = start; i < nums.length; i++) {
+            if (i != start && nums[i - 1] == nums[i])
+                continue;
+            for (List<Integer> combo : method2(nums, target - nums[i], k - 1, i + 1)) {
+                combos.add(new ArrayList<>(Arrays.asList(nums[i])));
+                combos.get(combos.size() - 1).addAll(combo);
+            }
+        }
+        return combos;
+    }
+
+    private List<List<Integer>> method3(int[] candidates, int target, int start) {
+        List<List<Integer>> result = new ArrayList<>();
+        Set<Integer> set = new HashSet<>();
+        for (int i = start; i < candidates.length; i++) {
+            if (set.contains(target - candidates[i])) {
+                if (result.isEmpty() || result.get(result.size() - 1).get(1) != candidates[i])
+                    result.add(Arrays.asList(target - candidates[i], candidates[i]));
+            }
+            set.add(candidates[i]);
+        }
+        return result;
+    }
+}

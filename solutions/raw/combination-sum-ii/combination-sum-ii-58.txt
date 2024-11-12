@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<List<Integer>> combinationSum2(int[] nums, int n) {
+        Arrays.sort(nums);
+        Set<List<Integer>> a = new HashSet<>();
+        List<Integer> b = new ArrayList<>();
+        rec(nums, n, a, b, 0, 0);
+        return new ArrayList<>(a);
+    }
+
+    void rec(int[] nums, int n, Set<List<Integer>> a, List<Integer> b, int ind, int sum) {
+        if (sum == n) {
+            a.add(new ArrayList<>(b));
+            return;
+        }
+        for (int i = ind; i < nums.length; i++) {
+            if (i > ind && nums[i] == nums[i - 1])
+                continue;
+            if (sum + nums[i] > n)
+                break;
+            if (sum + nums[i] <= n) {
+                b.add(nums[i]);
+                sum = sum + nums[i];
+                rec(nums, n, a, b, i + 1, sum);
+                b.remove(b.size() - 1);
+                sum = sum - nums[i];
+            }
+        }
+    }
+}

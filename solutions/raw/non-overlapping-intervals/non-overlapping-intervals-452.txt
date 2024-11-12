@@ -1,0 +1,26 @@
+class Solution {
+
+    class IntervalComparator implements Comparator<int[]> {
+
+        public int compare(int[] intervalA, int[] intervalB) {
+            return intervalA[0] - intervalB[0];
+        }
+    }
+
+    public int eraseOverlapIntervals(int[][] intervals) {
+        // sort intervals by the first value
+        Arrays.sort(intervals, new IntervalComparator());
+        int removals = 0;
+        for (int i = 1; i < intervals.length; i++) {
+            // if there is an overlap
+            if (intervals[i - 1][1] > intervals[i][0]) {
+                // prefer the interval that ends sooner
+                // turn the next one into the smaller one, so that we can compare
+                // the next interval to the smaller one
+                intervals[i][1] = Math.min(intervals[i][1], intervals[i - 1][1]);
+                removals += 1;
+            }
+        }
+        return removals;
+    }
+}

@@ -1,0 +1,54 @@
+class Solution {
+
+    public boolean sameSign(int x, int y) {
+        if ((x > 0 && y > 0) || (x < 0 && y < 0)) {
+            return true;
+        }
+        return false;
+    }
+
+    public int[] method1(int[] param1) {
+        int len = param1.length;
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < len; i++) {
+            if (stack.empty() || sameSign(param1[i], stack.peek())) {
+                stack.push(param1[i]);
+            } else {
+                if (stack.peek() > 0 && param1[i] < 0) {
+                    if (stack.peek() + param1[i] < 0) {
+                        boolean var1 = false;
+                        while (stack.peek() > 0 && param1[i] < 0 && (stack.peek() + param1[i]) <= 0) {
+                            if (stack.peek() + param1[i] == 0) {
+                                stack.pop();
+                                var1 = true;
+                                break;
+                            } else {
+                                stack.pop();
+                                if (stack.empty()) {
+                                    break;
+                                }
+                            }
+                        }
+                        if (var1 == false) {
+                            if (stack.empty() || (stack.peek() < 0 && param1[i] < 0)) {
+                                stack.push(param1[i]);
+                            }
+                        }
+                    } else if (stack.peek() + param1[i] == 0) {
+                        stack.pop();
+                    } else {
+                        continue;
+                    }
+                } else {
+                    stack.push(param1[i]);
+                }
+            }
+        }
+        int size = stack.size();
+        int[] var2 = new int[size];
+        for (int i = 0; i < size; i++) {
+            var2[i] = stack.get(i);
+        }
+        return var2;
+    }
+}

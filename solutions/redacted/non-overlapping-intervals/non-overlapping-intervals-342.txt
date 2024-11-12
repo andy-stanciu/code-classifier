@@ -1,0 +1,37 @@
+class Solution {
+
+    /**
+     *     1. find the length of the longest non-overlapping interval
+     *     2. subtract it from the length of the intervals array
+     */
+    public int method1(int[][] param1) {
+        if (param1.length == 1) {
+            return 0;
+        }
+        int n = param1.length;
+        Arrays.sort(param1, (a, b) -> {
+            if (a[0] == b[0]) {
+                return a[1] - b[1];
+            } else {
+                return a[0] - b[0];
+            }
+        });
+        int[] MEMO = new int[n + 1];
+        Arrays.fill(MEMO, -1);
+        return param1.length - backtrack(0, -1, param1, MEMO);
+    }
+
+    public int backtrack(int idx, int prevIdx, int[][] param1, int[] MEMO) {
+        if (idx == param1.length) {
+            return 0;
+        }
+        if (MEMO[prevIdx + 1] != -1) {
+            return MEMO[prevIdx + 1];
+        }
+        int count = 0 + backtrack(idx + 1, prevIdx, param1, MEMO);
+        if (prevIdx == -1 || param1[idx][0] >= param1[prevIdx][1]) {
+            count = Math.max(count, 1 + backtrack(idx + 1, idx, param1, MEMO));
+        }
+        return MEMO[prevIdx + 1] = count;
+    }
+}

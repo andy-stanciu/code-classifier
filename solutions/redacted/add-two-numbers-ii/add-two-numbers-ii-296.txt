@@ -1,0 +1,92 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ArrayList<Integer> store1 = new ArrayList<>();
+        ArrayList<Integer> store2 = new ArrayList<>();
+        ArrayList<Integer> ans = new ArrayList<>();
+        ListNode dummyhead = new ListNode(0);
+        ListNode head = dummyhead;
+        while (l1 != null) {
+            store1.add(l1.val);
+            l1 = l1.next;
+        }
+        Collections.reverse(store1);
+        while (l2 != null) {
+            store2.add(l2.val);
+            l2 = l2.next;
+        }
+        Collections.reverse(store2);
+        int count = 0;
+        System.out.println(store1 + " " + store2);
+        int i;
+        for (i = 0; i < Math.min(store1.size(), store2.size()); i++) {
+            int temp = store1.get(i) + store2.get(i);
+            if (count > 0) {
+                temp += 1;
+                count--;
+            }
+            if (temp >= 10) {
+                ans.add(temp % 10);
+                count++;
+            } else {
+                ans.add(temp);
+            }
+        }
+        int c = Math.abs(store1.size() - store2.size());
+        if (store1.size() > store2.size()) {
+            while (c-- > 0) {
+                int temp = store1.get(i++);
+                if (count > 0) {
+                    temp += 1;
+                    count--;
+                }
+                if (temp >= 10) {
+                    ans.add(temp % 10);
+                    count++;
+                } else {
+                    ans.add(temp);
+                }
+            }
+        }
+        if (store1.size() < store2.size()) {
+            while (c-- > 0) {
+                int temp = store2.get(i++);
+                if (count > 0) {
+                    temp += 1;
+                    count--;
+                }
+                if (temp >= 10) {
+                    ans.add(temp % 10);
+                    count++;
+                } else {
+                    ans.add(temp);
+                }
+            }
+        }
+        if (store1.size() == store2.size()) {
+            if (count > 0) {
+                ans.add(1);
+                count--;
+            }
+        }
+        if (count > 0) {
+            ans.add(1);
+            count--;
+        }
+        System.out.println(ans);
+        for (int j = ans.size() - 1; j >= 0; j--) {
+            head = head.next = new ListNode(ans.get(j));
+        }
+        return dummyhead.next;
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        // pre sort to remove duplicates effectively
+        Arrays.sort(candidates);
+        // int and Integer are immutable in Java. Wrap it in an array to modify it by
+        // reference
+        int[] current_sum = new int[1];
+        backtrack(new ArrayList<>(), 0, candidates, target, current_sum, result);
+        return result;
+    }
+
+    public void backtrack(List<Integer> current, int start, int[] candidates, int target, int[] sum, List<List<Integer>> result) {
+        if (sum[0] >= target) {
+            if (sum[0] == target)
+                result.add(new ArrayList<>(current));
+            return;
+        }
+        for (int i = start; i < candidates.length; i++) {
+            if (i > start && candidates[i] == candidates[i - 1])
+                continue;
+            current.add(candidates[i]);
+            sum[0] += current.get(current.size() - 1);
+            backtrack(current, i + 1, candidates, target, sum, result);
+            sum[0] -= current.get(current.size() - 1);
+            /*
+             * If the sum of [x, y, z] is greater or equal to the target, since the array is
+             * presorted there won\'t be
+             * any other combination starting with [x,y]. So an optimization is to do a
+             * double backtrack from [x,y,z] to just [x] and continue from there
+             */
+            if (sum[0] >= target) {
+                sum[0] -= current.get(current.size() - 1);
+                current.remove(current.size() - 1);
+                sum[0] -= current.get(current.size() - 1);
+                current.remove(current.size() - 1);
+                return;
+            }
+            current.remove(current.size() - 1);
+        }
+    }
+}

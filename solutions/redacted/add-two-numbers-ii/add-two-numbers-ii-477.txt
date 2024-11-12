@@ -1,0 +1,111 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ListNode reverseL1 = null;
+        ListNode reverseL2 = null;
+        ListNode ansList = null;
+        int carryForwardCount = 0;
+        while (l1 != null) {
+            ListNode temp = l1.next;
+            l1.next = reverseL1;
+            reverseL1 = l1;
+            l1 = temp;
+        }
+        while (l2 != null) {
+            ListNode temp = l2.next;
+            l2.next = reverseL2;
+            reverseL2 = l2;
+            l2 = temp;
+        }
+        while (reverseL1 != null && reverseL2 != null) {
+            int v1 = reverseL1.val;
+            int v2 = reverseL2.val;
+            int ans = v1 + v2 + carryForwardCount;
+            ListNode temp = ansList;
+            if (temp != null) {
+                while (temp.next != null) {
+                    temp = temp.next;
+                }
+            }
+            if (ansList == null) {
+                if (ans >= 10) {
+                    carryForwardCount = ans / 10;
+                    ansList = new ListNode(ans % 10);
+                } else {
+                    ansList = new ListNode(ans);
+                }
+            } else if (ans < 10) {
+                temp.next = new ListNode(ans);
+                carryForwardCount = 0;
+            } else if (ans >= 10) {
+                carryForwardCount = ans / 10;
+                temp.next = new ListNode(ans % 10);
+            }
+            reverseL1 = reverseL1.next;
+            reverseL2 = reverseL2.next;
+        }
+        while (reverseL1 != null) {
+            int v1 = reverseL1.val;
+            int ans = v1 + carryForwardCount;
+            ListNode temp = ansList;
+            if (ansList != null) {
+                while (temp.next != null) {
+                    temp = temp.next;
+                }
+            }
+            if (ans < 10) {
+                if (temp != null)
+                    temp.next = new ListNode(ans);
+                else
+                    temp = new ListNode(ans);
+                carryForwardCount = 0;
+            } else if (ans >= 10) {
+                carryForwardCount = ans / 10;
+                temp.next = new ListNode(ans % 10);
+            }
+            reverseL1 = reverseL1.next;
+        }
+        while (reverseL2 != null) {
+            int v2 = reverseL2.val;
+            int ans = v2 + carryForwardCount;
+            ListNode temp = ansList;
+            while (temp.next != null) {
+                temp = temp.next;
+            }
+            if (ans < 10) {
+                temp.next = new ListNode(ans);
+                carryForwardCount = 0;
+            } else if (ans >= 10) {
+                carryForwardCount = ans / 10;
+                temp.next = new ListNode(ans % 10);
+            }
+            reverseL2 = reverseL2.next;
+        }
+        if (carryForwardCount != 0) {
+            ListNode temp = ansList;
+            while (temp.next != null) {
+                temp = temp.next;
+            }
+            temp.next = new ListNode(carryForwardCount);
+            carryForwardCount = 0;
+        }
+        ListNode prevAns = null;
+        while (ansList != null) {
+            ListNode temp = ansList.next;
+            ansList.next = prevAns;
+            prevAns = ansList;
+            ansList = temp;
+        }
+        return prevAns;
+    }
+}

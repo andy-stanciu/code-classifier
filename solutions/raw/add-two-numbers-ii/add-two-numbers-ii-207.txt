@@ -1,0 +1,56 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        Stack<ListNode> stack1 = new Stack<>();
+        Stack<ListNode> stack2 = new Stack<>();
+        Stack<ListNode> stack3 = new Stack<>();
+        int carry = 0;
+        ListNode prev = new ListNode(0);
+        ListNode dummy = prev;
+        while (l1 != null) {
+            stack1.push(l1);
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            stack2.push(l2);
+            l2 = l2.next;
+        }
+        while (!stack1.isEmpty() && !stack2.isEmpty()) {
+            int sum = stack1.pop().val + stack2.pop().val + carry;
+            carry = sum / 10;
+            ListNode cur = new ListNode(sum % 10);
+            stack3.push(cur);
+        }
+        while (!stack1.isEmpty()) {
+            int sum = stack1.pop().val + carry;
+            carry = sum / 10;
+            ListNode cur = new ListNode(sum % 10);
+            stack3.push(cur);
+        }
+        while (!stack2.isEmpty()) {
+            int sum = stack2.pop().val + carry;
+            carry = sum / 10;
+            ListNode cur = new ListNode(sum % 10);
+            stack3.push(cur);
+        }
+        if (carry != 0) {
+            stack3.push(new ListNode(carry));
+        }
+        while (!stack3.isEmpty()) {
+            ListNode cur = stack3.pop();
+            prev.next = cur;
+            prev = cur;
+        }
+        return dummy.next;
+    }
+}

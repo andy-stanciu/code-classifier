@@ -1,0 +1,71 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    // Approach - appending the head of the linked list to head of the next reversed ll
+    // here we will memoise the head of the linked list first
+    // we will first reverse the head upto k.
+    // from the first linked list we will obtain next node and head of the reversed ll
+    // the next node is used to connect the head of the second linked list of group k to remaining nodes
+    // we will start while loop and store the head when k  ==2;
+    // we will decrement k and move to next node till k is equal to 1.
+    // once k is equal to 0 we will reverrse from current till k ==0
+    // after reversing the connect the  head of the last linked list(we will memoise as begin) to head of the reversed ll
+    //move begin to memoise node before reversal
+    // at last we will connect the head of the last linkedList( = tail of reversed ll) to remaining which we have stored in the return int array of reversed ll
+    public ListNode reverseKGroup(ListNode head, int k) {
+        //return approach1(head,k);
+        return approach2Optimised(head, k);
+    }
+
+    private ListNode approach2Optimised(ListNode head, int k) {
+        if (head == null)
+            return null;
+        if (k == 1)
+            return head;
+        int count = k;
+        ListNode begin = head;
+        ListNode[] reversed = reverseLL(begin, count);
+        ListNode result = reversed[0];
+        ListNode start = reversed[1];
+        ListNode curr = null;
+        while (start != null) {
+            if (k == count)
+                curr = start;
+            if (k >= 1) {
+                start = start.next;
+                k--;
+            }
+            if (k == 0) {
+                reversed = reverseLL(curr, count);
+                begin.next = reversed[0];
+                begin = curr;
+                k = count;
+            }
+        }
+        begin.next = reversed[1];
+        return result;
+    }
+
+    private ListNode[] reverseLL(ListNode temp, int k) {
+        //ListNode temp = head;
+        ListNode prev = null;
+        while (k > 0) {
+            ListNode next = temp.next;
+            temp.next = prev;
+            prev = temp;
+            temp = next;
+            k--;
+        }
+        // System.out.println(temp.val);
+        return new ListNode[] { prev, temp };
+    }
+}

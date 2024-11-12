@@ -1,0 +1,108 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        TreeNode found = null;
+        TreeNode temp = root;
+        TreeNode pre = root;
+        // to check wether given node exist or not
+        while (found == null && temp != null) {
+            if (temp.val == key) {
+                found = temp;
+                break;
+            } else if (temp.val < key) {
+                pre = temp;
+                temp = temp.right;
+            } else {
+                pre = temp;
+                temp = temp.left;
+            }
+        }
+        // return root oif given key is not found
+        if (found == null)
+            return root;
+        // if given key is found
+        TreeNode left = found.left;
+        TreeNode right = found.right;
+        // System.out.println("pre is : " + pre.val);
+        // to delete leaf node
+        if (left == null && right == null) {
+            if (found == root)
+                return null;
+            else if (key < pre.val) {
+                pre.left = null;
+                return root;
+            } else if (key > pre.val) {
+                pre.right = null;
+                return root;
+            }
+        }
+        // to delete root node
+        if (found == root) {
+            TreeNode newroot;
+            if (left == null)
+                return newroot = right;
+            else if (right == null)
+                return newroot = left;
+            else if (left != null) {
+                newroot = left;
+                while (left.right != null) {
+                    left = left.right;
+                }
+                left.right = right;
+                return newroot;
+            } else if (right != null) {
+                newroot = right;
+                while (right.left != null) {
+                    right = right.left;
+                }
+                right.left = right;
+                return newroot;
+            }
+        } else if (key < pre.val && left == null) {
+            pre.left = right;
+            return root;
+        } else if (key > pre.val && left == null) {
+            pre.right = right;
+            return root;
+        } else if (key > pre.val && right == null) {
+            pre.right = left;
+            return root;
+        } else if (key < pre.val && right == null) {
+            pre.left = left;
+            return root;
+        }
+        // System.out.println("pre is : " + pre.val);
+        // to insert node having both left and right
+        if (key < pre.val) {
+            pre.left = left;
+            while (left.right != null) {
+                left = left.right;
+            }
+            left.right = right;
+            return root;
+        } else if (key > pre.val) {
+            pre.right = right;
+            while (right.left != null) {
+                right = right.left;
+            }
+            right.left = left;
+            return root;
+        }
+        return root;
+    }
+}

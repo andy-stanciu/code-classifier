@@ -1,0 +1,36 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        ListNode prev = null;
+        ListNode current = head;
+        int count = 0;
+        ListNode next = null;
+        //reverse blindly
+        while (current != null && count < k) {
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+            count++;
+        }
+        //restoring if count lesser
+        if (count < k) {
+            current = prev;
+            prev = null;
+            next = null;
+            while (count != 0) {
+                count--;
+                next = current.next;
+                current.next = prev;
+                prev = current;
+                current = next;
+            }
+        }
+        //head always contains first node (last node after reverse) current head will become current tail and next set should be attached to that
+        if (next != null) {
+            head.next = method1(next, k);
+        }
+        //prev contains current head and it should be returned
+        return prev;
+    }
+}

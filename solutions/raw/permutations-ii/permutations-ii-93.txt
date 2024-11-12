@@ -1,0 +1,30 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> finalans = new ArrayList<>();
+        List<Integer> container = new ArrayList<>();
+        boolean[] check = new boolean[nums.length];
+        int index;
+        Arrays.sort(nums);
+        permute(finalans, container, check, nums, 0);
+        return finalans;
+    }
+
+    private void permute(List<List<Integer>> finalans, List<Integer> container, boolean[] check, int[] nums, int index) {
+        if (index == nums.length) {
+            finalans.add(new ArrayList(container));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            //checks for duplicate
+            if (check[i] || (i > 0 && nums[i] == nums[i - 1] && !check[i - 1])) {
+                continue;
+            }
+            check[i] = true;
+            container.add(nums[i]);
+            permute(finalans, container, check, nums, index + 1);
+            container.remove(container.size() - 1);
+            check[i] = false;
+        }
+    }
+}

@@ -1,0 +1,31 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Set<List<Integer>> result = new HashSet<>();
+        List<Integer> indexArray = new ArrayList<>();
+        permuteUniqueDfs(nums, nums.length, indexArray, result);
+        return new ArrayList<>(result);
+    }
+
+    void permuteUniqueDfs(int[] nums, int length, List<Integer> indexArray, Set<List<Integer>> result) {
+        if (length == 0) {
+            List<Integer> res = new ArrayList<>();
+            for (int idx : indexArray) {
+                res.add(nums[idx]);
+            }
+            if (!result.contains(res)) {
+                result.add(res);
+            }
+            return;
+        }
+        if (length < 0)
+            return;
+        for (int i = 0; i < nums.length; i++) {
+            if (indexArray.contains(i))
+                continue;
+            indexArray.add(i);
+            permuteUniqueDfs(nums, length - 1, indexArray, result);
+            indexArray.remove(indexArray.size() - 1);
+        }
+    }
+}

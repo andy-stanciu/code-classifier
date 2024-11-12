@@ -1,0 +1,72 @@
+class Solution {
+
+    class Pair {
+
+        private String first;
+
+        private Integer second;
+
+        public Pair(String s, Integer x) {
+            this.first = s;
+            this.second = x;
+        }
+
+        public String getFirst() {
+            return first;
+        }
+
+        public Integer getSecond() {
+            return second;
+        }
+    }
+
+    public String method1(String s) {
+        char[] cs = s.toCharArray();
+        int n = cs.length;
+        Arrays.sort(cs);
+        List<Pair> ls = new ArrayList();
+        int count = 1;
+        for (int i = n - 1; i > 0; i--) {
+            if (i == 1) {
+                if (cs[i] == cs[i - 1]) {
+                    count++;
+                    char[] ch = new char[count];
+                    Arrays.fill(ch, cs[i]);
+                    String ss = new String(ch);
+                    ls.add(new Pair(ss, count));
+                } else {
+                    char[] ch = new char[count];
+                    Arrays.fill(ch, cs[i]);
+                    String ss = new String(ch);
+                    ls.add(new Pair(ss, count));
+                    String st = Character.toString(cs[0]);
+                    ls.add(new Pair(st, 1));
+                }
+            } else {
+                if (cs[i] == cs[i - 1]) {
+                    count++;
+                } else {
+                    char[] ch = new char[count];
+                    Arrays.fill(ch, cs[i]);
+                    String ss = new String(ch);
+                    ls.add(new Pair(ss, count));
+                    count = 1;
+                }
+            }
+        }
+        Collections.sort(ls, new Comparator<Pair>() {
+
+            @Override
+            public int compare(Pair p1, Pair p2) {
+                return Integer.compare(p1.getSecond(), p2.getSecond());
+            }
+        });
+        Collections.reverse(ls);
+        String ans = "";
+        for (Pair it : ls) {
+            String st = it.getFirst();
+            ans += st;
+        }
+        return ans;
+    }
+}

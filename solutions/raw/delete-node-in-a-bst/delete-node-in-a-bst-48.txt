@@ -1,0 +1,33 @@
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        if (key < root.val) {
+            root.left = deleteNode(root.left, key);
+        } else if (key > root.val) {
+            root.right = deleteNode(root.right, key);
+        } else {
+            if (root.left == null) {
+                TreeNode temp = root.right;
+                return temp;
+            } else if (root.right == null) {
+                TreeNode temp = root.left;
+                return temp;
+            } else {
+                TreeNode temp = inordersucc(root.right);
+                root.val = temp.val;
+                root.right = deleteNode(root.right, temp.val);
+            }
+        }
+        return root;
+    }
+
+    public TreeNode inordersucc(TreeNode root) {
+        TreeNode temp = root;
+        while (temp != null && temp.left != null) {
+            temp = temp.left;
+        }
+        return temp;
+    }
+}

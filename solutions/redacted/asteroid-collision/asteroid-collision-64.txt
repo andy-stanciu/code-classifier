@@ -1,0 +1,49 @@
+class Solution {
+
+    public static int[] method1(int[] param1) {
+        //stack of asteroids
+        Stack<Integer> stack = new Stack<>();
+        for (int num : param1) {
+            boolean destroyed = false;
+            while (!stack.isEmpty() && !destroyed) {
+                if (diffDir(num, stack.peek())) {
+                    //collision case
+                    if (Math.abs(num) > Math.abs(stack.peek())) {
+                        //destroy an asteroid in array
+                        stack.pop();
+                    } else if (Math.abs(num) < Math.abs(stack.peek())) {
+                        //our new asteroid is destroyed
+                        destroyed = true;
+                    } else {
+                        //same size asteroid but diff direction
+                        //both destroyed
+                        stack.pop();
+                        destroyed = true;
+                    }
+                } else {
+                    //added it to the stack
+                    stack.add(num);
+                    //hypothetically destory new asteroid and since we have copy of it in the stack
+                    destroyed = true;
+                }
+            }
+            //we have emptied the stack and not yet destroyed the new asteroid
+            if (!destroyed) {
+                stack.add(num);
+            }
+        }
+        //creating array using reversed order stack elements
+        int[] res = new int[stack.size()];
+        for (int i = res.length - 1; i >= 0; i--) {
+            res[i] = stack.pop();
+        }
+        return res;
+    }
+
+    public static boolean diffDir(int num1, int num2) {
+        //Stack asteroid is going to the right and new asteroid is going to the left
+        return (num1 < 0 && num2 > 0);
+        //note: if the stack asteroid was going left and new asteroid was going right,
+        //they would never meet thus never collide
+    }
+}

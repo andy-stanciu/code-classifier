@@ -1,0 +1,32 @@
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        else if (root.val > key)
+            root.left = method1(root.left, key);
+        else if (root.val < key)
+            root.right = method1(root.right, key);
+        else {
+            if (root.left != null && root.right != null) {
+                int v = method2(root.left, Integer.MIN_VALUE);
+                root.val = v;
+                root.left = method1(root.left, v);
+            } else if (root.left != null)
+                return root.left;
+            else if (root.right != null)
+                return root.right;
+            else
+                return null;
+        }
+        return root;
+    }
+
+    public int method2(TreeNode root, int max) {
+        while (root != null) {
+            max = Math.max(root.val, max);
+            root = root.right;
+        }
+        return max;
+    }
+}

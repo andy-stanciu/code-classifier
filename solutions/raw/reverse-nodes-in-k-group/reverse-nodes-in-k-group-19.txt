@@ -1,0 +1,32 @@
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode curr = head;
+        int count = 0;
+        while (curr != null && count != k) {
+            // find the k+1 node
+            curr = curr.next;
+            count++;
+        }
+        if (count == k) {
+            // if k+1 node is found
+            // reverse list with k+1 node as head
+            curr = reverseKGroup(curr, k);
+            // head - head-pointer to direct part,
+            // curr - head-pointer to reversed part;
+            while (count-- > 0) {
+                // reverse current k-group:
+                // tmp - next head in direct part
+                ListNode tmp = head.next;
+                // preappending "direct" head to the reversed list
+                head.next = curr;
+                // move head of reversed part to a new node
+                curr = head;
+                // move "direct" head to the next node in direct part
+                head = tmp;
+            }
+            head = curr;
+        }
+        return head;
+    }
+}

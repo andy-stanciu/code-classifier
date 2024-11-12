@@ -1,0 +1,54 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public List<String> method1(TreeNode root) {
+        var results = new LinkedList<List<TreeNode>>();
+        method2(root, new LinkedList<TreeNode>(), results);
+        var result = new LinkedList<String>();
+        for (var trail : results) {
+            var sb = new StringBuilder();
+            for (var node : trail) {
+                sb.append(node.val);
+                sb.append("->");
+            }
+            result.add(sb.substring(0, sb.length() - 2));
+        }
+        return result;
+    }
+
+    private boolean method2(TreeNode root, LinkedList<TreeNode> trail, LinkedList<List<TreeNode>> results) {
+        if (root == null) {
+            return false;
+        }
+        trail.add(root);
+        if (root.left == null && root.right == null) {
+            var result = new LinkedList<TreeNode>();
+            result.addAll(trail);
+            results.add(result);
+            return true;
+        }
+        var l = method2(root.left, trail, results);
+        if (l) {
+            trail.removeLast();
+        }
+        var r = method2(root.right, trail, results);
+        if (r) {
+            trail.removeLast();
+        }
+        return l || r;
+    }
+}

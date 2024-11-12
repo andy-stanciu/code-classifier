@@ -1,0 +1,28 @@
+class Solution {
+
+    List<List<Integer>> ans;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        ans = new ArrayList<>();
+        LinkedHashMap<Integer, Integer> map = new LinkedHashMap<>();
+        for (int i : nums) map.put(i, map.getOrDefault(i, 0) + 1);
+        backtrack(map, new ArrayList<>(), nums.length);
+        return ans;
+    }
+
+    public void backtrack(LinkedHashMap<Integer, Integer> map, ArrayList<Integer> asf, int n) {
+        if (asf.size() == n) {
+            ans.add(new ArrayList<>(asf));
+            return;
+        }
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if (entry.getValue() > 0) {
+                asf.add(entry.getKey());
+                entry.setValue(entry.getValue() - 1);
+                backtrack(map, asf, n);
+                asf.remove(asf.size() - 1);
+                entry.setValue(entry.getValue() + 1);
+            }
+        }
+    }
+}

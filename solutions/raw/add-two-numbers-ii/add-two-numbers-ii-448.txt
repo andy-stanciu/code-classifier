@@ -1,0 +1,69 @@
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        // calculate the size of lists l1, l2.
+        int size1 = 0;
+        ListNode one = l1;
+        while (one != null) {
+            size1++;
+            one = one.next;
+        }
+        int size2 = 0;
+        ListNode two = l2;
+        while (two != null) {
+            size2++;
+            two = two.next;
+        }
+        // call method to add lists.
+        return solve(l1, l2, size1, size2);
+    }
+
+    private ListNode solve(ListNode l1, ListNode l2, int size1, int size2) {
+        // if list l2 is greater than l1, call same method after swapping the parameters.
+        // We want l1 to be larger if they are not equal.
+        if (size2 > size1)
+            return solve(l2, l1, size2, size1);
+        // head is pointer to the head of added list.
+        ListNode head = null;
+        // while remaining elements in both lists are not equal
+        // process larger list.
+        while (size1 > size2) {
+            ListNode node = new ListNode(l1.val);
+            node.next = head;
+            head = node;
+            l1 = l1.next;
+            size1--;
+        }
+        // Here both lists are of same size.
+        // Add elements from both the lists.
+        while (size1-- > 0) {
+            ListNode node = new ListNode(l1.val + l2.val);
+            node.next = head;
+            head = node;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        // Nodes in added list contains value as whole and in reverse order.
+        // We need to process all the nodes and update node values with unit digit and take the carry out.
+        int carry = 0;
+        ListNode result = null;
+        while (head != null) {
+            int sum = head.val + carry;
+            head.val = sum % 10;
+            carry = sum / 10;
+            // Here head value and carry are updated.
+            // make head as result and next as new head.
+            ListNode next = head.next;
+            head.next = result;
+            result = head;
+            head = next;
+        }
+        // If we have carry after processing last node add new node before head.
+        if (carry != 0) {
+            ListNode node = new ListNode(carry);
+            node.next = result;
+            result = node;
+        }
+        return result;
+    }
+}

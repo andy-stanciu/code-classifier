@@ -1,0 +1,107 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        if (l1 == null)
+            return l2;
+        if (l2 == null)
+            return l1;
+        int[] size = size(l1, l2);
+        ListNode remainingElementsHead = null;
+        ListNode remainingElementTail = null;
+        if (size[0] != size[1]) {
+            if (size[0] > size[1]) {
+                remainingElementsHead = remainingElementTail = l1;
+            } else {
+                remainingElementsHead = remainingElementTail = l2;
+            }
+            int diff = Math.abs(size[0] - size[1]);
+            while (remainingElementTail != null && diff > 1) {
+                remainingElementTail = remainingElementTail.next;
+                diff--;
+            }
+            if (remainingElementTail != null) {
+                if (size[0] > size[1]) {
+                    l1 = remainingElementTail.next;
+                } else {
+                    l2 = remainingElementTail.next;
+                }
+                remainingElementTail.next = null;
+            }
+        }
+        ListNode[] resultHead = { null };
+        int carry = method2(l1, l2, resultHead);
+        int[] c = { carry };
+        propagateCarry(remainingElementsHead, c, resultHead);
+        carry = c[0];
+        if (carry > 0) {
+            ListNode node = new ListNode(carry);
+            node.next = resultHead[0];
+            resultHead[0] = node;
+        }
+        if (remainingElementTail != null) {
+            if (size[0] > size[1]) {
+                remainingElementTail.next = l1;
+                l1 = remainingElementsHead;
+            } else {
+                remainingElementTail.next = l2;
+                l2 = remainingElementsHead;
+            }
+        }
+        return resultHead[0];
+    }
+
+    private int method2(ListNode l1, ListNode l2, ListNode[] resultHead) {
+        if (l1 == null) {
+            resultHead[0] = l2;
+            return 0;
+        }
+        if (l2 == null) {
+            resultHead[0] = l1;
+            return 0;
+        }
+        int carry = method2(l1.next, l2.next, resultHead);
+        int sum = l1.val + l2.val + carry;
+        carry = sum / 10;
+        sum = sum % 10;
+        ListNode node = new ListNode(sum);
+        if (resultHead[0] != null) {
+            node.next = resultHead[0];
+        }
+        resultHead[0] = node;
+        return carry;
+    }
+
+    private void propagateCarry(ListNode current, int[] carry, ListNode[] resultHead) {
+        if (current == null)
+            return;
+        propagateCarry(current.next, carry, resultHead);
+        int sum = current.val + carry[0];
+        carry[0] = sum / 10;
+        sum = sum % 10;
+        ListNode node = new ListNode(sum);
+        if (resultHead[0] != null) {
+            node.next = resultHead[0];
+        }
+        resultHead[0] = node;
+    }
+
+    private int[] size(ListNode l1, ListNode l2) {
+        int size1 = 0;
+        int size2 = 0;
+        while (l1 != null && l2 != null) {
+            size1++;
+            size2++;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        while (l1 != null) {
+            size1++;
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            size2++;
+            l2 = l2.next;
+        }
+        return new int[] { size1, size2 };
+    }
+}

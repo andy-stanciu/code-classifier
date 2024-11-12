@@ -1,0 +1,69 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root, int key) {
+        TreeNode var1 = root;
+        TreeNode parent = null;
+        while (var1 != null && var1.val != key) {
+            parent = var1;
+            if (var1.val > key)
+                var1 = var1.left;
+            else if (var1.val < key)
+                var1 = var1.right;
+        }
+        if (var1 == null)
+            return root;
+        if (var1 != null) {
+            if (var1.left == null && var1.right == null) {
+                if (root == var1) {
+                    root = null;
+                } else {
+                    if (parent.left == var1) {
+                        parent.left = null;
+                    } else {
+                        parent.right = null;
+                    }
+                }
+            } else if (var1.left == null || var1.right == null) {
+                TreeNode child = var1.left == null ? var1.right : var1.left;
+                if (var1 == root) {
+                    root = child;
+                } else {
+                    if (parent.left == var1) {
+                        parent.left = child;
+                    } else {
+                        parent.right = child;
+                    }
+                }
+            } else {
+                TreeNode successor = method2(var1.right);
+                int data = successor.val;
+                method1(root, data);
+                var1.val = data;
+            }
+        }
+        return root;
+    }
+
+    public TreeNode method2(TreeNode root) {
+        TreeNode var1 = root;
+        while (var1.left != null) {
+            var1 = var1.left;
+        }
+        return var1;
+    }
+}

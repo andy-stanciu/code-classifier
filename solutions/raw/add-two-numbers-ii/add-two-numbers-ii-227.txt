@@ -1,0 +1,68 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode head = l1;
+        int a = 1;
+        int b = 1;
+        ListNode t1 = l1;
+        ListNode t2 = l2;
+        while (t1 != null || t2 != null) {
+            if (t1 != null) {
+                a++;
+                t1 = t1.next;
+            }
+            if (t2 != null) {
+                b++;
+                t2 = t2.next;
+            }
+        }
+        int shortCountFromLast = b < a ? b : a;
+        List<Integer> l = new ArrayList<>();
+        l.add(0);
+        l.add(shortCountFromLast);
+        ListNode ne = b > a ? getjjj(l2, l1, b - a, l) : getjjj(l1, l2, a - b, l);
+        if (l.get(0) != 0) {
+            return new ListNode(l.get(0), ne);
+        }
+        return ne;
+    }
+
+    static ListNode getjjj(ListNode l1, ListNode l2, int diff, List<Integer> l) {
+        if (l1 == null) {
+            l.set(1, l.get(1) - 1);
+            return null;
+        }
+        ListNode temp;
+        if (diff > 0) {
+            temp = getjjj(l1.next, l2, diff - 1, l);
+        } else {
+            temp = getjjj(l1.next, l2.next, diff, l);
+        }
+        int sum;
+        if (l.get(1) > 0) {
+            sum = l1.val + l2.val;
+            l.set(1, l.get(1) - 1);
+        } else {
+            sum = l1.val;
+        }
+        sum += l.get(0);
+        if (sum >= 10) {
+            l.set(0, sum / 10);
+            sum = sum % 10;
+        } else {
+            l.set(0, 0);
+        }
+        l1.val = sum;
+        return l1;
+    }
+}

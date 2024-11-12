@@ -1,0 +1,34 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> var1 = new ArrayList<>();
+        helper(candidates, target, 0, new ArrayList<>(), var1);
+        return var1;
+    }
+
+    private void helper(int[] candidates, int target, int idx, List<Integer> list, List<List<Integer>> var1) {
+        if (target == 0) {
+            var1.add(new ArrayList<>(list));
+            return;
+        }
+        if (target < 0 || idx >= candidates.length) {
+            return;
+        }
+        int prev = -1;
+        for (int i = idx; i < candidates.length; i++) {
+            if (candidates[i] == prev) {
+                continue;
+            }
+            if (candidates[i] > target) {
+                break;
+            }
+            target -= candidates[i];
+            list.add(candidates[i]);
+            helper(candidates, target, i + 1, list, var1);
+            target += candidates[i];
+            list.remove(list.size() - 1);
+            prev = candidates[i];
+        }
+    }
+}

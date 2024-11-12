@@ -1,0 +1,29 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        ArrayList<Integer> al = new ArrayList<>();
+        Stack<Integer> sk = new Stack<>();
+        for (int i = 0; i < param1.length; i++) {
+            if (param1[i] > 0)
+                sk.push(i);
+            else {
+                if (!sk.isEmpty() && Math.abs(param1[i]) < param1[sk.peek()]) {
+                    continue;
+                } else if (!sk.isEmpty() && Math.abs(param1[i]) == param1[sk.peek()])
+                    sk.pop();
+                else {
+                    while (!sk.isEmpty() && Math.abs(param1[i]) > param1[sk.peek()]) {
+                        sk.pop();
+                    }
+                    if (sk.isEmpty())
+                        al.add(param1[i]);
+                    if (!sk.isEmpty() && Math.abs(param1[i]) == param1[sk.peek()])
+                        sk.pop();
+                }
+            }
+        }
+        int index = al.size();
+        while (!sk.isEmpty()) al.add(index, param1[sk.pop()]);
+        return al.stream().mapToInt(i -> i).toArray();
+    }
+}

@@ -1,0 +1,33 @@
+class Solution {
+
+    public boolean canConstruct(String ransomNote, String magazine) {
+        boolean canConstruct = false;
+        if (ransomNote.length() <= magazine.length()) {
+            HashMap<Character, Integer> dict = new HashMap<>();
+            for (int i = 0; i < ransomNote.length(); i++) {
+                Character ch = ransomNote.charAt(i);
+                Integer value = dict.get(ch);
+                if (value == null) {
+                    value = Integer.valueOf(1);
+                } else {
+                    value = Integer.valueOf(value.intValue() + 1);
+                }
+                dict.put(ch, value);
+            }
+            for (int i = 0; i < magazine.length() && !dict.isEmpty(); i++) {
+                Character ch = magazine.charAt(i);
+                Integer value = dict.get(ch);
+                if (value != null) {
+                    value = Integer.valueOf(value.intValue() - 1);
+                    if (value.intValue() == 0) {
+                        dict.remove(ch);
+                    } else {
+                        dict.put(ch, value);
+                    }
+                }
+            }
+            canConstruct = dict.isEmpty();
+        }
+        return canConstruct;
+    }
+}

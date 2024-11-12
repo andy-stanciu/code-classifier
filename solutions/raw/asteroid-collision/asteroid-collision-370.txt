@@ -1,0 +1,47 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < asteroids.length; i++) {
+            // Case 1: Blind insertion - (i) empty stack (ii) positive number
+            if (st.isEmpty() || asteroids[i] > 0) {
+                st.push(asteroids[i]);
+            } else {
+                // Case 2: Asteroid is negative
+                while (!st.isEmpty()) {
+                    int top = st.peek();
+                    if (top < 0) {
+                        // Case 2.1: Stack current asteroid if the top is (negative).
+                        st.push(asteroids[i]);
+                        break;
+                    } else {
+                        int modVal = Math.abs(asteroids[i]);
+                        // Case 2.2: The top of the stack is (positive).
+                        // Case 2.2.1: Collision! Both asteroids destruct each other; pop the top.
+                        if (modVal == top) {
+                            st.pop();
+                            break;
+                        } else // Case 2.2.2: Destroy the current asteroid; it\'s smaller than the top.
+                        if (modVal < top) {
+                            break;
+                        } else // Case 2.2.3: Pop the top. If empty, put the current one in.
+                        {
+                            st.pop();
+                            if (st.isEmpty()) {
+                                st.push(asteroids[i]);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // Copy elements from the stack to the result array
+        int len = st.size();
+        int[] ans = new int[len];
+        for (int i = len - 1; i >= 0; i--) {
+            ans[i] = st.pop();
+        }
+        return ans;
+    }
+}

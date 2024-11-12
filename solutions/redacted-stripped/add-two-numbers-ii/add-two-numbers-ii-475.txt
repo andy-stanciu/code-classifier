@@ -1,0 +1,58 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ListNode head1 = reverseList(l1);
+        ListNode head2 = reverseList(l2);
+        ListNode newHead = method2(head1, head2);
+        return reverseList(newHead);
+    }
+
+    public ListNode reverseList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode node = reverseList(head.next);
+        head.next.next = head;
+        head.next = null;
+        return node;
+    }
+
+    public ListNode method2(ListNode head1, ListNode head2) {
+        ListNode current1 = head1;
+        ListNode current2 = head2;
+        ListNode dummy = new ListNode(-1);
+        ListNode current = dummy;
+        int carry = 0;
+        int temp = 0;
+        while (current1 != null && current2 != null) {
+            temp = (current1.val + current2.val + carry) % 10;
+            ListNode node = new ListNode(temp);
+            current.next = node;
+            current = current.next;
+            carry = (current1.val + current2.val + carry) / 10;
+            current1 = current1.next;
+            current2 = current2.next;
+        }
+        while (current1 != null) {
+            temp = (current1.val + carry) % 10;
+            ListNode node = new ListNode(temp);
+            current.next = node;
+            carry = (current1.val + carry) / 10;
+            current = current.next;
+            current1 = current1.next;
+        }
+        while (current2 != null) {
+            temp = (current2.val + carry) % 10;
+            ListNode node = new ListNode(temp);
+            current.next = node;
+            carry = (current2.val + carry) / 10;
+            current = current.next;
+            current2 = current2.next;
+        }
+        if (carry == 1) {
+            current.next = new ListNode(1);
+            current = current.next;
+        }
+        return dummy.next;
+    }
+}

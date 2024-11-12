@@ -1,0 +1,38 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> St = new Stack<>();
+        int n = param1.length;
+        for (int i = 0; i < n; i++) {
+            int ele = param1[i];
+            if (St.size() == 0 || St.peek() < 0 || ele > 0) {
+                //empty or peek towards left or ele towards right : JUST PUSH
+                St.push(ele);
+                continue;
+            }
+            while (St.size() > 0 && St.peek() > 0 && Math.abs(ele) > Math.abs(St.peek())) {
+                //if peek is coming towards right and I am moving towards left and I am bigger
+                St.pop();
+            }
+            // entered removing everyone
+            if (St.size() > 0 && St.peek() == -ele) {
+                //if found equal opposite pop and continue
+                St.pop();
+                continue;
+            }
+            if (St.size() > 0 && St.peek() > 0 && Math.abs(St.peek()) > Math.abs(ele)) {
+                //if found some one bigger than me
+                continue;
+            }
+            St.push(ele);
+        }
+        n = St.size();
+        if (n == 0)
+            return new int[0];
+        int[] arr = new int[n];
+        for (int i = n - 1; i >= 0; i--) {
+            arr[i] = St.pop();
+        }
+        return arr;
+    }
+}

@@ -1,0 +1,57 @@
+class cmp implements Comparator<int[]> {
+
+    public int compare(int[] a, int[] b) {
+        if (a[0] == b[0]) {
+            return a[1] - b[1];
+        }
+        return a[0] - b[0];
+    }
+}
+
+class Solution {
+
+    private int bs(int[][] param1, int n, int i) {
+        int lo = i + 1;
+        int hi = n - 1;
+        int idx = n;
+        while (lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+            // FFFFTTTTTTT
+            if (param1[i][1] <= param1[mid][0]) {
+                hi = mid - 1;
+                idx = mid;
+            } else {
+                lo = mid + 1;
+            }
+        }
+        return idx;
+    }
+
+    public int method1(int[][] param1) {
+        int n = param1.length;
+        if (n == 1) {
+            return 0;
+        }
+        Arrays.sort(param1, new cmp());
+        int[] dp = new int[n];
+        dp[n - 1] = 1;
+        for (int i = n - 2; i >= 0; i--) {
+            int idx = bs(param1, n, i);
+            int take = 1 + (idx == n ? 0 : dp[idx]);
+            int not_take = dp[i + 1];
+            dp[i] = Math.max(take, not_take);
+        }
+        int ans = n - dp[0];
+        return ans;
+    }
+}
+/**
+ * int idx = bs(i+1,n-1);
+ * int take = 1 + dp[idx];
+ * int not_take = dp[i+1];
+ * dp[i] = max(take,not_take)
+ *
+ * dp[0] -> Max interval I have taken
+ *
+ * ans = n-dp[0];
+ */

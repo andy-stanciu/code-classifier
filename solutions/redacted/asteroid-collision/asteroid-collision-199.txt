@@ -1,0 +1,40 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < param1.length; i++) {
+            int var1 = param1[i];
+            if (var1 > 0) {
+                //current asteroid is moving right.
+                stack.push(var1);
+            } else {
+                if (!stack.isEmpty()) {
+                    Integer previous = stack.peek();
+                    if (previous > 0) {
+                        //previous asteroid is moving right
+                        if (previous < Math.abs(var1)) {
+                            //previous size is smaller
+                            stack.pop();
+                            //decrement i so that it stays at the same asteroid the next iteration.
+                            i--;
+                        } else if (previous == Math.abs(var1)) {
+                            //sizes are equal. remove the previous asteroid and dont add the current one.
+                            stack.pop();
+                        }
+                    } else {
+                        //previous asteroid is moving left, current asteroid wont collide with it.
+                        stack.push(var1);
+                    }
+                } else {
+                    //stack is empty, asteroid won\'t collide with anything.
+                    stack.push(var1);
+                }
+            }
+        }
+        int[] result = new int[stack.size()];
+        for (int i = result.length - 1; i >= 0; i--) {
+            result[i] = stack.pop();
+        }
+        return result;
+    }
+}

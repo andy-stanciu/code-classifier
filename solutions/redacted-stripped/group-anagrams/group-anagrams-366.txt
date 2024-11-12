@@ -1,0 +1,49 @@
+class Solution {
+
+    public List<List<String>> method1(String[] strs) {
+        List<List<String>> big = new ArrayList<>();
+        List<String> init = new ArrayList<>();
+        init.add(strs[0]);
+        big.add(init);
+        for (int i = 1; i < strs.length; i++) {
+            boolean placed = false;
+            for (List<String> l : big) {
+                boolean var1 = anagram(strs[i], l.get(0));
+                if (var1) {
+                    l.add(strs[i]);
+                    placed = true;
+                    break;
+                }
+            }
+            if (!placed) {
+                List<String> newList = new ArrayList<>();
+                newList.add(strs[i]);
+                big.add(newList);
+            }
+        }
+        return big;
+    }
+
+    public boolean anagram(String curr, String old) {
+        if (curr.length() != old.length())
+            return false;
+        HashMap<Character, Integer> m = new HashMap<>();
+        for (int i = 0; i < old.length(); i++) {
+            if (m.containsKey(old.charAt(i))) {
+                m.put(old.charAt(i), m.get(old.charAt(i)) + 1);
+            } else {
+                m.put(old.charAt(i), 1);
+            }
+        }
+        for (int i = 0; i < curr.length(); i++) {
+            if (!m.containsKey(curr.charAt(i)))
+                return false;
+            else if (m.get(curr.charAt(i)) == 0)
+                return false;
+            else {
+                m.put(curr.charAt(i), m.get(curr.charAt(i)) - 1);
+            }
+        }
+        return true;
+    }
+}

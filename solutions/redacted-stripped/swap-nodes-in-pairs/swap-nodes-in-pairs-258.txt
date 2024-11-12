@@ -1,0 +1,56 @@
+class ListNode {
+
+    int val;
+
+    ListNode next;
+
+    ListNode(int x) {
+        val = x;
+    }
+
+    public static ListNode deserialize(String data) {
+        if (data == null || data.isEmpty()) {
+            return null;
+        }
+        String[] values = data.replace("[", "").replace("]", "").split(",");
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        for (String value : values) {
+            if (!value.trim().isEmpty()) {
+                current.next = new ListNode(Integer.parseInt(value.trim()));
+                current = current.next;
+            }
+        }
+        return dummy.next;
+    }
+}
+
+public class Solution {
+
+    public ListNode method1(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode firstNode = head;
+        ListNode secondNode = head.next;
+        firstNode.next = method1(secondNode.next);
+        secondNode.next = firstNode;
+        return secondNode;
+    }
+
+    public static void method2(String[] args) {
+        ListNode head = ListNode.deserialize("[]");
+        Solution solution = new Solution();
+        ListNode result = solution.method1(head);
+        method3(result);
+    }
+
+    public static void method3(ListNode head) {
+        ListNode current = head;
+        while (current != null) {
+            System.out.print(current.val + " ");
+            current = current.next;
+        }
+        System.out.println();
+    }
+}

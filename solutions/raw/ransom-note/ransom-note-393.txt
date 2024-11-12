@@ -1,0 +1,34 @@
+class Solution {
+
+    public boolean canConstruct(String ransomNote, String magazine) {
+        if (ransomNote.length() > magazine.length()) {
+            return false;
+        }
+        char[] magazineCharArray = magazine.toCharArray();
+        char[] ransomCharArray = ransomNote.toCharArray();
+        Map<Character, Integer> charIndexMap = new HashMap<>();
+        boolean isCheckSuccessful = false;
+        for (int i = 0; i < ransomCharArray.length; i++) {
+            isCheckSuccessful = false;
+            char ransomChar = ransomCharArray[i];
+            for (int j = 0; j < magazineCharArray.length; j++) {
+                Integer indexOfExistingRansomChar = charIndexMap.get(ransomChar);
+                if (indexOfExistingRansomChar != null) {
+                    j = indexOfExistingRansomChar + 1;
+                }
+                char magazineChar = magazineCharArray[j];
+                if (ransomChar == magazineChar) {
+                    isCheckSuccessful = true;
+                    charIndexMap.put(ransomChar, j);
+                    break;
+                } else {
+                    charIndexMap.remove(ransomChar);
+                }
+            }
+            if (!isCheckSuccessful) {
+                break;
+            }
+        }
+        return isCheckSuccessful;
+    }
+}

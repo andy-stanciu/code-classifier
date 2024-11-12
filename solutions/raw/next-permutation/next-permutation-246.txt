@@ -1,0 +1,38 @@
+class Solution {
+
+    public void reverse(int start, int end, int[] nums) {
+        while (start < end) {
+            nums[start] = nums[start] ^ nums[end] ^ (nums[end] = nums[start]);
+            start++;
+            end--;
+        }
+    }
+
+    public void nextPermutation(int[] nums) {
+        int n = nums.length;
+        int dip = -1;
+        // finding the dip
+        for (int i = n - 1; i > 0; i--) {
+            if (nums[i] > nums[i - 1]) {
+                dip = i - 1;
+                break;
+            }
+        }
+        if (dip == -1) {
+            // as we didn\'t recived any dip
+            // so array is already sorted in decending order
+            reverse(0, n - 1, nums);
+            return;
+        }
+        //swapping the number at dip with the next greater number
+        for (int i = n - 1; i > dip; i--) {
+            if (nums[i] > nums[dip]) {
+                nums[i] = nums[i] ^ nums[dip] ^ (nums[dip] = nums[i]);
+                break;
+            }
+        }
+        // array after dip is already in decending order
+        reverse(dip + 1, n - 1, nums);
+        return;
+    }
+}

@@ -1,0 +1,52 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        DoublyListNode d1 = new DoublyListNode(l1), d1l = d1.last;
+        DoublyListNode d2 = new DoublyListNode(l2), d2l = d2.last;
+        boolean hasCarry = false;
+        ListNode answer = null, prev = null;
+        while (d1l != null || d2l != null || hasCarry) {
+            answer = new ListNode((hasCarry ? 1 : 0), prev);
+            answer.val += (d1l != null ? d1l.val : 0);
+            answer.val += (d2l != null ? d2l.val : 0);
+            hasCarry = (answer.val >= 10);
+            if (hasCarry)
+                answer.val -= 10;
+            if (d1l != null)
+                d1l = d1l.prev;
+            if (d2l != null)
+                d2l = d2l.prev;
+            prev = answer;
+        }
+        return answer;
+    }
+}
+
+class DoublyListNode extends ListNode {
+
+    int val;
+
+    DoublyListNode next, prev, last;
+
+    DoublyListNode(ListNode root) {
+        this.val = root.val;
+        if (root.next == null) {
+            this.next = null;
+            this.last = this;
+        } else {
+            this.next = new DoublyListNode(root.next);
+            this.next.prev = this;
+            this.last = this.next.last;
+        }
+    }
+}

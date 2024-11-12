@@ -1,0 +1,41 @@
+class Solution {
+
+    List<String> list = new ArrayList<String>();
+
+    static final String ARROW = "->";
+
+    public List<String> method1(TreeNode root) {
+        if (root == null)
+            return list;
+        method2(root, new StringBuilder());
+        return list;
+    }
+
+    private void method2(TreeNode tn, StringBuilder sb) {
+        // Add the node value
+        sb.append(tn.val);
+        // If it is leaf node, add the value to the list
+        if (tn.left == null && tn.right == null) {
+            list.add(sb.toString());
+        } else // If not a leaf node
+        {
+            // Find the length of StringBuilder at this point (this will come in handy later)
+            int len = sb.length();
+            //If there is left node, call the function again
+            if (tn.left != null) {
+                method2(tn.left, sb.append(ARROW));
+            }
+            // If there is a right node, call the function again.
+            // Here we have used the same StringBuilder object, but trimmed down to the length
+            // just before calling the getTreePath() function on the left node above
+            // Since StringBuilder is mutable, the call to getTreePath() for left node above
+            // changes the object and appends the left node values. Hence we need to remove
+            // the left node values, before we call the getTreePath() function on right node
+            // You can initialize a new StringBuilder object just after else statement
+            // StringBuilder sb2 = new StringBuilder(sb); and use that sb2 below.
+            // but we are reusing same StringBuilder object to save on memory
+            if (tn.right != null)
+                method2(tn.right, sb.delete(len, sb.length()).append(ARROW));
+        }
+    }
+}

@@ -1,0 +1,35 @@
+class Solution {
+
+    public int pivotIndex(int[] nums) {
+        int len = nums.length;
+        int[] prefixNums = new int[len];
+        for (int i = 0; i < len; i++) {
+            int k = ((i == 0) ? 0 : i - 1);
+            prefixNums[i] += prefixNums[k] + nums[i];
+        }
+        //System.out.println(Arrays.toString(prefixNums));
+        //System.out.println(rangeSum(prefixNums, 0,5));
+        for (int i = 0; i < len; i++) {
+            if (i == 0) {
+                if (rangeSum(prefixNums, i + 1, len - 1) == 0)
+                    return i;
+            } else if (i == len - 1) {
+                if (rangeSum(prefixNums, 0, len - 2) == 0)
+                    return i;
+            } else {
+                if (rangeSum(prefixNums, 0, i - 1) == rangeSum(prefixNums, i + 1, len - 1))
+                    return i;
+            }
+        }
+        return -1;
+    }
+
+    private static int rangeSum(int[] prefixSumArray, int i, int j) {
+        int sum = 0;
+        if (i == 0)
+            sum = prefixSumArray[j];
+        else
+            sum = prefixSumArray[j] - prefixSumArray[i - 1];
+        return sum;
+    }
+}

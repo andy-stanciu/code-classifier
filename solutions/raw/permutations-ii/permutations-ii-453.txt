@@ -1,0 +1,28 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        boolean[] u = new boolean[nums.length];
+        Arrays.sort(nums);
+        dfs(ans, nums, u, new ArrayList<Integer>(), 0);
+        return ans;
+    }
+
+    private void dfs(List<List<Integer>> ans, int[] nums, boolean[] u, List<Integer> root, int index) {
+        if (index == nums.length) {
+            ans.add(new ArrayList<>(root));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (u[i])
+                continue;
+            if (i > 0 && nums[i] == nums[i - 1] && !u[i - 1])
+                continue;
+            root.add(nums[i]);
+            u[i] = true;
+            dfs(ans, nums, u, root, index + 1);
+            root.remove(root.size() - 1);
+            u[i] = false;
+        }
+    }
+}

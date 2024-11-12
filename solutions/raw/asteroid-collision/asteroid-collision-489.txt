@@ -1,0 +1,41 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> positiveAsteroids = new Stack<Integer>();
+        Stack<Integer> negativeAsteroids = new Stack<Integer>();
+        for (int i = asteroids.length - 1; i >= 0; i--) {
+            int currAsteroid = asteroids[i];
+            if (currAsteroid > 0) {
+                while (!negativeAsteroids.empty()) {
+                    if (Math.abs(negativeAsteroids.peek()) > currAsteroid) {
+                        currAsteroid = 0;
+                        break;
+                    } else if (Math.abs(negativeAsteroids.peek()) == currAsteroid) {
+                        negativeAsteroids.pop();
+                        currAsteroid = 0;
+                        break;
+                    } else {
+                        negativeAsteroids.pop();
+                    }
+                }
+                if (negativeAsteroids.empty() && currAsteroid > 0) {
+                    positiveAsteroids.push(currAsteroid);
+                }
+            } else {
+                negativeAsteroids.push(currAsteroid);
+            }
+        }
+        List<Integer> ans = new ArrayList<>();
+        while (!negativeAsteroids.empty()) {
+            ans.add(negativeAsteroids.pop());
+        }
+        while (!positiveAsteroids.empty()) {
+            ans.add(positiveAsteroids.pop());
+        }
+        int[] arr = new int[ans.size()];
+        for (int i = 0; i < ans.size(); i++) {
+            arr[i] = ans.get(i);
+        }
+        return arr;
+    }
+}

@@ -1,0 +1,27 @@
+class Solution {
+
+    private void dfs(int index, int target, int[] cand, List<List<Integer>> list, List<Integer> innerlist) {
+        if (target == 0) {
+            list.add(new ArrayList<>(innerlist));
+            return;
+        }
+        for (int i = index; i < cand.length; i++) {
+            if (i > index && cand[i] == cand[i - 1]) {
+                continue;
+            }
+            if (cand[i] > target) {
+                break;
+            }
+            innerlist.add(cand[i]);
+            dfs(i + 1, target - cand[i], cand, list, innerlist);
+            innerlist.remove(innerlist.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> list = new ArrayList<>();
+        dfs(0, target, candidates, list, new ArrayList<>());
+        return list;
+    }
+}

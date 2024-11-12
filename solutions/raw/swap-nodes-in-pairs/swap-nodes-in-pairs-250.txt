@@ -1,0 +1,50 @@
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        //The head is always modified so take dummy node and append the answer.
+        ListNode dummy = new ListNode(-1, head);
+        //slow pointer for appending  the nodes.
+        ListNode slow = dummy;
+        while (head != null) {
+            //store intial temp address .
+            ListNode temp = head;
+            int count = k;
+            while (//Move head pointer k steps forward.
+            count > 0 && head != null) {
+                head = head.next;
+                count--;
+            }
+            if (// count > 0 says there are no k nodes from temp node to last node.
+            count > 0) {
+                //append the nodes as it is without reversal.
+                slow.next = temp;
+            } else {
+                //reverse the k nodes from temp pointer, and append to slow.next;
+                slow.next = reverse(temp, k);
+                //head becomes tail after reversal so intially in reverse function temp acts as  head
+                slow = temp;
+                // Now temp becomes tail ,place slow at tail (temp);
+            }
+        }
+        //return the next node of dummy.
+        return dummy.next;
+    }
+
+    public ListNode reverse(ListNode head, int k) {
+        ListNode prev = null;
+        ListNode pres = head;
+        ListNode temp = null;
+        while (k > 0) {
+            temp = pres.next;
+            pres.next = prev;
+            prev = pres;
+            pres = temp;
+            k--;
+        }
+        return prev;
+    }
+
+    public ListNode swapPairs(ListNode head) {
+        return reverseKGroup(head, 2);
+    }
+}

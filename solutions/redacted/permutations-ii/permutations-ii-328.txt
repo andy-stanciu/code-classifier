@@ -1,0 +1,27 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] arr) {
+        Set<List<Integer>> buffer = new HashSet<>();
+        recurse(arr, buffer, new LinkedList<>(), new boolean[arr.length]);
+        List<List<Integer>> result = new ArrayList<>();
+        for (List<Integer> list : buffer) result.add(list);
+        return result;
+    }
+
+    private void recurse(int[] arr, Set<List<Integer>> result, List<Integer> permutation, boolean[] chosen) {
+        int n = arr.length;
+        if (permutation.size() == n) {
+            result.add(new ArrayList<>(permutation));
+            return;
+        }
+        for (int i = 0; i < n; i++) {
+            if (chosen[i])
+                continue;
+            chosen[i] = true;
+            permutation.add(arr[i]);
+            recurse(arr, result, permutation, chosen);
+            permutation.remove(permutation.size() - 1);
+            chosen[i] = false;
+        }
+    }
+}

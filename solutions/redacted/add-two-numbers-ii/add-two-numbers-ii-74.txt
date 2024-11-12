@@ -1,0 +1,65 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    //global variable used when back tracking
+    int carry = 0;
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        // used to count nodes in l1
+        int count1 = 0;
+        for (ListNode t1 = l1; t1 != null; t1 = t1.next) {
+            count1++;
+        }
+        // used to count nodes in l2
+        int count2 = 0;
+        for (ListNode t1 = l2; t1 != null; t1 = t1.next) {
+            count2++;
+        }
+        return helper(null, l1, count1, l2, count2);
+    }
+
+    // created a helper method to calculate the sum
+    private ListNode helper(ListNode p, ListNode l1, int count1, ListNode l2, int count2) {
+        // this is if you reach the end of the list
+        if (l1 == null && l2 == null)
+            return null;
+        // initializing ans
+        ListNode ans = new ListNode(0);
+        if (// if l1 has more nodes than l2
+        count1 > count2) {
+            //only decrement count1 by 1 and only have l1 move to the next node
+            ans.next = helper(ans, l1.next, count1 - 1, l2, count2);
+            // only make ans.val sum of carry and l1.val
+            ans.val = carry + l1.val;
+        } else if (count1 < count2) {
+            //only decrement count2 by 1 and only have l2 move to the next node
+            ans.next = helper(ans, l1, count1, l2.next, count2 - 1);
+            // only make ans.val sum of carry and l2.val
+            ans.val = carry + l2.val;
+        } else {
+            // have both l1 and l2 move to their next nodes
+            ans.next = helper(ans, l1.next, count1, l2.next, count2);
+            // add up all the node values and carry
+            ans.val = carry + l2.val + l1.val;
+        }
+        // making carry 0 or 1
+        carry = ans.val / 10;
+        // getting the lasting digit of ans.val
+        ans.val %= 10;
+        if (p == null && carry == 1) {
+            // if you are all the way back at the start, but your carry is 1
+            // adding an extra node in front of ans with a value of 1
+            ans = new ListNode(carry, ans);
+        }
+        return ans;
+    }
+}

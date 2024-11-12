@@ -1,0 +1,125 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // public TreeNode deleteNode(TreeNode root, int key) {
+    //     if (root == null) return null;
+    //     if (root.val == key) return helper(root);
+    //     TreeNode dummy = root;
+    //     while (root != null) {
+    //         if (root.val > key) {
+    //             if (root.left != null && root.left.val == key) {
+    //                 root.left = helper(root.left);
+    //                 break;
+    //             }else root = root.left;
+    //         } else {
+    //             if (root.right != null && root.right.val == key) {
+    //                 root.right = helper(root.right);
+    //                 break;
+    //             }else root = root.right;
+    //         }
+    //     }
+    //     return dummy;
+    // }
+    // public static TreeNode helper (TreeNode root) {
+    //     if (root.left == null) return root.right;
+    //     if (root.right == null) return root.left;
+    //     else {
+    //         TreeNode rightChild = root.right;
+    //         TreeNode lastRight = findLastRight(root.left);
+    //         lastRight.right = rightChild;
+    //         return root.left;
+    //     }
+    // }
+    // public static TreeNode findLastRight (TreeNode root) {
+    //     if (root.right == null) return root;
+    //     return findLastRight (root.right);
+    // }
+    public static TreeNode deleteNode(TreeNode root, int target) {
+        if (root == null)
+            return null;
+        if (root != null && root.val == target) {
+            if (root.right == null)
+                return root.left;
+            TreeNode root1 = (root.right != null) ? root.right : root.left;
+            TreeNode dummyRoot1 = root1;
+            if (root1 != null && root1.left != null) {
+                while (true) {
+                    if (dummyRoot1.left != null) {
+                        dummyRoot1 = dummyRoot1.left;
+                        continue;
+                    }
+                    if (dummyRoot1.right != null) {
+                        dummyRoot1 = dummyRoot1.right;
+                        continue;
+                    }
+                    if (dummyRoot1.left == null && dummyRoot1.right == null) {
+                        break;
+                    }
+                }
+            }
+            if (root1 == null)
+                return root1;
+            dummyRoot1.left = (root.left != null) ? root.left : null;
+            return root1;
+        }
+        TreeNode node = root;
+        TreeNode nod = solve(root, target);
+        return (nod == null) ? nod : node;
+    }
+
+    public static TreeNode solve(TreeNode root, int target) {
+        if (root == null)
+            return null;
+        if (target > root.val) {
+            TreeNode combine = solve(root.right, target);
+            root.right = null;
+            root.right = combine;
+            return root;
+        } else if (target < root.val) {
+            TreeNode combine = solve(root.left, target);
+            root.left = null;
+            root.left = combine;
+            return root;
+        } else if (target == root.val) {
+            TreeNode leftTreeOfTarget = root.left;
+            TreeNode rightTreeOfTarget = root.right;
+            // combine left and right tree of the target node
+            TreeNode combinedLeftAndRightTree = combineTwoTrees(leftTreeOfTarget, rightTreeOfTarget);
+            return combinedLeftAndRightTree;
+        }
+        return root;
+    }
+
+    public static TreeNode combineTwoTrees(TreeNode root1, TreeNode root2) {
+        if (root1 == null && root2 != null)
+            return root2;
+        if (root2 == null && root1 != null)
+            return root1;
+        if (root1 == null && root2 == null)
+            return null;
+        TreeNode temp = root2;
+        while (true) {
+            if (temp.left != null) {
+                temp = temp.left;
+                continue;
+            } else
+                break;
+        }
+        temp.left = root1;
+        return root2;
+    }
+}

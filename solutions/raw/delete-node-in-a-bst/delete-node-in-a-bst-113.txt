@@ -1,0 +1,54 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // BST delete function
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null)
+            return null;
+        // Step 1: Search for the node
+        if (key < root.val) {
+            // go left
+            root.left = deleteNode(root.left, key);
+        } else if (key > root.val) {
+            // go right
+            root.right = deleteNode(root.right, key);
+        } else {
+            // Step 2: Node is found, now handle 3 cases
+            // Case 1: Node with only one child or no child
+            if (root.left == null)
+                return root.right;
+            if (root.right == null)
+                return root.left;
+            // Case 2: Node with two children
+            // Find the inorder successor (smallest node in the right subtree)
+            TreeNode minNode = findMin(root.right);
+            // Replace value
+            root.val = minNode.val;
+            // Delete the inorder successor
+            root.right = deleteNode(root.right, minNode.val);
+        }
+        return root;
+    }
+
+    // Helper function to find the minimum value node
+    private TreeNode findMin(TreeNode node) {
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+}

@@ -1,0 +1,26 @@
+class Solution {
+
+    public int method1(int[][] param1) {
+        Arrays.sort(param1, (a, b) -> a[0] != b[0] ? a[0] - b[0] : a[1] - b[1]);
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> b[1] - a[1]);
+        int ret = 0;
+        for (int[] interval : param1) {
+            if (pq.isEmpty()) {
+                pq.add(interval);
+                continue;
+            }
+            int[] topInterval = pq.poll();
+            if (topInterval[1] > interval[0]) {
+                ret++;
+                if (topInterval[1] <= interval[1])
+                    pq.add(topInterval);
+                else
+                    pq.add(interval);
+            } else {
+                pq.add(topInterval);
+                pq.add(interval);
+            }
+        }
+        return ret;
+    }
+}

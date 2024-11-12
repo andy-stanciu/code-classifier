@@ -1,0 +1,75 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public static ListNode rev(ListNode head) {
+        ListNode prev = null;
+        while (head != null) {
+            ListNode next_node = head.next;
+            head.next = prev;
+            prev = head;
+            head = next_node;
+            //Checks for null pointer
+            if (next_node != null) {
+                next_node = next_node.next;
+            }
+        }
+        return prev;
+    }
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        ListNode t1 = rev(l1);
+        ListNode t2 = rev(l2);
+        ListNode dummy = new ListNode(0);
+        // Create a pointer to dummy
+        ListNode temp = dummy;
+        // int carry : to store the carry
+        int carry = 0;
+        while (t1 != null || t2 != null) {
+            // Check if a == null
+            // if not then take a.val
+            // else take 0
+            int x = 0;
+            int y = 0;
+            if (t1 != null) {
+                x = t1.val;
+            } else {
+                x = 0;
+            }
+            if (t2 != null) {
+                y = t2.val;
+            } else {
+                y = 0;
+            }
+            int sum = carry + x + y;
+            // we\'ll store carry here
+            carry = sum / 10;
+            // And the digit we want to store in the linked list is given by
+            // sum % 10
+            ListNode node = new ListNode(sum % 10);
+            temp.next = node;
+            // Why we\'ve created a listnode ??
+            // Because we need to return the result in linked list
+            temp = temp.next;
+            if (t1 != null)
+                t1 = t1.next;
+            if (t2 != null)
+                t2 = t2.next;
+        }
+        // If carry > 0 we need to add that digit as node
+        if (carry > 0) {
+            temp.next = new ListNode(carry);
+        }
+        // Reversing the result list again
+        // So that the list is returned in original form
+        return rev(dummy.next);
+    }
+}

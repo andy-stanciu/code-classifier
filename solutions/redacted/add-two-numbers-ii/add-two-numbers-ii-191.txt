@@ -1,0 +1,67 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    Stack<ListNode> stk1 = new Stack<>();
+
+    Stack<ListNode> stk2 = new Stack<>();
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        formStack(l1, l2);
+        ListNode head = null;
+        ListNode a = null;
+        ListNode b = null;
+        while (!stk1.isEmpty() || !stk2.isEmpty()) {
+            if (!stk1.isEmpty())
+                a = stk1.pop();
+            else
+                a = null;
+            if (!stk2.isEmpty())
+                b = stk2.pop();
+            else
+                b = null;
+            //if(a==null && b==null) break;
+            head = method2(head, a, b);
+        }
+        if (head.val >= 10) {
+            ListNode newNode = new ListNode(head.val / 10, head);
+            head.val %= 10;
+            head = newNode;
+        }
+        return head;
+    }
+
+    private ListNode method2(ListNode prev, ListNode a, ListNode b) {
+        int sum = 0;
+        if (prev != null) {
+            sum = prev.val / 10;
+            prev.val %= 10;
+        }
+        if (a != null)
+            sum += a.val;
+        if (b != null)
+            sum += b.val;
+        return new ListNode(sum, prev);
+    }
+
+    private void formStack(ListNode list1, ListNode list2) {
+        while (list1 != null || list2 != null) {
+            if (list1 != null) {
+                stk1.push(list1);
+                list1 = list1.next;
+            }
+            if (list2 != null) {
+                stk2.push(list2);
+                list2 = list2.next;
+            }
+        }
+    }
+}

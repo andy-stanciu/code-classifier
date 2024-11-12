@@ -1,0 +1,46 @@
+class Solution {
+
+    public static int[] method1(int[] param1) {
+        Stack<Integer> stack = new Stack<>();
+        for (int i : param1) {
+            if (stack.isEmpty()) {
+                stack.push(i);
+            } else {
+                boolean stopColliding = false;
+                while (!stopColliding && !stack.isEmpty()) {
+                    int valueInStack = stack.peek();
+                    if (valueInStack < 0) {
+                        stack.push(i);
+                        stopColliding = true;
+                    } else {
+                        if (i > 0) {
+                            stack.push(i);
+                            stopColliding = true;
+                        } else {
+                            if (valueInStack > Math.abs(i)) {
+                                stopColliding = true;
+                            } else if (valueInStack == Math.abs(i)) {
+                                stack.pop();
+                                stopColliding = true;
+                            } else if (Math.abs(i) > valueInStack) {
+                                stack.pop();
+                            }
+                        }
+                    }
+                }
+                if (!stopColliding && stack.isEmpty()) {
+                    stack.push(i);
+                }
+            }
+        }
+        if (stack.isEmpty()) {
+            return new int[] {};
+        }
+        int[] result = new int[stack.size()];
+        int index = stack.size() - 1;
+        while (!stack.isEmpty()) {
+            result[index--] = stack.pop();
+        }
+        return result;
+    }
+}

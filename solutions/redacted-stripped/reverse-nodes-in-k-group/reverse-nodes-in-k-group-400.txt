@@ -1,0 +1,43 @@
+class Solution {
+
+    public static ListNode method1(ListNode head, int k) {
+        ListNode start = head;
+        ListNode end = teamEnd(start, k);
+        if (end == null) {
+            return head;
+        }
+        head = end;
+        method2(start, end);
+        ListNode lastTeamEnd = start;
+        while (lastTeamEnd.next != null) {
+            start = lastTeamEnd.next;
+            end = teamEnd(start, k);
+            if (end == null) {
+                return head;
+            }
+            method2(start, end);
+            lastTeamEnd.next = end;
+            lastTeamEnd = start;
+        }
+        return head;
+    }
+
+    public static ListNode teamEnd(ListNode s, int k) {
+        while (--k != 0 && s != null) {
+            s = s.next;
+        }
+        return s;
+    }
+
+    public static void method2(ListNode s, ListNode e) {
+        e = e.next;
+        ListNode pre = null, cur = s, next = null;
+        while (cur != e) {
+            next = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = next;
+        }
+        s.next = e;
+    }
+}

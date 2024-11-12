@@ -1,0 +1,48 @@
+class Solution {
+
+    public String method1(String s) {
+        HashMap<Character, Integer> hm = new HashMap<>();
+        //count the frequency of each character
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (!hm.containsKey(ch))
+                hm.put(ch, 1);
+            else
+                hm.put(ch, hm.get(ch) + 1);
+        }
+        String ans = "";
+        //iterate on hashmap
+        for (Map.Entry<Character, Integer> entry : hm.entrySet()) {
+            char current = entry.getKey();
+            int freq = entry.getValue();
+            String stringToBeInserted = "";
+            while (freq > 0) {
+                stringToBeInserted += current;
+                freq--;
+            }
+            //first insert
+            if (ans.length() == 0)
+                ans += stringToBeInserted;
+            else {
+                int index = 0;
+                //find index at which string to be inserted
+                while (index < ans.length() && entry.getValue() <= hm.get(ans.charAt(index))) {
+                    index++;
+                }
+                ans = insertString(ans, stringToBeInserted, index - 1);
+            }
+        }
+        return ans;
+    }
+
+    public static String insertString(String originalString, String stringToBeInserted, int index) {
+        //first insert
+        if (index == 0)
+            return stringToBeInserted + originalString;
+        //last insert
+        if (index >= originalString.length())
+            return originalString + stringToBeInserted;
+        //In between
+        return originalString.substring(0, index + 1) + stringToBeInserted + originalString.substring(index + 1);
+    }
+}

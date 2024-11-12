@@ -1,0 +1,26 @@
+class Solution {
+
+    public List<List<Integer>> method1(int[] candidates, int target) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        List<Integer> ans = new ArrayList<>();
+        Arrays.sort(candidates);
+        generate(res, candidates, ans, 0, target);
+        return res;
+    }
+
+    private void generate(List<List<Integer>> res, int[] candidates, List<Integer> ans, int startIdx, int target) {
+        if (target == 0) {
+            res.add(new ArrayList<>(ans));
+            return;
+        }
+        for (int i = startIdx; i < candidates.length; i++) {
+            if (candidates[i] > target)
+                continue;
+            if (i > startIdx && candidates[i] == candidates[i - 1])
+                continue;
+            ans.add(candidates[i]);
+            generate(res, candidates, ans, i + 1, target - candidates[i]);
+            ans.remove(ans.size() - 1);
+        }
+    }
+}

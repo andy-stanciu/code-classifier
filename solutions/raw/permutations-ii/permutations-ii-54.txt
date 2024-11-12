@@ -1,0 +1,55 @@
+class Solution {
+
+    static List<List<Integer>> finalAnswer;
+
+    public static void swapItems(int[] arr, int f, int s) {
+        int temp = arr[f];
+        arr[f] = arr[s];
+        arr[s] = temp;
+    }
+
+    public static void helper(int[] arr, int s, List<Integer> ans) {
+        if (s == arr.length) {
+            finalAnswer.add(new ArrayList<>(ans));
+            return;
+        }
+        Set<Integer> st = new HashSet<>();
+        for (int i = s; i < arr.length; i++) {
+            if (i == s && !st.contains(arr[i])) {
+                ans.add(arr[s]);
+                st.add(arr[i]);
+                helper(arr, s + 1, ans);
+                ans.remove(s);
+            } else if (!st.contains(arr[i])) {
+                st.add(arr[i]);
+                swapItems(arr, s, i);
+                ans.add(arr[s]);
+                helper(arr, s + 1, ans);
+                ans.remove(s);
+                swapItems(arr, s, i);
+            }
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        finalAnswer = new ArrayList<>();
+        List<Integer> ans = new ArrayList<>();
+        Set<Integer> st = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (i == 0 && !st.contains(nums[i])) {
+                ans.add(nums[0]);
+                st.add(nums[0]);
+                helper(nums, 1, ans);
+                ans.remove(0);
+            } else if (!st.contains(nums[i])) {
+                st.add(nums[i]);
+                swapItems(nums, 0, i);
+                ans.add(nums[0]);
+                helper(nums, 1, ans);
+                ans.remove(0);
+                swapItems(nums, 0, i);
+            }
+        }
+        return finalAnswer;
+    }
+}

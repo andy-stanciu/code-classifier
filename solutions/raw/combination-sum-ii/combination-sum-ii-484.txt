@@ -1,0 +1,123 @@
+class Solution {
+
+    Map<Integer, ArrayList<ArrayList<Integer>>> memoization = new HashMap<>();
+
+    int[] nums;
+
+    int count;
+
+    int target;
+
+    int solutionSizeLimit;
+
+    public int combinationSum4(int[] nums, int target) {
+        if (nums == null || nums.length == 0)
+            return 0;
+        memoization = new HashMap<>();
+        this.nums = nums.clone();
+        Arrays.sort(this.nums);
+        count = 0;
+        this.target = target;
+        this.solutionSizeLimit = calculateSolutionSizeLimit();
+        //System.out.print(solutionSizeLimit + " ");
+        combinationSum4Helper(target, new ArrayList<>());
+        return count;
+    }
+
+    private int calculateSolutionSizeLimit() {
+        int smallestDelta = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        int min = Integer.MAX_VALUE;
+        int delta = 0;
+        // find smallest non-zero difference between elements
+        for (int ii = 1; ii < nums.length; ++ii) {
+            max = Math.max(max, nums[ii]);
+            min = Math.min(min, nums[ii]);
+            delta = nums[ii] - nums[ii - 1];
+            if (delta > 0)
+                smallestDelta = Math.min(smallestDelta, delta);
+        }
+        return Math.max(Math.abs(target / smallestDelta), 2);
+    }
+
+    private void combinationSum4Helper(int remainder, ArrayList<Integer> currentSubset) {
+        if (currentSubset.size() > solutionSizeLimit)
+            return;
+        if (memoization.containsKey(remainder) && memoization.get(remainder).contains(currentSubset))
+            return;
+        if (remainder == 0) {
+            count++;
+            //            System.out.println(currentSubset);
+            return;
+        }
+        for (int num : nums) {
+            boolean bInvalidatesCurrentSubset = doesAddingThisNumInvalidatePreviousElements(currentSubset, -1 * num);
+            if (bInvalidatesCurrentSubset)
+                continue;
+            ArrayList<Integer> local = new ArrayList<>(currentSubset);
+            local.add(num);
+            combinationSum4Helper(remainder - num, local);
+        }
+        // update memoization
+        if (!memoization.containsKey(remainder)) {
+            ArrayList<ArrayList<Integer>> newList = new ArrayList<>();
+            newList.add(currentSubset);
+            memoization.put(remainder, newList);
+        } else {
+            ArrayList<ArrayList<Integer>> referencesArrayList = memoization.get(remainder);
+            if (!referencesArrayList.contains(currentSubset))
+                referencesArrayList.add(currentSubset);
+        }
+    }
+
+    /**
+     * the question is: Does the current list of numbers contain a combination that will sum to -1*num
+     * Thankfully, this task was accomplished in 40. Combination Sum II
+     * A small modification to this solution can be used here.
+     *
+     * @param currentSubset
+     * @param num number to check
+     * @return
+     */
+    private boolean doesAddingThisNumInvalidatePreviousElements(ArrayList<Integer> currentSubset, int num) {
+        if (currentSubset.isEmpty())
+            return false;
+        List<List<Integer>> answer = new CombinationSum2().combinationSum2(currentSubset, num);
+        return answer.size() > 0;
+    }
+
+    private class CombinationSum2 {
+
+        private List<List<Integer>> result;
+
+        private ArrayList<Integer> nums;
+
+        private int target;
+
+        public List<List<Integer>> combinationSum2(ArrayList<Integer> candidates, int target) {
+            this.result = new ArrayList<>();
+            this.nums = new ArrayList<>(candidates);
+            Collections.sort(this.nums);
+            this.target = target;
+            backtrack(new ArrayList<>(), 0, 0);
+            return this.result;
+        }
+
+        private void backtrack(List<Integer> list, int idx, int currentSum) {
+            if (currentSum == this.target) {
+                result.add(new ArrayList<>(list));
+                return;
+            }
+            if (idx >= nums.size())
+                return;
+            for (int ii = idx; ii < nums.size(); ii++) {
+                if (ii > idx && nums.get(ii) == nums.get(ii - 1))
+                    // skip duplicates
+                    continue;
+                list.add(nums.get(ii));
+                backtrack(list, ii + 1, currentSum + nums.get(ii));
+                list.remove(list.size() - 1);
+            }
+        }
+    }
+}

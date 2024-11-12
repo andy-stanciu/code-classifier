@@ -1,0 +1,48 @@
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        Stack<ListNode> st1 = new Stack<>();
+        Stack<ListNode> st2 = new Stack<>();
+        ListNode temp = l1;
+        while (temp != null) {
+            st1.push(temp);
+            temp = temp.next;
+        }
+        temp = l2;
+        while (temp != null) {
+            st2.push(temp);
+            temp = temp.next;
+        }
+        ListNode tail = null;
+        int sum = 0;
+        int carry = 0;
+        ListNode temp1 = null;
+        ListNode temp2 = null;
+        while (!st1.isEmpty() && !st2.isEmpty()) {
+            temp1 = st1.pop();
+            temp2 = st2.pop();
+            sum = temp1.val + temp2.val + carry;
+            carry = sum / 10;
+            sum = sum % 10;
+            ListNode o = new ListNode(sum);
+            o.next = tail;
+            tail = o;
+        }
+        Stack<ListNode> p = st1.isEmpty() ? st2 : st1;
+        while (!p.isEmpty()) {
+            temp1 = p.pop();
+            sum = temp1.val + carry;
+            carry = sum / 10;
+            sum = sum % 10;
+            ListNode o = new ListNode(sum);
+            o.next = tail;
+            tail = o;
+        }
+        if (carry != 0) {
+            ListNode d = new ListNode(carry);
+            d.next = tail;
+            tail = d;
+        }
+        return tail;
+    }
+}

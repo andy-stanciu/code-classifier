@@ -1,0 +1,58 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    /**
+     *        Delete a node in the BST -
+     *        1. if the root is null - return null;
+     *        2. if the "val of the node" is less than value -
+     *            - Set the node right to the return value of DeleteNode (right)
+     *        3. If the "Val of the node" is greater than value -
+     *            - Set the node left to the return value of DeleteNode (left)
+     *        4. If the "Value of node is same as the Value to be deleted"
+     *            - if it\'s left child is Null - return Right node;
+     *            - if it\'s right child is Null - return left node;
+     *            - if it has both left and right
+     *             - Find the min Value of the node on the right child
+     *             - Set the value of the node to value of the right child
+     *             - Recurrsively delete the found value
+     */
+    public TreeNode method1(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        } else if (root.val < key) {
+            root.right = method1(root.right, key);
+        } else if (root.val > key) {
+            root.left = method1(root.left, key);
+        } else {
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            }
+            root.val = method2(root.right);
+            root.right = method1(root.right, root.val);
+        }
+        return root;
+    }
+
+    private int method2(TreeNode root) {
+        while (root.left != null) {
+            root = root.left;
+        }
+        return root.val;
+    }
+}

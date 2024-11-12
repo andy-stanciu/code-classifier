@@ -1,0 +1,35 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> ans = new ArrayList<>();
+        boolean[] visited = new boolean[nums.length];
+        solve(ans, new ArrayList<>(), new HashSet<>(), visited, nums);
+        return ans;
+    }
+
+    void solve(List<List<Integer>> ans, List<Integer> list, HashSet<Integer> set, boolean[] visited, int[] nums) {
+        if (list.size() == nums.length) {
+            ans.add(new ArrayList(list));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (set.contains(i)) {
+                continue;
+            }
+            if (visited[i] == true) {
+                continue;
+            }
+            list.add(nums[i]);
+            set.add(i);
+            visited[i] = true;
+            solve(ans, list, set, visited, nums);
+            list.remove(list.size() - 1);
+            set.remove(i);
+            visited[i] = false;
+            while (i < nums.length - 1 && nums[i] == nums[i + 1]) {
+                i++;
+            }
+        }
+    }
+}

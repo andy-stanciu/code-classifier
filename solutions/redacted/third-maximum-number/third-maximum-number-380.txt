@@ -1,0 +1,33 @@
+class Solution {
+
+    private static final int K_TH = 3;
+
+    public int method1(int[] nums) {
+        int[] maxes = new int[K_TH];
+        maxes[0] = nums[0];
+        int mlen = 1;
+        // O(N) time complexity. Even with the inner loop, it doesn\'t reach O(N^2) unless K is very large.
+        for (int num : nums) {
+            if (mlen == K_TH && num <= maxes[mlen - 1])
+                continue;
+            boolean isDistinct = true;
+            for (int j = 0; j < mlen; j++) {
+                if (maxes[j] == num) {
+                    isDistinct = false;
+                    break;
+                }
+                if (maxes[j] < num) {
+                    int tmp = maxes[j];
+                    maxes[j] = num;
+                    num = tmp;
+                }
+            }
+            if (!isDistinct)
+                continue;
+            if (mlen < K_TH) {
+                maxes[mlen++] = num;
+            }
+        }
+        return mlen == K_TH ? maxes[maxes.length - 1] : maxes[0];
+    }
+}

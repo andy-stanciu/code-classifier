@@ -1,0 +1,95 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        // if node to be removed is leaf node simply delete it
+        // if not leaf, then get MIN val node on RIGHT side to replace it
+        // if right is null, then get MAX val node on LEFT side to replace it
+        parent = null;
+        TreeNode searched = search(root, key);
+        // node not found
+        if (searched == null)
+            return root;
+        // node to be deleted is the only node
+        if (searched == root && root.left == null && root.right == null)
+            return null;
+        delete(searched);
+        return root;
+    }
+
+    // parent [to keep prev node]
+    TreeNode parent;
+
+    public void delete(TreeNode root) {
+        TreeNode toBeDeleted = root;
+        // ------- finding MIN in RIGHT
+        if (root.right != null) {
+            parent = root;
+            root = root.right;
+            while (// we\'ll keep on going left (cuz BST)
+            root.left != null) {
+                parent = root;
+                root = root.left;
+            }
+            // min is at \'root\'
+            toBeDeleted.val = root.val;
+            if (parent != toBeDeleted)
+                //  BST, root is minimum, so it would be left child
+                parent.left = root.right;
+            else
+                parent.right = root.right;
+        } else // ------- else try finding MAX on LEFT
+        if (root.left != null) {
+            parent = root;
+            root = root.left;
+            while (// we\'ll keep on going RIGHT (cuz BST)
+            root.right != null) {
+                parent = root;
+                root = root.right;
+            }
+            // min is at \'root\'
+            toBeDeleted.val = root.val;
+            if (parent != toBeDeleted)
+                //  BST, root is max, so it would be right most
+                parent.right = root.left;
+            else
+                parent.left = root.left;
+        } else // ------- node to be removed is leaf node
+        {
+            if (parent.left == root)
+                parent.left = null;
+            else
+                parent.right = null;
+        }
+    }
+
+    public TreeNode search(TreeNode root, int val) {
+        while (root != null) {
+            if (root.val == val)
+                break;
+            else if (val < root.val) {
+                parent = root;
+                root = root.left;
+            } else // (val>root.val)
+            {
+                parent = root;
+                root = root.right;
+            }
+        }
+        return root;
+    }
+}

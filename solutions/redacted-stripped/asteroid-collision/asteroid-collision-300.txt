@@ -1,0 +1,38 @@
+class Solution {
+
+    public boolean isColliding(Stack<Integer> stack, int[] arr, int i) {
+        if (stack.isEmpty()) {
+            return false;
+        }
+        return arr[i] < 0 && arr[stack.peek()] > 0;
+    }
+
+    public int[] method1(int[] arr) {
+        int n = arr.length;
+        Stack<Integer> stack = new Stack();
+        for (int i = 0; i < n; i++) {
+            boolean isCurrAstBlow = false;
+            while (!isCurrAstBlow && isColliding(stack, arr, i)) {
+                int ast1 = arr[stack.peek()];
+                int ast2 = Math.abs(arr[i]);
+                if (ast1 > ast2) {
+                    isCurrAstBlow = true;
+                } else if (ast1 < ast2) {
+                    stack.pop();
+                } else {
+                    stack.pop();
+                    isCurrAstBlow = true;
+                }
+            }
+            if (!isCurrAstBlow) {
+                stack.push(i);
+            }
+        }
+        int[] res = new int[stack.size()];
+        int resIdx = stack.size() - 1;
+        while (!stack.isEmpty()) {
+            res[resIdx--] = arr[stack.pop()];
+        }
+        return res;
+    }
+}

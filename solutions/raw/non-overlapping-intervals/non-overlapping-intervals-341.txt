@@ -1,0 +1,39 @@
+class Solution {
+
+    /**
+     *     1. find the length of the longest non-overlapping interval
+     *     2. subtract it from the length of the intervals array
+     */
+    public int eraseOverlapIntervals(int[][] intervals) {
+        if (intervals.length == 1) {
+            return 0;
+        }
+        int n = intervals.length;
+        Arrays.sort(intervals, (a, b) -> {
+            if (a[0] == b[0]) {
+                return a[1] - b[1];
+            } else {
+                return a[0] - b[0];
+            }
+        });
+        int[][] MEMO = new int[n][n + 1];
+        for (int[] row : MEMO) {
+            Arrays.fill(row, -1);
+        }
+        return intervals.length - backtrack(0, -1, intervals, MEMO);
+    }
+
+    public int backtrack(int idx, int prevIdx, int[][] intervals, int[][] MEMO) {
+        if (idx == intervals.length) {
+            return 0;
+        }
+        if (MEMO[idx][prevIdx + 1] != -1) {
+            return MEMO[idx][prevIdx + 1];
+        }
+        int count = 0 + backtrack(idx + 1, prevIdx, intervals, MEMO);
+        if (prevIdx == -1 || intervals[idx][0] >= intervals[prevIdx][1]) {
+            count = Math.max(count, 1 + backtrack(idx + 1, idx, intervals, MEMO));
+        }
+        return MEMO[idx][prevIdx + 1] = count;
+    }
+}

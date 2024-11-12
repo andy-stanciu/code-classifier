@@ -1,0 +1,51 @@
+class IntervalComparator implements Comparator<int[]> {
+
+    public int compare(int[] a, int[] b) {
+        if (a[1] != b[1])
+            return a[1] - b[1];
+        else
+            return a[0] - b[0];
+    }
+}
+
+class Solution {
+
+    public int method1(int[][] param1) {
+        /*
+         * 
+         * the pattern is similar to the merge intervals,
+         * 
+         * sort by start time and then end time ascending
+         * 
+         * but it is oppisite, instead of merge, Need to delete
+         * 
+         * so, which one to delete, I think which ever one is shorter interval, i.e
+         * whoseever end time is lower , i will keep it and delete the other one.
+         * 
+         * so which has longer end time is deleted
+         */
+        Arrays.sort(param1, new IntervalComparator());
+        List<int[]> ls = new ArrayList<>();
+        int n = param1.length;
+        // for(int[] ar : intervals ){
+        //     System.out.println(Arrays.toString(ar));
+        // }
+        ls.add(param1[0]);
+        for (int i = 1; i < n; i++) {
+            int[] prev = ls.get(ls.size() - 1);
+            int[] curr = param1[i];
+            if ((curr[0] >= prev[0] && curr[0] < prev[1]) || curr[0] < prev[0]) {
+                // conflict
+                continue;
+            } else {
+                ls.add(curr);
+            }
+        }
+        // System.out.println("");
+        // for(int[] i : ls ){
+        //     System.out.println(Arrays.toString(i));
+        // }
+        // System.out.println(" n " +n + " ls " + ls.toString());
+        return n - ls.size();
+    }
+}

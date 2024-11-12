@@ -1,0 +1,51 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode method1(TreeNode root) {
+        while (root.left != null) {
+            root = root.left;
+        }
+        return root;
+    }
+
+    public TreeNode method2(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        if (root.val < key) {
+            root.right = method2(root.right, key);
+        } else if (root.val > key) {
+            root.left = method2(root.left, key);
+        } else {
+            // case-1 : leaf node
+            if (root.left == null && root.right == null) {
+                return null;
+            }
+            // case-2 : single node
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            }
+            //case-3 : two child
+            TreeNode Is = method1(root.right);
+            root.val = Is.val;
+            root.right = method2(root.right, Is.val);
+        }
+        return root;
+    }
+}

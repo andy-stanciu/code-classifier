@@ -1,0 +1,30 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Deque<Integer> deque = new LinkedList<>();
+        for (int a : asteroids) {
+            if (deque.isEmpty() || deque.peekLast() < 0 || a > 0) {
+                deque.offerLast(a);
+            } else {
+                boolean explode = false;
+                while (!deque.isEmpty() && deque.peekLast() > 0 && deque.peekLast() + a <= 0) {
+                    if (deque.peekLast() + a == 0) {
+                        deque.pollLast();
+                        explode = true;
+                        break;
+                    } else {
+                        deque.pollLast();
+                    }
+                }
+                if (!explode && (deque.isEmpty() || deque.peekLast() < 0))
+                    deque.offerLast(a);
+            }
+        }
+        int[] result = new int[deque.size()];
+        int i = 0;
+        while (!deque.isEmpty()) {
+            result[i++] = deque.pollFirst();
+        }
+        return result;
+    }
+}

@@ -1,0 +1,65 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public void printList(ListNode start) {
+        ListNode tmp = start;
+        while (tmp != null) {
+            System.out.print(tmp.val + " ");
+            tmp = tmp.next;
+        }
+    }
+
+    public ListNode reverseList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode rev = reverseList(head.next);
+        head.next.next = head;
+        head.next = null;
+        return rev;
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        //iterating the nodes
+        ListNode iterate = head;
+        ListNode reverseKGroupList = null;
+        ListNode getend = null;
+        ListNode start = head;
+        int klength = 1;
+        while (iterate != null) {
+            if (klength == k) {
+                //we have got a linkedlist from start(having length k)
+                ListNode end = iterate;
+                iterate = iterate.next;
+                end.next = null;
+                klength = 1;
+                //above steps, we have separated 2 list. one that need to be reversed + another which needed to be iterated.
+                ListNode rev = reverseList(start);
+                if (reverseKGroupList == null) {
+                    reverseKGroupList = rev;
+                    getend = start;
+                }
+                getend.next = end;
+                getend = start;
+                //printList(rev);
+                start = iterate;
+                //break;
+                continue;
+            }
+            iterate = iterate.next;
+            klength++;
+        }
+        getend.next = start;
+        //printList(start);
+        return reverseKGroupList;
+    }
+}

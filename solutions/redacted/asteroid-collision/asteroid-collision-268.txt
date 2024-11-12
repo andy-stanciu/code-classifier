@@ -1,0 +1,52 @@
+class pair {
+
+    int x;
+
+    String y;
+
+    pair(int x, String y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<pair> st = new Stack<>();
+        int n = param1.length, f;
+        for (int i = n - 1; i >= 0; i--) {
+            f = 0;
+            String dir = (param1[i] >= 0) ? "right" : "left";
+            if (st.isEmpty() || st.peek().y == "right")
+                st.push(new pair(param1[i], dir));
+            else {
+                if (dir == "left")
+                    st.push(new pair(param1[i], dir));
+                else {
+                    while (Math.abs(st.peek().x) <= param1[i]) {
+                        if (Math.abs(st.peek().x) == param1[i]) {
+                            st.pop();
+                            break;
+                        } else {
+                            st.pop();
+                            if (st.isEmpty() || st.peek().y == "right") {
+                                f = 1;
+                                break;
+                            }
+                        }
+                    }
+                    if (f == 1)
+                        st.push(new pair(param1[i], dir));
+                }
+            }
+        }
+        int[] res = new int[st.size()];
+        int i = 0;
+        while (!st.isEmpty()) {
+            res[i++] = st.peek().x;
+            st.pop();
+        }
+        return res;
+    }
+}

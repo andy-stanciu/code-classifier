@@ -1,0 +1,84 @@
+class Solution {
+
+    TreeNode root;
+
+    public TreeNode method1(TreeNode root, int key) {
+        this.root = root;
+        TreeNode var1 = search(root, key);
+        if (var1 != null) {
+            method2(var1);
+        }
+        return this.root;
+    }
+
+    private void method2(TreeNode param1) {
+        if (param1.left == null) {
+            transplant(param1, param1.right);
+        } else if (param1.right == null) {
+            transplant(param1, param1.left);
+        } else {
+            TreeNode successor = method3(param1.right);
+            if (successor != param1.right) {
+                transplant(successor, successor.right);
+                successor.right = param1.right;
+            }
+            transplant(param1, successor);
+            successor.left = param1.left;
+        }
+    }
+
+    private TreeNode method3(TreeNode param1) {
+        if (param1.left != null) {
+            return method3(param1.left);
+        }
+        return param1;
+    }
+
+    private TreeNode search(TreeNode param1, int key) {
+        if (param1 == null || param1.val == key) {
+            return param1;
+        }
+        if (key > param1.val) {
+            return search(param1.right, key);
+        } else {
+            return search(param1.left, key);
+        }
+    }
+
+    private TreeNode parentSearch(TreeNode param1) {
+        if (param1 == root) {
+            return null;
+        }
+        TreeNode parent = root;
+        TreeNode current;
+        if (parent.val > param1.val) {
+            current = parent.left;
+        } else {
+            current = parent.right;
+        }
+        return recursiveParentSearch(parent, current, param1.val);
+    }
+
+    private TreeNode recursiveParentSearch(TreeNode parent, TreeNode current, int key) {
+        if (current.val == key) {
+            return parent;
+        }
+        parent = current;
+        if (current.val > key) {
+            return recursiveParentSearch(parent, current.left, key);
+        } else {
+            return recursiveParentSearch(parent, current.right, key);
+        }
+    }
+
+    private void transplant(TreeNode u, TreeNode v) {
+        TreeNode parentOfU = parentSearch(u);
+        if (parentOfU == null) {
+            root = v;
+        } else if (u == parentOfU.left) {
+            parentOfU.left = v;
+        } else {
+            parentOfU.right = v;
+        }
+    }
+}

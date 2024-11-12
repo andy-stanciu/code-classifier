@@ -1,0 +1,79 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    class ListInfo {
+
+        int size;
+
+        ListNode head;
+
+        ListInfo(int s, ListNode h) {
+            this.size = s;
+            this.head = h;
+        }
+    }
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListInfo l1Info = reverse(l1);
+        ListInfo l2Info = reverse(l2);
+        ListNode c1 = l1Info.size >= l2Info.size ? l1Info.head : l2Info.head;
+        ListNode c2 = l1Info.size < l2Info.size ? l1Info.head : l2Info.head;
+        // ListNode c1, c2;
+        // if(l1Info.size >= l2Info.size) {
+        //     c1 = l1Info.head;
+        //     c2 = l2Info.head;
+        // } else {
+        //     c1 = l2Info.head;
+        //     c2 = l1Info.head;
+        // }
+        int carry = 0;
+        ListNode c1Prev = null;
+        while (c2 != null) {
+            int sum = c1.val + c2.val + carry;
+            c1.val = sum % 10;
+            carry = sum / 10;
+            c1Prev = c1;
+            c1 = c1.next;
+            c2 = c2.next;
+        }
+        while (carry > 0) {
+            if (c1 == null) {
+                ListNode newNode = new ListNode(carry);
+                c1Prev.next = newNode;
+                break;
+            }
+            int sum = c1.val + carry;
+            c1.val = sum % 10;
+            carry = sum / 10;
+            c1Prev = c1;
+            c1 = c1.next;
+        }
+        l1 = l1Info.size >= l2Info.size ? l1Info.head : l2Info.head;
+        ListInfo newInfo = reverse(l1);
+        return newInfo.head;
+    }
+
+    private ListInfo reverse(ListNode l) {
+        int count = 1;
+        ListNode current = l;
+        ListNode prev = null;
+        while (current.next != null) {
+            ListNode tmp = current.next;
+            current.next = prev;
+            prev = current;
+            current = tmp;
+            count++;
+        }
+        current.next = prev;
+        return new ListInfo(count, current);
+    }
+}

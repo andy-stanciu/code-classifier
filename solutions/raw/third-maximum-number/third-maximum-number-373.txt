@@ -1,0 +1,42 @@
+class Solution {
+
+    public int thirdMax(int[] nums) {
+        //Trick: Using float.NEGATIVE_INFINITY instead
+        //of Integer.MIN_VALUE coz, the input range also includes
+        //Integer.MIN_VALUE and Integer.MAX_VALUE.
+        //first smallest
+        float fm = Float.NEGATIVE_INFINITY;
+        //second smallest
+        float sm = Float.NEGATIVE_INFINITY;
+        //third smallest
+        float tm = Float.NEGATIVE_INFINITY;
+        for (int num : nums) {
+            //If a num is already marked as sm, tm or fm,
+            //we don\'t need to consider it again.
+            if ((num == fm || num == sm || num == tm))
+                continue;
+            //If a first max found,
+            //record it and store curr fm
+            //and sm and curr sm and tm.
+            if (num > fm) {
+                float tfm = fm;
+                fm = num;
+                float tsm = sm;
+                sm = tfm;
+                tm = tsm;
+            } else if (num > sm) {
+                //If second max found,
+                //record it and store curr sm
+                //as tm.
+                float tsm = sm;
+                sm = num;
+                tm = tsm;
+            } else if (num > tm) {
+                tm = num;
+            }
+        }
+        //If by end, tm isn\'t updated from it\'s initial value,
+        //means we didn\'t find a tm.
+        return (tm == Float.NEGATIVE_INFINITY) ? (int) fm : (int) tm;
+    }
+}

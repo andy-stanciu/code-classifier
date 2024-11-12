@@ -1,0 +1,58 @@
+/**
+ *    -> Candidates : Array of integers
+ *    -> target : an integer
+ *
+ *    To find :-  all the combinations of using the integer values from the candidates that arrive at the sum target
+ *
+ *    Solution:-
+ *
+ *        combinationSum(candidates[], target, index, used_index, temp){
+ *            if(index==candidates.length){
+ *                return
+ *            }
+ *            if(sum(temp)==target){
+ *                ans.add(temp)
+ *            }
+ *            for(int i = 0; i< cardidates.length; i++){
+ *                if(!used_index[i]){
+ *                    temp.add(candidates[i]);
+ *                    used_index[i] = true;
+ *                    combinationSum(candidates, target, i+1, used_index, temp);
+ *                    used_index[i] = false;
+ *                }
+ *            }
+ *        }
+ */
+class Solution {
+
+    public List<List<Integer>> ans = new ArrayList<>();
+
+    // public HashMap<Integer, Boolean> used_index = new HashMap<>();
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<Integer> temp = new ArrayList<>();
+        Arrays.sort(candidates);
+        combinationSum2(candidates, target, 0, temp);
+        return new ArrayList<>(ans);
+    }
+
+    public void combinationSum2(int[] candidates, int target, int index, List<Integer> temp) {
+        if (target < 0) {
+            return;
+        }
+        if (target == 0) {
+            ans.add(new ArrayList<>(temp));
+            return;
+        }
+        for (int i = index; i < candidates.length; i++) {
+            if (i > index && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+            if (candidates[i] > target) {
+                break;
+            }
+            temp.add(candidates[i]);
+            combinationSum2(candidates, target - candidates[i], i + 1, temp);
+            temp.remove(temp.size() - 1);
+        }
+    }
+}

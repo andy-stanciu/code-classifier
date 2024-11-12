@@ -1,0 +1,53 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public static List<String> method1(TreeNode root) {
+        List<String> res = new ArrayList<>();
+        if (root == null)
+            return res;
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        method2(root, curr, result);
+        for (List<Integer> tmp : result) {
+            StringBuilder sb = new StringBuilder();
+            for (int i : tmp) {
+                sb.append(i);
+                sb.append("->");
+            }
+            sb.deleteCharAt(sb.length() - 1);
+            sb.deleteCharAt(sb.length() - 1);
+            res.add(sb.toString());
+        }
+        return res;
+    }
+
+    private static void method2(TreeNode root, List<Integer> curr, List<List<Integer>> result) {
+        curr.add(root.val);
+        if (root.left == null && root.right == null) {
+            result.add(new ArrayList<>(curr));
+            return;
+        }
+        if (root.left != null) {
+            method2(root.left, curr, result);
+            curr.remove(curr.size() - 1);
+        }
+        if (root.right != null) {
+            method2(root.right, curr, result);
+            curr.remove(curr.size() - 1);
+        }
+    }
+}

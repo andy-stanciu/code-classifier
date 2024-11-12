@@ -1,0 +1,33 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        Map<Integer, Integer> mp = new HashMap<>();
+        for (int num : nums) {
+            mp.put(num, mp.getOrDefault(num, 0) + 1);
+        }
+        List<List<Integer>> res = new ArrayList<>();
+        method1(nums, mp, new HashMap<>(), res, new ArrayList<>());
+        return res;
+    }
+
+    public void method1(int[] nums, Map<Integer, Integer> mp, Map<Integer, Integer> atPresent, List<List<Integer>> res, List<Integer> temp) {
+        if (temp.size() == nums.length) {
+            res.add(new ArrayList<>(temp));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (i > 0 && nums[i - 1] == nums[i])
+                continue;
+            atPresent.put(nums[i], atPresent.getOrDefault(nums[i], 0) + 1);
+            if (atPresent.get(nums[i]) > mp.get(nums[i])) {
+                atPresent.put(nums[i], atPresent.get(nums[i]) - 1);
+                continue;
+            }
+            temp.add(nums[i]);
+            method1(nums, mp, atPresent, res, temp);
+            atPresent.put(nums[i], atPresent.get(nums[i]) - 1);
+            temp.remove(temp.size() - 1);
+        }
+    }
+}

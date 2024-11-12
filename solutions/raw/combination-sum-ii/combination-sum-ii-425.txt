@@ -1,0 +1,50 @@
+class Solution {
+
+    private void swap(int[] v, int p1, int p2) {
+        int tmp = v[p1];
+        v[p1] = v[p2];
+        v[p2] = tmp;
+    }
+
+    private void qSort(int[] v, int l, int r) {
+        if (r <= l) {
+            return;
+        }
+        int m = l + (r - l) / 2, p = l;
+        swap(v, m, r);
+        for (int i = l; i < r; i++) {
+            if (v[i] < v[r]) {
+                swap(v, p++, i);
+            }
+        }
+        swap(v, p, r);
+        qSort(v, l, p - 1);
+        qSort(v, p + 1, r);
+    }
+
+    private void backTrack(List<List<Integer>> res, LinkedList<Integer> curr, int[] nums, int target, int sum, int start) {
+        if (sum == target) {
+            res.add(new LinkedList<>(curr));
+            return;
+        } else if (target < sum) {
+            return;
+        }
+        for (int i = start; i < nums.length; i++) {
+            if (start < i && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            sum += nums[i];
+            curr.push(nums[i]);
+            backTrack(res, curr, nums, target, sum, i + 1);
+            curr.pop();
+            sum -= nums[i];
+        }
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> res = new LinkedList<>();
+        qSort(candidates, 0, candidates.length - 1);
+        backTrack(res, new LinkedList<>(), candidates, target, 0, 0);
+        return res;
+    }
+}

@@ -1,0 +1,26 @@
+class Solution {
+
+    public int method1(int[][] param1) {
+        if (param1 == null || param1.length == 0) {
+            return 0;
+        }
+        // Sort the intervals based on their end times
+        Arrays.sort(param1, (a, b) -> a[1] - b[1]);
+        // Count of non-overlapping intervals
+        int var1 = 1;
+        int lastEndTime = param1[0][1];
+        for (int i = 1; i < param1.length; i++) {
+            // If the current interval\'s start time is greater than or equal to the last selected interval\'s end time,
+            // it means they don\'t overlap, and we can select this interval as well
+            if (param1[i][0] >= lastEndTime) {
+                var1++;
+                lastEndTime = param1[i][1];
+            } else // If the current interval overlaps with the last selected interval, remove the one with the larger end time
+            {
+                lastEndTime = Math.min(lastEndTime, param1[i][1]);
+            }
+        }
+        // The number of intervals to be removed is the total number of intervals minus the count of non-overlapping intervals
+        return param1.length - var1;
+    }
+}

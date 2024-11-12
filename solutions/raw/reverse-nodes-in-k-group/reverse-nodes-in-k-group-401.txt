@@ -1,0 +1,67 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        //Edge case
+        if (head.next == null || head == null)
+            return head;
+        ListNode currPointer = head;
+        ListNode actualStartingPoint = new ListNode(-10000);
+        ListNode nodeBeforeSeries = null;
+        while (currPointer != null) {
+            nodeBeforeSeries = reverseK(currPointer, nodeBeforeSeries, k, actualStartingPoint);
+            if (nodeBeforeSeries == null)
+                break;
+            currPointer = nodeBeforeSeries.next;
+        }
+        return actualStartingPoint.next;
+    }
+
+    private ListNode reverseK(ListNode head, ListNode prevNode, int k, ListNode actualStartingPoint) {
+        //First check if we should reverse it
+        ListNode firstCurr = head;
+        for (int i = 1; i <= k; i++) {
+            firstCurr = firstCurr.next;
+            //This means pointer is null at some point so we should not check
+            if (firstCurr == null && i != k) {
+                if (prevNode != null) {
+                    prevNode.next = head;
+                }
+                return null;
+            }
+        }
+        //If we got to this point it means nodes should be reversed
+        ListNode realCurr = head;
+        //prevNode will be moved and is passed by parameters already
+        ListNode tail = head;
+        ListNode con = prevNode;
+        //Reversing action from 0 to k-1 1->2 will be null<-1 and then 2nd iteration null <=1<-2
+        for (int i = 0; i < k; i++) {
+            ListNode temp = realCurr.next;
+            realCurr.next = prevNode;
+            //updating prevNode
+            prevNode = realCurr;
+            realCurr = temp;
+        }
+        //At this point we have prevNode pointing to k node and realCurr to null or starting element of next k series
+        if (con != null) {
+            //a previous Node pointing to last element of current series
+            con.next = prevNode;
+        } else {
+            //first element in series
+            actualStartingPoint.next = prevNode;
+        }
+        tail.next = realCurr;
+        return tail;
+        //tail is last element before next series start
+    }
+}

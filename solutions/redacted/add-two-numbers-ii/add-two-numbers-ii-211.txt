@@ -1,0 +1,54 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        List<Integer> list1 = new ArrayList<>();
+        List<Integer> list2 = new ArrayList<>();
+        ListNode dummy = new ListNode(0, null);
+        ListNode curr = dummy;
+        Stack<Integer> stack = new Stack<>();
+        while (l1 != null) {
+            list1.add(l1.val);
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            list2.add(l2.val);
+            l2 = l2.next;
+        }
+        int i = list1.size() - 1;
+        int j = list2.size() - 1;
+        int carry = 0;
+        while (i >= 0 || j >= 0) {
+            int val1 = i >= 0 ? list1.get(i) : 0;
+            int val2 = j >= 0 ? list2.get(j) : 0;
+            int sum = carry + val1 + val2;
+            if (sum >= 10) {
+                // to get the carry over. divide the sum by 10
+                carry = sum / 10;
+                // to get the reminder.
+                sum = sum % 10;
+            } else
+                carry = 0;
+            stack.push(sum);
+            i--;
+            j--;
+        }
+        if (carry > 0)
+            stack.push(carry);
+        while (stack.size() > 0) {
+            // reading the stack and popping out the items and adding them to listnode.
+            curr.next = new ListNode(stack.pop());
+            curr = curr.next;
+        }
+        return dummy.next;
+    }
+}

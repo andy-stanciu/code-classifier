@@ -1,0 +1,40 @@
+class Solution {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode rl1 = reverse(l1);
+        ListNode rl2 = reverse(l2);
+        int carry = 0;
+        ListNode dummy = new ListNode(-1);
+        ListNode curr = dummy;
+        while (rl1 != null || rl2 != null) {
+            // Note we are not using && and if we do we need to have another two while loop after this while loop to add up those extra parts
+            int a = rl1 == null ? 0 : rl1.val;
+            int b = rl2 == null ? 0 : rl2.val;
+            int sum = a + b + carry;
+            curr.next = new ListNode(sum % 10);
+            curr = curr.next;
+            carry = sum / 10;
+            if (rl1 != null)
+                rl1 = rl1.next;
+            if (rl2 != null)
+                rl2 = rl2.next;
+        }
+        // post processing
+        if (carry == 1)
+            curr.next = new ListNode(1);
+        return reverse(dummy.next);
+    }
+
+    private ListNode reverse(ListNode h) {
+        ListNode next = null;
+        ListNode curr = h;
+        ListNode prev = null;
+        while (curr != null) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+}

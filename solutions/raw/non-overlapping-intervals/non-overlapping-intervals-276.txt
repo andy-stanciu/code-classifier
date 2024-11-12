@@ -1,0 +1,24 @@
+class Solution {
+
+    public int eraseOverlapIntervals(int[][] intervals) {
+        // Greedy Approach
+        Arrays.sort(intervals, (itv1, itv2) -> (itv1[0] - itv2[0]));
+        Deque<int[]> stack = new ArrayDeque<>();
+        for (int i = 0; i < intervals.length; i++) {
+            if (stack.isEmpty()) {
+                stack.offerFirst(intervals[i]);
+            } else {
+                int[] top = stack.peekFirst();
+                // No conflict
+                if (top[1] <= intervals[i][0]) {
+                    stack.offerFirst(intervals[i]);
+                } else // Conflict, replace the last-added interval with this current interval
+                if (top[1] > intervals[i][1]) {
+                    stack.pollFirst();
+                    stack.offerFirst(intervals[i]);
+                }
+            }
+        }
+        return intervals.length - stack.size();
+    }
+}

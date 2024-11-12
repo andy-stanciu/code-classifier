@@ -1,0 +1,35 @@
+// [-1,3,2,-3]
+// [5,10,-5]
+class Solution {
+
+    public int[] method1(int[] param1) {
+        Stack<Integer> stack = new Stack<>();
+        for (int var1 : param1) {
+            boolean destroyed = false;
+            while (!stack.isEmpty() && var1 < 0 && stack.peek() > 0) {
+                int top = stack.peek();
+                if (top < -var1) {
+                    // for test case 1: 2<-*-3 so smaller asteroid 2 vanish and -3 dominate to next loop
+                    stack.pop();
+                } else if (top == -var1) {
+                    //for test case 1: 3 and -3 meets both destroy, since -3 is destroyed it cant be pushed to stack
+                    stack.pop();
+                    destroyed = true;
+                    break;
+                } else {
+                    // test case 2: 10>-5 so -5 gets destroyed so it cant be pushed into the stack.
+                    destroyed = true;
+                    break;
+                }
+            }
+            if (!destroyed) {
+                stack.push(var1);
+            }
+        }
+        int[] result = new int[stack.size()];
+        for (int i = result.length - 1; i >= 0; i--) {
+            result[i] = stack.pop();
+        }
+        return result;
+    }
+}

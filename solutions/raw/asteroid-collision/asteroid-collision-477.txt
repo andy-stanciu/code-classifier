@@ -1,0 +1,36 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        LinkedList<Integer> result = new LinkedList<>();
+        for (int asteroid : asteroids) {
+            resolveCollisions(result, asteroid);
+        }
+        int[] answer = new int[result.size()];
+        int index = 0;
+        for (int asteroid : result) {
+            answer[index++] = asteroid;
+        }
+        return answer;
+    }
+
+    private boolean areColliding(LinkedList<Integer> asteroids, int asteroid) {
+        return !asteroids.isEmpty() && asteroids.peekLast() > 0 && asteroid < 0;
+    }
+
+    private void resolveCollisions(LinkedList<Integer> asteroids, int next) {
+        while (areColliding(asteroids, next)) {
+            if (Math.abs(asteroids.peekLast()) > Math.abs(next)) {
+                // current one gets destroyed
+                return;
+            } else if (Math.abs(asteroids.peekLast()) < Math.abs(next)) {
+                asteroids.removeLast();
+            } else {
+                // both are equal, so they get destroyed
+                asteroids.removeLast();
+                return;
+            }
+        }
+        // add current one as it does not collide
+        asteroids.add(next);
+    }
+}

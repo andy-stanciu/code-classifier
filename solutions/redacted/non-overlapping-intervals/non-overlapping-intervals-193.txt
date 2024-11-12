@@ -1,0 +1,28 @@
+class Solution {
+
+    public int method1(int[][] param1) {
+        if (param1.length == 0)
+            return 0;
+        // Cant sort with start time first and then end time. Consider example: [1,10], [2,5], [8,11]
+        // Here the answer should be one - remove interval [1,10]. But since it is sorted by start time first, the answer will be wrong.
+        // So it is smarter to sort by end time only.
+        Arrays.sort(param1, (a, b) -> a[1] - b[1]);
+        int count = 0;
+        int[] lastInterval = param1[0];
+        for (int i = 1; i < param1.length; i++) {
+            int[] interval = param1[i];
+            if (hasOverlap(lastInterval, interval)) {
+                count++;
+            } else {
+                lastInterval = interval;
+            }
+        }
+        return count;
+    }
+
+    boolean hasOverlap(int[] before, int[] after) {
+        if (before[1] <= after[0])
+            return false;
+        return true;
+    }
+}

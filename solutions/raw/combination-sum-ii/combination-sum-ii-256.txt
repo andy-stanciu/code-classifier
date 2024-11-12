@@ -1,0 +1,37 @@
+class Solution {
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        ArrayList<List<Integer>> results = new ArrayList<>();
+        ArrayList<Integer> currentCombination = new ArrayList<>();
+        // Sort the candidates to handle duplicates
+        Arrays.sort(candidates);
+        // Start the recursive function to find combinations
+        findCombinations(candidates, target, 0, currentCombination, results);
+        return results;
+    }
+
+    public void findCombinations(int[] candidates, int target, int startIndex, ArrayList<Integer> currentCombination, ArrayList<List<Integer>> results) {
+        // Base case: if target is reached,
+        // add the current combination to results
+        if (target == 0) {
+            results.add(new ArrayList<>(currentCombination));
+            return;
+        }
+        // Iterate through the candidates starting from startIndex
+        for (int i = startIndex; i < candidates.length; i++) {
+            // Skip duplicates
+            if (i != startIndex && candidates[i - 1] == candidates[i])
+                continue;
+            // Only proceed if the current candidate
+            // can be part of the combination
+            if (candidates[i] <= target) {
+                currentCombination.add(candidates[i]);
+                // Recursively find combinations with
+                // the updated target and current candidate
+                findCombinations(candidates, target - candidates[i], i + 1, currentCombination, results);
+                // Backtrack: remove the last added candidate
+                currentCombination.remove(currentCombination.size() - 1);
+            }
+        }
+    }
+}

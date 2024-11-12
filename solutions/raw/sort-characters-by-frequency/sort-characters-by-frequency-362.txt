@@ -1,0 +1,34 @@
+class Solution {
+
+    public String frequencySort(String s) {
+        // Create a HashMap to store character frequencies
+        Map<Character, Integer> charCount = new HashMap<>();
+        // Count frequencies of characters
+        for (char c : s.toCharArray()) {
+            charCount.put(c, charCount.getOrDefault(c, 0) + 1);
+        }
+        // Find the maximum frequency
+        int maxFreq = Collections.max(charCount.values());
+        // Create an array of lists (buckets) to store characters based on their frequency
+        List<Character>[] buckets = new ArrayList[maxFreq + 1];
+        for (int i = 0; i <= maxFreq; i++) {
+            buckets[i] = new ArrayList<>();
+        }
+        // Fill buckets with characters based on their frequency
+        for (Map.Entry<Character, Integer> entry : charCount.entrySet()) {
+            char c = entry.getKey();
+            int freq = entry.getValue();
+            buckets[freq].add(c);
+        }
+        // Build the result string by appending characters from buckets
+        StringBuilder result = new StringBuilder();
+        for (int freq = maxFreq; freq > 0; freq--) {
+            for (char c : buckets[freq]) {
+                for (int i = 0; i < freq; i++) {
+                    result.append(c);
+                }
+            }
+        }
+        return result.toString();
+    }
+}

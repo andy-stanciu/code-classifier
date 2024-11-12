@@ -1,0 +1,45 @@
+class Solution {
+
+    int lenDiff;
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        lenDiff = findLen(l1) - findLen(l2);
+        int rem;
+        if (lenDiff >= 0) {
+            rem = rec(0, l1, l2);
+            return rem > 0 ? new ListNode(rem, l1) : l1;
+        } else {
+            lenDiff = -lenDiff;
+            rem = rec(0, l2, l1);
+            return rem > 0 ? new ListNode(rem, l2) : l2;
+        }
+    }
+
+    private int rec(int dept, ListNode big, ListNode small) {
+        int rem;
+        if (big.next == null) {
+            return getRem(big, small.val);
+        }
+        if (dept >= this.lenDiff) {
+            rem = rec(dept + 1, big.next, small.next) + small.val;
+        } else {
+            rem = rec(dept + 1, big.next, small);
+        }
+        return getRem(big, rem);
+    }
+
+    private int getRem(ListNode node, int rem) {
+        rem += node.val;
+        node.val = rem % 10;
+        return rem / 10;
+    }
+
+    private int findLen(ListNode node) {
+        int len = 1;
+        while (node.next != null) {
+            len++;
+            node = node.next;
+        }
+        return len;
+    }
+}

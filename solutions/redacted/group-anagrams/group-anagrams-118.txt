@@ -1,0 +1,42 @@
+/**
+ *  => Idea :
+ *  => we first sort each and every string with in string array
+ *  => store with in another array
+ *  => using hashmap sorted array as key and orginal array as value
+ *  => Eg :
+ *  => OrginalArray : ["eat","tea","tan","ate","nat","bat"]
+ *  => sorted array : [aet, aet, ant, aet, ant, abt]
+ *  => Final Bucket : [["eat","tea","ate"],["bat"],["tan","nat"]]
+ */
+class Solution {
+
+    public List<List<String>> method1(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+        List<List<String>> listAns = new ArrayList<>();
+        String[] sort = new String[strs.length];
+        int index = 0;
+        // to sort the orginal array
+        for (String str : strs) {
+            char[] tempArray = str.toCharArray();
+            Arrays.sort(tempArray);
+            sort[index] = new String(tempArray);
+            index++;
+        }
+        // to get the internal divison
+        for (int i = 0; i < strs.length; i++) {
+            if (map.containsKey(sort[i])) {
+                map.get(sort[i]).add(strs[i]);
+                //map.put(sort[i],map.get(sort[i])); need not required as the map.get acting as reference to orginal bucket
+            } else {
+                List<String> list = new ArrayList<String>();
+                list.add(strs[i]);
+                map.put(sort[i], list);
+            }
+        }
+        // to convert individual buckets to Arraylist
+        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+            listAns.add(entry.getValue());
+        }
+        return listAns;
+    }
+}

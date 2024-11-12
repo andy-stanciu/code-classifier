@@ -1,0 +1,42 @@
+class // \u5B9A\u7FA9 Solution \u985E\u5225
+Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        // \u5B9A\u7FA9 permuteUnique \u65B9\u6CD5\uFF0C\u63A5\u6536\u4E00\u500B\u6574\u6578\u9663\u5217\u4E26\u56DE\u50B3\u7531\u6574\u6578\u5217\u8868\u6240\u7D44\u6210\u7684\u5217\u8868
+        // \u5EFA\u7ACB\u7D50\u679C\u5217\u8868 res
+        List<List<Integer>> res = new ArrayList<>();
+        // \u5C07 nums \u9032\u884C\u6392\u5E8F
+        Arrays.sort(nums);
+        // \u547C\u53EB backtrack \u65B9\u6CD5
+        backtrack(res, new ArrayList<>(), nums, new boolean[nums.length]);
+        // \u56DE\u50B3\u7D50\u679C\u5217\u8868 res
+        return res;
+    }
+
+    private void backtrack(List<List<Integer>> res, List<Integer> temp, int[] nums, boolean[] used) {
+        // \u5B9A\u7FA9 backtrack \u65B9\u6CD5
+        if (temp.size() == nums.length) {
+            // \u5982\u679C temp \u7684\u5927\u5C0F\u8207 nums \u7684\u9577\u5EA6\u76F8\u540C
+            // \u5C07 temp \u52A0\u5165\u7D50\u679C\u5217\u8868 res \u4E2D
+            res.add(new ArrayList<>(temp));
+        } else {
+            // \u5426\u5247
+            for (int i = 0; i < nums.length; i++) {
+                // \u679A\u8209 nums \u4E2D\u7684\u6BCF\u4E00\u500B\u6574\u6578
+                // \u5982\u679C used[i] \u70BA true \u6216\u8005 nums[i] \u8207 nums[i-1] \u76F8\u540C\u4E14 used[i-1] \u70BA false\uFF0C\u5247\u8DF3\u904E\u7576\u524D\u8FF4\u5708
+                if (used[i] || i > 0 && nums[i] == nums[i - 1] && !used[i - 1])
+                    continue;
+                // \u5C07 used[i] \u8A2D\u70BA true
+                used[i] = true;
+                // \u5C07 nums[i] \u52A0\u5165 temp \u4E2D
+                temp.add(nums[i]);
+                // \u547C\u53EB backtrack \u65B9\u6CD5
+                backtrack(res, temp, nums, used);
+                // \u5C07 used[i] \u8A2D\u70BA false
+                used[i] = false;
+                // \u5C07 temp \u4E2D\u7684\u6700\u5F8C\u4E00\u500B\u5143\u7D20\u79FB\u9664
+                temp.remove(temp.size() - 1);
+            }
+        }
+    }
+}

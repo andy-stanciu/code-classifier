@@ -1,0 +1,45 @@
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        return reverse(head, k);
+    }
+
+    private static ListNode reverse(ListNode head, int k) {
+        ListNode newTail = head;
+        ListNode newHead = null;
+        if (canGroup(head, k)) {
+            ListNode groupEnd = getGroupEnd(head, k);
+            newHead = reverseGroup(head, groupEnd);
+            newTail.next = reverse(groupEnd, k);
+            return newHead;
+        } else
+            return head;
+    }
+
+    private static ListNode reverseGroup(ListNode begin, ListNode end) {
+        ListNode newHead = begin;
+        ListNode tail = null;
+        while (newHead != end) {
+            ListNode next = newHead.next;
+            newHead.next = tail;
+            tail = newHead;
+            newHead = next;
+        }
+        return tail;
+    }
+
+    private static ListNode getGroupEnd(ListNode begin, int k) {
+        ListNode end = begin;
+        for (int i = 0; end != null && i < k; i++) end = end.next;
+        return end;
+    }
+
+    private static boolean canGroup(ListNode begin, int k) {
+        int count = 0;
+        while (begin != null && count < k) {
+            count++;
+            begin = begin.next;
+        }
+        return count == k;
+    }
+}

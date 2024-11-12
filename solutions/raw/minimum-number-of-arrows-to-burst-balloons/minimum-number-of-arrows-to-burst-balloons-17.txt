@@ -1,0 +1,32 @@
+class Solution {
+
+    // Comparator function to sort the balloons based on their end points in ascending order
+    static class IntervalComparator implements Comparator<int[]> {
+
+        public int compare(int[] a, int[] b) {
+            // Sort by end points
+            return Integer.compare(a[1], b[1]);
+        }
+    }
+
+    public int findMinArrowShots(int[][] points) {
+        // If there are no balloons, return 0
+        if (points.length == 0)
+            return 0;
+        // Sort the balloons based on their end points
+        Arrays.sort(points, new IntervalComparator());
+        // Initialize the number of arrows to 1 (at least one arrow will be needed)
+        int arrows = 1;
+        // Initialize the end point with the end point of the first balloon
+        int end = points[0][1];
+        for (int i = 1; i < points.length; ++i) {
+            // If the start point of the current balloon is beyond the current end point,
+            // a new arrow is required, update the end point to the end point of the current balloon
+            if (points[i][0] > end) {
+                ++arrows;
+                end = points[i][1];
+            }
+        }
+        return arrows;
+    }
+}

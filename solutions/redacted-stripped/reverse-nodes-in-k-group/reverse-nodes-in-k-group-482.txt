@@ -1,0 +1,46 @@
+class Solution {
+
+    public ListNode method1(ListNode head, int k) {
+        if (k <= 1 || head == null) {
+            return head;
+        }
+        ListNode current = head;
+        ListNode prev = null;
+        int size = getSize(head);
+        while (size > k) {
+            ListNode last = prev;
+            ListNode newEnd = current;
+            ListNode next = current.next;
+            for (int i = 0; current != null && i < k; i++) {
+                current.next = prev;
+                prev = current;
+                current = next;
+                if (next != null) {
+                    next = next.next;
+                }
+                size--;
+            }
+            if (last != null) {
+                last.next = prev;
+            } else {
+                head = prev;
+            }
+            newEnd.next = current;
+            if (current == null) {
+                break;
+            }
+            prev = newEnd;
+        }
+        return head;
+    }
+
+    public int getSize(ListNode head) {
+        int count = 1;
+        ListNode temp = head;
+        while (temp != null) {
+            temp = temp.next;
+            count++;
+        }
+        return count;
+    }
+}

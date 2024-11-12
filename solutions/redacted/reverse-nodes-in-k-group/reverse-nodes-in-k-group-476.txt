@@ -1,0 +1,68 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    // Method to get the kth node from the current node
+    public ListNode kthNode(ListNode curr, int k) {
+        while (k > 1 && curr != null) {
+            curr = curr.next;
+            k--;
+        }
+        return curr;
+    }
+
+    // Method to reverse the linked list starting from the given head
+    public void method1(ListNode head) {
+        if (head.next == null)
+            return;
+        ListNode pre = null;
+        ListNode curr = head;
+        ListNode next = head;
+        while (curr != null) {
+            next = curr.next;
+            curr.next = pre;
+            pre = curr;
+            curr = next;
+        }
+    }
+
+    // Method to reverse the linked list in groups of size k
+    public ListNode method2(ListNode head, int k) {
+        ListNode temp = head;
+        ListNode var1 = null;
+        while (true) {
+            // Get the kth node from temp
+            ListNode kth = kthNode(temp, k);
+            if (kth == null) {
+                // Connect the last group to the remaining nodes
+                var1.next = temp;
+                break;
+            }
+            // Store the next group\'s head
+            ListNode var2 = kth.next;
+            // Disconnect the current group
+            kth.next = null;
+            // Reverse the current group
+            method1(temp);
+            if (temp == head)
+                // Update head if necessary
+                head = kth;
+            if (var1 != null)
+                // Connect the previous group to the reversed group
+                var1.next = kth;
+            // Move preGroup to the last node of the current group
+            var1 = temp;
+            // Move temp to the head of the next group
+            temp = var2;
+        }
+        return head;
+    }
+}

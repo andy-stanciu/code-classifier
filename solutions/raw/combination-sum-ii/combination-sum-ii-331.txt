@@ -1,0 +1,37 @@
+class Solution {
+
+    private List<Integer> makeIntegerList(String[] input) {
+        List<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < input.length; i++) {
+            if (input[i].equals(""))
+                continue;
+            ans.add(Integer.parseInt(input[i]));
+        }
+        return ans;
+    }
+
+    private void generateUniqueSubsets(int[] a, int i, int n, int sum, List<List<Integer>> ans, String asf) {
+        //IMP : Reduce Time by pruning the search
+        if (sum < 0)
+            return;
+        if (i == n) {
+            if (sum == 0)
+                ans.add(makeIntegerList(asf.split(" ")));
+            return;
+        }
+        //Take it
+        generateUniqueSubsets(a, i + 1, n, sum - a[i], ans, asf + a[i] + " ");
+        //Dont take it
+        while (i + 1 < n && a[i] == a[i + 1]) i += 1;
+        generateUniqueSubsets(a, i + 1, n, sum, ans, asf + "");
+    }
+
+    public List<List<Integer>> combinationSum2(int[] a, int sum) {
+        //Using Recurrsion
+        //NOTE: generate unique combination => unique subsets
+        Arrays.sort(a);
+        List<List<Integer>> ans = new ArrayList<>();
+        generateUniqueSubsets(a, 0, a.length, sum, ans, "");
+        return ans;
+    }
+}

@@ -1,0 +1,83 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public static ListNode after = null;
+
+    public static int traverseFromTailToHead(ListNode temp1, ListNode temp2) {
+        if (temp1 == null || temp2 == null) {
+            after = null;
+            return 0;
+        }
+        int carry = traverseFromTailToHead(temp1.next, temp2.next);
+        int sum = temp1.val + temp2.val + carry;
+        if (sum / 10 == 0) {
+            carry = 0;
+            ListNode n = new ListNode(sum);
+            n.next = after;
+            after = n;
+        } else {
+            carry = 1;
+            ListNode n = new ListNode(sum % 10);
+            n.next = after;
+            after = n;
+        }
+        return carry;
+    }
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        //Approach 2 - Using recusrion without reversing the List.
+        ListNode temp1 = l1;
+        ListNode temp2 = l2;
+        int cnt1 = 0;
+        int cnt2 = 0;
+        ListNode tail1 = null;
+        ListNode tail2 = null;
+        while (temp1 != null) {
+            tail1 = temp1;
+            temp1 = temp1.next;
+            cnt1++;
+        }
+        while (temp2 != null) {
+            tail2 = temp2;
+            temp2 = temp2.next;
+            cnt2++;
+        }
+        if (cnt1 > cnt2) {
+            int diff = cnt1 - cnt2;
+            while (diff > 0) {
+                ListNode newNode = new ListNode(0);
+                newNode.next = l2;
+                l2 = newNode;
+                diff--;
+            }
+        } else if (cnt2 > cnt1) {
+            int diff = cnt2 - cnt1;
+            while (diff > 0) {
+                ListNode newNode = new ListNode(0);
+                newNode.next = l1;
+                l1 = newNode;
+                diff--;
+            }
+        }
+        temp1 = l1;
+        temp2 = l2;
+        int carry = traverseFromTailToHead(temp1, temp2);
+        Solution sol = new Solution();
+        ListNode after = sol.after;
+        if (carry == 1) {
+            ListNode head = new ListNode(carry);
+            head.next = after;
+            return head;
+        }
+        return after;
+    }
+}

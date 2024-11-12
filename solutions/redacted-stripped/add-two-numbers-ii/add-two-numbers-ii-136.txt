@@ -1,0 +1,74 @@
+class Solution {
+
+    public ListNode method1(ListNode list1, ListNode list2) {
+        String numberFromList1 = "";
+        while (list1.next != null) {
+            numberFromList1 += list1.val;
+            list1 = list1.next;
+        }
+        numberFromList1 += list1.val;
+        String numberFromList2 = "";
+        while (list2.next != null) {
+            numberFromList2 += list2.val;
+            list2 = list2.next;
+        }
+        numberFromList2 += list2.val;
+        String sum = mySum(numberFromList1, numberFromList2);
+        ListNode listNode = new ListNode();
+        ListNode newHead = new ListNode();
+        for (int i = 0; i < sum.length(); i++) {
+            if (i == 0) {
+                newHead = listNode;
+            }
+            listNode.val = Integer.parseInt(sum.charAt(i) + "");
+            if (i != sum.length() - 1) {
+                listNode.next = new ListNode();
+                listNode = listNode.next;
+            }
+        }
+        return newHead;
+    }
+
+    private String mySum(String sum, String tempNumber) {
+        String lastSum = sum;
+        String var1 = tempNumber;
+        String big;
+        String small;
+        if (lastSum.length() >= var1.length()) {
+            big = lastSum;
+            small = var1;
+        } else {
+            big = var1;
+            small = lastSum;
+        }
+        int[] var2 = new int[big.length()];
+        for (int index = 0; index < var2.length; index++) {
+            var2[index] = Integer.parseInt(big.charAt(index) + "");
+        }
+        int[] arrayWithSmallNumber = new int[big.length()];
+        for (int index = 0; index < arrayWithSmallNumber.length; index++) {
+            if (index < (big.length() - small.length()))
+                arrayWithSmallNumber[index] = 0;
+            else
+                arrayWithSmallNumber[index] = Integer.parseInt(small.charAt(index - (big.length() - small.length())) + "");
+        }
+        int count = 0;
+        String tempSum = "";
+        for (int index = arrayWithSmallNumber.length - 1; index >= 0; index--) {
+            int numberFromSmall = arrayWithSmallNumber[index];
+            int numberFromBig = var2[index];
+            int tempResult = numberFromSmall + numberFromBig + count;
+            if (tempResult <= 9) {
+                tempSum = tempResult + tempSum;
+                count = 0;
+            } else {
+                count = tempResult / 10;
+                tempSum = tempResult % 10 + tempSum;
+            }
+        }
+        if (count != 0)
+            tempSum = count + tempSum;
+        sum = tempSum;
+        return sum;
+    }
+}

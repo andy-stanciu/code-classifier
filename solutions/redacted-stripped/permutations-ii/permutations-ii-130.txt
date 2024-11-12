@@ -1,0 +1,31 @@
+class Solution {
+
+    private List<Integer> makeIntegerList(String[] input) {
+        List<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < input.length; i++) {
+            ans.add(Integer.parseInt(input[i]));
+        }
+        return ans;
+    }
+
+    private void UniquePermutation(int[] a, int n, List<List<Integer>> ans, int mask, String psf) {
+        if (mask == (1 << n) - 1) {
+            ans.add(makeIntegerList(psf.split(" ")));
+            return;
+        }
+        boolean[] used = new boolean[20 + 1];
+        for (int i = 0; i < n; i++) {
+            if ((mask & (1 << i)) > 0 || used[a[i] + 10])
+                continue;
+            used[a[i] + 10] = true;
+            UniquePermutation(a, n, ans, mask + (1 << i), psf + a[i] + " ");
+        }
+    }
+
+    public List<List<Integer>> permuteUnique(int[] a) {
+        List<List<Integer>> ans = new ArrayList<>();
+        int mask = 0;
+        UniquePermutation(a, a.length, ans, mask, "");
+        return ans;
+    }
+}

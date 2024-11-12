@@ -1,0 +1,32 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        //Using recursion Tc- O(n * n!) and SC-O(n)
+        List<List<Integer>> list = new ArrayList<>();
+        //boolean array to keep track of visited or not;
+        permuteNums(nums, new ArrayList<Integer>(), list, new boolean[nums.length]);
+        return list;
+    }
+
+    private void permuteNums(int[] nums, List<Integer> temp, List<List<Integer>> list, boolean[] used) {
+        if (temp.size() == nums.length && !list.contains(temp)) {
+            //added this condition for removing duplicates from the list
+            list.add(new ArrayList<>(temp));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            //this for will give all possibel permutations but there chnaces that my list conatins duplicates string so add check in base condition
+            //if visited already no needto visit again for duplicates
+            if (used[i]) {
+                continue;
+            }
+            //mark visted and add in the list
+            used[i] = true;
+            temp.add(nums[i]);
+            permuteNums(nums, temp, list, used);
+            //unmark visited and remove from list
+            used[i] = false;
+            temp.remove(temp.size() - 1);
+        }
+    }
+}

@@ -1,0 +1,73 @@
+public class Solution {
+
+    public int[] method1(int[] nums1, int[] nums2) {
+        nums1 = removeDuplicates(nums1);
+        nums2 = removeDuplicates(nums2);
+        bubbleSort(nums1);
+        bubbleSort(nums2);
+        int[] temp = new int[Math.min(nums1.length, nums2.length)];
+        int index = 0;
+        int i = 0, j = 0;
+        while (i < nums1.length && j < nums2.length) {
+            if (nums1[i] == nums2[j]) {
+                temp[index++] = nums1[i];
+                i++;
+                j++;
+            } else if (nums1[i] < nums2[j]) {
+                i++;
+            } else {
+                j++;
+            }
+        }
+        int[] result = new int[index];
+        for (int k = 0; k < index; k++) {
+            result[k] = temp[k];
+        }
+        return result;
+    }
+
+    public static int[] removeDuplicates(int[] nums) {
+        int n = nums.length;
+        if (n == 0 || n == 1) {
+            return nums;
+        }
+        bubbleSort(nums);
+        int[] temp = new int[n];
+        int j = 0;
+        for (int i = 0; i < n - 1; i++) {
+            if (nums[i] != nums[i + 1]) {
+                temp[j++] = nums[i];
+            }
+        }
+        temp[j++] = nums[n - 1];
+        int[] uniqueArray = new int[j];
+        for (int i = 0; i < j; i++) {
+            uniqueArray[i] = temp[i];
+        }
+        return uniqueArray;
+    }
+
+    public static void bubbleSort(int[] nums) {
+        int n = nums.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (nums[j] > nums[j + 1]) {
+                    int temp = nums[j];
+                    nums[j] = nums[j + 1];
+                    nums[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        int[] nums1 = { 1, 2, 2, 1 };
+        int[] nums2 = { 2, 2 };
+        int[] result = solution.method1(nums1, nums2);
+        System.out.print("Intersection: ");
+        for (int num : result) {
+            System.out.print(num + " ");
+        }
+    }
+}

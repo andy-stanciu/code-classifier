@@ -1,0 +1,42 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        stack.offer(asteroids[0]);
+        boolean flag = false;
+        for (int i = 1; i < asteroids.length; i++) {
+            if (stack.peek() == null)
+                stack.offer(asteroids[i]);
+            else if (asteroids[i] > 0 && stack.getLast() > 0)
+                stack.offer(asteroids[i]);
+            else if (asteroids[i] < 0 && stack.getLast() < 0)
+                stack.offer(asteroids[i]);
+            else if (asteroids[i] < 0 && stack.getLast() > 0) {
+                while (stack.peek() != null && asteroids[i] < 0 && stack.getLast() > 0) {
+                    if (Math.abs(asteroids[i]) > Math.abs(stack.getLast())) {
+                        stack.removeLast();
+                        flag = true;
+                    } else if (Math.abs(asteroids[i]) == Math.abs(stack.getLast())) {
+                        stack.removeLast();
+                        flag = false;
+                        break;
+                    } else if (Math.abs(asteroids[i]) < Math.abs(stack.getLast())) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag)
+                    stack.offer(asteroids[i]);
+            } else if (asteroids[i] > 0 && stack.getLast() < 0)
+                stack.offer(asteroids[i]);
+            else
+                stack.removeLast();
+        }
+        ArrayList<Integer> list = new ArrayList<>(stack);
+        int[] res = new int[stack.size()];
+        for (int i = 0; i < list.size(); i++) {
+            res[i] = list.get(i);
+        }
+        return res;
+    }
+}

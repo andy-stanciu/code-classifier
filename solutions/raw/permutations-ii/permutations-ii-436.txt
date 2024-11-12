@@ -1,0 +1,38 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        //         create the list of list of integer to store the final answer
+        List<List<Integer>> result = new LinkedList<>();
+        //         list of integer to store the curr permutations
+        List<Integer> curr = new LinkedList<>();
+        //         we use boolean array to check whether we visited the particular element of an array.
+        boolean[] bool = new boolean[nums.length];
+        //         here we sort the array , to check the duplicate elements.
+        Arrays.sort(nums);
+        back(nums, curr, result, bool);
+        return result;
+    }
+
+    void back(int[] nums, List<Integer> curr, List<List<Integer>> result, boolean[] visited) {
+        if (curr.size() == nums.length) {
+            result.add(new LinkedList<>(curr));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            //             if the element is already visited the we simply skip the elements and move to next one
+            if (visited[i] == true)
+                continue;
+            //             this is the important part of the  question. here we actually discard the duplicate permutations
+            //             if curr elemnts of num and previous elemnts is same and the pervious element is not visited then we continue.
+            if (i > 0 && nums[i] == nums[i - 1] && !visited[i - 1]) {
+                continue;
+            }
+            curr.add(nums[i]);
+            visited[i] = true;
+            back(nums, curr, result, visited);
+            curr.remove(curr.size() - 1);
+            visited[i] = false;
+        }
+    }
+}
+// hope you understand the question

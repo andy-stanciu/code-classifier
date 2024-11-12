@@ -1,0 +1,50 @@
+class Solution {
+
+    public void nextPermutation(int[] nums) {
+        int swapIndex = -1;
+        // find break point: digit which is smaller than its next digit
+        for (int i = nums.length - 1; i > 0; i--) {
+            if (nums[i - 1] < nums[i]) {
+                swapIndex = i - 1;
+                break;
+            }
+        }
+        // We will swap digits only if there is a break point
+        if (swapIndex != -1) {
+            swapNumbers(swapIndex, nums);
+        }
+        reverseArray(swapIndex, nums);
+    }
+
+    private static void swapNumbers(int swapIndex, int[] nums) {
+        int swapWith = -1;
+        int nextGreater = Integer.MAX_VALUE;
+        int breakPoint = nums[swapIndex];
+        // find next greater digit of that break point
+        for (int i = nums.length - 1; i > swapIndex; i--) {
+            if (breakPoint < nums[i] && nums[i] < nextGreater) {
+                nextGreater = nums[i];
+                swapWith = i;
+            }
+        }
+        // NOTE: There will always be a next greater digit of breakPoint,
+        // So swapWith will never be -1
+        int temp = nums[swapIndex];
+        nums[swapIndex] = nums[swapWith];
+        nums[swapWith] = temp;
+    }
+
+    private static void reverseArray(int swapIndex, int[] nums) {
+        int i = swapIndex + 1;
+        int j = nums.length - 1;
+        // Digits after swapIndex will always in decreasing order,
+        // So we just need to swap them for sorting in reverse order
+        while (i < j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+            i++;
+            j--;
+        }
+    }
+}

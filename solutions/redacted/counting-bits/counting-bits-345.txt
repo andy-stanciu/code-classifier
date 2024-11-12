@@ -1,0 +1,35 @@
+class Solution {
+
+    public int[] method1(int n) {
+        int[] result = new int[n + 1];
+        for (int i = 0; i <= n; i++) {
+            result[i] = solve(i, result);
+        }
+        return result;
+    }
+
+    /*
+        let\'s say 4. So, you want the answer of 4. Whatever the answer of 4 is the answer of 2 as well. So, i can say that even = n / 2
+        For odd = 1 + n / 2 let\'s say for 5, what ever the answer of 5 os the answer of 3 as well. 
+     */
+    private int solve(int n, int[] memo) {
+        if (n == 0)
+            return 0;
+        if (n == 1)
+            return 1;
+        //for 15 going to 7 all the way to 1.
+        // But in 14 if you see we have already calculate for 7. Then we don\'t want to repeat for 15, we simply return our answer from there
+        // for 2 ==> find memo[2] : not found then find since 2 is even so n = 2/2=1 =>  memo[2]= solve(2,memo)
+        // for 4 =>   find memo[4] : not found then find since 4 is even so n = 4/2=1 =>  memo[2]= solve(2,memo) => if(memo[2]!=0) return memo[2] which we already stored;
+        if (memo[n] != 0)
+            return memo[n];
+        if (n % 2 == 0) {
+            // store the result i.e n=14 store what is the store in 7
+            memo[n] = solve(n / 2, memo);
+            return solve(n / 2, memo);
+        } else {
+            memo[n] = 1 + solve(n / 2, memo);
+            return 1 + solve(n / 2, memo);
+        }
+    }
+}

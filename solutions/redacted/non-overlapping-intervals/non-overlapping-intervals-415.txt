@@ -1,0 +1,40 @@
+class Solution {
+
+    public int method1(int[][] param1) {
+        HashMap<Integer, Integer> h = new HashMap<Integer, Integer>();
+        PriorityQueue<Integer> pq = new PriorityQueue<Integer>();
+        int result = 0;
+        for (int i = 0; i < param1.length; i++) {
+            if (!h.containsKey(param1[i][0])) {
+                pq.add(param1[i][0]);
+                h.put(param1[i][0], param1[i][1]);
+            } else {
+                result++;
+                if (h.get(param1[i][0]) > param1[i][1]) {
+                    h.put(param1[i][0], param1[i][1]);
+                }
+            }
+        }
+        if (h.size() == 1) {
+            return result;
+        } else {
+            int start = pq.poll();
+            int end = h.get(start);
+            while (pq.size() > 0) {
+                int x = pq.poll();
+                int xEnd = h.get(x);
+                if (end > x) {
+                    result++;
+                    if (xEnd <= end) {
+                        start = x;
+                        end = xEnd;
+                    }
+                } else {
+                    start = x;
+                    end = xEnd;
+                }
+            }
+        }
+        return result;
+    }
+}

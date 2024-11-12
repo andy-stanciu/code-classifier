@@ -1,0 +1,51 @@
+class Solution {
+
+    static ListNode reverse(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        ListNode next1 = null;
+        while (curr != null) {
+            next1 = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next1;
+        }
+        return prev;
+    }
+
+    static ListNode method1(ListNode l1, ListNode l2) {
+        ListNode anshead = null;
+        ListNode ans = null;
+        int carry = 0;
+        while (l1 != null || l2 != null || carry != 0) {
+            int sum = carry;
+            if (l1 != null) {
+                sum += (int) l1.val;
+                l1 = l1.next;
+            }
+            if (l2 != null) {
+                sum += (int) l2.val;
+                l2 = l2.next;
+            }
+            int digit = sum % 10;
+            carry = sum / 10;
+            ListNode node = new ListNode(digit);
+            if (anshead == null) {
+                anshead = node;
+                ans = node;
+            } else {
+                ans.next = node;
+                ans = ans.next;
+            }
+        }
+        return anshead;
+    }
+
+    public ListNode method2(ListNode l1, ListNode l2) {
+        l1 = reverse(l1);
+        l2 = reverse(l2);
+        ListNode ans = method1(l1, l2);
+        ans = reverse(ans);
+        return ans;
+    }
+}

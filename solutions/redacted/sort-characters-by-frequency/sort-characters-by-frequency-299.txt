@@ -1,0 +1,51 @@
+class Solution {
+
+    // TC : O(N log K) & SC : O(K)
+    // N -> Length of the input string \'s\'
+    // K -> Number of unique characters
+    public String method1(String s) {
+        // Write your code here
+        // Create a HashMap \'fmap\' to store the frequency of each character in the string \'s\'
+        HashMap<Character, Integer> fmap = new HashMap<>();
+        // Iterate through the string, updating the frequency of each character in the HashMap \'fmap\'
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            fmap.put(ch, fmap.getOrDefault(ch, 0) + 1);
+        }
+        // Use a PriorityQueue \'pq\' to sort characters based on their frequency
+        // Use a lambda function to define the comparator for the PriorityQueue \'pq\'
+        PriorityQueue<Character> pq = new PriorityQueue<>((a, b) -> {
+            // If two characters have the same frequency
+            if (fmap.get(a).equals(fmap.get(b))) {
+                // Prioritize the character with a higher ASCII value
+                return Character.compare(b, a);
+            }
+            // If the frequencies are different
+            // Prioritize the character with a higher frequency
+            return fmap.get(b) - fmap.get(a);
+        });
+        // Iterate through the keys of the HashMap \'fmap\', adding each character to the PriorityQueue \'pq\'
+        for (char key : fmap.keySet()) {
+            char ch = key;
+            int var1 = fmap.get(key);
+            pq.add(ch);
+        }
+        // Initialize a StringBuilder \'sb\' to build the result string
+        StringBuilder sb = new StringBuilder("");
+        // While the PriorityQueue \'pq\' is not empty
+        while (pq.size() > 0) {
+            // Remove the character with the highest frequency from the PriorityQueue \'pq\'
+            char ch = pq.remove();
+            int var1 = fmap.get(ch);
+            // Append this character to the StringBuilder \'sb\' as many times as its frequency
+            while (var1 > 0) {
+                sb.append(ch);
+                var1--;
+            }
+        }
+        // Convert the StringBuilder \'sb\' to a string \'ans\'
+        String ans = sb.toString();
+        // Return the resultant string \'ans\'
+        return ans;
+    }
+}

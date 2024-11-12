@@ -1,0 +1,19 @@
+class Solution {
+
+    public int[] method1(int[] param1) {
+        // helper functions
+        BiPredicate<Integer, Integer> shouldCollide = (a, b) -> a > 0 && b < 0;
+        BinaryOperator<Integer> var1 = (a, b) -> abs(a) == abs(b) ? 0 : abs(a) > abs(b) ? a : b;
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < param1.length; i++) {
+            int ast = param1[i];
+            while (!stack.empty() && shouldCollide.test(stack.peek(), ast)) {
+                ast = var1.apply(stack.pop(), ast);
+            }
+            if (ast == 0)
+                continue;
+            stack.push(ast);
+        }
+        return stack.stream().mapToInt(i -> i).toArray();
+    }
+}

@@ -1,0 +1,43 @@
+class Solution {
+
+    public int compress(char[] chars) {
+        boolean seqStarted = false;
+        int top = 0;
+        int bottom = top + 1;
+        int n = chars.length;
+        int count = 0;
+        while (top < n && bottom < n) {
+            if (chars[top] == chars[bottom]) {
+                seqStarted = true;
+                bottom++;
+            } else {
+                if (seqStarted) {
+                    seqStarted = false;
+                    chars[count++] = chars[top];
+                    String occ = "" + (bottom - top) + "";
+                    for (int j = 0; j < occ.length(); j++) {
+                        chars[count++] = occ.charAt(j);
+                    }
+                    top = bottom;
+                    bottom = top + 1;
+                } else {
+                    chars[count++] = chars[top];
+                    top++;
+                    bottom++;
+                }
+            }
+        }
+        if (seqStarted) {
+            chars[count++] = chars[top];
+            String occ = "" + (bottom - top) + "";
+            for (int j = 0; j < occ.length(); j++) {
+                chars[count++] = occ.charAt(j);
+            }
+        } else {
+            if (top < n) {
+                chars[count++] = chars[top];
+            }
+        }
+        return count;
+    }
+}

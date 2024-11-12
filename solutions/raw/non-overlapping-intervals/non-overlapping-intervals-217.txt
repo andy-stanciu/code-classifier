@@ -1,0 +1,28 @@
+class Solution {
+
+    public int eraseOverlapIntervals(int[][] intervals) {
+        // sort based on the start value
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+        int res = 0;
+        // keep the end value of very first interval (0th index) to compare
+        int prevEnd = intervals[0][1];
+        for (int i = 1; i < intervals.length; i++) {
+            // check for overlap condition.. a overlap happens if the end value of the left
+            // side interval is larger than the start value of the next (right) interval
+            if (prevEnd > intervals[i][0]) {
+                // overlap
+                // chose the value to remove with the highest end value... in other words KEEP
+                // the interval with the lower end value. This minimize the chance of
+                // overlapping.
+                prevEnd = Math.min(prevEnd, intervals[i][1]);
+                // just increase the res for this removal. We are not removing anything, just
+                // counting the number of removal
+                res++;
+            } else {
+                // not overlapping, just update the prevEnd
+                prevEnd = intervals[i][1];
+            }
+        }
+        return res;
+    }
+}

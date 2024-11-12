@@ -1,0 +1,50 @@
+class Solution {
+
+    public String method1(String s) {
+        int[] alphabet = new int[75];
+        for (char c : s.toCharArray()) {
+            alphabet[c - 48]++;
+        }
+        PriorityQueue<Pair> pq = new PriorityQueue<>((p1, p2) -> Integer.compare(p2.freq, p1.freq));
+        for (int i = 0; i < 75; i++) {
+            if (alphabet[i] > 0) {
+                pq.add(new Pair(alphabet[i], (char) (i + 48)));
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        while (!pq.isEmpty()) {
+            Pair pair = pq.poll();
+            while (pair.freq-- > 0) sb.append(pair.c);
+        }
+        return sb.toString();
+    }
+
+    public String method2(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c : s.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        PriorityQueue<Pair> pq = new PriorityQueue<>((p1, p2) -> Integer.compare(p2.freq, p1.freq));
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+            pq.add(new Pair(entry.getValue(), entry.getKey()));
+        }
+        StringBuilder sb = new StringBuilder();
+        while (!pq.isEmpty()) {
+            Pair pair = pq.poll();
+            while (pair.freq-- > 0) sb.append(pair.c);
+        }
+        return sb.toString();
+    }
+
+    class Pair {
+
+        int freq;
+
+        Character c;
+
+        public Pair(int freq, Character c) {
+            this.freq = freq;
+            this.c = c;
+        }
+    }
+}

@@ -1,0 +1,44 @@
+class Solution {
+
+    private void removeElement(HashSet<Integer> set, int num) {
+        if (set.size() > 3) {
+            set.remove(num);
+        }
+    }
+
+    public int thirdMax(int[] nums) {
+        int largest = Integer.MIN_VALUE;
+        int secondLargest = Integer.MIN_VALUE;
+        int thirdLargest = Integer.MIN_VALUE;
+        ;
+        HashSet<Integer> set = new HashSet<>();
+        for (int num : nums) {
+            if (set.contains(num)) {
+                continue;
+            }
+            if (largest <= num) {
+                removeElement(set, thirdLargest);
+                thirdLargest = secondLargest;
+                secondLargest = largest;
+                largest = num;
+                set.add(num);
+            } else if (largest > num && secondLargest <= num) {
+                removeElement(set, thirdLargest);
+                thirdLargest = secondLargest;
+                secondLargest = num;
+                set.add(num);
+            } else if (secondLargest > num && thirdLargest <= num) {
+                removeElement(set, thirdLargest);
+                thirdLargest = num;
+                set.add(num);
+            } else {
+                continue;
+            }
+        }
+        if (set.size() < 3) {
+            return largest;
+        } else {
+            return thirdLargest;
+        }
+    }
+}

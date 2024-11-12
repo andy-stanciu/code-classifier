@@ -1,0 +1,50 @@
+class Solution {
+
+    public Stack<Integer> stack(ListNode head) {
+        ListNode temp = head;
+        Stack<Integer> s = new Stack<>();
+        while (temp != null) {
+            s.push(temp.val);
+            temp = temp.next;
+        }
+        return s;
+    }
+
+    public ListNode method1(ListNode l1, ListNode l2) {
+        Stack<Integer> s1 = stack(l1);
+        Stack<Integer> s2 = stack(l2);
+        ListNode curr = null;
+        int carry = 0;
+        while (!s1.isEmpty() && !s2.isEmpty()) {
+            int a = s1.pop();
+            int b = s2.pop();
+            int c = a + b + carry;
+            carry = c / 10;
+            ListNode node = new ListNode(c % 10);
+            node.next = curr;
+            curr = node;
+        }
+        while (!s1.isEmpty()) {
+            int a = s1.pop();
+            int c = a + carry;
+            carry = c / 10;
+            ListNode node = new ListNode(c % 10);
+            node.next = curr;
+            curr = node;
+        }
+        while (!s2.isEmpty()) {
+            int b = s2.pop();
+            int c = b + carry;
+            carry = c / 10;
+            ListNode node = new ListNode(c % 10);
+            node.next = curr;
+            curr = node;
+        }
+        if (carry > 0) {
+            ListNode node = new ListNode(carry);
+            node.next = curr;
+            curr = node;
+        }
+        return curr;
+    }
+}

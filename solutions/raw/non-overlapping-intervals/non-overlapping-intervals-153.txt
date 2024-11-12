@@ -1,0 +1,58 @@
+class Solution {
+
+    private enum OverlapType {
+
+        // no over lap between x and y, x finishes before y starts
+        XY,
+        // no over lap between x and y, y finishes before x starts
+        YX,
+        // x contains y
+        Xy,
+        // y contains x
+        xY,
+        // x starts before y starts
+        XYXy,
+        // x starts after y starts
+        XYxY
+    }
+
+    public int eraseOverlapIntervals(int[][] intervals) {
+        Arrays.sort(intervals, (a, b) -> a[1] - b[1]);
+        int[] previous = intervals[0];
+        //System.out.println(Arrays.deepToString(intervals));
+        int toBeDeleted = 0;
+        for (int i = 1; i < intervals.length; i++) {
+            int[] current = intervals[i];
+            if (current[0] >= previous[1])
+                previous = current;
+            else
+                toBeDeleted++;
+            // final OverlapType overlapType = overlapType(previous, intervals[i]);
+            // switch (overlapType) {
+            //     case XY:
+            //     case YX:
+            //         previous = intervals[i];
+            //         break;
+            //     default:
+            //         System.out.println("Overlap found " + Arrays.toString(previous) + " " + Arrays.toString(intervals[i]));
+            //         toBeDeleted++;
+            //         break;
+            // }
+        }
+        return toBeDeleted;
+    }
+
+    private OverlapType overlapType(int[] x, int[] y) {
+        if (x[1] <= y[0])
+            return OverlapType.XY;
+        if (x[0] >= y[1])
+            return OverlapType.YX;
+        if (x[0] < y[0] && x[1] > y[1])
+            return OverlapType.Xy;
+        if (x[0] > y[0] && x[1] < y[1])
+            return OverlapType.xY;
+        if (x[0] < y[0])
+            return OverlapType.XYXy;
+        return OverlapType.XYxY;
+    }
+}

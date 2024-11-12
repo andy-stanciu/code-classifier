@@ -1,0 +1,36 @@
+class Solution {
+
+    List<List<Integer>> results = new LinkedList<>();
+
+    int[] candidates;
+
+    int target;
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        this.candidates = candidates;
+        this.target = target;
+        Arrays.sort(this.candidates);
+        if (this.candidates.length > 0 && this.candidates[0] <= this.target) {
+            jumpToNext(new LinkedList<>(), 0, -1);
+        }
+        return results;
+    }
+
+    private void jumpToNext(List<Integer> acc, int currentSum, int currentIndex) {
+        if (currentSum == this.target) {
+            this.results.add(acc);
+        } else {
+            for (int nextIndex = currentIndex + 1; nextIndex < this.candidates.length; nextIndex++) {
+                if (nextIndex > 0 && nextIndex > currentIndex + 1 && this.candidates[nextIndex] == this.candidates[nextIndex - 1]) {
+                    continue;
+                }
+                int nextSum = currentSum + this.candidates[nextIndex];
+                if (nextSum <= this.target) {
+                    List<Integer> nextAcc = new LinkedList<>(acc);
+                    nextAcc.add(this.candidates[nextIndex]);
+                    jumpToNext(nextAcc, nextSum, nextIndex);
+                }
+            }
+        }
+    }
+}

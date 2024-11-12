@@ -1,0 +1,35 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        // // without using stack
+        int i = 0;
+        // use two pointer to track the incomming indecies
+        for (int j = 1; j < asteroids.length; j++) {
+            // first update the arr if two asteroid have opposite dire
+            if (i >= 0 && asteroids[i] > 0 && asteroids[j] < 0) {
+                i = update(asteroids, i, j);
+            } else {
+                // otherwise add the asteroid to the state stack
+                asteroids[++i] = asteroids[j];
+            }
+        }
+        // return the arr with range 0 to i + 1
+        return Arrays.copyOfRange(asteroids, 0, i + 1);
+    }
+
+    // helper method to update the asteroid after collision
+    private int update(int[] nums, int i, int j) {
+        // if collision occur and incomming asteroid destroy the asteroid which is opposite direciton
+        while (i >= 0 && nums[i] > 0 && nums[i] < -nums[j]) i--;
+        // if both asteroid are equal and have oposite dir then remove both
+        if (i >= 0 && nums[i] == -nums[j])
+            return --i;
+        // if arr is empty or it has negative value at i then add the asteroid
+        if (i < 0 || nums[i] < 0) {
+            nums[++i] = nums[j];
+            return i;
+        }
+        // if the stack is not empty and the front asteroid has bigger size then no need to change the i
+        return i;
+    }
+}

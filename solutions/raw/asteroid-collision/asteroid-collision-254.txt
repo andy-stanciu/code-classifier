@@ -1,0 +1,37 @@
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> stack = new Stack<>();
+        // Iterate through each asteroid
+        for (int asteroid : asteroids) {
+            // Handle positive asteroids (moving to the right)
+            if (asteroid > 0) {
+                // Push it onto the stack
+                stack.push(asteroid);
+            } else {
+                // Handle negative asteroids (moving to the left)
+                // While there are positive asteroids moving to the right
+                // and the current negative asteroid\'s magnitude is greater
+                // than the top positive asteroid\'s magnitude
+                while (!stack.isEmpty() && stack.peek() > 0 && stack.peek() < Math.abs(asteroid)) {
+                    // Destroy the positive asteroid
+                    stack.pop();
+                }
+                // Check if there\'s a collision between negative and positive asteroids
+                if (stack.isEmpty() || stack.peek() < 0) {
+                    // Add the negative asteroid to the stack
+                    stack.push(asteroid);
+                } else if (stack.peek() == Math.abs(asteroid)) {
+                    // Destroy both asteroids
+                    stack.pop();
+                }
+            }
+        }
+        // Convert the stack to an array
+        int[] result = new int[stack.size()];
+        for (int i = result.length - 1; i >= 0; i--) {
+            result[i] = stack.pop();
+        }
+        return result;
+    }
+}

@@ -1,0 +1,33 @@
+class Solution {
+
+    private ListNode method1(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        ListNode curr = head, prev = null, next = head.next;
+        while (next != null) {
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+            next = next.next;
+        }
+        curr.next = prev;
+        return curr;
+    }
+
+    public ListNode method2(ListNode head, int k) {
+        if (head == null || head.next == null)
+            return head;
+        ListNode currHead = head, currTail = head;
+        for (int i = 1; i < k; i++) {
+            if (currTail.next == null && i < k)
+                return currHead;
+            currTail = currTail.next;
+        }
+        ListNode nextHead = currTail.next;
+        currTail.next = null;
+        currTail = currHead;
+        currHead = method1(currHead);
+        currTail.next = method2(nextHead, k);
+        return currHead;
+    }
+}

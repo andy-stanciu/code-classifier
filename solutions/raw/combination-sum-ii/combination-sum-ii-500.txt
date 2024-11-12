@@ -1,0 +1,32 @@
+/**
+ * Simimlar to the normal combination sum
+ * To solve the problem of only use once of each number, we can sort the candidates first
+ */
+class Solution {
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        //sort
+        Arrays.sort(candidates);
+        List<List<Integer>> res = new ArrayList<>();
+        helper(candidates, target, res, new ArrayList<>(), 0);
+        return res;
+    }
+
+    private void helper(int[] candidates, int remain, List<List<Integer>> res, List<Integer> curr, int start) {
+        if (remain < 0) {
+            return;
+        }
+        if (remain == 0) {
+            res.add(new ArrayList<>(curr));
+        }
+        for (int i = start; i < candidates.length; i++) {
+            // skip replicates
+            if (i > start && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+            curr.add(candidates[i]);
+            helper(candidates, remain - candidates[i], res, curr, i + 1);
+            curr.remove(curr.size() - 1);
+        }
+    }
+}

@@ -1,0 +1,56 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        TreeNode node = root;
+        TreeNode parent = null;
+        while (node != null && key != node.val) {
+            parent = node;
+            node = key < node.val ? node.left : node.right;
+        }
+        if (node == null) {
+            return root;
+        }
+        if (node.right == null && node.left == null && node == root) {
+            System.gc();
+            return parent;
+        } else if (node.right == null && node.left == null) {
+            if (parent.left != null && parent.left.val == key)
+                parent.left = null;
+            if (parent.right != null && parent.right.val == key)
+                parent.right = null;
+        } else if (node.left == null) {
+            node.val = node.right.val;
+            node.left = node.right.left;
+            node.right = node.right.right;
+        } else if (node.right == null) {
+            node.val = node.left.val;
+            node.right = node.left.right;
+            node.left = node.left.left;
+        } else {
+            node.val = node.right.val;
+            TreeNode left = node.left;
+            while (left.right != null) {
+                left = left.right;
+            }
+            left.right = node.right.left;
+            node.right = node.right.right;
+        }
+        System.gc();
+        return root;
+    }
+}

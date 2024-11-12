@@ -1,0 +1,50 @@
+class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        // Way: 1
+        boolean[] used = new boolean[nums.length];
+        Arrays.sort(nums);
+        helper2(ans, new ArrayList(), nums, used);
+        // Way: 2
+        // Map<Integer,Integer> countMap = new HashMap<>();
+        // for(int n:nums){
+        //     countMap.put(n,countMap.getOrDefault(n,0)+1);
+        // }
+        // helper(ans,new ArrayList(),nums,countMap);
+        return ans;
+    }
+
+    private void helper2(List<List<Integer>> ans, List<Integer> tempAns, int[] nums, boolean[] used) {
+        if (tempAns.size() == nums.length) {
+            ans.add(new ArrayList<>(tempAns));
+        } else {
+            for (int i = 0; i < nums.length; i++) {
+                if (used[i] || (i > 0 && !used[i - 1] && nums[i - 1] == nums[i])) {
+                    continue;
+                }
+                used[i] = true;
+                tempAns.add(nums[i]);
+                helper2(ans, tempAns, nums, used);
+                used[i] = false;
+                tempAns.remove(tempAns.size() - 1);
+            }
+        }
+    }
+
+    private void helper(List<List<Integer>> ans, List<Integer> tempAns, int[] nums, Map<Integer, Integer> countMap) {
+        if (tempAns.size() == nums.length) {
+            ans.add(new ArrayList<>(tempAns));
+        } else {
+            for (int n : countMap.keySet()) {
+                if (countMap.get(n) > 0) {
+                    tempAns.add(n);
+                    countMap.put(n, countMap.get(n) - 1);
+                    helper(ans, tempAns, nums, countMap);
+                    tempAns.remove(tempAns.size() - 1);
+                    countMap.put(n, countMap.get(n) + 1);
+                }
+            }
+        }
+    }
+}
