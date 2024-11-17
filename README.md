@@ -1,5 +1,5 @@
-# Code classifier
-This is a UW CSE493g1 deep learning project by students Andy Stanciu & Rich Chen. The goal: given a Leetcode solution, identify the problem it is trying to solve. Exploring various neural network code classification architectures including (but not limited to) AST-based GNNs, CNNs, LSTMs, and potentially transformers.
+# Code Classifier
+This is a UW CSE493G1 deep learning project by students Andy Stanciu & Rich Chen. The goal: given a Leetcode solution, identify the problem it is trying to solve. Exploring various neural network code classification architectures including (but not limited to) AST-based GNNs, CNNs, LSTMs, and potentially transformers.
 
 ## Contents
 - `docs/` - Background documentation and project report.

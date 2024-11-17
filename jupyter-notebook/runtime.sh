@@ -1,0 +1,1 @@
+python -m ipykernel install --user --name=CSE493G1
