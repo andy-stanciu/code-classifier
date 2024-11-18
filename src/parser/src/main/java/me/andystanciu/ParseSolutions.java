@@ -3,7 +3,7 @@ package me.andystanciu;
 import java.nio.file.Path;
 import java.util.Objects;
 
-public class Main {
+public final class ParseSolutions {
     private static final String SOLUTIONS_DIR = "./solutions";
 
     public static void main(String[] args) {
