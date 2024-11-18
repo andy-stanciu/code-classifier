@@ -3,6 +3,7 @@ import torch
 import random
 from torch_geometric.data import Dataset, Data
 from torch_geometric.utils import from_networkx
+from viz import *
 import networkx as nx
 import matplotlib.pyplot as plt
 
@@ -31,11 +32,24 @@ class SolutionDataset(Dataset):
     def visualize(self, idx):
         solution, path = self.get_solution_path(idx)
         graph = nx.read_edgelist(path, create_using=nx.DiGraph)
+        pos = hierarchy_pos(graph)
         fig = plt.figure(figsize=(10, 8))
         fig.canvas.manager.set_window_title(solution)
-        nx.draw(graph, with_labels=True, node_size=2000, node_color="lightblue", font_size=10, font_color="black")
+        nx.draw(
+            graph,
+            pos,
+            with_labels=True,
+            arrows=True,
+            node_size=25,
+            node_color="lightblue",
+            font_size=8,
+            font_color="black",
+            edge_color="gray"
+        )
         plt.title(solution)
         plt.show()
+
+    
 
     def get_solution_path(self, idx):
         # map idx to the correct solution file
