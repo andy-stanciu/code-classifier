@@ -1,4 +1,4 @@
-package me.andystanciu;
+package me.andystanciu.parser;
 
 public enum SolutionType {
     RAW("./solutions/raw", "./data/raw"),

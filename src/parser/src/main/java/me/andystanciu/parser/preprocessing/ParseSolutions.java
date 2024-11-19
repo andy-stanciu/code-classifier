@@ -1,4 +1,4 @@
-package me.andystanciu;
+package me.andystanciu.parser.preprocessing;
 
 import java.nio.file.Path;
 import java.util.Objects;

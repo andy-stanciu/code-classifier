@@ -1,4 +1,4 @@
-package me.andystanciu;
+package me.andystanciu.parser.preprocessing;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.StaticJavaParser;

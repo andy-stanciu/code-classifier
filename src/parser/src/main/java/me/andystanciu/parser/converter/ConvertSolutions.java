@@ -1,4 +1,6 @@
-package me.andystanciu;
+package me.andystanciu.parser.converter;
+
+import me.andystanciu.parser.SolutionType;
 
 import java.nio.file.Path;
 import java.util.Objects;
@@ -31,7 +33,7 @@ public final class ConvertSolutions {
                         .withSolution(problemName, i, type)
                         .export();
             }
-            System.out.printf("Converted %d solutions to edge lists for %s%n",
+            System.out.printf("Converted %d solutions to edges and features for %s%n",
                     solutionCount, problemName);
         }
     }
