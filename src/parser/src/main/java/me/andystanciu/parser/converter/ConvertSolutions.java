@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public final class ConvertSolutions {
-    private static final String SOLUTIONS_DIR = "./solutions";
-    private static final String DATA_DIR = "./data";
 
     public static void main(String[] args) {
         var rawCooccurrenceEncoder = ASTCooccurrenceEncoder.withJavaVocabulary();
@@ -42,7 +40,7 @@ public final class ConvertSolutions {
                         .withSolution(problemName, i, type)
                         .export();
             }
-            System.out.printf("Converted %d solutions to edges for %s%n",
+            System.out.printf("Converted %d solutions for %s%n",
                     solutionCount, problemName);
         }
 

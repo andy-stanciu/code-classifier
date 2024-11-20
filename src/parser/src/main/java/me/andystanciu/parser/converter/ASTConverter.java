@@ -52,23 +52,48 @@ public final class ASTConverter {
         return this;
     }
 
-    public void export() {
+    public void exportDot() {
+        if (compilationUnit == null) {
+            throw new IllegalStateException("Source program failed to parse");
+        }
+
+        // export dot visual representation
+        var dot = new StringBuilder("digraph AST {\n");
+        traverseDot(compilationUnit, dot, null);
+        dot.append("}");
+        writeToDisk(dot.toString(), "dot");
+    }
+
+    private void traverseDot(Node node, StringBuilder dot, String parentNodeId) {
+        String currentNodeId = "node" + (nodeId++);
+        dot.append(String.format("%s [label=\"%s\"];\n", currentNodeId, node.getClass().getSimpleName()));
+
+        if (parentNodeId != null) {
+            dot.append(String.format("%s -> %s;\n", parentNodeId, currentNodeId));
+        }
+
+        for (Node child : node.getChildNodes()) {
+            traverseDot(child, dot, currentNodeId);
+        }
+    }
+
+    public void exportEdges() {
         if (compilationUnit == null) {
             throw new IllegalStateException("Source program failed to parse");
         }
 
         // export edge list and update co-occurrence matrix
         var edgeList = new StringBuilder();
-        traverseAST(compilationUnit, edgeList, null, null, null,
+        traverseEdges(compilationUnit, edgeList, null, null, null,
                 cooccurrenceEncoder);
-        writeToDisk(edgeList.toString());
+        writeToDisk(edgeList.toString(), "edges");
     }
 
-    private void traverseAST(Node node, StringBuilder edgeList,
-                             String parentNodeId,
-                             String parentNodeName,
-                             String parentNodeMapping,
-                             ASTCooccurrenceEncoder cooccurrenceEncoder) {
+    private void traverseEdges(Node node, StringBuilder edgeList,
+                               String parentNodeId,
+                               String parentNodeName,
+                               String parentNodeMapping,
+                               ASTCooccurrenceEncoder cooccurrenceEncoder) {
         String currentNodeMapping = String.valueOf(cooccurrenceEncoder.getVocabularyEncoding(node.getClass()));
         String currentNodeName = node.getClass().getSimpleName();
         String currentNodeId = String.valueOf(nodeId++);
@@ -83,19 +108,19 @@ public final class ASTConverter {
                     .append(currentNodeMapping).append("\n");
         }
         for (Node child : node.getChildNodes()) {
-            traverseAST(child, edgeList, currentNodeId, currentNodeName, currentNodeMapping, cooccurrenceEncoder);
+            traverseEdges(child, edgeList, currentNodeId, currentNodeName, currentNodeMapping, cooccurrenceEncoder);
             cooccurrenceEncoder.updateMapping(child.getClass(), node.getClass());  // update parent-child co-occurrence
         }
     }
 
-    private void writeToDisk(String str) {
+    private void writeToDisk(String str, String extension) {
         var path = Path.of(String.format("%s/%s", type.getDataPath(), problemName));
         if (!Files.exists(path)) {
             path.toFile().mkdirs();
         }
 
-        String filePath = String.format("%s/%s/%s-%d.edges",
-                type.getDataPath(), problemName, problemName, solutionNumber);
+        String filePath = String.format("%s/%s/%s-%d.%s",
+                type.getDataPath(), problemName, problemName, solutionNumber, extension);
         try (var outputStream = new FileOutputStream(filePath)) {
             outputStream.write(str.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
