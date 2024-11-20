@@ -3,13 +3,16 @@ import torch
 import random
 from torch_geometric.data import Dataset, Data
 from torch_geometric.utils import from_networkx
-from viz import *
+from graph_util import *
 import networkx as nx
 import matplotlib.pyplot as plt
+
 SOLUTION_COUNT = 500
+
 class SolutionDataset(Dataset):
     def __init__(self, root, transform=None, pre_transform=None):
         super(SolutionDataset, self).__init__(root, transform, pre_transform)
+
     def len(self):
         solutions = os.listdir(self.root)
         solution_count = 0
@@ -22,13 +25,13 @@ class SolutionDataset(Dataset):
 
     def get(self, idx):
         _, path = self.get_solution_path(idx)
-        graph = nx.read_edgelist(path, create_using=nx.DiGraph)
+        graph = read_edges(path)
         data = from_networkx(graph)
         return data
 
     def visualize(self, idx):
         solution, path = self.get_solution_path(idx)
-        graph = nx.read_edgelist(path, create_using=nx.DiGraph)
+        graph = read_edges(path)
         pos = hierarchy_pos(graph)
         fig = plt.figure(figsize=(10, 8))
         fig.canvas.manager.set_window_title(solution)
@@ -53,9 +56,11 @@ class SolutionDataset(Dataset):
         solution_num = (idx % SOLUTION_COUNT) + 1
         solution = solutions[solution_idx]
         solution_formatted = f'{solution}-{solution_num}'
-        return solution_formatted, os.path.join(self.root, f'{solution}/{solution_formatted}.txt')
+        return solution_formatted, os.path.join(self.root, f'{solution}/{solution_formatted}.edges')
+
 raw_solutions = SolutionDataset(root='../../data/raw')
 print(f'total solution count: {len(raw_solutions)}')
+
 # sample 5 random solutions
 solution_nums = random.sample(range(0, len(raw_solutions)), k=5)
 for solution_num in solution_nums:

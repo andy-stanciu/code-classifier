@@ -2,10 +2,7 @@ package me.andystanciu.parser.converter;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.expr.SimpleName;
-import com.github.javaparser.ast.type.Type;
 import me.andystanciu.parser.SolutionType;
 
 import java.io.FileOutputStream;
@@ -13,8 +10,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 
 public final class ASTConverter {
     private String problemName;
@@ -25,13 +20,15 @@ public final class ASTConverter {
     private CompilationUnit compilationUnit;
 
     private int nodeId;
-    private final Map<Integer, Node> nodeMappings;
+    private final ASTCooccurrenceEncoder cooccurrenceEncoder;
 
-    private ASTConverter() {
-        nodeMappings = new HashMap<>();
+    private ASTConverter(ASTCooccurrenceEncoder cooccurrenceEncoder) {
+        this.cooccurrenceEncoder = cooccurrenceEncoder;
     }
 
-    public static ASTConverter builder() { return new ASTConverter(); }
+    public static ASTConverter withCooccurrenceEncoder(ASTCooccurrenceEncoder cooccurrenceEncoder) {
+        return new ASTConverter(cooccurrenceEncoder);
+    }
 
     public ASTConverter withSolution(String problemName, int solutionNumber, SolutionType type) {
         this.problemName = problemName;
@@ -60,58 +57,45 @@ public final class ASTConverter {
             throw new IllegalStateException("Source program failed to parse");
         }
 
-        // export edge list
+        // export edge list and update co-occurrence matrix
         var edgeList = new StringBuilder();
-        constructEdgeList(compilationUnit, edgeList, null);
-        writeToDisk(edgeList.toString(), "edges");
-
-        // export features
-        var features = new StringBuilder();
-        constructFeatures(features);
-        writeToDisk(features.toString(), "features");
+        traverseAST(compilationUnit, edgeList, null, null, null,
+                cooccurrenceEncoder);
+        writeToDisk(edgeList.toString());
     }
 
-    private void constructFeatures(StringBuilder features) {
-        Map<Integer, Feature> featureMappings = new HashMap<>();
-        var featureVisitor = new FeatureVisitor(featureMappings);
+    private void traverseAST(Node node, StringBuilder edgeList,
+                             String parentNodeId,
+                             String parentNodeName,
+                             String parentNodeMapping,
+                             ASTCooccurrenceEncoder cooccurrenceEncoder) {
+        String currentNodeMapping = String.valueOf(cooccurrenceEncoder.getVocabularyEncoding(node.getClass()));
+        String currentNodeName = node.getClass().getSimpleName();
+        String currentNodeId = String.valueOf(nodeId++);
+        cooccurrenceEncoder.updateMapping(node.getClass(), node.getClass());  // update self-occurrence
 
-        for (var entry : nodeMappings.entrySet()) {
-            int nodeId = entry.getKey();
-            var node = entry.getValue();
-            node.accept(featureVisitor, nodeId);  // feature visitor does not recurse
+        if (parentNodeId != null) {
+            edgeList.append(parentNodeId).append(" ")
+                    .append(parentNodeName).append(" ")
+                    .append(parentNodeMapping).append(" ")
+                    .append(currentNodeId).append(" ")
+                    .append(currentNodeName).append(" ")
+                    .append(currentNodeMapping).append("\n");
         }
-
-        for (var entry : featureMappings.entrySet()) {
-            features.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
-        }
-    }
-
-    private void constructEdgeList(Node node, StringBuilder edgeList, String parentNodeId) {
-        String currentNodeId = String.valueOf(nodeId);
-        nodeMappings.put(nodeId++, node);
-
-        if (parentNodeId != null && shouldKeep(node)) {
-            edgeList.append(parentNodeId).append(" ").append(currentNodeId).append("\n");
-        }
-        for (Node child : node.getChildNodes().stream().filter(this::shouldKeep).toList()) {
-            constructEdgeList(child, edgeList, currentNodeId);
+        for (Node child : node.getChildNodes()) {
+            traverseAST(child, edgeList, currentNodeId, currentNodeName, currentNodeMapping, cooccurrenceEncoder);
+            cooccurrenceEncoder.updateMapping(child.getClass(), node.getClass());  // update parent-child co-occurrence
         }
     }
 
-    private boolean shouldKeep(Node node) {
-        return !(node instanceof Modifier) &&
-                !(node instanceof SimpleName) &&
-                !(node instanceof Type);
-    }
-
-    private void writeToDisk(String str, String extension) {
+    private void writeToDisk(String str) {
         var path = Path.of(String.format("%s/%s", type.getDataPath(), problemName));
         if (!Files.exists(path)) {
             path.toFile().mkdirs();
         }
 
-        String filePath = String.format("%s/%s/%s-%d.%s",
-                type.getDataPath(), problemName, problemName, solutionNumber, extension);
+        String filePath = String.format("%s/%s/%s-%d.edges",
+                type.getDataPath(), problemName, problemName, solutionNumber);
         try (var outputStream = new FileOutputStream(filePath)) {
             outputStream.write(str.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {

@@ -2,19 +2,28 @@ package me.andystanciu.parser.converter;
 
 import me.andystanciu.parser.SolutionType;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Objects;
 
 public final class ConvertSolutions {
     private static final String SOLUTIONS_DIR = "./solutions";
+    private static final String DATA_DIR = "./data";
 
     public static void main(String[] args) {
-        convertSolutions(SolutionType.RAW);
-        convertSolutions(SolutionType.REDACTED);
-        convertSolutions(SolutionType.REDACTED_STRIPPED);
+        var rawCooccurrenceEncoder = ASTCooccurrenceEncoder.withJavaVocabulary();
+        var redactedCooccurrenceEncoder = ASTCooccurrenceEncoder.withJavaVocabulary();
+        var redactedStrippedCooccurrenceEncoder = ASTCooccurrenceEncoder.withJavaVocabulary();
+
+        convertSolutions(SolutionType.RAW, rawCooccurrenceEncoder);
+        convertSolutions(SolutionType.REDACTED, redactedCooccurrenceEncoder);
+        convertSolutions(SolutionType.REDACTED_STRIPPED, redactedStrippedCooccurrenceEncoder);
     }
 
-    private static void convertSolutions(SolutionType type) {
+    private static void convertSolutions(SolutionType type, ASTCooccurrenceEncoder cooccurrenceEncoder) {
         var path = Path.of(type.getSolutionPath());
         var directory = path.toFile();
         if (!directory.exists() || !directory.isDirectory()) {
@@ -29,12 +38,30 @@ public final class ConvertSolutions {
             String problemName = solutionDir.getName();
             int solutionCount = Objects.requireNonNull(solutionDir.listFiles()).length;
             for (int i = 1; i <= solutionCount; i++) {
-                ASTConverter.builder()
+                ASTConverter.withCooccurrenceEncoder(cooccurrenceEncoder)
                         .withSolution(problemName, i, type)
                         .export();
             }
-            System.out.printf("Converted %d solutions to edges and features for %s%n",
+            System.out.printf("Converted %d solutions to edges for %s%n",
                     solutionCount, problemName);
+        }
+
+        // export co-occurrence matrix
+        var cooccurrences = cooccurrenceEncoder.vectorize();
+        var sb = new StringBuilder();
+        for (Map.Entry<Integer, long[]> entry : cooccurrences.entrySet()) {
+            sb.append(entry.getKey()).append(':');
+            for (long l : entry.getValue()) {
+                sb.append(' ').append(l);
+            }
+            sb.append('\n');
+        }
+
+        String filePath = String.format("%s.cooccurrences", type.getDataPath());
+        try (var outputStream = new FileOutputStream(filePath)) {
+            outputStream.write(sb.toString().getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
