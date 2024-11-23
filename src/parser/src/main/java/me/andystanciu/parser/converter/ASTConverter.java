@@ -94,10 +94,10 @@ public final class ASTConverter {
                                String parentNodeName,
                                String parentNodeMapping,
                                ASTCooccurrenceEncoder cooccurrenceEncoder) {
-        String currentNodeMapping = String.valueOf(cooccurrenceEncoder.getVocabularyEncoding(node.getClass()));
-        String currentNodeName = node.getClass().getSimpleName();
+        String currentNodeMapping = String.valueOf(cooccurrenceEncoder.getVocabularyEncoding(node));
+        String currentNodeName = cooccurrenceEncoder.getNodeName(node);
         String currentNodeId = String.valueOf(nodeId++);
-        cooccurrenceEncoder.updateMapping(node.getClass(), node.getClass());  // update self-occurrence
+        cooccurrenceEncoder.updateMapping(node, node);  // update self-occurrence
 
         if (parentNodeId != null) {
             edgeList.append(parentNodeId).append(" ")
@@ -109,7 +109,7 @@ public final class ASTConverter {
         }
         for (Node child : node.getChildNodes()) {
             traverseEdges(child, edgeList, currentNodeId, currentNodeName, currentNodeMapping, cooccurrenceEncoder);
-            cooccurrenceEncoder.updateMapping(child.getClass(), node.getClass());  // update parent-child co-occurrence
+            cooccurrenceEncoder.updateMapping(child, node);  // update parent-child co-occurrence
         }
     }
 

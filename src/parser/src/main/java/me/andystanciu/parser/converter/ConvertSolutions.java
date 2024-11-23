@@ -38,7 +38,7 @@ public final class ConvertSolutions {
             for (int i = 1; i <= solutionCount; i++) {
                 ASTConverter.withCooccurrenceEncoder(cooccurrenceEncoder)
                         .withSolution(problemName, i, type)
-                        .export();
+                        .exportEdges();
             }
             System.out.printf("Converted %d solutions for %s%n",
                     solutionCount, problemName);

@@ -9,34 +9,36 @@ import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.modules.*;
 import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.type.*;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public final class ASTCooccurrenceEncoder {
-    private final BiMap<Class<?>, Integer> vocabulary;
+    private final Map<String, Integer> vocabulary;
     private final long[][] cooccurrences;
 
-    private ASTCooccurrenceEncoder(BiMap<Class<?>, Integer> vocabulary) {
+    private ASTCooccurrenceEncoder(Map<String, Integer> vocabulary) {
         this.vocabulary = vocabulary;
         cooccurrences = new long[vocabulary.size()][vocabulary.size()];
     }
 
-    public int getVocabularyEncoding(Class<?> node) {
-        if (!vocabulary.containsKey(node)) {
-            throw new IllegalArgumentException(node.getSimpleName() + " is not in the vocabulary");
+    public int getVocabularyEncoding(Node node) {
+        String name = getNodeName(node);
+        if (!vocabulary.containsKey(name)) {
+            throw new IllegalArgumentException(name + " is not in the vocabulary");
         }
-        return vocabulary.get(node);
+        return vocabulary.get(name);
     }
 
-    public void updateMapping(Class<?> i, Class<?> j) {
+    public void updateMapping(Node node1, Node node2) {
+        String i = getNodeName(node1);
+        String j = getNodeName(node2);
+
         if (!vocabulary.containsKey(i)) {
-            throw new IllegalArgumentException(i.getSimpleName() + " is not in the vocabulary");
+            throw new IllegalArgumentException(i + " is not in the vocabulary");
         }
         if (!vocabulary.containsKey(j)) {
-            throw new IllegalArgumentException(i.getSimpleName() + " is not in the vocabulary");
+            throw new IllegalArgumentException(j + " is not in the vocabulary");
         }
 
         int n = vocabulary.get(i);
@@ -54,111 +56,171 @@ public final class ASTCooccurrenceEncoder {
         return vectorized;
     }
 
+    public String getNodeName(Node node) {
+        String name = node.getClass().getSimpleName();
+        if (node instanceof BinaryExpr b) {
+            name += toPascalCase(b.getOperator().toString());
+        } else if (node instanceof UnaryExpr u) {
+            name += toPascalCase(u.getOperator().toString());
+        } else if (node instanceof AssignExpr a) {
+            name += toPascalCase(a.getOperator().toString());
+        }
+        return name;
+    }
+
+    private String toPascalCase(String str) {
+        var result = new StringBuilder();
+        String[] words = str.split("_");
+        for (String word : words) {
+            result.append(word.substring(0, 1).toUpperCase())
+                    .append(word.substring(1).toLowerCase());
+        }
+        return result.toString();
+    }
+
     public static ASTCooccurrenceEncoder withJavaVocabulary() {
         return new ASTCooccurrenceEncoder(javaVocabulary);
     }
 
-    private static final BiMap<Class<?>, Integer> javaVocabulary = HashBiMap.create(new HashMap<>() {{
-        put(AnnotationDeclaration.class, 0);
-        put(AnnotationMemberDeclaration.class, 1);
-        put(ArrayAccessExpr.class, 2);
-        put(ArrayCreationExpr.class, 3);
-        put(ArrayInitializerExpr.class, 4);
-        put(AssertStmt.class, 5);
-        put(AssignExpr.class, 6);
-        put(BinaryExpr.class, 7);
-        put(BlockComment.class, 8);
-        put(BlockStmt.class, 9);
-        put(BooleanLiteralExpr.class, 10);
-        put(BreakStmt.class, 11);
-        put(CastExpr.class, 12);
-        put(CatchClause.class, 13);
-        put(CharLiteralExpr.class, 14);
-        put(ClassExpr.class, 15);
-        put(ClassOrInterfaceDeclaration.class, 16);
-        put(CompilationUnit.class, 17);
-        put(ConditionalExpr.class, 18);
-        put(ConstructorDeclaration.class, 19);
-        put(ContinueStmt.class, 20);
-        put(DoStmt.class, 21);
-        put(DoubleLiteralExpr.class, 22);
-        put(EmptyStmt.class, 23);
-        put(EnclosedExpr.class, 24);
-        put(EnumConstantDeclaration.class, 25);
-        put(EnumDeclaration.class, 26);
-        put(ExplicitConstructorInvocationStmt.class, 27);
-        put(ExpressionStmt.class, 28);
-        put(FieldDeclaration.class, 29);
-        put(ForEachStmt.class, 30);
-        put(ForStmt.class, 31);
-        put(IfStmt.class, 32);
-        put(InitializerDeclaration.class, 33);
-        put(InstanceOfExpr.class, 34);
-        put(IntegerLiteralExpr.class, 35);
-        put(JavadocComment.class, 36);
-        put(LabeledStmt.class, 37);
-        put(LineComment.class, 38);
-        put(LongLiteralExpr.class, 39);
-        put(MarkerAnnotationExpr.class, 40);
-        put(MemberValuePair.class, 41);
-        put(MethodCallExpr.class, 42);
-        put(MethodDeclaration.class, 43);
-        put(NameExpr.class, 44);
-        put(NormalAnnotationExpr.class, 45);
-        put(NullLiteralExpr.class, 46);
-        put(ObjectCreationExpr.class, 47);
-        put(PackageDeclaration.class, 48);
-        put(Parameter.class, 49);
-        put(Name.class, 50);
-        put(SimpleName.class, 51);
-        put(ArrayCreationLevel.class, 52);
-        put(ReturnStmt.class, 53);
-        put(SingleMemberAnnotationExpr.class, 54);
-        put(StringLiteralExpr.class, 55);
-        put(SuperExpr.class, 56);
-        put(SwitchEntry.class, 57);
-        put(SynchronizedStmt.class, 58);
-        put(ThisExpr.class, 59);
-        put(TryStmt.class, 60);
-        put(LocalClassDeclarationStmt.class, 61);
-        put(UnaryExpr.class, 62);
-        put(VariableDeclarationExpr.class, 63);
-        put(VariableDeclarator.class, 64);
-        put(WhileStmt.class, 65);
-        put(LambdaExpr.class, 66);
-        put(MethodReferenceExpr.class, 67);
-        put(TypeExpr.class, 68);
-        put(NodeList.class, 69);
-        put(ImportDeclaration.class, 70);
-        put(ModuleDeclaration.class, 71);
-        put(ModuleRequiresDirective.class, 72);
-        put(ModuleExportsDirective.class, 73);
-        put(ModuleProvidesDirective.class, 74);
-        put(ModuleUsesDirective.class, 75);
-        put(ModuleOpensDirective.class, 76);
-        put(UnparsableStmt.class, 77);
-        put(ReceiverParameter.class, 78);
-        put(SwitchExpr.class, 79);
-        put(TextBlockLiteralExpr.class, 80);
-        put(YieldStmt.class, 81);
-        put(TypePatternExpr.class, 82);
-        put(RecordDeclaration.class, 83);
-        put(CompactConstructorDeclaration.class, 84);
-        put(RecordPatternExpr.class, 85);
-        put(ClassOrInterfaceType.class, 86);
-        put(FieldAccessExpr.class, 87);
-        put(PrimitiveType.class, 88);
-        put(ArrayType.class, 89);
-        put(IntersectionType.class, 90);
-        put(UnionType.class, 91);
-        put(SwitchStmt.class, 92);
-        put(ThrowStmt.class, 93);
-        put(LocalRecordDeclarationStmt.class, 94);
-        put(TypeParameter.class, 95);
-        put(UnknownType.class, 96);
-        put(VoidType.class, 97);
-        put(WildcardType.class, 98);
-        put(VarType.class, 99);
-        put(Modifier.class, 100);
-    }});
+    private static final Map<String, Integer> javaVocabulary = new HashMap<>() {{
+        put(AnnotationDeclaration.class.getSimpleName(), 0);
+        put(AnnotationMemberDeclaration.class.getSimpleName(), 1);
+        put(ArrayAccessExpr.class.getSimpleName(), 2);
+        put(ArrayCreationExpr.class.getSimpleName(), 3);
+        put(ArrayInitializerExpr.class.getSimpleName(), 4);
+        put(AssertStmt.class.getSimpleName(), 5);
+        put(AssignExpr.class.getSimpleName(), 6);
+        put("BinaryExprOr", 7);
+        put(BlockComment.class.getSimpleName(), 8);
+        put(BlockStmt.class.getSimpleName(), 9);
+        put(BooleanLiteralExpr.class.getSimpleName(), 10);
+        put(BreakStmt.class.getSimpleName(), 11);
+        put(CastExpr.class.getSimpleName(), 12);
+        put(CatchClause.class.getSimpleName(), 13);
+        put(CharLiteralExpr.class.getSimpleName(), 14);
+        put(ClassExpr.class.getSimpleName(), 15);
+        put(ClassOrInterfaceDeclaration.class.getSimpleName(), 16);
+        put(CompilationUnit.class.getSimpleName(), 17);
+        put(ConditionalExpr.class.getSimpleName(), 18);
+        put(ConstructorDeclaration.class.getSimpleName(), 19);
+        put(ContinueStmt.class.getSimpleName(), 20);
+        put(DoStmt.class.getSimpleName(), 21);
+        put(DoubleLiteralExpr.class.getSimpleName(), 22);
+        put(EmptyStmt.class.getSimpleName(), 23);
+        put(EnclosedExpr.class.getSimpleName(), 24);
+        put(EnumConstantDeclaration.class.getSimpleName(), 25);
+        put(EnumDeclaration.class.getSimpleName(), 26);
+        put(ExplicitConstructorInvocationStmt.class.getSimpleName(), 27);
+        put(ExpressionStmt.class.getSimpleName(), 28);
+        put(FieldDeclaration.class.getSimpleName(), 29);
+        put(ForEachStmt.class.getSimpleName(), 30);
+        put(ForStmt.class.getSimpleName(), 31);
+        put(IfStmt.class.getSimpleName(), 32);
+        put(InitializerDeclaration.class.getSimpleName(), 33);
+        put(InstanceOfExpr.class.getSimpleName(), 34);
+        put(IntegerLiteralExpr.class.getSimpleName(), 35);
+        put(JavadocComment.class.getSimpleName(), 36);
+        put(LabeledStmt.class.getSimpleName(), 37);
+        put(LineComment.class.getSimpleName(), 38);
+        put(LongLiteralExpr.class.getSimpleName(), 39);
+        put(MarkerAnnotationExpr.class.getSimpleName(), 40);
+        put(MemberValuePair.class.getSimpleName(), 41);
+        put(MethodCallExpr.class.getSimpleName(), 42);
+        put(MethodDeclaration.class.getSimpleName(), 43);
+        put(NameExpr.class.getSimpleName(), 44);
+        put(NormalAnnotationExpr.class.getSimpleName(), 45);
+        put(NullLiteralExpr.class.getSimpleName(), 46);
+        put(ObjectCreationExpr.class.getSimpleName(), 47);
+        put(PackageDeclaration.class.getSimpleName(), 48);
+        put(Parameter.class.getSimpleName(), 49);
+        put(Name.class.getSimpleName(), 50);
+        put(SimpleName.class.getSimpleName(), 51);
+        put(ArrayCreationLevel.class.getSimpleName(), 52);
+        put(ReturnStmt.class.getSimpleName(), 53);
+        put(SingleMemberAnnotationExpr.class.getSimpleName(), 54);
+        put(StringLiteralExpr.class.getSimpleName(), 55);
+        put(SuperExpr.class.getSimpleName(), 56);
+        put(SwitchEntry.class.getSimpleName(), 57);
+        put(SynchronizedStmt.class.getSimpleName(), 58);
+        put(ThisExpr.class.getSimpleName(), 59);
+        put(TryStmt.class.getSimpleName(), 60);
+        put(LocalClassDeclarationStmt.class.getSimpleName(), 61);
+        put(UnaryExpr.class.getSimpleName(), 62);
+        put(VariableDeclarationExpr.class.getSimpleName(), 63);
+        put(VariableDeclarator.class.getSimpleName(), 64);
+        put(WhileStmt.class.getSimpleName(), 65);
+        put(LambdaExpr.class.getSimpleName(), 66);
+        put(MethodReferenceExpr.class.getSimpleName(), 67);
+        put(TypeExpr.class.getSimpleName(), 68);
+        put(NodeList.class.getSimpleName(), 69);
+        put(ImportDeclaration.class.getSimpleName(), 70);
+        put(ModuleDeclaration.class.getSimpleName(), 71);
+        put(ModuleRequiresDirective.class.getSimpleName(), 72);
+        put(ModuleExportsDirective.class.getSimpleName(), 73);
+        put(ModuleProvidesDirective.class.getSimpleName(), 74);
+        put(ModuleUsesDirective.class.getSimpleName(), 75);
+        put(ModuleOpensDirective.class.getSimpleName(), 76);
+        put(UnparsableStmt.class.getSimpleName(), 77);
+        put(ReceiverParameter.class.getSimpleName(), 78);
+        put(SwitchExpr.class.getSimpleName(), 79);
+        put(TextBlockLiteralExpr.class.getSimpleName(), 80);
+        put(YieldStmt.class.getSimpleName(), 81);
+        put(TypePatternExpr.class.getSimpleName(), 82);
+        put(RecordDeclaration.class.getSimpleName(), 83);
+        put(CompactConstructorDeclaration.class.getSimpleName(), 84);
+        put(RecordPatternExpr.class.getSimpleName(), 85);
+        put(ClassOrInterfaceType.class.getSimpleName(), 86);
+        put(FieldAccessExpr.class.getSimpleName(), 87);
+        put(PrimitiveType.class.getSimpleName(), 88);
+        put(ArrayType.class.getSimpleName(), 89);
+        put(IntersectionType.class.getSimpleName(), 90);
+        put(UnionType.class.getSimpleName(), 91);
+        put(SwitchStmt.class.getSimpleName(), 92);
+        put(ThrowStmt.class.getSimpleName(), 93);
+        put(LocalRecordDeclarationStmt.class.getSimpleName(), 94);
+        put(TypeParameter.class.getSimpleName(), 95);
+        put(UnknownType.class.getSimpleName(), 96);
+        put(VoidType.class.getSimpleName(), 97);
+        put(WildcardType.class.getSimpleName(), 98);
+        put(VarType.class.getSimpleName(), 99);
+        put(Modifier.class.getSimpleName(), 100);
+        put("BinaryExprAnd", 101);
+        put("BinaryExprBinaryOr", 102);
+        put("BinaryExprBinaryAnd", 103);
+        put("BinaryExprXor", 104);
+        put("BinaryExprEquals", 105);
+        put("BinaryExprNotEquals", 106);
+        put("BinaryExprLess", 107);
+        put("BinaryExprGreater", 108);
+        put("BinaryExprLessEquals", 109);
+        put("BinaryExprGreaterEquals", 110);
+        put("BinaryExprLeftShift", 111);
+        put("BinaryExprSignedRightShift", 112);
+        put("BinaryExprUnsignedRightShift", 113);
+        put("BinaryExprPlus", 114);
+        put("BinaryExprMinus", 115);
+        put("BinaryExprMultiply", 116);
+        put("BinaryExprDivide", 117);
+        put("BinaryExprRemainder", 118);
+        put("AssignExprAssign", 119);
+        put("AssignExprPlus", 119);
+        put("AssignExprMinus", 120);
+        put("AssignExprMultiply", 121);
+        put("AssignExprDivide", 122);
+        put("AssignExprBinaryAnd", 123);
+        put("AssignExprBinaryOr", 124);
+        put("AssignExprXor", 125);
+        put("AssignExprRemainder", 126);
+        put("AssignExprLeftShift", 127);
+        put("AssignExprSignedRightShift", 128);
+        put("AssignExprUnsignedRightShift", 129);
+        put("UnaryExprPlus", 130);
+        put("UnaryExprMinus", 131);
+        put("UnaryExprPrefixIncrement", 132);
+        put("UnaryExprPrefixDecrement", 133);
+        put("UnaryExprLogicalComplement", 134);
+        put("UnaryExprBitwiseComplement", 135);
+        put("UnaryExprPostfixIncrement", 136);
+        put("UnaryExprPostfixDecrement", 137);
+    }};
 }
