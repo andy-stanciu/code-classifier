@@ -55,11 +55,18 @@ def normalize(arr):
     normalized = (arr - arr_mean) / arr_std
     return normalized
 
-if __name__ == "__main__":
+def read_cooccurrences(strip=False):
     cooccurrences = parse_cooccurrences(COOCCURRENCES)
-    strip_empty_cooccurrences(cooccurrences)
+
+    if strip:
+        strip_empty_cooccurrences(cooccurrences)
+
     for k, v in cooccurrences.items():
         cooccurrences[k] = normalize(v)
+    return cooccurrences
+
+if __name__ == "__main__":
+    cooccurrences = read_cooccurrences(strip=True)
     
     # Step 1: Extract k-dimensional vectors and their keys
     keys = list(cooccurrences.keys())
@@ -72,10 +79,9 @@ if __name__ == "__main__":
     # Step 3: Plot the 2D points
     plt.figure(figsize=(16, 10))
 
-    texts = []
     for i, key in enumerate(keys):
         plt.scatter(reduced_vectors[i, 0], reduced_vectors[i, 1], label=JAVA_VOCABULARY_MAPPINGS[key])
-        texts.append(plt.text(reduced_vectors[i, 0] + 0.1, reduced_vectors[i, 1] + 0.1, JAVA_VOCABULARY_MAPPINGS[key], fontsize=9))
+        plt.text(reduced_vectors[i, 0] + 0.1, reduced_vectors[i, 1] + 0.1, JAVA_VOCABULARY_MAPPINGS[key], fontsize=9)
    
     plt.title("Co-occurrences")
     plt.xlabel("Principal Component 1")

@@ -1,5 +1,6 @@
 import networkx as nx
 import matplotlib.pyplot as plt
+from read_cooccurrences import *
 
 def hierarchy_pos(G, root=None, width=10.0, vert_gap=0.2, vert_loc=0, xcenter=0.5):
     """
@@ -31,9 +32,10 @@ def hierarchy_pos(G, root=None, width=10.0, vert_gap=0.2, vert_loc=0, xcenter=0.
 
     return _hierarchy_pos(G, root, 0, width, vert_loc, {})
 
-def read_edges(file):
+def read_nodes(file):
     try:
         graph = nx.DiGraph()
+        cooccurrences = read_cooccurrences()
         with open(file, 'r') as file:
             for line in file:
                 line = line.strip()
@@ -45,17 +47,15 @@ def read_edges(file):
                     continue  # Skip lines that don't have exactly 6 elements
 
                 node1_id, node1_name, node1_mapping, node2_id, node2_name, node2_mapping = parts
-
+                
                 if not graph.has_node(node1_id):
-                    graph.add_node(node1_id, name=node1_name, mapping=node1_mapping)
+                    graph.add_node(node1_id, name=node1_name, cooccurrences=cooccurrences[int(node1_mapping)])
                 if not graph.has_node(node2_id):
-                    graph.add_node(node2_id, name=node2_name, mapping=node2_mapping)
+                    graph.add_node(node2_id, name=node2_name, cooccurrences=cooccurrences[int(node2_mapping)])
 
                 graph.add_edge(node1_id, node2_id)
         
         return graph
     except FileNotFoundError:
         print(f"Error: File '{file}' not found.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
     return None
