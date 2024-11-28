@@ -72,20 +72,10 @@ class SolutionDataset(Dataset):
 raw_solutions = SolutionDataset(root='../../data/raw')
 print(f'total solution count: {len(raw_solutions)}')
 
-pickle_file = '../../data/model-train-pickle/raw_solutions.pkl'
-solution_data = []
-for i in tqdm(range(len(raw_solutions)), desc="Processing Solutions"):
-    try:
-        data = raw_solutions.get(i)
-        solution_data.append(data)
-    except Exception as e:
-        print(f"Error processing solution at index {i}: {e}")
+with open('solution_dataset.pkl', 'wb') as f:
+    pickle.dump(raw_solutions, f)
 
-with open(pickle_file, 'wb') as f:
-    pickle.dump(solution_data, f)
-
-print(f'Saved {len(solution_data)} solutions to {pickle_file}')
-
+print("Dataset serialized and saved to 'solution_dataset.pkl'")
 
 # sample 1 random solution
 solution_nums = random.sample(range(0, len(raw_solutions)), k=1)
