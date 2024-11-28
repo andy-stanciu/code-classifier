@@ -76,8 +76,8 @@ pickle_file = '../../data/model-train-pickle/raw_solutions.pkl'
 solution_data = []
 for i in tqdm(range(len(raw_solutions)), desc="Processing Solutions"):
     try:
-        data = raw_solutions.get(i) 
-        solution_data.append(data)   
+        data = raw_solutions.get(i)
+        solution_data.append(data)
     except Exception as e:
         print(f"Error processing solution at index {i}: {e}")
 
