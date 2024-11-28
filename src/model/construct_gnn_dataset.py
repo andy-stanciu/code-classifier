@@ -10,8 +10,9 @@ import matplotlib.pyplot as plt
 import pickle
 from tqdm import tqdm
 
-SOLUTION_COUNT = 500
+TOTAL_SOLUTION_COUNT = 500
 PROBLEM_COUNT = 100
+X = 5
 
 class SolutionDataset(Dataset):
     def __init__(self, root, transform=None, pre_transform=None):
@@ -63,8 +64,8 @@ class SolutionDataset(Dataset):
     def get_solution_path(self, idx):
         # map idx to the correct solution file
         solutions = sorted([f for f in os.listdir(self.root) if f != '.DS_Store'])
-        solution_idx = idx // SOLUTION_COUNT
-        solution_num = (idx % SOLUTION_COUNT) + 1
+        solution_idx = idx // TOTAL_SOLUTION_COUNT
+        solution_num = (idx % TOTAL_SOLUTION_COUNT) + 1
         solution = solutions[solution_idx]
         solution_formatted = f'{solution}-{solution_num}'
         return solution_formatted, solution_idx, os.path.join(self.root, f'{solution}/{solution_formatted}.edges')
