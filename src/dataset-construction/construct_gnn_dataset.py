@@ -72,10 +72,10 @@ class SolutionDataset(Dataset):
 raw_solutions = SolutionDataset(root='../../data/raw')
 print(f'total solution count: {len(raw_solutions)}')
 
-with open('../../data/model-pickle/solution_dataset.pkl', 'wb') as f:
+with open('../../data/model-pickle/solutions_dataset_gnn_graphs.pkl', 'wb') as f:
     pickle.dump(raw_solutions, f)
 
-print("Dataset serialized and saved to '../../data/model-pickle/solution_dataset.pkl'")
+print("Dataset serialized and saved to '../../data/model-pickle/solutions_dataset_gnn_graphs.pkl'")
 
 # sample 1 random solution
 solution_nums = random.sample(range(0, len(raw_solutions)), k=1)
