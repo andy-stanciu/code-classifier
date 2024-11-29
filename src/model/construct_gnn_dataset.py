@@ -8,10 +8,57 @@ from graph_util import *
 import networkx as nx
 import matplotlib.pyplot as plt
 import pickle
-from tqdm import tqdm
 
 TOTAL_SOLUTION_COUNT = 500
-PROBLEM_COUNT = 5
+PROBLEM_COUNT = 15
+
+FILES = [
+'koko-eating-bananas',
+'two-sum', 
+'binary-tree-preorder-traversal',
+'binary-tree-postorder-traversal',
+'merge-k-sorted-lists',
+
+'minimum-number-of-arrows-to-burst-balloons',
+'kth-smallest-element-in-a-bst',
+'intersection-of-two-arrays',
+'longest-palindromic-substring',
+'combinations',
+
+'3sum',
+'4sum', 
+'majority-element',
+'generate-parentheses',
+'valid-anagram',
+
+'product-of-array-except-self',
+'median-of-two-sorted-arrays',
+'integer-to-roman', 
+'single-number',
+'longest-consecutive-sequence', 
+
+'sqrtx', 'find-the-index-of-the-first-occurrence-in-a-string',  
+ 'plus-one', 'linked-list-cycle', 'jump-game',   
+'minimum-size-subarray-sum',  'unique-paths-ii', 'permutations', 'coin-change', 
+'group-anagrams', 'maximum-subarray', 'counting-bits', 'remove-nth-node-from-end-of-list', 'longest-common-prefix', 
+ 'remove-duplicates-from-sorted-array-ii', 'is-subsequence', 
+'best-time-to-buy-and-sell-stock', 'odd-even-linked-list', 'game-of-life', 'happy-number', 'valid-palindrome', 
+'sum-of-left-leaves', 'find-minimum-in-rotated-sorted-array', 'first-missing-positive',  
+'binary-tree-zigzag-level-order-traversal', 'average-of-levels-in-binary-tree', 'remove-duplicates-from-sorted-array', 
+'combination-sum-ii', 'target-sum',  'merge-sorted-array', 
+'evaluate-reverse-polish-notation', 'reverse-nodes-in-k-group',  '3sum-closest', 'swap-nodes-in-pairs', 
+'word-pattern', 'palindrome-partitioning', 'reverse-linked-list',  'count-complete-tree-nodes', 
+'best-time-to-buy-and-sell-stock-ii', 'pascals-triangle', 'delete-node-in-a-bst', 'move-zeroes', 'missing-number', 
+'course-schedule',  'third-maximum-number', 'sort-characters-by-frequency', 
+'climbing-stairs', 'linked-list-cycle-ii', 'permutations-ii', 'course-schedule-ii', 
+'kth-largest-element-in-an-array', 'symmetric-tree', 'find-pivot-index', 'non-overlapping-intervals', 'rotate-image', 
+'path-sum-ii', 'gas-station',  'zigzag-conversion', 'asteroid-collision', 'majority-element-ii', 
+'powx-n', 'longest-increasing-subsequence', 'reverse-words-in-a-string', 'minimum-window-substring', 'next-permutation', 
+'sort-colors', 'add-two-numbers-ii', 'word-break', 'string-compression', 'merge-two-sorted-lists', 'binary-tree-paths', 
+'search-in-rotated-sorted-array', 'palindrome-number', 'path-sum', 'binary-tree-inorder-traversal', 
+'binary-tree-maximum-path-sum', 'contains-duplicate-ii', 'ransom-note', 'add-two-numbers', 
+'intersection-of-two-arrays-ii', 
+]
 
 class SolutionDataset(Dataset):
     def __init__(self, root, transform=None, pre_transform=None):
@@ -22,7 +69,7 @@ class SolutionDataset(Dataset):
         
         # Select random PROBLEM_COUNT solution folders
         all_folders = [f for f in os.listdir(root) if os.path.isdir(os.path.join(root, f))]
-        self.selected_folders = random.sample(all_folders, PROBLEM_COUNT)
+        self.selected_folders = FILES[:PROBLEM_COUNT]
         
         # Gather the first TOTAL_SOLUTION_COUNT files in each folder
         self.solution_files = []
@@ -44,7 +91,7 @@ class SolutionDataset(Dataset):
         label[folder_idx] = 1
         
         data.x = torch.tensor([node[1]['cooccurrences'] for node in graph.nodes(data=True)], dtype=torch.float)
-        data.y = torch.tensor(label, dtype=torch.long)
+        data.y = torch.tensor(label, dtype=torch.long).unsqueeze(0)
 
         return data
 
