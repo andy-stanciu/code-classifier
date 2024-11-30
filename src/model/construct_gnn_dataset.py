@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import pickle
 
 TOTAL_SOLUTION_COUNT = 500
-PROBLEM_COUNT = 15
+PROBLEM_COUNT = 10
 
 FILES = [
 'koko-eating-bananas',
@@ -68,7 +68,6 @@ class SolutionDataset(Dataset):
         self.pre_transform = pre_transform
         
         # Select random PROBLEM_COUNT solution folders
-        all_folders = [f for f in os.listdir(root) if os.path.isdir(os.path.join(root, f))]
         self.selected_folders = FILES[:PROBLEM_COUNT]
         
         # Gather the first TOTAL_SOLUTION_COUNT files in each folder
@@ -91,7 +90,7 @@ class SolutionDataset(Dataset):
         label[folder_idx] = 1
         
         data.x = torch.tensor([node[1]['cooccurrences'] for node in graph.nodes(data=True)], dtype=torch.float)
-        data.y = torch.tensor(label, dtype=torch.long).unsqueeze(0)
+        data.y = torch.tensor(label, dtype=torch.long)
 
         return data
 
