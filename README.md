@@ -30,6 +30,10 @@ This is a UW CSE493G1 deep learning project by students Andy Stanciu & Rich Chen
 3. Install any missing node, python, or Java dependencies.
 4. You should have spun up a functional web app hosted on `http://localhost:3000`! Start typing Java code in the code editor, and watch as the model predicts the top 3 most likely LeetCode problems you're trying to solve in real-time.
 
+
+![Demo](demo.png)
+
+
 ## How to train
 1. Scrape Leetcode problem solutions. Example:
    ```
