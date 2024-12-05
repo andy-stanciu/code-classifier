@@ -24,12 +24,11 @@ def main():
 
     data.x = torch.tensor([node[1]['cooccurrences'] for node in graph.nodes(data=True)], dtype=torch.float)
 
-    model = torch.load("../../src/model/GCNModel_6_50epoch_0_layer_full.pth")
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model = torch.load("../../src/model/GCNModel_7_standard.pth", map_location=torch.device(device))
     model.eval()
 
     loader = DataLoader([data], batch_size=1, shuffle=False)
-
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     out = None
     with torch.no_grad():
@@ -54,15 +53,22 @@ def main():
 class GCN(torch.nn.Module):
     def __init__(self, hidden_channels):
         super(GCN, self).__init__()
-        # self.conv1 = GCNConv(NODE_FEATURES, hidden_channels)
-        self.lin = Linear(139, 100)
+        self.conv1 = GCNConv(139, hidden_channels)
+        self.conv2 = GCNConv(hidden_channels, hidden_channels)
+        self.conv3 = GCNConv(hidden_channels, hidden_channels)
+        self.lin = Linear(hidden_channels, 100)
 
     def forward(self, x, edge_index, batch):
-        # x = self.conv1(x, edge_index)
+        x = self.conv1(x, edge_index)
+        x = x.relu()
+        x = self.conv2(x, edge_index)
+        x = x.relu()
+        x = self.conv3(x, edge_index)
+        x = x.relu()
 
-        x = global_mean_pool(x, batch)
+        x = global_mean_pool(x, batch)  
         
-        # x = F.dropout(x, p=0.5, training=self.training)
+        x = F.dropout(x, p=0.5, training=self.training)
         x = self.lin(x)
         return x
     
