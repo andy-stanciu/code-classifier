@@ -44,6 +44,20 @@ public final class SolutionParser {
         return new SolutionParser();
     }
 
+    public SolutionParser withString(String sourceCode) {
+        var parser = new JavaParser();
+        var parseResult = parser.parse(sourceCode);
+        parseResult.ifSuccessful(compilationUnit -> {
+            this.compilationUnit = compilationUnit;
+        });
+
+        return this;
+    }
+
+    public boolean validate() {
+        return compilationUnit != null;
+    }
+
     public SolutionParser withSolution(String problemName, int solutionNumber) {
         this.problemName = problemName;
         this.solutionNumber = solutionNumber;

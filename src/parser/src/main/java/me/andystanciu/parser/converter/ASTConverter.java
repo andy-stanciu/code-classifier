@@ -30,6 +30,16 @@ public final class ASTConverter {
         return new ASTConverter(cooccurrenceEncoder);
     }
 
+    public ASTConverter withString(String sourceCode) {
+        var parser = new JavaParser();
+        var parseResult = parser.parse(sourceCode);
+        parseResult.ifSuccessful(compilationUnit -> {
+            this.compilationUnit = compilationUnit;
+        });
+
+        return this;
+    }
+
     public ASTConverter withSolution(String problemName, int solutionNumber, SolutionType type) {
         this.problemName = problemName;
         this.solutionNumber = solutionNumber;
@@ -75,6 +85,13 @@ public final class ASTConverter {
         for (Node child : node.getChildNodes()) {
             traverseDot(child, dot, currentNodeId);
         }
+    }
+
+    public String getEdges() {
+        var edgeList = new StringBuilder();
+        traverseEdges(compilationUnit, edgeList, null, null, null,
+                cooccurrenceEncoder);
+        return edgeList.toString();
     }
 
     public void exportEdges() {
